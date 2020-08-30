@@ -1,0 +1,719 @@
+./wmllint --diffs ../../data/core ../../data/multiplayer ../../data/themes ../../data/campaigns/* 
+--- ../../data/core/units/nagas/Dirkfang.cfg-bak	Tue Jul 14 23:37:58 2020
++++ ../../data/core/units/nagas/Dirkfang.cfg	Sun Aug 30 14:01:40 2020
+@@ -15,7 +15,7 @@
+     advances_to=Naga Ophidian,Naga Ringcaster
+     cost=15
+     usage=mixed fighter
+-    description= _ "In contrast to the heavily melee-focused style of their northern brethren, young Naga of the southern waters prefer to soften their prey from afar before closing in. The small chakri they throw can be carried on the wrist or on a belt without causing hindrance.  While any final kill under water must usually be done at close range, the mixed combat style often allows them to live long enough to learn and improve. Sometimes viewed as cowardly by the northern Naga warriors, these fighters are nonetheless effective when it comes time to engage in warfare."
++    description= _ "In contrast to the heavily melee-focused style of their northern brethren, young Naga of the southern waters prefer to soften their prey from afar before closing in. The small chakri they throw can be carried on the wrist or on a belt without causing hindrance. While any final kill under water must usually be done at close range, the mixed combat style often allows them to live long enough to learn and improve. Sometimes viewed as cowardly by the northern Naga warriors, these fighters are nonetheless effective when it comes time to engage in warfare."
+     die_sound=naga-die.ogg
+     {DEFENSE_ANIM_FILTERED "units/nagas/dirkfang-range-defend2.png" "units/nagas/dirkfang-range-defend1.png" {SOUND_LIST:NAGA_HIT} (
+         [filter_attack]
+--- ../../data/core/units/nagas/Ophidian.cfg-bak	Tue Jul 14 23:37:58 2020
++++ ../../data/core/units/nagas/Ophidian.cfg	Sun Aug 30 14:01:40 2020
+@@ -15,7 +15,7 @@
+     advances_to=Naga Sicarius
+     cost=24
+     usage=fighter
+-    description= _ "Experienced warriors of the Southern Naga often find work as mercenaries, usually hired by neighboring Dunefolk to control key waterways near the coastline.  Due to their constant confrontations with enemy horsemen, Ophidians have retired the ringed blades of their youth and picked up the piercing bow.  Though generally amicable with their wealthy employers, this friendliness should not be mistaken for loyalty, for the Ophidian are known for readily switching between rival city-state factions at the start of each shipping season, when demand for water-based protection is the highest.  As a group, these nagas encourage a healthy amount of competition among the surface factions, ensuring their services are valued by one tribe or another."
++    description= _ "Experienced warriors of the Southern Naga often find work as mercenaries, usually hired by neighboring Dunefolk to control key waterways near the coastline. Due to their constant confrontations with enemy horsemen, Ophidians have retired the ringed blades of their youth and picked up the piercing bow. Though generally amicable with their wealthy employers, this friendliness should not be mistaken for loyalty, for the Ophidian are known for readily switching between rival city-state factions at the start of each shipping season, when demand for water-based protection is the highest. As a group, these nagas encourage a healthy amount of competition among the surface factions, ensuring their services are valued by one tribe or another."
+     die_sound=naga-die.ogg
+     {DEFENSE_ANIM "units/nagas/ophidian.png" "units/nagas/ophidian.png" {SOUND_LIST:NAGA_HIT} }
+     [defense]
+--- ../../data/core/units/nagas/Ringcaster.cfg-bak	Tue Jul 14 23:37:58 2020
++++ ../../data/core/units/nagas/Ringcaster.cfg	Sun Aug 30 14:01:40 2020
+@@ -14,7 +14,7 @@
+     advances_to=Naga Zephyr
+     cost=24
+     usage=mixed fighter
+-    description= _ "The chakram, a greater blade ring than the chakri, is the signature weapon of the southern Naga and their renowned Ringcasters.  Well balanced chakrams are useful for throwing, but the rejected blades make a good fist-load weapon, similar to a sharp-bladed tekko or knuckleduster."
++    description= _ "The chakram, a greater blade ring than the chakri, is the signature weapon of the southern Naga and their renowned Ringcasters. Well balanced chakrams are useful for throwing, but the rejected blades make a good fist-load weapon, similar to a sharp-bladed tekko or knuckleduster."
+     die_sound=naga-die.ogg
+     {DEFENSE_ANIM "units/nagas/ringcaster.png" "units/nagas/ringcaster.png" {SOUND_LIST:NAGA_HIT} }
+ 
+--- ../../data/campaigns/Descent_Into_Darkness/scenarios/01_Saving_Parthyn.cfg-bak	Tue Jul 14 23:37:53 2020
++++ ../../data/campaigns/Descent_Into_Darkness/scenarios/01_Saving_Parthyn.cfg	Sun Aug 30 14:01:56 2020
+@@ -339,6 +339,7 @@
+         [message]
+             speaker=narrator
+             message= _ "Ignorance is the parent of fear."
++            image=wesnoth-icon.png
+         [/message]
+ 
+         [store_unit]
+@@ -351,7 +352,7 @@
+         {VARIABLE_OP malin.experience add 4}
+         [floating_text]
+             x,y=$malin.x,$malin.y
+-            text="<span color='#800080'>" + "+4 exp" + "</span>"
++            text=_ "<span color='#800080'>" + "+4 exp" + "</span>"
+         [/floating_text]
+ 
+         [unstore_unit]
+@@ -372,6 +373,7 @@
+         [message]
+             speaker=narrator
+             message= _ "A monolith of pale stone, luminous and bright, but cold and brittle to the touch."
++            image=wesnoth-icon.png
+         [/message]
+ 
+         [store_unit]
+@@ -384,7 +386,7 @@
+         {VARIABLE_OP malin.experience add 8}
+         [floating_text]
+             x,y=$malin.x,$malin.y
+-            text="<span color='#800080'>" + "+8 exp" + "</span>"
++            text=_ "<span color='#800080'>" + "+8 exp" + "</span>"
+         [/floating_text]
+ 
+         [unstore_unit]
+--- ../../data/campaigns/Descent_Into_Darkness/scenarios/02_Peaceful_Valley.cfg-bak	Tue Jul 14 23:37:53 2020
++++ ../../data/campaigns/Descent_Into_Darkness/scenarios/02_Peaceful_Valley.cfg	Sun Aug 30 14:01:56 2020
+@@ -514,7 +514,7 @@
+     [event]
+         name=die
+         [filter]
+-            id=T'shar Lggi
++            id="T'shar Lggi"
+         [/filter]
+ 
+         [message]
+--- ../../data/campaigns/Descent_Into_Darkness/scenarios/03_A_Haunting_in_Winter.cfg-bak	Tue Jul 14 23:37:53 2020
++++ ../../data/campaigns/Descent_Into_Darkness/scenarios/03_A_Haunting_in_Winter.cfg	Sun Aug 30 14:01:58 2020
+@@ -993,21 +993,21 @@
+                 {VARIABLE_OP malin.experience add 30}
+                 [floating_text]
+                     x,y=$malin.x,$malin.y
+-                    text="<span color='#800080'>" + "+30 exp" + "</span>"
++                    text=_ "<span color='#800080'>" + "+30 exp" + "</span>"
+                 [/floating_text]
+ #endif
+ #ifdef NORMAL
+                 {VARIABLE_OP malin.experience add 25}
+                 [floating_text]
+                     x,y=$malin.x,$malin.y
+-                    text="<span color='#800080'>" + "+25 exp" + "</span>"
++                    text=_ "<span color='#800080'>" + "+25 exp" + "</span>"
+                 [/floating_text]
+ #endif
+ #ifdef HARD
+                 {VARIABLE_OP malin.experience add 20}
+                 [floating_text]
+                     x,y=$malin.x,$malin.y
+-                    text="<span color='#800080'>" + "+20 exp" + "</span>"
++                    text=_ "<span color='#800080'>" + "+20 exp" + "</span>"
+                 [/floating_text]
+ #endif
+ 
+@@ -1023,6 +1023,7 @@
+                 [message]
+                     speaker=narrator
+                     message= _ "Nothing happens."
++                    image=wesnoth-icon.png
+                 [/message]
+             [/else]
+         [/if]
+@@ -1399,21 +1400,21 @@
+                 {VARIABLE_OP malin.experience add 30}
+                 [floating_text]
+                     x,y=$malin.x,$malin.y
+-                    text="<span color='#800080'>" + "+30 exp" + "</span>"
++                    text=_ "<span color='#800080'>" + "+30 exp" + "</span>"
+                 [/floating_text]
+ #endif
+ #ifdef NORMAL
+                 {VARIABLE_OP malin.experience add 25}
+                 [floating_text]
+                     x,y=$malin.x,$malin.y
+-                    text="<span color='#800080'>" + "+25 exp" + "</span>"
++                    text=_ "<span color='#800080'>" + "+25 exp" + "</span>"
+                 [/floating_text]
+ #endif
+ #ifdef HARD
+                 {VARIABLE_OP malin.experience add 20}
+                 [floating_text]
+                     x,y=$malin.x,$malin.y
+-                    text="<span color='#800080'>" + "+20 exp" + "</span>"
++                    text=_ "<span color='#800080'>" + "+20 exp" + "</span>"
+                 [/floating_text]
+ #endif
+ 
+--- ../../data/campaigns/Descent_Into_Darkness/scenarios/04_Spring_of_Reprisal.cfg-bak	Tue Jul 14 23:37:53 2020
++++ ../../data/campaigns/Descent_Into_Darkness/scenarios/04_Spring_of_Reprisal.cfg	Sun Aug 30 14:01:58 2020
+@@ -250,6 +250,7 @@
+         [message]
+             speaker=narrator
+             message= _ "Revenge is a confession of pain."
++            image=wesnoth-icon.png
+         [/message]
+ 
+         [store_unit]
+@@ -262,7 +263,7 @@
+         {VARIABLE_OP malin.experience add 6}
+         [floating_text]
+             x,y=$malin.x,$malin.y
+-            text="<span color='#800080'>" + "+6 exp" + "</span>"
++            text=_ "<span color='#800080'>" + "+6 exp" + "</span>"
+         [/floating_text]
+ 
+         [unstore_unit]
+--- ../../data/campaigns/Descent_Into_Darkness/scenarios/06_Return_to_Parthyn.cfg-bak	Tue Jul 14 23:37:53 2020
++++ ../../data/campaigns/Descent_Into_Darkness/scenarios/06_Return_to_Parthyn.cfg	Sun Aug 30 14:01:59 2020
+@@ -483,6 +483,7 @@
+         [message]
+             speaker=narrator
+             message= _ "A monolith of grey stone, appearing solid, but crumbling within."
++            image=wesnoth-icon.png
+         [/message]
+ 
+         [store_unit]
+@@ -496,21 +497,21 @@
+         {VARIABLE_OP malin.experience add 12}
+         [floating_text]
+             x,y=$malin.x,$malin.y
+-            text="<span color='#800080'>" + "+12 exp" + "</span>"
++            text=_ "<span color='#800080'>" + "+12 exp" + "</span>"
+         [/floating_text]
+ #endif
+ #ifdef NORMAL
+         {VARIABLE_OP malin.experience add 10}
+         [floating_text]
+             x,y=$malin.x,$malin.y
+-            text="<span color='#800080'>" + "+10 exp" + "</span>"
++            text=_ "<span color='#800080'>" + "+10 exp" + "</span>"
+         [/floating_text]
+ #endif
+ #ifdef HARD
+         {VARIABLE_OP malin.experience add 8}
+         [floating_text]
+             x,y=$malin.x,$malin.y
+-            text="<span color='#800080'>" + "+8 exp" + "</span>"
++            text=_ "<span color='#800080'>" + "+8 exp" + "</span>"
+         [/floating_text]
+ #endif
+ 
+@@ -533,6 +534,7 @@
+         [message]
+             speaker=narrator
+             message= _ "Darkness is not the enemy, but believing it is so makes it so."
++            image=wesnoth-icon.png
+         [/message]
+ 
+         [store_unit]
+@@ -545,7 +547,7 @@
+         {VARIABLE_OP malin.experience add 6}
+         [floating_text]
+             x,y=$malin.x,$malin.y
+-            text="<span color='#800080'>" + "+6 exp" + "</span>"
++            text=_ "<span color='#800080'>" + "+6 exp" + "</span>"
+         [/floating_text]
+ 
+         [unstore_unit]
+@@ -665,6 +667,7 @@
+                 [message]
+                     speaker=narrator
+                     message= _ "The orc was carrying some gold."
++                    image=wesnoth-icon.png
+                 [/message]
+ 
+                 [gold]
+@@ -876,6 +879,7 @@
+             [message]
+                 speaker=narrator
+                 message= _ "A monolith of dark stone, shadowed panes reflecting distorted images."
++                image=wesnoth-icon.png
+             [/message]
+ 
+             [store_unit]
+@@ -889,21 +893,21 @@
+             {VARIABLE_OP malin.experience add 12}
+             [floating_text]
+                 x,y=$malin.x,$malin.y
+-                text="<span color='#800080'>" + "+12 exp" + "</span>"
++                text=_ "<span color='#800080'>" + "+12 exp" + "</span>"
+             [/floating_text]
+ #endif
+ #ifdef NORMAL
+             {VARIABLE_OP malin.experience add 10}
+             [floating_text]
+                 x,y=$malin.x,$malin.y
+-                text="<span color='#800080'>" + "+10 exp" + "</span>"
++                text=_ "<span color='#800080'>" + "+10 exp" + "</span>"
+             [/floating_text]
+ #endif
+ #ifdef HARD
+             {VARIABLE_OP malin.experience add 8}
+             [floating_text]
+                 x,y=$malin.x,$malin.y
+-                text="<span color='#800080'>" + "+8 exp" + "</span>"
++                text=_ "<span color='#800080'>" + "+8 exp" + "</span>"
+             [/floating_text]
+ #endif
+ 
+--- ../../data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg-bak	Tue Jul 14 23:37:53 2020
++++ ../../data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg	Sun Aug 30 14:01:59 2020
+@@ -679,6 +679,7 @@
+         [message]
+             speaker=narrator
+             message= _ "The only thing we have to fear is fear itself."
++            image=wesnoth-icon.png
+         [/message]
+         [delay]
+             time=350
+@@ -692,6 +693,7 @@
+         [message]
+             speaker=narrator
+             message= _ "<i>... nameless, unreasoning, unjustified terror...</i>"
++            image=wesnoth-icon.png
+         [/message]
+         [allow_undo][/allow_undo]
+     [/event]
+@@ -704,6 +706,7 @@
+         [message]
+             speaker=narrator
+             message= _ "<i>There is nothing good or bad, but thinking makes it so.</i>"
++            image=wesnoth-icon.png
+         [/message]
+         [allow_undo][/allow_undo]
+     [/event]
+@@ -718,6 +721,7 @@
+             message= _ "<i>Mirrors of shallow blue, cold and opaque, they stare,
+ Piercing, unblinking, a pitiless reflection,
+ Shattering our brittle, fancied reality.</i>"
++            image=wesnoth-icon.png
+         [/message]
+         [allow_undo][/allow_undo]
+     [/event]
+@@ -732,6 +736,7 @@
+             message= _ "<i>Emerald, verdant green gives way,
+ Touched by shadow, dark dye of black,
+ An abhorrent stain of pestilence.</i>"
++            image=wesnoth-icon.png
+         [/message]
+         [allow_undo][/allow_undo]
+     [/event]
+@@ -746,6 +751,7 @@
+             message= _ "<i>Crimson pool, essence of life,
+ Flesh and blood flow away to rot,
+ Leaving only bones to remain.</i>"
++            image=wesnoth-icon.png
+         [/message]
+         [allow_undo][/allow_undo]
+     [/event]
+--- ../../data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg-bak	Tue Jul 14 23:37:53 2020
++++ ../../data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg	Sun Aug 30 14:02:00 2020
+@@ -802,6 +802,7 @@
+         [message]
+             speaker=narrator
+             message= _ "<i>Beware that, when fighting monsters, you yourself do not become a monster...</i>"
++            image=wesnoth-icon.png
+         [/message]
+         [allow_undo][/allow_undo]
+     [/event]
+@@ -816,6 +817,7 @@
+             message= _ "<i>Death is the twilight that follows the light of day.
+ Life fades with the setting sun into darkness.
+ Existence churns and the soul is reborn into endless night.</i>"
++            image=wesnoth-icon.png
+         [/message]
+         [allow_undo][/allow_undo]
+     [/event]
+--- ../../data/campaigns/Descent_Into_Darkness/scenarios/08_Alone_at_Last.cfg-bak	Tue Jul 14 23:37:53 2020
++++ ../../data/campaigns/Descent_Into_Darkness/scenarios/08_Alone_at_Last.cfg	Sun Aug 30 14:02:00 2020
+@@ -531,6 +531,7 @@
+         [message]
+             speaker=narrator
+             message= _ "A monolith of dark stone, marred by cracks running throughout."
++            image=wesnoth-icon.png
+         [/message]
+ 
+         [store_unit]
+@@ -544,21 +545,21 @@
+         {VARIABLE_OP malin.experience add 12}
+         [floating_text]
+             x,y=$malin.x,$malin.y
+-            text="<span color='#800080'>" + "+12 exp" + "</span>"
++            text=_ "<span color='#800080'>" + "+12 exp" + "</span>"
+         [/floating_text]
+ #endif
+ #ifdef NORMAL
+         {VARIABLE_OP malin.experience add 10}
+         [floating_text]
+             x,y=$malin.x,$malin.y
+-            text="<span color='#800080'>" + "+10 exp" + "</span>"
++            text=_ "<span color='#800080'>" + "+10 exp" + "</span>"
+         [/floating_text]
+ #endif
+ #ifdef HARD
+         {VARIABLE_OP malin.experience add 8}
+         [floating_text]
+             x,y=$malin.x,$malin.y
+-            text="<span color='#800080'>" + "+8 exp" + "</span>"
++            text=_ "<span color='#800080'>" + "+8 exp" + "</span>"
+         [/floating_text]
+ #endif
+ 
+@@ -934,6 +935,7 @@
+             [message]
+                 speaker=narrator
+                 message= _ "A monolith of black stone, broken shards inexplicably held together by nothingness."
++                image=wesnoth-icon.png
+             [/message]
+ 
+             [store_unit]
+@@ -947,21 +949,21 @@
+             {VARIABLE_OP malin.experience add 12}
+             [floating_text]
+                 x,y=$malin.x,$malin.y
+-                text="<span color='#800080'>" + "+12 exp" + "</span>"
++                text=_ "<span color='#800080'>" + "+12 exp" + "</span>"
+             [/floating_text]
+ #endif
+ #ifdef NORMAL
+             {VARIABLE_OP malin.experience add 10}
+             [floating_text]
+                 x,y=$malin.x,$malin.y
+-                text="<span color='#800080'>" + "+10 exp" + "</span>"
++                text=_ "<span color='#800080'>" + "+10 exp" + "</span>"
+             [/floating_text]
+ #endif
+ #ifdef HARD
+             {VARIABLE_OP malin.experience add 8}
+             [floating_text]
+                 x,y=$malin.x,$malin.y
+-                text="<span color='#800080'>" + "+8 exp" + "</span>"
++                text=_ "<span color='#800080'>" + "+8 exp" + "</span>"
+             [/floating_text]
+ #endif
+ 
+--- ../../data/campaigns/Descent_Into_Darkness/scenarios/09_Descent_into_Darkness.cfg-bak	Tue Jul 14 23:37:53 2020
++++ ../../data/campaigns/Descent_Into_Darkness/scenarios/09_Descent_into_Darkness.cfg	Sun Aug 30 14:02:03 2020
+@@ -1577,6 +1577,7 @@
+         [message]
+             speaker=narrator
+             message= _ "There is darkness..."
++            image=wesnoth-icon.png
+         [/message]
+ 
+         [delay]
+@@ -1586,6 +1587,7 @@
+         [message]
+             speaker=narrator
+             message= _ "and peace..."
++            image=wesnoth-icon.png
+         [/message]
+ 
+         [delay]
+@@ -1595,6 +1597,7 @@
+         [message]
+             speaker=narrator
+             message= _ "for a moment."
++            image=wesnoth-icon.png
+         [/message]
+ 
+         [delay]
+@@ -1604,11 +1607,13 @@
+         [message]
+             speaker=narrator
+             message= _ "Then, they are replaced by a pulling, a pain too strong to resist, and then..."
++            image=wesnoth-icon.png
+         [/message]
+ 
+         [message]
+             speaker=narrator
+             message= _ "... by emptiness."
++            image=wesnoth-icon.png
+         [/message]
+ 
+         [replace_map]
+@@ -1990,6 +1995,7 @@
+         [message]
+             speaker=narrator
+             message= _ "A monolith of black stone, a fractured surface shrouded by darkened shadow."
++            image=wesnoth-icon.png
+         [/message]
+         [allow_undo][/allow_undo]
+     [/event]
+@@ -2518,6 +2524,7 @@
+                 [message]
+                     speaker=narrator
+                     message= _ "Mal Keshar drinks the potion and feels energy flow through his skeletal form. The power of death surges in his vacant body, threatening to overflow, to burst free, but at the last moment, he reins it in. The stream of magic trickles down to drops, diminished, tempered, but manageable."
++                    image=wesnoth-icon.png
+                 [/message]
+ 
+                 [remove_object]
+@@ -2590,6 +2597,7 @@
+ Unmasked by a lick of flame,
+ Transmuted by the altar of darkness
+ Into pitch black shadow.</i>"
++            image=wesnoth-icon.png
+         [/message]
+         [fire_event]
+             name=potion text
+@@ -2837,6 +2845,7 @@
+                     [message]
+                         speaker=narrator
+                         message= _ "Ash swirls upward, charred remnants of the once living. Charcoal from bone, embers from flesh, he consumes the pallid cinders, siphoning away the energy with a draining touch."
++                        image=wesnoth-icon.png
+                     [/message]
+ 
+                     [remove_object]
+@@ -2899,6 +2908,7 @@
+ In eternal wakefulness.
+ Then, the key is found and the lid opened,
+ And the tongue of fire begets ashen repose.</i>"
++            image=wesnoth-icon.png
+         [/message]
+     [/event]
+ 
+--- ../../data/campaigns/Descent_Into_Darkness/scenarios/10_Endless_Night.cfg-bak	Tue Jul 14 23:37:53 2020
++++ ../../data/campaigns/Descent_Into_Darkness/scenarios/10_Endless_Night.cfg	Sun Aug 30 14:02:04 2020
+@@ -1253,12 +1253,14 @@
+                 [message]
+                     speaker=narrator
+                     message= _ "A monolith of black stone, a dark surface reflecting deep shadow infinitely into the night."
++                    image=wesnoth-icon.png
+                 [/message]
+             [/then]
+             [else]
+                 [message]
+                     speaker=narrator
+                     message= _ "A monolith of black stone, cold and brittle to the touch."
++                    image=wesnoth-icon.png
+                 [/message]
+             [/else]
+         [/if]
+@@ -1493,6 +1495,7 @@
+                 [message]
+                     speaker=narrator
+                     message= _ "Mal Keshar stares into the abyss, oddly at ease alone amongst the darkness."
++                    image=wesnoth-icon.png
+                 [/message]
+             [/else]
+         [/switch]
+--- ../../data/campaigns/Descent_Into_Darkness/utils/abilities.cfg-bak	Tue Jul 14 23:37:53 2020
++++ ../../data/campaigns/Descent_Into_Darkness/utils/abilities.cfg	Sun Aug 30 14:02:05 2020
+@@ -362,7 +362,7 @@
+ 
+         [floating_text]
+             x,y=$unit.x,$unit.y
+-            text="<span color='#ff0000'>" + "5" + "</span>"
++            text=_ "<span color='#ff0000'>" + "5" + "</span>"
+         [/floating_text]
+ 
+         {VARIABLE counter 0}
+@@ -704,7 +704,7 @@
+ 
+                 [floating_text]
+                     x,y=$unit.x,$unit.y
+-                    text="<span color='#ff0000'>" + "2" + "</span>"
++                    text=_ "<span color='#ff0000'>" + "2" + "</span>"
+                 [/floating_text]
+             [/then]
+         [/if]
+--- ../../data/campaigns/Heir_To_The_Throne/scenarios/22_Return_to_Wesnoth.cfg-bak	Tue Jul 14 23:37:53 2020
++++ ../../data/campaigns/Heir_To_The_Throne/scenarios/22_Return_to_Wesnoth.cfg	Sun Aug 30 14:02:16 2020
+@@ -66,6 +66,7 @@
+                     [message]
+                         speaker=narrator
+                         message= _ "The battlefield falls silent as a loud shriek fills the air."
++                        image=wesnoth-icon.png
+                     [/message]
+                     [scroll_to]
+                         x,y=1,1
+--- ../../data/campaigns/Heir_To_The_Throne/scenarios/23_Test_of_the_Clans.cfg-bak	Tue Jul 14 23:37:53 2020
++++ ../../data/campaigns/Heir_To_The_Throne/scenarios/23_Test_of_the_Clans.cfg	Sun Aug 30 14:02:16 2020
+@@ -27,7 +27,7 @@
+ 				if not cfg.silent then
+ 					local splash = _("Still $units_to_slay clan member to defeat!", "Still $units_to_slay clan members to defeat!", n)
+ 					wesnoth.wml_actions.print{
+-						text = splash:vformat{units_to_slay = n},
++						text =_  splash:vformat{units_to_slay = n},
+ 						size = 18,
+ 						red = 255, green = 255, blue = 255
+ 					}
+--- ../../data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg-bak	Tue Jul 14 23:37:54 2020
++++ ../../data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg	Sun Aug 30 14:02:23 2020
+@@ -424,6 +424,7 @@
+         [message]
+             speaker=narrator
+             message= _ "<i>The sun sets...</i>"
++            image=wesnoth-icon.png
+         [/message]
+ 
+         [message]
+--- ../../data/campaigns/Sceptre_of_Fire/scenarios/1_A_Bargain_is_Struck.cfg-bak	Sun Aug 30 12:52:55 2020
++++ ../../data/campaigns/Sceptre_of_Fire/scenarios/1_A_Bargain_is_Struck.cfg	Sun Aug 30 14:02:32 2020
+@@ -484,7 +484,7 @@
+         [/message]
+         [message]
+             speaker=Glildur
+-            message= _ "Hey!  You can’t do that — this road is an elvish road. We’re not letting you transport gold and jewels on it without paying a toll."
++            message= _ "Hey! You can’t do that — this road is an elvish road. We’re not letting you transport gold and jewels on it without paying a toll."
+         [/message]
+         [message]
+             speaker=Rugnur
+--- ../../data/campaigns/Sceptre_of_Fire/scenarios/2p5_Reaching_the_Runecrafter.cfg-bak	Tue Jul 14 23:37:54 2020
++++ ../../data/campaigns/Sceptre_of_Fire/scenarios/2p5_Reaching_the_Runecrafter.cfg	Sun Aug 30 14:02:32 2020
+@@ -36,7 +36,7 @@
+         {INCOME 8 12 16}
+         team_name=orcs
+         user_team_name= _ "Orcs"
+-        {FLAG_VARIANT ragged}
++        {FLAG_VARIANT6 ragged}
+         #        [ai]
+         #            aggression=1.0
+         #            caution=0.0
+@@ -54,7 +54,7 @@
+         {INCOME 8 12 16}
+         team_name=orcs
+         user_team_name= _ "Goblins"
+-        {FLAG_VARIANT ragged}
++        {FLAG_VARIANT6 ragged}
+         #        [ai]
+         #            aggression=1.0
+         #            caution=0.0
+--- ../../data/campaigns/Sceptre_of_Fire/scenarios/9_Caverns_of_Flame.cfg-bak	Tue Jul 14 23:37:54 2020
++++ ../../data/campaigns/Sceptre_of_Fire/scenarios/9_Caverns_of_Flame.cfg	Sun Aug 30 14:02:35 2020
+@@ -886,7 +886,7 @@
+         [message]
+             speaker=Thursagan
+             # wmllint: local spelling Khrakrahs
+-            message= _ "Remember what Khrakrahs said, about this being a volcano?  Well, it seems we're under the crater, sitting on the magma chamber... I think we should try to cause it to erupt."
++            message= _ "Remember what Khrakrahs said, about this being a volcano? Well, it seems we're under the crater, sitting on the magma chamber... I think we should try to cause it to erupt."
+         [/message]
+         [message]
+             speaker=Rugnur
+--- ../../data/campaigns/Sceptre_of_Fire/scenarios/Epilogue.cfg-bak	Tue Jul 14 23:37:54 2020
++++ ../../data/campaigns/Sceptre_of_Fire/scenarios/Epilogue.cfg	Sun Aug 30 14:02:35 2020
+@@ -212,6 +212,7 @@
+         [message]
+             speaker=narrator
+             message= _ "Krawg reached over his back with his beak, and brought out a scorched parchment, which he dropped at the feet of the king."
++            image=wesnoth-icon.png
+         [/message]
+         [message]
+             speaker=Alanin
+--- ../../data/campaigns/Secrets_of_the_Ancients/utils/zombie-utils.cfg-bak	Tue Jul 14 23:37:54 2020
++++ ../../data/campaigns/Secrets_of_the_Ancients/utils/zombie-utils.cfg	Sun Aug 30 14:02:41 2020
+@@ -39,7 +39,7 @@
+             name=zombies
+             mode=merge
+             [split]
+-                list= _ "(Bat),
++                list= "(Bat),
+                 (Rat),
+                 (Wolf),
+                 (Human),
+@@ -60,7 +60,7 @@
+             name=zombies
+             mode=merge
+             [split]
+-                list= _ "You can now raise bat corpses!,
++                list= "You can now raise bat corpses!,
+                 You can now raise rat corpses!,
+                 You can now raise wolf corpses!,
+                 You can now raise human corpses!,
+@@ -347,6 +347,7 @@
+         [message]
+             speaker=narrator
+             message= _ "A lua error has occurred, and a corpse cannot be recruited."
++            image=wesnoth-icon.png
+         [/message]
+     [/event]
+ 
+--- ../../data/campaigns/Under_the_Burning_Suns/scenarios/04_Descending_into_Darkness.cfg-bak	Sun Aug 30 12:52:57 2020
++++ ../../data/campaigns/Under_the_Burning_Suns/scenarios/04_Descending_into_Darkness.cfg	Sun Aug 30 14:03:02 2020
+@@ -575,7 +575,7 @@
+ 
+         [message]
+             speaker=Scylla
+-            message= _ "Yesss, we remember the oath...  Sssslay them all!" # wmllint: no spellcheck
++            message= _ "Yesss, we remember the oath... Sssslay them all!" # wmllint: no spellcheck
+             # leaving this here because it might have been a reference to the alien?  It really isn't clear.
+             #            message= _ "Sssslay them all! In the name of the Ssscaled One!" # wmllint: no spellcheck
+         [/message]
+@@ -736,7 +736,7 @@
+ 
+                 [message]
+                     speaker=Scylla
+-                    message= _ "Yesss, we remember the oath...  Sssslay them all!" # wmllint: no spellcheck
++                    message= _ "Yesss, we remember the oath... Sssslay them all!" # wmllint: no spellcheck
+                 [/message]
+             [/then]
+         [/if]
+--- ../../data/campaigns/Under_the_Burning_Suns/scenarios/08_Out_of_the_Frying_Pan.cfg-bak	Sun Aug 30 12:52:57 2020
++++ ../../data/campaigns/Under_the_Burning_Suns/scenarios/08_Out_of_the_Frying_Pan.cfg	Sun Aug 30 14:03:08 2020
+@@ -3334,7 +3334,7 @@
+ 
+         [message]
+             speaker=Eloh
+-            message= _ "You were weak and foolish, but I forgive you. You must remember, Kaleh, that without my guidance, your people would have died out years ago.  Believe in me, I alone can save you."
++            message= _ "You were weak and foolish, but I forgive you. You must remember, Kaleh, that without my guidance, your people would have died out years ago. Believe in me, I alone can save you."
+         [/message]
+ 
+         [message]
+@@ -3349,7 +3349,7 @@
+ 
+         [message]
+             speaker=Eloh
+-            message= _ "Of course I am!  Oh, how little you understand. Do not worry yourself with such distractions, come to me and all will be made clear."
++            message= _ "Of course I am! Oh, how little you understand. Do not worry yourself with such distractions, come to me and all will be made clear."
+         [/message]
+ 
+         [delay]
+@@ -3510,7 +3510,7 @@
+ 
+         [message]
+             speaker=Eloh
+-            message= _ "You disappoint me, Kaleh. You are weak, and not worthy of my guidance...  Do as you like, but know that while you may be the appointed leader of your people, I am your god, and you defy me at your peril!"
++            message= _ "You disappoint me, Kaleh. You are weak, and not worthy of my guidance... Do as you like, but know that while you may be the appointed leader of your people, I am your god, and you defy me at your peril!"
+         [/message]
+ 
+         [kill]
+@@ -4418,17 +4418,17 @@
+         {MOVE_UNIT (id=Dummy Unit7) 66 2}
+         [message]
+             speaker=Dummy Unit7
+-            message= _ "Eastern scouts, reporting back!  If you like sand and hot dust, there's plenty more out there!  No water, or signs of others, we had to turn back."
+-        [/message]
+-
+-        [message]
+-            speaker=Kaleh
+-            message= _ "No shame in that, Jezhar.  Of all the scouts, only Tanstafaal and Nym have yet to return."
++            message= _ "Eastern scouts, reporting back! If you like sand and hot dust, there's plenty more out there! No water, or signs of others, we had to turn back."
++        [/message]
++
++        [message]
++            speaker=Kaleh
++            message= _ "No shame in that, Jezhar. Of all the scouts, only Tanstafaal and Nym have yet to return."
+         [/message]
+ 
+         [message]
+             speaker=Zhul
+-            message= _ "And that has me worried.  What if-"
++            message= _ "And that has me worried. What if-"
+         [/message]
+ 
+         [move_unit_fake]
+@@ -4605,7 +4605,7 @@
+ 
+         [message]
+             speaker=Kaleh
+-            message= _ "Things are coming to a head, Tanstafaal and our new friends are in trouble.  Time is of the essence, so let’s move out as soon as possible."
++            message= _ "Things are coming to a head, Tanstafaal and our new friends are in trouble. Time is of the essence, so let’s move out as soon as possible."
+         [/message]
+ 
+         [kill]
+--- ../../data/campaigns/Under_the_Burning_Suns/scenarios/10_Speaking_with_the_Fishes.cfg-bak	Tue Jul 14 23:37:54 2020
++++ ../../data/campaigns/Under_the_Burning_Suns/scenarios/10_Speaking_with_the_Fishes.cfg	Sun Aug 30 14:03:10 2020
+@@ -248,7 +248,7 @@
+ 
+         [message]
+             speaker=Melusand
+-            message= _ "Perhaps I should start at the beginning, for that is a good place to start.  Make yourselves comfortable, this may take a while. I want to tell you a tale, it is a story of the fall of what you refer to as ‘The Golden Age’."
++            message= _ "Perhaps I should start at the beginning, for that is a good place to start. Make yourselves comfortable, this may take a while. I want to tell you a tale, it is a story of the fall of what you refer to as ‘The Golden Age’."
+         [/message]
+ 
+         {REPLACE_SCENARIO_MUSIC "revelation.ogg"}
