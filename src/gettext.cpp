@@ -129,12 +129,11 @@ namespace
 				if(!filesystem::file_exists(path)) {
 					continue;
 				}
-				std::ifstream po_file;
-				po_file.exceptions(std::ios::badbit);
 				LOG_G << "Loading language file from " << path << '\n';
 				try {
-					po_file.open(path);
-					const po_catalog& cat = po_catalog::from_istream(po_file);
+					filesystem::scoped_istream po_file = filesystem::istream_file(path);
+					po_file->exceptions(std::ios::badbit);
+					const po_catalog& cat = po_catalog::from_istream(*po_file);
 					extra_messages_.emplace(get_base().domain(domain), cat);
 				} catch(const spirit_po::catalog_exception& e) {
 					throw_po_error(lang_name_long, domain, e.what());
@@ -528,4 +527,9 @@ bool ci_search(const std::string& s1, const std::string& s2)
 	                   ls2.begin(), ls2.end()) != ls1.end();
 }
 
+const boost::locale::info& get_effective_locale_info()
+{
+	std::lock_guard<std::mutex> lock(get_mutex());
+	return std::use_facet<boost::locale::info>(get_manager().get_locale());
+}
 }

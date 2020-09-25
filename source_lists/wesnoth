@@ -196,6 +196,7 @@ gui/dialogs/game_load.cpp
 gui/dialogs/game_save.cpp
 gui/dialogs/game_stats.cpp
 gui/dialogs/game_version_dialog.cpp
+gui/dialogs/server_info_dialog.cpp
 gui/dialogs/gamestate_inspector.cpp
 gui/dialogs/help_browser.cpp
 gui/dialogs/hotkey_bind.cpp
@@ -329,6 +330,9 @@ scripting/lua_terrainfilter.cpp
 scripting/lua_unit.cpp
 scripting/lua_unit_attacks.cpp
 scripting/lua_unit_type.cpp
+scripting/lua_widget.cpp
+scripting/lua_widget_attributes.cpp
+scripting/lua_widget_methods.cpp
 scripting/mapgen_lua_kernel.cpp
 scripting/plugins/context.cpp
 scripting/plugins/manager.cpp

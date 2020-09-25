@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wesnoth-multiplayer\n"
 "Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
-"POT-Creation-Date: 2020-03-09 23:11 UTC\n"
+"POT-Creation-Date: 2020-09-19 17:35 UTC\n"
 "PO-Revision-Date: 2020-01-14 15:26+0300\n"
 "Last-Translator: Nilgün Belma Bugüner <nilgun@belgeler.gen.tr>\n"
 "Language-Team: Turkish <>\n"
@@ -1117,19 +1117,19 @@ msgstr "Asiler"
 
 #. [side]
 #: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:50
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:70
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:76
 msgid "teamname^Human"
 msgstr "İnsanlar"
 
-#. [then]
 #. [objective]: condition=lose
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:105
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:262
+#. [then]
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:114
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:275
 msgid "Death of your leader"
 msgstr "Liderlerinizin ölümü."
 
 #. [then]
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:106
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:115
 msgid ""
 "Since your team has only one leader, the enemy waves will not be at full "
 "strength."
@@ -1138,28 +1138,28 @@ msgstr ""
 "olmayacak."
 
 #. [else]
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:109
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:118
 msgid "Death of both of your team’s leaders"
 msgstr "Her iki ekip liderinizin ölümü"
 
 #. [else]
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:110
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:119
 msgid ""
 "Since your team has two leaders, the enemy waves will be at full strength."
 msgstr "Takımınızın iki lideri olduğundan, düşman dalgaları tam güçte olacak."
 
 #. [objective]: condition=win
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:131
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:140
 msgid "Survive and defeat all enemy waves"
 msgstr "Tüm düşman akınlarına dayan ve savaşı kazan"
 
 #. [message]: speaker=narrator
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:151
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:160
 msgid "Dark Forecast — a random survival scenario"
 msgstr "Kara Öngörü - Bir rasgele hayatta kalma senaryosu"
 
 #. [message]: speaker=narrator
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:156
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:165
 msgid ""
 "Your aim is to survive the spawning waves of units and defeat the final "
 "archenemies.\n"
@@ -1202,12 +1202,12 @@ msgstr ""
 "\t- WML gerçeklenimi"
 
 #. [message]
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:176
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:185
 msgid "So this is the accursed valley — a land ours for the taking."
 msgstr "Bu lanetli vadi ülkeniz olacak — ele geçirebilirseniz."
 
 #. [message]
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:180
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:189
 msgid ""
 "The inhabitants are rumored to be a strange alliance of man and beast, and "
 "our claim is not going to be unopposed. We must be prepared for the "
@@ -1218,7 +1218,7 @@ msgstr ""
 "olmalıyız."
 
 #. [message]
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:184
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:193
 msgid ""
 "Then let us discover what lies in waiting and teach them not to oppose our "
 "claim."
@@ -1227,7 +1227,7 @@ msgstr ""
 "öğretelim."
 
 #. [message]: speaker=unit
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:203
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:212
 msgid ""
 "Ugh! How can this be? Defeated by mere barbarians! My gods have forsaken "
 "me..."
@@ -1235,7 +1235,7 @@ msgstr ""
 "Uh! Bu nasıl olur? Bu barbarlar beni yendi! Tanrılar günahlarımı affetsin..."
 
 #. [message]: speaker=second_unit
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:217
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:226
 msgid ""
 "Cheers of your enemy are the last thing you hear as you slip into death..."
 "their joy fills your last moments with pure hate."
@@ -1244,7 +1244,7 @@ msgstr ""
 "sevinci, son anlarını saf nefretle dolduruyordu."
 
 #. [message]
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:239
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:248
 msgid ""
 "The enemy cheers as a dark mist rises from the land, engulfing you. As "
 "ghostly wisps drain away your will, you realize that your time in this land "
@@ -1255,7 +1255,7 @@ msgstr ""
 "olduğunu fark edersin."
 
 #. [slider]: id=enemey_gold_factor
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:252
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:261
 msgid "Changes the gold worth of the enemy spawns by a certain percentage"
 msgstr "Düşmanların altın miktarını belli bir yüzdeye göre değiştirir"
 
@@ -1905,19 +1905,19 @@ msgstr ""
 msgid "3p — Alirok Marsh"
 msgstr "3o — Alirok Bataklığı"
 
-#. [multiplayer]: id=multiplayer_Island_of_the_Horatii
-#. [multiplayer]: id=multiplayer_Loris_River
-#. [multiplayer]: id=multiplayer_3p_Morituri
-#. [multiplayer]: id=multiplayer_4p_Underworld
-#. [multiplayer]: id=multiplayer_4p_Morituri
 #. [multiplayer]: id=multiplayer_Alirok_Marsh
-#. [multiplayer]: id=multiplayer_Ruins_of_Terra-Dwelve
+#. [multiplayer]: id=multiplayer_Island_of_the_Horatii
+#. [multiplayer]: id=multiplayer_3p_Morituri
 #. [multiplayer]: id=multiplayer_Blue_Water_Province
-#. [multiplayer]: id=multiplayer_8p_Morituri
-#. [multiplayer]: id=multiplayer_8p_Mokena_Prairie
-#. [multiplayer]: id=multiplayer_Clash
 #. [multiplayer]: id=multiplayer_Castle_Hopping_Isle
+#. [multiplayer]: id=multiplayer_Clash
 #. [multiplayer]: id=multiplayer_4p_Hamlets
+#. [multiplayer]: id=multiplayer_Loris_River
+#. [multiplayer]: id=multiplayer_4p_Morituri
+#. [multiplayer]: id=multiplayer_Ruins_of_Terra-Dwelve
+#. [multiplayer]: id=multiplayer_4p_Underworld
+#. [multiplayer]: id=multiplayer_8p_Mokena_Prairie
+#. [multiplayer]: id=multiplayer_8p_Morituri
 #: data/multiplayer/scenarios/3p_Alirok_Marsh.cfg:6
 #: data/multiplayer/scenarios/3p_Island_of_the_Horatii.cfg:6
 #: data/multiplayer/scenarios/3p_Morituri.cfg:6
@@ -2015,7 +2015,7 @@ msgstr ""
 #. [side]
 #: data/multiplayer/scenarios/4p_Blue_Water_Province.cfg:21
 #: data/multiplayer/scenarios/4p_Blue_Water_Province.cfg:54
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:71
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:73
 #: data/multiplayer/scenarios/6p_Crusaders_Field.cfg:20
 #: data/multiplayer/scenarios/6p_Crusaders_Field.cfg:42
 #: data/multiplayer/scenarios/6p_Crusaders_Field.cfg:64
@@ -2029,7 +2029,7 @@ msgstr "1. Takım"
 #. [side]
 #: data/multiplayer/scenarios/4p_Blue_Water_Province.cfg:32
 #: data/multiplayer/scenarios/4p_Blue_Water_Province.cfg:43
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:82
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:84
 #: data/multiplayer/scenarios/6p_Crusaders_Field.cfg:31
 #: data/multiplayer/scenarios/6p_Crusaders_Field.cfg:53
 #: data/multiplayer/scenarios/6p_Crusaders_Field.cfg:75
@@ -2318,19 +2318,19 @@ msgid "In this mixed landscape, five armies battle for supremacy."
 msgstr "Bu karışık bölgede, beş ordu egemenlik için savaşıyor."
 
 #. [multiplayer]: id=multiplayer_The_Wilderlands
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:55
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:57
 msgid "5p — The Wilderlands"
 msgstr "5o — Vahşi Topraklar"
 
 #. [multiplayer]: id=multiplayer_Crusaders_Field
 #. [multiplayer]: id=multiplayer_The_Wilderlands
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:56
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:58
 #: data/multiplayer/scenarios/6p_Crusaders_Field.cfg:7
 msgid " Recommended setting of 1 gold per village."
 msgstr " Önerilen ayarlar: Köy başına 2 altın."
 
 #. [multiplayer]: id=multiplayer_The_Wilderlands
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:56
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:58
 msgid ""
 "A vast region of wild, untamed wilderness, its terrain dotted with forests, "
 "caves, rivers, and the ruins of ancient fortresses."
@@ -2339,44 +2339,44 @@ msgstr ""
 "dolu yabani bir bölge."
 
 #. [side]
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:93
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:95
 msgid "teamname^Team 3"
 msgstr "3. Takım"
 
 #. [side]
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:104
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:106
 msgid "teamname^Team 4"
 msgstr "4. Takım"
 
 #. [side]
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:125
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:128
 msgid "teamname^Monsters"
 msgstr "Canavarlar"
 
 #. [objective]: condition=win
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:235
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:246
 #, fuzzy
 #| msgid "Defeat the enemy leaders"
 msgid "Defeat all enemy leaders"
 msgstr "Düşman liderlerini yen"
 
 #. [objective]: condition=win
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:252
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:265
 msgid "Defeat all monsters"
 msgstr "Tüm canavarları yen"
 
 #. [objective]: condition=win
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:270
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:283
 msgid "Defeat the enemy leaders"
 msgstr "Düşman liderlerini yen"
 
 #. [objective]: condition=lose
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:275
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:288
 msgid "Death of all your units"
 msgstr "Birimlerinizin tamamı ölürse"
 
 #. [note]
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:280
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:293
 msgid "You cannot recruit units."
 msgstr "Birimleri askere alamazsınız."
 
@@ -2423,73 +2423,73 @@ msgstr "Saldıran"
 
 #. [side]
 #: data/multiplayer/scenarios/6p_Team_Survival.cfg:280
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:294
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:308
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:322
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:336
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:350
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:300
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:317
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:334
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:351
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:368
 msgid "Defender"
 msgstr "Savunan"
 
 #. [objective]: condition=win
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:369
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:390
 msgid "Survive all enemy attacks"
 msgstr "Tüm düşman saldırılarına dayan"
 
 #. [objective]: condition=lose
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:375
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:396
 msgid "Death of your team leaders"
 msgstr "Ekip liderlerininizin ölümü"
 
 #. [note]
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:380
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:401
 msgid "Hint: Learning the enemy spawn points and types helps a lot."
 msgstr ""
 "İpucu: Düşman akınlarının başlangıç noktalarını ve türlerini öğrenmek "
 "oldukça yardımcı olacaktır."
 
 #. [label]
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:386
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:407
 msgid "Turn 2: Loyalists"
 msgstr "2. El: Kralcılar"
 
 #. [label]
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:391
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:412
 msgid "Turn 5: Knalgans"
 msgstr "5. El: Kanalgalılar"
 
 #. [label]
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:396
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:417
 msgid "Turn 8: Rebels"
 msgstr "8. El: Asiler"
 
 #. [label]
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:401
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:422
 msgid "Turn 11: Northerners"
 msgstr "11. El: Kuzeyliler"
 
 #. [label]
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:406
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:427
 msgid "Turn 14: Drakes"
 msgstr "14. El: Ejderler"
 
 #. [label]
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:411
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:432
 msgid "Turn 17: Undead"
 msgstr "17. El: Yarı ölüler"
 
 #. [label]
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:416
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:437
 msgid "Tower of Doom"
 msgstr "Cehennem Kulesi"
 
 #. [message]: speaker=narrator
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:523
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:544
 msgid "Faery"
 msgstr "Perili"
 
 #. [message]: speaker=narrator
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:524
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:545
 msgid ""
 "Congratulations for surviving the map that so many people claim is "
 "impossible!"
@@ -2498,12 +2498,12 @@ msgstr ""
 "tebrikler!"
 
 #. [message]: speaker=narrator
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:538
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:559
 msgid "Death"
 msgstr "Ölüm"
 
 #. [message]: speaker=narrator
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:540
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:561
 msgid ""
 "You have lost this game, but fear not. You can always try again. And again. "
 "And again. *Muahahaha*"
@@ -2721,16 +2721,6 @@ msgstr ""
 "Bir Vesnot değerlendirmesi; programı --no-delay --multiplayer --"
 "scenario=wesbench_shroud_walk --exit-at-end seçenekleri ile çalıştırarak "
 "deneyiniz."
-
-#. [multiplayer]: id=multiplayer_test_lua_mapgen
-#: data/multiplayer/scenarios/test_lua_mapgen.cfg:16
-msgid "Lua Mapgen Maritime"
-msgstr ""
-
-#. [multiplayer]: id=multiplayer_test_lua_mapgen
-#: data/multiplayer/scenarios/test_lua_mapgen.cfg:17
-msgid "Testing new lua mapgen features"
-msgstr ""
 
 #, fuzzy
 #~| msgid "Defeat all enemy leaders"

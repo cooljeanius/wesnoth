@@ -341,7 +341,8 @@ static int impl_animator_collect(lua_State* L) {
 static int impl_add_animation(lua_State* L)
 {
 	unit_animator& anim = *static_cast<unit_animator*>(luaL_checkudata(L, 1, animatorKey));
-	unit& u = luaW_checkunit(L, 2);
+	unit_ptr up = luaW_checkunit_ptr(L, 2, false);
+	unit& u = *up;
 	std::string which = luaL_checkstring(L, 3);
 
 	using hit_type = unit_animation::hit_type;
@@ -435,7 +436,7 @@ static int impl_add_animation(lua_State* L)
 		return luaW_type_error(L, 5, "table of options");
 	}
 
-	anim.add_animation(&u, which, u.get_location(), dest, v1, bars, text, color, hits, primary, secondary, v2);
+	anim.add_animation(up, which, u.get_location(), dest, v1, bars, text, color, hits, primary, secondary, v2);
 	return 0;
 }
 
@@ -1210,7 +1211,7 @@ int game_lua_kernel::intf_get_village_owner(lua_State *L)
 	if (!board().map().is_village(loc))
 		return 0;
 
-	int side = board().village_owner(loc) + 1;
+	int side = board().village_owner(loc);
 	if (!side) return 0;
 	lua_pushinteger(L, side);
 	return 1;
@@ -1228,7 +1229,7 @@ int game_lua_kernel::intf_set_village_owner(lua_State *L)
 		return 0;
 	}
 
-	const int old_side_num = board().village_owner(loc) + 1;
+	const int old_side_num = board().village_owner(loc);
 	const int new_side_num = lua_isnoneornil(L, 2) ? 0 : luaL_checkinteger(L, 2);
 
 	team* old_side = nullptr;
@@ -2660,7 +2661,7 @@ int game_lua_kernel::intf_simulate_combat(lua_State *L)
 	}
 
 	battle_context context(units(), att->get_location(),
-		def->get_location(), att_w, def_w, 0.0, nullptr, att.get(), def.get());
+		def->get_location(), att_w, def_w, 0.0, nullptr, att, def);
 
 	luaW_pushsimdata(L, context.get_attacker_combatant());
 	luaW_pushsimdata(L, context.get_defender_combatant());
@@ -3960,7 +3961,7 @@ int game_lua_kernel::intf_teleport(lua_State *L)
 	units().move(src_loc, vacant_dst);
 	unit::clear_status_caches();
 
-	u = &*units().find(vacant_dst);
+	u = units().find(vacant_dst).get_shared_ptr();
 	u->anim_comp().set_standing();
 
 	if ( clear_shroud ) {

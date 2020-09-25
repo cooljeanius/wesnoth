@@ -296,44 +296,43 @@ void saved_game::expand_scenario()
 
 void saved_game::check_require_scenario()
 {
-	if(!starting_point_["require_scenario"].to_bool(false)) {
-		return;
-	}
+	const std::string version_default = starting_point_["addon_id"].empty() ? game_config::wesnoth_version.str() : "";
+	config scenario;
+	scenario["id"] = starting_point_["addon_id"].str("mainline");
+	scenario["name"] = starting_point_["addon_title"].str("mainline");
+	scenario["version"] = starting_point_["addon_version"].str(version_default);
+	scenario["min_version"] = starting_point_["addon_min_version"];
+	scenario["required"] = starting_point_["require_scenario"].to_bool(false);
+	config& content = scenario.add_child("content");
+	content["id"] = starting_point_["id"];
+	content["type"] = "scenario";
 
-	if(starting_point_["addon_id"].empty()) {
-		//ERR_NG << "cannot handle require_scenario=yes because we don't know from which addon that scenario came from\n";
-		return;
-	}
-
-	config required_scenario;
-
-	required_scenario["id"] = starting_point_["addon_id"];
-	required_scenario["name"] = starting_point_["addon_title"];
-	required_scenario["version"] = starting_point_["addon_version"];
-	required_scenario["min_version"] = starting_point_["addon_min_version"];
-
-	mp_settings_.update_addon_requirements(required_scenario);
+	mp_settings_.update_addon_requirements(scenario);
 }
 
-void saved_game::load_mod(const std::string& type, const std::string& id, size_t pos)
+// "non scenario" at the time of writing this meaning any era, campaign, mods, or resources (see expand_mp_events() below).
+void saved_game::load_non_scenario(const std::string& type, const std::string& id, size_t pos)
 {
 	if(const config& cfg = game_config_manager::get()->game_config().find_child(type, "id", id)) {
 		// Note the addon_id if this mod is required to play the game in mp.
 		std::string require_attr = "require_" + type;
 
 		// By default, eras have "require_era = true", and mods have "require_modification = false".
-		bool require_default = (type == "era");
+		// anything with no addon_id is from mainline, and therefore isn't required in the sense that all players already have it
+		const bool require_default = cfg["addon_id"].empty() ? false : type == "era";
+		const std::string version_default = cfg["addon_id"].empty() ? game_config::wesnoth_version.str() : "";
+		config non_scenario;
+		// if there's no addon_id, then this isn't an add-on
+		non_scenario["id"] = cfg["addon_id"].str("mainline");
+		non_scenario["name"] = cfg["addon_title"].str("mainline");
+		non_scenario["version"] = cfg["addon_version"].str(version_default);
+		non_scenario["min_version"] = cfg["addon_min_version"];
+		non_scenario["required"] = cfg[require_attr].to_bool(require_default);
+		config& content = non_scenario.add_child("content");
+		content["id"] = id;
+		content["type"] = type;
 
-		if(!cfg["addon_id"].empty() && cfg[require_attr].to_bool(require_default)) {
-			config required_mod;
-
-			required_mod["id"] = cfg["addon_id"];
-			required_mod["name"] = cfg["addon_title"];
-			required_mod["version"] = cfg["addon_version"];
-			required_mod["min_version"] = cfg["addon_min_version"];
-
-			mp_settings_.update_addon_requirements(required_mod);
-		}
+		mp_settings_.update_addon_requirements(non_scenario);
 
 		// Copy events
 		for(const config& modevent : cfg.child_range("event")) {
@@ -390,7 +389,7 @@ void saved_game::expand_mp_events()
 		}
 
 		for(modevents_entry& mod : mods) {
-			load_mod(mod.type, mod.id, starting_point_.all_children_count());
+			load_non_scenario(mod.type, mod.id, starting_point_.all_children_count());
 		}
 		mods.clear();
 
@@ -401,7 +400,7 @@ void saved_game::expand_mp_events()
 			starting_point_.remove_child("load_resource", 0);
 			if(loaded_resources.find(id) == loaded_resources.end()) {
 				loaded_resources.insert(id);
-				load_mod("resource", id, pos);
+				load_non_scenario("resource", id, pos);
 			}
 		}
 		this->starting_point_["has_mod_events"] = true;
@@ -445,6 +444,7 @@ static void inherit_scenario(config& scenario, config& map_scenario)
 	config sides;
 	sides.splice_children(map_scenario, "side");
 	scenario.append_children(map_scenario);
+	scenario.inherit_attributes(map_scenario);
 	for(config& side_from : sides.child_range("side")) {
 		config& side_to = scenario.find_child("side", "side", side_from["side"]);
 		if(side_to) {
@@ -654,6 +654,8 @@ std::string saved_game::get_scenario_id()
 		scenario_id = starting_point_["id"].str();
 	} else if(!has_carryover_expanded_) {
 		scenario_id = carryover_["next_scenario"].str();
+	} else if(!replay_start_.empty()) {
+		scenario_id = replay_start_["id"].str();
 	} else {
 		assert(!"cannot figure out scenario_id");
 		throw "assertion ignored";

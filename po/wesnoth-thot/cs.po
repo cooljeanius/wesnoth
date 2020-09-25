@@ -17,16 +17,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Battle for Wesnoth\n"
 "Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
-"POT-Creation-Date: 2020-03-09 23:11 UTC\n"
-"PO-Revision-Date: 2020-05-15 20:20+0200\n"
-"Last-Translator: Martin Hrubý (hrubymar10) <hrubymar10@gmail.com>\n"
+"POT-Creation-Date: 2020-09-19 17:35 UTC\n"
+"PO-Revision-Date: 2020-08-28 10:00+0200\n"
+"Last-Translator: Martin Hrubý <hrubymar10@gmail.com>\n"
 "Language-Team: Český <hrubymar10@gmail.com>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Poedit 2.3.1\n"
+"X-Generator: Poedit 2.4.1\n"
 
 # Název tažení
 #. [campaign]: id=The_Hammer_of_Thursagan
@@ -159,8 +159,8 @@ msgstr ""
 "hlášení o tom, že se blíží menší skupina ničemných skřetů."
 
 #. [side]
-#. [side]: type=Dwarvish Lord, id=Hamel
 #. [side]: type=Orcish Warrior, id=Marth-Tak
+#. [side]: type=Dwarvish Lord, id=Hamel
 #: data/campaigns/The_Hammer_of_Thursagan/scenarios/01_At_the_East_Gate.cfg:43
 #: data/campaigns/The_Hammer_of_Thursagan/scenarios/02_Reclaiming_the_Past.cfg:34
 #: data/campaigns/The_Hammer_of_Thursagan/scenarios/02_Reclaiming_the_Past.cfg:48
@@ -183,10 +183,10 @@ msgstr "Aliance"
 msgid "Pelmathidrol"
 msgstr "Pelmathidrol"
 
+#. [side]: type=Orcish Warrior, id=Bashnark
 #. [side]: type=Orcish Warlord, id=Tan-Morgh
 #. [side]: type=Orcish Warlord, id=Tan-Garukh
 #. [side]: type=Orcish Warlord, id=Tan-Wagran
-#. [side]: type=Orcish Warrior, id=Bashnark
 #: data/campaigns/The_Hammer_of_Thursagan/scenarios/01_At_the_East_Gate.cfg:70
 #: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:82
 #: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:127

@@ -35,6 +35,7 @@
 #include "gui/widgets/toggle_button.hpp"
 #include "gui/widgets/toggle_panel.hpp"
 #include "gui/widgets/tree_view_node.hpp"
+#include "gui/dialogs/server_info_dialog.hpp"
 
 #include "addon/client.hpp"
 #include "addon/manager_ui.hpp"
@@ -114,6 +115,9 @@ bool mp_lobby::logout_prompt()
 {
 	return show_prompt(_("Do you really want to log out?"));
 }
+
+std::string mp_lobby::announcements_ = "";
+std::string mp_lobby::server_information_ = "";
 
 mp_lobby::mp_lobby(const game_config_view& game_config, mp::lobby_info& info, wesnothd_connection &connection)
 	: quit_confirmation(&mp_lobby::logout_prompt)
@@ -760,6 +764,10 @@ void mp_lobby::pre_show(window& window)
 		find_widget<button>(&window, "observe_global", false),
 		std::bind(&mp_lobby::enter_selected_game, this, DO_OBSERVE));
 
+	connect_signal_mouse_left_click(
+		find_widget<button>(&window, "server_info", false),
+		std::bind(&mp_lobby::show_server_info, this));
+
 	find_widget<button>(&window, "observe_global", false).set_active(false);
 
 	menu_button& replay_options = find_widget<menu_button>(&window, "replay_options", false);
@@ -886,6 +894,14 @@ void mp_lobby::process_network_data(const config& data)
 		process_gamelist(data);
 	} else if(const config& gamelist_diff = data.child("gamelist_diff")) {
 		process_gamelist_diff(gamelist_diff);
+	} else if(const config& info = data.child("message")) {
+		if(info["type"] == "server_info") {
+			server_information_ = info["message"].str();
+			return;
+		} else if(info["type"] == "announcements") {
+			announcements_ = info["message"].str();
+			return;
+		}
 	}
 
 	chatbox_->process_network_data(data);
@@ -1051,6 +1067,11 @@ void mp_lobby::show_preferences_button_callback(window& window)
 	window.invalidate_layout();
 
 	refresh_lobby();
+}
+
+void mp_lobby::show_server_info()
+{
+	server_info::display(server_information_, announcements_);
 }
 
 void mp_lobby::game_filter_reload()

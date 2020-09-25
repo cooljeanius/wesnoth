@@ -651,6 +651,9 @@ place_recruit_result place_recruit(unit_ptr u, const map_location &recruit_locat
 	resources::whiteboard->on_gamestate_change();
 
 	resources::game_events->pump().fire("unit_placed", current_loc);
+	if(!new_unit_itor.valid()) {
+		return place_recruit_result { true, 0, false };
+	}
 
 	if ( fire_event ) {
 		const std::string event_name = is_recall ? "prerecall" : "prerecruit";
@@ -677,7 +680,7 @@ place_recruit_result place_recruit(unit_ptr u, const map_location &recruit_locat
 
 	// Village capturing.
 	if ( resources::gameboard->map().is_village(current_loc) ) {
-		std::get<1>(res) = resources::gameboard->village_owner(current_loc) + 1;
+		std::get<1>(res) = resources::gameboard->village_owner(current_loc);
 		std::get<0>(res) |= std::get<0>(actions::get_village(current_loc, new_unit_itor->side(), &std::get<2>(res)));
 		if ( !validate_recruit_iterator(new_unit_itor, current_loc) )
 			return std::make_tuple(true, 0, false);

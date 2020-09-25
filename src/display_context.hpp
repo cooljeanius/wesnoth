@@ -23,6 +23,7 @@
 
 #include <string>
 #include <vector>
+#include "units/ptr.hpp"
 
 class team;
 class gamemap;
@@ -60,6 +61,7 @@ public:
 	// Needed for reports
 
 	const unit * get_visible_unit(const map_location &loc, const team &current_team, bool see_all = false) const;
+	unit_const_ptr get_visible_unit_shared_ptr(const map_location &loc, const team &current_team, bool see_all = false) const;
 
 	// From actions:: namespace
 
@@ -68,8 +70,8 @@ public:
 	// From class team
 
 	/**
-	 * Given the location of a village, will return the 0-based index
-	 * of the team that currently owns it, and -1 if it is unowned.
+	 * Given the location of a village, will return the 1-based number
+	 * of the team that currently owns it, and 0 if it is unowned.
 	 */
 	int village_owner(const map_location & loc) const;
 
