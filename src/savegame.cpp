@@ -21,6 +21,11 @@
 #include "cursor.hpp"
 #include "format_time_summary.hpp"
 #include "formatter.hpp"
+#include "units/ptr.hpp"
+#include "units/unit.hpp"
+#include "units/make.hpp"
+#include "units/types.hpp"
+#include "units/attack_type.hpp"
 #include "formula/string_utils.hpp"
 #include "game_config_manager.hpp"
 #include "game_config_view.hpp"
@@ -783,6 +788,12 @@ static void convert_old_saves_1_13_0(config& cfg)
 	if(config& carryover_sides_start = cfg.child("carryover_sides_start")) {
 		if(!carryover_sides_start.has_attribute("next_underlying_unit_id")) {
 			carryover_sides_start["next_underlying_unit_id"] = cfg["next_underlying_unit_id"];
+		}
+		if(carryover_sides_start.has_attribute("random_seed"))
+		{
+			std::stringstream stream;
+			stream << std::setfill('0') << std::setw(8) << std::hex << carryover_sides_start["random_seed"].to_int();
+			carryover_sides_start["random_seed"] = stream.str();
 		}
 	}
 
