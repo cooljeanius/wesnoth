@@ -1,5 +1,6 @@
 /*
 	Copyright (C) 2009 - 2021
+	by Tomasz Sniatowski <kailoran@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -30,7 +31,7 @@ namespace mp
 class lobby_info
 {
 public:
-	explicit lobby_info(const std::vector<std::string>& installed_addons);
+	lobby_info();
 
 	typedef std::map<int, game_info> game_info_map;
 
@@ -72,13 +73,13 @@ public:
 	}
 
 	/** Clears all game filter functions. */
-	void clear_game_filter()
+	void clear_game_filters()
 	{
 		game_filters_.clear();
 	}
 
 	/** Sets whether the result of each game filter should be inverted. */
-	void set_game_filter_invert(bool value)
+	void set_game_filter_invert(std::function<bool(bool)> value)
 	{
 		game_filter_invert_ = value;
 	}
@@ -125,10 +126,7 @@ public:
 		return gamelist_initialized_;
 	}
 
-	void set_installed_addons(const std::vector<std::string>& new_list)
-	{
-		installed_addons_ = new_list;
-	}
+	void refresh_installed_addons_cache();
 
 private:
 	void process_userlist();
@@ -147,7 +145,7 @@ private:
 
 	std::vector<game_filter_func> game_filters_;
 
-	bool game_filter_invert_;
+	std::function<bool(bool)> game_filter_invert_;
 
 	boost::dynamic_bitset<> games_visibility_;
 };

@@ -1,5 +1,6 @@
 /*
 	Copyright (C) 2009 - 2021
+	by Tomasz Sniatowski <kailoran@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -14,6 +15,7 @@
 
 #include "game_initialization/lobby_info.hpp"
 
+#include "addon/manager.hpp" // for installed_addons
 #include "gettext.hpp"
 #include "log.hpp"
 #include "map/exception.hpp"
@@ -35,17 +37,26 @@ static lg::log_domain log_lobby("lobby");
 
 namespace mp
 {
-lobby_info::lobby_info(const std::vector<std::string>& installed_addons)
-	: installed_addons_(installed_addons)
+lobby_info::lobby_info()
+	: installed_addons_()
 	, gamelist_()
 	, gamelist_initialized_(false)
 	, games_by_id_()
 	, games_()
 	, users_()
 	, game_filters_()
-	, game_filter_invert_(false)
+	, game_filter_invert_()
 	, games_visibility_()
 {
+	refresh_installed_addons_cache();
+}
+
+void lobby_info::refresh_installed_addons_cache()
+{
+	// This function does not refer to an addon database, it calls filesystem functions.
+	// For the sanity of the mp lobby, this list should be fixed for the entire lobby session,
+	// even if the user changes the contents of the addon directory in the meantime.
+	installed_addons_ = ::installed_addons();
 }
 
 void do_notify(notify_mode mode, const std::string& sender, const std::string& message)
@@ -220,12 +231,8 @@ void lobby_info::process_userlist()
 
 	users_.clear();
 	for(const auto& c : gamelist_.child_range("user")) {
-		users_.emplace_back(c);
-	}
+		user_info& ui = users_.emplace_back(c);
 
-	std::stable_sort(users_.begin(), users_.end());
-
-	for(auto& ui : users_) {
 		if(ui.game_id == 0) {
 			continue;
 		}
@@ -247,6 +254,8 @@ void lobby_info::process_userlist()
 			break;
 		}
 	}
+
+	std::stable_sort(users_.begin(), users_.end());
 }
 
 void lobby_info::sync_games_display_status()
@@ -343,22 +352,15 @@ void lobby_info::make_games_vector()
 	games_visibility_.flip();
 }
 
-bool lobby_info::is_game_visible(const game_info& game) {
-	bool show = true;
-
+bool lobby_info::is_game_visible(const game_info& game)
+{
 	for(const auto& filter_func : game_filters_) {
-		show = filter_func(game);
-
-		if(!show) {
-			break;
+		if(!game_filter_invert_(filter_func(game))) {
+			return false;
 		}
 	}
 
-	if(game_filter_invert_) {
-		show = !show;
-	}
-
-	return show;
+	return true;
 }
 
 void lobby_info::apply_game_filter()

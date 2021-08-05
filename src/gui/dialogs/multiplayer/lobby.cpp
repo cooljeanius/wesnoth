@@ -1,5 +1,6 @@
 /*
 	Copyright (C) 2009 - 2021
+	by Tomasz Sniatowski <kailoran@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -34,9 +35,7 @@
 #include "gui/widgets/chatbox.hpp"
 #include "gui/widgets/settings.hpp"
 #include "gui/widgets/text_box.hpp"
-#include "gui/widgets/toggle_button.hpp"
 #include "gui/widgets/toggle_panel.hpp"
-#include "gui/widgets/tree_view_node.hpp"
 #include "gui/dialogs/server_info_dialog.hpp"
 
 #include "addon/client.hpp"
@@ -46,12 +45,11 @@
 #include "font/text_formatting.hpp"
 #include "formatter.hpp"
 #include "formula/string_utils.hpp"
-#include "game_config_manager.hpp"
 #include "preferences/game.hpp"
 #include "gettext.hpp"
 #include "help/help.hpp"
 #include "preferences/lobby.hpp"
-#include "playmp_controller.hpp"
+#include "video.hpp"
 #include "wesnothd_connection.hpp"
 
 #include <functional>
@@ -64,64 +62,15 @@ static lg::log_domain log_lobby("lobby");
 
 namespace gui2::dialogs
 {
-
 REGISTER_DIALOG(mp_lobby)
-
-void sub_player_list::init(window& w, const std::string& lbl, const bool unfolded)
-{
-	tree_view& parent_tree = find_widget<tree_view>(&w, "player_tree", false);
-
-	std::map<std::string, string_map> tree_group_item;
-	tree_group_item["tree_view_node_label"]["label"] = lbl;
-
-	tree = &parent_tree.add_node("player_group", tree_group_item);
-
-	if(unfolded) {
-		tree->unfold();
-	}
-
-	tree_label = find_widget<label>(tree, "tree_view_node_label", false, true);
-	label_player_count = find_widget<label>(tree, "player_count", false, true);
-
-	assert(tree_label);
-	assert(label_player_count);
-}
-
-void sub_player_list::update_player_count_label()
-{
-	assert(tree);
-	assert(label_player_count);
-
-	/**
-	 * @todo Make sure setting visible resizes the widget.
-	 *
-	 * It doesn't work here since invalidate_layout is blocked, but the
-	 * widget should also be able to handle it itself. Once done the
-	 * setting of the label text can also be removed.
-	 */
-	label_player_count->set_label((formatter() << "(" << tree->count_children() << ")").str());
-}
-
-void player_list::init(window& w)
-{
-	active_game.init(w, _("Selected Game"), true);
-	lobby_players.init(w, _("Lobby"), true);
-	other_games.init(w, _("Other Games"));
-
-	tree = find_widget<tree_view>(&w, "player_tree", false, true);
-}
 
 bool mp_lobby::logout_prompt()
 {
 	return show_prompt(_("Do you really want to log out?"));
 }
 
-std::string mp_lobby::announcements_ = "";
-std::string mp_lobby::server_information_ = "";
-
 mp_lobby::mp_lobby(mp::lobby_info& info, wesnothd_connection& connection, int& joined_game)
 	: quit_confirmation(&mp_lobby::logout_prompt)
-	, game_config_(game_config_manager::get()->game_config())
 	, gamelistbox_(nullptr)
 	, lobby_info_(info)
 	, chatbox_(nullptr)
@@ -147,7 +96,7 @@ mp_lobby::mp_lobby(mp::lobby_info& info, wesnothd_connection& connection, int& j
 		  std::bind(&mp_lobby::game_filter_change_callback, this)))
 	, filter_text_(nullptr)
 	, selected_game_id_()
-	, player_list_()
+	, player_list_(std::bind(&mp_lobby::user_dialog_callback, this, std::placeholders::_1))
 	, player_list_dirty_(true)
 	, gamelist_dirty_(true)
 	, last_lobby_update_(0)
@@ -221,11 +170,6 @@ void modify_grid_with_data(grid* grid, const std::map<std::string, string_map>& 
 			}
 		}
 	}
-}
-
-std::string colorize(const std::string& str, const color_t& color)
-{
-	return (formatter() << font::span_color(color) << str << "</span>").str();
 }
 
 bool handle_addon_requirements_gui(const std::vector<mp::game_info::required_addon>& reqs, mp::game_info::addon_req addon_outcome)
@@ -452,13 +396,13 @@ std::map<std::string, string_map> mp_lobby::make_game_row_data(const mp::game_in
 		{"era_name", game.era}
 	});
 
-	item["label"] = game.vacant_slots > 0 ? colorize(game.name, color_string) : game.name;
+	item["label"] = game.vacant_slots > 0 ? font::span_color(color_string, game.name) : game.name;
 	data.emplace("name", item);
 
-	item["label"] = colorize(game.type_marker + "<i>" + scenario_text + "</i>", font::GRAY_COLOR);
+	item["label"] = font::span_color(font::GRAY_COLOR, game.type_marker + "<i>" + scenario_text + "</i>");
 	data.emplace("scenario", item);
 
-	item["label"] = colorize(game.status, color_string);
+	item["label"] = font::span_color(color_string, game.status);
 	data.emplace("status", item);
 
 	return data;
@@ -480,14 +424,14 @@ void mp_lobby::adjust_game_row_contents(const mp::game_info& game, grid* grid, b
 		ss << ' ' << font::span_color(font::BAD_COLOR) << "(" << _("era_or_mod^not installed") << ")</span>";
 	};
 
-	ss << "<big>" << colorize(_("Era"), font::TITLE_COLOR) << "</big>\n" << game.era;
+	ss << "<big>" << font::span_color(font::TITLE_COLOR, _("Era")) << "</big>\n" << game.era;
 
 	if(!game.have_era) {
 		// NOTE: not using colorize() here deliberately to avoid awkward string concatenation.
 		mark_missing();
 	}
 
-	ss << "\n\n<big>" << colorize(_("Modifications"), font::TITLE_COLOR) << "</big>\n";
+	ss << "\n\n<big>" << font::span_color(font::TITLE_COLOR, _("Modifications")) << "</big>\n";
 
 	auto mods = game.mod_info;
 
@@ -508,7 +452,7 @@ void mp_lobby::adjust_game_row_contents(const mp::game_info& game, grid* grid, b
 	// TODO: move to some general area of the code.
 	const auto yes_or_no = [](bool val) { return val ? _("yes") : _("no"); };
 
-	ss << "\n<big>" << colorize(_("Settings"), font::TITLE_COLOR) << "</big>\n";
+	ss << "\n<big>" << font::span_color(font::TITLE_COLOR, _("Settings")) << "</big>\n";
 	ss << _("Experience modifier:")   << " " << game.xp << "\n";
 	ss << _("Gold per village:")      << " " << game.gold << "\n";
 	ss << _("Map size:")              << " " << game.map_size_info << "\n";
@@ -590,109 +534,7 @@ void mp_lobby::update_playerlist()
 	DBG_LB << "Playerlist update: " << lobby_info_.users().size() << "\n";
 	lobby_info_.update_user_statuses(selected_game_id_);
 
-	assert(player_list_.active_game.tree);
-	assert(player_list_.other_games.tree);
-	assert(player_list_.lobby_players.tree);
-
-	unsigned scrollbar_position = player_list_.tree->get_vertical_scrollbar_item_position();
-
-	player_list_.active_game.tree->clear();
-	player_list_.other_games.tree->clear();
-	player_list_.lobby_players.tree->clear();
-
-	std::map<std::string, std::map<std::string, string_map>> lobby_player_items;
-	std::map<std::string, std::map<std::string, string_map>> active_game_items;
-	std::map<std::string, std::map<std::string, string_map>> other_game_items;
-	for(const auto& user : lobby_info_.users()) {
-		std::string name = user.name;
-
-		std::stringstream icon_ss;
-
-		icon_ss << "lobby/status";
-		switch(user.state) {
-			case mp::user_info::user_state::LOBBY:
-				icon_ss << "-lobby";
-				break;
-			case mp::user_info::user_state::SEL_GAME:
-				name = colorize(name, {0, 255, 255});
-				icon_ss << (user.observing ? "-obs" : "-playing");
-				break;
-			case mp::user_info::user_state::GAME:
-				name = colorize(name, font::GRAY_COLOR);
-				icon_ss << (user.observing ? "-obs" : "-playing");
-				break;
-			default:
-				ERR_LB << "Bad user state in lobby: " << user.name << ": " << static_cast<int>(user.state) << "\n";
-				continue;
-		}
-
-		switch(user.relation) {
-			case mp::user_info::user_relation::ME:
-				icon_ss << "-s";
-				break;
-			case mp::user_info::user_relation::NEUTRAL:
-				icon_ss << "-n";
-				break;
-			case mp::user_info::user_relation::FRIEND:
-				icon_ss << "-f";
-				break;
-			case mp::user_info::user_relation::IGNORED:
-				icon_ss << "-i";
-				break;
-			default:
-				ERR_LB << "Bad user relation in lobby: " << static_cast<int>(user.relation) << "\n";
-		}
-
-		icon_ss << ".png";
-
-		string_map tree_group_field;
-		std::map<std::string, string_map> tree_group_item;
-
-		/*** Add tree item ***/
-		tree_group_field["label"] = icon_ss.str();
-		tree_group_item["icon"] = tree_group_field;
-
-		tree_group_field["label"] = name;
-		tree_group_field["use_markup"] = "true";
-		tree_group_item["name"] = tree_group_field;
-
-		switch(user.state) {
-			case mp::user_info::user_state::LOBBY:
-				lobby_player_items[user.name] = tree_group_item;
-				break;
-			case mp::user_info::user_state::SEL_GAME:
-				active_game_items[user.name] = tree_group_item;
-				break;
-			case mp::user_info::user_state::GAME:
-				other_game_items[user.name] = tree_group_item;
-				break;
-			default:
-				ERR_LB << "Bad user state in lobby: " << user.name << ": " << static_cast<int>(user.state) << "\n";
-				continue;
-		}
-	}
-
-	for(const auto& player : player_list_.active_game.tree->replace_children("player", active_game_items)) {
-		 connect_signal_mouse_left_double_click(find_widget<toggle_panel>(player.second.get(), "tree_view_node_label", false),
-		 	std::bind(&mp_lobby::user_dialog_callback, this, lobby_info_.get_user(player.first)));
-	}
-	for(const auto& player : player_list_.lobby_players.tree->replace_children("player", lobby_player_items)) {
-		 connect_signal_mouse_left_double_click(find_widget<toggle_panel>(player.second.get(), "tree_view_node_label", false),
-		 	std::bind(&mp_lobby::user_dialog_callback, this, lobby_info_.get_user(player.first)));
-	}
-	for(const auto& player : player_list_.other_games.tree->replace_children("player", other_game_items)) {
-		 connect_signal_mouse_left_double_click(find_widget<toggle_panel>(player.second.get(), "tree_view_node_label", false),
-		 	std::bind(&mp_lobby::user_dialog_callback, this, lobby_info_.get_user(player.first)));
-	}
-
-	player_list_.active_game.update_player_count_label();
-	player_list_.lobby_players.update_player_count_label();
-	player_list_.other_games.update_player_count_label();
-
-	// Don't attempt to restore the scroll position if the window hasn't been laid out yet
-	if(player_list_.tree->get_origin() != point{-1, -1}) {
-		player_list_.tree->set_vertical_scrollbar_item_position(scrollbar_position);
-	}
+	player_list_.update(lobby_info_.users());
 
 	player_list_dirty_ = false;
 	last_lobby_update_ = SDL_GetTicks();
@@ -720,11 +562,7 @@ void mp_lobby::update_selected_game()
 
 bool mp_lobby::exit_hook(window& window)
 {
-	if(window.get_retval() == retval::CANCEL) {
-		return quit();
-	}
-
-	return true;
+	return window.get_retval() == retval::CANCEL ? quit() : true;
 }
 
 void mp_lobby::pre_show(window& window)
@@ -747,7 +585,6 @@ void mp_lobby::pre_show(window& window)
 
 	window.keyboard_capture(chatbox_);
 
-	chatbox_->set_wesnothd_connection(network_connection_);
 	chatbox_->set_active_window_changed_callback([this]() { player_list_dirty_ = true; });
 	chatbox_->load_log(default_chat_log, true);
 
@@ -794,7 +631,8 @@ void mp_lobby::pre_show(window& window)
 
 	chatbox_->room_window_open(N_("lobby"), true, false);
 	chatbox_->active_window_changed();
-	game_filter_reload();
+
+	game_filter_init();
 
 	// Force first update to be directly.
 	update_gamelist();
@@ -850,7 +688,6 @@ void mp_lobby::pre_show(window& window)
 	}, true);
 
 	plugins_context_->set_accessor("game_list",   [this](const config&) { return lobby_info_.gamelist(); });
-	//plugins_context_->set_accessor("game_config", [this](const config&) { return game_config_; });
 }
 
 void mp_lobby::post_show(window& /*window*/)
@@ -904,14 +741,6 @@ void mp_lobby::process_network_data(const config& data)
 		process_gamelist(data);
 	} else if(const config& gamelist_diff = data.child("gamelist_diff")) {
 		process_gamelist_diff(gamelist_diff);
-	} else if(const config& info = data.child("message")) {
-		if(info["type"] == "server_info") {
-			server_information_ = info["message"].str();
-			return;
-		} else if(info["type"] == "announcements") {
-			announcements_ = info["message"].str();
-			return;
-		}
 	}
 
 	chatbox_->process_network_data(data);
@@ -1090,57 +919,51 @@ void mp_lobby::show_preferences_button_callback()
 
 void mp_lobby::show_server_info()
 {
-	server_info::display(server_information_, announcements_);
+	server_info::display();
 }
 
-void mp_lobby::game_filter_reload()
+void mp_lobby::game_filter_init()
 {
-	lobby_info_.clear_game_filter();
+	lobby_info_.clear_game_filters();
 
-	for(const auto& s : utils::split(filter_text_->get_value(), ' ')) {
-		lobby_info_.add_game_filter([s](const mp::game_info& info)->bool {
-			return info.match_string_filter(s);
-		});
-	}
+	lobby_info_.add_game_filter([this](const mp::game_info& info) {
+		for(const auto& s : utils::split(filter_text_->get_value(), ' ')) {
+			if(!info.match_string_filter(s)) {
+				return false;
+			}
+		}
 
-	window& window = *get_window();
+		return true;
+	});
 
-	// TODO: make changing friend/ignore lists trigger a refresh
-	if(filter_friends_->get_widget_value(window)) {
-		lobby_info_.add_game_filter([](const mp::game_info& info)->bool {
-			return info.has_friends == true;
-		});
-	}
+	lobby_info_.add_game_filter([this](const mp::game_info& info) {
+		return filter_friends_->get_widget_value(*get_window()) ? info.has_friends == true : true;
+	});
 
 	// Unlike the friends filter, this is an inclusion filter (do we want to also show
 	// games with blocked players) rather than an exclusion filter (do we want to show
 	// only games with friends).
-	if(filter_ignored_->get_widget_value(window) == false) {
-		lobby_info_.add_game_filter([](const mp::game_info& info)->bool {
-			return info.has_ignored == false;
-		});
-	}
+	lobby_info_.add_game_filter([this](const mp::game_info& info) {
+		return filter_ignored_->get_widget_value(*get_window()) == false ? info.has_ignored == false : true;
+	});
 
-	if(filter_slots_->get_widget_value(window)) {
-		lobby_info_.add_game_filter([](const mp::game_info& info)->bool {
-			return info.vacant_slots > 0;
-		});
-	}
+	lobby_info_.add_game_filter([this](const mp::game_info& info) {
+		return filter_slots_->get_widget_value(*get_window()) ? info.vacant_slots > 0 : true;
+	});
 
-	lobby_info_.set_game_filter_invert(filter_invert_->get_widget_value(window));
+	lobby_info_.set_game_filter_invert(
+		[this](bool val) { return filter_invert_->get_widget_value(*get_window()) ? !val : val; });
 }
 
 void mp_lobby::game_filter_keypress_callback(const SDL_Keycode key)
 {
 	if(key == SDLK_RETURN || key == SDLK_KP_ENTER) {
-		game_filter_reload();
 		update_gamelist_filter();
 	}
 }
 
 void mp_lobby::game_filter_change_callback()
 {
-	game_filter_reload();
 	update_gamelist_filter();
 }
 

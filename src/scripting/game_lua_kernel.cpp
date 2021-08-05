@@ -1,5 +1,6 @@
 /*
 	Copyright (C) 2009 - 2021
+	by Guillaume Melquiond <guillaume.melquiond@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -783,35 +784,6 @@ int game_lua_kernel::intf_override_shroud(lua_State *L)
 	game_display_->invalidate_all();
 
 	return 0;
-}
-
-static int intf_parse_shroud_bitmap(lua_State* L)
-{
-	shroud_map temp;
-	temp.set_enabled(true);
-	temp.read(luaL_checkstring(L, 1));
-	std::set<map_location> locs;
-	for(int x = 1; x <= temp.width(); x++) {
-		for(int y = 1; y <= temp.height(); y++) {
-			if(!temp.value(x, y)) {
-				locs.emplace(x, y, wml_loc());
-			}
-		}
-	}
-	luaW_push_locationset(L, locs);
-	return 1;
-}
-
-static int intf_make_shroud_bitmap(lua_State* L)
-{
-	shroud_map temp;
-	temp.set_enabled(true);
-	auto locs = luaW_check_locationset(L, 1);
-	for(const auto& loc : locs) {
-		temp.clear(loc.wml_x(), loc.wml_y());
-	}
-	lua_push(L, temp.write());
-	return 1;
 }
 
 /**
@@ -3603,6 +3575,7 @@ int game_lua_kernel::intf_delay(lua_State *L)
 
 int game_lua_kernel::intf_add_label(lua_State *L)
 {
+	// TODO: Support color = {r = 0, g = 0, b = 0}
 	if (game_display_) {
 		vconfig cfg(luaW_checkvconfig(L, 1));
 
@@ -4453,9 +4426,6 @@ game_lua_kernel::game_lua_kernel(game_state & gs, play_controller & pc, reports 
 		{"find", &dispatch<&game_lua_kernel::intf_get_locations>},
 		{"matches", &dispatch<&game_lua_kernel::intf_match_location>},
 		{"replace_if_failed", intf_replace_if_failed},
-		// Shroud bitmaps
-		{"parse_bitmap", intf_parse_shroud_bitmap},
-		{"make_bitmap", intf_make_shroud_bitmap},
 		{ nullptr, nullptr }
 	};
 	luaL_setfuncs(L, map_callbacks, 0);

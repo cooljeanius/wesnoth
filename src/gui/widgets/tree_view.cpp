@@ -1,5 +1,6 @@
 /*
 	Copyright (C) 2010 - 2021
+	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -39,7 +40,7 @@ tree_view::tree_view(const implementation::builder_tree_view& builder)
 	, node_definitions_(builder.nodes)
 	, indentation_step_size_(0)
 	, need_layout_(false)
-	, root_node_(new tree_view_node("root", nullptr, *this, std::map<std::string, string_map>()))
+	, root_node_(new tree_view_node(root_node_id, nullptr, *this, {}))
 	, selected_item_(nullptr)
 {
 	connect_signal<event::LEFT_BUTTON_DOWN>(
@@ -330,7 +331,8 @@ tree_node::tree_node(const config& cfg)
 {
 	VALIDATE(!id.empty(), missing_mandatory_wml_key("node", "id"));
 
-	VALIDATE(id != "root", _("[node]id 'root' is reserved for the implementation."));
+	// TODO: interpolate this value into the error message
+	VALIDATE(id != tree_view::root_node_id, _("[node]id 'root' is reserved for the implementation."));
 
 	const config& node_definition = cfg.child("node_definition");
 

@@ -67,7 +67,7 @@ if wesnoth.kernel_type() ~= "Application Lua Kernel" then
 	end
 
 	function wesnoth.map.iter_adjacent(map, ...)
-		local where, n = wesnoth.read_location(...)
+		local where, n = wesnoth.map.read_location(...)
 		if n == 0 then error('wesnoth.map.iter_adjacent: missing location') end
 		local with_borders = select(n + 1, ...)
 		local adj = {wesnoth.map.get_adjacent_hexes(where)}
@@ -209,8 +209,8 @@ if wesnoth.kernel_type() == "Game Lua Kernel" then
 	end
 
 	local find_locations = wesnoth.map.find
-	function wesnoth.map.find(cfg)
-		local hexes = find_locations(cfg)
+	function wesnoth.map.find(cfg, ref_unit)
+		local hexes = find_locations(cfg, ref_unit)
 		for i = 1, #hexes do
 			hexes[i] = wesnoth.map.get(hexes[i][1], hexes[i][2])
 		end
@@ -271,6 +271,42 @@ if wesnoth.kernel_type() == "Game Lua Kernel" then
 end
 
 if wesnoth.kernel_type() == "Mapgen Lua Kernel" then
+	wesnoth.map.filter_tags = {
+		terrain = function(terrain)
+			return { "terrain", terrain }
+		end,
+		all =  function(...)
+			return { "all", ... }
+		end,
+		any =  function(...)
+			return { "any", ... }
+		end,
+		none =  function(...)
+			return { "none", ... }
+		end,
+		notall =  function(...)
+			return { "notall", ... }
+		end,
+		adjacent =  function(f, adj, count)
+			return { "adjacent",  f, adjacent = adj, count = count }
+		end,
+		find_in =  function(terrain)
+			return { "find_in", terrain }
+		end,
+		radius =  function(r, f, f_r)
+			return { "radius", r, f, filter_radius = f_r}
+		end,
+		x =  function(terrain)
+			return { "x", terrain }
+		end,
+		y =  function(terrain)
+			return { "y", terrain }
+		end,
+		is_loc = function(loc)
+			return f.all(f.x(loc[1]), f.y(loc[2]))
+		end
+	}
+
 	-- More map module stuff
 	wesnoth.create_filter = wesnoth.deprecate_api('wesnoth.create_filter', 'wesnoth.map.filter', 1, nil, wesnoth.map.filter)
 	wesnoth.create_map = wesnoth.deprecate_api('wesnoth.create_map', 'wesnoth.map.create', 1, nil, wesnoth.map.create)

@@ -56,6 +56,12 @@ function locset_meta:__bxor(other)
 	return new
 end
 
+if wesnoth.current then
+	function locset_meta:__bnot(other)
+		return self:invert(wesnoth.current.map)
+	end
+end
+
 function locset_meta:__sub(other)
 	local new = self:clone()
 	new:diff(other)
@@ -160,6 +166,28 @@ function methods:symm(s)
 	end
 end
 
+function methods:invert(width, height, border_size)
+	if type(width) == 'number' and type(height) == 'number' then
+		border_size = border_size or 0
+	elseif type(width) == 'userdata' and getmetatable(width) == 'terrain map' then
+		local map = width
+		width = map.playable_width
+		height = map.playable_height
+		border_size = map.border_size
+	else
+		error('Invalid arguments to location_set:invert - expected a map or map dimensions', 2)
+	end
+	local new = location_set.create()
+	for x = 1 - border_size, width + border_size do
+		for y = 1 - border_size, height + border_size do
+			if not self:get(x, y) then
+				new:insert(x, y)
+			end
+		end
+	end
+	return new
+end
+
 function methods:filter(f)
 	local nvalues = {}
 	for p,v in pairs(self.values) do
@@ -249,7 +277,11 @@ function methods:of_triples(t)
     -- Create a location set from a table of 3-element tables
     -- Elements 1 and 2 are x,y coordinates, #3 is value to be inserted
     for k,v in pairs(t) do
-        self:insert(v[1], v[2], v[3])
+		if #v == 0 then
+			self:insert(v.x, v.y, v.value)
+		else
+			self:insert(v[1], v[2], v[3])
+		end
     end
 end
 
@@ -296,7 +328,9 @@ end
 
 function methods:to_triples()
     local res = {}
-    self:iter(function(x, y, v) table.insert(res, { x, y, v }) end)
+    self:iter(function(x, y, v)
+		table.insert(res, wesnoth.named_tuple({ x, y, v }, {"x", "y", "value"}))
+	end)
     return res
 end
 
