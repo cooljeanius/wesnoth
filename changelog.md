@@ -2,13 +2,15 @@
  ### Add-ons client
  ### Add-ons server
  ### Campaigns
+   * Liberty
+     * S06: Enforce failure condition for allied team (issue #6019)
  ### Editor
  ### Multiplayer
  ### Lua API
  ### Packaging
  ### Terrain
  ### Translations
-   * Updated translations: Bulgarian, Chinese (Traditional), Czech, Italian, Portuguese (Brazil), Russian, Spanish, Turkish
+   * Updated translations: Bulgarian, Chinese (Traditional), Czech, Finnish, French, Indonesian, Italian, Polish, Portuguese (Brazil), Russian, Spanish, Turkish
  ### Units
  ### User interface
    * The names of the abilities used as specials appear in the attack prediction window with specials weapons

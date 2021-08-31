@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: wesnoth-utbs\n"
 "Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
 "POT-Creation-Date: 2021-06-23 15:42 UTC\n"
-"PO-Revision-Date: 2021-07-20 22:33+0300\n"
+"PO-Revision-Date: 2021-08-20 21:00+0300\n"
 "Last-Translator: Artem Khrapov <artemkhrapov2001@yandex.ru>\n"
 "Language-Team: https://wiki.wesnoth.org/RussianTranslation\n"
 "Language: ru\n"
@@ -1261,7 +1261,7 @@ msgstr "Ну что ж. Чем скорее мы дойдём до Каменн�
 #. [scenario]: id=02_Across_the_Harsh_Sands, role=Hunting Ogre
 #: data/campaigns/Under_the_Burning_Suns/scenarios/02_Across_the_Harsh_Sands.cfg:367
 msgid "Scuttler"
-msgstr "Бегунок"
+msgstr "Отшельник"
 
 #. [message]: speaker=unit
 #: data/campaigns/Under_the_Burning_Suns/scenarios/02_Across_the_Harsh_Sands.cfg:393
@@ -4876,7 +4876,7 @@ msgstr ""
 "лава может убить. Летающие бойцы получат лишь $heat_damage единиц урона за "
 "каждый ход, что они летят над лавой, но и они могут умереть, если будут "
 "лететь слишком долго. К тому же, из-за жара в пещере, все бойцы, стоящие на "
-"полу пещеры, получат $head_damage единиц урона в начале каждого хода. Урон "
+"полу пещеры, получат $heat_damage единиц урона в начале каждого хода. Урон "
 "от жары может снизить здоровье до 1, но не может убить."
 
 #. [message]: role=Troll High Shaman
