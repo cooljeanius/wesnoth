@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2009 - 2021
+	Copyright (C) 2009 - 2022
+	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -852,10 +853,9 @@ struct dialog_tester<mp_lobby>
 {
 	config game_config;
 	wesnothd_connection connection;
-	std::vector<std::string> installed_addons;
 	mp::lobby_info li;
 	int selected_game;
-	dialog_tester() : connection("", ""), li(installed_addons)
+	dialog_tester() : connection("", ""), li()
 	{
 	}
 	mp_lobby* create()
@@ -870,6 +870,7 @@ class fake_chat_handler : public events::chat_handler {
 		MESSAGE_TYPE) {}
 	void send_chat_message(const std::string&, bool) {}
 	void send_to_server(const config&) {}
+	void clear_messages() {}
 };
 
 template<>
@@ -879,11 +880,10 @@ struct dialog_tester<lobby_player_info>
 	fake_chat_handler ch;
 	wesnothd_connection connection;
 	mp::user_info ui;
-	std::vector<std::string> installed_addons;
 	mp::lobby_info li;
 	dialog_tester()
 		: connection("", "")
-		, ui(c), li(installed_addons)
+		, ui(c), li()
 	{
 	}
 	lobby_player_info* create()

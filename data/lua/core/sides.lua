@@ -17,6 +17,10 @@ if wesnoth.kernel_type() == "Game Lua Kernel" then
 	}
 	setmetatable(wesnoth.sides, sides_mt)
 
+	-- Iterate over sides matching a filter
+	---@param filter WML
+	---@return fun(state:table)
+	---@return table state
 	function wesnoth.sides.iter(filter)
 		local function f(s)
 			local i = s.i
@@ -38,25 +42,32 @@ if wesnoth.kernel_type() == "Game Lua Kernel" then
 	function wesnoth.get_side_variable(side, var)
 		return wesnoth.sides[side].variables[var]
 	end
-	function wesnoth.get_starting_location(side)
-		local side = side
-		if type(side) == 'number' then side = wesnoth.sides[side] end
+	function wesnoth.get_starting_location(side_num)
+		local side = side_num
+		if type(side) == 'number' then
+			side = wesnoth.sides[side]
+		end
 		return side.starting_location
 	end
 
 	local function place_shroud(side, shroud)
 		if type(shroud) == 'string' then
-			shroud = wesnoth.map.parse_bitmap(shroud)
+			if shroud == 'all' then
+				wesnoth.sides.override_shroud(side, {})
+			else
+				local ls = wesnoth.require "location_set"
+				shroud = ls.of_shroud_data(shroud)
+				wesnoth.sides.place_shroud(side, (~shroud):to_pairs())
+			end
+		else
+			wesnoth.sides.place_shroud(side, shroud)
 		end
-		wesnoth.sides.place_shroud(side, shroud)
 	end
 	local function remove_shroud(side, shroud)
 		if type(shroud) == 'string' then
-			if shroud == 'all' then
-				wesnoth.sides.override_shroud(side, {})
-				return
-			end
-			shroud = wesnoth.map.parse_bitmap(shroud)
+			-- This may look wrong, but it's replicating the (undocumented) behaviour in 1.14
+			wesnoth.place_shroud(side, shroud)
+			return
 		end
 		wesnoth.sides.remove_shroud(side, shroud)
 	end

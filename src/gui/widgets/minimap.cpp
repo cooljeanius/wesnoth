@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2008 - 2021
+	Copyright (C) 2008 - 2022
+	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -25,6 +26,7 @@
 #include "map/exception.hpp"
 #include "sdl/rect.hpp"
 #include "../../minimap.hpp" // We want the file in src/
+#include "video.hpp"
 
 #include <functional>
 
@@ -203,9 +205,7 @@ const surface minimap::get_image(const int w, const int h) const
 	return nullptr;
 }
 
-void minimap::impl_draw_background(surface& frame_buffer,
-									int x_offset,
-									int y_offset)
+void minimap::impl_draw_background(int x_offset, int y_offset)
 {
 	DBG_GUI_D << LOG_HEADER << " size "
 			  << calculate_blitting_rectangle(x_offset, y_offset) << ".\n";
@@ -219,7 +219,7 @@ void minimap::impl_draw_background(surface& frame_buffer,
 
 	const ::surface surf = get_image(rect.w, rect.h);
 	if(surf) {
-		sdl_blit(surf, nullptr, frame_buffer, &rect);
+		CVideo::get_singleton().blit_surface(rect.x, rect.y, surf);
 	}
 }
 
@@ -249,9 +249,9 @@ builder_minimap::builder_minimap(const config& cfg) : builder_styled_widget(cfg)
 {
 }
 
-widget* builder_minimap::build() const
+std::unique_ptr<widget> builder_minimap::build() const
 {
-	minimap* widget = new minimap(*this);
+	auto widget = std::make_unique<minimap>(*this);
 
 	DBG_GUI_G << "Window builder: placed minimap '" << id
 			  << "' with definition '" << definition << "'.\n";

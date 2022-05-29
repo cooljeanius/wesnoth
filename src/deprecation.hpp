@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2017 - 2021
+	Copyright (C) 2017 - 2022
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -14,10 +14,11 @@
 
 #pragma once
 
+#include <cstdint>
 #include <string>
 
 /** See https://wiki.wesnoth.org/CompatibilityStandards for more info. */
-enum class DEP_LEVEL { INDEFINITE = 1, PREEMPTIVE, FOR_REMOVAL, REMOVED };
+enum class DEP_LEVEL : uint8_t { INDEFINITE = 1, PREEMPTIVE, FOR_REMOVAL, REMOVED };
 
 /**
  * Prints a message to the deprecation log domain informing players that a given feature

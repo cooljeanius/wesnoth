@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2009 - 2021
+	Copyright (C) 2009 - 2022
+	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -40,10 +41,6 @@
  */
 #define DEBUG_THROW(id) throw id;
 #else
-
-#ifdef __FreeBSD__
-#define __LONG_LONG_SUPPORTED
-#endif
 
 #include <optional>
 

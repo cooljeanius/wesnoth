@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2003 - 2021
+	Copyright (C) 2003 - 2022
+	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -79,9 +80,13 @@ class gamemap;
 class display : public video2::draw_layering
 {
 public:
-	display(const display_context * dc, std::weak_ptr<wb::manager> wb,
-			reports & reports_object,
-			const config& theme_cfg, const config& level, bool auto_join=true);
+	display(const display_context* dc,
+		std::weak_ptr<wb::manager> wb,
+		reports& reports_object,
+		const std::string& theme_id,
+		const config& level,
+		bool auto_join = true);
+
 	virtual ~display();
 	/**
 	 * Returns the display object if a display object exists. Otherwise it returns nullptr.
@@ -199,9 +204,6 @@ public:
 	/** Gets the underlying screen object. */
 	CVideo& video() { return screen_; }
 
-	/** return the screen surface or the surface used for map_screenshot. */
-	surface& get_screen_surface() { return map_screenshot_ ? map_screenshot_surf_ : screen_.getSurface();}
-
 	virtual bool in_game() const { return false; }
 	virtual bool in_editor() const { return false; }
 
@@ -216,11 +218,11 @@ public:
 	 */
 
 	const SDL_Rect& minimap_area() const
-		{ return theme_.mini_map_location(screen_.screen_area()); }
+		{ return theme_.mini_map_location(screen_.draw_area()); }
 	const SDL_Rect& palette_area() const
-		{ return theme_.palette_location(screen_.screen_area()); }
+		{ return theme_.palette_location(screen_.draw_area()); }
 	const SDL_Rect& unit_image_area() const
-		{ return theme_.unit_image_location(screen_.screen_area()); }
+		{ return theme_.unit_image_location(screen_.draw_area()); }
 
 	/**
 	 * Returns the maximum area used for the map
@@ -239,7 +241,7 @@ public:
 	 * applied to it.
 	 */
 	const SDL_Rect& map_outside_area() const { return map_screenshot_ ?
-		max_map_area() : theme_.main_map_location(screen_.screen_area()); }
+		max_map_area() : theme_.main_map_location(screen_.draw_area()); }
 
 	/** Check if the bbox of the hex at x,y has pixels outside the area rectangle. */
 	static bool outside_area(const SDL_Rect& area, const int x,const int y);
@@ -347,12 +349,6 @@ public:
 	/** Returns true if location (x,y) is covered in fog. */
 	bool fogged(const map_location& loc) const;
 
-	/**
-	 * Determines whether a grid should be overlayed on the game board.
-	 * (to more clearly show where hexes are)
-	 */
-	void set_grid(const bool grid) { grid_ = grid; }
-
 	/** Getter for the x,y debug overlay on tiles */
 	bool get_draw_coordinates() const { return draw_coordinates_; }
 	/** Setter for the x,y debug overlay on tiles */
@@ -381,7 +377,7 @@ public:
 	void clear_redraw_observers();
 
 	theme& get_theme() { return theme_; }
-	void set_theme(config theme_cfg);
+	void set_theme(const std::string& new_theme);
 
 	/**
 	 * Retrieves a pointer to a theme UI button.
@@ -396,7 +392,6 @@ public:
 	std::shared_ptr<gui::button> find_action_button(const std::string& id);
 	std::shared_ptr<gui::button> find_menu_button(const std::string& id);
 
-	static gui::button::TYPE string_to_button_type(const std::string& type);
 	void create_buttons();
 
 	void layout_buttons();
@@ -473,29 +468,9 @@ public:
 	const theme::action* action_pressed();
 	const theme::menu*   menu_pressed();
 
-	/**
-	 * Finds the menu which has a given item in it,
-	 * and enables or disables it.
-	 */
-	void enable_menu(const std::string& item, bool enable);
-
 	void set_diagnostic(const std::string& msg);
 
-	/**
-	 * Set/Get whether 'turbo' mode is on.
-	 * When turbo mode is on, everything moves much faster.
-	 */
-	void set_turbo(const bool turbo) { turbo_ = turbo; }
-
 	double turbo_speed() const;
-
-	void set_turbo_speed(const double speed) { turbo_speed_ = speed; }
-
-	/** control unit idle animations and their frequency */
-	void set_idle_anim(bool ison) { idle_anim_ = ison; }
-	bool idle_anim() const { return idle_anim_; }
-	void set_idle_anim_rate(int rate);
-	double idle_anim_rate() const { return idle_anim_rate_; }
 
 	void bounds_check_position();
 	void bounds_check_position(int& xpos, int& ypos) const;
@@ -760,11 +735,8 @@ protected:
 	bool redrawMinimap_;
 	bool redraw_background_;
 	bool invalidateAll_;
-	bool grid_;
 	int diagnostic_label_;
 	bool panelsDrawn_;
-	double turbo_speed_;
-	bool turbo_;
 	bool invalidateGameStatus_;
 	const std::unique_ptr<map_labels> map_labels_;
 	reports * reports_object_;
@@ -877,7 +849,7 @@ public:
 	void render_image(int x, int y, const display::drawing_layer drawing_layer,
 			const map_location& loc, surface image,
 			bool hreverse=false, bool greyscale=false,
-			fixed_t alpha=ftofxp(1.0), color_t blendto = {0,0,0},
+			int32_t alpha=floating_to_fixed_point(1.0), color_t blendto = {0,0,0},
 			double blend_ratio=0, double submerged=0.0,bool vreverse =false);
 
 	/**
@@ -925,7 +897,17 @@ protected:
 	private:
 		unsigned int key_;
 
-		static const std::array<drawing_layer, 4> layer_groups;
+		// FIXME: temporary method. Group splitting should be made
+		// public into the definition of drawing_layer
+		//
+		// The drawing is done per layer_group, the range per group is [low, high).
+		static inline const std::array layer_groups {
+			LAYER_TERRAIN_BG,
+			LAYER_UNIT_FIRST,
+			LAYER_UNIT_MOVE_DEFAULT,
+			// Make sure the movement doesn't show above fog and reachmap.
+			LAYER_REACHMAP
+		};
 
 	public:
 		drawing_buffer_key(const map_location &loc, drawing_layer layer);
@@ -1049,9 +1031,6 @@ private:
 	/** Count work done for the debug info displayed under fps */
 	int invalidated_hexes_;
 	int drawn_hexes_;
-
-	bool idle_anim_;
-	double idle_anim_rate_;
 
 	surface map_screenshot_surf_;
 

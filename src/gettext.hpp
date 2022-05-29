@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2003 - 2021
+	Copyright (C) 2003 - 2022
+	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -98,3 +99,4 @@ namespace translation
 
 #define gettext_noop(String) String
 #define N_(String) gettext_noop (String)
+#define N_n(String1, String2) String1, String2

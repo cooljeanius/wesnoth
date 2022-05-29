@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2010 - 2021
+	Copyright (C) 2010 - 2022
+	by Gabriel Morin <gabrielmorin (at) gmail (dot) com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -33,7 +34,7 @@ public:
 	arrow(const arrow&) = delete;
 	arrow& operator=(const arrow&) = delete;
 
-	arrow(bool hidden = false);
+	explicit arrow(bool hidden = false);
 	virtual ~arrow();
 
 	/** Sets the arrow's visibility */

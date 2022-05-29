@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2007 - 2021
+	Copyright (C) 2007 - 2022
+	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -28,6 +29,8 @@
 #include "gui/widgets/panel.hpp"
 #include "gui/widgets/retval.hpp"
 
+#include "sdl/texture.hpp"
+
 #include <functional>
 #include <map>
 #include <memory>
@@ -35,7 +38,6 @@
 #include <vector>
 
 class CVideo;
-class surface;
 struct point;
 
 namespace gui2
@@ -424,6 +426,11 @@ public:
 		callback_next_draw_ = func;
 	}
 
+	void set_suspend_drawing(bool s = true)
+	{
+		suspend_drawing_ = s;
+	}
+
 	enum class show_mode {
 		none,
 		modal,
@@ -474,8 +481,8 @@ private:
 	/** Whether the window has other windows behind it */
 	bool is_toplevel_;
 
-	/** When the window closes this surface is used to undraw the window. */
-	surface restorer_;
+	/** When the window closes this texture is used to undraw the window. */
+	texture restorer_;
 
 	/** Do we wish to place the widget automatically? */
 	const bool automatic_placement_;

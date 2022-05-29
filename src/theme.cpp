@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2003 - 2021
+	Copyright (C) 2003 - 2022
+	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -519,11 +520,11 @@ theme::menu::menu(std::size_t sw, std::size_t sh, const config& cfg)
 		items_.emplace_back("id", item);
 	}
 
+	const auto& cmd = hotkey::get_hotkey_command(items_[0]["id"]);
 	if(cfg["auto_tooltip"].to_bool() && tooltip_.empty() && items_.size() == 1) {
-		tooltip_ = hotkey::get_description(items_[0]["id"]) + hotkey::get_names(items_[0]["id"]) + "\n"
-				   + hotkey::get_tooltip(items_[0]["id"]);
+		tooltip_ = cmd.description + hotkey::get_names(items_[0]["id"]) + "\n" + cmd.tooltip;
 	} else if(cfg["tooltip_name_prepend"].to_bool() && items_.size() == 1) {
-		tooltip_ = hotkey::get_description(items_[0]["id"]) + hotkey::get_names(items_[0]["id"]) + "\n" + tooltip_;
+		tooltip_ = cmd.description + hotkey::get_names(items_[0]["id"]) + "\n" + tooltip_;
 	}
 }
 
@@ -557,14 +558,15 @@ theme::action::action(std::size_t sw, std::size_t sh, const config& cfg)
 
 const std::string theme::action::tooltip(std::size_t index) const
 {
+	const auto& cmd = hotkey::get_hotkey_command(items_[index]);
 	std::stringstream result;
 	if(auto_tooltip_ && tooltip_.empty() && items_.size() > index) {
-		result << hotkey::get_description(items_[index]);
+		result << cmd.description;
 		if(!hotkey::get_names(items_[index]).empty())
 			result << "\n" << _("Hotkey(s): ") << hotkey::get_names(items_[index]);
-		result << "\n" << hotkey::get_tooltip(items_[index]);
+		result << "\n" << cmd.tooltip;
 	} else if(tooltip_name_prepend_ && items_.size() == 1) {
-		result << hotkey::get_description(items_[index]);
+		result << cmd.description;
 		if(!hotkey::get_names(items_[index]).empty())
 			result << "\n" << _("Hotkey(s): ") << hotkey::get_names(items_[index]);
 		result << "\n" << tooltip_;
@@ -913,38 +915,6 @@ const theme::status_item* theme::get_status_item(const std::string& key) const
 		return nullptr;
 }
 
-typedef std::map<std::string, config> known_themes_map;
-known_themes_map theme::known_themes;
-
-void theme::set_known_themes(const game_config_view* cfg)
-{
-	known_themes.clear();
-	if(!cfg)
-		return;
-
-	for(const config& thm : cfg->child_range("theme")) {
-		std::string thm_id = thm["id"];
-
-		if(!thm["hidden"].to_bool(false)) {
-			known_themes[thm_id] = thm;
-		}
-	}
-}
-
-std::vector<theme_info> theme::get_known_themes()
-{
-	std::vector<theme_info> res;
-
-	for(known_themes_map::const_iterator i = known_themes.begin(); i != known_themes.end(); ++i) {
-		res.push_back(theme_info());
-		res.back().id = i->first;
-		res.back().name = i->second["name"].t_str();
-		res.back().description = i->second["description"].t_str();
-	}
-
-	return res;
-}
-
 const theme::menu* theme::get_menu_item(const std::string& key) const
 {
 	for(const theme::menu& m : menus_) {
@@ -1003,4 +973,50 @@ void theme::modify_label(const std::string& id, const std::string& text)
 		return;
 	}
 	label->set_text(text);
+}
+
+void theme::set_known_themes(const game_config_view* cfg)
+{
+	if(cfg) {
+		known_themes.clear();
+		for(const config& thm : cfg->child_range("theme")) {
+			known_themes[thm["id"]] = thm;
+		}
+	}
+}
+
+std::vector<theme_info> theme::get_basic_theme_info(bool include_hidden)
+{
+	std::vector<theme_info> res;
+
+	for(const auto& [id, cfg] : known_themes) {
+		if(!cfg["hidden"].to_bool(false) || include_hidden) {
+			auto& info = res.emplace_back();
+			info.id = id;
+			info.name = cfg["name"].t_str();
+			info.description = cfg["description"].t_str();
+		}
+	}
+
+	return res;
+}
+
+const config& theme::get_theme_config(const std::string& id)
+{
+	auto iter = known_themes.find(id);
+	if(iter != known_themes.end()) {
+		return iter->second;
+	}
+
+	ERR_DP << "Theme '" << id << "' not found. Falling back to default theme." << std::endl;
+
+	iter = known_themes.find("Default");
+	if(iter != known_themes.end()) {
+		return iter->second;
+	}
+
+	ERR_DP << "Default theme not found." << std::endl;
+
+	static config empty;
+	return empty;
 }

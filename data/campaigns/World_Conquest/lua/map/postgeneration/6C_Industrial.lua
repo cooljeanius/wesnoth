@@ -1,5 +1,5 @@
 -- Industrial
--- TODO: this is somwwhta slow, maybe it because it used wct_iterate_road_to ?
+-- TODO: this is somewhat slow, maybe it because it used wct_iterate_road_to ?
 local function wct_conect_factory_rails()
 	local rails_conected = map:find(f.all(
 		f.terrain("*^Br*"),
@@ -104,7 +104,7 @@ local function wct_dirty_deltas()
 	local terrain_to_change = wct_store_possible_dirty_delta()
 	while #terrain_to_change > 0 do
 		local loc = 1 -- todo: maybe use  terrain_to_change[mathx.random(#terrain_to_change)]
-		local ter = mathx.random_choice("Gs,Hh^Uf,Cud,Gs^Uf,Gs,Hh,Ds^Edt,Ds,Hh^Fmf,Gs,Gs^Fmf")
+		local ter = mathx.random_choice("Gs,Hh^Tf,Cud,Gs^Tf,Gs,Hh,Ds^Edt,Ds,Hh^Fmf,Gs,Gs^Fmf")
 		map[loc] = ter
 		terrain_to_change = wct_store_possible_dirty_delta()
 	end
@@ -379,12 +379,12 @@ local function world_conquest_tek_map_decoration_6c()
 		),
 		layer = "base",
 	}
-	local terrain_to_change = map:find(f.all(
+	local terrain_to_change1 = map:find(f.all(
 		f.terrain("Sm^*"),
 		f.adjacent(f.terrain("Ww^*"))
 	))
 
-	for swamp_i, swamp_loc in ipairs(terrain_to_change) do
+	for swamp_i, swamp_loc in ipairs(terrain_to_change1) do
 		local r = mathx.random(3, map.width // 4)
 		set_terrain { "Sm",
 			f.all(
@@ -396,12 +396,12 @@ local function world_conquest_tek_map_decoration_6c()
 		}
 	end
 	-- dirty rivers
-	local terrain_to_change = map:find(f.all(
+	local terrain_to_change2 = map:find(f.all(
 		f.terrain("Sm^*"),
 		f.adjacent(f.terrain("Ww^*"))
 	))
 
-	for water_i, water_loc in ipairs(terrain_to_change) do
+	for water_i, water_loc in ipairs(terrain_to_change2) do
 		local r = mathx.random(4, map.width // 6)
 		set_terrain { "Wwg",
 			f.all(
@@ -472,7 +472,7 @@ local function world_conquest_tek_map_decoration_6c()
 		fraction = 6,
 		layer = "base",
 	}
-	set_terrain { "*^Fp,*^Fp,*^Fp,*^Fms,*^Fms,*^Fmf,*^Fmf,*^Uf,*^Fds,*^Fms,*^Fms,*^Fet,*^Efm,*",
+	set_terrain { "*^Fp,*^Fp,*^Fp,*^Fms,*^Fms,*^Fmf,*^Fmf,*^Tf,*^Fds,*^Fms,*^Fms,*^Fet,*^Efm,*",
 		f.all(
 			f.terrain("Hh,G*"),
 			f.radius(3, f.any(
@@ -582,7 +582,7 @@ local function world_conquest_tek_map_decoration_6c()
 	}
 
 	-- rough extra terrain noise
-	set_terrain { "Gs^Fp,Gs^Fp,Gs^Fp,Gs^Fp,Gs^Fp,Gs^Fmw,Gs^Fmf,Hh^Fp,Hh,Hh,Mm,Mm,Gs^Uf",
+	set_terrain { "Gs^Fp,Gs^Fp,Gs^Fp,Gs^Fp,Gs^Fp,Gs^Fmw,Gs^Fmf,Hh^Fp,Hh,Hh,Mm,Mm,Gs^Tf",
 		f.all(
 			f.terrain("G*"),
 			f.adjacent(f.terrain("Sm^*,C*^*,K*^*,W*^*,*^V*,Ds"), nil, 0)
@@ -637,7 +637,7 @@ local function world_conquest_tek_map_repaint_6c()
 	-- soft hills clusters
 	set_terrain { "Gs,Gs,Gg,Gs,Gs,Gg,Gs,Gs,Gg,Gs,Gs,Gg,Hh^Fp",
 		f.all(
-			f.terrain("Hh,Hh^F*,Hh^Uf"),
+			f.terrain("Hh,Hh^F*,Hh^Tf"),
 			f.adjacent(f.terrain("H*^*,M*^*,C*,K*^*"), nil, 6)
 		),
 		fraction = 2,
@@ -653,7 +653,7 @@ local function world_conquest_tek_map_repaint_6c()
 
 	world_conquest_tek_map_decoration_6c()
 
-	wct_reduce_wall_clusters("Uu,Uu^Uf,Uh,Uu^Uf,Uu,Uu^Uf,Uh,Ql,Qxu,Xu,Uu,Rb")
+	wct_reduce_wall_clusters("Uu,Uu^Tf,Uh,Uu^Tf,Uu,Uu^Tf,Uh,Ql,Qxu,Xu,Uu,Rb")
 	wct_fill_lava_chasms()
 	wct_volcanos()
 	wct_volcanos_dirt()

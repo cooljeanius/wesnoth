@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2012 - 2021
+	Copyright (C) 2012 - 2022
+	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -107,11 +108,8 @@ class matrix : public tbase
 {
 	friend class debug_layout_graph;
 
-private:
-	explicit matrix(const implementation::builder_matrix& builder);
-
 public:
-	static matrix* build(const implementation::builder_matrix& builder);
+	explicit matrix(const implementation::builder_matrix& builder);
 
 	/***** ***** ***** ***** Item handling. ***** ***** ****** *****/
 
@@ -128,9 +126,7 @@ public:
 	virtual void layout_initialize(const bool full_initialization) override;
 
 	/** See @ref widget::impl_draw_children. */
-	virtual void impl_draw_children(surface& frame_buffer,
-									int x_offset,
-									int y_offset) override;
+	virtual void impl_draw_children(int x_offset, int y_offset) override;
 
 	/** See @ref widget::layout_children. */
 	virtual void layout_children() override;
@@ -194,7 +190,7 @@ public:
 	bool disable_click_dismiss() const override;
 
 	/** See @ref widget::create_walker. */
-	virtual iteration::walker_base* create_walker() override;
+	virtual iteration::walker_ptr create_walker() override;
 
 	/**
 	 * Returns a grid in the pane.
@@ -266,7 +262,7 @@ struct builder_matrix : public builder_styled_widget
 
 	using builder_styled_widget::build;
 
-	virtual widget* build() const override;
+	virtual std::unique_ptr<widget> build() const override;
 
 	scrollbar_container::scrollbar_mode vertical_scrollbar_mode;
 	scrollbar_container::scrollbar_mode horizontal_scrollbar_mode;

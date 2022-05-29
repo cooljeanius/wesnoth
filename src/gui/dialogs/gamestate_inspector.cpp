@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2009 - 2021
+	Copyright (C) 2009 - 2022
+	by Yurii Chernyi <terraninfo@terraninfo.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -33,6 +34,7 @@
 
 #include "game_board.hpp"
 #include "game_data.hpp"
+#include "gettext.hpp"
 #include "recall_list_manager.hpp"
 #include "team.hpp"
 #include "units/unit.hpp"

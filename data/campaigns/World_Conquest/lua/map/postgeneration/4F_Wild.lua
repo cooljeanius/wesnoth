@@ -17,7 +17,7 @@ function connected_components(locs)
 			local todo = { loc }
 			l_set[loc_i] = color_i
 			while #todo ~= 0 do
-				for i, loc_ad in ipairs({wesnoth.map.get_adjacent_hexes(todo[1][1], todo[1][2])}) do
+				for j, loc_ad in ipairs({wesnoth.map.get_adjacent_hexes(todo[1][1], todo[1][2])}) do
 					local loc_ad_i = loc_to_index(loc_ad)
 					if l_set[loc_ad_i] then
 						if l_set[loc_ad_i] == true then
@@ -117,7 +117,7 @@ function repaint(map_data)
 	}
 	set_terrain { "Xu",
 		f.all(
-			f.terrain("Uu,Uh,Uu^Uf,Uh^Uf"),
+			f.terrain("Uu,Uh,Uu^Tf,Uh^Tf"),
 			f.adjacent(f.terrain("G*^*,H*^*")),
 			f.adjacent(f.terrain("*^Xm"), nil, 0)
 		),
@@ -172,7 +172,7 @@ function repaint(map_data)
 			),
 			f.all(
 				f.terrain("Gll^V*"),
-				f.adjacent(f.terrain("Gll^Uf"))
+				f.adjacent(f.terrain("Gll^Tf"))
 			)
 		),
 		layer = "overlay",

@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2007 - 2021
+	Copyright (C) 2007 - 2022
+	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -31,6 +32,7 @@
 #include "gui/core/log.hpp"
 #include "gui/widgets/helper.hpp"
 #include "sdl/rect.hpp"
+#include "sdl/texture.hpp"
 #include "video.hpp"
 #include "wml_exception.hpp"
 
@@ -577,14 +579,14 @@ void image_shape::draw(surface& canvas,
 		surf = image_;
 	}
 	else { // assert((w != 0) || (h != 0))
-		if(w == 0 && resize_mode_ == stretch) {
+		if(w == 0 && resize_mode_ == resize_mode::stretch) {
 			DBG_GUI_D << "Image: vertical stretch from " << image_->w << ','
 					  << image_->h << " to a height of " << h << ".\n";
 
 			surf = stretch_surface_vertical(image_, h);
 			w = image_->w;
 		}
-		else if(h == 0 && resize_mode_ == stretch) {
+		else if(h == 0 && resize_mode_ == resize_mode::stretch) {
 			DBG_GUI_D << "Image: horizontal stretch from " << image_->w
 					  << ',' << image_->h << " to a width of " << w
 					  << ".\n";
@@ -599,18 +601,18 @@ void image_shape::draw(surface& canvas,
 			if(h == 0) {
 				h = image_->h;
 			}
-			if(resize_mode_ == tile) {
+			if(resize_mode_ == resize_mode::tile) {
 				DBG_GUI_D << "Image: tiling from " << image_->w << ','
 						  << image_->h << " to " << w << ',' << h << ".\n";
 
 				surf = tile_surface(image_, w, h, false);
-			} else if(resize_mode_ == tile_center) {
+			} else if(resize_mode_ == resize_mode::tile_center) {
 				DBG_GUI_D << "Image: tiling centrally from " << image_->w << ','
 						  << image_->h << " to " << w << ',' << h << ".\n";
 
 				surf = tile_surface(image_, w, h, true);
 			} else {
-				if(resize_mode_ == stretch) {
+				if(resize_mode_ == resize_mode::stretch) {
 					ERR_GUI_D << "Image: failed to stretch image, "
 								 "fall back to scaling.\n";
 				}
@@ -618,7 +620,11 @@ void image_shape::draw(surface& canvas,
 				DBG_GUI_D << "Image: scaling from " << image_->w << ','
 						  << image_->h << " to " << w << ',' << h << ".\n";
 
-				surf = scale_surface_legacy(image_, w, h);
+				if(resize_mode_ == resize_mode::scale_sharp) {
+					surf = scale_surface_sharp(image_, w, h);
+				} else {
+					surf = scale_surface_legacy(image_, w, h);
+				}
 			}
 		}
 		src_clip.w = w;
@@ -650,17 +656,19 @@ void image_shape::draw(surface& canvas,
 image_shape::resize_mode image_shape::get_resize_mode(const std::string& resize_mode)
 {
 	if(resize_mode == "tile") {
-		return image_shape::tile;
+		return resize_mode::tile;
 	} else if(resize_mode == "tile_center") {
-		return image_shape::tile_center;
+		return resize_mode::tile_center;
 	} else if(resize_mode == "stretch") {
-		return image_shape::stretch;
+		return resize_mode::stretch;
+	} else if(resize_mode == "scale_sharp") {
+		return resize_mode::scale_sharp;
 	} else {
 		if(!resize_mode.empty() && resize_mode != "scale") {
 			ERR_GUI_E << "Invalid resize mode '" << resize_mode
 					  << "' falling back to 'scale'.\n";
 		}
-		return image_shape::scale;
+		return resize_mode::scale;
 	}
 }
 
@@ -822,7 +830,7 @@ void canvas::draw(const SDL_Rect& area_to_draw, bool force)
 	is_dirty_ = false;
 }
 
-void canvas::blit(surface& surf, SDL_Rect rect)
+void canvas::blit(SDL_Rect rect)
 {
 	// This early-return has to come before the `validate(rect.w <= w_)` check, as during the boost_unit_tests execution
 	// the debug_clock widget will have no shapes, 0x0 size, yet be given a larger rect to draw.
@@ -830,6 +838,8 @@ void canvas::blit(surface& surf, SDL_Rect rect)
 		DBG_GUI_D << "Canvas: empty (no shapes to draw).\n";
 		return;
 	}
+
+	CVideo& video = CVideo::get_singleton();
 
 	VALIDATE(rect.w >= 0 && rect.h >= 0, _("Area to draw has negative size"));
 	VALIDATE(static_cast<unsigned>(rect.w) <= w_ && static_cast<unsigned>(rect.h) <= h_,
@@ -842,7 +852,7 @@ void canvas::blit(surface& surf, SDL_Rect rect)
 	// From those, as the first column is off-screen:
 	// rect_clipped_to_parent={0, 2, 329, 440}
 	// area_to_draw={1, 0, 329, 440}
-	SDL_Rect parent {0, 0, surf->w, surf->h};
+	SDL_Rect parent {0, 0, video.get_width(), video.get_height()};
 	SDL_Rect rect_clipped_to_parent;
 	if(!SDL_IntersectRect(&rect, &parent, &rect_clipped_to_parent)) {
 		DBG_GUI_D << "Area to draw is completely outside parent.\n";
@@ -858,20 +868,9 @@ void canvas::blit(surface& surf, SDL_Rect rect)
 	draw(area_to_draw);
 
 	if(blur_depth_) {
-		/*
-		 * If the surf is the video surface the blurring seems to stack, this
-		 * can be seen in the title screen. So also use the not 32 bpp method
-		 * for this situation.
-		 */
-		if(surf != CVideo::get_singleton().getSurface() && surf.is_neutral()) {
-			blur_surface(surf, rect, blur_depth_);
-		} else {
-			// Can't directly blur the surface if not 32 bpp.
-			SDL_Rect r = rect;
-			surface s = get_surface_portion(surf, r);
-			s = blur_surface(s, blur_depth_);
-			sdl_blit(s, nullptr, surf, &r);
-		}
+		surface s = video.read_pixels_low_res(&rect);
+		s = blur_surface(s, blur_depth_);
+		video.blit_surface(s, &rect);
 	}
 
 	// Currently draw(area_to_draw) will always allocate a viewport_ that exactly matches area_to_draw, which means that
@@ -885,7 +884,7 @@ void canvas::blit(surface& surf, SDL_Rect rect)
 	assert(area_to_draw.y == view_bounds_.y);
 	assert(area_to_draw.w == view_bounds_.w);
 	assert(area_to_draw.h == view_bounds_.h);
-	sdl_blit(viewport_, nullptr, surf, &rect_clipped_to_parent);
+	video.blit_surface(rect.x, rect.y, viewport_);
 }
 
 void canvas::parse_cfg(const config& cfg)

@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2003 - 2021
+	Copyright (C) 2003 - 2022
+	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -18,10 +19,14 @@
 #include "exceptions.hpp"
 #include "lua_jailbreak_exception.hpp"
 
+#include <SDL2/SDL_render.h>
+
 #include <memory>
 
 class surface;
+class texture;
 struct point;
+struct SDL_Texture;
 
 namespace sdl
 {
@@ -69,6 +74,8 @@ public:
 
 	bool non_interactive() const;
 
+	bool surface_initialized() const;
+
 	/***** ***** ***** ***** Window-related functions ***** ***** ****** *****/
 
 	/** Initializes a new SDL window instance, taking into account any preiously saved states. */
@@ -76,6 +83,9 @@ public:
 
 	/** Returns a pointer to the underlying SDL window. */
 	sdl::window* get_window();
+
+	/** Returns a pointer to the underlying window's renderer. */
+	SDL_Renderer* get_renderer();
 
 	bool has_window()
 	{
@@ -104,6 +114,8 @@ public:
 
 	bool is_fullscreen() const;
 
+	bool supports_vsync() const;
+
 	bool set_resolution(const unsigned width, const unsigned height);
 
 	/**
@@ -117,28 +129,86 @@ public:
 
 	point current_resolution();
 
+	/**
+	 * Update buffers to match current resolution and pixel scale settings.
+	 * Also triggers a full redraw.
+	 */
+	void update_buffers();
+
 	/** Returns the list of available screen resolutions. */
 	std::vector<point> get_available_resolutions(const bool include_current = false);
 
 	/**
-	 * Returns the current window renderer area, either in pixels or screen coordinates.
-	 *
-	 * @param as_pixels           Whether to return the area in pixels (default true) or
-	 *                            DPI-independent (DIP) screen coordinates.
+	 * Returns the size of the final render target. This is irrelevant
+	 * for most purposes. Use draw_area() in stead.
 	 */
-	SDL_Rect screen_area(bool as_pixels = true) const;
+	SDL_Point output_size() const;
 
-	/** Returns the window renderer width in pixels or screen coordinates. */
-	int get_width(bool as_pixels = true) const;
+	/**
+	 * Returns the size of the window in display units / screen coordinates.
+	 * This should match the value sent by window resize events, and also
+	 * those used for setting resolution.
+	 */
+	SDL_Point window_size() const;
 
-	/** Returns the window renderer height in pixels or in screen coordinates. */
-	int get_height(bool as_pixels = true) const;
+	/**
+	 * Returns the size and location of the current drawing area in pixels.
+	 * This will usually be an SDL_Rect indicating the full drawing surface.
+	 */
+	SDL_Rect draw_area() const;
+
+	/**
+	 * Returns the size and location of the window's input area in pixels.
+	 * We use SDL_RendererSetLogicalSize to ensure this always matches
+	 * draw_area(), but for clarity there are two separate functions.
+	 */
+	SDL_Rect input_area() const;
+
+	/**
+	 * Returns the width of the drawing surface in pixels.
+	 * Input coordinates are automatically scaled to correspond,
+	 * so this also indicates the width of the input surface.
+	 */
+	int get_width() const;
+
+	/**
+	 * Returns the height of the drawing surface in pixels.
+	 * Input coordinates are automatically scaled to correspond,
+	 * so this also indicates the height of the input surface.
+	 */
+	int get_height() const;
+
+	/**
+	 * Get the current active pixel scale multiplier.
+	 * This is equal to output_size() / draw_area().
+	 * Currently it is always integer, and the same in both dimensions.
+	 *
+	 * This may differ from preferences::pixel_scale() in some cases,
+	 * For example if the window is too small to fit the desired scale.
+	 *
+	 * @returns     The currently active pixel scale multiplier.
+	 */
+	int get_pixel_scale() const { return pixel_scale_; }
 
 	/** The current game screen dpi. */
 	std::pair<float, float> get_dpi() const;
 
 	/** The current scale factor on High-DPI screens. */
 	std::pair<float, float> get_dpi_scale_factor() const;
+
+	/**
+	 * Clip a rectangle to the drawing area.
+	 *
+	 * This does not change the original
+	 * @param r                   The SDL_Rect to clip.
+	 * @returns                   The new clipped SDL_Rect.
+	 */
+	SDL_Rect clip_to_draw_area(const SDL_Rect* r) const;
+
+	/**
+	 * Convert coordinates in draw space to coordinates in render space.
+	 */
+	SDL_Rect to_output(const SDL_Rect& draw_space_rect) const;
 
 	/**
 	 * Tests whether the given flags are currently set on the SDL window.
@@ -169,20 +239,92 @@ public:
 	/***** ***** ***** ***** Drawing functions ***** ***** ****** *****/
 
 	/**
-	 * Draws a surface directly onto the screen framebuffer.
+	 * Fills an area with the given colour.
+	 *
+	 * @param rect      The area to fill, in drawing coordinates.
+	 * @param r         The red   component of the fill colour, 0-255.
+	 * @param g         The green component of the fill colour, 0-255.
+	 * @param b         The blue  component of the fill colour, 0-255.
+	 * @param a         The alpha component of the fill colour, 0-255.
+	 * @returns         0 on success, a negative SDL error code on failure.
+	 */
+	int fill(const SDL_Rect& rect, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+
+	/**
+	 * Draws a surface at the given location.
+	 *
+	 * The w and h members of dst are ignored, but will be updated
+	 * to reflect the final draw extents including clipping.
+	 *
+	 * The surface will be rendered in game-native resolution,
+	 * and all coordinates are given in this context.
+	 *
+	 * @param surf                The surface to draw.
+	 * @param dst                 Where to draw the surface. w and h are ignored, but will be updated to reflect the final draw extents including clipping.
+	 */
+	void blit_surface(const surface& surf, SDL_Rect* dst);
+
+	/**
+	 * Draws a surface at the given coordinates.
+	 *
+	 * The surface will be rendered in game-native resolution,
+	 * and all coordinates are given in this context.
 	 *
 	 * @param x                   The x coordinate at which to draw.
 	 * @param y                   The y coordinate at which to draw.
 	 * @param surf                The surface to draw.
-	 * @param srcrect             The area of the surface to draw. This defaults to nullptr,
-	 *                            which implies the entire thing.
-	 * @param clip_rect           The clippin rect. If not null, the surface will only be drawn
+	 */
+	void blit_surface(int x, int y, const surface& surf);
+
+	/**
+	 * Draws an area of a surface at the given location.
+	 *
+	 * The surface will be rendered in game-native resolution,
+	 * and all coordinates are given in this context.
+	 *
+	 * @param x                   The x coordinate at which to draw.
+	 * @param y                   The y coordinate at which to draw.
+	 * @param surf                The surface to draw.
+	 * @param srcrect             The area of the surface to draw. If null, the entire surface is drawn.
+	 * @param clip_rect           The clipping area. If not null, the surface will only be drawn
 	 *                            within the bounds of the given rectangle.
 	 */
-	void blit_surface(int x, int y, surface surf, SDL_Rect* srcrect = nullptr, SDL_Rect* clip_rect = nullptr);
+	void blit_surface(int x, int y, const surface& surf, const SDL_Rect* srcrect, const SDL_Rect* clip_rect);
+
+	/**
+	 * Draws a texture, or part of a texture, at the given location.
+	 *
+	 * The portion of the texture to be drawn will be scaled to fill
+	 * the target rectangle.
+	 *
+	 * This version takes coordinates in game-native resolution,
+	 * which may be lower than the final output resolution in high-dpi
+	 * contexts or if pixel scaling is used. The texture will be copied
+	 * in high-resolution if possible.
+	 *
+	 * @param tex           The texture to be copied / drawn.
+	 * @param dstrect       The target location to copy the texture to,
+	 *                      in low-resolution game-native drawing coordinates.
+	 *                      If null, this fills the entire render target.
+	 * @param srcrect       The portion of the texture to copy.
+	 *                      If null, this copies the entire texture.
+	 */
+	void blit_texture(texture& tex, const SDL_Rect* dstrect = nullptr, const SDL_Rect* srcrect = nullptr);
+
+	/**
+	 * Render a portion of the low-resolution drawing surface.
+	 *
+	 * @param src_rect      The portion of the drawing surface to render, in draw-space coordinates. If null, the entire drawing surface is rendered.
+	 */
+	void render_low_res(SDL_Rect* src_rect);
+
+	/**
+	 * Render the entire low-resolution drawing surface.
+	 */
+	void render_low_res();
 
 	/** Renders the screen. Should normally not be called directly! */
-	void flip();
+	void render_screen();
 
 	/**
 	 * Updates and ensures the framebuffer surface is valid.
@@ -193,8 +335,49 @@ public:
 	/** Clear the screen contents */
 	void clear_screen();
 
-	/** Returns a reference to the framebuffer. */
-	surface& getSurface();
+	/**
+	 * Copy back a portion of the render target that is already drawn.
+	 *
+	 * This area is specified in draw coordinates, not render coordinates.
+	 * Thus the size of the retrieved surface may not match the size of r.
+	 *
+	 * If not null, r will be automatically clipped to the drawing area.
+	 *
+	 * Note: This is a very slow function! Its use should be phased out
+	 * for everything except maybe screenshots.
+	 *
+	 * @param r       The portion of the render target to retrieve, in
+	 *                draw coordinates.
+	 *                If not null, this will be modified to reflect the
+	 *                portion of the draw area that has been returned.
+	 */
+	surface read_pixels(SDL_Rect* r = nullptr);
+
+	/**
+	 * The same as read_pixels, but returns a low-resolution surface
+	 * suitable for use with the old drawing system.
+	 *
+	 * This should be considered deprecated, and phased out ASAP.
+	 */
+	surface read_pixels_low_res(SDL_Rect* r = nullptr);
+
+	/**
+	 * Copy a portion of the render target to another texture.
+	 *
+	 * This area is specified in draw coordinates, not render coordinates.
+	 * Thus the size of the retrieved texture may not match the size of r.
+	 *
+	 * If not null, r will be automatically clipped to the drawing area.
+	 *
+	 * Note: This is a very slow function! Its use should be phased out
+	 * for everything except maybe screenshots.
+	 *
+	 * @param r       The portion of the render target to retrieve, in
+	 *                draw coordinates.
+	 *                If not null, this will be modified to reflect the
+	 *                portion of the draw area that has been returned.
+	 */
+	texture read_texture(SDL_Rect* r = nullptr);
 
 	/**
 	 * Stop the screen being redrawn. Anything that happens while the updates are locked will
@@ -209,6 +392,55 @@ public:
 	bool update_locked() const;
 
 	void lock_flips(bool);
+
+	/** A class to manage automatic restoration of the clipping region.
+	 *
+	 * While this can be constructed on its own, it is usually easier to
+	 * use the CVideo::set_clip() member function.
+	 */
+	class clip_setter
+	{
+	public:
+		clip_setter(CVideo& video, const SDL_Rect& clip)
+			: video_(video), old_clip_()
+		{
+			old_clip_ = video_.get_clip();
+			video_.force_clip(clip);
+		}
+
+		~clip_setter()
+		{
+			video_.force_clip(old_clip_);
+		}
+	private:
+		CVideo& video_;
+		SDL_Rect old_clip_;
+	};
+
+	/**
+	 * Set the clipping area. All draw calls will be clipped to this region.
+	 *
+	 * The clipping area is specified in draw-space coordinates.
+	 *
+	 * The returned object will reset the clipping area when it is destroyed,
+	 * so it should be kept in scope until drawing is complete.
+	 *
+	 * @param clip          The clipping region in draw-space coordinates.
+	 * @returns             A clip_setter object. When this object is destroyed
+	 *                      the clipping region will be restored to whatever
+	 *                      it was before this call.
+	 */
+	clip_setter set_clip(const SDL_Rect& clip);
+
+	/**
+	 * Set the clipping area, without any provided way of setting it back.
+	 *
+	 * @param clip          The clipping area, in draw-space coordinates.
+	 */
+	void force_clip(const SDL_Rect& clip);
+
+	/** Get the current clipping area, in draw coordinates. */
+	SDL_Rect get_clip() const;
 
 	/***** ***** ***** ***** Help string functions ***** ***** ****** *****/
 
@@ -235,10 +467,8 @@ public:
 
 	struct error : public game::error
 	{
-		error()
-			: game::error("Video initialization failed")
-		{
-		}
+		error() : game::error("unspecified video subsystem error") {}
+		error(const std::string& msg) : game::error(msg) {}
 	};
 
 	/** Type that can be thrown as an exception to quit to desktop. */
@@ -259,6 +489,12 @@ private:
 
 	/** The SDL window object. */
 	std::unique_ptr<sdl::window> window;
+
+	/** The drawing texture. */
+	SDL_Texture* drawing_texture_;
+
+	/** The current offscreen render target. */
+	SDL_Texture* render_texture_;
 
 	/** Initializes the SDL video subsystem. */
 	void initSDL();
@@ -290,6 +526,8 @@ private:
 	int updated_locked_;
 	int flip_locked_;
 	int refresh_rate_;
+	int offset_x_, offset_y_;
+	int pixel_scale_;
 };
 
 /** An object which will lock the display for the duration of its lifetime. */

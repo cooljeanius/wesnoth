@@ -1,5 +1,7 @@
 /*
-	Copyright (C) 2003 - 2021
+	Copyright (C) 2006 - 2022
+	by Joerg Hinrichs <joerg.hinrichs@alice-dsl.de>
+	Copyright (C) 2003 by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -119,7 +121,7 @@ void playmp_controller::play_human_turn()
 	assert(gamestate_->init_side_done());
 	assert(gamestate().gamedata_.phase() == game_data::PLAY);
 
-	mp_ui_alerts::turn_changed(current_team().current_player());
+	mp::ui_alerts::turn_changed(current_team().current_player());
 
 	LOG_NG << "events::commands_disabled=" << events::commands_disabled << "\n";
 

@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2003 - 2021
+	Copyright (C) 2003 - 2022
+	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -26,6 +27,7 @@
 #include "font/sdl_ttf_compat.hpp"
 #include "font/standard_colors.hpp"
 #include "sdl/rect.hpp"
+#include "sdl/input.hpp" // get_mouse_state
 
 static lg::log_domain log_display("display");
 #define ERR_DP LOG_STREAM(err, log_display)
@@ -63,7 +65,7 @@ dialog_manager::~dialog_manager()
 {
 	is_in_dialog = reset_to;
 	int mousex, mousey;
-	SDL_GetMouseState(&mousex, &mousey);
+	sdl::get_mouse_state(&mousex, &mousey);
 	SDL_Event pb_event;
 	pb_event.type = SDL_MOUSEMOTION;
 	pb_event.motion.state = 0;
@@ -200,7 +202,7 @@ dialog_frame::dimension_measurements dialog_frame::layout(int x, int y, int w, i
 	h += dim_.title.h + dim_.button_row.h;
 	dim_.button_row.x += x + w;
 
-	SDL_Rect bounds = video_.screen_area();
+	SDL_Rect bounds = video_.draw_area();
 	if(have_border_) {
 		bounds.x += left_->w;
 		bounds.y += top_->h;
@@ -296,9 +298,10 @@ void dialog_frame::draw_background()
 	}
 
 	if (dialog_style_.blur_radius) {
-		surface surf = ::get_surface_portion(video_.getSurface(), dim_.exterior);
+		SDL_Rect r = dim_.exterior;
+		surface surf = video_.read_pixels_low_res(&r);
 		surf = blur_surface(surf, dialog_style_.blur_radius);
-		sdl_blit(surf, nullptr, video_.getSurface(), &dim_.exterior);
+		video_.blit_surface(surf, &r);
 	}
 
 	if(bg_ == nullptr) {
@@ -313,14 +316,14 @@ void dialog_frame::draw_background()
 			SDL_Rect dst = src;
 			dst.x = dim_.interior.x + i;
 			dst.y = dim_.interior.y + j;
-			sdl_blit(bg_, &src, video_.getSurface(), &dst);
+			video_.blit_surface(dst.x, dst.y, bg_, &src, nullptr);
 		}
 	}
 }
 
 SDL_Rect dialog_frame::draw_title(CVideo* video)
 {
-	SDL_Rect rect = CVideo::get_singleton().screen_area();
+	SDL_Rect rect = CVideo::get_singleton().draw_area();
 	return font::pango_draw_text(video, rect, font::SIZE_TITLE, font::TITLE_COLOR,
 	                       title_, dim_.title.x, dim_.title.y, false, font::pango_text::STYLE_NORMAL);
 }

@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2003 - 2021
+	Copyright (C) 2003 - 2022
+	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -190,7 +191,8 @@ static bool make_change_diff(const simple_wml::node& src,
 static std::string player_status(const wesnothd::player_record& player)
 {
 	std::ostringstream out;
-	out << "'" << player.name() << "' @ " << player.client_ip();
+	out << "'" << player.name() << "' @ " << player.client_ip()
+		<< " logged on for " << lg::get_timespan(std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - player.login_time).count());
 	return out.str();
 }
 
@@ -292,7 +294,7 @@ void server::handle_graceful_timeout(const boost::system::error_code& error)
 
 	if(games().empty()) {
 		process_command("msg All games ended. Shutting down now. Reconnect to the new server instance.", "system");
-		throw server_shutdown("graceful shutdown timeout");
+		BOOST_THROW_EXCEPTION(server_shutdown("graceful shutdown timeout"));
 	} else {
 		timer_.expires_from_now(std::chrono::seconds(1));
 		timer_.async_wait(std::bind(&server::handle_graceful_timeout, this, std::placeholders::_1));
@@ -315,7 +317,7 @@ void server::handle_lan_server_shutdown(const boost::system::error_code& error)
 	if(error)
 		return;
 
-	throw server_shutdown("lan server shutdown");
+	BOOST_THROW_EXCEPTION(server_shutdown("lan server shutdown"));
 }
 
 void server::setup_fifo()
@@ -751,7 +753,7 @@ void server::login_client(boost::asio::yield_context yield, SocketPtr socket)
 		if(const simple_wml::node* const login = login_response->child("login")) {
 			username = (*login)["username"].to_string();
 
-			if(is_login_allowed(socket, login, username, registered, is_moderator)) {
+			if(is_login_allowed(yield, socket, login, username, registered, is_moderator)) {
 				break;
 			} else continue;
 		}
@@ -766,20 +768,20 @@ void server::login_client(boost::asio::yield_context yield, SocketPtr socket)
 	if(check_error(ec, socket)) return;
 
 	simple_wml::node& player_cfg = games_and_users_list_.root().add_child("user");
-	wesnothd::player new_player(
-		username,
-		player_cfg,
-		user_handler_ ? user_handler_->get_forum_id(username) : 0,
-		registered,
-		client_version,
-		client_source,
-		user_handler_ ? user_handler_->db_insert_login(username, client_address(socket), client_version) : 0,
-		default_max_messages_,
-		default_time_period_,
-		is_moderator
-	);
+
 	boost::asio::spawn(io_service_,
-		[this, socket, new_player](boost::asio::yield_context yield) { handle_player(yield, socket, new_player); }
+		[this, socket, new_player = wesnothd::player{
+			username,
+			player_cfg,
+			user_handler_ ? user_handler_->get_forum_id(username) : 0,
+			registered,
+			client_version,
+			client_source,
+			user_handler_ ? user_handler_->db_insert_login(username, client_address(socket), client_version) : 0,
+			default_max_messages_,
+			default_time_period_,
+			is_moderator
+		}](boost::asio::yield_context yield) { handle_player(yield, socket, new_player); }
 	);
 
 	LOG_SERVER << log_address(socket) << "\t" << username << "\thas logged on"
@@ -810,7 +812,7 @@ void server::login_client(boost::asio::yield_context yield, SocketPtr socket)
 	}
 }
 
-template<class SocketPtr> bool server::is_login_allowed(SocketPtr socket, const simple_wml::node* const login, const std::string& username, bool& registered, bool& is_moderator)
+template<class SocketPtr> bool server::is_login_allowed(boost::asio::yield_context yield, SocketPtr socket, const simple_wml::node* const login, const std::string& username, bool& registered, bool& is_moderator)
 {
 	// Check if the username is valid (all alpha-numeric plus underscore and hyphen)
 	if(!utils::isvalid_username(username)) {
@@ -916,7 +918,11 @@ template<class SocketPtr> bool server::is_login_allowed(SocketPtr socket, const 
 	if(name_taken) {
 		if(registered) {
 			// If there is already a client using this username kick it
-			process_command("kick " + p->info().name() + " autokick by registered user", username);
+			process_command("kick " + username + " autokick by registered user", username);
+			// need to wait for it to process
+			while(player_connections_.get<name_t>().count(username) > 0) {
+				boost::asio::post(yield);
+			}
 		} else {
 			async_send_error(socket, "The nickname '" + username + "' is already taken.", MP_NAME_TAKEN_ERROR);
 			return false;
@@ -1067,7 +1073,9 @@ template<class SocketPtr> void server::handle_player(boost::asio::yield_context 
 	assert(inserted);
 
 	BOOST_SCOPE_EXIT_ALL(this, &player) {
-		remove_player(player);
+		if(!destructed) {
+			remove_player(player);
+		}
 	};
 
 	async_send_doc_queued(socket, games_and_users_list_);
@@ -1097,18 +1105,22 @@ template<class SocketPtr> void server::handle_player(boost::asio::yield_context 
 		// DBG_SERVER << client_address(socket) << "\tWML received:\n" << doc->output() << std::endl;
 		if(doc->child("refresh_lobby")) {
 			async_send_doc_queued(socket, games_and_users_list_);
+			continue;
 		}
 
 		if(simple_wml::node* whisper = doc->child("whisper")) {
 			handle_whisper(player, *whisper);
+			continue;
 		}
 
 		if(simple_wml::node* query = doc->child("query")) {
 			handle_query(player, *query);
+			continue;
 		}
 
 		if(simple_wml::node* nickserv = doc->child("nickserv")) {
 			handle_nickserv(player, *nickserv);
+			continue;
 		}
 
 		if(!player_is_in_game(player)) {
@@ -1366,7 +1378,7 @@ void server::cleanup_game(game* game_ptr)
 
 	// Send a diff of the gamelist with the game deleted to players in the lobby
 	simple_wml::document diff;
-	if(make_delete_diff(*gamelist, "gamelist", "game", game_ptr->description(), diff)) {
+	if(!destructed && make_delete_diff(*gamelist, "gamelist", "game", game_ptr->description(), diff)) {
 		send_to_lobby(diff);
 	}
 
@@ -1381,6 +1393,8 @@ void server::cleanup_game(game* game_ptr)
 		// Can happen when the game ends before the scenario was transferred.
 		LOG_SERVER << "Could not find game (" << game_ptr->id() << ", " << game_ptr->db_id() << ") to delete in games_and_users_list_.\n";
 	}
+
+	if(destructed) game_ptr->emergency_cleanup();
 
 	delete game_ptr;
 }
@@ -1674,8 +1688,14 @@ void server::handle_player_in_game(player_iterator p, simple_wml::document& data
 			// [addon] info handling
 			for(const auto& addon : m.children("addon")) {
 				for(const auto& content : addon->children("content")) {
-					user_handler_->db_insert_game_content_info(uuid_, g.db_id(), content->attr("type").to_string(), content->attr("name").to_string(), content->attr("id").to_string(), addon->attr("id").to_string(), addon->attr("version").to_string());
+					unsigned long long rows_inserted = user_handler_->db_insert_game_content_info(uuid_, g.db_id(), content->attr("type").to_string(), content->attr("name").to_string(), content->attr("id").to_string(), addon->attr("id").to_string(), addon->attr("version").to_string());
+					if(rows_inserted == 0) {
+						WRN_SERVER << "Did not insert content row for [addon] data with uuid '" << uuid_ << "', game ID '" << g.db_id() << "', type '" << content->attr("type").to_string() << "', and content ID '" << content->attr("id").to_string() << "'\n";
+					}
 				}
+			}
+			if(m.children("addon").size() == 0) {
+				WRN_SERVER << "Game content info missing for game with uuid '" << uuid_ << "', game ID '" << g.db_id() << "', named '" << g.name() << "'\n";
 			}
 
 			user_handler_->db_insert_game_info(uuid_, g.db_id(), server_id_, g.name(), g.is_reload(), m["observer"].to_bool(), !m["private_replay"].to_bool(), g.has_password());
@@ -1743,9 +1763,7 @@ void server::handle_player_in_game(player_iterator p, simple_wml::document& data
 		g.level().root().apply_diff(*scenario_diff);
 		const simple_wml::node* cfg_change = scenario_diff->child("change_child");
 
-		// it is very likeley that the diff changes a side so this check isn't that important.
-		// Note that [side] is not at toplevel but inside [scenario] or [snapshot]
-		if(cfg_change /** && cfg_change->child("side") */) {
+		if(cfg_change) {
 			g.update_side_data();
 		}
 
@@ -1910,7 +1928,9 @@ void server::disconnect_player(player_iterator player)
 {
 	utils::visit([](auto&& socket) {
 		if constexpr (utils::decayed_is_same<tls_socket_ptr, decltype(socket)>) {
-			socket->shutdown();
+			socket->async_shutdown([socket](...) {});
+			const char buffer[] = "";
+			async_write(*socket, boost::asio::buffer(buffer), [socket](...) { socket->lowest_layer().close(); });
 		} else {
 			socket->lowest_layer().shutdown(boost::asio::ip::tcp::socket::shutdown_receive);
 		}
@@ -2072,7 +2092,7 @@ void server::shut_down_handler(
 	}
 
 	if(parameters == "now") {
-		throw server_shutdown("shut down by admin command");
+		BOOST_THROW_EXCEPTION(server_shutdown("shut down by admin command"));
 	} else {
 		// Graceful shut down.
 		graceful_restart = true;
@@ -2164,8 +2184,7 @@ void server::stats_handler(const std::string& /*issuer_name*/,
 {
 	assert(out != nullptr);
 
-	*out << "Number of games = " << games().size() << "\nTotal number of users = " << player_connections_.size()
-		 << "\n";
+	*out << "Number of games = " << games().size() << "\nTotal number of users = " << player_connections_.size();
 }
 
 void server::metrics_handler(const std::string& /*issuer_name*/,
@@ -2426,7 +2445,7 @@ void server::status_handler(
 		}
 	}
 
-	const bool match_ip = (std::count(parameters.begin(), parameters.end(), '.') >= 1);
+	const bool match_ip = ((std::count(parameters.begin(), parameters.end(), '.') >= 1) || (std::count(parameters.begin(), parameters.end(), ':') >= 1));
 	for(const auto& player : player_connections_) {
 		if(parameters.empty() || parameters == "*" ||
 			(match_ip  && utils::wildcard_string_match(player.client_ip(), parameters)) ||
@@ -3076,12 +3095,5 @@ int main(int argc, char** argv)
 		}
 	}
 
-	try {
-		wesnothd::server(port, keep_alive, config_file, min_threads, max_threads).run();
-	} catch(const std::exception& e) {
-		ERR_SERVER << "terminated by C++ exception: " << e.what() << std::endl;
-		return 1;
-	}
-
-	return 0;
+	return wesnothd::server(port, keep_alive, config_file, min_threads, max_threads).run();
 }

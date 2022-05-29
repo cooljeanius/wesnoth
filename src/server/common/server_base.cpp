@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2016 - 2021
+	Copyright (C) 2016 - 2022
+	by Sergey Popov <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -20,6 +21,7 @@
 #include "serialization/parser.hpp"
 #include "serialization/base64.hpp"
 #include "filesystem.hpp"
+#include "utils/scope_exit.hpp"
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -96,27 +98,34 @@ void server_base::start_server()
 
 void server_base::serve(boost::asio::yield_context yield, boost::asio::ip::tcp::acceptor& acceptor, boost::asio::ip::tcp::endpoint endpoint)
 {
-	if(!acceptor.is_open()) {
-		acceptor.open(endpoint.protocol());
-		acceptor.set_option(boost::asio::ip::tcp::acceptor::reuse_address(true));
-		acceptor.set_option(boost::asio::ip::tcp::acceptor::keep_alive(keep_alive_));
-		if(endpoint.protocol() == boost::asio::ip::tcp::v6())
-			acceptor.set_option(boost::asio::ip::v6_only(true));
-		acceptor.bind(endpoint);
-		acceptor.listen();
+	try {
+		if(!acceptor.is_open()) {
+			acceptor.open(endpoint.protocol());
+			acceptor.set_option(boost::asio::ip::tcp::acceptor::reuse_address(true));
+			acceptor.set_option(boost::asio::ip::tcp::acceptor::keep_alive(keep_alive_));
+			if(endpoint.protocol() == boost::asio::ip::tcp::v6())
+				acceptor.set_option(boost::asio::ip::v6_only(true));
+			acceptor.bind(endpoint);
+			acceptor.listen();
+		}
+	} catch(const boost::system::system_error& e) {
+		ERR_SERVER << "Exception when trying to bind port: " << e.code().message() << "\n";
+		BOOST_THROW_EXCEPTION(server_shutdown("Port binding failed", e.code()));
 	}
 
 	socket_ptr socket = std::make_shared<socket_ptr::element_type>(io_service_);
 
 	boost::system::error_code error;
 	acceptor.async_accept(socket->lowest_layer(), yield[error]);
-	if(error) {
+	if(error && accepting_connections()) {
 		ERR_SERVER << "Accept failed: " << error.message() << "\n";
-		return;
+		BOOST_THROW_EXCEPTION(server_shutdown("Accept failed", error));
 	}
 
 	if(accepting_connections()) {
 		boost::asio::spawn(io_service_, [this, &acceptor, endpoint](boost::asio::yield_context yield) { serve(yield, acceptor, endpoint); });
+	} else {
+		return;
 	}
 
 #ifndef _WIN32
@@ -133,6 +142,10 @@ void server_base::serve(boost::asio::yield_context yield, boost::asio::ip::tcp::
 		setsockopt(socket->native_handle(), IPPROTO_TCP, TCP_KEEPALIVE, &timeout, sizeof(timeout));
 #endif
 	}
+#endif
+
+#ifdef __linux__
+	fcntl(socket->native_handle(), F_SETFD, FD_CLOEXEC);
 #endif
 
 	DBG_SERVER << client_address(socket) << "\tnew connection tentatively accepted\n";
@@ -225,12 +238,20 @@ void server_base::handle_termination(const boost::system::error_code& error, int
 	exit(128 + signal_number);
 }
 
-void server_base::run() {
-	try {
-		io_service_.run();
-		LOG_SERVER << "Server has shut down because event loop is out of work\n";
-	} catch(const server_shutdown& e) {
-		LOG_SERVER << "Server has been shut down: " << e.what() << "\n";
+int server_base::run() {
+	for(;;) {
+		try {
+			io_service_.run();
+			LOG_SERVER << "Server has shut down because event loop is out of work\n";
+			return 1;
+		} catch(const server_shutdown& e) {
+			LOG_SERVER << "Server has been shut down: " << e.what() << "\n";
+			return e.ec.value();
+		} catch(const boost::system::system_error& e) {
+			ERR_SERVER << "Caught system error exception from handler: " << e.code().message() << "\n";
+		} catch(const std::exception& e) {
+			ERR_SERVER << "Caught exception from handler: " << e.what() << "\n" << boost::current_exception_diagnostic_information() << "\n";
+		}
 	}
 }
 
@@ -344,7 +365,7 @@ void server_base::coro_send_file(socket_ptr socket, const std::string& filename,
 	std::size_t filesize { std::size_t(filesystem::file_size(filename)) };
 	int in_file { open(filename.c_str(), O_RDONLY) };
 	off_t offset { 0 };
-	std::size_t total_bytes_transferred { 0 };
+	//std::size_t total_bytes_transferred { 0 };
 
 	union DataSize
 	{
@@ -368,7 +389,7 @@ void server_base::coro_send_file(socket_ptr socket, const std::string& filename,
 		int n = ::sendfile(socket->native_handle(), in_file, &offset, 65536);
 		*(yield.ec_) = boost::system::error_code(n < 0 ? errno : 0,
 									   boost::asio::error::get_system_category());
-		total_bytes_transferred += *(yield.ec_) ? 0 : n;
+		//total_bytes_transferred += *(yield.ec_) ? 0 : n;
 
 		// Retry operation immediately if interrupted by signal.
 		if (*(yield.ec_) == boost::asio::error::interrupted)
@@ -514,22 +535,28 @@ template<class SocketPtr> std::unique_ptr<simple_wml::document> server_base::cor
 template std::unique_ptr<simple_wml::document> server_base::coro_receive_doc<socket_ptr>(socket_ptr socket, boost::asio::yield_context yield);
 template std::unique_ptr<simple_wml::document> server_base::coro_receive_doc<tls_socket_ptr>(tls_socket_ptr socket, boost::asio::yield_context yield);
 
+template<class SocketPtr> void server_base::send_doc_queued(SocketPtr socket, std::unique_ptr<simple_wml::document>& doc_ptr, boost::asio::yield_context yield)
+{
+	static std::map<SocketPtr, std::queue<std::unique_ptr<simple_wml::document>>> queues;
+
+	queues[socket].push(std::move(doc_ptr));
+	if(queues[socket].size() > 1) {
+		return;
+	}
+
+	ON_SCOPE_EXIT(this, socket) { queues.erase(socket); };
+
+	while(queues[socket].size() > 0) {
+		coro_send_doc(socket, *(queues[socket].front()), yield);
+		ON_SCOPE_EXIT(this, socket) { queues[socket].pop(); };
+	}
+}
+
 template<class SocketPtr> void server_base::async_send_doc_queued(SocketPtr socket, simple_wml::document& doc)
 {
 	boost::asio::spawn(
 		io_service_, [this, doc_ptr = doc.clone(), socket](boost::asio::yield_context yield) mutable {
-			static std::map<SocketPtr, std::queue<std::unique_ptr<simple_wml::document>>> queues;
-
-			queues[socket].push(std::move(doc_ptr));
-			if(queues[socket].size() > 1) {
-				return;
-			}
-
-			while(queues[socket].size() > 0) {
-				coro_send_doc(socket, *(queues[socket].front()), yield);
-				queues[socket].pop();
-			}
-			queues.erase(socket);
+			send_doc_queued(socket, doc_ptr, yield);
 		}
 	);
 }
@@ -586,13 +613,32 @@ std::string server_base::hash_password(const std::string& pw, const std::string&
 		return "";
 	}
 
+	std::string password = pw;
+
+	// Apparently HTML key-characters are passed to the hashing functions of phpbb in this escaped form.
+	// I will do closer investigations on this, for now let's just hope these are all of them.
+
+	// Note: we must obviously replace '&' first, I wasted some time before I figured that out... :)
+	for(std::string::size_type pos = 0; (pos = password.find('&', pos)) != std::string::npos; ++pos) {
+		password.replace(pos, 1, "&amp;");
+	}
+	for(std::string::size_type pos = 0; (pos = password.find('\"', pos)) != std::string::npos; ++pos) {
+		password.replace(pos, 1, "&quot;");
+	}
+	for(std::string::size_type pos = 0; (pos = password.find('<', pos)) != std::string::npos; ++pos) {
+		password.replace(pos, 1, "&lt;");
+	}
+	for(std::string::size_type pos = 0; (pos = password.find('>', pos)) != std::string::npos; ++pos) {
+		password.replace(pos, 1, "&gt;");
+	}
+
 	if(utils::md5::is_valid_prefix(salt)) {
-		std::string hash = utils::md5(pw, utils::md5::get_salt(salt), utils::md5::get_iteration_count(salt)).base64_digest();
+		std::string hash = utils::md5(password, utils::md5::get_salt(salt), utils::md5::get_iteration_count(salt)).base64_digest();
 		return salt+hash;
 	} else if(utils::bcrypt::is_valid_prefix(salt)) {
 		try {
 			auto bcrypt_salt = utils::bcrypt::from_salted_salt(salt);
-			auto hash = utils::bcrypt::hash_pw(pw, bcrypt_salt);
+			auto hash = utils::bcrypt::hash_pw(password, bcrypt_salt);
 			return hash.base64_digest();
 		} catch(const utils::hash_error& err) {
 			ERR_SERVER << "bcrypt hash failed for user " << username << ": " << err.what() << std::endl;

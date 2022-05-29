@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2010 - 2021
+	Copyright (C) 2010 - 2022
+	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -103,9 +104,9 @@ builder_progress_bar::builder_progress_bar(const config& cfg)
 {
 }
 
-widget* builder_progress_bar::build() const
+std::unique_ptr<widget> builder_progress_bar::build() const
 {
-	progress_bar* widget = new progress_bar(*this);
+	auto widget = std::make_unique<progress_bar>(*this);
 
 	DBG_GUI_G << "Window builder: placed progress bar '" << id
 			  << "' with definition '" << definition << "'.\n";

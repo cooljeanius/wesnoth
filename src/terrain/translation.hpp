@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2006 - 2021
+	Copyright (C) 2006 - 2022
+	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -20,7 +21,6 @@
 #include <boost/bimap.hpp>
 #include <boost/bimap/set_of.hpp>
 #include <boost/bimap/multiset_of.hpp>
-#include <boost/multi_array.hpp>
 
 #include "exceptions.hpp"
 #include "map/location.hpp"

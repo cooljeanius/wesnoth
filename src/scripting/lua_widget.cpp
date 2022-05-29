@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2009 - 2021
+	Copyright (C) 2009 - 2022
+	by Guillaume Melquiond <guillaume.melquiond@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -25,7 +26,6 @@
 
 
 #include "lua/lauxlib.h"
-#include "lua/lua.h"                    // for lua_State, lua_settop, etc
 
 #include <type_traits>
 

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018 - 2021
+	Copyright (C) 2018 - 2022
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -34,7 +34,6 @@
 #include <boost/range/iterator_range.hpp>
 #include <unordered_map>
 #include "lua/lauxlib.h"
-#include "lua/lua.h"
 
 static lg::log_domain log_scripting_lua_mapgen("scripting/lua/mapgen");
 #define LOG_LMG LOG_STREAM(info, log_scripting_lua_mapgen)
@@ -347,7 +346,8 @@ public:
 	bool matches(const gamemap_base&, map_location l) override
 	{
 		LOG_MATCHES(x);
-		return l.x >= 0 && l.x < int(filter_.size()) && filter_[l.x];
+		const auto value = l.wml_x();
+		return value >= 0 && value < int(filter_.size()) && filter_[value];
 	}
 	dynamic_bitset filter_;
 };
@@ -367,7 +367,8 @@ public:
 	bool matches(const gamemap_base&, map_location l) override
 	{
 		LOG_MATCHES(y);
-		return l.y >= 0 && l.y < int(filter_.size()) && filter_[l.y];
+		const auto value = l.wml_y();
+		return value >= 0 && value < int(filter_.size()) && filter_[value];
 	}
 
 	dynamic_bitset filter_;

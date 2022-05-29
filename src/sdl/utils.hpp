@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2003 - 2021
+	Copyright (C) 2003 - 2022
+	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -26,9 +27,11 @@
 #include <map>
 #include <string>
 
+class CVideo;
+
 version_info sdl_get_version();
 
-inline void sdl_blit(const surface& src, SDL_Rect* src_rect, surface& dst, SDL_Rect* dst_rect){
+inline void sdl_blit(const surface& src, const SDL_Rect* src_rect, surface& dst, SDL_Rect* dst_rect){
 	SDL_BlitSurface(src, src_rect, dst, dst_rect);
 }
 
@@ -157,7 +160,7 @@ surface swap_channels_image(const surface& surf, channel r, channel g, channel b
  */
 surface recolor_image(surface surf, const color_range_map& map_rgb);
 
-surface brighten_image(const surface &surf, fixed_t amount);
+surface brighten_image(const surface &surf, int32_t amount);
 
 /** Get a portion of the screen.
  *  Send nullptr if the portion is outside of the screen.
@@ -169,7 +172,7 @@ surface brighten_image(const surface &surf, fixed_t amount);
  */
 surface get_surface_portion(const surface &surf, SDL_Rect &rect);
 
-void adjust_surface_alpha(surface& surf, fixed_t amount);
+void adjust_surface_alpha(surface& surf, int32_t amount);
 surface adjust_surface_alpha_add(const surface &surf, int amount);
 
 /** Applies a mask on a surface. */
@@ -323,5 +326,5 @@ uint32_t get_pixel(const surface& surf, const const_surface_lock& surf_lock, int
 
 // blit the image on the center of the rectangle
 // and a add a colored background
-void draw_centered_on_background(surface surf, const SDL_Rect& rect,
-	const color_t& color, surface target);
+void draw_centered_on_background(surface& surf, const SDL_Rect& rect,
+	const color_t& color, CVideo& video);

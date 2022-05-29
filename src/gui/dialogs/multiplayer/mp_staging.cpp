@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008 - 2021
+	Copyright (C) 2008 - 2022
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -97,10 +97,6 @@ void mp_staging::pre_show(window& window)
 	//
 	chatbox& chat = find_widget<chatbox>(&window, "chat", false);
 
-	if(network_connection_) {
-		chat.set_wesnothd_connection(*network_connection_);
-	}
-
 	chat.room_window_open(N_("this game"), true, false);
 	chat.active_window_changed();
 	chat.load_log(default_chat_log, false);
@@ -197,7 +193,7 @@ void mp_staging::add_side_node(ng::side_engine_ptr side)
 	const bool lock_team   = side->cfg()["team_lock"].to_bool(fls);
 	const bool lock_color  = side->cfg()["color_lock"].to_bool(fls);
 
-	const bool saved_game = connect_engine_.params().saved_game == mp_game_settings::SAVED_GAME_MODE::MIDGAME;
+	const bool saved_game = connect_engine_.params().saved_game == saved_game_mode::type::midgame;
 
 	//
 	// AI Algorithm
@@ -430,11 +426,9 @@ void mp_staging::on_team_select(ng::side_engine_ptr side, menu_button& team_menu
 
 	// Last, remove the old team node if it's now empty
 	if(old_team_node->empty()) {
-		// Only sibling should be the decor line, and it should be last
-		auto decor = old_team_node->siblings().back();
-
+		// Decor node will be immediately after team node. Remove this first!
+		tree.remove_node(old_team_node->get_node_below());
 		tree.remove_node(old_team_node);
-		tree.remove_node(decor.get());
 
 		team_tree_map_[old_team] = nullptr;
 	}
@@ -568,7 +562,7 @@ void mp_staging::network_handler()
 	update_status_label_and_buttons();
 
 	if(!was_able_to_start && connect_engine_.can_start_game()) {
-		mp_ui_alerts::ready_for_start();
+		mp::ui_alerts::ready_for_start();
 	}
 
 	state_changed_ = false;

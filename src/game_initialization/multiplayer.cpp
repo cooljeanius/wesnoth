@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2007 - 2021
+	Copyright (C) 2007 - 2022
+	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -14,7 +15,6 @@
 
 #include "game_initialization/multiplayer.hpp"
 
-#include "addon/manager.hpp" // for installed_addons
 #include "build_info.hpp"
 #include "commandline_options.hpp"
 #include "connect_engine.hpp"
@@ -52,6 +52,8 @@
 
 static lg::log_domain log_mp("mp/main");
 #define DBG_MP LOG_STREAM(debug, log_mp)
+#define LOG_MP LOG_STREAM(info, log_mp)
+#define WRN_MP LOG_STREAM(warn, log_mp)
 #define ERR_MP LOG_STREAM(err, log_mp)
 
 namespace mp
@@ -67,6 +69,8 @@ class mp_manager
 public:
 	// Declare this as a friend to allow direct access to enter_create_mode
 	friend void mp::start_local_game();
+	friend void mp::send_to_server(const config&);
+	friend mp::lobby_info* mp::get_lobby_info();
 
 	mp_manager(const std::optional<std::string> host);
 
@@ -144,10 +148,17 @@ private:
 
 	mp::lobby_info lobby_info;
 
+	std::list<mp::network_registrar::handler> process_handlers;
+
 public:
 	const session_metadata& get_session_info() const
 	{
 		return session_info;
+	}
+
+	auto add_network_handler(decltype(process_handlers)::value_type func)
+	{
+		return [this, iter = process_handlers.insert(process_handlers.end(), func)]() { process_handlers.erase(iter); };
 	}
 };
 
@@ -157,9 +168,10 @@ mp_manager::mp_manager(const std::optional<std::string> host)
 	, connection(nullptr)
 	, session_info()
 	, state()
-	, lobby_info(::installed_addons())
+	, lobby_info()
+	, process_handlers()
 {
-	state.classification().campaign_type = game_classification::CAMPAIGN_TYPE::MULTIPLAYER;
+	state.classification().type = campaign_type::type::multiplayer;
 
 	if(host) {
 		gui2::dialogs::loading_screen::display([&]() {
@@ -182,8 +194,8 @@ mp_manager::mp_manager(const std::optional<std::string> host)
 				while(!stop) {
 					connection->wait_and_receive_data(data);
 
-					if(const config& error = data.child("error")) {
-						throw wesnothd_error(error["message"]);
+					if(const auto error = data.optional_child("error")) {
+						throw wesnothd_error((*error)["message"]);
 					}
 
 					else if(data.has_child("gamelist")) {
@@ -200,8 +212,15 @@ mp_manager::mp_manager(const std::optional<std::string> host)
 						}
 					}
 
-					else if(const config& gamelist_diff = data.child("gamelist_diff")) {
-						this->lobby_info.process_gamelist_diff(gamelist_diff);
+					else if(const auto gamelist_diff = data.optional_child("gamelist_diff")) {
+						this->lobby_info.process_gamelist_diff(*gamelist_diff);
+					}
+
+					else {
+						// No special actions to take. Pass the data on to the network handlers.
+						for(const auto& handler : process_handlers) {
+							handler(data);
+						}
 					}
 				}
 			});
@@ -253,11 +272,11 @@ std::unique_ptr<wesnothd_connection> mp_manager::open_connection(std::string hos
 		data.clear();
 		conn->wait_and_receive_data(data);
 
-		if(data.has_child("reject") || data.has_attribute("version")) {
+		if(const auto reject = data.optional_child("reject"); reject || data.has_attribute("version")) {
 			std::string version;
 
-			if(const config& reject = data.child("reject")) {
-				version = reject["accepted_versions"].str();
+			if(reject) {
+				version = (*reject)["accepted_versions"].str();
 			} else {
 				// Backwards-compatibility "version" attribute
 				version = data["version"].str();
@@ -326,16 +345,16 @@ std::unique_ptr<wesnothd_connection> mp_manager::open_connection(std::string hos
 
 			gui2::dialogs::loading_screen::progress(loading_stage::login_response);
 
-			if(const config& warning = data.child("warning")) {
+			if(const auto warning = data.optional_child("warning")) {
 				std::string warning_msg;
 
-				if(warning["warning_code"] == MP_NAME_INACTIVE_WARNING) {
+				if((*warning)["warning_code"] == MP_NAME_INACTIVE_WARNING) {
 					warning_msg = VGETTEXT("The nickname ‘$nick’ is inactive. "
 						"You cannot claim ownership of this nickname until you "
 						"activate your account via email or ask an "
 						"administrator to do it for you.", {{"nick", login}});
 				} else {
-					warning_msg = warning["message"].str();
+					warning_msg = (*warning)["message"].str();
 				}
 
 				warning_msg += "\n\n";
@@ -502,11 +521,7 @@ void mp_manager::run_lobby_loop()
 		gcm->reload_changed_game_config();
 		gcm->load_game_config_for_create(true); // NOTE: Using reload_changed_game_config only doesn't seem to work here
 
-		// This function does not refer to an addon database, it calls filesystem functions.
-		// For the sanity of the mp lobby, this list should be fixed for the entire lobby session,
-		// even if the user changes the contents of the addon directory in the meantime.
-		// TODO: do we want to handle fetching the installed addons in the lobby_info ctor?
-		lobby_info.set_installed_addons(::installed_addons());
+		lobby_info.refresh_installed_addons_cache();
 
 		connection->send_data(config("refresh_lobby"));
 	}
@@ -708,7 +723,7 @@ void start_local_game_commandline(const commandline_options& cmdline_opts)
 
 	// Set the default parameters
 	saved_game state;
-	state.classification().campaign_type = game_classification::CAMPAIGN_TYPE::MULTIPLAYER;
+	state.classification().type = campaign_type::type::multiplayer;
 
 	mp_game_settings& parameters = state.mp_settings();
 
@@ -733,7 +748,7 @@ void start_local_game_commandline(const commandline_options& cmdline_opts)
 	// None of the other parameters need to be set, as their creation values above are good enough for CL mode.
 	// In particular, we do not want to use the preferences values.
 
-	state.classification().campaign_type = game_classification::CAMPAIGN_TYPE::MULTIPLAYER;
+	state.classification().type = campaign_type::type::multiplayer;
 
 	// [era] define.
 	if(cmdline_opts.multiplayer_era) {
@@ -825,6 +840,32 @@ std::string get_profile_link(int user_id)
 	}
 
 	return "";
+}
+
+void send_to_server(const config& data)
+{
+	if(manager && manager->connection) {
+		manager->connection->send_data(data);
+	}
+}
+
+network_registrar::network_registrar(handler func)
+{
+	if(manager /*&& manager->connection*/) {
+		remove_handler = manager->add_network_handler(func);
+	}
+}
+
+network_registrar::~network_registrar()
+{
+	if(remove_handler) {
+		remove_handler();
+	}
+}
+
+lobby_info* get_lobby_info()
+{
+	return manager ? &manager->lobby_info : nullptr;
 }
 
 } // end namespace mp

@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2003 - 2021
+	Copyright (C) 2003 - 2022
+	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -35,6 +36,7 @@
 #include "units/unit.hpp"
 #include "units/helper.hpp"
 #include "units/types.hpp"
+#include "units/unit_alignments.hpp"
 #include "whiteboard/manager.hpp"
 
 #include <cassert>
@@ -195,7 +197,7 @@ static config unit_type(const unit* u)
 	if(const auto& notes = u->unit_special_notes(); !notes.empty()) {
 		tooltip << "\n\n" << _("Special Notes:") << '\n';
 		for(const auto& note : notes) {
-			tooltip << "• " << note << '\n';
+			tooltip << font::unicode_bullet << " " << note << '\n';
 		}
 	}
 	return text_report(str.str(), tooltip.str(), has_variations_prefix + "unit_" + u->type_id());
@@ -369,7 +371,7 @@ static config unit_alignment(reports::context & rc, const unit* u, const map_loc
 	if (!u) return config();
 	std::ostringstream str, tooltip;
 	const std::string align = unit_type::alignment_description(u->alignment(), u->gender());
-	const std::string align_id = u->alignment().to_string();
+	const std::string align_id = unit_alignments::get_string(u->alignment());
 	const time_of_day effective_tod = get_visible_time_of_day_at(rc, hex);
 	int cm = combat_modifier(effective_tod, u->alignment(), u->is_fearless());
 
@@ -598,7 +600,8 @@ static config unit_defense(reports::context & rc, const unit* u, const map_locat
 	}
 
 	tooltip << "<b>" << _("Defense: ") << span_color(color)  << def << '%' << naps << "</b>";
-	return text_report(str.str(), tooltip.str());
+	const std::string has_variations_prefix = (u->type().show_variations_in_help() ? ".." : "");
+	return text_report(str.str(), tooltip.str(), has_variations_prefix + "unit_" + u->type_id());
 }
 REPORT_GENERATOR(unit_defense,rc)
 {
@@ -1263,18 +1266,17 @@ static config time_of_day_at(reports::context & rc, const map_location& mouseove
 	time_of_day tod = get_visible_time_of_day_at(rc, mouseover_hex);
 
 	int b = tod.lawful_bonus;
-	int l = generic_combat_modifier(b, unit_type::ALIGNMENT::LIMINAL, false, rc.tod().get_max_liminal_bonus());
+	int l = generic_combat_modifier(b, unit_alignments::type::liminal, false, rc.tod().get_max_liminal_bonus());
 	std::string  lawful_color("white");
 	std::string chaotic_color("white");
 	std::string liminal_color("white");
 
-	// Use same red/green colouring scheme as time_of_day_bonus_colored() in help/help_impl.cpp for consistency
 	if (b != 0) {
-		lawful_color  = (b > 0) ? "green" : "red";
-		chaotic_color = (b < 0) ? "green" : "red";
+		lawful_color  = (b > 0) ? "#0f0" : "#f00";
+		chaotic_color = (b < 0) ? "#0f0" : "#f00";
 	}
 	if (l != 0) {
-		liminal_color = (l > 0) ? "green" : "red";
+		liminal_color = (l > 0) ? "#0f0" : "#f00";
 	}
 	tooltip << _("Time of day:") << " <b>" << tod.name << "</b>\n"
 		<< _("Lawful units: ") << "<span foreground=\"" << lawful_color  << "\">"
@@ -1317,7 +1319,7 @@ static config unit_box_at(reports::context & rc, const map_location& mouseover_h
 	time_of_day local_tod = get_visible_time_of_day_at(rc, mouseover_hex);
 
 	int bonus = local_tod.lawful_bonus;
-	int l = generic_combat_modifier(bonus, unit_type::ALIGNMENT::LIMINAL, false, rc.tod().get_max_liminal_bonus());
+	int l = generic_combat_modifier(bonus, unit_alignments::type::liminal, false, rc.tod().get_max_liminal_bonus());
 
 	std::string  lawful_color("white");
 	std::string chaotic_color("white");

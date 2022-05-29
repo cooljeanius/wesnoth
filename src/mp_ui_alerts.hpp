@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2014 - 2021
+	Copyright (C) 2014 - 2022
+	by Chris Beck <render787@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -22,7 +23,7 @@
 #include<string>
 #include<vector>
 
-namespace mp_ui_alerts {
+namespace mp::ui_alerts {
 
 	// Functions called when such an event occurs
 	void player_joins(bool is_lobby);

@@ -1,5 +1,7 @@
 /*
-	Copyright (C) 2003 - 2021
+	Copyright (C) 2003 - 2022
+	by Guillaume Melquiond <guillaume.melquiond@gmail.com>
+	Copyright (C) 2003 by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -219,6 +221,13 @@ config_attribute_value& config_attribute_value::operator=(const std::string& v)
 	return *this;
 }
 
+config_attribute_value& config_attribute_value::operator=(const std::string_view& v)
+{
+	// TODO: Currently this acts just like std::string assignment.
+	// Perhaps the underlying variant should take a string_view directly?
+	return operator=(std::string(v));
+
+}
 config_attribute_value& config_attribute_value::operator=(const t_string& v)
 {
 	if(!v.translatable()) {

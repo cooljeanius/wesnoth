@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2008 - 2021
+	Copyright (C) 2008 - 2022
+	by Tomasz Sniatowski <kailoran@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -87,7 +88,7 @@ class editor_controller : public controller_base,
 		EXIT_STATUS main_loop();
 
 		/** Takes a screenshot **/
-		void do_screenshot(const std::string& screenshot_filename = "map_screenshot.bmp");
+		void do_screenshot(const std::string& screenshot_filename = "map_screenshot.png");
 
 		/** Process a hotkey quit command */
 		void hotkey_quit();

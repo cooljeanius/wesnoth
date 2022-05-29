@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2021 - 2021
+	Copyright (C) 2021 - 2022
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -41,7 +41,7 @@ void load_tls_root_certs(boost::asio::ssl::context &ctx)
 	PCCERT_CONTEXT pContext = NULL;
 	while ((pContext = CertEnumCertificatesInStore(hStore, pContext)) != NULL) {
 		X509 *x509 = d2i_X509(NULL,
-			(const unsigned char **)&pContext->pbCertEncoded,
+			const_cast<const unsigned char**>(&pContext->pbCertEncoded),
 			pContext->cbCertEncoded);
 		if(x509 != NULL) {
 			X509_STORE_add_cert(store, x509);

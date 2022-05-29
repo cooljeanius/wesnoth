@@ -1,5 +1,7 @@
 /*
-	Copyright (C) 2003 - 2021
+	Copyright (C) 2015 - 2022
+	by Iris Morelle <shadowm2006@gmail.com>
+	Copyright (C) 2003 - 2018 by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -141,24 +143,33 @@ inline util::ms_optimer service_timer(const campaignd::server::request& req, con
 
 /**
  * WML version of campaignd::auth::verify_passphrase().
+ * The salt and hash are retrieved from the @a passsalt and @a passhash attributes, respectively, if not using forum_auth.
  *
- * The salt and hash are retrieved from the @a passsalt and @a passhash
- * attributes, respectively.
+ * @param addon The config of the addon being authenticated for upload.
+ * @param passphrase The password being validated.
+ * @return Whether the password is correct for the addon.
  */
 inline bool authenticate(config& addon, const config::attribute_value& passphrase)
 {
-	return auth::verify_passphrase(passphrase, addon["passsalt"], addon["passhash"]);
+	if(!addon["forum_auth"].to_bool()) {
+		return auth::verify_passphrase(passphrase, addon["passsalt"], addon["passhash"]);
+	}
+	return false;
 }
 
 /**
  * WML version of campaignd::auth::generate_hash().
+ * The salt and hash are written into the @a passsalt and @a passhash attributes, respectively, if not using forum_auth.
  *
- * The salt and hash are written into the @a passsalt and @a passhash
- * attributes, respectively.
+ * @param addon The addon whose password is being set.
+ * @param passphrase The password being hashed.
  */
 inline void set_passphrase(config& addon, const std::string& passphrase)
 {
-	std::tie(addon["passsalt"], addon["passhash"]) = auth::generate_hash(passphrase);
+	// don't do anything if using forum authorization
+	if(!addon["forum_auth"].to_bool()) {
+		std::tie(addon["passsalt"], addon["passhash"]) = auth::generate_hash(passphrase);
+	}
 }
 
 /**
@@ -463,6 +474,7 @@ void server::load_config()
 			exit(1);
 		}
 		user_handler_.reset(new fuh(user_handler));
+		LOG_CS << "User handler initialized.\n";
 	}
 #endif
 
@@ -541,7 +553,7 @@ void server::handle_read_from_fifo(const boost::system::error_code& error, std::
 
 	if(ctl == "shut_down") {
 		LOG_CS << "Shut down requested by admin, shutting down...\n";
-		throw server_shutdown("Shut down via fifo command");
+		BOOST_THROW_EXCEPTION(server_shutdown("Shut down via fifo command"));
 	} else if(ctl == "readonly") {
 		if(ctl.args_count()) {
 			cfg_["read_only"] = read_only_ = utils::string_bool(ctl[1], true);
@@ -602,6 +614,8 @@ void server::handle_read_from_fifo(const boost::system::error_code& error, std::
 			} else if(newpass.empty()) {
 				// Shouldn't happen!
 				ERR_CS << "Add-on passphrases may not be empty!\n";
+			} else if(addon["forum_auth"].to_bool()) {
+				ERR_CS << "Can't set passphrase for add-on using forum_auth.\n";
 			} else {
 				set_passphrase(addon, newpass);
 				mark_dirty(addon_id);
@@ -610,12 +624,18 @@ void server::handle_read_from_fifo(const boost::system::error_code& error, std::
 			}
 		}
 	} else if(ctl == "setattr") {
-		if(ctl.args_count() != 3) {
+		if(ctl.args_count() < 3) {
 			ERR_CS << "Incorrect number of arguments for 'setattr'\n";
 		} else {
 			const std::string& addon_id = ctl[1];
 			const std::string& key = ctl[2];
-			const std::string& value = ctl[3];
+			std::string value;
+			for (std::size_t i = 3; i <= ctl.args_count(); ++i) {
+				if(i > 3) {
+					value += ' ';
+				}
+				value += ctl[i];
+			}
 
 			config& addon = get_addon(addon_id);
 
@@ -1290,8 +1310,26 @@ ADDON_CHECK_STATUS server::validate_addon(const server::request& req, config*& e
 		return ADDON_CHECK_STATUS::NO_PASSPHRASE;
 	}
 
-	if(existing_addon && !authenticate(*existing_addon, upload["passphrase"])) {
-		LOG_CS << "Validation error: passphrase does not match\n";
+	if(existing_addon && upload["forum_auth"].to_bool() != (*existing_addon)["forum_auth"].to_bool()) {
+		LOG_CS << "Validation error: forum_auth is " << upload["forum_auth"].to_bool() << " but was previously uploaded set to " << (*existing_addon)["forum_auth"].to_bool() << "\n";
+		return ADDON_CHECK_STATUS::AUTH_TYPE_MISMATCH;
+	} else if(upload["forum_auth"].to_bool()) {
+		if(!user_handler_) {
+			LOG_CS << "Validation error: client requested forum authentication but server does not support it\n";
+			return ADDON_CHECK_STATUS::SERVER_FORUM_AUTH_DISABLED;
+		} else {
+			if(!user_handler_->user_exists(upload["author"].str())) {
+				LOG_CS << "Validation error: forum auth requested for an author who doesn't exist\n";
+				return ADDON_CHECK_STATUS::USER_DOES_NOT_EXIST;
+			}
+
+			if(!authenticate_forum(upload, upload["passphrase"].str())) {
+				LOG_CS << "Validation error: forum passphrase does not match\n";
+				return ADDON_CHECK_STATUS::UNAUTHORIZED;
+			}
+		}
+	} else if(existing_addon && !authenticate(*existing_addon, upload["passphrase"])) {
+		LOG_CS << "Validation error: campaignd passphrase does not match\n";
 		return ADDON_CHECK_STATUS::UNAUTHORIZED;
 	}
 
@@ -1378,7 +1416,8 @@ ADDON_CHECK_STATUS server::validate_addon(const server::request& req, config*& e
 		return ADDON_CHECK_STATUS::NO_DESCRIPTION;
 	}
 
-	if(upload["email"].empty()) {
+	// if using forum_auth, email will be pulled from the forum database later
+	if(upload["email"].empty() && !upload["forum_auth"].to_bool()) {
 		LOG_CS << "Validation error: no add-on email specified\n";
 		return ADDON_CHECK_STATUS::NO_EMAIL;
 	}
@@ -1462,13 +1501,13 @@ void server::handle_upload(const server::request& req)
 
 	addon.copy_attributes(upload,
 		"title", "name", "author", "description", "version", "icon",
-		"translate", "dependencies", "type", "tags", "email");
+		"translate", "dependencies", "core", "type", "tags", "email", "forum_auth");
 
 	const std::string& pathstem = "data/" + name;
 	addon["filename"] = pathstem;
 	addon["upload_ip"] = req.addr;
 
-	if(!is_existing_upload) {
+	if(!is_existing_upload && !addon["forum_auth"].to_bool()) {
 		set_passphrase(addon, upload["passphrase"]);
 	}
 
@@ -1488,7 +1527,10 @@ void server::handle_upload(const server::request& req)
 	}
 
 	if(user_handler_) {
-		user_handler_->db_insert_addon_info(server_id_, name, addon["title"].str(), addon["type"].str(), addon["version"].str(), false, topic_id);
+		if(addon["forum_auth"].to_bool()) {
+			addon["email"] = user_handler_->get_user_email(upload["author"].str());
+		}
+		user_handler_->db_insert_addon_info(server_id_, name, addon["title"].str(), addon["type"].str(), addon["version"].str(), addon["forum_auth"].to_bool(), topic_id);
 	}
 
 	// Copy in any metadata translations provided directly in the .pbl.
@@ -1795,9 +1837,16 @@ void server::handle_delete(const server::request& req)
 		return;
 	}
 
-	if(!authenticate(addon, pass)) {
-		send_error("The passphrase is incorrect.", req.sock);
-		return;
+	if(!addon["forum_auth"].to_bool()) {
+		if(!authenticate(addon, pass)) {
+			send_error("The passphrase is incorrect.", req.sock);
+			return;
+		}
+	} else {
+		if(!authenticate_forum(addon, pass)) {
+			send_error("The passphrase is incorrect.", req.sock);
+			return;
+		}
 	}
 
 	if(addon["hidden"].to_bool()) {
@@ -1825,6 +1874,8 @@ void server::handle_change_passphrase(const server::request& req)
 
 	if(!addon) {
 		send_error("No add-on with that name exists.", req.sock);
+	} else if(addon["forum_auth"].to_bool()) {
+		send_error("Changing the password for add-ons using forum_auth is not supported.", req.sock);
 	} else if(!authenticate(addon, cpass["passphrase"])) {
 		send_error("Your old passphrase was incorrect.", req.sock);
 	} else if(addon["hidden"].to_bool()) {
@@ -1838,6 +1889,17 @@ void server::handle_change_passphrase(const server::request& req)
 		write_config();
 		send_message("Passphrase changed.", req.sock);
 	}
+}
+
+bool server::authenticate_forum(const config& addon, const std::string& passphrase) {
+	if(!user_handler_) {
+		return false;
+	}
+
+	std::string author = addon["author"].str();
+	std::string salt = user_handler_->extract_salt(author);
+	std::string hashed_password = hash_password(passphrase, salt, author);
+	return user_handler_->login(author, hashed_password);
 }
 
 } // end namespace campaignd
@@ -1939,9 +2001,7 @@ int run_campaignd(int argc, char** argv)
 	//
 	// Run the server
 	//
-	campaignd::server(config_file, port).run();
-
-	return 0;
+	return campaignd::server(config_file, port).run();
 }
 
 int main(int argc, char** argv)

@@ -34,7 +34,7 @@ local function preshow(dialog)
     function dialog.unit_help_button.on_button_click()
         W.open_help { topic="unit_" .. listedZombies[dialog.unit_list.selected_index] }
     end
-    
+
     for i,z in ipairs(zombies) do
         if z.allow_recruit then
             local unit_type = wesnoth.unit_types[z.type]
@@ -87,12 +87,17 @@ wml.variables["recruitedZombieType"] = "cancel" -- default value
 if zExists==false then
     gui.show_prompt("", _ "There are no corpses available.", "")
 else
-    --TODO: this seems not to be synced.
-    local returned = gui.show_dialog(wml.get_child(zombie_recruit_dialog, 'resolution'), preshow, postshow)
-    if  returned ~= -2 and sides[1].gold  < recruitCost then
-        gui.show_prompt("", _ "You do not have enough gold to recruit that unit", "")
-    elseif returned ~= -2 and (sides[1].gold ) >= recruitCost then
-        wml.variables["recruitedZombieType"] = recruitedType
-        wml.variables["recruitedZombieCost"] = recruitCost
-    end
+    local result = wesnoth.sync.evaluate_single(function()
+        local res = gui.show_dialog(wml.get_child(zombie_recruit_dialog, 'resolution'), preshow, postshow)
+        if res == -2 then
+            return {recruitCost = 0, recruitedType = "cancel"}
+        end
+        if sides[1].gold  < recruitCost then
+            gui.show_prompt("", _ "You do not have enough gold to recruit that unit", "")
+            return {recruitCost = 0, recruitedType = "cancel"}
+        end
+        return {recruitCost = recruitCost, recruitedType = recruitedType}
+    end)
+    wml.variables["recruitedZombieType"] = result.recruitedType
+    wml.variables["recruitedZombieCost"] = result.recruitCost
 end

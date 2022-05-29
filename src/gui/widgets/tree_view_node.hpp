@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2010 - 2021
+	Copyright (C) 2010 - 2022
+	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -77,13 +78,11 @@ public:
 	 * The motivation here is to provide a way to add multiple children without calculating the trees size for each child added.
 	 * This is a waste of time since the results of that resizing will be immediately thrown out except for the final child added.
 	 *
-	 * @param id The id of the node definition to use for the new nodes.
-	 * @param data data.first is a unique identifying value to be associated to the respective tree_view_node that's returned.
-	 * 			   data.second is the data to provide to the tree_node_view's constructor.
-	 * @return return_value.first is data.first
-	 * 		   return_value.second is the tree_view_node created from data.second
+	 * @param id                  The id of the node definition to use for the new nodes.
+	 * @param data                A vector of the data to provide to the tree_node_view's constructor.
+	 * @return                    A vector of pointers to the newly created nodes.
 	 */
-	std::map<std::string, std::shared_ptr<gui2::tree_view_node>> replace_children(const std::string& id, const std::map<std::string, std::map<std::string /* widget id */, string_map>>& data);
+	std::vector<std::shared_ptr<gui2::tree_view_node>> replace_children(const std::string& id, const std::vector<std::map<std::string /* widget id */, string_map>>& data);
 
 	/**
 	 * Adds a previously-constructed node as a child of this node at the given position.
@@ -174,7 +173,7 @@ public:
 	 *
 	 * @todo Implement properly.
 	 */
-	virtual iteration::walker_base* create_walker() override;
+	virtual iteration::walker_ptr create_walker() override;
 
 	node_children_vector& children()
 	{
@@ -325,9 +324,7 @@ private:
 	virtual void set_visible_rectangle(const SDL_Rect& rectangle) override;
 
 	/** See @ref widget::impl_draw_children. */
-	virtual void impl_draw_children(surface& frame_buffer,
-									int x_offset,
-									int y_offset) override;
+	virtual void impl_draw_children(int x_offset, int y_offset) override;
 
 	// FIXME rename to icon
 	void signal_handler_left_button_click(const event::ui_event event);

@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2003 - 2021
+	Copyright (C) 2003 - 2022
+	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -507,6 +508,12 @@ static int process_command_args(const commandline_options& cmdline_opts)
 		return 0;
 	}
 
+	if(cmdline_opts.simple_version) {
+		std::cout << game_config::wesnoth_version.str() << "\n";
+
+		return 0;
+	}
+
 	if(cmdline_opts.report) {
 		std::cout << "\n========= BUILD INFORMATION =========\n\n" << game_config::full_build_report();
 		return 0;
@@ -528,7 +535,7 @@ static int process_command_args(const commandline_options& cmdline_opts)
 		if(cmdline_opts.output_file) {
 			os = new std::ofstream(*cmdline_opts.output_file);
 		}
-		config_writer out(*os, compression::format::NONE);
+		config_writer out(*os, compression::format::none);
 		out.write(right.get_diff(left));
 		if(os != &std::cout) delete os;
 		return 0;
@@ -545,7 +552,7 @@ static int process_command_args(const commandline_options& cmdline_opts)
 		if(cmdline_opts.output_file) {
 			os = new std::ofstream(*cmdline_opts.output_file);
 		}
-		config_writer out(*os, compression::format::NONE);
+		config_writer out(*os, compression::format::none);
 		out.write(base);
 		if(os != &std::cout) delete os;
 		return 0;
@@ -1109,7 +1116,7 @@ int main(int argc, char** argv)
 		std::cerr << "Error in command line: " << e.what() << '\n';
 		error_exit(1);
 	} catch(const CVideo::error& e) {
-		std::cerr << "Could not initialize video.\n\n" << e.what() << "\n\nExiting.\n";
+		std::cerr << "Video system error: " << e.what() << std::endl;
 		error_exit(1);
 	} catch(const font::error& e) {
 		std::cerr << "Could not initialize fonts.\n\n" << e.what() << "\n\nExiting.\n";

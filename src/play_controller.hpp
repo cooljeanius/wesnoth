@@ -1,5 +1,7 @@
 /*
-	Copyright (C) 2006 - 2021
+	Copyright (C) 2006 - 2022
+	by Joerg Hinrichs <joerg.hinrichs@alice-dsl.de>
+	Copyright (C) 2003 by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -415,7 +417,7 @@ private:
 	std::vector<std::string> victory_music_;
 	std::vector<std::string> defeat_music_;
 
-	hotkey::scope_changer scope_;
+	const hotkey::scope_changer scope_;
 
 protected:
 	mutable bool ignore_replay_errors_;

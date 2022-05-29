@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2008 - 2021
+	Copyright (C) 2008 - 2022
+	by Thomas Baumhauer <thomas.baumhauer@NOSPAMgmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -179,8 +180,9 @@ public:
 	 * @param id The id of the content.
 	 * @param source The source add-on for the content.
 	 * @param version The version of the source add-on.
+	 * @return The number of rows inserted which should always be 1.
 	 */
-	void db_insert_game_content_info(const std::string& uuid, int game_id, const std::string& type, const std::string& name, const std::string& id, const std::string& source, const std::string& version);
+	unsigned long long db_insert_game_content_info(const std::string& uuid, int game_id, const std::string& type, const std::string& name, const std::string& id, const std::string& source, const std::string& version);
 
 	/**
 	 * Sets the OOS flag in the database if wesnothd is told by a client it has detected an OOS error.
@@ -254,6 +256,12 @@ public:
 	 * @param out Where to output the results.
 	 */
 	void get_ips_for_user(const std::string& username, std::ostringstream* out);
+
+	/**
+	 * @param user The player's username.
+	 * @return The player's email address from the phpbb forum database.
+	 */
+	std::string get_user_email(const std::string& user);
 
 private:
 	/** An instance of the class responsible for executing the queries and handling the database connection. */

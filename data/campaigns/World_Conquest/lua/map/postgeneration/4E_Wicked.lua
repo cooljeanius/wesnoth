@@ -1,6 +1,6 @@
 -- Wicked
 function world_conquest_tek_map_repaint_4e()
-	wct_reduce_wall_clusters("Uu,Uu,Uu,Uu,Uu,Uu,Uu,Uu,Uh,Uh,Uh,Uh,Uu^Uf,Wwf,Ur,Qxu,Ql,Wwg")
+	wct_reduce_wall_clusters("Uu,Uu,Uu,Uu,Uu,Uu,Uu,Uu,Uh,Uh,Uh,Uh,Uu^Tf,Wwf,Ur,Qxu,Ql,Wwg")
 	wct_fill_lava_chasms()
 	-- soft rough terrain around caves
 	set_terrain { "Aa,Aa,Gs",
@@ -12,7 +12,7 @@ function world_conquest_tek_map_repaint_4e()
 		fraction = 4,
 	}
 	set_terrain { "Gs,Gg,Gg",
-		f.terrain("H*^Uf,Hh,Hhd"),
+		f.terrain("H*^Tf,Hh,Hhd"),
 		fraction = 3,
 	}
 	set_terrain { "Aa,Aa,Aa,Gs",
@@ -173,7 +173,7 @@ function world_conquest_tek_map_repaint_4e()
 	}
 
 	-- swamp mushrooms east
-	set_terrain { "Ss^Uf",
+	set_terrain { "Ss^Tf",
 		f.all(
 			f.terrain("S*"),
 			f.none(
@@ -363,9 +363,9 @@ function world_conquest_tek_map_repaint_4e()
 		layer = "overlay",
 	}
 
-	local r = "Gs^Fp,Gs^Fms,Gs^Fds,Gs^Ft,Gs^Ft,Gs^Ftp,Gs^Ftr,Gs^Ftd,Gs^Fet"
-	r = mathx.random_choice(r)
-	set_terrain { r,
+	local r1 = "Gs^Fp,Gs^Fms,Gs^Fds,Gs^Ft,Gs^Ft,Gs^Ftp,Gs^Ftr,Gs^Ftd,Gs^Fet"
+	r1 = mathx.random_choice(r1)
+	set_terrain { r1,
 		f.all(
 			f_west_half,
 			f.terrain("Gs^F*"),
@@ -375,9 +375,9 @@ function world_conquest_tek_map_repaint_4e()
 		),
 	}
 
-	local r = "Gs^Fp,Gs^Fms,Gs^Fds,Gs^Ftp,Gs^Ft,Gs^Ftp,Gs^Ftr,Gs^Ftd,Gs^Fet,Gs^Fts,Gs^Fts,Gs^Ft,Gs^Ft,Gs^Ftd,Gs^Fp"
-	r = mathx.random_choice(r)
-	set_terrain { r,
+	local r2 = "Gs^Fp,Gs^Fms,Gs^Fds,Gs^Ftp,Gs^Ft,Gs^Ftp,Gs^Ftr,Gs^Ftd,Gs^Fet,Gs^Fts,Gs^Fts,Gs^Ft,Gs^Ft,Gs^Ftd,Gs^Fp"
+	r2 = mathx.random_choice(r2)
+	set_terrain { r2,
 		f.all(
 			f.terrain("Gs^F*,Hh^F*"),
 			f.none(

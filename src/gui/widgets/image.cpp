@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2008 - 2021
+	Copyright (C) 2008 - 2022
+	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -121,9 +122,9 @@ builder_image::builder_image(const config& cfg) : builder_styled_widget(cfg)
 {
 }
 
-widget* builder_image::build() const
+std::unique_ptr<widget> builder_image::build() const
 {
-	image* widget = new image(*this);
+	auto widget = std::make_unique<image>(*this);
 
 	DBG_GUI_G << "Window builder: placed image '" << id << "' with definition '"
 			  << definition << "'.\n";

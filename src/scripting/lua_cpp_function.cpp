@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2014 - 2021
+	Copyright (C) 2014 - 2022
+	by Chris Beck <render787@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -20,7 +21,6 @@
 #include <string>
 
 #include "lua/lauxlib.h"
-#include "lua/lua.h"
 #include "scripting/lua_common.hpp" // for new(L)
 
 static lg::log_domain log_scripting_lua("scripting/lua");

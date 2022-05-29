@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2012 - 2021
+	Copyright (C) 2012 - 2022
+	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -28,9 +29,9 @@ struct builder_instance : public builder_widget
 {
 	explicit builder_instance(const config& cfg);
 
-	virtual widget* build() const override;
+	virtual std::unique_ptr<widget> build() const override;
 
-	virtual widget* build(const replacements_map& replacements) const override;
+	virtual std::unique_ptr<widget> build(const replacements_map& replacements) const override;
 
 	/**
 	 * Holds a copy of the cfg parameter in the constructor.

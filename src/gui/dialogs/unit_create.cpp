@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2009 - 2021
+	Copyright (C) 2009 - 2022
+	by Iris Morelle <shadowm2006@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -68,7 +69,7 @@ void unit_create::pre_show(window& window)
 	gender_toggle.set_member_states(last_gender);
 
 	gender_toggle.set_callback_on_value_change(
-		std::bind(&unit_create::gender_toggle_callback, this));
+		std::bind(&unit_create::gender_toggle_callback, this, std::placeholders::_2));
 
 	menu_button& var_box = find_widget<menu_button>(&window, "variation_box", false);
 
@@ -125,7 +126,7 @@ void unit_create::pre_show(window& window)
 	list.register_translatable_sorting_option(1, [this](const int i) { return (*units_[i]).type_name().str(); });
 
 	// Select the first entry on sort if no previous selection was provided.
-	list.set_active_sorting_option({0, preferences::SORT_ORDER::ASCENDING}, choice_.empty());
+	list.set_active_sorting_option({0, sort_order::type::ascending}, choice_.empty());
 
 	list_item_clicked();
 }
@@ -280,9 +281,9 @@ void unit_create::filter_text_changed(const std::string& text)
 	list.set_row_shown(show_items);
 }
 
-void unit_create::gender_toggle_callback()
+void unit_create::gender_toggle_callback(const unit_race::GENDER val)
 {
-	gender_ = gender_toggle.get_active_member_value();
+	gender_ = val;
 
 	update_displayed_type();
 }

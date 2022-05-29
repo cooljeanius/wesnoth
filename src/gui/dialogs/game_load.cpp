@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2008 - 2021
+	Copyright (C) 2008 - 2022
+	by Jörg Hinrichs <joerg.hinrichs@alice-dsl.de>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -229,11 +230,9 @@ void game_load::display_savegame_internal(const savegame::save_info& game)
 		item["label"] = leader["gold"];
 		data.emplace("leader_gold", item);
 
-		item["label"] = leader["units"];
+		// TRANSLATORS: "reserve" refers to units on the recall list
+		item["label"] = VGETTEXT("$active active, $reserve reserve", {{"active", leader["units"]}, {"reserve", leader["recall_units"]}});
 		data.emplace("leader_troops", item);
-
-		item["label"] = leader["recall_units"];
-		data.emplace("leader_reserves", item);
 
 		leader_list.add_row(data);
 	}
@@ -352,7 +351,6 @@ void game_load::filter_text_changed(const std::string& text)
 
 void game_load::evaluate_summary_string(std::stringstream& str, const config& cfg_summary)
 {
-	std::string difficulty_human_str = string_table[cfg_summary["difficulty"]];
 	if(cfg_summary["corrupt"].to_bool()) {
 		str << "\n<span color='#f00'>" << _("(Invalid)") << "</span>";
 		// \todo: this skips the catch() statement in display_savegame. Low priority, as the
@@ -363,26 +361,16 @@ void game_load::evaluate_summary_string(std::stringstream& str, const config& cf
 	}
 
 	const std::string& campaign_type = cfg_summary["campaign_type"];
+	const std::string campaign_id = cfg_summary["campaign"];
+	auto campaign_type_enum = campaign_type::get_enum(campaign_type);
 
-	try {
-		switch(game_classification::CAMPAIGN_TYPE::string_to_enum(campaign_type).v) {
-			case game_classification::CAMPAIGN_TYPE::SCENARIO: {
-				const std::string campaign_id = cfg_summary["campaign"];
-
+	if(campaign_type_enum) {
+		switch(*campaign_type_enum) {
+			case campaign_type::type::scenario: {
 				const config* campaign = nullptr;
 				if(!campaign_id.empty()) {
 					if(const config& c = cache_config_.find_child("campaign", "id", campaign_id)) {
 						campaign = &c;
-					}
-				}
-
-				if (campaign != nullptr) {
-					try {
-						const config &difficulty = campaign->find_child("difficulty", "define", cfg_summary["difficulty"]);
-						std::ostringstream ss;
-						ss << difficulty["label"] << " (" << difficulty["description"] << ")";
-						difficulty_human_str = ss.str();
-					} catch(const config::error&) {
 					}
 				}
 
@@ -402,17 +390,17 @@ void game_load::evaluate_summary_string(std::stringstream& str, const config& cf
 				}
 				break;
 			}
-			case game_classification::CAMPAIGN_TYPE::MULTIPLAYER:
+			case campaign_type::type::multiplayer:
 				str << _("Multiplayer");
 				break;
-			case game_classification::CAMPAIGN_TYPE::TUTORIAL:
+			case campaign_type::type::tutorial:
 				str << _("Tutorial");
 				break;
-			case game_classification::CAMPAIGN_TYPE::TEST:
+			case campaign_type::type::test:
 				str << _("Test scenario");
 				break;
 		}
-	} catch(const bad_enum_cast&) {
+	} else {
 		str << campaign_type;
 	}
 
@@ -426,8 +414,43 @@ void game_load::evaluate_summary_string(std::stringstream& str, const config& cf
 		str << _("Scenario start");
 	}
 
-	str << "\n" << _("Difficulty: ")
-		<< difficulty_human_str;
+	if(campaign_type_enum) {
+		switch (*campaign_type_enum) {
+		case campaign_type::type::scenario:
+		case campaign_type::type::multiplayer: {
+			const config* campaign = nullptr;
+			if (!campaign_id.empty()) {
+				if (const config& c = cache_config_.find_child("campaign", "id", campaign_id)) {
+					campaign = &c;
+				}
+			}
+
+			// 'SCENARIO' or SP should only ever be campaigns
+			// 'MULTIPLAYER' may be a campaign with difficulty or single scenario without difficulty
+			// For the latter do not show the difficulty - even though it will be listed as
+			// NORMAL -> Medium in the save file it should not be considered valid (GitHub Issue #5321)
+			if (campaign != nullptr) {
+				str << "\n" << _("Difficulty: ");
+				try {
+					const config& difficulty = campaign->find_child("difficulty", "define", cfg_summary["difficulty"]);
+					std::ostringstream ss;
+					ss << difficulty["label"] << " (" << difficulty["description"] << ")";
+					str << ss.str();
+				}
+				catch (const config::error&) {
+					// fall back to standard difficulty string in case of exception
+					str << string_table[cfg_summary["difficulty"]];
+				}
+			}
+
+			break;
+		}
+		case campaign_type::type::tutorial:
+		case campaign_type::type::test:
+			break;
+		}
+	} else {
+	}
 
 	if(!cfg_summary["version"].empty()) {
 		str << "\n" << _("Version: ") << cfg_summary["version"];

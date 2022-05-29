@@ -19,15 +19,13 @@ local ice = {
 --replaces terrain fo the wct  custom terrain mod.
 local function wct_map_custom_ruin_village(loc)
 	local map = wesnoth.current.map
-	-- TODO: enable once https://github.com/wesnoth/wesnoth/issues/4894 is fixed.
-	if false then
-		if loc:matches{terrain = "*^Vh,*^Vha"} then
-			map[loc] = "^Vhr"
-		end
-		if loc:matches{terrain = "*^Vhc,*^Vhca"} then
-			map[loc] = "^Vhr"
-		end
-	end
+	-- TODO: uncomment once https://github.com/wesnoth/wesnoth/issues/4894 is fixed.
+	-- if loc:matches{terrain = "*^Vh,*^Vha"} then
+	-- 	map[loc] = "^Vhr"
+	-- end
+	-- if loc:matches{terrain = "*^Vhc,*^Vhca"} then
+	-- 	map[loc] = "^Vhr"
+	-- end
 end
 
 on_event("die", function(cx)
@@ -36,7 +34,7 @@ on_event("die", function(cx)
 	if wml.variables.wc2_config_enable_terrain_destruction == false then
 		return
 	end
-	if not loc:matches{terrain = "K*^*,C*^*,*^Fet,G*^F*,G*^Uf,A*,*^B*,Rrc,Iwr,*^Vhh,*^Vh*,*^Fda*"} then
+	if not loc:matches{terrain = "K*^*,C*^*,*^Fet,G*^F*,G*^Tf,A*,*^B*,Rrc,Iwr,*^Vhh,*^Vh*,*^Fda*"} then
 		return
 	end
 	local function item(image)
@@ -66,7 +64,7 @@ on_event("die", function(cx)
 	elseif loc:matches{terrain = "Kd"} then
 		map[loc] = "Kdr^Es"
 
-	elseif loc:matches{terrain = "Gg^Fmf,Gg^Fdf,Gg^Fp,Gg^Uf,Gs^Fmf,Gs^Fdf,Gs^Fp,Gs^Uf"} then
+	elseif loc:matches{terrain = "Gg^Fmf,Gg^Fdf,Gg^Fp,Gg^Tf,Gs^Fmf,Gs^Fdf,Gs^Fp,Gs^Tf"} then
 		map[loc] = "Gll^"
 
 	elseif loc:matches{terrain = "Cv^Fds"} then
@@ -106,12 +104,10 @@ on_event("die", function(cx)
 		if loc:matches{terrain = "Ch^V*"} then
 			map[loc] = "Chr^"
 		end
-		--  TODO: enable once https://github.com/wesnoth/wesnoth/issues/4894 is fixed.
-		if false then
-			if loc:matches{terrain = "*^Fda"} then
-				map[loc] = "^Fdw"
-			end
-		end
+		--  TODO: uncomment once https://github.com/wesnoth/wesnoth/issues/4894 is fixed.
+		-- if loc:matches{terrain = "*^Fda"} then
+		-- 	map[loc] = "^Fdw"
+		-- end
 	else
 		if loc:matches{terrain = "*^Vhh,*^Vhha"} then
 			map[loc] = "^Vhhr"

@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2007 - 2021
+	Copyright (C) 2007 - 2022
+	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -105,15 +106,14 @@ public:
 
 	public:
 	/**
-	 * Draw the canvas' shapes onto another surface.
+	 * Draw the canvas' shapes onto the screen.
 	 *
 	 * It makes sure the image on the canvas is up to date. Also executes the
 	 * pre-blitting functions.
 	 *
-	 * @param surf                The surface to blit upon.
-	 * @param rect                The place to blit to.
+	 * @param rect                Where to blit to, in drawing coordinates.
 	 */
-	void blit(surface& surf, SDL_Rect rect);
+	void blit(SDL_Rect rect);
 
 	/**
 	 * Sets the config.

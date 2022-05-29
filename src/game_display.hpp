@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2003 - 2021
+	Copyright (C) 2003 - 2022
+	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -35,7 +36,7 @@ public:
 	game_display(game_board& board,
 			std::weak_ptr<wb::manager> wb,
 			reports & reports_object,
-			const config& theme_cfg,
+			const std::string& theme_id,
 			const config& level);
 
 	~game_display();

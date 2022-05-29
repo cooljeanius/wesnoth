@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2003 - 2021
+	Copyright (C) 2003 - 2022
+	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -63,13 +64,19 @@ namespace preferences {
  * Add any variables of similar type here.
  */
 const int min_window_width  = 800;
-const int min_window_height = 600;
+const int min_window_height = 540;
 
 const int def_window_width  = 1280;
 const int def_window_height = 720;
 
+const int max_window_width = 1920;
+const int max_window_height = 1080;
+
 const int min_font_scaling  = 80;
 const int max_font_scaling  = 150;
+
+const int min_pixel_scale = 1;
+const int max_pixel_scale = 4;
 
 class prefs_event_handler : public events::sdl_handler {
 public:
@@ -115,7 +122,7 @@ void prefs_event_handler::handle_window_event(const SDL_Event& event)
 
 	switch(event.window.event) {
 	case SDL_WINDOWEVENT_RESIZED:
-		_set_resolution(point(event.window.data1,event.window.data2));
+		_set_resolution(CVideo::get_singleton().window_size());
 
 		break;
 
@@ -405,6 +412,27 @@ point resolution()
 	);
 }
 
+int pixel_scale()
+{
+	// For now this has a minimum value of 1 and a maximum of 4.
+	return std::max<int>(std::min<int>(prefs["pixel_scale"].to_int(1), max_pixel_scale), min_pixel_scale);
+}
+
+void set_pixel_scale(const int scale)
+{
+	prefs["pixel_scale"] = std::clamp(scale, min_pixel_scale, max_pixel_scale);
+}
+
+bool auto_pixel_scale()
+{
+	return get("auto_pixel_scale", true);
+}
+
+void set_auto_pixel_scale(bool choice)
+{
+	prefs["auto_pixel_scale"] = choice;
+}
+
 bool maximized()
 {
 	return get("maximized", !fullscreen());
@@ -413,6 +441,11 @@ bool maximized()
 bool fullscreen()
 {
 	return get("fullscreen", true);
+}
+
+bool vsync()
+{
+	return get("vsync", true);
 }
 
 void _set_resolution(const point& res)
@@ -431,6 +464,11 @@ void _set_fullscreen(bool ison)
 	prefs["fullscreen"] = ison;
 }
 
+void set_vsync(bool ison)
+{
+	prefs["vsync"] = ison;
+}
+
 bool turbo()
 {
 	if(CVideo::get_singleton().non_interactive()) {
@@ -440,7 +478,7 @@ bool turbo()
 	return get("turbo", false);
 }
 
-void _set_turbo(bool ison)
+void set_turbo(bool ison)
 {
 	prefs["turbo"] = ison;
 }
@@ -450,7 +488,7 @@ double turbo_speed()
 	return prefs["turbo_speed"].to_double(2.0);
 }
 
-void save_turbo_speed(const double speed)
+void set_turbo_speed(const double speed)
 {
 	prefs["turbo_speed"] = speed;
 }
@@ -476,19 +514,19 @@ bool idle_anim()
 	return  get("idle_anim", true);
 }
 
-void _set_idle_anim(const bool ison)
+void set_idle_anim(const bool ison)
 {
 	prefs["idle_anim"] = ison;
 }
 
-int idle_anim_rate()
+double idle_anim_rate()
 {
-	return prefs["idle_anim_rate"];
+	return prefs["idle_anim_rate"].to_double(1.0);
 }
 
-void _set_idle_anim_rate(const int rate)
+void set_idle_anim_rate(const int rate)
 {
-	prefs["idle_anim_rate"] = rate;
+	prefs["idle_anim_rate"] = std::pow(2.0, -rate / 10.0);
 }
 
 std::string language()
@@ -526,7 +564,7 @@ bool grid()
 	return get("grid", false);
 }
 
-void _set_grid(bool ison)
+void set_grid(bool ison)
 {
 	preferences::set("grid", ison);
 }
@@ -883,7 +921,7 @@ void _set_color_cursors(bool value)
 
 void load_hotkeys()
 {
-	hotkey::load_hotkeys(game_config_view::wrap(prefs), false);
+	hotkey::load_custom_hotkeys(game_config_view::wrap(prefs));
 }
 
 void save_hotkeys()
@@ -965,14 +1003,14 @@ void set_addon_manager_saved_order_name(const std::string& value)
 	set("addon_manager_saved_order_name", value);
 }
 
-SORT_ORDER addon_manager_saved_order_direction()
+sort_order::type addon_manager_saved_order_direction()
 {
-	return SORT_ORDER::string_to_enum(get("addon_manager_saved_order_direction"), SORT_ORDER::NONE);
+	return sort_order::get_enum(get("addon_manager_saved_order_direction")).value_or(sort_order::type::none);
 }
 
-void set_addon_manager_saved_order_direction(SORT_ORDER value)
+void set_addon_manager_saved_order_direction(sort_order::type value)
 {
-	set("addon_manager_saved_order_direction", SORT_ORDER::enum_to_string(value));
+	set("addon_manager_saved_order_direction", sort_order::get_string(value));
 }
 
 

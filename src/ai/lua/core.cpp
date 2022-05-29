@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2010 - 2021
+	Copyright (C) 2010 - 2022
+	by Yurii Chernyi <terraninfo@terraninfo.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -43,9 +44,7 @@
 #include "ai/composite/contexts.hpp"
 #include "ai/default/aspect_attacks.hpp"
 
-#include "lua/lualib.h"
 #include "lua/lauxlib.h"
-#include "lua/llimits.h"
 
 static lg::log_domain log_ai_engine_lua("ai/engine/lua");
 #define LOG_LUA LOG_STREAM(info, log_ai_engine_lua)
@@ -333,7 +332,7 @@ static int cfun_ai_get_targets(lua_State *L)
 		lua_createtable(L, 3, 0);
 
 		lua_pushstring(L, "type");
-		lua_pushstring(L, it->type.to_string().c_str());
+		lua_pushstring(L, ai_target::get_string(it->type).c_str());
 		lua_rawset(L, -3);
 
 		lua_pushstring(L, "loc");
@@ -949,6 +948,13 @@ static size_t generate_and_push_ai_state(lua_State* L, ai::engine_lua* engine)
 	lua_rawseti(L, -3, length_ai + 1); // [-1: AI state  -2: AIs registry]
 	lua_remove(L, -2); // [-1: AI state table]
 	return length_ai + 1;
+}
+
+void lua_ai_context::apply_micro_ai(const config &cfg)
+{
+	luaW_getglobal(L, "wesnoth", "wml_actions", "micro_ai");
+	luaW_pushconfig(L, cfg);
+	luaW_pcall(L, 1, 0);
 }
 
 lua_ai_context* lua_ai_context::create(lua_State *L, char const *code, ai::engine_lua *engine)

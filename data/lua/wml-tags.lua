@@ -346,7 +346,7 @@ function wml_actions.unit_overlay(cfg)
 	local img = cfg.image or wml.error( "[unit_overlay] missing required image= attribute" )
 	for i,u in ipairs(wesnoth.units.find_on_map(cfg)) do
 		local has_already = false
-		for i, w in ipairs(u.overlays) do
+		for j, w in ipairs(u.overlays) do
 			if w == img then has_already = true end
 		end
 		if has_already == false then
@@ -366,7 +366,7 @@ function wml_actions.remove_unit_overlay(cfg)
 	local img = cfg.image or wml.error( "[remove_unit_overlay] missing required image= attribute" )
 	for i,u in ipairs(wesnoth.units.find_on_map(cfg)) do
 		local has_already = false
-		for i, w in ipairs(u.overlays) do
+		for j, w in ipairs(u.overlays) do
 			if w == img then has_already = true end
 		end
 		if has_already then
@@ -402,7 +402,7 @@ function wml_actions.store_unit(cfg)
 			ucfg.x = 'recall'
 			ucfg.y = 'recall'
 		end
-		utils.vwriter.write(writer, u.__cfg)
+		utils.vwriter.write(writer, ucfg)
 		if kill_units then u:erase() end
 	end
 end
@@ -715,7 +715,7 @@ function wml_actions.scroll(cfg)
 end
 
 function wml_actions.color_adjust(cfg)
-	wesnoth.interface.color_adjust(cfg.red, cfg.green, cfg.blue)
+	wesnoth.interface.color_adjust(cfg.red or 0, cfg.green or 0, cfg.blue or 0)
 end
 
 function wml_actions.end_turn(cfg)
@@ -766,8 +766,28 @@ function wml_actions.redraw(cfg)
 	wesnoth.redraw(cfg, clear_shroud)
 end
 
+local wml_floating_label = {valid = false}
 function wml_actions.print(cfg)
-	wesnoth.print(cfg)
+	local options = {}
+	if wml_floating_label.valid then
+		wml_floating_label:remove()
+	end
+	if cfg.size then
+		options.size = cfg.size
+	end
+	if cfg.color then
+		options.color = stringx.split(cfg.color)
+	elseif cfg.red or cfg.green or cfg.blue then
+		options.color = {cfg.red or 0, cfg.green or 0, cfg.blue or 0}
+	end
+	if cfg.duration then
+		options.duration = cfg.duration
+	end
+	if cfg.fade_time then
+		options.fade_time = cfg.fade_time
+	end
+
+	wml_floating_label = wesnoth.interface.add_overlay_text(cfg.text, options)
 end
 
 function wml_actions.unsynced(cfg)

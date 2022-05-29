@@ -1,6 +1,6 @@
 -- Glaciers
 function world_conquest_tek_map_repaint_2c()
-	wct_reduce_wall_clusters("Uu,Uu^Uf,Uh,Uh^Uf,Uu,Uh,Ai,Ai,Xu,Ai,Ai")
+	wct_reduce_wall_clusters("Uu,Uu^Tf,Uh,Uh^Tf,Uu,Uh,Ai,Ai,Xu,Ai,Ai")
 	world_conquest_tek_map_decoration_2c()
 	wct_randomize_snowed_forest()
 end
@@ -17,10 +17,10 @@ function world_conquest_tek_map_decoration_2c()
 		f.terrain("Mm"),
 	}
 	set_terrain { "Ha^Fpa",
-		f.terrain("Uh^Uf"),
+		f.terrain("Uh^Tf"),
 	}
 	set_terrain { "Aa^Fpa",
-		f.terrain("Uu^Uf"),
+		f.terrain("Uu^Tf"),
 	}
 	set_terrain { "Ha",
 		f.terrain("Uh,Hd"),
@@ -118,7 +118,7 @@ function world_conquest_tek_map_decoration_2c()
 		fraction = 2,
 		layer = "overlay",
 	}
-	set_terrain { "Hh^Uf",
+	set_terrain { "Hh^Tf",
 		f.all(
 			f.terrain("Hh^Fp"),
 			f.none(
@@ -127,7 +127,7 @@ function world_conquest_tek_map_decoration_2c()
 		),
 		fraction = 10,
 	}
-	set_terrain { "Ss^Uf",
+	set_terrain { "Ss^Tf",
 		f.all(
 			f.terrain("Ss"),
 			f.none(
@@ -143,8 +143,8 @@ function world_conquest_tek_map_decoration_2c()
 	))
 	mathx.shuffle(terrain_to_change)
 	-- base amount in map surface
-	local r = mathx.random_choice(tostring(total_tiles // 285) .. ".." .. tostring(total_tiles // 150))
-	for i = 1, math.min(r, #terrain_to_change) do
+	local r1 = mathx.random_choice(tostring(total_tiles // 285) .. ".." .. tostring(total_tiles // 150))
+	for i = 1, math.min(r1, #terrain_to_change) do
 		map[terrain_to_change[i]] = "Ai"
 	end
 
@@ -153,9 +153,9 @@ function world_conquest_tek_map_decoration_2c()
 		f.adjacent(f.terrain("!,Wo,Ai"), nil, 0)
 	))
 	mathx.shuffle(icepack_candiates)
-	local r = mathx.random_choice(tostring(total_tiles // 250) .. ".." .. tostring(total_tiles // 150))
+	local r2 = mathx.random_choice(tostring(total_tiles // 250) .. ".." .. tostring(total_tiles // 150))
 
-	for i = 1, math.min(r, #icepack_candiates) do
+	for i = 1, math.min(r2, #icepack_candiates) do
 		local loc = icepack_candiates[i]
 		table.insert(prestart_event, wml.tag.item {
 			image = "scenery/icepack-1.png",
