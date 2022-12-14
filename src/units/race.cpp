@@ -82,7 +82,7 @@ unit_race::unit_race(const config& cfg) :
 {
 	if (plural_name_.empty()) {
 		lg::log_to_chat() << "[race] id='" << id_ << "' is missing a plural_name field.\n";
-		ERR_WML << "[race] id='" << id_ << "' is missing a plural_name field.\n";
+		ERR_WML << "[race] id='" << id_ << "' is missing a plural_name field.";
 		plural_name_ = (cfg["name"]);
 	}
 
@@ -100,7 +100,7 @@ unit_race::unit_race(const config& cfg) :
 			<< "[race] id='" << id_
 			<< "' is missing a singular name field (either 'name' or both 'male_name' and 'female_name').\n";
 		ERR_WML << "[race] id'" << id_
-				<< "' is missing a singular name field (either 'name' or both 'male_name' and 'female_name').\n";
+				<< "' is missing a singular name field (either 'name' or both 'male_name' and 'female_name').";
 	}
 
 	name_generator_factory generator_factory = name_generator_factory(cfg, {"male", "female"});
@@ -113,7 +113,7 @@ unit_race::unit_race(const config& cfg) :
 
 std::string unit_race::generate_name(unit_race::GENDER gender) const
 {
-    return name_generator_[gender]->generate();
+	return name_generator_[gender]->generate();
 }
 
 const name_generator& unit_race::generator(unit_race::GENDER gender) const
@@ -133,7 +133,7 @@ const config::const_child_itors &unit_race::additional_traits() const
 
 const config::const_child_itors &unit_race::additional_topics() const
 {
-  return topics_;
+	return topics_;
 }
 
 unsigned int unit_race::num_traits() const { return ntraits_; }

@@ -27,6 +27,7 @@
 #include "arrow.hpp"
 #include "config.hpp"
 #include "display.hpp"
+#include "draw.hpp"
 #include "game_end_exceptions.hpp"
 #include "mouse_events.hpp"
 #include "play_controller.hpp"
@@ -118,7 +119,7 @@ void suppose_dead::apply_temp_modifier(unit_map& unit_map)
 	// Remove the unit
 	const unit_const_ptr removed_unit = unit_map.extract(loc_);
 	DBG_WB << "Suppose dead: Temporarily removing unit " << removed_unit->name() << " [" << removed_unit->id()
-			<< "] from (" << loc_ << ")\n";
+			<< "] from (" << loc_ << ")";
 
 	// Just check to make sure we removed the unit we expected to remove
 	assert(get_unit().get() == removed_unit.get());
@@ -136,16 +137,19 @@ void suppose_dead::remove_temp_modifier(unit_map& unit_map)
 
 void suppose_dead::draw_hex(const map_location& hex)
 {
-	if(hex == loc_) //add symbol to hex
-	{
-		//@todo: Possibly use a different layer
-		const display::drawing_layer layer = display::LAYER_ARROWS;
-
-		int xpos = display::get_singleton()->get_location_x(loc_);
-		int ypos = display::get_singleton()->get_location_y(loc_);
-		display::get_singleton()->drawing_buffer_add(layer, loc_, xpos, ypos,
-				image::get_image("whiteboard/suppose_dead.png", image::SCALED_TO_HEX));
+	if (hex != loc_) {
+		return;
 	}
+
+	//@todo: Possibly use a different layer
+	const display::drawing_layer layer = display::LAYER_ARROWS;
+
+	auto disp = display::get_singleton();
+
+	disp->drawing_buffer_add(
+		layer, loc_, [=, tex = image::get_texture("whiteboard/suppose_dead.png", image::HEXED)](const rect& d) {
+			draw::blit(tex, disp->scaled_to_zoom({d.x, d.y, tex.w(), tex.h()}));
+		});
 }
 
 void suppose_dead::redraw()

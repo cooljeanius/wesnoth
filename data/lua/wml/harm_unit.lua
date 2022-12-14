@@ -78,7 +78,6 @@ function wml_actions.harm_unit(cfg)
 					damage_multiplier = damage_multiplier - tod_bonus
 				elseif alignment == "liminal" then
 					damage_multiplier = damage_multiplier + math.max(0, wesnoth.current.schedule.liminal_bonus - math.abs(tod_bonus))
-				else -- neutral, do nothing
 				end
 				local resistance_modified = resistance * modifier
 				damage_multiplier = damage_multiplier * resistance_modified
@@ -130,7 +129,7 @@ function wml_actions.harm_unit(cfg)
 
 			-- Extract unit and put it back to update animation if status was changed
 			unit_to_harm:extract()
-			unit_to_harm:to_map()
+			unit_to_harm:to_map(false)
 
 			if add_tab then
 				text = string.format("%s%s", "\t", text)
@@ -143,8 +142,8 @@ function wml_actions.harm_unit(cfg)
 						hits = true,
 						with_bars = true,
 						T.filter { id = unit_to_harm.id },
-						T.primary_attack ( primary_attack ),
-						T.secondary_attack ( secondary_attack ),
+						T.primary_attack ( secondary_attack ),
+						T.secondary_attack ( primary_attack ),
 						T.facing { x = harmer.x, y = harmer.y },
 					}
 				else
@@ -153,8 +152,8 @@ function wml_actions.harm_unit(cfg)
 						hits = true,
 						with_bars = true,
 						T.filter { id = unit_to_harm.id },
-						T.primary_attack ( primary_attack ),
-						T.secondary_attack ( secondary_attack ),
+						T.primary_attack ( secondary_attack ),
+						T.secondary_attack ( primary_attack ),
 					}
 				end
 			end

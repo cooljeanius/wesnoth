@@ -9,17 +9,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wesnoth-did\n"
 "Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
-"POT-Creation-Date: 2022-04-17 00:24 UTC\n"
-"PO-Revision-Date: 2022-02-02 15:27+0300\n"
+"POT-Creation-Date: 2022-11-20 05:31 UTC\n"
+"PO-Revision-Date: 2022-08-28 19:57+0300\n"
 "Last-Translator: Artem Khrapov <artemkhrapov2001@yandex.ru>\n"
 "Language-Team: https://wiki.wesnoth.org/RussianTranslation\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 3.0.1\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 3.1.1\n"
 
 #. [campaign]: id=Descent_into_Darkness
 #. [scenario]: id=09_Descent_into_Darkness
@@ -2040,13 +2040,6 @@ msgstr ""
 
 #. [part]
 #: data/campaigns/Descent_Into_Darkness/scenarios/05_Schism.cfg:36
-#, fuzzy
-#| msgid ""
-#| "As Malin and Darken Volk continue their raids on the orcs, they "
-#| "eventually force the usually fractious Whitefang chieftains to unite in "
-#| "opposition. The orcs pursue the two necromancers east toward the mouth of "
-#| "the river humans call the Longlier and elves call the Arkan-thoria, where "
-#| "they manage to surround the humans and force a fight."
 msgid ""
 "As Malin and Darken Volk continue their raids on the orcs, they eventually "
 "force the usually fractious Whitefang chieftains to unite in opposition. The "
@@ -3091,7 +3084,7 @@ msgid "Ooouuuh! It burns... burrrrnnns..."
 msgstr "О-о-о-о-у-у-ух! Горит... горю-ю-ю-ю-ю..."
 
 #. [message]: speaker=Darken Volk
-#: data/campaigns/Descent_Into_Darkness/scenarios/07a_A_Small_Favor.cfg:764
+#: data/campaigns/Descent_Into_Darkness/scenarios/07a_A_Small_Favor.cfg:766
 msgid ""
 "Beware the urns. It appears that they contain holy water that these mages "
 "have brewed themselves. As you might guess from the name, it is quite "
@@ -3102,17 +3095,17 @@ msgstr ""
 "нежити."
 
 #. [message]: speaker=Taylor
-#: data/campaigns/Descent_Into_Darkness/scenarios/07a_A_Small_Favor.cfg:776
+#: data/campaigns/Descent_Into_Darkness/scenarios/07a_A_Small_Favor.cfg:778
 msgid "The undead are too strong! Retreat and regroup!"
 msgstr "Мертвецов слишком много! Отходим, перестраиваемся!"
 
 #. [message]: speaker=Darken Volk
-#: data/campaigns/Descent_Into_Darkness/scenarios/07a_A_Small_Favor.cfg:814
+#: data/campaigns/Descent_Into_Darkness/scenarios/07a_A_Small_Favor.cfg:816
 msgid "Here is the entrance! Hurry!"
 msgstr "Здесь вход! Скорее!"
 
 #. [message]: speaker=Darken Volk
-#: data/campaigns/Descent_Into_Darkness/scenarios/07a_A_Small_Favor.cfg:860
+#: data/campaigns/Descent_Into_Darkness/scenarios/07a_A_Small_Favor.cfg:862
 msgid ""
 "We have no hope of entering the manor now that dawn has broken and the "
 "entire city guard is alerted to our presence. Your incompetence is truly "
@@ -3190,16 +3183,15 @@ msgstr "Ещё больше стражей прибыло. Надо потора
 msgid "It does not look like we have much time left..."
 msgstr "Похоже, нам осталось совсем немного времени..."
 
-# В оригинале отсылка к Алхимику Пабло Коэльо, нашёл эту цитату в переводе А.С. Богдановского. Она находится в начале первой части, её можно найти в ознакомительных фрагментах --kabachuha
 #. [message]: speaker=narrator
 #: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:682
 msgid "There is only one thing that makes a dream impossible to achieve."
-msgstr "Именно на этом этапе его ожидает последнее препятствие:"
+msgstr "Только одно делает исполнение мечты невозможным..."
 
 #. [message]: speaker=narrator
 #: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:695
 msgid "... the fear of failure."
-msgstr "... страх перед исполнением мечты всей его жизни."
+msgstr "... страх неудачи."
 
 #. [message]: speaker=narrator
 #: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:706
@@ -3982,9 +3974,13 @@ msgstr ""
 
 #. [message]: speaker=Malin Keshar
 #: data/campaigns/Descent_Into_Darkness/scenarios/08_Alone_at_Last.cfg:1085
+#, fuzzy
+#| msgid ""
+#| "The terrain is hazardous in these mountains. Neither the paladins nor "
+#| "Dela will be able to pursue me."
 msgid ""
-"The terrain is hazardous in these mountains. Neither the paladins nor Dela "
-"will be able to pursue me."
+"The terrain is hazardous in these mountains. No one will be able to pursue "
+"me."
 msgstr ""
 "Ландшафт в этих горах трудный. Ни паладины, ни Дела не смогут догнаться за "
 "мной."
@@ -4037,15 +4033,6 @@ msgstr "<i>«Чтобы стать личом, сначала нужно уме�
 
 #. [part]
 #: data/campaigns/Descent_Into_Darkness/scenarios/09_Descent_into_Darkness.cfg:37
-#, fuzzy
-#| msgid ""
-#| "So reads the book that Malin has reclaimed. <i>“The spells of necromancy "
-#| "can free the spirit from the limitations of the flesh, but only once the "
-#| "soul has been unbound from the body. The necromancer must make the "
-#| "necessary incantations with his dying breaths, then conquer his own "
-#| "spirit in much the same way he binds the spirits of others. Because he "
-#| "retains his own will, however, the lich can call upon the awesome powers "
-#| "of the spirit world.”</i>"
 msgid ""
 "So reads the book that Malin has reclaimed. <i>“The spells of necromancy can "
 "free the spirit from the limitations of the flesh, but only once the soul "
@@ -4980,11 +4967,6 @@ msgstr ""
 
 #. [part]
 #: data/campaigns/Descent_Into_Darkness/scenarios/10_Endless_Night.cfg:29
-#, fuzzy
-#| msgid ""
-#| "The lich sometimes wonders if his endeavors are naught but a fruitless "
-#| "crusade, but then again, so what? Life, unlife, death... nothing has ever "
-#| "given his existence meaning. And yet, he still persists? For what?"
 msgid ""
 "The lich sometimes wonders if his endeavors are naught but a fruitless "
 "crusade, but then again, so what? Life, unlife, death... nothing has ever "
@@ -6401,14 +6383,14 @@ msgstr ""
 "врага рядом с ним."
 
 #. [damage]: id=did_malevolence
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:430
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:431
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:432
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:433
 msgid "malevolence"
 msgstr "злорадство"
 
 #. [damage]: id=did_malevolence
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:432
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:433
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:434
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:435
 msgid ""
 "This attack gains 50% damage on offense, but causes this unit to lose 1 hp "
 "per hit."
@@ -6417,57 +6399,57 @@ msgstr ""
 "каждый удар."
 
 #. [swarm]: id=did_hysteria
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:447
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:449
 msgid "hysteria"
 msgstr "истерия"
 
 #. [swarm]: id=did_hysteria
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:448
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:450
 msgid "This attack gains up to 10 strikes when this unit is wounded."
 msgstr "Когда боец ранен, эта атака получает вплоть до десяти ударов."
 
 #. [leadership]: id=sorrow
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:458
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:474
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:460
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:476
 msgid "sorrow"
 msgstr "тоска"
 
 #. [leadership]: id=sorrow
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:459
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:461
 msgid "Adjacent enemy units do 20% less damage."
 msgstr "Соседние вражеские бойцы наносят на 20% меньше урона."
 
 #. [leadership]: id=sorrow
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:475
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:477
 msgid "Adjacent enemy units do 40% less damage."
 msgstr "Соседние вражеские бойцы наносят на 40% меньше урона."
 
 #. [heal_on_hit]: id=did_vitalize1
 #. [heal_on_hit]: id=did_vitalize2
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:491
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:500
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:493
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:502
 msgid "vitalize"
 msgstr "оживление"
 
 #. [heal_on_hit]: id=did_vitalize1
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:492
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:494
 msgid "This unit heals 2 HP every time this attack hits."
 msgstr "Боец восстанавливает 2 ЗД всякий раз, когда атака поражает цель."
 
 #. [heal_on_hit]: id=did_vitalize2
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:501
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:503
 msgid "This unit heals 4 HP every time this attack hits."
 msgstr "Боец восстанавливает 4 ЗД всякий раз, когда атака поражает цель."
 
 #. [attacks]: id=did_fervor
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:508
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:509
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:510
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:511
 msgid "fervor"
 msgstr "рвение"
 
 #. [attacks]: id=did_fervor
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:510
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:511
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:512
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:513
 msgid ""
 "This attack gains 2 attacks on offense, but causes this unit to lose 4 hp "
 "per hit."
@@ -6476,26 +6458,26 @@ msgstr ""
 "теряет 4 ЗД с каждым из них."
 
 #. [attacks]: id=did_impetuity
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:525
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:526
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:527
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:528
 msgid "impetuity"
 msgstr "резкость"
 
 #. [attacks]: id=did_impetuity
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:527
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:528
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:529
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:530
 msgid ""
 "This attack loses one strike on offense but deals three times the normal "
 "damage."
 msgstr "Атака теряет один удар при наступлении, но наносит троекратный урон."
 
 #. [attacks]: id=did_corpse_launcher
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:542
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:544
 msgid "corpse launcher"
 msgstr "трупомёт"
 
 #. [attacks]: id=did_corpse_launcher
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:543
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:545
 msgid ""
 "On offense, enemies cannot retaliate against this attack. This attack "
 "consumes 3 HP from each nearby allied corpse to deal 11 impact damage (per "
@@ -6506,12 +6488,12 @@ msgstr ""
 "(за каждый труп) сверху базового урона атаки."
 
 #. [leadership]: id=did_consumption
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:669
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:671
 msgid "consumption"
 msgstr "порча"
 
 #. [leadership]: id=did_consumption
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:670
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:672
 msgid ""
 "At night, this unit and adjacent allied undead gain 25% damage. However, "
 "this unit loses 2 HP per turn."
@@ -6520,12 +6502,12 @@ msgstr ""
 "сам он теряет 2 ЗД каждый ход."
 
 #. [heals]: id=did_corpse_master
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:732
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:736
 msgid "corpse master"
 msgstr "повелитель трупов"
 
 #. [heals]: id=did_corpse_master
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:733
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:737
 msgid ""
 "Adjacent allied corpses heal 8 HP per turn and gain 30% resistance to blade, "
 "impact, and pierce."
@@ -6534,24 +6516,24 @@ msgstr ""
 "сопротивления режущему, крушащему и колющему урону."
 
 #. [leadership]: id=did_zombie_frenzy
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:767
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:771
 msgid "zombie frenzy"
 msgstr "ярость зомби"
 
 #. [leadership]: id=did_zombie_frenzy
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:768
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:772
 msgid "Adjacent allied corpses gain 30% damage and are berserk."
 msgstr "Соседние союзные трупы получают 30% к урону и становятся берсерками."
 
 #. [regenerate]: id=did_cannibalize1
 #. [regenerate]: id=did_cannibalize2
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:798
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:883
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:802
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:887
 msgid "cannibalize"
 msgstr "каннибализм"
 
 #. [regenerate]: id=did_cannibalize1
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:799
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:803
 msgid ""
 "On each turn, this unit regenerates 2 HP per adjacent allied ghoul-type "
 "unit, but consumes 1 HP from each ally in the process."
@@ -6560,7 +6542,7 @@ msgstr ""
 "упырей поблизости, но в процессе поглощает с них 1 ЗД."
 
 #. [regenerate]: id=did_cannibalize2
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:884
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:888
 msgid ""
 "On each turn, this unit regenerates 4 HP per adjacent allied ghoul-type "
 "unit, but consumes 2 HP from each ally in the process."
@@ -6569,38 +6551,38 @@ msgstr ""
 "упырей поблизости, но в процессе поглощает с них 2 ЗД."
 
 #. [dummy]: id=did_death_cloud
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:966
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:970
 msgid "death cloud"
 msgstr "облако смерти"
 
 #. [dummy]: id=did_death_cloud
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:967
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:971
 msgid ""
 "This unit poisons all nearby enemy units on the start of every new turn."
 msgstr "Этот боец отравляет всех врагов рядом с ним в начале каждого хода."
 
 #. [resistance]: id=did_drunk
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1012
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1016
 msgid "drunk"
 msgstr "пьяный"
 
 #. [resistance]: id=did_drunk
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1013
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1017
 msgid "female^drunk"
 msgstr "пьяная"
 
 #. [resistance]: id=did_drunk
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1014
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1018
 msgid "This unit is drunk and has 10% increased resistances."
 msgstr "Этот боец пьян, и он получает 10% ко всем видам сопротивления."
 
 #. [berserk]: id=did_drunken_rage
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1022
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1026
 msgid "drunken rage"
 msgstr "дебош"
 
 #. [berserk]: id=did_drunken_rage
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1023
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1027
 msgid "On offense, this attack presses the engagement for 4 rounds of attacks."
 msgstr ""
 "При наступлении эта атака задерживает сражение вплоть до трёх повторений."
@@ -6662,8 +6644,6 @@ msgstr "Усилить высасывание проклятого меча"
 
 #. [advancement]: id=eidolon_sorrow1
 #: data/campaigns/Descent_Into_Darkness/utils/amlas.cfg:605
-#, fuzzy
-#| msgid "Reduces nearby enemy units’ damage"
 msgid "Reduces nearby enemy units’ damage"
 msgstr "Снижает урон атак вражеских бойцов поблизости"
 

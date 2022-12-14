@@ -73,11 +73,12 @@ unsigned horizontal_scrollbar::offset_after() const
 
 bool horizontal_scrollbar::on_positioner(const point& coordinate) const
 {
-	SDL_Rect positioner_rect =
-		sdl::create_rect(get_positioner_offset(), 0, get_positioner_length(), get_height());
+	rect positioner_rect(
+		get_positioner_offset(), 0, get_positioner_length(), get_height()
+	);
 
 	// Note we assume the positioner is over the entire height of the widget.
-	return sdl::point_in_rect(coordinate, positioner_rect);
+	return positioner_rect.contains(coordinate);
 }
 
 int horizontal_scrollbar::on_bar(const point& coordinate) const
@@ -111,7 +112,7 @@ horizontal_scrollbar_definition::horizontal_scrollbar_definition(
 		const config& cfg)
 	: styled_widget_definition(cfg)
 {
-	DBG_GUI_P << "Parsing horizontal scrollbar " << id << '\n';
+	DBG_GUI_P << "Parsing horizontal scrollbar " << id;
 
 	load_resolutions<resolution>(cfg);
 }
@@ -152,7 +153,7 @@ std::unique_ptr<widget> builder_horizontal_scrollbar::build() const
 
 	DBG_GUI_G << "Window builder:"
 			  << " placed horizontal scrollbar '" << id << "' with definition '"
-			  << definition << "'.\n";
+			  << definition << "'.";
 
 	return widget;
 }

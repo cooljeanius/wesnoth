@@ -74,7 +74,7 @@ struct pane_implementation
 			 * If the adjusted coordinate is in the item's grid let the grid
 			 * resolve the coordinate.
 			 */
-			if(sdl::point_in_rect(coordinate, item.item_grid->get_rectangle())) {
+			if(item.item_grid->get_rectangle().contains(coordinate)) {
 				return item.item_grid->find_at(coordinate, must_be_active);
 			}
 		}
@@ -115,7 +115,7 @@ pane::pane(const implementation::builder_pane& builder)
 			event::dispatcher::back_pre_child);
 }
 
-unsigned pane::create_item(const std::map<std::string, string_map>& item_data,
+unsigned pane::create_item(const widget_data& item_data,
 							const std::map<std::string, std::string>& tags)
 {
 	item item{item_id_generator_++, tags, std::unique_ptr<grid>{static_cast<grid*>(item_builder_->build().release())}};
@@ -142,7 +142,7 @@ unsigned pane::create_item(const std::map<std::string, string_map>& item_data,
 
 void pane::place(const point& origin, const point& size)
 {
-	DBG_GUI_L << LOG_HEADER << '\n';
+	DBG_GUI_L << LOG_HEADER;
 	widget::place(origin, size);
 
 	assert(origin.x == 0);
@@ -153,7 +153,7 @@ void pane::place(const point& origin, const point& size)
 
 void pane::layout_initialize(const bool full_initialization)
 {
-	DBG_GUI_D << LOG_HEADER << '\n';
+	DBG_GUI_D << LOG_HEADER;
 
 	widget::layout_initialize(full_initialization);
 
@@ -165,25 +165,15 @@ void pane::layout_initialize(const bool full_initialization)
 	}
 }
 
-void pane::impl_draw_children(int x_offset, int y_offset)
+void pane::impl_draw_children()
 {
-	DBG_GUI_D << LOG_HEADER << '\n';
+	DBG_GUI_D << LOG_HEADER;
 
 	for(auto & item : items_)
 	{
 		if(item.item_grid->get_visible() != widget::visibility::invisible) {
-			item.item_grid->draw_children(x_offset, y_offset);
+			item.item_grid->draw_children();
 		}
-	}
-}
-
-void pane::child_populate_dirty_list(window& caller,
-									  const std::vector<widget*>& call_stack)
-{
-	for(auto & item : items_)
-	{
-		std::vector<widget*> child_call_stack = call_stack;
-		item.item_grid->populate_dirty_list(caller, child_call_stack);
 	}
 }
 
@@ -321,7 +311,7 @@ void pane::signal_handler_request_placement(dispatcher& dispatcher,
 											 const event::ui_event event,
 											 bool& handled)
 {
-	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	widget* wgt = dynamic_cast<widget*>(&dispatcher);
 	if(wgt) {
@@ -347,14 +337,14 @@ void pane::signal_handler_request_placement(dispatcher& dispatcher,
 					item.item_grid->place(point(), item.item_grid->get_best_size());
 				}
 				place_or_set_origin_children();
-				DBG_GUI_E << LOG_HEADER << ' ' << event << " handled.\n";
+				DBG_GUI_E << LOG_HEADER << ' ' << event << " handled.";
 				handled = true;
 				return;
 			}
 		}
 	}
 
-	DBG_GUI_E << LOG_HEADER << ' ' << event << " failed to handle.\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << " failed to handle.";
 	assert(false);
 	handled = false;
 }

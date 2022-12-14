@@ -68,7 +68,7 @@ void progress_bar::set_percentage(unsigned percentage)
 			c.set_variable("percentage", wfl::variant(percentage));
 		}
 
-		set_is_dirty(true);
+		queue_redraw();
 	}
 }
 
@@ -82,7 +82,7 @@ bool progress_bar::disable_click_dismiss() const
 progress_bar_definition::progress_bar_definition(const config& cfg)
 	: styled_widget_definition(cfg)
 {
-	DBG_GUI_P << "Parsing progress bar " << id << '\n';
+	DBG_GUI_P << "Parsing progress bar " << id;
 
 	load_resolutions<resolution>(cfg);
 }
@@ -109,7 +109,7 @@ std::unique_ptr<widget> builder_progress_bar::build() const
 	auto widget = std::make_unique<progress_bar>(*this);
 
 	DBG_GUI_G << "Window builder: placed progress bar '" << id
-			  << "' with definition '" << definition << "'.\n";
+			  << "' with definition '" << definition << "'.";
 
 	return widget;
 }

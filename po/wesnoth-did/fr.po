@@ -5,21 +5,24 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Descent_into_Darkness-1.12\n"
 "Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
-"POT-Creation-Date: 2022-04-17 00:24 UTC\n"
-"PO-Revision-Date: 2021-02-08 15:30+0100\n"
+"POT-Creation-Date: 2022-11-20 05:31 UTC\n"
+"PO-Revision-Date: 2022-09-04 00:13-0500\n"
 "Last-Translator: Syll <syll-dev@laposte.net>\n"
-"Language-Team: French <wesnoth@ml.free.fr>\n"
+"Language-Team: French <wesnothfr@lists.tuxfamily.org>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.4.2\n"
+"X-Generator: Lokalize 2.0\n"
 
+# Mise en fuzzy pour informer l'utilisateur de la traduction partielle.
+# Supprimer le fuzzy (sans changement) quand la traduction est complète.
 #. [campaign]: id=Descent_into_Darkness
 #. [scenario]: id=09_Descent_into_Darkness
 #: data/campaigns/Descent_Into_Darkness/_main.cfg:13
 #: data/campaigns/Descent_Into_Darkness/scenarios/09_Descent_into_Darkness.cfg:9
+#, fuzzy
 msgid "Descent into Darkness"
 msgstr "Descente dans les ténèbres"
 
@@ -377,6 +380,11 @@ msgstr ""
 #. [message]: speaker=Drogan
 #: data/campaigns/Descent_Into_Darkness/scenarios/01_Saving_Parthyn.cfg:244
 #, fuzzy
+#| msgid ""
+#| "Quit bickering, you two. With the bulk of their forces massacred in that "
+#| "assault, the orcish encampments will be greatly weakened. The raiding "
+#| "party should be able to clear them out and leave us a relatively quiet "
+#| "summer."
 msgid ""
 "Quit bickerin’, you two. With most o’ them orcs dead now, their camps will "
 "be lots weaker. Our raiders will clear ’em out and leave us a quiet summer."
@@ -408,6 +416,11 @@ msgstr ""
 #. [message]: speaker=Drogan
 #: data/campaigns/Descent_Into_Darkness/scenarios/01_Saving_Parthyn.cfg:272
 #, fuzzy
+#| msgid ""
+#| "Quiet, you. Malin, you must hold the river fort, or they shall surely "
+#| "overrun the town. If you can defend for two days, the raiding party "
+#| "should return by then and we will be able to fight the orcs off. For now, "
+#| "I will bring what soldiers remain to your aid."
 msgid ""
 "Quiet, you. Malin, you’ve got ta hold tha river fort or they’ll overrun us. "
 "Tha raidin’ party should be back in two days ta help us fight ’em off. Fer "
@@ -421,6 +434,9 @@ msgstr ""
 #. [message]: speaker=Drogan
 #: data/campaigns/Descent_Into_Darkness/scenarios/01_Saving_Parthyn.cfg:286
 #, fuzzy
+#| msgid ""
+#| "What in blazes is that thing? Has the necromancer returned? His timing "
+#| "could not be worse..."
 msgid ""
 "What in blazes is that... that thing? Has tha necromancer returned already? "
 "His timin’ couldn’t be any worse..."
@@ -455,6 +471,10 @@ msgstr "Quoi ?! Je ne suis pas diabolique, Drogan !"
 #. [message]: speaker=Drogan
 #: data/campaigns/Descent_Into_Darkness/scenarios/01_Saving_Parthyn.cfg:306
 #, fuzzy
+#| msgid ""
+#| "You say that, Brother, but you have been very close-mouthed about why the "
+#| "mages sent you home from Alduin. I am beginning to think that you were "
+#| "already dabbling in this witchcraft even before you met that necromancer!"
 msgid ""
 "Ya say that, but you’ve been very quiet ’bout why tha mages sent you home "
 "from Alduin. I’m beginning ta think you were already dabblin’ in this "
@@ -540,6 +560,12 @@ msgstr "Les orcs sont morts !"
 #. [message]: speaker=Drogan
 #: data/campaigns/Descent_Into_Darkness/scenarios/01_Saving_Parthyn.cfg:514
 #, fuzzy
+#| msgid ""
+#| "By all rights, I should have you executed on the spot, Malin. I cannot "
+#| "believe you let that necromancer corrupt you. I suppose part of this is "
+#| "my fault since I was the one who allowed him into Parthyn; "
+#| "nevertheless... Since I showed him mercy, I will show the same to you. "
+#| "You are hereby banished from Parthyn."
 msgid ""
 "By all rights, Malin, I should have ya kill’d on tha spot. I can’t believe "
 "ya let that necromancer corrupt you. I s’ppose part o’ this is my fault "
@@ -564,6 +590,11 @@ msgstr ""
 #. ’least is short for at least
 #: data/campaigns/Descent_Into_Darkness/scenarios/01_Saving_Parthyn.cfg:525
 #, fuzzy
+#| msgid ""
+#| "Aye, better that than to even dabble in dark magic. People would have "
+#| "rebuilt the town, just as they always have before. Even had I died, it "
+#| "would at least have been with dignity. Would the mages had taught you "
+#| "more sense."
 msgid ""
 "Aye, better that than ta even dabble in dark magic. We woulda rebuilt this "
 "place like always. Even if I died, ’least it woulda been with dignity. Too "
@@ -585,7 +616,6 @@ msgstr ""
 
 #. [message]: speaker=Drogan
 #: data/campaigns/Descent_Into_Darkness/scenarios/01_Saving_Parthyn.cfg:535
-#, fuzzy
 msgid "Yes, yes it is. Nobody’ll support ya on yer crazy path to depravity."
 msgstr ""
 "Oui, c'est cela. Personne ne t'aidera dans ton cheminement vers la "
@@ -696,10 +726,6 @@ msgstr ""
 
 #. [message]: speaker=Drogan
 #: data/campaigns/Descent_Into_Darkness/scenarios/01_Saving_Parthyn.cfg:606
-#, fuzzy
-#| msgid ""
-#| "Should you embark on a quest to seek out depravity, none of us will "
-#| "support you."
 msgid "If ya go out on a quest to seek depravity, none o’ us will support ya."
 msgstr ""
 "Si tu dois t'embarquer dans une quête à la recherche de la dépravation, "
@@ -1981,13 +2007,6 @@ msgstr ""
 
 #. [part]
 #: data/campaigns/Descent_Into_Darkness/scenarios/05_Schism.cfg:36
-#, fuzzy
-#| msgid ""
-#| "As Malin and Darken Volk continue their raids on the orcs, they "
-#| "eventually force the usually fractious Whitefang chieftains to unite in "
-#| "opposition. The orcs pursue the two necromancers east toward the mouth of "
-#| "the river Men call the Longlier and Elves call the Arkan-thoria, where "
-#| "they manage to surround the humans and force a fight."
 msgid ""
 "As Malin and Darken Volk continue their raids on the orcs, they eventually "
 "force the usually fractious Whitefang chieftains to unite in opposition. The "
@@ -2296,10 +2315,6 @@ msgstr ""
 
 #. [message]: speaker=Drogan
 #: data/campaigns/Descent_Into_Darkness/scenarios/06_Return_to_Parthyn.cfg:303
-#, fuzzy
-#| msgid ""
-#| "It does not take a trained mage to realize that by ‘magical arts’, you "
-#| "refer to necromancy! That creature reeks of death!"
 msgid ""
 "It don’t take a trained mage ta see that yer ‘magical arts’ refers to "
 "necromancy! That creature stinks o’ death!"
@@ -2523,10 +2538,6 @@ msgstr ""
 
 #. [message]: speaker=Dela Keshar
 #: data/campaigns/Descent_Into_Darkness/scenarios/06_Return_to_Parthyn.cfg:601
-#, fuzzy
-#| msgid ""
-#| "Have you lost your mind, Malin? There’s no way we’re going to banish "
-#| "Drogan!"
 msgid "Have ye lost yer mind, Malin? There’s no way we’re banishin’ Drogan!"
 msgstr ""
 "As-tu perdu la tête, Malin ? Nous n'avons aucune raison de bannir Drogan !"
@@ -2578,10 +2589,6 @@ msgstr "Tu vois où ta traîtrise t'a conduit, Drogan ?"
 
 #. [message]: speaker=Dela Keshar
 #: data/campaigns/Descent_Into_Darkness/scenarios/06_Return_to_Parthyn.cfg:723
-#, fuzzy
-#| msgid ""
-#| "Drogan, no! Malin, you monster, how could you just murder Drogan in cold "
-#| "blood?"
 msgid ""
 "Drogan, no! Malin, you monster, how could ya just murder Drogan in cold "
 "blood?"
@@ -2596,10 +2603,6 @@ msgstr "Il a choisi son destin lui-même ! J'ai simplement riposté !"
 
 #. [message]: speaker=Dela Keshar
 #: data/campaigns/Descent_Into_Darkness/scenarios/06_Return_to_Parthyn.cfg:733
-#, fuzzy
-#| msgid ""
-#| "How could you possibly think Drogan was the traitor when you are the one "
-#| "attacking Parthyn?"
 msgid ""
 "How could ye possibly think Drogan was tha traitor when you’re the one "
 "attacking Parthyn?"
@@ -2709,6 +2712,10 @@ msgstr ""
 #. [message]: speaker=Dela Keshar
 #: data/campaigns/Descent_Into_Darkness/scenarios/06_Return_to_Parthyn.cfg:903
 #, fuzzy
+#| msgid ""
+#| "What have you done?! Killing Drogan was not enough — you had to defile "
+#| "his body as well? How could you turn him into such a... a twisted, "
+#| "abominable thing? I cannot believe how depraved you have become!"
 msgid ""
 "What have you done?! Killing Drogan wasn’t enough — ya had ta defile his "
 "body as well? How could ya turn him into such a... a hideous thing? I can’t "
@@ -3084,7 +3091,7 @@ msgid "Ooouuuh! It burns... burrrrnnns..."
 msgstr "Ooouuah ! Ça brûle... brûûûllle..."
 
 #. [message]: speaker=Darken Volk
-#: data/campaigns/Descent_Into_Darkness/scenarios/07a_A_Small_Favor.cfg:764
+#: data/campaigns/Descent_Into_Darkness/scenarios/07a_A_Small_Favor.cfg:766
 msgid ""
 "Beware the urns. It appears that they contain holy water that these mages "
 "have brewed themselves. As you might guess from the name, it is quite "
@@ -3092,17 +3099,17 @@ msgid ""
 msgstr ""
 
 #. [message]: speaker=Taylor
-#: data/campaigns/Descent_Into_Darkness/scenarios/07a_A_Small_Favor.cfg:776
+#: data/campaigns/Descent_Into_Darkness/scenarios/07a_A_Small_Favor.cfg:778
 msgid "The undead are too strong! Retreat and regroup!"
 msgstr "Les morts-vivants sont trop forts ! Repli et regroupement !"
 
 #. [message]: speaker=Darken Volk
-#: data/campaigns/Descent_Into_Darkness/scenarios/07a_A_Small_Favor.cfg:814
+#: data/campaigns/Descent_Into_Darkness/scenarios/07a_A_Small_Favor.cfg:816
 msgid "Here is the entrance! Hurry!"
 msgstr "Voici l'entrée ! Vite !"
 
 #. [message]: speaker=Darken Volk
-#: data/campaigns/Descent_Into_Darkness/scenarios/07a_A_Small_Favor.cfg:860
+#: data/campaigns/Descent_Into_Darkness/scenarios/07a_A_Small_Favor.cfg:862
 msgid ""
 "We have no hope of entering the manor now that dawn has broken and the "
 "entire city guard is alerted to our presence. Your incompetence is truly "
@@ -3834,11 +3841,6 @@ msgstr ""
 
 #. [message]: speaker=Dela Keshar
 #: data/campaigns/Descent_Into_Darkness/scenarios/08_Alone_at_Last.cfg:743
-#, fuzzy
-#| msgid ""
-#| "I finally found you, Malin! At last, you will have to pay for what you "
-#| "have done to my people and my home. I will not let you live to see "
-#| "another sunset."
 msgid ""
 "I finally found you, Malin! At last, you’ll pay fer what you’ve done to my "
 "people and my home. I won’t let you live ta see another sunset."
@@ -3986,9 +3988,13 @@ msgstr ""
 
 #. [message]: speaker=Malin Keshar
 #: data/campaigns/Descent_Into_Darkness/scenarios/08_Alone_at_Last.cfg:1085
+#, fuzzy
+#| msgid ""
+#| "The terrain is hazardous in these mountains. Neither the paladins nor "
+#| "Dela will be able to pursue me."
 msgid ""
-"The terrain is hazardous in these mountains. Neither the paladins nor Dela "
-"will be able to pursue me."
+"The terrain is hazardous in these mountains. No one will be able to pursue "
+"me."
 msgstr ""
 "Le terrain est accidenté dans ces montagnes. Ni le paladin, ni Dela ne "
 "seront capables de me poursuivre."
@@ -4043,15 +4049,6 @@ msgstr "<i>« Pour devenir une liche, il faut d'abord mourir. »</i>"
 
 #. [part]
 #: data/campaigns/Descent_Into_Darkness/scenarios/09_Descent_into_Darkness.cfg:37
-#, fuzzy
-#| msgid ""
-#| "So reads the book that Malin has reclaimed. <i>“The spells of necromancy "
-#| "can free the spirit from the limitations of the flesh, but only once the "
-#| "soul has been unbound from the body. The necromancer must make the "
-#| "necessary incantations with his dying breaths, then conquer his own "
-#| "spirit much the same way he binds the spirits of others. Because he "
-#| "retains his own will, however, the lich can call upon the awesome powers "
-#| "of the spirit world.”</i>"
 msgid ""
 "So reads the book that Malin has reclaimed. <i>“The spells of necromancy can "
 "free the spirit from the limitations of the flesh, but only once the soul "
@@ -4980,11 +4977,6 @@ msgstr ""
 
 #. [part]
 #: data/campaigns/Descent_Into_Darkness/scenarios/10_Endless_Night.cfg:29
-#, fuzzy
-#| msgid ""
-#| "The lich sometimes wonders if his endeavors are naught but a fruitless "
-#| "crusade, but then again, so what? Life, unlife, death... nothing has ever "
-#| "given his existence meaning. And yet, he still persists on? For what?"
 msgid ""
 "The lich sometimes wonders if his endeavors are naught but a fruitless "
 "crusade, but then again, so what? Life, unlife, death... nothing has ever "
@@ -5556,11 +5548,6 @@ msgstr ""
 
 #. [part]
 #: data/campaigns/Descent_Into_Darkness/scenarios/10_Endless_Night.cfg:1295
-#, fuzzy
-#| msgid ""
-#| "Rumors circulate about a spirit of good fortune that protects these "
-#| "guards. It is said that that when attacked by orcs at night, the darkness "
-#| "itself descends to repel the assailants."
 msgid ""
 "Rumors circulate about a spirit of good fortune that protects these guards. "
 "It is said that when attacked by orcs at night, the darkness itself descends "
@@ -6405,97 +6392,97 @@ msgid ""
 msgstr ""
 
 #. [damage]: id=did_malevolence
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:430
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:431
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:432
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:433
 msgid "malevolence"
 msgstr ""
 
 #. [damage]: id=did_malevolence
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:432
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:433
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:434
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:435
 msgid ""
 "This attack gains 50% damage on offense, but causes this unit to lose 1 hp "
 "per hit."
 msgstr ""
 
 #. [swarm]: id=did_hysteria
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:447
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:449
 msgid "hysteria"
 msgstr ""
 
 #. [swarm]: id=did_hysteria
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:448
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:450
 msgid "This attack gains up to 10 strikes when this unit is wounded."
 msgstr ""
 
 #. [leadership]: id=sorrow
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:458
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:474
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:460
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:476
 msgid "sorrow"
 msgstr ""
 
 #. [leadership]: id=sorrow
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:459
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:461
 msgid "Adjacent enemy units do 20% less damage."
 msgstr ""
 
 #. [leadership]: id=sorrow
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:475
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:477
 msgid "Adjacent enemy units do 40% less damage."
 msgstr ""
 
 #. [heal_on_hit]: id=did_vitalize1
 #. [heal_on_hit]: id=did_vitalize2
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:491
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:500
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:493
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:502
 msgid "vitalize"
 msgstr ""
 
 #. [heal_on_hit]: id=did_vitalize1
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:492
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:494
 msgid "This unit heals 2 HP every time this attack hits."
 msgstr ""
 
 #. [heal_on_hit]: id=did_vitalize2
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:501
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:503
 msgid "This unit heals 4 HP every time this attack hits."
-msgstr ""
-
-#. [attacks]: id=did_fervor
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:508
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:509
-msgid "fervor"
 msgstr ""
 
 #. [attacks]: id=did_fervor
 #: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:510
 #: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:511
+msgid "fervor"
+msgstr ""
+
+#. [attacks]: id=did_fervor
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:512
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:513
 msgid ""
 "This attack gains 2 attacks on offense, but causes this unit to lose 4 hp "
 "per hit."
 msgstr ""
 
 #. [attacks]: id=did_impetuity
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:525
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:526
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:527
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:528
 msgid "impetuity"
 msgstr ""
 
 #. [attacks]: id=did_impetuity
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:527
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:528
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:529
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:530
 msgid ""
 "This attack loses one strike on offense but deals three times the normal "
 "damage."
 msgstr ""
 
 #. [attacks]: id=did_corpse_launcher
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:542
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:544
 msgid "corpse launcher"
 msgstr ""
 
 #. [attacks]: id=did_corpse_launcher
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:543
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:545
 msgid ""
 "On offense, enemies cannot retaliate against this attack. This attack "
 "consumes 3 HP from each nearby allied corpse to deal 11 impact damage (per "
@@ -6503,96 +6490,96 @@ msgid ""
 msgstr ""
 
 #. [leadership]: id=did_consumption
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:669
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:671
 msgid "consumption"
 msgstr ""
 
 #. [leadership]: id=did_consumption
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:670
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:672
 msgid ""
 "At night, this unit and adjacent allied undead gain 25% damage. However, "
 "this unit loses 2 HP per turn."
 msgstr ""
 
 #. [heals]: id=did_corpse_master
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:732
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:736
 #, fuzzy
 #| msgid "Yes, master."
 msgid "corpse master"
 msgstr "Oui, maître."
 
 #. [heals]: id=did_corpse_master
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:733
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:737
 msgid ""
 "Adjacent allied corpses heal 8 HP per turn and gain 30% resistance to blade, "
 "impact, and pierce."
 msgstr ""
 
 #. [leadership]: id=did_zombie_frenzy
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:767
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:771
 msgid "zombie frenzy"
 msgstr ""
 
 #. [leadership]: id=did_zombie_frenzy
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:768
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:772
 msgid "Adjacent allied corpses gain 30% damage and are berserk."
 msgstr ""
 
 #. [regenerate]: id=did_cannibalize1
 #. [regenerate]: id=did_cannibalize2
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:798
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:883
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:802
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:887
 msgid "cannibalize"
 msgstr ""
 
 #. [regenerate]: id=did_cannibalize1
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:799
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:803
 msgid ""
 "On each turn, this unit regenerates 2 HP per adjacent allied ghoul-type "
 "unit, but consumes 1 HP from each ally in the process."
 msgstr ""
 
 #. [regenerate]: id=did_cannibalize2
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:884
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:888
 msgid ""
 "On each turn, this unit regenerates 4 HP per adjacent allied ghoul-type "
 "unit, but consumes 2 HP from each ally in the process."
 msgstr ""
 
 #. [dummy]: id=did_death_cloud
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:966
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:970
 msgid "death cloud"
 msgstr ""
 
 #. [dummy]: id=did_death_cloud
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:967
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:971
 msgid ""
 "This unit poisons all nearby enemy units on the start of every new turn."
 msgstr ""
 
 #. [resistance]: id=did_drunk
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1012
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1016
 msgid "drunk"
 msgstr "ivre"
 
 #. [resistance]: id=did_drunk
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1013
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1017
 msgid "female^drunk"
 msgstr "ivre"
 
 #. [resistance]: id=did_drunk
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1014
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1018
 msgid "This unit is drunk and has 10% increased resistances."
 msgstr ""
 "Cette unité est ivre et a une augmentation de toutes ses résistances de 10%."
 
 #. [berserk]: id=did_drunken_rage
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1022
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1026
 msgid "drunken rage"
 msgstr "Rage de l'ivresse"
 
 #. [berserk]: id=did_drunken_rage
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1023
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1027
 msgid "On offense, this attack presses the engagement for 4 rounds of attacks."
 msgstr ""
 

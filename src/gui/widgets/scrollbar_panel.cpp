@@ -58,7 +58,7 @@ void scrollbar_panel::set_self_active(const bool /*active*/)
 scrollbar_panel_definition::scrollbar_panel_definition(const config& cfg)
 	: styled_widget_definition(cfg)
 {
-	DBG_GUI_P << "Parsing scrollbar panel " << id << '\n';
+	DBG_GUI_P << "Parsing scrollbar panel " << id;
 
 	load_resolutions<resolution>(cfg);
 }
@@ -104,7 +104,7 @@ std::unique_ptr<widget> builder_scrollbar_panel::build() const
 	panel->set_horizontal_scrollbar_mode(horizontal_scrollbar_mode);
 
 	DBG_GUI_G << "Window builder: placed scrollbar_panel '" << id
-			  << "' with definition '" << definition << "'.\n";
+			  << "' with definition '" << definition << "'.";
 
 	const auto conf = panel->cast_config_to<scrollbar_panel_definition>();
 	assert(conf);

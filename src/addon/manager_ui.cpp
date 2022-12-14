@@ -81,16 +81,16 @@ bool addons_manager_ui(const std::string& remote_address)
 
 		need_wml_cache_refresh = dlg.get_need_wml_cache_refresh();
 	} catch(const config::error& e) {
-		ERR_CFG << "config::error thrown during transaction with add-on server; \""<< e.message << "\"" << std::endl;
+		ERR_CFG << "config::error thrown during transaction with add-on server; \""<< e.message << "\"";
 		gui2::show_error_message(_("Network communication error."));
 	} catch(const network_asio::error& e) {
-		ERR_NET << "network_asio::error thrown during transaction with add-on server; \""<< e.what() << "\"" << std::endl;
+		ERR_NET << "network_asio::error thrown during transaction with add-on server; \""<< e.what() << "\"";
 		gui2::show_error_message(_("Remote host disconnected."));
 	} catch(const filesystem::io_exception& e) {
-		ERR_FS << "filesystem::io_exception thrown while installing an addon; \"" << e.what() << "\"" << std::endl;
+		ERR_FS << "filesystem::io_exception thrown while installing an addon; \"" << e.what() << "\"";
 		gui2::show_error_message(_("A problem occurred when trying to create the files necessary to install this add-on."));
 	} catch(const invalid_pbl_exception& e) {
-		ERR_CFG << "could not read .pbl file " << e.path << ": " << e.message << std::endl;
+		ERR_CFG << "could not read .pbl file " << e.path << ": " << e.message;
 
 		utils::string_map symbols;
 		symbols["path"] = e.path;
@@ -101,9 +101,9 @@ bool addons_manager_ui(const std::string& remote_address)
 	} catch(const wml_exception& e) {
 		e.show();
 	} catch(const addons_client::user_exit&) {
-		LOG_AC << "initial connection canceled by user\n";
+		LOG_AC << "initial connection canceled by user";
 	} catch(const addons_client::user_disconnect&) {
-		LOG_AC << "attempt to reconnect canceled by user\n";
+		LOG_AC << "attempt to reconnect canceled by user";
 	} catch(const addons_client::invalid_server_address&) {
 		gui2::show_error_message(_("The add-ons server address specified is not valid."));
 	}
@@ -218,7 +218,8 @@ bool uninstall_local_addons()
 
 		gui2::show_transient_message(
 			dlg_title,
-			dlg_msg + list_lead + utils::bullet_list(succeeded_names), "", false, false, true);
+			dlg_msg + list_lead + utils::bullet_list(succeeded_names)
+		);
 
 		return true;
 	}
@@ -321,16 +322,16 @@ bool ad_hoc_addon_fetch_session(const std::vector<std::string>& addon_ids)
 		return return_value;
 
 	} catch(const config::error& e) {
-		ERR_CFG << "config::error thrown during transaction with add-on server; \""<< e.message << "\"" << std::endl;
+		ERR_CFG << "config::error thrown during transaction with add-on server; \""<< e.message << "\"";
 		gui2::show_error_message(_("Network communication error."));
 	} catch(const network_asio::error& e) {
-		ERR_NET << "network_asio::error thrown during transaction with add-on server; \""<< e.what() << "\"" << std::endl;
+		ERR_NET << "network_asio::error thrown during transaction with add-on server; \""<< e.what() << "\"";
 		gui2::show_error_message(_("Remote host disconnected."));
 	} catch(const filesystem::io_exception& e) {
-		ERR_FS << "io_exception thrown while installing an addon; \"" << e.what() << "\"" << std::endl;
+		ERR_FS << "io_exception thrown while installing an addon; \"" << e.what() << "\"";
 		gui2::show_error_message(_("A problem occurred when trying to create the files necessary to install this add-on."));
 	} catch(const invalid_pbl_exception& e) {
-		ERR_CFG << "could not read .pbl file " << e.path << ": " << e.message << std::endl;
+		ERR_CFG << "could not read .pbl file " << e.path << ": " << e.message;
 
 		utils::string_map symbols;
 		symbols["path"] = e.path;
@@ -341,7 +342,7 @@ bool ad_hoc_addon_fetch_session(const std::vector<std::string>& addon_ids)
 	} catch(const wml_exception& e) {
 		e.show();
 	} catch(const addons_client::user_exit&) {
-		LOG_AC << "initial connection canceled by user\n";
+		LOG_AC << "initial connection canceled by user";
 	} catch(const addons_client::invalid_server_address&) {
 		gui2::show_error_message(_("The add-ons server address specified is not valid."));
 	}

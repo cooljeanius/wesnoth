@@ -311,11 +311,9 @@ function ca_bottleneck_move:evaluation(cfg, data)
 
         -- A unit that cannot move any more, (or at least cannot move out of the way)
         -- must be considered to have a very high rating (it's in the best position
-        -- it can possibly achieve), but only if it is in own territory
-        if on_my_territory then
-            local best_move_away = bottleneck_move_out_of_way(unit, data)
-            if (not best_move_away) then current_rating_map:insert(unit.x, unit.y, 20000) end
-        end
+        -- it can possibly achieve)
+        local best_move_away = bottleneck_move_out_of_way(unit, data)
+        if (not best_move_away) then current_rating_map:insert(unit.x, unit.y, 20000) end
     end
 
     local enemies = AH.get_attackable_enemies()
@@ -351,6 +349,7 @@ function ca_bottleneck_move:evaluation(cfg, data)
 
     local max_rating, best_unit, best_hex = 0, nil, nil
     for _,unit in ipairs(units) do
+        wesnoth.interface.handle_user_interact()
         local is_healer = (unit.usage == "healer")
         local has_leadership = unit:matches { ability_type = "leadership" }
         local on_my_territory = BD_is_my_territory:get(unit.x, unit.y)

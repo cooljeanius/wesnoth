@@ -65,18 +65,16 @@ unsigned panel::get_state() const
 	return 0;
 }
 
-void panel::impl_draw_background(int x_offset, int y_offset)
+void panel::impl_draw_background()
 {
-	DBG_GUI_D << LOG_HEADER << " size " << get_rectangle() << ".\n";
-
-	get_canvas(0).blit(calculate_blitting_rectangle(x_offset, y_offset));
+	DBG_GUI_D << LOG_HEADER << " size " << get_rectangle() << ".";
+	get_canvas(0).draw();
 }
 
-void panel::impl_draw_foreground(int x_offset, int y_offset)
+void panel::impl_draw_foreground()
 {
-	DBG_GUI_D << LOG_HEADER << " size " << get_rectangle() << ".\n";
-
-	get_canvas(1).blit(calculate_blitting_rectangle(x_offset, y_offset));
+	DBG_GUI_D << LOG_HEADER << " size " << get_rectangle() << ".";
+	get_canvas(1).draw();
 }
 
 point panel::border_space() const
@@ -97,7 +95,7 @@ void panel::set_self_active(const bool /*active*/)
 panel_definition::panel_definition(const config& cfg)
 	: styled_widget_definition(cfg)
 {
-	DBG_GUI_P << "Parsing panel " << id << '\n';
+	DBG_GUI_P << "Parsing panel " << id;
 
 	load_resolutions<resolution>(cfg);
 }
@@ -134,7 +132,7 @@ std::unique_ptr<widget> builder_panel::build() const
 	auto widget = std::make_unique<panel>(*this);
 
 	DBG_GUI_G << "Window builder: placed panel '" << id << "' with definition '"
-			  << definition << "'.\n";
+			  << definition << "'.";
 
 	widget->init_grid(*grid);
 	return widget;

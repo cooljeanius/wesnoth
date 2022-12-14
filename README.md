@@ -1,5 +1,10 @@
 [![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
 
+|Branch|CI status|
+|------|---------|
+|Master|[![CI](https://github.com/wesnoth/wesnoth/actions/workflows/ci-main.yml/badge.svg)](https://github.com/wesnoth/wesnoth/actions/workflows/ci-main.yml?query=branch%3Amaster)|
+|1.16|[![CI](https://github.com/wesnoth/wesnoth/actions/workflows/ci-main.yml/badge.svg?branch=1.16)](https://github.com/wesnoth/wesnoth/actions/workflows/ci-main.yml?query=branch%3A1.16)|
+
 About
 =====
 
@@ -17,8 +22,8 @@ Discord:
 IRC:
   <https://wiki.wesnoth.org/Support#IRC>
 
-Twitter:
-  <https://twitter.com/Wesnoth>
+Mastodon:
+  <https://fosstodon.org/@wesnoth>
 
 Steam forums:
   <https://steamcommunity.com/app/599390/discussions/>

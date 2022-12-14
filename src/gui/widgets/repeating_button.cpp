@@ -93,7 +93,7 @@ void repeating_button::set_state(const state_t state)
 {
 	if(state != state_) {
 		state_ = state;
-		set_is_dirty(true);
+		queue_redraw();
 
 		if(state_ == DISABLED && repeat_timer_) {
 			remove_timer(repeat_timer_);
@@ -105,7 +105,7 @@ void repeating_button::set_state(const state_t state)
 void repeating_button::signal_handler_mouse_enter(const event::ui_event event,
 												   bool& handled)
 {
-	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	set_state(FOCUSED);
 	handled = true;
@@ -114,7 +114,7 @@ void repeating_button::signal_handler_mouse_enter(const event::ui_event event,
 void repeating_button::signal_handler_mouse_leave(const event::ui_event event,
 												   bool& handled)
 {
-	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	set_state(ENABLED);
 	handled = true;
@@ -124,7 +124,7 @@ void
 repeating_button::signal_handler_left_button_down(const event::ui_event event,
 												   bool& handled)
 {
-	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	// If the timer isn't set it's the initial down event.
 	if(!repeat_timer_) {
@@ -151,7 +151,7 @@ repeating_button::signal_handler_left_button_down(const event::ui_event event,
 void repeating_button::signal_handler_left_button_up(const event::ui_event event,
 													  bool& handled)
 {
-	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	if(repeat_timer_) {
 		remove_timer(repeat_timer_);
@@ -169,7 +169,7 @@ void repeating_button::signal_handler_left_button_up(const event::ui_event event
 repeating_button_definition::repeating_button_definition(const config& cfg)
 	: styled_widget_definition(cfg)
 {
-	DBG_GUI_P << "Parsing repeating button " << id << '\n';
+	DBG_GUI_P << "Parsing repeating button " << id;
 
 	load_resolutions<resolution>(cfg);
 }
@@ -200,7 +200,7 @@ std::unique_ptr<widget> builder_repeating_button::build() const
 	auto widget = std::make_unique<repeating_button>(*this);
 
 	DBG_GUI_G << "Window builder: placed repeating button '" << id
-			  << "' with definition '" << definition << "'.\n";
+			  << "' with definition '" << definition << "'.";
 
 	return widget;
 }

@@ -17,7 +17,7 @@
 
 #include "gui/widgets/container_base.hpp"
 
-#include "gui/auxiliary/iterator/walker.hpp"
+#include "gui/auxiliary/iterator/walker_container.hpp"
 #include "gui/core/log.hpp"
 #include "gui/widgets/window.hpp"
 
@@ -173,7 +173,7 @@ point container_base::calculate_best_size() const
 
 
 	DBG_GUI_L << LOG_HEADER << " border size " << border_size << " returning "
-			  << result << ".\n";
+			  << result << ".";
 
 	return result;
 }
@@ -196,25 +196,17 @@ void container_base::set_visible_rectangle(const SDL_Rect& rectangle)
 	grid_.set_visible_rectangle(rectangle);
 }
 
-void container_base::impl_draw_children(int x_offset, int y_offset)
+void container_base::impl_draw_children()
 {
 	assert(get_visible() == widget::visibility::visible
 	       && grid_.get_visible() == widget::visibility::visible);
 
-	grid_.draw_children(x_offset, y_offset);
+	grid_.draw_children();
 }
 
 void container_base::layout_children()
 {
 	grid_.layout_children();
-}
-
-void
-container_base::child_populate_dirty_list(window& caller,
-									   const std::vector<widget*>& call_stack)
-{
-	std::vector<widget*> child_call_stack = call_stack;
-	grid_.populate_dirty_list(caller, child_call_stack);
 }
 
 widget* container_base::find_at(const point& coordinate,
@@ -252,7 +244,7 @@ void container_base::set_active(const bool active)
 		return;
 	}
 
-	set_is_dirty(true);
+	queue_redraw();
 
 	set_self_active(active);
 }
@@ -264,7 +256,7 @@ bool container_base::disable_click_dismiss() const
 
 iteration::walker_ptr container_base::create_walker()
 {
-	return nullptr;
+	return std::make_unique<gui2::iteration::container>(*this);
 }
 
 void container_base::init_grid(const builder_grid& grid_builder)
@@ -283,7 +275,7 @@ point container_base::border_space() const
 
 void container_base::inject_linked_groups()
 {
-	for(const auto& lg : config()->linked_groups) {
+	for(const auto& lg : get_config()->linked_groups) {
 		if(!get_window()->has_linked_size_group(lg.id)) {
 			get_window()->init_linked_size_group(lg.id, lg.fixed_width, lg.fixed_height);
 		}

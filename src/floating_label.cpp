@@ -16,8 +16,12 @@
 #include "floating_label.hpp"
 
 #include "display.hpp"
+#include "draw.hpp"
+#include "draw_manager.hpp"
+#include "font/sdl_ttf_compat.hpp" // pango_line_width
 #include "font/text.hpp"
 #include "log.hpp"
+#include "sdl/utils.hpp"
 #include "video.hpp"
 
 #include <map>
@@ -30,6 +34,9 @@ static lg::log_domain log_font("font");
 #define WRN_FT LOG_STREAM(warn, log_font)
 #define ERR_FT LOG_STREAM(err, log_font)
 
+static lg::log_domain log_display("display");
+#define ERR_DP LOG_STREAM(err, log_display)
+
 namespace
 {
 typedef std::map<int, font::floating_label> label_map;
@@ -37,26 +44,23 @@ label_map labels;
 int label_id = 1;
 
 std::stack<std::set<int>> label_contexts;
+
+/** Curent ID of the help string. */
+int help_string_ = 0;
 }
 
 namespace font
 {
 floating_label::floating_label(const std::string& text, const surface& surf)
-#if 0
-	: img_(),
-#else
 	: tex_()
-	, buf_()
-	, buf_pos_()
-#endif
-	, draw_size_()
+	, screen_loc_()
+	, alpha_(0)
 	, fadeout_(0)
 	, time_start_(0)
 	, text_(text)
 	, font_size_(SIZE_SMALL)
 	, color_(NORMAL_COLOR)
-	, bgcolor_()
-	, bgalpha_(0)
+	, bgcolor_(0, 0, 0, SDL_ALPHA_TRANSPARENT)
 	, xpos_(0)
 	, ypos_(0)
 	, xmove_(0)
@@ -64,7 +68,7 @@ floating_label::floating_label(const std::string& text, const surface& surf)
 	, lifetime_(-1)
 	, width_(-1)
 	, height_(-1)
-	, clip_rect_(CVideo::get_singleton().draw_area())
+	, clip_rect_(video::game_canvas())
 	, visible_(true)
 	, align_(CENTER_ALIGN)
 	, border_(0)
@@ -73,7 +77,6 @@ floating_label::floating_label(const std::string& text, const surface& surf)
 {
 	if (surf.get()) {
 		tex_ = texture(surf);
-		draw_size_ = {surf->w, surf->h};
 	}
 }
 
@@ -95,115 +98,136 @@ int floating_label::xpos(std::size_t width) const
 	return xpos;
 }
 
-bool floating_label::create_texture()
+rect floating_label::get_bg_rect(const rect& text_rect) const
 {
-	if(tex_ == nullptr) {
-		DBG_FT << "creating floating label texture" << std::endl;
-		font::pango_text& text = font::get_text_renderer();
-
-		text.set_link_aware(false)
-			.set_family_class(font::FONT_SANS_SERIF)
-			.set_font_size(font_size_)
-			.set_font_style(font::pango_text::STYLE_NORMAL)
-			.set_alignment(PANGO_ALIGN_LEFT)
-			.set_foreground_color(color_)
-			.set_maximum_width(width_ < 0 ? clip_rect_.w : width_)
-			.set_maximum_height(height_ < 0 ? clip_rect_.h : height_, true)
-			.set_ellipse_mode(PANGO_ELLIPSIZE_END)
-			.set_characters_per_line(0);
-
-		// ignore last '\n'
-		if(!text_.empty() && *(text_.rbegin()) == '\n') {
-			text.set_text(std::string(text_.begin(), text_.end() - 1), use_markup_);
-		} else {
-			text.set_text(text_, use_markup_);
-		}
-
-		surface foreground = text.render();
-
-		if(foreground == nullptr) {
-			ERR_FT << "could not create floating label's text" << std::endl;
-			return false;
-		}
-
-		// combine foreground text with its background
-		if(bgalpha_ != 0) {
-			// background is a dark tooltip box
-			surface background(foreground->w + border_ * 2, foreground->h + border_ * 2);
-
-			if(background == nullptr) {
-				ERR_FT << "could not create tooltip box" << std::endl;
-				tex_ = texture(foreground);
-				draw_size_ = {foreground->w, foreground->h};
-				return tex_ != nullptr;
-			}
-
-			uint32_t color = SDL_MapRGBA(foreground->format, bgcolor_.r, bgcolor_.g, bgcolor_.b, bgalpha_);
-			sdl::fill_surface_rect(background, nullptr, color);
-
-			// we make the text less transparent, because the blitting on the
-			// dark background will darken the anti-aliased part.
-			// This 1.13 value seems to restore the brightness of version 1.4
-			// (where the text was blitted directly on screen)
-			adjust_surface_alpha(foreground, floating_to_fixed_point(1.13));
-
-			SDL_Rect r{border_, border_, 0, 0};
-			adjust_surface_alpha(foreground, SDL_ALPHA_OPAQUE);
-			sdl_blit(foreground, nullptr, background, &r);
-
-			tex_ = texture(background);
-			draw_size_ = {background->w, background->h};
-		} else {
-			// background is blurred shadow of the text
-			surface background(foreground->w + 4, foreground->h + 4);
-			sdl::fill_surface_rect(background, nullptr, 0);
-			SDL_Rect r{2, 2, 0, 0};
-			sdl_blit(foreground, nullptr, background, &r);
-			background = shadow_image(background);
-
-			if(background == nullptr) {
-				ERR_FT << "could not create floating label's shadow" << std::endl;
-				tex_ = texture(foreground);
-				draw_size_ = {foreground->w, foreground->h};
-				return tex_ != nullptr;
-			}
-			sdl_blit(foreground, nullptr, background, &r);
-			tex_ = texture(background);
-			draw_size_ = {background->w, background->h};
-		}
-	}
-
-	return tex_ != nullptr;
+	return {
+		text_rect.x -  border_,
+		text_rect.y -  border_,
+		text_rect.w + (border_ * 2),
+		text_rect.h + (border_ * 2)
+	};
 }
 
-void floating_label::draw(int time)
+bool floating_label::create_texture()
+{
+	if(video::headless()) {
+		return false;
+	}
+
+	if(tex_ != nullptr) {
+		// Already have a texture
+		return true;
+	}
+
+	if(text_.empty()) {
+		// Empty labels are unfortunately still used sometimes
+		return false;
+	}
+
+	DBG_FT << "creating floating label texture";
+	font::pango_text& text = font::get_text_renderer();
+
+	text.set_link_aware(false)
+		.set_family_class(font::FONT_SANS_SERIF)
+		.set_font_size(font_size_)
+		.set_font_style(font::pango_text::STYLE_NORMAL)
+		.set_alignment(PANGO_ALIGN_LEFT)
+		.set_foreground_color(color_)
+		.set_maximum_width(width_ < 0 ? clip_rect_.w : width_)
+		.set_maximum_height(height_ < 0 ? clip_rect_.h : height_, true)
+		.set_ellipse_mode(PANGO_ELLIPSIZE_END)
+		.set_characters_per_line(0)
+		.set_add_outline(bgcolor_.a == 0);
+
+	// ignore last '\n'
+	if(!text_.empty() && *(text_.rbegin()) == '\n') {
+		text.set_text(std::string(text_.begin(), text_.end() - 1), use_markup_);
+	} else {
+		text.set_text(text_, use_markup_);
+	}
+
+	tex_ = text.render_and_get_texture();
+	if(!tex_) {
+		ERR_FT << "could not create floating label's text";
+		return false;
+	}
+
+	return true;
+}
+
+void floating_label::undraw()
+{
+	DBG_FT << "undrawing floating label from " << screen_loc_;
+	draw_manager::invalidate_region(get_bg_rect(screen_loc_));
+	screen_loc_ = {};
+}
+
+void floating_label::update(int time)
+{
+	if(video::headless() || text_.empty()) {
+		return;
+	}
+
+	if(!create_texture()) {
+		ERR_FT << "failed to create texture for floating label";
+		return;
+	}
+
+	point new_pos = get_pos(time);
+	rect draw_loc {new_pos.x, new_pos.y, tex_.w(), tex_.h()};
+
+	uint8_t new_alpha = get_alpha(time);
+
+	if(screen_loc_ == draw_loc && alpha_ == new_alpha) {
+		// nothing has changed
+		return;
+	}
+
+	// Invalidate former draw loc
+	draw_manager::invalidate_region(get_bg_rect(screen_loc_));
+
+	// Invalidate new draw loc in preparation
+	draw_manager::invalidate_region(get_bg_rect(draw_loc));
+
+	DBG_FT << "updating floating label from " << screen_loc_ << " to " << draw_loc;
+
+	screen_loc_ = draw_loc;
+	alpha_ = new_alpha;
+}
+
+void floating_label::draw()
 {
 	if(!visible_) {
-		buf_.reset();
+		screen_loc_ = {};
 		return;
 	}
 
-	if (!create_texture()) {
+	if(screen_loc_.empty()) {
 		return;
 	}
 
-	SDL_Point pos = get_loc(time);
-	SDL_Rect draw_rect = {pos.x, pos.y, draw_size_.x, draw_size_.y};
-	buf_pos_ = draw_rect;
+	if(!tex_) {
+		ERR_DP << "trying to draw floating label with no texture!";
+		return;
+	}
 
-	CVideo& video = CVideo::get_singleton();
-	auto clipper = video.set_clip(clip_rect_);
+	if(!screen_loc_.overlaps(draw::get_clip().intersect(clip_rect_))) {
+		return;
+	}
 
-	// Read buf_ back from the screen.
-	// buf_pos_ will be intersected with the drawing area,
-	// so might not match draw_rect after this.
-	buf_ = video.read_texture(&buf_pos_);
+	DBG_FT << "drawing floating label to " << screen_loc_;
 
-	// Fade the label out according to the time.
-	tex_.set_alpha_mod(get_alpha(time));
+	// Clip if appropriate.
+	auto clipper = draw::reduce_clip(clip_rect_);
+
+	// Draw background, if appropriate
+	if(bgcolor_.a != 0) {
+		draw::fill(get_bg_rect(screen_loc_), bgcolor_);
+	}
 
 	// Apply the label texture to the screen.
-	video.blit_texture(tex_, &draw_rect);
+	tex_.set_alpha_mod(alpha_);
+	draw::blit(tex_, screen_loc_);
 }
 
 void floating_label::set_lifetime(int lifetime, int fadeout)
@@ -214,11 +238,11 @@ void floating_label::set_lifetime(int lifetime, int fadeout)
 }
 
 
-SDL_Point floating_label::get_loc(int time)
+point floating_label::get_pos(int time)
 {
 	int time_alive = get_time_alive(time);
 	return {
-		static_cast<int>(time_alive * xmove_ + xpos(draw_size_.x)),
+		static_cast<int>(time_alive * xmove_ + xpos(tex_.w())),
 		static_cast<int>(time_alive * ymove_ + ypos_)
 	};
 }
@@ -238,17 +262,6 @@ uint8_t floating_label::get_alpha(int time)
 		}
 	}
 	return 255;
-}
-
-void floating_label::undraw()
-{
-	if(buf_ == nullptr) {
-		return;
-	}
-
-	CVideo& video = CVideo::get_singleton();
-	auto clipper = video.set_clip(clip_rect_);
-	video.blit_texture(buf_, &buf_pos_);
 }
 
 int add_floating_label(const floating_label& flabel)
@@ -291,6 +304,8 @@ void remove_floating_label(int handle, int fadeout)
 			i->second.set_lifetime(0, i->second.get_fade_time());
 			return;
 		}
+		// Queue a redraw of where the label was.
+		i->second.undraw();
 		labels.erase(i);
 	}
 
@@ -344,20 +359,19 @@ void draw_floating_labels()
 	if(label_contexts.empty()) {
 		return;
 	}
-	int time = SDL_GetTicks();
 
 	const std::set<int>& context = label_contexts.top();
 
 	// draw the labels in the order they were added, so later added labels (likely to be tooltips)
 	// are displayed over earlier added labels.
-	for(label_map::iterator i = labels.begin(); i != labels.end(); ++i) {
-		if(context.count(i->first) > 0) {
-			i->second.draw(time);
+	for(auto& [id, label] : labels) {
+		if(context.count(id) > 0) {
+			label.draw();
 		}
 	}
 }
 
-void undraw_floating_labels()
+void update_floating_labels()
 {
 	if(label_contexts.empty()) {
 		return;
@@ -366,17 +380,16 @@ void undraw_floating_labels()
 
 	std::set<int>& context = label_contexts.top();
 
-	//undraw labels in reverse order, so that a LIFO process occurs, and the screen is restored
-	//into the exact state it started in.
-	for(label_map::reverse_iterator i = labels.rbegin(); i != labels.rend(); ++i) {
-		if(context.count(i->first) > 0) {
-			i->second.undraw();
+	for(auto& [id, label] : labels) {
+		if(context.count(id) > 0) {
+			label.update(time);
 		}
 	}
 
 	//remove expired labels
 	for(label_map::iterator j = labels.begin(); j != labels.end(); ) {
 		if(context.count(j->first) > 0 && j->second.expired(time)) {
+			DBG_FT << "removing expired floating label " << j->first;
 			context.erase(j->first);
 			labels.erase(j++);
 		} else {
@@ -384,4 +397,42 @@ void undraw_floating_labels()
 		}
 	}
 }
+
+void set_help_string(const std::string& str)
+{
+	remove_floating_label(help_string_);
+
+	const color_t color{0, 0, 0, 0xbb};
+
+	int size = font::SIZE_LARGE;
+	point canvas_size = video::game_canvas_size();
+
+	while(size > 0) {
+		if(pango_line_width(str, size) > canvas_size.x) {
+			size--;
+		} else {
+			break;
+		}
+	}
+
+	const int border = 5;
+
+	floating_label flabel(str);
+	flabel.set_font_size(size);
+	flabel.set_position(canvas_size.x / 2, canvas_size.y);
+	flabel.set_bg_color(color);
+	flabel.set_border_size(border);
+
+	help_string_ = add_floating_label(flabel);
+
+	const rect& r = get_floating_label_rect(help_string_);
+	move_floating_label(help_string_, 0.0, -double(r.h));
+}
+
+void clear_help_string()
+{
+	remove_floating_label(help_string_);
+	help_string_ = 0;
+}
+
 }

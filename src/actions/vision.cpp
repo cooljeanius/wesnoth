@@ -47,7 +47,7 @@ static const std::string sighted_str("sighted");
 
 
 void actions::create_jamming_map(std::map<map_location, int> & jamming,
-                               const team & view_team)
+                                 const team & view_team)
 {
 	// Reset the map.
 	jamming.clear();
@@ -176,7 +176,7 @@ shroud_clearer::shroud_clearer() : jamming_(), sightings_(), view_team_(nullptr)
 shroud_clearer::~shroud_clearer()
 {
 	if ( !sightings_.empty() ) {
-		ERR_NG << sightings_.size() << " sighted events were ignored." << std::endl;
+		ERR_NG << sightings_.size() << " sighted events were ignored.";
 	}
 }
 
@@ -335,12 +335,8 @@ bool shroud_clearer::clear_unit(const map_location &view_loc, team &view_team,
                                 const map_location & real_loc,
                                 const std::set<map_location>* known_units,
                                 std::size_t * enemy_count, std::size_t * friend_count,
-                                move_unit_spectator * spectator, bool instant)
+                                move_unit_spectator * spectator, bool /*instant*/)
 {
-	// Give animations a chance to progress; see bug #20324.
-	if ( !instant  && display::get_singleton() )
-		display::get_singleton()->draw(true);
-
 	bool cleared_something = false;
 	// Dummy variables to make some logic simpler.
 	std::size_t enemies=0, friends=0;
@@ -352,16 +348,10 @@ bool shroud_clearer::clear_unit(const map_location &view_loc, team &view_team,
 	// Make sure the jamming map is up-to-date.
 	if ( view_team_ != &view_team ) {
 		calculate_jamming(&view_team);
-		// Give animations a chance to progress; see bug #20324.
-		if ( !instant  && display::get_singleton() )
-			display::get_singleton()->draw(true);
 	}
 
 	// Determine the hexes to clear.
 	pathfind::vision_path sight(costs, slowed, sight_range, view_loc, jamming_);
-	// Give animations a chance to progress; see bug #20324.
-	if ( !instant  && display::get_singleton() )
-		display::get_singleton()->draw(true);
 
 	// Clear the fog.
 	for (const pathfind::paths::step &dest : sight.destinations) {
@@ -540,7 +530,7 @@ bool shroud_clearer::clear_dest(const map_location &dest, const unit &viewer)
 void shroud_clearer::drop_events()
 {
 	if ( !sightings_.empty() ) {
-		DBG_NG << sightings_.size() << " sighted events were dropped.\n";
+		DBG_NG << sightings_.size() << " sighted events were dropped.";
 	}
 	sightings_.clear();
 }

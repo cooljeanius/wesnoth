@@ -55,7 +55,7 @@ tree_view::~tree_view()
 }
 
 tree_view_node& tree_view::add_node(
-		const std::string& id, const std::map<std::string /* widget id */, string_map>& data, const int index)
+	const std::string& id, const widget_data& data, const int index)
 {
 	return get_root_node().add_child(id, data, index);
 }
@@ -92,17 +92,6 @@ void tree_view::clear()
 	resize_content(0, -content_grid()->get_size().y);
 }
 
-void
-tree_view::child_populate_dirty_list(window& caller,
-									  const std::vector<widget*>& call_stack)
-{
-	// Inherited.
-	scrollbar_container::child_populate_dirty_list(caller, call_stack);
-
-	assert(root_node_);
-	root_node_->impl_populate_dirty_list(caller, call_stack);
-}
-
 void tree_view::set_self_active(const bool /*active*/)
 {
 	/* DO NOTHING */
@@ -124,7 +113,7 @@ void tree_view::resize_content(const int width_modification,
 		const int height_modification_pos)
 {
 	DBG_GUI_L << LOG_HEADER << " current size " << content_grid()->get_size() << " width_modification "
-			  << width_modification << " height_modification " << height_modification << ".\n";
+			  << width_modification << " height_modification " << height_modification << ".";
 
 	if(content_resize_request(
 		width_modification,
@@ -144,12 +133,12 @@ void tree_view::resize_content(const int width_modification,
 		need_layout_ = true;
 		// If the content grows assume it "overwrites" the old content.
 		if(width_modification < 0 || height_modification < 0) {
-			set_is_dirty(true);
+			queue_redraw();
 		}
 		horizontal_scrollbar_moved();
-		DBG_GUI_L << LOG_HEADER << " succeeded.\n";
+		DBG_GUI_L << LOG_HEADER << " succeeded.";
 	} else {
-		DBG_GUI_L << LOG_HEADER << " failed.\n";
+		DBG_GUI_L << LOG_HEADER << " failed.";
 	}
 }
 
@@ -171,7 +160,7 @@ void tree_view::finalize_setup()
 	// Inherited.
 	scrollbar_container::finalize_setup();
 
-	auto root = std::make_unique<tree_view_node>(root_node_id, nullptr, *this, std::map<std::string, string_map>{});
+	auto root = std::make_unique<tree_view_node>(root_node_id, nullptr, *this, widget_data{});
 	root_node_ = root.get();
 
 	assert(content_grid());
@@ -182,7 +171,7 @@ void tree_view::finalize_setup()
 
 void tree_view::signal_handler_left_button_down(const event::ui_event event)
 {
-	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	get_window()->keyboard_capture(this);
 }
@@ -266,7 +255,7 @@ void tree_view::handle_key_right_arrow(SDL_Keymod modifier, bool& handled)
 tree_view_definition::tree_view_definition(const config& cfg)
 	: styled_widget_definition(cfg)
 {
-	DBG_GUI_P << "Parsing tree view " << id << '\n';
+	DBG_GUI_P << "Parsing tree view " << id;
 
 	load_resolutions<resolution>(cfg);
 }
@@ -316,7 +305,7 @@ std::unique_ptr<widget> builder_tree_view::build() const
 
 	widget->set_indentation_step_size(indentation_step_size);
 
-	DBG_GUI_G << "Window builder: placed tree_view '" << id << "' with definition '" << definition << "'.\n";
+	DBG_GUI_G << "Window builder: placed tree_view '" << id << "' with definition '" << definition << "'.";
 
 	const auto conf = widget->cast_config_to<tree_view_definition>();
 	assert(conf);

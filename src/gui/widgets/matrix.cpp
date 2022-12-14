@@ -90,7 +90,7 @@ matrix::matrix(const implementation::builder_matrix& builder)
 }
 
 unsigned
-matrix::create_item(const std::map<std::string, string_map>& item_data,
+matrix::create_item(const widget_data& item_data,
 					 const std::map<std::string, std::string>& tags)
 {
 	return pane_->create_item(item_data, tags);
@@ -108,21 +108,14 @@ void matrix::layout_initialize(const bool full_initialization)
 	content_.layout_initialize(full_initialization);
 }
 
-void matrix::impl_draw_children(int x_offset, int y_offset)
+void matrix::impl_draw_children()
 {
-	content_.draw_children(x_offset, y_offset);
+	content_.draw_children();
 }
 
 void matrix::layout_children()
 {
 	content_.layout_children();
-}
-
-void matrix::child_populate_dirty_list(window& caller,
-										const std::vector<widget*>& call_stack)
-{
-	std::vector<widget*> child_call_stack = call_stack;
-	content_.populate_dirty_list(caller, child_call_stack);
 }
 
 void matrix::request_reduce_width(const unsigned /*maximum_width*/)
@@ -184,7 +177,7 @@ iteration::walker_ptr matrix::create_walker()
 matrix_definition::matrix_definition(const config& cfg)
 	: styled_widget_definition(cfg)
 {
-	DBG_GUI_P << "Parsing matrix " << id << '\n';
+	DBG_GUI_P << "Parsing matrix " << id;
 
 	load_resolutions<resolution>(cfg);
 }

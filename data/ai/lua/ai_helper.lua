@@ -470,9 +470,6 @@ end
 
 ----- General functionality and maths helper functions ------
 
-ai_helper.filter = wesnoth.deprecate_api('ai_helper.filter', 'functional.filter', 3, '1.17.0', F.filter)
-ai_helper.choose = wesnoth.deprecate_api('ai_helper.choose', 'functional.filter', 3, '1.17.0', F.choose)
-
 function ai_helper.table_copy(t)
     -- Make a copy of a table (rather than just another pointer to the same table)
     local copy = {}
@@ -670,7 +667,7 @@ function ai_helper.get_named_loc_xy(param_core, cfg, required_for)
         if loc then
             return loc
         else
-            wml.error("Named location does not exist: " .. loc_id)
+            wml.error("Named location does not exist: " .. loc_id .. " " .. (required_for or ''))
         end
     end
 
@@ -679,7 +676,7 @@ function ai_helper.get_named_loc_xy(param_core, cfg, required_for)
     local x, y = cfg[param_x], cfg[param_y]
     if x and y then
         if not wesnoth.current.map:on_board(x, y) then
-            wml.error("Location is not on map: " .. param_x .. ',' .. param_y .. ' = ' .. x .. ',' .. y)
+            wml.error("Location is not on map: " .. param_x .. ',' .. param_y .. ' = ' .. x .. ',' .. y .. " " .. (required_for or ''))
         end
 
         return { x, y }
@@ -705,7 +702,7 @@ function ai_helper.get_multi_named_locs_xy(param_core, cfg, required_for)
         for _,loc_id in ipairs(loc_ids) do
             local tmp_cfg = {}
             tmp_cfg[param_loc] = loc_id
-            local loc = ai_helper.get_named_loc_xy(param_core, tmp_cfg)
+            local loc = ai_helper.get_named_loc_xy(param_core, tmp_cfg, required_for)
             table.insert(locs, loc)
         end
         return locs
@@ -725,7 +722,7 @@ function ai_helper.get_multi_named_locs_xy(param_core, cfg, required_for)
             local tmp_cfg = {}
             tmp_cfg[param_x] = tonumber(x)
             tmp_cfg[param_y] = tonumber(ys[i])
-            local loc = ai_helper.get_named_loc_xy(param_core, tmp_cfg)
+            local loc = ai_helper.get_named_loc_xy(param_core, tmp_cfg, required_for)
             table.insert(locs, loc)
         end
         return locs
@@ -925,91 +922,6 @@ function ai_helper.generalized_distance(x1, y1, x2, y2)
     return M.distance_between(x1, y1, x2, y2)
 end
 
-function ai_helper.xyoff(x, y, ori, hex)
-    -- Finds hexes at a certain offset from @x,@y
-    -- @ori: direction/orientation: north (0), ne (1), se (2), s (3), sw (4), nw (5)
-    -- @hex: string for the hex to be queried. Possible values:
-    --   's': self, 'u': up, 'lu': left up, 'ld': left down, 'ru': right up, 'rd': right down
-    --   This is all relative "looking" in the direction of 'ori'
-    -- returns x,y for the queried hex
-
-    wesnoth.deprecated_message('ai_helper.xyoff', 3, '1.17.0', "Use of ai_helper.xyoff is deprecated. There is no replacement as this is not a generally useful function, but equivalent results can be obtained with combinations of the wesnoth.map functions.")
-
-    -- Unlike Lua default, we count 'ori' from 0 (north) to 5 (nw), so that modulo operator can be used
-    ori = ori % 6
-
-    if (hex == 's') then return x, y end
-
-    -- This is all done with ifs, to keep it as fast as possible
-    if (ori == 0)  then -- "north"
-        if (hex == 'u') then return x, y-1 end
-        if (hex == 'd') then return x, y+1 end
-        local dy = 0
-        if (x % 2) == 1 then dy=1 end
-        if (hex == 'lu') then return x-1, y-dy end
-        if (hex == 'ld') then return x-1, y+1-dy end
-        if (hex == 'ru') then return x+1, y-dy end
-        if (hex == 'rd') then return x+1, y+1-dy end
-    end
-
-    if (ori == 1)  then -- "north-east"
-        local dy = 0
-        if (x % 2) == 1 then dy=1 end
-        if (hex == 'u') then return x+1, y-dy end
-        if (hex == 'd') then return x-1, y+1-dy end
-        if (hex == 'lu') then return x, y-1 end
-        if (hex == 'ld') then return x-1, y-dy end
-        if (hex == 'ru') then return x+1, y+1-dy end
-        if (hex == 'rd') then return x, y+1 end
-    end
-
-    if (ori == 2)  then -- "south-east"
-        local dy = 0
-        if (x % 2) == 1 then dy=1 end
-        if (hex == 'u') then return x+1, y+1-dy end
-        if (hex == 'd') then return x-1, y-dy end
-        if (hex == 'lu') then return x+1, y-dy end
-        if (hex == 'ld') then return x, y-1 end
-        if (hex == 'ru') then return x, y+1 end
-        if (hex == 'rd') then return x-1, y+1-dy end
-    end
-
-    if (ori == 3)  then -- "south"
-        if (hex == 'u') then return x, y+1 end
-        if (hex == 'd') then return x, y-1 end
-        local dy = 0
-        if (x % 2) == 1 then dy=1 end
-        if (hex == 'lu') then return x+1, y+1-dy end
-        if (hex == 'ld') then return x+1, y-dy end
-        if (hex == 'ru') then return x-1, y+1-dy end
-        if (hex == 'rd') then return x-1, y-dy end
-    end
-
-    if (ori == 4)  then -- "south-west"
-        local dy = 0
-        if (x % 2) == 1 then dy=1 end
-        if (hex == 'u') then return x-1, y+1-dy end
-        if (hex == 'd') then return x+1, y-dy end
-        if (hex == 'lu') then return x, y+1 end
-        if (hex == 'ld') then return x+1, y+1-dy end
-        if (hex == 'ru') then return x-1, y-dy end
-        if (hex == 'rd') then return x, y-1 end
-    end
-
-    if (ori == 5)  then -- "north-west"
-        local dy = 0
-        if (x % 2) == 1 then dy=1 end
-        if (hex == 'u') then return x-1, y-dy end
-        if (hex == 'd') then return x+1, y+1-dy end
-        if (hex == 'lu') then return x-1, y+1-dy end
-        if (hex == 'ld') then return x, y+1 end
-        if (hex == 'ru') then return x, y-1 end
-        if (hex == 'rd') then return x+1, y-dy end
-    end
-
-    return
-end
-
 function ai_helper.split_location_list_to_strings(list)
     -- Convert a list of locations @list as returned by wesnoth.map.find into a pair of strings
     -- suitable for passing in as x,y coordinate lists to wesnoth.map.find.
@@ -1200,7 +1112,10 @@ function ai_helper.get_attackable_enemies(filter, side, cfg)
     local filter_plus_vision = {}
     if filter then filter_plus_vision = ai_helper.table_copy(filter) end
     if (not ignore_visibility) then
-        table.insert(filter_plus_vision, { "filter_vision", { side = viewing_side, visible = 'yes' } })
+        filter_plus_vision = {
+            { "and", filter_plus_vision },
+            { "filter_vision", { side = viewing_side, visible = 'yes' } }
+        }
     end
 
     local enemies = {}
@@ -1288,30 +1203,6 @@ function ai_helper.get_closest_enemy(loc, side, cfg)
     end
 
     return closest_enemy, closest_distance
-end
-
-function ai_helper.has_ability(unit, ability, exact_match)
-    -- Returns true/false depending on whether unit has the given ability type (tag name)
-
-    wesnoth.deprecated_message('ai_helper.has_ability', 3, '1.17.0', "Use unit:matches { ability_type = ability } instead.")
-
-    return unit:matches { ability_type = ability }
-end
-
-function ai_helper.has_weapon_special(unit, special)
-    -- Returns true/false depending on whether @unit has a weapon with special @special
-    -- Also returns the number of the first weapon with this special
-
-    wesnoth.deprecated_message('ai_helper.has_weapon_special', 3, '1.17.0', "Use unit:find_attack() instead, noting that the argument needs to be a filter, such as { special_id = 'poison' }.")
-
-    for weapon_number,att in ipairs(unit.attacks) do
-        for _,sp in ipairs(att.specials) do
-            if (sp[1] == special) then
-                return true, weapon_number
-            end
-        end
-    end
-    return false
 end
 
 function ai_helper.get_cheapest_recruit_cost(leader)
@@ -1739,12 +1630,14 @@ function ai_helper.find_path_with_shroud(unit, x, y, cfg)
         local cfg_copy = {}
         if cfg then cfg_copy = ai_helper.table_copy(cfg) end
         cfg_copy.ignore_visibility = true
+        wesnoth.interface.handle_user_interact()
         path, cost = wesnoth.paths.find_path(unit, x, y, cfg_copy)
 
         for _,extracted_unit in ipairs(extracted_units) do
             extracted_unit:to_map()
         end
     else
+        wesnoth.interface.handle_user_interact()
         path, cost = wesnoth.paths.find_path(unit, x, y, cfg)
     end
 
@@ -2173,6 +2066,7 @@ function ai_helper.get_attacks(units, cfg)
     local reaches = LS.create()
 
     for _,unit in ipairs(units) do
+        wesnoth.interface.handle_user_interact()
         local reach
         if reaches:get(unit.x, unit.y) then
             reach = reaches:get(unit.x, unit.y)

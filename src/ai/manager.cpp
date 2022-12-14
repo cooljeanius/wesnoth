@@ -76,7 +76,7 @@ static lg::log_domain log_ai_mod("ai/mod");
 holder::holder( side_number side, const config &cfg )
 	: ai_(), side_context_(nullptr), readonly_context_(nullptr), readwrite_context_(nullptr), default_ai_context_(nullptr), side_(side), cfg_(cfg)
 {
-	DBG_AI_MANAGER << describe_ai() << "Preparing new AI holder" << std::endl;
+	DBG_AI_MANAGER << describe_ai() << "Preparing new AI holder";
 }
 
 void holder::init( side_number side )
@@ -122,7 +122,7 @@ void holder::init( side_number side )
 		}
 
 	} else {
-		ERR_AI_MANAGER << describe_ai()<<"AI lazy initialization error!" << std::endl;
+		ERR_AI_MANAGER << describe_ai()<<"AI lazy initialization error!";
 	}
 
 }
@@ -131,7 +131,7 @@ holder::~holder()
 {
 	try {
 	if (this->ai_) {
-		LOG_AI_MANAGER << describe_ai() << "Managed AI will be deleted" << std::endl;
+		LOG_AI_MANAGER << describe_ai() << "Managed AI will be deleted";
 	}
 	} catch (...) {}
 }
@@ -166,9 +166,9 @@ void holder::modify_ai(const config &cfg)
 		get_ai_ref();
 	}
 	const std::string &act = cfg["action"];
-	LOG_AI_MOD << "side "<< side_ << "        "<<act<<"_ai_component \""<<cfg["path"]<<"\""<<std::endl;
-	DBG_AI_MOD << std::endl << cfg << std::endl;
-	DBG_AI_MOD << "side "<< side_ << " before "<<act<<"_ai_component"<<std::endl << to_config() << std::endl;
+	LOG_AI_MOD << "side "<< side_ << "        "<<act<<"_ai_component \""<<cfg["path"]<<"\"";
+	DBG_AI_MOD << std::endl << cfg;
+	DBG_AI_MOD << "side "<< side_ << " before "<<act<<"_ai_component"<<std::endl << to_config();
 	bool res = false;
 	if (act == "add") {
 		res = component_manager::add_component(&*this->ai_,cfg["path"],cfg);
@@ -177,13 +177,13 @@ void holder::modify_ai(const config &cfg)
 	} else if (act == "delete") {
 		res = component_manager::delete_component(&*this->ai_,cfg["path"]);
 	} else {
-		ERR_AI_MOD << "modify_ai tag has invalid 'action' attribute " << act << std::endl;
+		ERR_AI_MOD << "modify_ai tag has invalid 'action' attribute " << act;
 	}
-	DBG_AI_MOD << "side "<< side_ << "  after [modify_ai]"<<act<<std::endl << to_config() << std::endl;
+	DBG_AI_MOD << "side "<< side_ << "  after [modify_ai]"<<act<<std::endl << to_config();
 	if (!res) {
-		LOG_AI_MOD << act << "_ai_component failed"<< std::endl;
+		LOG_AI_MOD << act << "_ai_component failed";
 	} else {
-		LOG_AI_MOD << act << "_ai_component success"<< std::endl;
+		LOG_AI_MOD << act << "_ai_component success";
 	}
 
 }
@@ -265,11 +265,13 @@ const std::string holder::get_ai_overview()
 	auto plsk = this->ai_->get_passive_leader_shares_keep();
 	// In order to display booleans as yes/no rather than 1/0 or true/false
 	config cfg;
+	cfg["allow_ally_villages"] = this->ai_->get_allow_ally_villages();
 	cfg["simple_targeting"] = this->ai_->get_simple_targeting();
 	cfg["support_villages"] = this->ai_->get_support_villages();
 	std::stringstream s;
 	s << "advancements:  " << this->ai_->get_advancements().get_value() << std::endl;
 	s << "aggression:  " << this->ai_->get_aggression() << std::endl;
+	s << "allow_ally_villages:  " << cfg["allow_ally_villages"] << std::endl;
 	s << "caution:  " << this->ai_->get_caution() << std::endl;
 	s << "grouping:  " << this->ai_->get_grouping() << std::endl;
 	s << "leader_aggression:  " << this->ai_->get_leader_aggression() << std::endl;
@@ -470,7 +472,7 @@ const std::string manager::evaluate_command( side_number side, const std::string
 	//prune history - erase 1/2 of it if it grows too large
 	if (history_.size()>MAX_HISTORY_SIZE){
 		history_.erase(history_.begin(),history_.begin()+MAX_HISTORY_SIZE/2);
-		LOG_AI_MANAGER << "AI MANAGER: pruned history" << std::endl;
+		LOG_AI_MANAGER << "AI MANAGER: pruned history";
 	}
 
 	if (!should_intercept(str)){
@@ -616,7 +618,7 @@ bool manager::add_ai_for_side_from_file( side_number side, const std::string& fi
 {
 	config cfg;
 	if (!configuration::get_side_config_from_file(file,cfg)){
-		ERR_AI_MANAGER << " unable to read [SIDE] config for side "<< side << "from file [" << file <<"]"<< std::endl;
+		ERR_AI_MANAGER << " unable to read [SIDE] config for side "<< side << "from file [" << file <<"]";
 		return false;
 	}
 	return add_ai_for_side_from_config(side,cfg,replace);
@@ -735,8 +737,8 @@ void manager::play_turn( side_number side ){
 	ai_obj.new_turn();
 	ai_obj.play_turn();
 	const int turn_end_time= SDL_GetTicks();
-	DBG_AI_MANAGER << "side " << side << ": number of user interactions: "<<num_interact_<<std::endl;
-	DBG_AI_MANAGER << "side " << side << ": total turn time: "<<turn_end_time - turn_start_time << " ms "<< std::endl;
+	DBG_AI_MANAGER << "side " << side << ": number of user interactions: "<<num_interact_;
+	DBG_AI_MANAGER << "side " << side << ": total turn time: "<<turn_end_time - turn_start_time << " ms ";
 }
 
 // =======================================================================

@@ -110,14 +110,21 @@ private:
 	{
 		pages.clear();
 		std::size_t start = 0;
-		while(start < data.size()) {
+		while(start + max_inspect_win_len < data.size()) {
+			// This could search into data that's already on a previous page, which is why the result
+			// is then checked for end < start.
 			std::size_t end = data.find_last_of('\n', start + max_inspect_win_len);
-			if(end == std::string::npos) {
-				end = data.size() - 1;
+			int len;
+			if(end == std::string::npos || end < start) {
+				len = max_inspect_win_len;
+			} else {
+				len = end - start + 1;
 			}
-			int len = end - start + 1;
 			pages.emplace_back(start, len);
 			start += len;
+		}
+		if(start < data.size()) {
+			pages.emplace_back(start, data.size() - start);
 		}
 	}
 	static const unsigned int max_inspect_win_len = 20000;
@@ -141,7 +148,7 @@ public:
 
 	stuff_list_adder& widget(const std::string& ref, const std::string& label, bool markup = false)
 	{
-		string_map& item = data_[ref];
+		widget_item& item = data_[ref];
 		item["label"] = label;
 		item["use_markup"] = utils::bool_string(markup);
 		return *this;
@@ -150,7 +157,7 @@ public:
 private:
 	tree_view_node& stuff_list_;
 	const std::string defn_;
-	std::map<std::string, string_map> data_;
+	widget_data data_;
 };
 
 class gamestate_inspector::view
@@ -490,7 +497,7 @@ const display_context& single_mode_controller::dc() const {
 event_mode_controller::event_mode_controller(gamestate_inspector::controller& c)
 	: single_mode_controller(c)
 {
-	single_mode_controller::events().write_events(events);
+	single_mode_controller::events().write_events(events, true);
 }
 
 void variable_mode_controller::show_list(tree_view_node& node)
@@ -907,7 +914,8 @@ void team_mode_controller::show_array(tree_view_node& node, int side)
 REGISTER_DIALOG(gamestate_inspector)
 
 gamestate_inspector::gamestate_inspector(const config& vars, const game_events::manager& events, const display_context& dc, const std::string& title)
-	: title_(title)
+	: modal_dialog(window_id())
+	, title_(title)
 	, vars_(vars)
 	, events_(events)
 	, dc_(dc)

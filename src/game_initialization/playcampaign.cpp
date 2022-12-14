@@ -44,6 +44,7 @@
 #include "saved_game.hpp"
 #include "savegame.hpp"
 #include "sound.hpp"
+#include "video.hpp"
 #include "wesnothd_connection.hpp"
 #include "wml_exception.hpp"
 
@@ -187,7 +188,7 @@ level_result::type campaign_controller::playsingle_scenario(end_level_data &end_
 
 	playsingle_controller playcontroller(starting_point, state_, false);
 
-	LOG_NG << "created objects... " << (SDL_GetTicks() - playcontroller.get_ticks()) << "\n";
+	LOG_NG << "created objects... " << (SDL_GetTicks() - playcontroller.get_ticks());
 	if(is_replay_) {
 		playcontroller.enable_replay(is_unit_test_);
 	}
@@ -208,7 +209,7 @@ level_result::type campaign_controller::playsingle_scenario(end_level_data &end_
 	end_level = playcontroller.get_end_level_data();
 	show_carryover_message(playcontroller, end_level, res);
 
-	if(!CVideo::get_singleton().faked()) {
+	if(!video::headless()) {
 		playcontroller.maybe_linger();
 	}
 
@@ -285,13 +286,13 @@ level_result::type campaign_controller::play_game()
 				res = playmp_scenario(end_level);
 			}
 		} catch(const leavegame_wesnothd_error&) {
-			LOG_NG << "The game was remotely ended\n";
+			LOG_NG << "The game was remotely ended";
 			return level_result::type::quit;
 		} catch(const game::load_game_failed& e) {
 			gui2::show_error_message(_("The game could not be loaded: ") + e.message);
 			return level_result::type::quit;
 		} catch(const quit_game_exception&) {
-			LOG_NG << "The game was aborted\n";
+			LOG_NG << "The game was aborted";
 			return level_result::type::quit;
 		} catch(const game::game_error& e) {
 			gui2::show_error_message(_("Error while playing the game: ") + e.message);

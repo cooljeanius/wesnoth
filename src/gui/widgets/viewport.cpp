@@ -107,25 +107,13 @@ void viewport::layout_initialize(const bool full_initialization)
 	}
 }
 
-void viewport::impl_draw_children(int x_offset, int y_offset)
+void viewport::impl_draw_children()
 {
-	x_offset += get_x();
-	y_offset += get_y();
-
 	if(widget_->get_visible() != widget::visibility::invisible) {
-		widget_->draw_background(x_offset, y_offset);
-		widget_->draw_children(x_offset, y_offset);
-		widget_->draw_foreground(x_offset, y_offset);
-		widget_->set_is_dirty(false);
+		widget_->draw_background();
+		widget_->draw_children();
+		widget_->draw_foreground();
 	}
-}
-
-void
-viewport::child_populate_dirty_list(window& caller,
-									 const std::vector<widget*>& call_stack)
-{
-	std::vector<widget*> child_call_stack = call_stack;
-	widget_->populate_dirty_list(caller, child_call_stack);
 }
 
 void viewport::request_reduce_width(const unsigned /*maximum_width*/)

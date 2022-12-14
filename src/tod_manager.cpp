@@ -55,7 +55,7 @@ tod_manager::tod_manager(const config& scenario_cfg)
 	}
 
 	time_of_day::parse_times(scenario_cfg, times_);
-	liminal_bonus_ = calculate_best_liminal_bonus(times_);
+	liminal_bonus_ = std::max(25, calculate_best_liminal_bonus(times_));
 
 	if(scenario_cfg.has_attribute("liminal_bonus")) {
 		liminal_bonus_ = scenario_cfg["liminal_bonus"].to_int(liminal_bonus_);
@@ -241,7 +241,7 @@ const time_of_day tod_manager::get_illuminated_time_of_day(
 			if(itor != units.end() && !itor->incapacitated()) {
 				unit_ability_list illum = itor->get_abilities("illuminates");
 				if(!illum.empty()) {
-					unit_abilities::effect illum_effect(illum, terrain_light, false);
+					unit_abilities::effect illum_effect(illum, terrain_light);
 					const int unit_mod = illum_effect.get_composite_value();
 
 					// Record this value.
@@ -484,7 +484,7 @@ void tod_manager::set_turn(const int num, game_data* vars, const bool increase_l
 {
 	has_tod_bonus_changed_ = false;
 	const int new_turn = std::max<int>(num, 1);
-	LOG_NG << "changing current turn number from " << turn_ << " to " << new_turn << '\n';
+	LOG_NG << "changing current turn number from " << turn_ << " to " << new_turn;
 
 	// Correct ToD
 	set_new_current_times(new_turn);

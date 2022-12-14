@@ -40,7 +40,6 @@
 #include "hotkey/hotkey_command.hpp"
 #include "key.hpp"
 #include "quit_confirmation.hpp"
-#include "video.hpp"
 
 class game_config_view;
 class display;
@@ -61,7 +60,7 @@ namespace soundsource
 class manager;
 }
 
-class controller_base : public video2::draw_layering, public events::pump_monitor
+class controller_base : public events::sdl_handler, public events::pump_monitor
 {
 public:
 	controller_base();
@@ -148,11 +147,6 @@ protected:
 	 */
 	void handle_event(const SDL_Event& event) override;
 
-	void handle_window_event(const SDL_Event& /*event*/) override
-	{
-		// No action by default
-	}
-
 	/** Process keydown (only when the general map display does not have focus). */
 	virtual void process_focus_keydown_event(const SDL_Event& /*event*/)
 	{
@@ -211,7 +205,6 @@ private:
 		}
 
 		void handle_event(const SDL_Event& event) override;
-		void handle_window_event(const SDL_Event&) override {}
 
 	private:
 		controller_base& controller_;

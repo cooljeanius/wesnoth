@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Battle for Wesnoth\n"
 "Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
-"POT-Creation-Date: 2022-02-20 10:48 UTC\n"
-"PO-Revision-Date: 2022-05-16 20:57+0200\n"
+"POT-Creation-Date: 2022-11-20 05:31 UTC\n"
+"PO-Revision-Date: 2022-06-18 10:08+0200\n"
 "Last-Translator: Michal Žejdl <lachim@emer.cz>\n"
 "Language-Team: Czech https://wiki.wesnoth.org/CzechTranslation\n"
 "Language: cs\n"
@@ -73,7 +73,7 @@ msgstr ""
 #. [about]
 #: data/campaigns/Secrets_of_the_Ancients/_main.cfg:29
 msgid "Campaign Design, Programming, and Artwork"
-msgstr "Design tažení, programování a grafika"
+msgstr "Návrh tažení, programování a grafika"
 
 #. [about]
 #: data/campaigns/Secrets_of_the_Ancients/_main.cfg:35
@@ -86,37 +86,37 @@ msgid "Additional Artwork"
 msgstr "Dodatečná grafika"
 
 #. [label]
-#: data/campaigns/Secrets_of_the_Ancients/gui/zombie_recruit_dialog.cfg:108
+#: data/campaigns/Secrets_of_the_Ancients/gui/zombie_recruit_dialog.cfg:106
 msgid "Lvl 0"
 msgstr "Úroveň 0"
 
 #. [label]
-#: data/campaigns/Secrets_of_the_Ancients/gui/zombie_recruit_dialog.cfg:130
+#: data/campaigns/Secrets_of_the_Ancients/gui/zombie_recruit_dialog.cfg:128
 msgid "Undead"
 msgstr "Nemrtví"
 
 #. [label]
-#: data/campaigns/Secrets_of_the_Ancients/gui/zombie_recruit_dialog.cfg:173
+#: data/campaigns/Secrets_of_the_Ancients/gui/zombie_recruit_dialog.cfg:171
 msgid "Traits"
 msgstr "Vlastnosti"
 
 #. [label]
-#: data/campaigns/Secrets_of_the_Ancients/gui/zombie_recruit_dialog.cfg:207
+#: data/campaigns/Secrets_of_the_Ancients/gui/zombie_recruit_dialog.cfg:209
 msgid "Attacks"
 msgstr "Útoky"
 
 #. [label]
-#: data/campaigns/Secrets_of_the_Ancients/gui/zombie_recruit_dialog.cfg:275
+#: data/campaigns/Secrets_of_the_Ancients/gui/zombie_recruit_dialog.cfg:277
 msgid "Choose a Corpse"
 msgstr "Vyber tělo"
 
 #. [button]
-#: data/campaigns/Secrets_of_the_Ancients/gui/zombie_recruit_dialog.cfg:341
+#: data/campaigns/Secrets_of_the_Ancients/gui/zombie_recruit_dialog.cfg:343
 msgid "Recruit"
 msgstr "Naverbovat"
 
 #. [button]: id=cancel
-#: data/campaigns/Secrets_of_the_Ancients/gui/zombie_recruit_dialog.cfg:347
+#: data/campaigns/Secrets_of_the_Ancients/gui/zombie_recruit_dialog.cfg:349
 msgid "Cancel"
 msgstr "Zpět"
 
@@ -1295,7 +1295,7 @@ msgid "Following the Shadow"
 msgstr "Následování stínu"
 
 #. [then]
-#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:30
+#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:31
 msgid ""
 "3 IV, 23 YW\n"
 "\n"
@@ -1318,7 +1318,7 @@ msgstr ""
 "podivného společníka mi zlepšuje náladu."
 
 #. [else]
-#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:35
+#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:36
 msgid ""
 "3 IV, 23 YW\n"
 "\n"
@@ -1336,7 +1336,7 @@ msgstr ""
 "podivného společníka mi zlepšuje náladu."
 
 #. [part]
-#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:48
+#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:49
 msgid ""
 "The phantom leads us north. It has identified itself as the ghost of Vash-"
 "Gorn, an orc. So it remembers! It seems that the problem has been solved, "
@@ -1353,32 +1353,32 @@ msgstr ""
 "takže jsem ani žádné nečekala."
 
 #. [side]: type=Direwolf Rider, id=Bogdush
-#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:73
+#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:74
 msgid "Goblin Raiders"
 msgstr "Goblinní nájezdníci"
 
 #. [side]: type=Direwolf Rider, id=Bogdush
-#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:76
+#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:77
 msgid "Bogdush"
 msgstr "Bogduš"
 
 #. [unit]: type=Goblin Pillager, id=Blaust
-#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:85
+#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:86
 msgid "Blaust"
 msgstr "Blaust"
 
 #. [side]
-#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:95
+#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:96
 msgid "Bats"
 msgstr "Netopýři"
 
 #. [objective]: condition=win
-#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:155
+#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:156
 msgid "Find out where the ghost went and follow it"
 msgstr "Zjisti, kam duch šel, a následuj jej"
 
 #. [message]: speaker=Ardonna
-#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:225
+#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:226
 msgid ""
 "Look, there is a cavern below the cave floor. What might we rouse if we go "
 "tromping about in the cave? I hope it is nothing worse than bats."
@@ -1387,17 +1387,17 @@ msgstr ""
 "po jeskyni? Doufám, že nic horšího než netopýry."
 
 #. [message]: speaker=Bone Captain
-#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:229
+#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:230
 msgid "Ghost?"
 msgstr "Duch?"
 
 #. [message]: speaker=Ardonna
-#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:233
+#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:234
 msgid "Surely the ghost would not have gone that way, where I cannot follow."
 msgstr "Ten duch by jistě nešel tak, abych ho nemohla následovat."
 
 #. [message]: speaker=Ardonna
-#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:253
+#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:254
 msgid ""
 "If there is one bat, there are certainly more. We should be careful. It "
 "would be foolish to explore this cave alone."
@@ -1406,46 +1406,46 @@ msgstr ""
 "být opatrní. Bylo by bláznovstvím prozkoumávat tuto jeskyni bez krytí."
 
 #. [message]: speaker=Ardonna
-#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:275
+#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:276
 msgid ""
 "There is a tunnel at the back of the cave! The ghost must have gone through "
 "there."
 msgstr "V zadní části jeskyně je tunel! Ten duch jím musel projít."
 
 #. [objective]: condition=win
-#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:284
+#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:285
 msgid "Move Ardonna to the tunnel"
 msgstr "Přesuň Ardonnu k tunelu"
 
 #. [message]: speaker=Ardonna
-#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:513
+#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:514
 msgid "So it’s only bats, but rather a lot of them."
 msgstr "Takže jsou to jen netopýři, zato jich je hodně."
 
 #. [message]: speaker=Ardonna
-#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:532
+#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:533
 msgid "Now let’s see where that ghost went."
 msgstr "Nyní pojďme zjistit, kam ten duch zmizel."
 
 #. [message]: speaker=Shadow
-#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:553
+#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:554
 msgid "Come."
 msgstr "Pojď."
 
 #. [message]: speaker=Ardonna
-#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:566
+#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:567
 msgid "Let’s follow it into the cave."
 msgstr "Následujme ho do té jeskyně."
 
 #. [message]: speaker=Blaust
-#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:570
+#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:571
 msgid ""
 "I don’t know, Bogdush. The Chief said he wanted stuff that was helpful for "
 "the war."
 msgstr "Nevím Bogduši. Šéf říkal, že chce něco, co by bylo užitečný pro válku."
 
 #. [message]: speaker=Bogdush
-#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:574
+#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:575
 msgid ""
 "It’s a <i>mage</i>! That <i>would</i> be helpful for the war, you idiot! "
 "It’s only a pup, and unless I miss my guess, it’s a female too. It will be "
@@ -1456,28 +1456,28 @@ msgstr ""
 "chytnout."
 
 #. [message]: speaker=Blaust
-#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:578
+#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:579
 msgid ""
 "What about the others? They look like the dead ones back on the Green Isle."
 msgstr "A co vostatní? Vypadaj jako ti mrtvoláci ze Zelenýho vostrova."
 
 #. [message]: speaker=Bogdush
-#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:582
+#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:583
 msgid "They are. It makes our job of killing them that much easier!"
 msgstr "Taky že sou! Vo to bude snazší je zabít!"
 
 #. [message]: speaker=Ardonna
-#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:592
+#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:593
 msgid "You must be goblins. You will stand out of my way if you wish to live."
 msgstr "Vy musíte být goblini. Kliďte se mi z cesty, pokud si přejete žít."
 
 #. [message]: speaker=Bogdush
-#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:596
+#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:597
 msgid "Oh, it’s a mage that makes jokes too! Let’s go."
 msgstr "Hele, ta magyně umí dělat i vtipy! Jdem."
 
 #. [message]: speaker=narrator
-#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:606
+#: data/campaigns/Secrets_of_the_Ancients/scenarios/06_Following_the_Shadow.cfg:607
 #: data/campaigns/Secrets_of_the_Ancients/scenarios/10_Merfolk_Revenge.cfg:547
 msgid "You have no more time."
 msgstr "Už nemáš čas."
@@ -3447,14 +3447,14 @@ msgid ""
 msgstr ""
 "17. VI. roku 23 w. l.\n"
 "\n"
-"Nyní je proces kompletní pro nás oba. Připravila jsem stráž, aby se mi něco "
-"nestalo, zatímco budu v oslabeném stádiu. A nic se nestalo. Jsem "
-"znovuzrozená. Necítím se moc odlišně, ale myslím si, že vypadám jinak. S tím "
-"ale nic neudělám. Můj hlavní cíl se uskutečnil! Nemůžu zemřít! Myslím si, že "
-"můžu být rozdrcena jako kostlivec a nebo možná spálená, ale nemusím se bát "
-"takovýchto nepravděpodobných událostí. Ovládám síly duchovního světa, které "
-"přímo skrz mě. Lehce se ubráním! Mým dalším cílem je sdílet moje vědomosti "
-"se světem, takže <i>nikdo</i> nemusí zemřít."
+"Nyní je proces dokončen pro nás oba. Postavila jsem stráž, aby se mi v mém "
+"oslabeném stavu nemohlo nic stát, a nic se nestalo. Jsem obnovena. Necítím "
+"se o moc jinak, ale asi vypadám děsně. Ach jo, s tím se nedá nic dělat. Ale "
+"můj hlavní cíl je splněn! Nemůžu zemřít! Počítám, že bych se mohla "
+"rozpadnout jako kostlivec nebo možná uhořet, ale těchto nepravděpodobných "
+"událostí se nemusím bát: Proudí skrze mne úžasné síly duchovního světa "
+"a dokážu se zcela dostatečně ochránit! Mým dalším cílem je podělit se o své "
+"znalosti se světem, aby <i>nikdo</i> nemusel zemřít."
 
 #. [side]
 #: data/campaigns/Secrets_of_the_Ancients/scenarios/18_Abandoned_Outpost.cfg:70
@@ -3513,9 +3513,9 @@ msgid ""
 "us not go over those wretched mountain passes again. These tunnels should "
 "connect to the realm of Knalga and take us there directly."
 msgstr ""
-"Také jsem plánoval jít tímto směrem, takže nic nenamítám. Ale už znovu "
-"nechoďme přes tyto horské průchody. Tyto tunely by nás měli propojit s "
-"Knalgou a dostat nás tam přímo."
+"Sám jsem se chystal vydat tímto směrem, takže nic nenamítám. Ale "
+"nepřelézejme znovu přes ty mizerné horské průsmyky. Tyto tunely by měly být "
+"napojené na říši Knalgy a dostat nás tam přímo."
 
 #. [message]: speaker=Ardonna
 #: data/campaigns/Secrets_of_the_Ancients/scenarios/18_Abandoned_Outpost.cfg:436
@@ -3568,13 +3568,14 @@ msgid ""
 msgstr ""
 "21. VI. roku 23 w. l.\n"
 "\n"
-"Pokračovali jsme tunelem v úplné temnotě po nějaký čas. Temnota nebyla nic "
-"náročného: Netopýři se v ní umí perfektně navigovat a všichni mágové věděli, "
-"kde přesně jsou. Ras-Tabahn a já jsme si povídali. Jeho plán je jít do "
-"Elensefaru. Myslím si, že může obsadit město a udělat ze sebe vládce impéria "
-"nemrtvých. Lidé se k němu přidají. Dobrovolně a nebo ne, ale přidají se. "
-"Když se nebudou chtít přidat, nebo nebudou mít dostatečnou mentální sílu "
-"k přeměně na kostlivce, tak z nich budou nemyslící otroci."
+"Delší dobu jsme pokračovali tunelem v úplné tmě. Temnota nepředstavovala "
+"žádnou velkou potíž: Netopýři dokázali dokonale nacházet správný směr "
+"a všichni mágové uměli přesně vycítit, kde jsou. Ras-Tabahn a já jsme si "
+"povídali. Jeho plánem je jít do Elensefaru. Věří, že dokáže svrhnout vládu "
+"nad městem a ustanovit sám sebe jako panovníka říše nemrtvých. Občané se "
+"k němu jako nemrtví přidají dobrovolně nebo ne, ale přidají se. Když se "
+"nepřipojí dobrovolně nebo jim bude chybět duševní síla ke změně do podoby "
+"licha, budou z nich samozřejmě nemyslící otroci."
 
 #. [part]
 #: data/campaigns/Secrets_of_the_Ancients/scenarios/19_Lava_and_Stone.cfg:25
@@ -3637,7 +3638,7 @@ msgid ""
 "seemed a fanciful tale. From the look of this, that may actually be true."
 msgstr ""
 "Slyšela jsem, že hory někdy dýchají oheň, tak jako draci, ale připadalo mi "
-"to jako hloupá povídačka. Při pohledu na toto to však může být pravda."
+"to jako hloupá povídačka. Při pohledu na tohle to však může být pravda."
 
 #. [message]: speaker=Ras-Tabahn
 #: data/campaigns/Secrets_of_the_Ancients/scenarios/19_Lava_and_Stone.cfg:127
@@ -3689,8 +3690,9 @@ msgid ""
 msgstr ""
 "27. VI. roku 23 w. l.\n"
 "\n"
-"Opustili jsme ohně v horách za námi a znovu jsme se dostali do temnoty. Po "
-"dlouhé cestě jsme se dostali na konec tunelu... ale zeď nebyla úplně pevná."
+"Nechali jsme za sebou ohně hory a znovu se vrhli do temnoty. Po dlouhém "
+"putování jsme se ocitli ve slepé uličce na konci tunelu..., ale zeď nebyla "
+"úplně pevná."
 
 #. [side]: type=Dwarvish Lord, id=Golbanduth
 #. [side]
@@ -3728,8 +3730,8 @@ msgid ""
 "Actually, I don’t think this is the end. There is air coming through here. "
 "Help me shift these stones."
 msgstr ""
-"Popravdě si nemyslím, že toto je konec. Prochází tudy vzduch. Pomoz mi "
-"posunout tyhle kameny."
+"Vlastně si myslím, že tohle není konec. Prochází tudy vzduch. Pomoz mi "
+"posunout ty kameny."
 
 #. [message]: speaker=Ardonna
 #: data/campaigns/Secrets_of_the_Ancients/scenarios/20_North_Knalga.cfg:708
@@ -3768,23 +3770,23 @@ msgid ""
 "But look. There is a large crack in the wall to our right! I’m certain we "
 "could squeeze through."
 msgstr ""
-"Ale podívejte. Ve stěně napravo je veliká puklina. Určitě tudy můžeme "
-"proniknout."
+"Ale podívejte. Ve stěně napravo je veliká puklina. Jsem si jistý, že bychom "
+"se tudy mohli protáhnout."
 
 #. [message]: speaker=Ras-Tabahn
 #: data/campaigns/Secrets_of_the_Ancients/scenarios/20_North_Knalga.cfg:777
 msgid "We’ll just remove the statue..."
-msgstr "Odstraníme sochu..."
+msgstr "Jenom odstraníme tu sochu..."
 
 #. [message]: speaker=Ras-Tabahn
 #: data/campaigns/Secrets_of_the_Ancients/scenarios/20_North_Knalga.cfg:812
 msgid "... and push the coffin out of the way."
-msgstr "... a hrobky posuneme pryč z cesty."
+msgstr "... a posuneme rakev pryč z cesty."
 
 #. [message]: speaker=spotter
 #: data/campaigns/Secrets_of_the_Ancients/scenarios/20_North_Knalga.cfg:840
 msgid "Ach! Th’ invaders have made it inna the Crystal Caves!"
-msgstr "Ach! Vetřelci se dostali do křišťálové jeskyně!"
+msgstr "Ach! Vetřelci se dostali do Křišťálových jeskyní!"
 
 #. [scenario]: id=21_Against_the_World
 #: data/campaigns/Secrets_of_the_Ancients/scenarios/21_Against_the_World.cfg:10
@@ -3820,12 +3822,12 @@ msgid ""
 msgstr ""
 "3. VII. roku 23 w. l.\n"
 "\n"
-"Konečně jsem se dostali z hor. Brzo ráno jsme přešli pčes brod Abez a "
-"cestovali jsme po zbytek dne na jihovýchod, směrem k městu Tath. Zde jsem se "
+"Konečně jsme se dostali z hor. Brzo ráno jsme přešli přes brod Abez a "
+"cestovali po zbytek dne na jihovýchod, směrem k městu Tath. Zde jsme se "
 "rozhodli, že se rozdělíme. Měla jsem jít na jih, směrem na Dan’Tonk a "
 "Weldyn, abych tam přinesla novinky o našich objevech. Ras-Tabahn plánoval "
-"cestu do Elensefaru, aby tam uskutečnil svojí část plánu. (A stal se tam "
-"něčím jako králem, předpokládám)."
+"cestu do Elensefaru, aby tam uskutečnil svoji část plánu. (A stal se tam "
+"něčím jako králem, předpokládám.)"
 
 #. [part]
 #: data/campaigns/Secrets_of_the_Ancients/scenarios/21_Against_the_World.cfg:37
@@ -3834,7 +3836,7 @@ msgid ""
 "plains suddenly became more crowded."
 msgstr ""
 "Ale nebylo tomu tak. Jen co jsme se chtěli rozdělit, pláně před námi se "
-"začali plnit."
+"začaly plnit."
 
 #. [side]
 #: data/campaigns/Secrets_of_the_Ancients/scenarios/21_Against_the_World.cfg:59
@@ -3870,8 +3872,8 @@ msgid ""
 "The enemy is already poised to attack! They must have anticipated our "
 "arrival. No rest my friends; we go to work immediately."
 msgstr ""
-"Nepřítel je připravený k útoku! Museli očekávat náš příchod. Žádný oddych "
-"nebude, musíme se pustit do práce okamžitě."
+"Nepřítel už je připraven zaútočit! Museli náš příchod předvídat. Žádný "
+"oddych, přátelé, okamžitě se dáme do práce."
 
 #. [message]: speaker=Carmyna
 #: data/campaigns/Secrets_of_the_Ancients/scenarios/21_Against_the_World.cfg:365
@@ -3888,8 +3890,8 @@ msgid ""
 "What is this? The enemy lurking in wait in our forests? To arms! Let us "
 "immediately rid our land of this foulness!"
 msgstr ""
-"Co to má znamenat? Nepřátelé číhají v našich lesích? Do zbraně! Okamžitě se "
-"musíme zbavit tohoto zla!"
+"Co to má znamenat? Nepřítel číhá v našich lesích? Do zbraně! Okamžitě zbavme "
+"naši zemi tohoto hnusu!"
 
 #. [message]: speaker=Isthiniel
 #: data/campaigns/Secrets_of_the_Ancients/scenarios/21_Against_the_World.cfg:394
@@ -3965,7 +3967,7 @@ msgstr "Stále přicházejí další! Nikdo ani nezauvažoval o tom, co nabízí
 #. [message]: speaker=Ras-Tabahn
 #: data/campaigns/Secrets_of_the_Ancients/scenarios/21_Against_the_World.cfg:725
 msgid "Well. That was intense."
-msgstr "Dobře. Tak toto bylo intenzivní."
+msgstr "Dobře. To bylo intenzivní."
 
 #. [message]: speaker=Ardonna
 #: data/campaigns/Secrets_of_the_Ancients/scenarios/21_Against_the_World.cfg:729
@@ -3988,13 +3990,13 @@ msgid ""
 "This is the place Crelanu’s gryphon told us to come, and yon party has an "
 "ill-favored look."
 msgstr ""
-"Toto je to místo, kam nás poslal Krelanův gryf. Už pohled na tu skupinu je "
+"Tohle je to místo, kam nás poslal Krelanův gryf. Už pohled na onu skupinu je "
 "strašný."
 
 #. [message]: speaker=Gwendir
 #: data/campaigns/Secrets_of_the_Ancients/scenarios/21_Against_the_World.cfg:846
 msgid "Yes, I believe that is our quarry."
-msgstr "Ano, věřím, že toto je místo, kde můžem udělat hodně práce."
+msgstr "Ano, věřím, že to je naše kořist."
 
 #. [message]: speaker=Ras-Tabahn
 #: data/campaigns/Secrets_of_the_Ancients/scenarios/21_Against_the_World.cfg:850
@@ -4036,7 +4038,7 @@ msgstr "Pane, mágové ješte stále nedorazili."
 msgid ""
 "No matter. We need not fear this darkness, and we need not wait on the "
 "schoolteachers."
-msgstr "To nevadí. Nemusíme se bát této temnoty. Nemusíme čekat na učitele."
+msgstr "To nevadí. Této temnoty se nemusíme bát a na učitele nemusíme čekat."
 
 #. [unit]: type=Naga Myrmidon, id=Taxtrimon
 #: data/campaigns/Secrets_of_the_Ancients/scenarios/21_Against_the_World.cfg:883
@@ -4065,7 +4067,7 @@ msgstr "Také se přidám. Zemřelo příliš nevinných. To dnes skončí."
 #. [message]: speaker=Ardonna
 #: data/campaigns/Secrets_of_the_Ancients/scenarios/21_Against_the_World.cfg:923
 msgid "We are surrounded. We must defeat this horde."
-msgstr "Jsme obklíčeni! Musíme prorazit tuto hordu."
+msgstr "Jsme obklíčeni. Musíme ten dav porazit."
 
 #. [scenario]: id=22_Epilogue
 #: data/campaigns/Secrets_of_the_Ancients/scenarios/22_Epilogue.cfg:5
@@ -4104,7 +4106,7 @@ msgstr ""
 "můžeme, abychom ten den uspíšili."
 
 #. [then]
-#: data/campaigns/Secrets_of_the_Ancients/scenarios/22_Epilogue.cfg:31
+#: data/campaigns/Secrets_of_the_Ancients/scenarios/22_Epilogue.cfg:32
 msgid ""
 "Ras-Tabahn is going to rebuild his strength and continue to Elensefar. Most "
 "of the others are going with him. I wish them success. Vendraxis now knows "
@@ -4117,19 +4119,19 @@ msgid ""
 "open-minded. Tath, in particular, is home to many mages. It only takes one "
 "who is willing to learn the secrets of the ancients."
 msgstr ""
-"Ras-Tabahn jde znovu získat svojí sílu a bude pokračovat na Elensefar. "
+"Ras-Tabahn jde znovu získat svoji sílu a bude pokračovat na Elensefar. "
 "Většina ostatních půjde s ním. Držím jim palce. Vendraxis teď už ví, co se "
 "musí naučit, aby mohl napodobit naší přeměnu. Roky, které mu zbývají, bude "
-"studovat a experimentovat a při tom se bude snažit změnit názor jeho lidu.\n"
+"studovat a experimentovat a přitom se bude snažit změnit názor svého lidu.\n"
 "Pokud jde o mě, zanechám na tomto bitevním poli okatě svůj deník. Trochu se "
 "obávám, aby se ho většina nebála natolik, že se jej pokusí zničit. Seslala "
 "jsem na něj ale několik ochranných prvků, co jej pomohou zachovat. Tímto "
 "způsobem by měl přežít dostatečně dlouho, aby se dostal do rukou někoho s "
-"otevřenější myslí. Zejména Tath je domovem mnoha mágů. Stačí aby se našel "
-"jeden, který bude ochoten se učit tajemstvím předků."
+"otevřenější myslí. Zejména Tath je domovem mnoha mágů. Stačí, aby se našel "
+"jeden, který bude ochoten učit se tajemstvím předků."
 
 #. [else]
-#: data/campaigns/Secrets_of_the_Ancients/scenarios/22_Epilogue.cfg:34
+#: data/campaigns/Secrets_of_the_Ancients/scenarios/22_Epilogue.cfg:35
 msgid ""
 "Ras-Tabahn is going to rebuild his strength and continue to Elensefar. Most "
 "of the others are going with him. I wish them success. As for me, I will "
@@ -4499,160 +4501,110 @@ msgstr "Skrýt plachty a lanoví"
 msgid "Show Sails and Rigging"
 msgstr "Zobrazit plachty a lanoví"
 
-#. [terrain_type]: id=zgrave
 #. [terrain_type]: id=grave
-#: data/campaigns/Secrets_of_the_Ancients/utils/terrain-compat.cfg:19
 #: data/campaigns/Secrets_of_the_Ancients/utils/terrain.cfg:15
 msgid "Grave"
 msgstr "Hrob"
 
-#. [terrain_type]: id=zgrave
 #. [terrain_type]: id=grave
-#: data/campaigns/Secrets_of_the_Ancients/utils/terrain-compat.cfg:20
 #: data/campaigns/Secrets_of_the_Ancients/utils/terrain.cfg:16
 msgid "Grave Overlay"
 msgstr "Zakrytý hrob"
 
-#. [terrain_type]: id=znot_here
 #. [terrain_type]: id=not_here
-#: data/campaigns/Secrets_of_the_Ancients/utils/terrain-compat.cfg:31
 #: data/campaigns/Secrets_of_the_Ancients/utils/terrain.cfg:27
 msgid "Not Here Overlay"
 msgstr "Nezakrytý hrob"
 
-#. [terrain_type]: id=zcrystal
 #. [terrain_type]: id=crystal
-#: data/campaigns/Secrets_of_the_Ancients/utils/terrain-compat.cfg:50
 #: data/campaigns/Secrets_of_the_Ancients/utils/terrain.cfg:46
 msgid "Crystal Caves"
 msgstr "Křišťálové jeskyně"
 
-#. [terrain_type]: id=zpassageway
 #. [terrain_type]: id=passageway
-#: data/campaigns/Secrets_of_the_Ancients/utils/terrain-compat.cfg:60
 #: data/campaigns/Secrets_of_the_Ancients/utils/terrain.cfg:56
 msgid "Passageway"
 msgstr "Průchod"
 
-#. [terrain_type]: id=zgate_open
-#. [terrain_type]: id=zgate_closed
 #. [terrain_type]: id=gate_open
 #. [terrain_type]: id=gate_closed
-#: data/campaigns/Secrets_of_the_Ancients/utils/terrain-compat.cfg:69
-#: data/campaigns/Secrets_of_the_Ancients/utils/terrain-compat.cfg:79
 #: data/campaigns/Secrets_of_the_Ancients/utils/terrain.cfg:65
 #: data/campaigns/Secrets_of_the_Ancients/utils/terrain.cfg:75
 msgid "Gate"
 msgstr "Brána"
 
-#. [terrain_type]: id=zweb
 #. [terrain_type]: id=web
-#: data/campaigns/Secrets_of_the_Ancients/utils/terrain-compat.cfg:89
 #: data/campaigns/Secrets_of_the_Ancients/utils/terrain.cfg:85
 msgid "Spiderweb"
 msgstr "Pavučina"
 
-#. [terrain_type]: id=zgraveyard-fence-top
 #. [terrain_type]: id=graveyard-fence-top
-#: data/campaigns/Secrets_of_the_Ancients/utils/terrain-compat.cfg:99
 #: data/campaigns/Secrets_of_the_Ancients/utils/terrain.cfg:95
 msgid "Fence-Top"
 msgstr "Vršek plotu"
 
-#. [terrain_type]: id=zgraveyard-fence-bottom
 #. [terrain_type]: id=graveyard-fence-bottom
-#: data/campaigns/Secrets_of_the_Ancients/utils/terrain-compat.cfg:108
 #: data/campaigns/Secrets_of_the_Ancients/utils/terrain.cfg:104
 msgid "Fence"
 msgstr "Plot"
 
-#. [terrain_type]: id=zgraveyard-fence-bottom
 #. [terrain_type]: id=graveyard-fence-bottom
-#: data/campaigns/Secrets_of_the_Ancients/utils/terrain-compat.cfg:109
 #: data/campaigns/Secrets_of_the_Ancients/utils/terrain.cfg:105
 msgid "Fence-Bottom"
 msgstr "Spodek plotu"
 
-#. [terrain_type]: id=zship--forecastle
 #. [terrain_type]: id=ship--forecastle
-#: data/campaigns/Secrets_of_the_Ancients/utils/terrain-compat.cfg:128
 #: data/campaigns/Secrets_of_the_Ancients/utils/terrain.cfg:124
 msgid "Ship Forecastle"
 msgstr "Příďová paluba lodi"
 
-#. [terrain_type]: id=zship--main-deck
 #. [terrain_type]: id=ship--main-deck
-#: data/campaigns/Secrets_of_the_Ancients/utils/terrain-compat.cfg:141
 #: data/campaigns/Secrets_of_the_Ancients/utils/terrain.cfg:137
 msgid "Ship Main Deck"
 msgstr "Hlavní paluba lodi"
 
-#. [terrain_type]: id=zship--poop-deck
 #. [terrain_type]: id=ship--poop-deck
-#: data/campaigns/Secrets_of_the_Ancients/utils/terrain-compat.cfg:151
 #: data/campaigns/Secrets_of_the_Ancients/utils/terrain.cfg:147
 msgid "Ship Poop Deck"
 msgstr "Záďová paluba lodi"
 
-#. [terrain_type]: id=zship--hull
-#. [terrain_type]: id=zship--railing
 #. [terrain_type]: id=ship--hull
 #. [terrain_type]: id=ship--railing
-#: data/campaigns/Secrets_of_the_Ancients/utils/terrain-compat.cfg:164
-#: data/campaigns/Secrets_of_the_Ancients/utils/terrain-compat.cfg:256
-#: data/campaigns/Secrets_of_the_Ancients/utils/terrain-compat.cfg:274
 #: data/campaigns/Secrets_of_the_Ancients/utils/terrain.cfg:160
 #: data/campaigns/Secrets_of_the_Ancients/utils/terrain.cfg:252
 #: data/campaigns/Secrets_of_the_Ancients/utils/terrain.cfg:270
 msgid "Ship Hull"
 msgstr "Lodní trup"
 
-#. [terrain_type]: id=zship--rigging-and-sails
 #. [terrain_type]: id=ship--rigging-and-sails
-#: data/campaigns/Secrets_of_the_Ancients/utils/terrain-compat.cfg:173
 #: data/campaigns/Secrets_of_the_Ancients/utils/terrain.cfg:169
 msgid "Ship Rigging and Sails"
 msgstr "Lodní lanoví a plachty"
 
-#. [terrain_type]: id=zship--railing
 #. [terrain_type]: id=ship--railing
-#: data/campaigns/Secrets_of_the_Ancients/utils/terrain-compat.cfg:182
 #: data/campaigns/Secrets_of_the_Ancients/utils/terrain.cfg:178
 msgid "Ship Railing"
 msgstr "Lodní zábradlí"
 
-#. [terrain_type]: id=zship--bits-and-pieces
 #. [terrain_type]: id=ship--bits-and-pieces
-#: data/campaigns/Secrets_of_the_Ancients/utils/terrain-compat.cfg:191
 #: data/campaigns/Secrets_of_the_Ancients/utils/terrain.cfg:187
 msgid "Ship Pieces"
 msgstr "Kousky lodě"
 
-#. [terrain_type]: id=zship--lower-deck
 #. [terrain_type]: id=ship--lower-deck
-#: data/campaigns/Secrets_of_the_Ancients/utils/terrain-compat.cfg:200
 #: data/campaigns/Secrets_of_the_Ancients/utils/terrain.cfg:196
 msgid "Ship Lower Deck"
 msgstr "Spodní paluba lodi"
 
-#. [terrain_type]: id=zship--lower-deck-edge
 #. [terrain_type]: id=ship--lower-deck-edge
-#: data/campaigns/Secrets_of_the_Ancients/utils/terrain-compat.cfg:209
 #: data/campaigns/Secrets_of_the_Ancients/utils/terrain.cfg:205
 msgid "Ship Lower Deck Edge"
 msgstr "Roh spodní paluby lodi"
 
-#. [terrain_type]: id=zship--forecastle
-#. [terrain_type]: id=ship--main-deck
-#. [terrain_type]: id=zship--poop-deck
-#. [terrain_type]: id=zship--lower-deck
 #. [terrain_type]: id=ship--forecastle
+#. [terrain_type]: id=ship--main-deck
 #. [terrain_type]: id=ship--poop-deck
 #. [terrain_type]: id=ship--lower-deck
-#: data/campaigns/Secrets_of_the_Ancients/utils/terrain-compat.cfg:220
-#: data/campaigns/Secrets_of_the_Ancients/utils/terrain-compat.cfg:233
-#: data/campaigns/Secrets_of_the_Ancients/utils/terrain-compat.cfg:243
-#: data/campaigns/Secrets_of_the_Ancients/utils/terrain-compat.cfg:305
 #: data/campaigns/Secrets_of_the_Ancients/utils/terrain.cfg:216
 #: data/campaigns/Secrets_of_the_Ancients/utils/terrain.cfg:229
 #: data/campaigns/Secrets_of_the_Ancients/utils/terrain.cfg:239
@@ -4660,23 +4612,17 @@ msgstr "Roh spodní paluby lodi"
 msgid "Ship"
 msgstr "Loď"
 
-#. [terrain_type]: id=zfull-void
 #. [terrain_type]: id=full-void
-#: data/campaigns/Secrets_of_the_Ancients/utils/terrain-compat.cfg:327
 #: data/campaigns/Secrets_of_the_Ancients/utils/terrain.cfg:323
 msgid "Full Void"
 msgstr "Naprostá prázdnota"
 
-#. [terrain_type]: id=zfull-void-overlay
 #. [terrain_type]: id=full-void-overlay
-#: data/campaigns/Secrets_of_the_Ancients/utils/terrain-compat.cfg:337
 #: data/campaigns/Secrets_of_the_Ancients/utils/terrain.cfg:333
 msgid "Void Overlay"
 msgstr "Překryv prázdnoty"
 
-#. [terrain_type]: id=zhalf-void-overlay
 #. [terrain_type]: id=half-void-overlay
-#: data/campaigns/Secrets_of_the_Ancients/utils/terrain-compat.cfg:347
 #: data/campaigns/Secrets_of_the_Ancients/utils/terrain.cfg:343
 msgid "Half Void"
 msgstr "Poloviční prázdnota"

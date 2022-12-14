@@ -22,21 +22,17 @@
 #include "sdl/input.hpp"                // for get_mouse_state
 
 #include <algorithm>                    // for find
-#include <iostream>                     // for basic_ostream, operator<<, etc
 #include <list>                         // for _List_const_iterator, etc
 #include <utility>                      // for pair
 #include <SDL2/SDL.h>
 
-class CVideo;  // lines 56-56
-
 namespace help {
 
-help_menu::help_menu(CVideo &video, const section& toplevel, int max_height) :
-	gui::menu(video, empty_string_vector, true, max_height, -1, nullptr, &gui::menu::bluebg_style),
+help_menu::help_menu(const section& toplevel, int max_height) :
+	gui::menu(empty_string_vector, true, max_height, -1, nullptr, &gui::menu::bluebg_style),
 	visible_items_(),
 	toplevel_(toplevel),
 	expanded_(),
-	restorer_(),
 	chosen_topic_(nullptr),
 	selected_item_(&toplevel, "", 0)
 {
@@ -160,9 +156,9 @@ int help_menu::process()
 	int mousex, mousey;
 	sdl::get_mouse_state(&mousex, &mousey);
 
-	if (!visible_items_.empty() &&
-            static_cast<std::size_t>(res) < visible_items_.size()) {
-
+	if (!visible_items_.empty()
+		&& static_cast<std::size_t>(res) < visible_items_.size())
+	{
 		selected_item_ = visible_items_[res];
 		const section* sec = selected_item_.sec;
 		if (sec != nullptr) {

@@ -80,14 +80,13 @@ toggle_panel::toggle_panel(const implementation::builder_toggle_panel& builder)
 
 unsigned toggle_panel::num_states() const
 {
-	std::div_t res = std::div(this->config()->state.size(), COUNT);
+	std::div_t res = std::div(this->get_config()->state.size(), COUNT);
 	assert(res.rem == 0);
 	assert(res.quot > 0);
 	return res.quot;
 }
 
-void toggle_panel::set_child_members(
-		const std::map<std::string /* widget id */, string_map>& data)
+void toggle_panel::set_child_members(const widget_data& data)
 {
 	for(const auto & item : data)
 	{
@@ -167,7 +166,7 @@ void toggle_panel::set_value(unsigned selected, bool fire_event)
 		return;
 	}
 	state_num_ = selected;
-	set_is_dirty(true);
+	queue_redraw();
 
 	// Check for get_window() is here to prevent the callback from
 	// being called when the initial value is set.
@@ -188,30 +187,30 @@ void toggle_panel::set_state(const state_t state)
 	}
 
 	state_ = state;
-	set_is_dirty(true);
+	queue_redraw();
 
 	const auto conf = cast_config_to<toggle_panel_definition>();
 	assert(conf);
 }
 
-void toggle_panel::impl_draw_background(int x_offset, int y_offset)
+void toggle_panel::impl_draw_background()
 {
 	// We don't have a fore and background and need to draw depending on
 	// our state, like a styled_widget. So we use the styled_widget's drawing method.
-	styled_widget::impl_draw_background(x_offset, y_offset);
+	styled_widget::impl_draw_background();
 }
 
-void toggle_panel::impl_draw_foreground(int x_offset, int y_offset)
+void toggle_panel::impl_draw_foreground()
 {
 	// We don't have a fore and background and need to draw depending on
 	// our state, like a styled_widget. So we use the styled_widget's drawing method.
-	styled_widget::impl_draw_foreground(x_offset, y_offset);
+	styled_widget::impl_draw_foreground();
 }
 
 void toggle_panel::signal_handler_mouse_enter(const event::ui_event event,
 											   bool& handled)
 {
-	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	set_state(FOCUSED);
 	handled = true;
@@ -220,7 +219,7 @@ void toggle_panel::signal_handler_mouse_enter(const event::ui_event event,
 void toggle_panel::signal_handler_mouse_leave(const event::ui_event event,
 											   bool& handled)
 {
-	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	set_state(ENABLED);
 	handled = true;
@@ -229,7 +228,7 @@ void toggle_panel::signal_handler_mouse_leave(const event::ui_event event,
 void
 toggle_panel::signal_handler_pre_left_button_click(const event::ui_event event)
 {
-	DBG_GUI_E << get_control_type() << "[" << id() << "]: " << event << ".\n";
+	DBG_GUI_E << get_control_type() << "[" << id() << "]: " << event << ".";
 
 	set_value(1, true);
 
@@ -256,7 +255,7 @@ toggle_panel::signal_handler_pre_left_button_click(const event::ui_event event)
 void toggle_panel::signal_handler_left_button_click(const event::ui_event event,
 													 bool& handled)
 {
-	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	sound::play_UI_sound(settings::sound_toggle_panel_click);
 
@@ -268,7 +267,7 @@ void toggle_panel::signal_handler_left_button_click(const event::ui_event event,
 void toggle_panel::signal_handler_left_button_double_click(
 		const event::ui_event event, bool& handled)
 {
-	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	if(retval_) {
 		window* window = get_window();
@@ -285,7 +284,7 @@ void toggle_panel::signal_handler_left_button_double_click(
 toggle_panel_definition::toggle_panel_definition(const config& cfg)
 	: styled_widget_definition(cfg)
 {
-	DBG_GUI_P << "Parsing toggle panel " << id << '\n';
+	DBG_GUI_P << "Parsing toggle panel " << id;
 
 	load_resolutions<resolution>(cfg);
 }
@@ -331,7 +330,7 @@ std::unique_ptr<widget> builder_toggle_panel::build() const
 	widget->set_retval(get_retval(retval_id_, retval_, id));
 
 	DBG_GUI_G << "Window builder: placed toggle panel '" << id
-			  << "' with definition '" << definition << "'.\n";
+			  << "' with definition '" << definition << "'.";
 
 	widget->init_grid(*grid);
 	return widget;

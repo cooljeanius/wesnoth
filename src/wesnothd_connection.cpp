@@ -18,7 +18,9 @@
 #include "wesnothd_connection.hpp"
 
 #include "gettext.hpp"
+#include "gui/dialogs/loading_screen.hpp"
 #include "log.hpp"
+#include "preferences/general.hpp"
 #include "serialization/parser.hpp"
 #include "tls_root_store.hpp"
 
@@ -45,7 +47,7 @@ struct mptest_log
 {
 	mptest_log(const char* functionname)
 	{
-		WRN_NW << "Process:" << getpid() << " Thread:" << std::this_thread::get_id() << " Function: " << functionname << " Start\n";
+		WRN_NW << "Process:" << getpid() << " Thread:" << std::this_thread::get_id() << " Function: " << functionname << " Start";
 	}
 };
 }
@@ -56,6 +58,8 @@ struct mptest_log
 
 using boost::system::error_code;
 using boost::system::system_error;
+
+using namespace std::chrono_literals; // s, ms, etc
 
 // main thread
 wesnothd_connection::wesnothd_connection(const std::string& host, const std::string& service)
@@ -105,12 +109,13 @@ wesnothd_connection::wesnothd_connection(const std::string& host, const std::str
 				// Handshake already complete. Do nothing.
 			}
 		} catch(...) {
+			DBG_NW << "wesnothd_connection worker thread threw general exception: " << utils::get_unknown_exception_type();
 		}
 
-		LOG_NW << "wesnothd_connection::io_service::run() returned\n";
+		LOG_NW << "wesnothd_connection::io_service::run() returned";
 	});
 
-	LOG_NW << "Resolving hostname: " << host << '\n';
+	LOG_NW << "Resolving hostname: " << host;
 }
 
 wesnothd_connection::~wesnothd_connection()
@@ -135,7 +140,7 @@ void wesnothd_connection::handle_resolve(const error_code& ec, results_type resu
 {
 	MPTEST_LOG;
 	if(ec) {
-		LOG_NW << __func__ << " Throwing: " << ec << "\n";
+		LOG_NW << __func__ << " Throwing: " << ec;
 		throw system_error(ec);
 	}
 
@@ -148,10 +153,10 @@ void wesnothd_connection::handle_connect(const boost::system::error_code& ec, en
 {
 	MPTEST_LOG;
 	if(ec) {
-		ERR_NW << "Tried all IPs. Giving up" << std::endl;
+		ERR_NW << "Tried all IPs. Giving up";
 		throw system_error(ec);
 	} else {
-		LOG_NW << "Connected to " << endpoint.address() << '\n';
+		LOG_NW << "Connected to " << endpoint.address();
 
 		if(endpoint.address().is_loopback()) {
 			use_tls_ = false;
@@ -164,6 +169,10 @@ void wesnothd_connection::handle_connect(const boost::system::error_code& ec, en
 void wesnothd_connection::handshake()
 {
 	MPTEST_LOG;
+
+	DBG_NW << "Connecting with keepalive of: " << preferences::keepalive_timeout();
+	set_keepalive(preferences::keepalive_timeout());
+
 	static const uint32_t handshake = 0;
 	static const uint32_t tls_handshake = htonl(uint32_t(1));
 
@@ -181,7 +190,7 @@ template<typename Verifier> auto verbose_verify(Verifier&& verifier)
 		X509_NAME_oneline(X509_get_subject_name(cert), subject_name, 256);
 		bool verified = verifier(preverified, ctx);
 		DBG_NW << "Verifying TLS certificate: " << subject_name << ": " <<
-			(verified ? "verified" : "failed") << std::endl;
+			(verified ? "verified" : "failed");
 		BIO* bio = BIO_new(BIO_s_mem());
 		char buffer[1024];
 		X509_print(bio, cert);
@@ -204,7 +213,7 @@ void wesnothd_connection::handle_handshake(const error_code& ec)
 			fallback_to_unencrypted();
 			return;
 		}
-		LOG_NW << __func__ << " Throwing: " << ec << "\n";
+		LOG_NW << __func__ << " Throwing: " << ec;
 		throw system_error(ec);
 	}
 
@@ -236,7 +245,7 @@ void wesnothd_connection::handle_handshake(const error_code& ec)
 
 			socket.async_handshake(boost::asio::ssl::stream_base::client, [this](const error_code& ec) {
 				if(ec) {
-					LOG_NW << __func__ << " Throwing: " << ec << "\n";
+					LOG_NW << __func__ << " Throwing: " << ec;
 					throw system_error(ec);
 				}
 
@@ -270,13 +279,22 @@ void wesnothd_connection::fallback_to_unencrypted()
 void wesnothd_connection::wait_for_handshake()
 {
 	MPTEST_LOG;
-	LOG_NW << "Waiting for handshake" << std::endl;
+	LOG_NW << "Waiting for handshake";
 
 	try {
 		// TODO: make this duration customizable. Should default to 1 minute.
-		const std::chrono::seconds timeout { 60 };
+		auto timeout = 60s;
 
-		switch(auto future = handshake_finished_.get_future(); future.wait_for(timeout)) {
+		auto future = handshake_finished_.get_future();
+		for(auto time = 0ms;
+			future.wait_for(10ms) == std::future_status::timeout
+				&& time < timeout;
+			time += 10ms)
+		{
+			gui2::dialogs::loading_screen::spin();
+		}
+
+		switch(future.wait_for(0ms)) {
 		case std::future_status::ready:
 			// This is a void future, so this just serves to re-throw any system_error exceptions
 			// stored by the worker thread. Additional handling occurs in the catch block below.
@@ -292,7 +310,7 @@ void wesnothd_connection::wait_for_handshake()
 			return;
 		}
 
-		WRN_NW << __func__ << " Rethrowing: " << err.code() << "\n";
+		WRN_NW << __func__ << " Rethrowing: " << err.code();
 		throw error(err.code());
 	} catch(const std::future_error& e) {
 		if(e.code() == std::future_errc::future_already_retrieved) {
@@ -313,7 +331,7 @@ void wesnothd_connection::send_data(const configr_of& request)
 
 	boost::asio::post(io_context_, [this, buf_ptr = std::move(buf_ptr)]() mutable {
 
-		DBG_NW << "In wesnothd_connection::send_data::lambda\n";
+		DBG_NW << "In wesnothd_connection::send_data::lambda";
 		send_queue_.push(std::move(buf_ptr));
 
 		if(send_queue_.size() == 1) {
@@ -342,7 +360,7 @@ void wesnothd_connection::cancel()
 #endif
 
 			if(ec) {
-				WRN_NW << "Failed to cancel network operations: " << ec.message() << std::endl;
+				WRN_NW << "Failed to cancel network operations: " << ec.message();
 			}
 		}
 	}, socket_);
@@ -366,7 +384,7 @@ std::size_t wesnothd_connection::is_write_complete(const boost::system::error_co
 			last_error_ = ec;
 		}
 
-		LOG_NW << __func__ << " Error: " << ec << "\n";
+		LOG_NW << __func__ << " Error: " << ec;
 
 		io_context_.stop();
 		return bytes_to_write_ - bytes_transferred;
@@ -380,7 +398,7 @@ std::size_t wesnothd_connection::is_write_complete(const boost::system::error_co
 void wesnothd_connection::handle_write(const boost::system::error_code& ec, std::size_t bytes_transferred)
 {
 	MPTEST_LOG;
-	DBG_NW << "Written " << bytes_transferred << " bytes.\n";
+	DBG_NW << "Written " << bytes_transferred << " bytes.";
 
 	send_queue_.pop();
 
@@ -390,7 +408,7 @@ void wesnothd_connection::handle_write(const boost::system::error_code& ec, std:
 			last_error_ = ec;
 		}
 
-		LOG_NW << __func__ << " Error: " << ec << "\n";
+		LOG_NW << __func__ << " Error: " << ec;
 
 		io_context_.stop();
 		return;
@@ -412,7 +430,7 @@ std::size_t wesnothd_connection::is_read_complete(const boost::system::error_cod
 			last_error_ = ec;
 		}
 
-		LOG_NW << __func__ << " Error: " << ec << "\n";
+		LOG_NW << __func__ << " Error: " << ec;
 
 		io_context_.stop();
 		return bytes_to_read_ - bytes_transferred;
@@ -444,7 +462,7 @@ std::size_t wesnothd_connection::is_read_complete(const boost::system::error_cod
 void wesnothd_connection::handle_read(const boost::system::error_code& ec, std::size_t bytes_transferred)
 {
 	MPTEST_LOG;
-	DBG_NW << "Read " << bytes_transferred << " bytes.\n";
+	DBG_NW << "Read " << bytes_transferred << " bytes.";
 
 	bytes_to_read_ = 0;
 	if(last_error_ && ec != boost::asio::error::eof) {
@@ -453,7 +471,7 @@ void wesnothd_connection::handle_read(const boost::system::error_code& ec, std::
 			last_error_ = ec;
 		}
 
-		LOG_NW << __func__ << " Error: " << ec << "\n";
+		LOG_NW << __func__ << " Error: " << ec;
 
 		io_context_.stop();
 		return;
@@ -542,8 +560,34 @@ bool wesnothd_connection::wait_and_receive_data(config& data)
 {
 	{
 		std::unique_lock<std::mutex> lock(recv_queue_mutex_);
-		recv_queue_lock_.wait(lock, [this]() { return has_data_received(); });
+		while(!recv_queue_lock_.wait_for(
+		      lock, 10ms, [this]() { return has_data_received(); }))
+		{
+			gui2::dialogs::loading_screen::spin();
+		}
 	}
 
 	return receive_data(data);
 };
+
+void wesnothd_connection::set_keepalive(int seconds)
+{
+	boost::asio::socket_base::keep_alive option(true);
+	utils::get<raw_socket>(socket_)->set_option(option);
+
+#ifdef __linux__
+	int timeout = 10;
+	int cnt = std::max((seconds - 10) / 10, 1);
+	int interval = 10;
+	setsockopt(utils::get<raw_socket>(socket_)->native_handle(), SOL_TCP, TCP_KEEPIDLE, &timeout, sizeof(timeout));
+	setsockopt(utils::get<raw_socket>(socket_)->native_handle(), SOL_TCP, TCP_KEEPCNT, &cnt, sizeof(cnt));
+	setsockopt(utils::get<raw_socket>(socket_)->native_handle(), SOL_TCP, TCP_KEEPINTVL, &interval, sizeof(interval));
+#elif defined(__APPLE__) && defined(__MACH__)
+	setsockopt(utils::get<raw_socket>(socket_)->native_handle(), IPPROTO_TCP, TCP_KEEPALIVE, &seconds, sizeof(seconds));
+#elif defined(_WIN32)
+	// these are in milliseconds for windows
+	DWORD timeout_ms = seconds * 1000;
+	setsockopt(utils::get<raw_socket>(socket_)->native_handle(), SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast<const char*>(&timeout_ms), sizeof(timeout_ms));
+	setsockopt(utils::get<raw_socket>(socket_)->native_handle(), SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast<const char*>(&timeout_ms), sizeof(timeout_ms));
+#endif
+}

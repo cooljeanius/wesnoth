@@ -22,7 +22,7 @@
  * Contains functions for cleanly handling SDL input.
  */
 
-struct SDL_Point;
+struct point;
 
 namespace sdl
 {
@@ -35,27 +35,21 @@ uint32_t get_mouse_state(int *x, int *y);
 /** Returns the current mouse button mask */
 uint32_t get_mouse_button_mask();
 
-/** Returns the currnet mouse location in draw space. */
-SDL_Point get_mouse_location();
+/** Returns the current mouse location in draw space. */
+point get_mouse_location();
 
 /**
- * Update the cached drawing area and input area sizes. These correspond to
- * the size of the drawing surface in pixels, and the size of the window in
- * display coordinates.
+ * Returns a bitmask of active modifier keys (ctrl, shift, alt, gui).
  *
- * This should be called every time the window is resized, or the pixel scale
- * multiplier changes.
+ * Unused modifier keys (caps lock, scroll lock, num lock, AltGr) are
+ * filtered out and will always be unset.
  *
- * @param draw_width         The width of the drawing surface, in pixels
- * @param draw_height        The height of the drawing surface, in pixels
- * @param input_width        The width of the input surface, in display coordinates
- * @param input_height       The height of the input surface, in display coordinates
+ * Left and right keys are not distinguished. If either is detected, both
+ * will be set. For example if only left shift is down, both KMOD_LSHIFT
+ * and KMOD_RSHIFT will be set in the returned bitmask.
+ *
+ * @returns  A bitmask of SDL_Keymod values representing the active state.
  */
-void update_input_dimensions(
-	int draw_width, int draw_height,
-	int input_width, int input_height
-);
-void update_input_dimensions(SDL_Point draw_size, SDL_Point input_size);
-
+unsigned get_mods();
 
 } // namespace sdl

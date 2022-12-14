@@ -18,8 +18,9 @@
 #include "hotkey_command.hpp"
 #include "game_end_exceptions.hpp"
 
+#include <SDL2/SDL_events.h>
+
 class display;
-class CVideo;
 
 namespace hotkey {
 

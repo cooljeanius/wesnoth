@@ -93,7 +93,7 @@ uint32_t mt_rng::get_next_random()
 	if(fallback_to_legacy_rng()) return legacy_rng_.get_next_random();
 	DBG_RND << "mt_rng pulled user random " << result
 		<< " for call " << random_calls_
-		<< " with seed " << std::hex << random_seed_ << std::endl;
+		<< " with seed " << std::hex << random_seed_;
 
 	return result;
 }
@@ -141,7 +141,7 @@ void mt_rng::seed_random(const std::string & seed_str, const unsigned int call_c
 	std::istringstream s(seed_str);
 	if (!(s >> std::hex >> new_seed)) {
 		new_seed = 42;
-		DBG_RND << "Failed to seed a random number generator using seed string '" << seed_str << "', it could not be parsed to hex. Seeding with 42.\n";
+		DBG_RND << "Failed to seed a random number generator using seed string '" << seed_str << "', it could not be parsed to hex. Seeding with 42.";
 	}
 	seed_random(new_seed, call_count);
 }

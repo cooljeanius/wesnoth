@@ -193,6 +193,13 @@ mapchanges = (
     ("^Vch",  "^Vc"),
     ("^Vcm",  "^Vc"),
     ("Qv",  "Mv"),
+
+    # new to 1.17.8
+    ("Ior", "Iwo"),
+    ("Icn", "Iwc"),
+    ("Irs", "Isr"),
+    ("Ias", "Isa"),
+    ("Icr", "Isc"),
     )
 
 # These terrains were changed from just base to base + overlay
@@ -2461,7 +2468,7 @@ to be called on their own".format(filename, num))
                 pass
             elif in_name_generator:
                 pass
-            elif key in ('name', 'male_name', 'female_name', 'value'): # FIXME: check this someday
+            elif key in ('name', 'male_name', 'female_name', 'value', 'info', 'config_name', 'deserters_names'): # FIXME: check this someday
                 pass
             elif key == "variation_name":
                 if markcheck and not has_tr_mark:
@@ -2473,9 +2480,12 @@ to be called on their own".format(filename, num))
                           % (filename, i+1, key))
                     lines[i] = lines[i].replace("=_","=")
                 if markcheck and value and not value.startswith("$") and not value.startswith("{") and not has_tr_mark and not ("wmllint: ignore" in comment or "wmllint: noconvert" in comment):
-                    print('"%s", line %d: %s needs translation mark' \
-                          % (filename, i+1, key))
-                    lines[i] = lines[i].replace('=', "=_ ", 1)
+                    # [image] sometimes uses label to specify a reference to a PNG or WebP file
+                    # so do not mark for translation in those cases
+                    if not (key == 'label' and ('.png' in value or '.webp' in value)):
+                        print('"%s", line %d: %s needs translation mark' \
+                              % (filename, i+1, key))
+                        lines[i] = lines[i].replace('=', "=_ ", 1)
                 nv = sentence_end.sub(" ", value)
                 if nv != value:
                     print('"%s", line %d: double space after sentence end' \
@@ -2762,26 +2772,6 @@ def hack_syntax(filename, lines):
                             lines.insert(j+1, new_line)
                             j += 1
                     j += 1
-    # Ensure that every speaker=narrator block without an image uses
-    # wesnoth-icon.png as an image.
-    narrator = has_image = in_message = False
-    for i in range(len(lines)):
-        if "no-syntax-rewrite" in lines[i]:
-            break
-        precomment = lines[i].split("#")[0]
-        if '[message]' in precomment:
-            in_message = True
-        if "speaker=narrator" in precomment:
-            narrator = True
-        elif precomment.strip().startswith("image"):
-            has_image = True
-        elif '[/message]' in precomment:
-            if narrator and not has_image:
-                # This line presumes the code has been through wmlindent
-                if verbose:
-                    print('"%s", line %d: inserting "image=wesnoth-icon.png"'%(filename, i+1))
-                lines.insert(i, leader(precomment) + baseindent + "image=wesnoth-icon.png\n")
-            narrator = has_image = in_message = False
     # Hack tracking-map macros from 1.4 and earlier.  The idea is to lose
     # all assumptions about colors in the names
     for i in range(len(lines)):

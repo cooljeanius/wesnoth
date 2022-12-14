@@ -145,7 +145,7 @@ void mouse_handler::touch_motion(int x, int y, const bool browse, bool update, m
 	if((browse || !found_unit.valid()) && is_dragging() && dragging_started_) {
 		sdl::get_mouse_state(&mx, &my);
 
-		if(sdl::point_in_rect(x, y, gui().map_area())) {
+		if(gui().map_area().contains(x, y)) {
 			int dx = drag_from_x_ - mx;
 			int dy = drag_from_y_ - my;
 
@@ -361,19 +361,23 @@ void mouse_handler::show_reach_for_unit(const unit_ptr& un)
 				gui().set_route(&route);
 			}
 			over_route_ = true;
+		}
 
-			wb::future_map_if_active raii;
-			current_paths_ = pathfind::paths(*un, false, true,
-											 viewing_team(), path_turns_);
-		} else {
-			//unit under cursor is not on our team
-			//Note: planned unit map must be activated after this is done,
-			//since the future state includes changes to units' movement.
-			unit_movement_resetter move_reset(*un);
+		// Scope for the unit_movement_resetter and future_map_if_active.
+		{
+			// Making this non-null will show the unit's max moves instead of current moves.
+			// Because movement is reset to max in the side's refresh phase, use the max if
+			// that refresh will happen before the unit's side can move again.
+			std::unique_ptr<unit_movement_resetter> move_reset;
+			if(un->side() != side_num_) {
+				move_reset = std::make_unique<unit_movement_resetter>(*un);
+			}
 
+			// Handle whiteboard. Any move_reset must be done before this, since the future
+			// state includes changes to units' movement.
 			wb::future_map_if_active raii;
-			current_paths_ = pathfind::paths(*un, false, true,
-											 viewing_team(), path_turns_);
+
+			current_paths_ = pathfind::paths(*un, false, true, viewing_team(), path_turns_);
 		}
 
 		unselected_paths_ = true;
@@ -391,6 +395,11 @@ void mouse_handler::mouse_motion(int x, int y, const bool browse, bool update, m
 	sdl::get_mouse_state(&x, &y); // <-- modify x and y
 
 	if(mouse_handler_base::mouse_motion_default(x, y, update)) {
+		return;
+	}
+
+	// Don't process other motion events while scrolling
+	if(scroll_started_) {
 		return;
 	}
 
@@ -771,7 +780,7 @@ bool mouse_handler::right_click_show_menu(int x, int y, const bool /*browse*/)
 		return false;
 	}
 
-	return sdl::point_in_rect(x, y, gui().map_area());
+	return gui().map_area().contains(x, y);
 }
 
 void mouse_handler::select_or_action(bool browse)
@@ -1171,7 +1180,7 @@ std::size_t mouse_handler::move_unit_along_route(const std::vector<map_location>
 		}
 	}
 
-	LOG_NG << "move unit along route  from " << steps.front() << " to " << steps.back() << "\n";
+	LOG_NG << "move unit along route  from " << steps.front() << " to " << steps.back();
 	std::size_t moves = actions::move_unit_and_record(steps, &pc_.get_undo_stack(), false, true, &interrupted);
 
 	cursor::set(cursor::NORMAL);

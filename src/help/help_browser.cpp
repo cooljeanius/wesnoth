@@ -14,7 +14,6 @@
 */
 
 #include "help/help_browser.hpp"
-#include <iostream>                     // for operator<<, basic_ostream, etc
 #include "cursor.hpp"                   // for set, CURSOR_TYPE::HYPERLINK, etc
 #include "font/constants.hpp"           // for relative_size
 #include "gettext.hpp"                  // for _
@@ -26,21 +25,19 @@
 #include "sdl/rect.hpp"
 #include "sdl/input.hpp"                // for get_mouse_state
 
-class CVideo;
 struct SDL_Rect;
 
 namespace help {
 
-help_browser::help_browser(CVideo& video, const section &toplevel) :
-	gui::widget(video),
-	menu_(video,
-	toplevel),
-	text_area_(video, toplevel), toplevel_(toplevel),
+help_browser::help_browser(const section &toplevel) :
+	gui::widget(),
+	menu_(toplevel),
+	text_area_(toplevel), toplevel_(toplevel),
 	ref_cursor_(false),
 	back_topics_(),
 	forward_topics_(),
-	back_button_(video, "", gui::button::TYPE_PRESS, "button_normal/button_small_H22", gui::button::DEFAULT_SPACE, true, "icons/arrows/long_arrow_ornate_left"),
-	forward_button_(video, "", gui::button::TYPE_PRESS, "button_normal/button_small_H22", gui::button::DEFAULT_SPACE, true, "icons/arrows/long_arrow_ornate_right"),
+	back_button_("", gui::button::TYPE_PRESS, "button_normal/button_small_H22", gui::button::DEFAULT_SPACE, true, "icons/arrows/long_arrow_ornate_left"),
+	forward_button_("", gui::button::TYPE_PRESS, "button_normal/button_small_H22", gui::button::DEFAULT_SPACE, true, "icons/arrows/long_arrow_ornate_right"),
 	shown_topic_(nullptr)
 {
 	// Hide the buttons at first since we do not have any forward or
@@ -85,7 +82,7 @@ void help_browser::adjust_layout()
 	back_button_.set_location(back_button_x, back_button_y);
 	forward_button_.set_location(forward_button_x, forward_button_y);
 
-	set_dirty(true);
+	queue_redraw();
 }
 
 void help_browser::update_location(const SDL_Rect&)
@@ -100,7 +97,7 @@ void help_browser::process_event()
 	sdl::get_mouse_state(&mousex,&mousey);
 
 	// Fake focus functionality for the menu, only process it if it has focus.
-	if (sdl::point_in_rect(mousex, mousey, menu_.location())) {
+	if (menu_.location().contains(mousex, mousey)) {
 		menu_.process();
 		const topic *chosen_topic = menu_.chosen_topic();
 		if (chosen_topic != nullptr && chosen_topic != shown_topic_) {
@@ -214,7 +211,7 @@ void help_browser::show_topic(const std::string &topic_id)
 	} else if (topic_id.find(unit_prefix)==0 || topic_id.find(hidden_symbol() + unit_prefix)==0) {
 		show_topic(unknown_unit_topic);
 	} else {
-		std::cerr << "Help browser tried to show topic with id '" << topic_id
+		PLAIN_LOG << "Help browser tried to show topic with id '" << topic_id
 				  << "' but that topic could not be found." << std::endl;
 	}
 }

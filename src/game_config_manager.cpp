@@ -37,6 +37,7 @@
 #include "scripting/game_lua_kernel.hpp"
 #include "serialization/schema_validator.hpp"
 #include "sound.hpp"
+#include "serialization/string_utils.hpp"
 #include "terrain/builder.hpp"
 #include "terrain/type_data.hpp"
 #include "theme.hpp"
@@ -46,6 +47,8 @@ static lg::log_domain log_config("config");
 #define ERR_CONFIG LOG_STREAM(err, log_config)
 #define WRN_CONFIG LOG_STREAM(warn, log_config)
 #define LOG_CONFIG LOG_STREAM(info, log_config)
+
+using gui2::dialogs::loading_screen;
 
 static game_config_manager* singleton;
 
@@ -175,7 +178,7 @@ void game_config_manager::load_game_config_with_loadscreen(
 		}
 	}
 
-	LOG_CONFIG << "load_game_config reload everything: " << reload_everything << "\n";
+	LOG_CONFIG << "load_game_config reload everything: " << reload_everything;
 
 	gui2::dialogs::loading_screen::display([this, reload_everything, classification, scenario_id]() {
 		load_game_config(reload_everything, classification, scenario_id);
@@ -320,17 +323,20 @@ void game_config_manager::load_game_config(bool reload_everything, const game_cl
 		}
 
 		// only after addon configs have been loaded do we check for which addons are needed and whether they exist to be used
+		LOG_CONFIG << "active_addons_ has size " << active_addons_.size() << " and contents: " << utils::join(active_addons_);
 		if(classification) {
+			LOG_CONFIG << "Enabling only some add-ons!";
 			std::set<std::string> active_addons = classification->active_addons(scenario_id);
 			// IMPORTANT: this is a significant performance optimization, particularly for the worst case example of the batched WML unit tests
 			if(!reload_everything && active_addons == active_addons_) {
-				LOG_CONFIG << "Configs not reloaded and active add-ons remain the same; returning early.\n";
+				LOG_CONFIG << "Configs not reloaded and active add-ons remain the same; returning early.";
+				LOG_CONFIG << "active_addons has size " << active_addons_.size() << " and contents: " << utils::join(active_addons);
 				return;
 			}
 			active_addons_ = active_addons;
 			set_enabled_addon(active_addons_);
 		} else {
-			active_addons_.clear();
+			LOG_CONFIG << "Enabling all add-ons!";
 			set_enabled_addon_all();
 		}
 
@@ -348,7 +354,7 @@ void game_config_manager::load_game_config(bool reload_everything, const game_cl
 		game_config::add_color_info(game_config());
 
 	} catch(const game::error& e) {
-		ERR_CONFIG << "Error loading game configuration files\n" << e.message << '\n';
+		ERR_CONFIG << "Error loading game configuration files\n" << e.message;
 
 		// Try reloading without add-ons
 		if(!game_config::no_addons) {
@@ -400,7 +406,7 @@ void game_config_manager::load_addons_cfg()
 		const int size_minus_extension = file.size() - 4;
 
 		if(file.substr(size_minus_extension, file.size()) == ".cfg") {
-			ERR_CONFIG << "error reading usermade add-on '" << file << "'\n";
+			ERR_CONFIG << "error reading usermade add-on '" << file << "'";
 
 			error_addons.push_back(file);
 
@@ -416,12 +422,16 @@ void game_config_manager::load_addons_cfg()
 		}
 	}
 
+	loading_screen::spin();
+
 	// Rerun the directory scan using filename only, to get the addon_ids more easily.
 	user_files.clear();
 	user_dirs.clear();
 
 	filesystem::get_files_in_dir(user_campaign_dir, nullptr, &user_dirs,
 		filesystem::name_mode::FILE_NAME_ONLY);
+
+	loading_screen::spin();
 
 	// Load the addons.
 	for(const std::string& addon_id : user_dirs) {
@@ -434,6 +444,8 @@ void game_config_manager::load_addons_cfg()
 		if(!filesystem::file_exists(main_cfg)) {
 			continue;
 		}
+
+		loading_screen::spin();
 
 		// Try to find this addon's metadata. Author publishing info (_server.pbl) is given
 		// precedence over addon sever-generated info (_info.cfg). If neither are found, it
@@ -486,6 +498,8 @@ void game_config_manager::load_addons_cfg()
 				validator->set_create_exceptions(false); // Don't crash if there's an error, just go ahead anyway
 			}
 
+			loading_screen::spin();
+
 			// Load this addon from the cache to a config.
 			config umc_cfg;
 			cache_.get_config(main_cfg, umc_cfg, validator.get());
@@ -511,6 +525,8 @@ void game_config_manager::load_addons_cfg()
 				}
 			}
 
+			loading_screen::spin();
+
 			for(auto& units : umc_cfg.child_range("units")) {
 				for(auto& unit_type : units.child_range("unit_type")) {
 					for(const auto& advancefrom : unit_type.child_range("advancefrom")) {
@@ -529,6 +545,8 @@ void game_config_manager::load_addons_cfg()
 					unit_type.remove_children("advancefrom", [](const config&){return true;});
 				}
 			}
+
+			loading_screen::spin();
 
 			// hardcoded list of 1.14 advancement macros, just used for the error mesage below.
 			static const std::set<std::string> deprecated_defines {
@@ -564,6 +582,8 @@ void game_config_manager::load_addons_cfg()
 				}
 			}
 
+			loading_screen::spin();
+
 			static const std::set<std::string> entry_tags {
 				"era",
 				"modification",
@@ -577,26 +597,28 @@ void game_config_manager::load_addons_cfg()
 				game_config_.append_children_by_move(umc_cfg, tagname);
 			}
 
+			loading_screen::spin();
+
 			addon_cfgs_[addon_id] = std::move(umc_cfg);
 		} catch(const config::error& err) {
-			ERR_CONFIG << "config error reading usermade add-on '" << main_cfg << "'" << std::endl;
-			ERR_CONFIG << err.message << '\n';
+			ERR_CONFIG << "config error reading usermade add-on '" << main_cfg << "'";
+			ERR_CONFIG << err.message;
 			error_addons.push_back(main_cfg);
 			error_log.push_back(err.message);
 		} catch(const preproc_config::error& err) {
-			ERR_CONFIG << "preprocessor config error reading usermade add-on '" << main_cfg << "'" << std::endl;
-			ERR_CONFIG << err.message << '\n';
+			ERR_CONFIG << "preprocessor config error reading usermade add-on '" << main_cfg << "'";
+			ERR_CONFIG << err.message;
 			error_addons.push_back(main_cfg);
 			error_log.push_back(err.message);
 		} catch(const filesystem::io_exception&) {
-			ERR_CONFIG << "filesystem I/O error reading usermade add-on '" << main_cfg << "'" << std::endl;
+			ERR_CONFIG << "filesystem I/O error reading usermade add-on '" << main_cfg << "'";
 			error_addons.push_back(main_cfg);
 		}
 	}
 
 	if(cmdline_opts_.validate_addon) {
 		if(!addon_cfgs_.count(*cmdline_opts_.validate_addon)) {
-			ERR_CONFIG << "Didn’t find an add-on for --validate-addon - check whether the id has a typo" << std::endl;
+			ERR_CONFIG << "Didn’t find an add-on for --validate-addon - check whether the id has a typo";
 			const std::string log_msg = formatter()
 				<< "Didn't find an add-on for --validate-addon - check whether the id has a typo";
 			error_log.push_back(log_msg);
@@ -743,18 +765,24 @@ void game_config_manager::set_enabled_addon(std::set<std::string> addon_ids)
 	for(const std::string& id : addon_ids) {
 		auto it = addon_cfgs_.find(id);
 		if(it != addon_cfgs_.end()) {
+			LOG_CONFIG << "Enabling add-on " << id;
 			vec.push_back(it->second);
+		} else {
+			ERR_CONFIG << "Attempted to enable add-on '" << id << "' but its config could not be found";
 		}
 	}
 }
 
 void game_config_manager::set_enabled_addon_all()
 {
+	active_addons_.clear();
 	auto& vec = game_config_view_.data();
 	vec.clear();
 	vec.push_back(game_config_);
 
 	for(const auto& pair : addon_cfgs_) {
+		LOG_CONFIG << "Enabling add-on " << pair.first;
 		vec.push_back(pair.second);
+		active_addons_.emplace(pair.first);
 	}
 }

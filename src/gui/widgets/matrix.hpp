@@ -113,7 +113,7 @@ public:
 
 	/***** ***** ***** ***** Item handling. ***** ***** ****** *****/
 
-	unsigned create_item(const std::map<std::string, string_map>& item_data,
+	unsigned create_item(const widget_data& item_data,
 						 const std::map<std::string, std::string>& tags);
 
 
@@ -126,15 +126,10 @@ public:
 	virtual void layout_initialize(const bool full_initialization) override;
 
 	/** See @ref widget::impl_draw_children. */
-	virtual void impl_draw_children(int x_offset, int y_offset) override;
+	virtual void impl_draw_children() override;
 
 	/** See @ref widget::layout_children. */
 	virtual void layout_children() override;
-
-	/** See @ref widget::child_populate_dirty_list. */
-	virtual void
-	child_populate_dirty_list(window& caller,
-							  const std::vector<widget*>& call_stack) override;
 
 	/** See @ref widget::request_reduce_width. */
 	virtual void request_reduce_width(const unsigned maximum_width) override;

@@ -112,7 +112,7 @@ void editor_toolkit::hotkey_set_mouse_action(hotkey::HOTKEY_COMMAND command)
 		palette_manager_->active_palette().hide(false);
 	} else {
 		ERR_ED << "Invalid hotkey command ("
-			<< static_cast<int>(command) << ") passed to set_mouse_action\n";
+			<< static_cast<int>(command) << ") passed to set_mouse_action";
 	}
 
 }
@@ -130,7 +130,7 @@ common_palette& editor_toolkit::get_palette()
 
 void editor_toolkit::update_mouse_action_highlights()
 {
-	DBG_ED << __func__ << "\n";
+	DBG_ED << __func__;
 	int x, y;
 	sdl::get_mouse_state(&x, &y);
 	map_location hex_clicked = gui_.hex_clicked_on(x,y);

@@ -30,6 +30,7 @@
 #include "soundsource.hpp"
 #include "gui/core/timer.hpp"
 #include "sdl/input.hpp" // get_mouse_state
+#include "video.hpp"
 
 static lg::log_domain log_display("display");
 #define ERR_DP LOG_STREAM(err, log_display)
@@ -83,7 +84,7 @@ void controller_base::long_touch_callback(int x, int y)
 
 		if(!yes_actually_dragging
 		   && (mouse_state & SDL_BUTTON(SDL_BUTTON_LEFT)) != 0
-		   && sdl::point_in_rect(x_now, y_now, get_display().map_area()))
+		   && get_display().map_area().contains(x_now, y_now))
 		{
 			const theme::menu* const m = get_mouse_handler_base().gui().get_theme().context_menu();
 			if(m != nullptr) {
@@ -214,7 +215,7 @@ void controller_base::handle_event(const SDL_Event& event)
 			int y = static_cast<int>(reinterpret_cast<std::intptr_t>(event.user.data2));
 			if(event.user.code == static_cast<int>(SDL_TOUCH_MOUSEID)
 			   // TODO: Move to right_click_show_menu?
-			   && sdl::point_in_rect(x, y, get_display().map_area())
+			   && get_display().map_area().contains(x, y)
 			   // TODO: This chain repeats in several places, move to a method.
 			   && get_display().get_theme().context_menu() != nullptr) {
 				show_menu(get_display().get_theme().context_menu()->items(),
@@ -273,7 +274,7 @@ bool controller_base::have_keyboard_focus()
 bool controller_base::handle_scroll(int mousex, int mousey, int mouse_flags)
 {
 	const bool mouse_in_window =
-		CVideo::get_singleton().window_has_flags(SDL_WINDOW_MOUSE_FOCUS)
+		video::window_has_mouse_focus()
 		|| preferences::get("scroll_when_mouse_outside", true);
 
 	int scroll_speed = preferences::scroll_speed();
@@ -284,7 +285,7 @@ bool controller_base::handle_scroll(int mousex, int mousey, int mouse_flags)
 		: 0;
 
 	for(const theme::menu& m : get_display().get_theme().menus()) {
-		if(sdl::point_in_rect(mousex, mousey, m.get_location())) {
+		if(m.get_location().contains(mousex, mousey)) {
 			scroll_threshold = 0;
 		}
 	}
@@ -314,7 +315,7 @@ bool controller_base::handle_scroll(int mousex, int mousey, int mouse_flags)
 			dy -= scroll_amount;
 		}
 
-		if(mousey > get_display().video().get_height() - scroll_threshold) {
+		if(mousey > video::game_canvas_size().y - scroll_threshold) {
 			dy += scroll_amount;
 		}
 
@@ -322,7 +323,7 @@ bool controller_base::handle_scroll(int mousex, int mousey, int mouse_flags)
 			dx -= scroll_amount;
 		}
 
-		if(mousex > get_display().video().get_width() - scroll_threshold) {
+		if(mousex > video::game_canvas_size().x - scroll_threshold) {
 			dx += scroll_amount;
 		}
 	}
@@ -334,9 +335,9 @@ bool controller_base::handle_scroll(int mousex, int mousey, int mouse_flags)
 		const SDL_Point original_loc = mh_base.get_scroll_start();
 
 		if(mh_base.scroll_started()) {
-			const SDL_Rect& rect = get_display().map_outside_area();
-
-			if(sdl::point_in_rect(mousex, mousey, rect) && mh_base.scroll_started()) {
+			if(get_display().map_outside_area().contains(mousex, mousey)
+				&& mh_base.scroll_started())
+			{
 				// Scroll speed is proportional from the distance from the first
 				// middle click and scrolling speed preference.
 				const double speed = 0.01 * scroll_amount;
@@ -390,7 +391,7 @@ void controller_base::play_slice(bool is_delay_enabled)
 
 	events::pump();
 	events::raise_process_event();
-	events::raise_draw_event();
+	events::draw();
 
 	// Update sound sources before scrolling
 	if(soundsource::manager* l = get_soundsource_man()) {
@@ -399,7 +400,7 @@ void controller_base::play_slice(bool is_delay_enabled)
 
 	const theme::menu* const m = get_display().menu_pressed();
 	if(m != nullptr) {
-		const SDL_Rect& menu_loc = m->location(get_display().video().draw_area());
+		const rect& menu_loc = m->location(video::game_canvas());
 		show_menu(m->items(), menu_loc.x + 1, menu_loc.y + menu_loc.h + 1, false, get_display());
 
 		return;
@@ -407,7 +408,7 @@ void controller_base::play_slice(bool is_delay_enabled)
 
 	const theme::action* const a = get_display().action_pressed();
 	if(a != nullptr) {
-		const SDL_Rect& action_loc = a->location(get_display().video().draw_area());
+		const rect& action_loc = a->location(video::game_canvas());
 		execute_action(a->items(), action_loc.x + 1, action_loc.y + action_loc.h + 1, false);
 
 		return;
@@ -429,8 +430,8 @@ void controller_base::play_slice(bool is_delay_enabled)
 	map_location highlighted_hex = get_display().mouseover_hex();
 
 	// be nice when window is not visible	// NOTE should be handled by display instead, to only disable drawing
-	if(is_delay_enabled && !CVideo::get_singleton().window_has_flags(SDL_WINDOW_SHOWN)) {
-		CVideo::delay(200);
+	if(is_delay_enabled && !video::window_is_visible()) {
+		SDL_Delay(200);
 	}
 
 	// Scrolling ended, update the cursor and the brightened hex

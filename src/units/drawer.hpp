@@ -25,6 +25,7 @@
 #pragma once
 
 #include "map/location.hpp"
+#include "sdl/rect.hpp"
 #include "utils/math.hpp"
 
 #include <map>
@@ -39,6 +40,7 @@ class unit;
 
 struct color_t;
 struct SDL_Rect;
+struct point;
 class surface;
 
 class unit_drawer
@@ -69,17 +71,4 @@ private:
 public:
 	/** draw a unit.  */
 	void redraw_unit(const unit & u) const;
-
-private:
-	/** draw a health/xp bar of a unit */
-	void draw_bar(const std::string& image, int xpos, int ypos,
-		const map_location& loc, std::size_t height, double filled,
-		const color_t& col, int32_t alpha) const;
-
-	/**
-	 * Finds the start and end rows on the energy bar image.
-	 *
-	 * White pixels are substituted for the color of the energy.
-	 */
-	const SDL_Rect& calculate_energy_bar(surface surf) const;
 };

@@ -31,11 +31,10 @@ namespace gui2::dialogs
 
 REGISTER_DIALOG(addon_connect)
 
-addon_connect::addon_connect(std::string& host_name,
-							   const bool allow_remove)
-	: allow_remove_(allow_remove)
+addon_connect::addon_connect(std::string& host_name, bool allow_remove)
+	: modal_dialog(window_id())
+	, allow_remove_(allow_remove)
 {
-	set_restore(true);
 	register_text("host_name", false, host_name, true);
 }
 

@@ -81,7 +81,8 @@ bool game_load::execute(const game_config_view& cache_config, savegame::load_gam
 }
 
 game_load::game_load(const game_config_view& cache_config, savegame::load_game_metadata& data)
-	: filename_(data.filename)
+	: modal_dialog(window_id())
+	, filename_(data.filename)
 	, save_index_manager_(data.manager)
 	, change_difficulty_(register_bool("change_difficulty", true, data.select_difficulty))
 	, show_replay_(register_bool("show_replay", true, data.show_replay))
@@ -162,8 +163,8 @@ void game_load::populate_game_list()
 	games_ = save_index_manager_->get_saves_list();
 
 	for(const auto& game : games_) {
-		std::map<std::string, string_map> data;
-		string_map item;
+		widget_data data;
+		widget_item item;
 
 		std::string name = game.name();
 		utils::ellipsis_truncate(name, 40);
@@ -197,8 +198,8 @@ void game_load::display_savegame_internal(const savegame::save_info& game)
 	const std::string sprite_scale_mod = (formatter() << "~SCALE_INTO(" << game_config::tile_size << ',' << game_config::tile_size << ')').str();
 
 	for(const auto& leader : summary_.child_range("leader")) {
-		std::map<std::string, string_map> data;
-		string_map item;
+		widget_data data;
+		widget_item item;
 
 		// First, we evaluate whether the leader image as provided exists.
 		// If not, we try getting a binary path-independent path. If that still doesn't
@@ -282,7 +283,7 @@ void game_load::display_savegame()
 		// Clear the UI widgets, show an error message.
 		const std::string preamble = _("The selected file is corrupt: ");
 		const std::string message = e.message.empty() ? "(no details)" : e.message;
-		ERR_GAMELOADDLG << preamble << message << "\n";
+		ERR_GAMELOADDLG << preamble << message;
 	}
 
 	if(!successfully_displayed_a_game) {

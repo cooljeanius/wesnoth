@@ -97,7 +97,7 @@ bool spacer::disable_click_dismiss() const
 	return false;
 }
 
-void spacer::impl_draw_background(int /*x_offset*/, int /*y_offset*/)
+void spacer::impl_draw_background()
 {
 	/* DO NOTHING */
 }
@@ -107,7 +107,7 @@ void spacer::impl_draw_background(int /*x_offset*/, int /*y_offset*/)
 spacer_definition::spacer_definition(const config& cfg)
 	: styled_widget_definition(cfg)
 {
-	DBG_GUI_P << "Parsing spacer " << id << '\n';
+	DBG_GUI_P << "Parsing spacer " << id;
 
 	load_resolutions<resolution>(cfg);
 }
@@ -132,7 +132,7 @@ std::unique_ptr<widget> builder_spacer::build() const
 	auto widget = std::make_unique<spacer>(*this, width_, height_);
 
 	DBG_GUI_G << "Window builder: placed spacer '" << id
-			  << "' with definition '" << definition << "'.\n";
+			  << "' with definition '" << definition << "'.";
 
 	return widget;
 }

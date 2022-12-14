@@ -89,7 +89,7 @@ connection::connection(const std::string& host, const std::string& service)
 			std::bind(&connection::handle_resolve, this, std::placeholders::_1, std::placeholders::_2));
 	}
 
-	LOG_NW << "Resolving hostname: " << host << '\n';
+	LOG_NW << "Resolving hostname: " << host;
 }
 
 connection::~connection()
@@ -117,10 +117,10 @@ void connection::handle_resolve(const boost::system::error_code& ec, results_typ
 void connection::handle_connect(const boost::system::error_code& ec, endpoint endpoint)
 {
 	if(ec) {
-		ERR_NW << "Tried all IPs. Giving up" << std::endl;
+		ERR_NW << "Tried all IPs. Giving up";
 		throw system_error(ec);
 	} else {
-		LOG_NW << "Connected to " << endpoint.address() << '\n';
+		LOG_NW << "Connected to " << endpoint.address();
 
 		if(endpoint.address().is_loopback()) {
 			use_tls_ = false;
@@ -152,7 +152,7 @@ template<typename Verifier> auto verbose_verify(Verifier&& verifier)
 		X509_NAME_oneline(X509_get_subject_name(cert), subject_name, 256);
 		bool verified = verifier(preverified, ctx);
 		DBG_NW << "Verifying TLS certificate: " << subject_name << ": " <<
-			(verified ? "verified" : "failed") << std::endl;
+			(verified ? "verified" : "failed");
 		BIO* bio = BIO_new(BIO_s_mem());
 		char buffer[1024];
 		X509_print(bio, cert);
@@ -277,7 +277,7 @@ void connection::cancel()
 #endif
 
 			if(ec) {
-				WRN_NW << "Failed to cancel network operations: " << ec.message() << std::endl;
+				WRN_NW << "Failed to cancel network operations: " << ec.message();
 			}
 		}
 	}, socket_);
@@ -299,7 +299,7 @@ std::size_t connection::is_write_complete(const boost::system::error_code& ec, s
 
 void connection::handle_write(const boost::system::error_code& ec, std::size_t bytes_transferred)
 {
-	DBG_NW << "Written " << bytes_transferred << " bytes.\n";
+	DBG_NW << "Written " << bytes_transferred << " bytes.";
 	if(write_buf_)
 		write_buf_->consume(bytes_transferred);
 
@@ -337,7 +337,7 @@ std::size_t connection::is_read_complete(const boost::system::error_code& ec, st
 
 void connection::handle_read(const boost::system::error_code& ec, std::size_t bytes_transferred, config& response)
 {
-	DBG_NW << "Read " << bytes_transferred << " bytes.\n";
+	DBG_NW << "Read " << bytes_transferred << " bytes.";
 
 	bytes_to_read_ = 0;
 	bytes_to_write_ = 0;

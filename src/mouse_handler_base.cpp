@@ -180,7 +180,7 @@ void mouse_handler_base::mouse_press(const SDL_MouseButtonEvent& event, const bo
 			minimap_scrolling_ = false;
 
 			if (!dragging_started_ && touch_timestamp > 0) {
-				time_t dt = clock() - touch_timestamp;
+				clock_t dt = clock() - touch_timestamp;
 				if (dt > CLOCKS_PER_SEC * 3 / 10) {
 					right_click(event.x, event.y, browse); // show_menu_ = true;
 				}
@@ -229,6 +229,9 @@ void mouse_handler_base::mouse_press(const SDL_MouseButtonEvent& event, const bo
 					last_hex_ = loc;
 					gui().scroll_to_tile(loc, display::WARP, false);
 				}
+			} else {
+				// Deselect the current tile as we're scrolling
+				gui().highlight_hex({-1,-1});
 			}
 		} else if(event.state == SDL_RELEASED) {
 			minimap_scrolling_ = false;
@@ -268,7 +271,7 @@ bool mouse_handler_base::is_right_click(const SDL_MouseButtonEvent& event) const
 	(void) event;
 	return false;
 #else
-    if(event.which == SDL_TOUCH_MOUSEID) {
+	if(event.which == SDL_TOUCH_MOUSEID) {
 		return false;
 	}
 	return event.button == SDL_BUTTON_RIGHT
@@ -318,7 +321,7 @@ void mouse_handler_base::mouse_wheel(int scrollx, int scrolly, bool browse)
 	int movey = scrolly * preferences::scroll_speed();
 
 	// Don't scroll map if cursor is not in gamemap area
-	if(!sdl::point_in_rect(x, y, gui().map_area())) {
+	if(!gui().map_area().contains(x, y)) {
 		return;
 	}
 
@@ -355,7 +358,7 @@ void mouse_handler_base::right_mouse_up(int x, int y, const bool browse)
 	if(m != nullptr) {
 		show_menu_ = true;
 	} else {
-		WRN_DP << "no context menu found..." << std::endl;
+		WRN_DP << "no context menu found...";
 	}
 }
 

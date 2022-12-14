@@ -46,7 +46,7 @@
 #include "side_controller.hpp"
 #include "statistics.hpp"
 #include "units/types.hpp"
-#include "utils/scope_exit.hpp"
+#include "utils/guard_value.hpp"
 #include "wesnothd_connection.hpp"
 
 static lg::log_domain log_mp_connect_engine("mp/connect/engine");
@@ -61,7 +61,8 @@ namespace gui2::dialogs
 REGISTER_DIALOG(mp_join_game)
 
 mp_join_game::mp_join_game(saved_game& state, wesnothd_connection& connection, const bool first_scenario, const bool observe_game)
-	: level_()
+	: modal_dialog(window_id())
+	, level_()
 	, state_(state)
 	, network_connection_(connection)
 	, update_timer_(0)
@@ -289,13 +290,13 @@ bool mp_join_game::show_flg_select(int side_num, bool first_time)
 
 		const config& era = level_.child("era");
 		if(!era) {
-			ERR_MP << "no era information\n";
+			ERR_MP << "no era information";
 			return false;
 		}
 
 		config::const_child_itors possible_sides = era.child_range("multiplayer_side");
 		if(possible_sides.empty()) {
-			WRN_MP << "no [multiplayer_side] found in era '" << era["id"] << "'.\n";
+			WRN_MP << "no [multiplayer_side] found in era '" << era["id"] << "'.";
 			return false;
 		}
 
@@ -318,10 +319,7 @@ bool mp_join_game::show_flg_select(int side_num, bool first_time)
 
 		{
 			gui2::dialogs::faction_select flg_dialog(flg, color, side_num);
-			flg_dialog_ = &flg_dialog;
-			ON_SCOPE_EXIT(this) {
-				flg_dialog_ = nullptr;
-			};
+			utils::guard_value guard(flg_dialog_, &flg_dialog);
 
 			if(!flg_dialog.show() && !first_time) {
 				return true;
@@ -354,7 +352,7 @@ void mp_join_game::generate_side_list()
 
 	tree.clear();
 	team_tree_map_.clear();
-	const std::map<std::string, string_map> empty_map;
+	const widget_data empty_map;
 
 	int side_num = 0;
 	for(const auto& side : get_scenario().child_range("side")) {
@@ -365,8 +363,8 @@ void mp_join_game::generate_side_list()
 
 		// Check to see whether we've added a toplevel tree node for this team. If not, add one
 		if(team_tree_map_.find(side["team_name"].str()) == team_tree_map_.end()) {
-			std::map<std::string, string_map> data;
-			string_map item;
+			widget_data data;
+			widget_item item;
 
 			item["label"] = t_string::from_serialized(side["user_team_name"]);
 			data.emplace("tree_view_node_label", item);
@@ -377,8 +375,8 @@ void mp_join_game::generate_side_list()
 			team_tree_map_[side["team_name"].str()] = &team_node;
 		}
 
-		std::map<std::string, string_map> data;
-		string_map item;
+		widget_data data;
+		widget_item item;
 
 		const std::string color = !side["color"].empty() ? side["color"] : side["side"].str();
 
@@ -550,7 +548,7 @@ void mp_join_game::network_handler()
 	}
 
 	if(data.has_child("turn")) {
-		ERR_MP << "received replay data\n" << data << "\n in mp join\n";
+		ERR_MP << "received replay data\n" << data << "\n in mp join";
 	}
 
 	// Update player list

@@ -39,26 +39,8 @@
  * and later versions, requiring UAC virtualization to be enabled).
  */
 
-namespace filesystem
-{
-
-/**
- * Returns the path to the permanent log storage directory.
- */
-std::string get_logs_dir();
-
-}
-
 namespace lg
 {
-
-/**
- * Returns the path to the current log file.
- *
- * An empty string is returned if the log file has not been set up yet or it
- * was disabled (e.g. by --wconsole).
- */
-std::string log_file_path();
 
 /**
  * Sets up the initial temporary log file.

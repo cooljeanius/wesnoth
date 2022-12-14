@@ -21,6 +21,7 @@
 #include "serialization/parser.hpp"
 #include "serialization/string_utils.hpp"
 #include "serialization/unicode.hpp"
+#include "utils/general.hpp"
 
 #include "server/wesnothd/ban.hpp"
 
@@ -272,7 +273,7 @@ void ban_manager::read()
 		return;
 	}
 
-	LOG_SERVER << "Reading bans from " <<  filename_ << "\n";
+	LOG_SERVER << "Reading bans from " <<  filename_;
 	config cfg;
 	dirty_ = false;
 	filesystem::scoped_istream ban_file = filesystem::istream_file(filename_);
@@ -286,7 +287,7 @@ void ban_manager::read()
 			if (new_ban->get_end_time() != 0)
 				time_queue_.push(new_ban);
 		} catch(const banned::error& e) {
-			ERR_SERVER << e.message << " while reading bans" << std::endl;
+			ERR_SERVER << e.message << " while reading bans";
 		}
 	}
 
@@ -297,7 +298,7 @@ void ban_manager::read()
 				auto new_ban = std::make_shared<banned>(b);
 				deleted_bans_.push_back(new_ban);
 			} catch(const banned::error& e) {
-				ERR_SERVER << e.message << " while reading deleted bans" << std::endl;
+				ERR_SERVER << e.message << " while reading deleted bans";
 			}
 		}
 	}
@@ -309,7 +310,7 @@ void ban_manager::write()
 		return;
 	}
 
-	LOG_SERVER << "Writing bans to " << filename_ << "\n";
+	LOG_SERVER << "Writing bans to " << filename_;
 	dirty_ = false;
 
 	config cfg;
@@ -362,7 +363,7 @@ bool ban_manager::parse_time(const std::string& duration, std::time_t* time) con
 					loc->tm_sec = number;
 					break;
 				default:
-					LOG_SERVER << "Invalid time modifier given: '" << *i << "'.\n";
+					LOG_SERVER << "Invalid time modifier given: '" << *i << "'.";
 					break;
 				}
 				number = 0;
@@ -378,7 +379,7 @@ bool ban_manager::parse_time(const std::string& duration, std::time_t* time) con
 	try {
 		dur_lower = utf8::lowercase(duration);
 	} catch(const utf8::invalid_utf8_exception& e) {
-		ERR_SERVER << "While parsing ban command duration string, caught an invalid utf8 exception: " << e.what() << std::endl;
+		ERR_SERVER << "While parsing ban command duration string, caught an invalid utf8 exception: " << e.what();
 		return false;
 	}
 
@@ -507,7 +508,7 @@ std::string ban_manager::ban(const std::string& ip,
 			bans_.erase(ban);
 		}
 	} catch(const banned::error& e) {
-		ERR_SERVER << e.message << " while creating dummy ban for finding existing ban" << std::endl;
+		ERR_SERVER << e.message << " while creating dummy ban for finding existing ban";
 		return e.message;
 	}
 
@@ -519,7 +520,7 @@ std::string ban_manager::ban(const std::string& ip,
 		}
 		ret << *new_ban;
 	} catch(const banned::error& e) {
-		ERR_SERVER << e.message << " while banning" << std::endl;
+		ERR_SERVER << e.message << " while banning";
 		return e.message;
 	}
 
@@ -534,7 +535,7 @@ void ban_manager::unban(std::ostringstream& os, const std::string& ip, bool imme
 	try {
 		ban = bans_.find(std::make_shared<banned>(ip));
 	} catch (const banned::error& e) {
-		ERR_SERVER << e.message << std::endl;
+		ERR_SERVER << e.message;
 		os << e.message;
 		return;
 	}
@@ -575,13 +576,12 @@ void ban_manager::check_ban_times(std::time_t time_now)
 		if(ban->get_end_time() > time_now) {
 			// No bans going to expire
 			DBG_SERVER << "ban " << ban->get_ip() << " not removed. time: " << time_now << " end_time "
-					   << ban->get_end_time() << "\n";
+					   << ban->get_end_time();
 			break;
 		}
 
 		// This ban is going to expire so delete it.
-		LOG_SERVER << "Remove a ban " << ban->get_ip() << ". time: " << time_now << " end_time " << ban->get_end_time()
-				   << "\n";
+		LOG_SERVER << "Remove a ban " << ban->get_ip() << ". time: " << time_now << " end_time " << ban->get_end_time();
 		std::ostringstream os;
 		unban(os, ban->get_ip(), false);
 		time_queue_.pop();
@@ -716,6 +716,7 @@ ban_manager::~ban_manager()
 	try {
 		write();
 	} catch(...) {
+		DBG_SERVER << "Caught exception in ban_manager destructor: " << utils::get_unknown_exception_type();
 	}
 }
 

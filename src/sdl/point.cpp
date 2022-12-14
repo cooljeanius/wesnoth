@@ -17,29 +17,10 @@
 
 #include "sdl/point.hpp"
 
-#include <iostream>
-
-point::operator SDL_Point() const
-{
-	return {x, y};
-}
-
-point& point::operator+=(const point& point)
-{
-	x += point.x;
-	y += point.y;
-	return *this;
-}
-
-point& point::operator-=(const point& point)
-{
-	x -= point.x;
-	y -= point.y;
-	return *this;
-}
+#include <ostream>
 
 std::ostream& operator<<(std::ostream& stream, const point& point)
 {
-	stream << point.x << ',' << point.y;
+	stream << '(' << point.x << ',' << point.y << ')';
 	return stream;
 }

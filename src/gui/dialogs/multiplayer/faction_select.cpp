@@ -41,7 +41,8 @@ namespace gui2::dialogs
 REGISTER_DIALOG(faction_select)
 
 faction_select::faction_select(ng::flg_manager& flg_manager, const std::string& color, const int side)
-	: flg_manager_(flg_manager)
+	: modal_dialog(window_id())
+	, flg_manager_(flg_manager)
 	, tc_color_(color)
 	, side_(side)
 	, last_faction_(flg_manager.current_faction_index())
@@ -93,8 +94,8 @@ void faction_select::pre_show(window& window)
 	for(const config *s : flg_manager_.choosable_factions()) {
 		const config& side = *s;
 
-		std::map<std::string, string_map> data;
-		string_map item;
+		widget_data data;
+		widget_item item;
 
 		const std::string name = side["name"].str();
 		// flag_rgb here is unrelated to any handling in the unit class

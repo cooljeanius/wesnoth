@@ -568,7 +568,7 @@ void preprocessor_streambuf::error(const std::string& error_type, int l)
 	error = error_type + '\n';
 	error += "at " + position;
 
-	ERR_PREPROC << error << '\n';
+	ERR_PREPROC << error;
 
 	throw preproc_config::error(error);
 }
@@ -584,7 +584,7 @@ void preprocessor_streambuf::warning(const std::string& warning_type, int l)
 	warning = warning_type + '\n';
 	warning += "at " + position;
 
-	WRN_PREPROC << warning << '\n';
+	WRN_PREPROC << warning;
 }
 
 
@@ -819,7 +819,7 @@ void preprocessor_file::init()
 	filesystem::scoped_istream file_stream = filesystem::istream_file(name_);
 
 	if(!file_stream->good()) {
-		ERR_PREPROC << "Could not open file " << name_ << std::endl;
+		ERR_PREPROC << "Could not open file " << name_;
 	} else {
 		parent_.add_preprocessor<preprocessor_data>(std::move(file_stream), "",
 			filesystem::get_short_wml_path(name_), 1,
@@ -986,7 +986,7 @@ std::string preprocessor_data::read_word()
 		int c = in_.peek();
 
 		if(c == preprocessor_streambuf::traits_type::eof() || utils::portable_isspace(c)) {
-			// DBG_PREPROC << "(" << res << ")\n";
+			// DBG_PREPROC << "(" << res << ")";
 			return res;
 		}
 
@@ -1310,7 +1310,7 @@ bool preprocessor_data::get_chunk()
 
 					WRN_PREPROC << "Redefining macro " << symbol << " without explicit #undef at "
 								<< lineno_string(new_pos.str()) << '\n'
-								<< "previously defined at " << lineno_string(old_pos.str()) << '\n';
+								<< "previously defined at " << lineno_string(old_pos.str());
 				}
 
 				buffer.erase(buffer.end() - 7, buffer.end());
@@ -1318,22 +1318,21 @@ bool preprocessor_data::get_chunk()
 						= preproc_define(buffer, items, optargs, parent_.textdomain_, linenum, parent_.location_,
 						deprecation_detail, deprecation_level, deprecation_version);
 
-				LOG_PREPROC << "defining macro " << symbol << " (location " << get_location(parent_.location_) << ")\n";
+				LOG_PREPROC << "defining macro " << symbol << " (location " << get_location(parent_.location_) << ")";
 			}
 		} else if(command == "ifdef" || command == "ifndef") {
 			const bool negate = command[2] == 'n';
 			skip_spaces();
 			const std::string& symbol = read_word();
 			bool found = parent_.defines_->count(symbol) != 0;
-			DBG_PREPROC << "testing for macro " << symbol << ": " << (found ? "defined" : "not defined") << '\n';
+			DBG_PREPROC << "testing for macro " << symbol << ": " << (found ? "defined" : "not defined");
 			conditional_skip(negate ? found : !found);
 		} else if(command == "ifhave" || command == "ifnhave") {
 			const bool negate = command[2] == 'n';
 			skip_spaces();
 			const std::string& symbol = read_word();
 			bool found = !filesystem::get_wml_location(symbol, directory_).empty();
-			DBG_PREPROC << "testing for file or directory " << symbol << ": " << (found ? "found" : "not found")
-						<< '\n';
+			DBG_PREPROC << "testing for file or directory " << symbol << ": " << (found ? "found" : "not found");
 			conditional_skip(negate ? found : !found);
 		} else if(command == "ifver" || command == "ifnver") {
 			const bool negate = command[2] == 'n';
@@ -1361,7 +1360,7 @@ bool preprocessor_data::get_chunk()
 
 				const bool found = do_version_check(version1, vop, version2);
 				DBG_PREPROC << "testing version '" << version1.str() << "' against '" << version2.str() << "' ("
-							<< vopstr << "): " << (found ? "match" : "no match") << '\n';
+							<< vopstr << "): " << (found ? "match" : "no match");
 
 				conditional_skip(negate ? found : !found);
 			} else {
@@ -1410,7 +1409,7 @@ bool preprocessor_data::get_chunk()
 			const std::string& symbol = read_word();
 			if(!skipping_) {
 				parent_.defines_->erase(symbol);
-				LOG_PREPROC << "undefine macro " << symbol << " (location " << get_location(parent_.location_) << ")\n";
+				LOG_PREPROC << "undefine macro " << symbol << " (location " << get_location(parent_.location_) << ")";
 			}
 		} else if(command == "error") {
 			if(!skipping_) {
@@ -1419,7 +1418,7 @@ bool preprocessor_data::get_chunk()
 				error << "#error: \"" << read_rest_of_line() << '"';
 				parent_.error(error.str(), linenum_);
 			} else
-				DBG_PREPROC << "Skipped an error\n";
+				DBG_PREPROC << "Skipped an error";
 		} else if(command == "warning") {
 			if(!skipping_) {
 				skip_spaces();
@@ -1427,7 +1426,7 @@ bool preprocessor_data::get_chunk()
 				warning << "#warning: \"" << read_rest_of_line() << '"';
 				parent_.warning(warning.str(), linenum_);
 			} else {
-				DBG_PREPROC << "Skipped a warning\n";
+				DBG_PREPROC << "Skipped a warning";
 			}
 		} else if(command == "deprecated") {
 			// The current file is deprecated, so print a message
@@ -1555,8 +1554,7 @@ bool preprocessor_data::get_chunk()
 
 								optional_arg_num++;
 
-								DBG_PREPROC << "Found override for " << argname << " in call to macro " << symbol
-											<< "\n";
+								DBG_PREPROC << "Found override for " << argname << " in call to macro " << symbol;
 							} else {
 								std::ostringstream warning;
 								warning << "Unrecognized optional argument passed to macro '" << symbol << "': '"
@@ -1590,7 +1588,7 @@ bool preprocessor_data::get_chunk()
 							res << in.rdbuf();
 
 							DBG_PREPROC << "Setting default for optional argument " << argument.first << " in macro "
-										<< symbol << "\n";
+										<< symbol;
 
 							(*defines)[argument.first] = res.str();
 						}
@@ -1612,12 +1610,12 @@ bool preprocessor_data::get_chunk()
 				pop_token();
 
 				if(!slowpath_) {
-					DBG_PREPROC << "substituting macro " << symbol << '\n';
+					DBG_PREPROC << "substituting macro " << symbol;
 
 					parent_.add_preprocessor<preprocessor_data>(
 						std::move(buffer), val.location, "", val.linenum, dir, val.textdomain, std::move(defines), true);
 				} else {
-					DBG_PREPROC << "substituting (slow) macro " << symbol << '\n';
+					DBG_PREPROC << "substituting (slow) macro " << symbol;
 
 					std::unique_ptr<preprocessor_streambuf> buf(new preprocessor_streambuf(parent_));
 
@@ -1637,7 +1635,7 @@ bool preprocessor_data::get_chunk()
 					put(res.str());
 				}
 			} else if(parent_.depth() < 40) {
-				LOG_PREPROC << "Macro definition not found for " << symbol << " , attempting to open as file.\n";
+				LOG_PREPROC << "Macro definition not found for " << symbol << " , attempting to open as file.";
 				pop_token();
 
 				std::string nfname = filesystem::get_wml_location(symbol, directory_);
@@ -1761,7 +1759,7 @@ void preprocess_resource(const std::string& res_name,
 
 		// Subdirectories
 		for(const std::string& dir : dirs) {
-			LOG_PREPROC << "processing sub-dir: " << dir << '\n';
+			LOG_PREPROC << "processing sub-dir: " << dir;
 			preprocess_resource(dir, defines_map, write_cfg, write_plain_cfg, parent_directory);
 		}
 
@@ -1778,7 +1776,7 @@ void preprocess_resource(const std::string& res_name,
 		return;
 	}
 
-	LOG_PREPROC << "processing resource: " << res_name << '\n';
+	LOG_PREPROC << "processing resource: " << res_name;
 
 	// disable filename encoding to get clear #line in cfg.plain
 	encode_filename = false;
@@ -1795,7 +1793,7 @@ void preprocess_resource(const std::string& res_name,
 
 	ss << (*stream).rdbuf();
 
-	LOG_PREPROC << "processing finished\n";
+	LOG_PREPROC << "processing finished";
 
 	if(write_cfg || write_plain_cfg) {
 		config cfg;
@@ -1807,7 +1805,7 @@ void preprocess_resource(const std::string& res_name,
 
 		// Write the processed cfg file
 		if(write_cfg) {
-			LOG_PREPROC << "writing cfg file: " << preproc_res_name << '\n';
+			LOG_PREPROC << "writing cfg file: " << preproc_res_name;
 
 			filesystem::create_directory_if_missing_recursive(filesystem::directory_name(preproc_res_name));
 			filesystem::scoped_ostream outStream(filesystem::ostream_file(preproc_res_name));
@@ -1817,7 +1815,7 @@ void preprocess_resource(const std::string& res_name,
 
 		// Write the plain cfg file
 		if(write_plain_cfg) {
-			LOG_PREPROC << "writing plain cfg file: " << (preproc_res_name + ".plain") << '\n';
+			LOG_PREPROC << "writing plain cfg file: " << (preproc_res_name + ".plain");
 
 			filesystem::create_directory_if_missing_recursive(filesystem::directory_name(preproc_res_name));
 			filesystem::write_file(preproc_res_name + ".plain", streamContent);

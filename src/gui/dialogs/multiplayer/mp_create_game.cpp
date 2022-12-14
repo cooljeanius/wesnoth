@@ -66,7 +66,8 @@ namespace prefs = preferences;
 REGISTER_DIALOG(mp_create_game)
 
 mp_create_game::mp_create_game(saved_game& state, bool local_mode)
-	: create_engine_(state)
+	: modal_dialog(window_id())
+	, create_engine_(state)
 	, config_engine_()
 	, options_manager_()
 	, selected_game_index_(-1)
@@ -136,7 +137,7 @@ void mp_create_game::pre_show(window& win)
 		std::bind(&mp_create_game::load_game_callback, this));
 
 	// Custom dialog close hook
-	win.set_exit_hook_ok_only([this](window& w)->bool { return dialog_exit_hook(w); });
+	win.set_exit_hook(window::exit_hook::on_ok, [this](window& w) { return dialog_exit_hook(w); });
 
 	//
 	// Set up the options manager. Needs to be done before selecting an initial tab
@@ -197,8 +198,8 @@ void mp_create_game::pre_show(window& win)
 
 	const auto& activemods = preferences::modifications();
 	for(const auto& mod : create_engine_.get_extras_by_type(ng::create_engine::MOD)) {
-		std::map<std::string, string_map> data;
-		string_map item;
+		widget_data data;
+		widget_item item;
 
 		item["label"] = mod->name;
 		data.emplace("mod_name", item);
@@ -338,7 +339,7 @@ void mp_create_game::pre_show(window& win)
 #define UPDATE_ATTRIBUTE(field, convert) \
 	do { if(cfg.has_attribute(#field)) { field##_->set_widget_value(cfg[#field].convert()); } } while(false) \
 
-	plugins_context_->set_callback("update_settings", [this, &win](const config& cfg) {
+	plugins_context_->set_callback("update_settings", [this](const config& cfg) {
 		UPDATE_ATTRIBUTE(turns, to_int);
 		UPDATE_ATTRIBUTE(gold, to_int);
 		UPDATE_ATTRIBUTE(support, to_int);
@@ -411,10 +412,10 @@ void mp_create_game::pre_show(window& win)
 
 void mp_create_game::sync_with_depcheck()
 {
-	DBG_MP << "sync_with_depcheck: start\n";
+	DBG_MP << "sync_with_depcheck: start";
 
 	if(static_cast<int>(create_engine_.current_era_index()) != create_engine_.dependency_manager().get_era_index()) {
-		DBG_MP << "sync_with_depcheck: correcting era\n";
+		DBG_MP << "sync_with_depcheck: correcting era";
 		const int new_era_index = create_engine_.dependency_manager().get_era_index();
 
 		create_engine_.set_current_era_index(new_era_index, true);
@@ -422,7 +423,7 @@ void mp_create_game::sync_with_depcheck()
 	}
 
 	if(create_engine_.current_level().id() != create_engine_.dependency_manager().get_scenario()) {
-		DBG_MP << "sync_with_depcheck: correcting scenario\n";
+		DBG_MP << "sync_with_depcheck: correcting scenario";
 
 		// Match scenario and scenario type
 		const auto new_level_index = create_engine_.find_level_by_id(create_engine_.dependency_manager().get_scenario());
@@ -454,18 +455,18 @@ void mp_create_game::sync_with_depcheck()
 	}
 
 	if(get_active_mods() != create_engine_.dependency_manager().get_modifications()) {
-		DBG_MP << "sync_with_depcheck: correcting modifications\n";
+		DBG_MP << "sync_with_depcheck: correcting modifications";
 		set_active_mods(create_engine_.dependency_manager().get_modifications());
 	}
 
 	create_engine_.init_active_mods();
-	DBG_MP << "sync_with_depcheck: end\n";
+	DBG_MP << "sync_with_depcheck: end";
 }
 
-template<typename widget>
+template<typename T>
 void mp_create_game::on_filter_change(const std::string& id, bool do_select)
 {
-	create_engine_.apply_level_filter(find_widget<widget>(get_window(), id, false).get_value());
+	create_engine_.apply_level_filter(find_widget<T>(get_window(), id, false).get_value());
 
 	listbox& game_list = find_widget<listbox>(get_window(), "games_list", false);
 
@@ -525,7 +526,7 @@ void mp_create_game::on_tab_select()
 void mp_create_game::on_mod_toggle(const int index, toggle_button* sender)
 {
 	if(sender && (sender->get_value_bool() == create_engine_.dependency_manager().is_modification_active(index))) {
-		ERR_MP << "ignoring on_mod_toggle that is already set\n";
+		ERR_MP << "ignoring on_mod_toggle that is already set";
 		return;
 	}
 
@@ -576,8 +577,8 @@ void mp_create_game::display_games_of_type(level_type::type type, const std::str
 	list.clear();
 
 	for(const auto& game : create_engine_.get_levels_by_type_unfiltered(type)) {
-		std::map<std::string, string_map> data;
-		string_map item;
+		widget_data data;
+		widget_item item;
 
 		if(type == level_type::type::campaign || type == level_type::type::sp_campaign) {
 			item["label"] = game->icon();
@@ -660,7 +661,6 @@ void mp_create_game::update_details()
 	boost::replace_all(title, "\n", " " + font::unicode_em_dash + " ");
 	find_widget<styled_widget>(get_window(), "game_title", false).set_label(title);
 
-	show_description(create_engine_.current_level().description());
 
 	switch(create_engine_.current_level_type()) {
 		case level_type::type::scenario:
@@ -714,6 +714,9 @@ void mp_create_game::update_details()
 			break;
 		}
 	}
+
+	// This needs to be at the end, since errors found expanding the map data are put into the description
+	show_description(create_engine_.current_level().description());
 }
 
 void mp_create_game::update_map_settings()

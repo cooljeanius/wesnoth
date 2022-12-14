@@ -59,7 +59,7 @@ void dbconn::log_sql_exception(const std::string& text, const mariadb::exception
 {
 	ERR_SQL << text << '\n'
 			<< "what: " << e.what() << '\n'
-			<< "error id: " << e.error_id() << std::endl;
+			<< "error id: " << e.error_id();
 }
 
 mariadb::connection_ref dbconn::create_connection()
@@ -446,6 +446,19 @@ void dbconn::get_ips_for_user(const std::string& username, std::ostringstream* o
 	}
 }
 
+void dbconn::update_addon_download_count(const std::string& instance_version, const std::string& id, const std::string& version)
+{
+	try
+	{
+		modify(connection_, "UPDATE `"+db_addon_info_table_+"` SET DOWNLOAD_COUNT = DOWNLOAD_COUNT+1 WHERE INSTANCE_VERSION = ? AND ADDON_ID = ? AND VERSION = ?",
+			instance_version, id, version);
+	}
+	catch(const mariadb::exception::base& e)
+	{
+		log_sql_exception("Unable to update download count for add-on "+id+" with version "+version+".", e);
+	}
+}
+
 //
 // handle complex query results
 //
@@ -526,7 +539,7 @@ mariadb::result_set_ref dbconn::select(mariadb::connection_ref connection, const
 	}
 	catch(const mariadb::exception::base& e)
 	{
-		ERR_SQL << "SQL query failed for query: `"+sql+"`" << std::endl;
+		ERR_SQL << "SQL query failed for query: `"+sql+"`";
 		throw e;
 	}
 }
@@ -541,7 +554,7 @@ unsigned long long dbconn::modify(mariadb::connection_ref connection, const std:
 	}
 	catch(const mariadb::exception::base& e)
 	{
-		ERR_SQL << "SQL query failed for query: `"+sql+"`" << std::endl;
+		ERR_SQL << "SQL query failed for query: `"+sql+"`";
 		throw e;
 	}
 }
@@ -556,7 +569,7 @@ unsigned long long dbconn::modify_get_id(mariadb::connection_ref connection, con
 	}
 	catch(const mariadb::exception::base& e)
 	{
-		ERR_SQL << "SQL query failed for query: `"+sql+"`" << std::endl;
+		ERR_SQL << "SQL query failed for query: `"+sql+"`";
 		throw e;
 	}
 }

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: bg\n"
 "Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
-"POT-Creation-Date: 2022-05-15 14:27 UTC\n"
+"POT-Creation-Date: 2022-11-20 05:31 UTC\n"
 "PO-Revision-Date: 2022-03-16 16:33+0200\n"
 "Last-Translator: Ivan Petrov <vankata_petrov@abv.bg>\n"
 "Language-Team: Bulgarian <bg@li.org>\n"
@@ -48,7 +48,6 @@ msgstr "опашка"
 
 #. [attack]: type=impact
 #: data/campaigns/Dead_Water/units/Kraken.cfg:27
-#: data/campaigns/Winds_of_Fate/units/Kraken.cfg:28
 #: data/core/units/monsters/Cuttle_Fish.cfg:29
 #: data/core/units/monsters/Tentacle.cfg:33
 msgid "tentacle"
@@ -56,7 +55,6 @@ msgstr "пипало"
 
 #. [attack]: type=pierce
 #: data/campaigns/Dead_Water/units/Kraken.cfg:38
-#: data/campaigns/Winds_of_Fate/units/Kraken.cfg:39
 #: data/core/units/monsters/Cuttle_Fish.cfg:40
 msgid "ink"
 msgstr "мастило"
@@ -125,10 +123,10 @@ msgstr "жезъл"
 #: data/campaigns/Descent_Into_Darkness/units/Malin_Keshar.cfg:535
 #: data/campaigns/Liberty/units/Rogue_Mage.cfg:23
 #: data/campaigns/Liberty/units/Shadow_Mage.cfg:32
-#: data/core/units/dunefolk/Falconer.cfg:140
-#: data/core/units/dunefolk/Sky_Hunter.cfg:138
+#: data/core/units/dunefolk/Falconer.cfg:141
+#: data/core/units/dunefolk/Sky_Hunter.cfg:139
 #: data/core/units/humans/Loyalist_Bowman.cfg:23
-#: data/core/units/orcs/Crossbowman.cfg:23 data/core/units/orcs/Slurbow.cfg:28
+#: data/core/units/orcs/Crossbowman.cfg:32 data/core/units/orcs/Slurbow.cfg:34
 msgid "short sword"
 msgstr "къс меч"
 
@@ -176,32 +174,10 @@ msgid "sling"
 msgstr "прашка"
 
 #. [attack]: type=blade
-#: data/campaigns/Eastern_Invasion/units/Bone_Knight.cfg:32
-#: data/campaigns/Eastern_Invasion/units/Skeleton_Rider.cfg:41
-#: data/campaigns/Liberty/units/Bone_Knight.cfg:32
-#: data/campaigns/Liberty/units/Skeleton_Rider.cfg:41
-#: data/campaigns/The_Hammer_of_Thursagan/units/Dwarvish_Masked_Fighter.cfg:32
-#: data/campaigns/Under_the_Burning_Suns/units/undead/Undead_Horseman.cfg:39
-#: data/core/units/dunefolk/Explorer.cfg:34
-#: data/core/units/dunefolk/Rover.cfg:31
-#: data/core/units/dunefolk/Wayfarer.cfg:43
-#: data/core/units/dwarves/Explorer.cfg:33
-#: data/core/units/dwarves/Fighter.cfg:57
-#: data/core/units/dwarves/Pathfinder.cfg:36
-#: data/core/units/dwarves/Pathfinder.cfg:44
-#: data/core/units/dwarves/Scout.cfg:35 data/core/units/dwarves/Scout.cfg:43
-#: data/core/units/undead/Skele_Deathblade.cfg:53
-#: data/core/units/undead/Skele_Draug.cfg:30
-#: data/core/units/undead/Skele_Revenant.cfg:31
-#: data/core/units/undead/Skeleton.cfg:49
-msgid "axe"
-msgstr "брадва"
-
-#. [attack]: type=blade
 #: data/campaigns/Eastern_Invasion/units/Horse_Lord.cfg:24
 #: data/campaigns/Eastern_Invasion/units/Mounted_Warrior.cfg:23
 #: data/core/units/orcs/Ruler.cfg:27 data/core/units/orcs/Sovereign.cfg:28
-#: data/core/units/orcs/Warlord.cfg:24 data/core/units/orcs/Warrior.cfg:22
+#: data/core/units/orcs/Warlord.cfg:24 data/core/units/orcs/Warrior.cfg:38
 msgid "greatsword"
 msgstr "двуръчен меч"
 
@@ -230,7 +206,6 @@ msgstr "бойно желязо"
 #: data/campaigns/Heir_To_The_Throne/units/Princess.cfg:34
 #: data/campaigns/Heir_To_The_Throne/units/Princess.cfg:91
 #: data/campaigns/Heir_To_The_Throne/units/Sea_Orc.cfg:36
-#: data/campaigns/Liberty/units/Death_Squire.cfg:32
 #: data/campaigns/Sceptre_of_Fire/units/Haldric_II.cfg:26
 #: data/campaigns/The_Rise_Of_Wesnoth/units/Noble_Commander.cfg:34
 #: data/campaigns/The_Rise_Of_Wesnoth/units/Noble_Fighter.cfg:23
@@ -270,8 +245,9 @@ msgstr "бойно желязо"
 #: data/core/units/humans/Loyalist_Swordsman.cfg:29
 #: data/core/units/humans/Woodsman_Ranger.cfg:44
 #: data/core/units/nagas/Fighter.cfg:30 data/core/units/nagas/Myrmidon.cfg:29
-#: data/core/units/nagas/Warrior.cfg:27 data/core/units/orcs/Grunt.cfg:82
+#: data/core/units/nagas/Warrior.cfg:27 data/core/units/orcs/Grunt.cfg:88
 #: data/core/units/orcs/Leader.cfg:27
+#: data/core/units/undead/Skele_Death_Squire.cfg:32
 msgid "sword"
 msgstr "меч"
 
@@ -331,7 +307,7 @@ msgstr "лък"
 #: data/core/units/monsters/Skeletal_Dragon.cfg:42
 #: data/core/units/undead/Corpse_Ghoul.cfg:32
 #: data/core/units/undead/Corpse_Necrophage.cfg:26
-#: data/core/units/undead/Spirit_Nightgaunt.cfg:36
+#: data/core/units/undead/Spirit_Nightgaunt.cfg:92
 #: data/core/units/undead/Spirit_Shadow.cfg:62
 msgid "claws"
 msgstr "нокти"
@@ -371,7 +347,7 @@ msgstr "сабя"
 #: data/campaigns/Secrets_of_the_Ancients/units/SotA_Corpses.cfg:267
 #: data/campaigns/Secrets_of_the_Ancients/units/SotA_Corpses.cfg:282
 #: data/campaigns/Secrets_of_the_Ancients/units/SotA_Corpses.cfg:298
-#: data/core/units/undead/Corpse_Walking.cfg:75
+#: data/core/units/undead/Corpse_Walking.cfg:97
 msgid "Walking Corpse"
 msgstr "Ходещ труп"
 
@@ -379,7 +355,7 @@ msgstr "Ходещ труп"
 #. [unit_type]: id=Walking Corpse, race=undead
 #: data/campaigns/Secrets_of_the_Ancients/units/Corpse_Shynal.cfg:17
 #: data/campaigns/Secrets_of_the_Ancients/units/SotA_Corpses.cfg:11
-#: data/core/units/undead/Corpse_Walking.cfg:85
+#: data/core/units/undead/Corpse_Walking.cfg:107
 msgid ""
 "Walking Corpses are the bodies of the dead, re-animated by dark magic. "
 "Though not especially dangerous to a trained soldier, the sight of one’s "
@@ -435,8 +411,8 @@ msgstr ""
 #: data/campaigns/Under_the_Burning_Suns/units/quenoth/Sun_Singer.cfg:27
 #: data/campaigns/Under_the_Burning_Suns/units/quenoth/Sun_Sylph.cfg:30
 #: data/campaigns/Under_the_Burning_Suns/units/undead/Spider_Lich.cfg:23
-#: data/core/units/undead/Corpse_Soulless.cfg:91
-#: data/core/units/undead/Corpse_Walking.cfg:90
+#: data/core/units/undead/Corpse_Soulless.cfg:113
+#: data/core/units/undead/Corpse_Walking.cfg:112
 #: data/core/units/undead/Necro_Ancient_Lich.cfg:29
 #: data/core/units/undead/Necro_Lich.cfg:35
 #: data/core/units/undead/Spirit_Ghost.cfg:57
@@ -515,6 +491,9 @@ msgstr "проклятие"
 #: data/core/units/goblins/Pillager.cfg:32
 #: data/core/units/goblins/Wolf_Rider.cfg:46
 #: data/core/units/monsters/Ant.cfg:33 data/core/units/monsters/Bear.cfg:42
+#: data/core/units/monsters/Caribe.cfg:112
+#: data/core/units/monsters/Caribe_Hunter.cfg:113
+#: data/core/units/monsters/Caribe_Nibbler.cfg:125
 #: data/core/units/monsters/Fire_Ant.cfg:64
 #: data/core/units/monsters/Giant_Spider.cfg:28
 #: data/core/units/monsters/Sea_Serpent.cfg:27
@@ -547,14 +526,14 @@ msgstr "зъби"
 #: data/core/units/monsters/Seahorse.cfg:34
 #: data/core/units/monsters/Wild_Wyvern.cfg:95
 #: data/core/units/undead/Corpse_Ghast.cfg:27
-#: data/core/units/undead/Corpse_Soulless.cfg:251
-#: data/core/units/undead/Corpse_Walking.cfg:250
+#: data/core/units/undead/Corpse_Soulless.cfg:273
+#: data/core/units/undead/Corpse_Walking.cfg:272
 msgid "bite"
 msgstr "захапка"
 
 #. [unit_type]: id=Soulless, race=undead
 #: data/campaigns/Secrets_of_the_Ancients/units/SotA_Soulless.cfg:14
-#: data/core/units/undead/Corpse_Soulless.cfg:86
+#: data/core/units/undead/Corpse_Soulless.cfg:108
 msgid ""
 "The technique of animating a dead body is unfortunately well-known in the "
 "dark arts; practitioners often use it to raise servants and soldiers from "
@@ -596,7 +575,7 @@ msgstr ""
 #: data/campaigns/Secrets_of_the_Ancients/units/SotA_Soulless.cfg:245
 #: data/campaigns/Secrets_of_the_Ancients/units/SotA_Soulless.cfg:260
 #: data/campaigns/Secrets_of_the_Ancients/units/SotA_Soulless.cfg:274
-#: data/core/units/undead/Corpse_Soulless.cfg:75
+#: data/core/units/undead/Corpse_Soulless.cfg:97
 msgid "Soulless"
 msgstr "Бездушен"
 
@@ -670,7 +649,7 @@ msgstr ""
 #: data/core/units/humans/Woodsman_Poacher.cfg:33
 #: data/core/units/humans/Woodsman_Trapper.cfg:33
 #: data/core/units/nagas/Dirkfang.cfg:29 data/core/units/orcs/Archer.cfg:24
-#: data/core/units/orcs/Assassin.cfg:26 data/core/units/orcs/Slayer.cfg:26
+#: data/core/units/orcs/Assassin.cfg:26 data/core/units/orcs/Slayer.cfg:34
 #: data/core/units/undead/Skele_Banebow.cfg:31
 #: data/core/units/undead/Skele_Bone_Shooter.cfg:29
 msgid "dagger"
@@ -696,6 +675,25 @@ msgstr ""
 "опасни противници в близък бой. Те се справят чудесно сред планините и под "
 "земята. Макар че не са много чевръсти, силата и издръжливостта им "
 "многократно компенсират скоростта."
+
+#. [attack]: type=blade
+#: data/campaigns/The_Hammer_of_Thursagan/units/Dwarvish_Masked_Fighter.cfg:32
+#: data/core/units/dunefolk/Explorer.cfg:34
+#: data/core/units/dunefolk/Rover.cfg:31
+#: data/core/units/dunefolk/Wayfarer.cfg:43
+#: data/core/units/dwarves/Explorer.cfg:33
+#: data/core/units/dwarves/Fighter.cfg:57
+#: data/core/units/dwarves/Pathfinder.cfg:36
+#: data/core/units/dwarves/Pathfinder.cfg:44
+#: data/core/units/dwarves/Scout.cfg:35 data/core/units/dwarves/Scout.cfg:43
+#: data/core/units/undead/Skele_Bone_Knight.cfg:31
+#: data/core/units/undead/Skele_Deathblade.cfg:53
+#: data/core/units/undead/Skele_Draug.cfg:30
+#: data/core/units/undead/Skele_Revenant.cfg:31
+#: data/core/units/undead/Skeleton.cfg:49
+#: data/core/units/undead/Skeleton_Rider.cfg:40
+msgid "axe"
+msgstr "брадва"
 
 #. [attack]: type=impact
 #: data/campaigns/The_Hammer_of_Thursagan/units/Dwarvish_Masked_Fighter.cfg:40
@@ -750,7 +748,7 @@ msgstr ""
 #: data/core/units/goblins/Spearman.cfg:26
 #: data/core/units/goblins/Spearman.cfg:36
 #: data/core/units/humans/Horseman.cfg:23
-#: data/core/units/humans/Loyalist_Javelineer.cfg:27
+#: data/core/units/humans/Loyalist_Javelineer.cfg:30
 #: data/core/units/humans/Loyalist_Spearman.cfg:80
 #: data/core/units/merfolk/Hoplite.cfg:35 data/core/units/merfolk/Hunter.cfg:24
 #: data/core/units/merfolk/Hunter.cfg:32
@@ -762,8 +760,12 @@ msgstr ""
 #: data/core/units/saurians/Ambusher.cfg:34
 #: data/core/units/saurians/Flanker.cfg:26
 #: data/core/units/saurians/Flanker.cfg:35
+#: data/core/units/saurians/Javelineer.cfg:23
+#: data/core/units/saurians/Javelineer.cfg:32
 #: data/core/units/saurians/Skirmisher.cfg:35
 #: data/core/units/saurians/Skirmisher.cfg:44
+#: data/core/units/saurians/Spearthrower.cfg:22
+#: data/core/units/saurians/Spearthrower.cfg:31
 #: data/core/units/undead/Skele_Chocobone.cfg:35
 msgid "spear"
 msgstr "копие"
@@ -781,7 +783,7 @@ msgstr "копие"
 #: data/core/units/dwarves/Guardsman.cfg:37
 #: data/core/units/dwarves/Sentinel.cfg:47
 #: data/core/units/dwarves/Stalwart.cfg:42
-#: data/core/units/humans/Loyalist_Javelineer.cfg:38
+#: data/core/units/humans/Loyalist_Javelineer.cfg:41
 #: data/core/units/humans/Loyalist_Spearman.cfg:92
 msgid "javelin"
 msgstr "дротик"
@@ -1148,8 +1150,8 @@ msgstr ""
 
 #. [attack]: type=blade
 #. [attack]: type=pierce
-#: data/core/units/drakes/Arbiter.cfg:30 data/core/units/drakes/Arbiter.cfg:39
-#: data/core/units/drakes/Warden.cfg:31 data/core/units/drakes/Warden.cfg:40
+#: data/core/units/drakes/Arbiter.cfg:36 data/core/units/drakes/Arbiter.cfg:45
+#: data/core/units/drakes/Warden.cfg:37 data/core/units/drakes/Warden.cfg:46
 #: data/core/units/humans/Loyalist_Halberdier.cfg:31
 #: data/core/units/humans/Loyalist_Halberdier.cfg:43
 msgid "halberd"
@@ -1268,8 +1270,9 @@ msgstr ""
 "спечелят битката.\n"
 "\n"
 "Освен това, само тази каста нарушава общото правило, като използва "
-"едновременно нокти и копия. Това ги прави особено добри при \"разрешаването"
-"\" на териториални конфликти с други змейове, за да наложат себе си."
+"едновременно нокти и копия. Това ги прави особено добри при "
+"\"разрешаването\" на териториални конфликти с други змейове, за да наложат "
+"себе си."
 
 #. [unit_type]: id=Drake Enforcer, race=drake
 #: data/core/units/drakes/Enforcer.cfg:4
@@ -1806,7 +1809,7 @@ msgid "female^Dune Falconer"
 msgstr "Пустинна соколарка"
 
 #. [unit_type]: id=Dune Falconer, race=dunefolk
-#: data/core/units/dunefolk/Falconer.cfg:38
+#: data/core/units/dunefolk/Falconer.cfg:39
 msgid ""
 "While well respected among the dunefolk, the art of falconry is relatively "
 "rare due to the time and skill required to properly train birds of prey. "
@@ -1835,7 +1838,7 @@ msgstr ""
 "много ефикасно, за да ги принуди да изоставят офанзивата и да се отбраняват."
 
 #. [attack]: type=blade
-#: data/core/units/dunefolk/Falconer.cfg:152
+#: data/core/units/dunefolk/Falconer.cfg:153
 msgid "falcon"
 msgstr "сокол"
 
@@ -2225,7 +2228,7 @@ msgid "female^Dune Sky Hunter"
 msgstr "Пустинна небесна ловджийка"
 
 #. [unit_type]: id=Dune Sky Hunter, race=dunefolk
-#: data/core/units/dunefolk/Sky_Hunter.cfg:38
+#: data/core/units/dunefolk/Sky_Hunter.cfg:39
 msgid ""
 "Often mistaken for young Rocs, desert eagles are large, majestic birds of "
 "prey who are notoriously aggressive and nearly impossible to tame. In the "
@@ -2249,7 +2252,7 @@ msgstr ""
 "пустинните си партньори."
 
 #. [attack]: type=blade
-#: data/core/units/dunefolk/Sky_Hunter.cfg:150
+#: data/core/units/dunefolk/Sky_Hunter.cfg:151
 msgid "eagle"
 msgstr "орел"
 
@@ -3012,6 +3015,7 @@ msgstr ""
 #. [attack]: type=impact
 #: data/core/units/elves/Enchantress.cfg:36 data/core/units/elves/Shaman.cfg:42
 #: data/core/units/elves/Sorceress.cfg:36
+#: data/core/units/monsters/Caribe_Hunter.cfg:122
 #: data/core/units/wose/Wose_Shaman.cfg:43
 msgid "entangle"
 msgstr "оплитане"
@@ -3993,10 +3997,10 @@ msgstr ""
 #: data/core/units/humans/Loyalist_Lieutenant.cfg:36
 #: data/core/units/humans/Loyalist_Master_at_Arms.cfg:40
 #: data/core/units/humans/Loyalist_Sergeant.cfg:36
-#: data/core/units/orcs/Crossbowman.cfg:32
-#: data/core/units/orcs/Crossbowman.cfg:41 data/core/units/orcs/Leader.cfg:36
-#: data/core/units/orcs/Ruler.cfg:36 data/core/units/orcs/Slurbow.cfg:37
-#: data/core/units/orcs/Slurbow.cfg:46 data/core/units/orcs/Sovereign.cfg:37
+#: data/core/units/orcs/Crossbowman.cfg:41
+#: data/core/units/orcs/Crossbowman.cfg:50 data/core/units/orcs/Leader.cfg:36
+#: data/core/units/orcs/Ruler.cfg:36 data/core/units/orcs/Slurbow.cfg:43
+#: data/core/units/orcs/Slurbow.cfg:52 data/core/units/orcs/Sovereign.cfg:37
 #: data/core/units/undead/Skele_Death_Knight.cfg:42
 msgid "crossbow"
 msgstr "арбалет"
@@ -4269,6 +4273,19 @@ msgstr ""
 "врагове. По време на близък бой, те са в състояние безнаказано да запратят "
 "копие към по-далечните редове на врага, като в същото време държат позицията "
 "си."
+
+#. [special_note]
+#: data/core/units/humans/Loyalist_Javelineer.cfg:20
+#, fuzzy
+#| msgid ""
+#| "Compared to other loyalists, Halberdiers have a higher resistance to "
+#| "‘pierce’ attacks."
+msgid ""
+"Compared to other loyalists, Javelineers have a higher resistance to "
+"‘pierce’ attacks."
+msgstr ""
+"В сравнение с други войници, алебардистите имат подсилена защита срещу "
+"\"пробождащи\" атаки."
 
 #. [unit_type]: id=Lieutenant, race=human
 #: data/core/units/humans/Loyalist_Lieutenant.cfg:4
@@ -4692,13 +4709,13 @@ msgid ""
 "Though they are not warriors, by any means, the application of their art to "
 "combat is something that often causes other soldiers to stand aside in awe."
 msgstr ""
-"Дори само, за да се допусне възможността даден маг да бъде наречен \"върховен"
-"\", той трябва да се е превърнал в истинска легенда на времето си, а хората "
-"са се научили да са предпазливи, когато връчват тази титла. Съвет от най-"
-"могъщите магове преценява достойнствата на кандидата, а решението се постига "
-"само с мнозинството от гласовете на съвета. Все пак, дори само факта, че "
-"нечия кандидатура се разглежда вече означава, че той е постигнал майсторство "
-"в магическото изкуство и е надминал повечето си колеги.\n"
+"Дори само, за да се допусне възможността даден маг да бъде наречен "
+"\"върховен\", той трябва да се е превърнал в истинска легенда на времето си, "
+"а хората са се научили да са предпазливи, когато връчват тази титла. Съвет "
+"от най-могъщите магове преценява достойнствата на кандидата, а решението се "
+"постига само с мнозинството от гласовете на съвета. Все пак, дори само "
+"факта, че нечия кандидатура се разглежда вече означава, че той е постигнал "
+"майсторство в магическото изкуство и е надминал повечето си колеги.\n"
 "\n"
 "Макар че не са войни, когато върховните магове прилагат уменията си на "
 "бойното поле, те често изумяват околните войниците."
@@ -4964,7 +4981,7 @@ msgstr ""
 #: data/core/units/humans/Outlaw_Assassin.cfg:39
 #: data/core/units/humans/Outlaw_Rogue.cfg:38
 #: data/core/units/orcs/Assassin.cfg:35 data/core/units/orcs/Nightblade.cfg:43
-#: data/core/units/orcs/Slayer.cfg:35
+#: data/core/units/orcs/Slayer.cfg:43
 msgid "throwing knives"
 msgstr "метателни ножове"
 
@@ -5710,8 +5727,8 @@ msgstr ""
 #. [attack]: type=pierce
 #. [variation]
 #: data/core/units/monsters/Boar.cfg:59
-#: data/core/units/undead/Corpse_Soulless.cfg:338
-#: data/core/units/undead/Corpse_Walking.cfg:337
+#: data/core/units/undead/Corpse_Soulless.cfg:378
+#: data/core/units/undead/Corpse_Walking.cfg:377
 msgid "tusk"
 msgstr "бивни"
 
@@ -5731,6 +5748,46 @@ msgstr ""
 "Младите прасенца са любопитни, но злонравни като родителите си, макар и да "
 "са по-малко дръзновени в борба. Но рядко ще срещнете прасенце, което да няма "
 "голям родител зад гърба си."
+
+#. [unit_type]: id=Caribe, race=monster
+#: data/core/units/monsters/Caribe.cfg:8
+msgid "Caribe"
+msgstr ""
+
+#. [unit_type]: id=Caribe, race=monster
+#: data/core/units/monsters/Caribe.cfg:28
+msgid ""
+"The giant caribe are seldom encountered in the inland rivers near Weldyn, "
+"but tales of their ferocious attacks have spread far and wide. Their angry "
+"red eyes are embedded in an armored face. While it is their teeth that are a "
+"dangerous weapon, they do posses small, bony arms and claws, which they can "
+"use to extricate themselves from situations dire to most other fish. These "
+"fish are unusually clever and should not be underestimated."
+msgstr ""
+
+#. [unit_type]: id=Hunter Caribe, race=monster
+#: data/core/units/monsters/Caribe_Hunter.cfg:8
+msgid "Hunter Caribe"
+msgstr ""
+
+#. [unit_type]: id=Hunter Caribe, race=monster
+#: data/core/units/monsters/Caribe_Hunter.cfg:29
+msgid ""
+"As they age, the giant caribe become bigger and more dangerous. They also "
+"learn to use seaweed to ensnare prey or enemies."
+msgstr ""
+
+#. [unit_type]: id=Nibbler, race=monster
+#: data/core/units/monsters/Caribe_Nibbler.cfg:8
+msgid "Nibbler"
+msgstr ""
+
+#. [unit_type]: id=Nibbler, race=monster
+#: data/core/units/monsters/Caribe_Nibbler.cfg:41
+msgid ""
+"Nibblers are juvenile predator fish, often more curious than dangerous. A "
+"single individual may not be a threat, but these fish seldom travel alone."
+msgstr ""
 
 #. [unit_type]: id=Swamp Lizard, race=monster
 #: data/core/units/monsters/Crocodile.cfg:13
@@ -5968,16 +6025,6 @@ msgstr ""
 msgid "ice claw"
 msgstr "ледени нокти"
 
-#. [unit_type]: id=Giant Stoat # wmllint: noconvert
-#: data/core/units/monsters/Frost_Stoat.cfg:169
-msgid "Giant Stoat"
-msgstr ""
-
-#. [unit_type]: id=Giant Stoat # wmllint: noconvert
-#: data/core/units/monsters/Frost_Stoat.cfg:170
-msgid "Giant Stoats are obsolete, use Frost Stoat."
-msgstr ""
-
 #. [unit_type]: id=Giant Mudcrawler, race=monster
 #: data/core/units/monsters/Giant_Mudcrawler.cfg:4
 msgid "Giant Mudcrawler"
@@ -6063,7 +6110,7 @@ msgid "Sand Scuttler"
 msgstr "Пясъчен рак"
 
 #. [variation]
-#: data/core/units/monsters/Giant_Scorpion.cfg:117
+#: data/core/units/monsters/Giant_Scorpion.cfg:118
 msgid ""
 "Making their homes in sandy dunes, these critters are an odd mix of mundane "
 "creature and elemental beast. Though usually timid, Sand Scuttlers sometimes "
@@ -6151,67 +6198,21 @@ msgstr ""
 "може, той може да отвърне с мощен ритник, ако бъде обграден."
 
 #. [attack]: type=impact
-#: data/core/units/monsters/Horse.cfg:32 data/core/units/monsters/Horse.cfg:98
-#: data/core/units/monsters/Horse.cfg:170
-#: data/core/units/monsters/Horse_Black.cfg:41
-#: data/core/units/monsters/Horse_Great.cfg:33
+#: data/core/units/monsters/Horse.cfg:32
+#: data/core/units/monsters/Horse_Black.cfg:50
+#: data/core/units/monsters/Horse_Dark.cfg:44
+#: data/core/units/monsters/Horse_Great.cfg:34
+#: data/core/units/monsters/Horse_White.cfg:38
 msgid "hooves"
 msgstr ""
 
-#. [unit_type]: id=White Horse
-#: data/core/units/monsters/Horse.cfg:74
-msgid "White Horse"
-msgstr "Бял кон"
-
-#. [unit_type]: id=White Horse
-#: data/core/units/monsters/Horse.cfg:85
-msgid ""
-"Some horses have a white color, and they are merely white horses. But there "
-"exist a special breed, found only in the wild woods, that are White Horses. "
-"As if blessed by the faerie world, they have a grace and agility not found "
-"in their more common relatives."
-msgstr ""
-"Някои коне са бели на цвят и са само това - бели коне. Въпреки това "
-"съществува специален вид, който се намира само в дивите гори и принадлежи "
-"към Бели коне. Те сякаш са благословени от феическия свят и притежават "
-"лекота и гъвкавост, която не се среща при по-обичайните коне."
-
-#. [unit_type]: id=Dark Horse
-#: data/core/units/monsters/Horse.cfg:140
-msgid "Dark Horse"
-msgstr "Тъмен кон"
-
-#. [unit_type]: id=Dark Horse
-#: data/core/units/monsters/Horse.cfg:166
-msgid ""
-"Dark Horses are wild animals, but they seem to take an odd interest in the "
-"civilized races. They leave no signs of their passage, but they have been "
-"noticed scouting camps and outposts during the night."
-msgstr ""
-"Тъмните коне са диви животни, ала проявяващи интерес към цивилизованите "
-"раси. Те не оставят никаква диря след себе си, но са забелязвани около "
-"лагери и аванпостове през нощта."
-
-#. [attack]: type=cold
-#: data/core/units/monsters/Horse.cfg:179
-#: data/core/units/monsters/Horse_Black.cfg:50
-msgid "whinny"
-msgstr "цвилене"
-
-#. [male]
-#. [female]
-#: data/core/units/monsters/Horse.cfg:214
-#: data/core/units/monsters/Horse.cfg:218
-msgid "female^Dark Horse"
-msgstr "Тъмна кобилка"
-
 #. [unit_type]: id=Black Horse, race=horse
-#: data/core/units/monsters/Horse_Black.cfg:5
+#: data/core/units/monsters/Horse_Black.cfg:14
 msgid "Black Horse"
 msgstr "Черен кон"
 
 #. [unit_type]: id=Black Horse, race=horse
-#: data/core/units/monsters/Horse_Black.cfg:25
+#: data/core/units/monsters/Horse_Black.cfg:34
 msgid ""
 "The true nature of Black Horses is impossible to discern, but the fire in "
 "their eyes and the unnerving, unnatural sound of their calls suggest they "
@@ -6221,16 +6222,50 @@ msgstr ""
 "очите и смущаващият, неестествен звук, който издават, намеква, че те са зли "
 "духове."
 
+#. [attack]: type=cold
+#: data/core/units/monsters/Horse_Black.cfg:59
+#: data/core/units/monsters/Horse_Dark.cfg:53
+msgid "whinny"
+msgstr "цвилене"
+
 #. [male]
-#: data/core/units/monsters/Horse_Black.cfg:85
+#: data/core/units/monsters/Horse_Black.cfg:94
 msgid "Black Stallion"
 msgstr "Черен жребец"
 
 #. [female]
 #. Female variant of the Black Horse or Black Stallion; in English this is a pun on the word "Mare"
-#: data/core/units/monsters/Horse_Black.cfg:91
+#: data/core/units/monsters/Horse_Black.cfg:100
 msgid "female^Black Nightmare"
 msgstr "Черен кошмар"
+
+#. [unit_type]: id=Dark Horse
+#: data/core/units/monsters/Horse_Dark.cfg:14
+msgid "Dark Horse"
+msgstr "Тъмен кон"
+
+#. [unit_type]: id=Dark Horse
+#: data/core/units/monsters/Horse_Dark.cfg:40
+msgid ""
+"Dark Horses are wild animals, but they seem to take an odd interest in the "
+"civilized races. They leave no signs of their passage, but they have been "
+"noticed scouting camps and outposts during the night."
+msgstr ""
+"Тъмните коне са диви животни, ала проявяващи интерес към цивилизованите "
+"раси. Те не оставят никаква диря след себе си, но са забелязвани около "
+"лагери и аванпостове през нощта."
+
+#. [male]
+#: data/core/units/monsters/Horse_Dark.cfg:88
+#, fuzzy
+#| msgid "female^Dark Horse"
+msgid "male^Dark Horse"
+msgstr "Тъмна кобилка"
+
+#. [female]
+#: data/core/units/monsters/Horse_Dark.cfg:92
+msgid "female^Dark Horse"
+msgstr "Тъмна кобилка"
 
 #. [unit_type]: id=Great Horse, race=horse
 #: data/core/units/monsters/Horse_Great.cfg:5
@@ -6249,6 +6284,24 @@ msgstr ""
 "прилики, тези са диви животни. Техният бурен темперамент и инат ги правят "
 "мъчни за опитомяване, макар че не един арогантен принц или военачалник, се е "
 "опитвал и издънвал."
+
+#. [unit_type]: id=White Horse
+#: data/core/units/monsters/Horse_White.cfg:14
+msgid "White Horse"
+msgstr "Бял кон"
+
+#. [unit_type]: id=White Horse
+#: data/core/units/monsters/Horse_White.cfg:25
+msgid ""
+"Some horses have a white color, and they are merely white horses. But there "
+"exist a special breed, found only in the wild woods, that are White Horses. "
+"As if blessed by the faerie world, they have a grace and agility not found "
+"in their more common relatives."
+msgstr ""
+"Някои коне са бели на цвят и са само това - бели коне. Въпреки това "
+"съществува специален вид, който се намира само в дивите гори и принадлежи "
+"към Бели коне. Те сякаш са благословени от феическия свят и притежават "
+"лекота и гъвкавост, която не се среща при по-обичайните коне."
 
 #. [unit_type]: id=Icemonax, race=monster
 #: data/core/units/monsters/Icemonax.cfg:4
@@ -7255,7 +7308,7 @@ msgid "Orcish Slayer"
 msgstr "Оркски изкормвач"
 
 #. [unit_type]: id=Orcish Slayer, race=orc
-#: data/core/units/orcs/Slayer.cfg:21
+#: data/core/units/orcs/Slayer.cfg:20
 msgid ""
 "Skilled orcish assassins are surprisingly nimble covert troops who achieve "
 "great agility by forgoing the heavy armor of their brethren. Their weapon of "
@@ -7273,8 +7326,8 @@ msgstr ""
 "традиционен начин на борба. Повечето орки не зачитат тези правила и търсят "
 "победа на всяка цена. Загубата се счита за най-великото безчестие, "
 "независимо от причината. Бруталното естество на войните, които орките водят, "
-"води до появата на тези безскрупулни войници, с право наричани \"изкормвачи"
-"\" от враговете си."
+"води до появата на тези безскрупулни войници, с право наричани "
+"\"изкормвачи\" от враговете си."
 
 #. [unit_type]: id=Orcish Slurbow, race=orc
 #: data/core/units/orcs/Slurbow.cfg:4
@@ -7452,6 +7505,22 @@ msgstr ""
 "битка и тези, които ги подценяват, може скоро да открият, че саурианците са "
 "ги заобиколили."
 
+#. [unit_type]: id=Saurian Javelineer, race=lizard
+#: data/core/units/saurians/Javelineer.cfg:4
+#, fuzzy
+#| msgid "female^Saurian Flanker"
+msgid "female^Saurian Javelineer"
+msgstr "Саурианска бързоходка"
+
+#. [unit_type]: id=Saurian Javelineer, race=lizard
+#: data/core/units/saurians/Javelineer.cfg:19
+msgid ""
+"After years of combat practice, saurians warriors that are the most talented "
+"in the skill of spear throwing might advance to the ranks of the "
+"javelineers. With better equipment and exceptional aim, saurian javelineers "
+"are not to be underestimated."
+msgstr ""
+
 #. [unit_type]: id=Saurian Oracle, race=lizard
 #: data/core/units/saurians/Oracle.cfg:4
 msgid "Saurian Oracle"
@@ -7514,6 +7583,21 @@ msgstr ""
 "Знае се, че саурианците имат някои странни умения, които граничат с магия и "
 "мистика. Някои от тях особено умело използват силите си за лечителски цели, "
 "което е много полезно, когато битката ги достигне."
+
+#. [unit_type]: id=Saurian Spearthrower, race=lizard
+#: data/core/units/saurians/Spearthrower.cfg:4
+#, fuzzy
+#| msgid "female^Saurian Skirmisher"
+msgid "female^Saurian Spearthrower"
+msgstr "Саурианка-нападател"
+
+#. [unit_type]: id=Saurian Spearthrower, race=lizard
+#: data/core/units/saurians/Spearthrower.cfg:18
+msgid ""
+"Some saurians  with particularly good aim prefer to aid their allies from "
+"the backlines rather than to infiltrate enemy formations. Their deadly spear "
+"throwing skills allow them to support other saurian warriors from afar."
+msgstr ""
 
 #. [unit_type]: id=Great Troll, race=troll
 #: data/core/units/trolls/Great.cfg:4
@@ -7733,116 +7817,124 @@ msgstr ""
 "почти нищо, но със сигурност е кошмарен."
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:117
-#: data/core/units/undead/Corpse_Walking.cfg:116
+#: data/core/units/undead/Corpse_Soulless.cfg:139
+#: data/core/units/undead/Corpse_Walking.cfg:138
 msgid "wc_variation^Drake"
 msgstr "Змей"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:132
-#: data/core/units/undead/Corpse_Walking.cfg:131
+#: data/core/units/undead/Corpse_Soulless.cfg:154
+#: data/core/units/undead/Corpse_Walking.cfg:153
 msgid "wc_variation^Dwarf"
 msgstr "Джудже"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:145
-#: data/core/units/undead/Corpse_Walking.cfg:144
+#: data/core/units/undead/Corpse_Soulless.cfg:167
+#: data/core/units/undead/Corpse_Walking.cfg:166
 msgid "wc_variation^Falcon"
 msgstr "сокол"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:179
-#: data/core/units/undead/Corpse_Walking.cfg:178
+#: data/core/units/undead/Corpse_Soulless.cfg:201
+#: data/core/units/undead/Corpse_Walking.cfg:200
 msgid "wc_variation^Goblin"
 msgstr "Гоблин"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:189
-#: data/core/units/undead/Corpse_Walking.cfg:211
+#: data/core/units/undead/Corpse_Soulless.cfg:211
+#: data/core/units/undead/Corpse_Walking.cfg:233
 msgid "wc_variation^Horse"
 msgstr "Кон"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:198
-#: data/core/units/undead/Corpse_Walking.cfg:220
+#: data/core/units/undead/Corpse_Soulless.cfg:220
+#: data/core/units/undead/Corpse_Walking.cfg:242
 msgid "wc_variation^Mounted"
 msgstr "Конник"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:207
-#: data/core/units/undead/Corpse_Walking.cfg:229
+#: data/core/units/undead/Corpse_Soulless.cfg:229
+#: data/core/units/undead/Corpse_Walking.cfg:251
 msgid "wc_variation^Beast-Rider"
 msgstr "Ездач на звяр"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:216
-#: data/core/units/undead/Corpse_Walking.cfg:188
+#: data/core/units/undead/Corpse_Soulless.cfg:238
+#: data/core/units/undead/Corpse_Walking.cfg:210
 msgid "wc_variation^Gryphon"
 msgstr "Грифон"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:239
-#: data/core/units/undead/Corpse_Walking.cfg:238
+#: data/core/units/undead/Corpse_Soulless.cfg:261
+#: data/core/units/undead/Corpse_Walking.cfg:260
 msgid "wc_variation^Rat"
 msgstr "Плъх"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:256
-#: data/core/units/undead/Corpse_Walking.cfg:255
+#: data/core/units/undead/Corpse_Soulless.cfg:278
+#: data/core/units/undead/Corpse_Walking.cfg:277
 msgid "wc_variation^Saurian"
 msgstr "Сауриан"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:266
-#: data/core/units/undead/Corpse_Walking.cfg:265
+#: data/core/units/undead/Corpse_Soulless.cfg:288
+#: data/core/units/undead/Corpse_Walking.cfg:287
 msgid "wc_variation^Scorpion"
 msgstr "Скорпион"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:275
-#: data/core/units/undead/Corpse_Walking.cfg:274
+#: data/core/units/undead/Corpse_Soulless.cfg:306
+#: data/core/units/undead/Corpse_Walking.cfg:305
+#, fuzzy
+#| msgid "wc_variation^Spider"
+msgid "wc_variation^Scuttler"
+msgstr "Паяк"
+
+#. [variation]
+#: data/core/units/undead/Corpse_Soulless.cfg:315
+#: data/core/units/undead/Corpse_Walking.cfg:314
 msgid "wc_variation^Spider"
 msgstr "Паяк"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:284
-#: data/core/units/undead/Corpse_Walking.cfg:283
+#: data/core/units/undead/Corpse_Soulless.cfg:324
+#: data/core/units/undead/Corpse_Walking.cfg:323
 msgid "wc_variation^Serpent"
 msgstr "Влечуго"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:303
-#: data/core/units/undead/Corpse_Walking.cfg:302
+#: data/core/units/undead/Corpse_Soulless.cfg:343
+#: data/core/units/undead/Corpse_Walking.cfg:342
 msgid "wc_variation^Swimmer"
 msgstr "Плувец"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:321
-#: data/core/units/undead/Corpse_Walking.cfg:320
+#: data/core/units/undead/Corpse_Soulless.cfg:361
+#: data/core/units/undead/Corpse_Walking.cfg:360
 msgid "wc_variation^Troll"
 msgstr "Трол"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:330
-#: data/core/units/undead/Corpse_Walking.cfg:329
+#: data/core/units/undead/Corpse_Soulless.cfg:370
+#: data/core/units/undead/Corpse_Walking.cfg:369
 msgid "wc_variation^Boar"
 msgstr "Глиган"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:343
-#: data/core/units/undead/Corpse_Walking.cfg:342
+#: data/core/units/undead/Corpse_Soulless.cfg:383
+#: data/core/units/undead/Corpse_Walking.cfg:382
 msgid "wc_variation^Wose"
 msgstr "Уз"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:355
-#: data/core/units/undead/Corpse_Walking.cfg:354
+#: data/core/units/undead/Corpse_Soulless.cfg:395
+#: data/core/units/undead/Corpse_Walking.cfg:394
 msgid "wc_variation^Wolf"
 msgstr "Вълк"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:368
-#: data/core/units/undead/Corpse_Walking.cfg:367
+#: data/core/units/undead/Corpse_Soulless.cfg:408
+#: data/core/units/undead/Corpse_Walking.cfg:407
 msgid "wc_variation^Bat"
 msgstr "Прилеп"
 
@@ -8051,6 +8143,26 @@ msgstr ""
 "съществуването или врага си. Води ги единствено злобата на празното им "
 "измъчено съществуване."
 
+#. [unit_type]: id=Bone Knight, race=undead
+#: data/core/units/undead/Skele_Bone_Knight.cfg:5
+#, fuzzy
+#| msgid "Goblin Knight"
+msgid "Bone Knight"
+msgstr "Гоблински рицар"
+
+#. [unit_type]: id=Bone Knight, race=undead
+#: data/core/units/undead/Skele_Bone_Knight.cfg:27
+msgid ""
+"Once great warriors across the plains, these mounted riders atop their "
+"skeletal horses were raised from the ground by unholy magic to spread fear "
+"and destruction."
+msgstr ""
+
+#. [attack]: type=impact
+#: data/core/units/undead/Skele_Bone_Knight.cfg:41
+msgid "trample"
+msgstr ""
+
 #. [unit_type]: id=Bone Shooter, race=undead
 #: data/core/units/undead/Skele_Bone_Shooter.cfg:4
 msgid "Bone Shooter"
@@ -8105,6 +8217,21 @@ msgstr ""
 "омраза и жажда за отмъщение, се връщат в този свят като рицари на Смъртта. "
 "Те размахват същите оръжия, с които са си служили приживе и предвождат "
 "немъртвите, в търсене на своята мъст."
+
+#. [unit_type]: id=Death Squire, race=undead
+#: data/core/units/undead/Skele_Death_Squire.cfg:5
+msgid "Death Squire"
+msgstr ""
+
+#. [unit_type]: id=Death Squire, race=undead
+#: data/core/units/undead/Skele_Death_Squire.cfg:27
+msgid ""
+"Sometimes the mightiest warriors and generals, cursed with hate and angst, "
+"came back to this world as Death Knights. Death Squires serve them whilst "
+"accruing enough unholy power to become Death Knights. In the process they "
+"pick up a good deal of the Knight’s power, including the ability to command "
+"underlings."
+msgstr ""
 
 #. [unit_type]: id=Deathblade, race=undead
 #: data/core/units/undead/Skele_Deathblade.cfg:4
@@ -8203,6 +8330,21 @@ msgstr ""
 "бие отново. В ръцете на господарите си тези войници биха направили всичко, "
 "за да постигнат възложената им задача, защото смъртта никак на плаши онези, "
 "които са вече мъртви."
+
+#. [unit_type]: id=Skeleton Rider, race=undead
+#: data/core/units/undead/Skeleton_Rider.cfg:5
+#, fuzzy
+#| msgid "Skeleton Archer"
+msgid "Skeleton Rider"
+msgstr "Скелет стрелец"
+
+#. [unit_type]: id=Skeleton Rider, race=undead
+#: data/core/units/undead/Skeleton_Rider.cfg:33
+msgid ""
+"Once great warriors thundering across the plains, these mounted riders atop "
+"their skeletal horses were raised from the grave by unholy magic to spread "
+"fear and destruction."
+msgstr ""
 
 #. [unit_type]: id=Ghost, race=undead
 #: data/core/units/undead/Spirit_Ghost.cfg:4

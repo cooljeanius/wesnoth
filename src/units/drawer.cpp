@@ -18,9 +18,11 @@
 #include "color.hpp"
 #include "display.hpp"
 #include "display_context.hpp"
+#include "draw.hpp"
 #include "formatter.hpp"
 #include "game_display.hpp"
 #include "halo.hpp"
+#include "log.hpp"
 #include "map/location.hpp"
 #include "map/map.hpp"
 #include "picture.hpp"
@@ -33,8 +35,8 @@
 #include "units/types.hpp"
 #include "units/unit.hpp"
 
-// Map of different energy bar surfaces and their dimensions.
-static std::map<surface, SDL_Rect> energy_bar_rects;
+static lg::log_domain log_display("display");
+#define LOG_DP LOG_STREAM(info, log_display)
 
 namespace
 {
@@ -59,25 +61,67 @@ std::unique_ptr<image::locator> get_orb_image(orb_status os)
 	auto color = orb_status_helper::get_orb_color(os);
 	return std::make_unique<image::locator>(game_config::images::orb + "~RC(magenta>" + color + ")");
 }
+
+void draw_bar(int xpos, int ypos, int bar_height, double filled, const color_t& col)
+{
+	// Magic width number
+	static constexpr unsigned int bar_width = 4;
+
+	static constexpr color_t bar_color_bg{0, 0, 0, 80};
+	static constexpr color_t bar_color_border{213, 213, 213, 200};
+
+	// We used to use an image for the bar instead of drawing it procedurally. Its x,y position
+	// within the file was 19,13, so we offset the origin by that much to make it line up with
+	// the crowns as before. Should probably compensate for this better in the future.
+	const point offset = display::scaled_to_zoom(point{19, 13});
+
+	// Full bar dimensions.
+	const rect bar_rect = display::scaled_to_zoom({
+		xpos + offset.x,
+		ypos + offset.y,
+		bar_width,
+		bar_height
+	});
+
+	filled = std::clamp<double>(filled, 0.0, 1.0);
+	const int unfilled = static_cast<std::size_t>(bar_rect.h * (1.0 - filled));
+
+	// Filled area dimensions.
+	const rect fill_rect {
+		bar_rect.x,
+		bar_rect.y + unfilled,
+		bar_rect.w,
+		bar_rect.h - unfilled
+	};
+
+	// Tinted background.
+	draw::fill(bar_rect, bar_color_bg);
+
+	// Filled area.
+	draw::fill(fill_rect, col);
+
+	// Bar outline.
+	draw::rect(bar_rect, bar_color_border);
+}
 }
 
-unit_drawer::unit_drawer(display & thedisp) :
-	disp(thedisp),
-	dc(disp.get_disp_context()),
-	map(dc.map()),
-	teams(dc.teams()),
-	halo_man(thedisp.get_halo_manager()),
-	viewing_team(disp.viewing_team()),
-	playing_team(disp.playing_team()),
-	viewing_team_ref(teams[viewing_team]),
-	playing_team_ref(teams[playing_team]),
-	is_blindfolded(disp.is_blindfolded()),
-	show_everything(disp.show_everything()),
-	sel_hex(disp.selected_hex()),
-	mouse_hex(disp.mouseover_hex()),
-	zoom_factor(disp.get_zoom_factor()),
-	hex_size(disp.hex_size()),
-	hex_size_by_2(disp.hex_size()/2)
+unit_drawer::unit_drawer(display& thedisp)
+	: disp(thedisp)
+	, dc(disp.get_disp_context())
+	, map(dc.map())
+	, teams(dc.teams())
+	, halo_man(thedisp.get_halo_manager())
+	, viewing_team(disp.viewing_team())
+	, playing_team(disp.playing_team())
+	, viewing_team_ref(teams[viewing_team])
+	, playing_team_ref(teams[playing_team])
+	, is_blindfolded(disp.is_blindfolded())
+	, show_everything(disp.show_everything())
+	, sel_hex(disp.selected_hex())
+	, mouse_hex(disp.mouseover_hex())
+	, zoom_factor(disp.get_zoom_factor())
+	, hex_size(disp.hex_size())
+	, hex_size_by_2(disp.hex_size() / 2)
 {
 	if(const game_display* game_display = dynamic_cast<class game_display*>(&disp)) {
 		units_that_can_reach_goal = game_display->units_that_can_reach_goal();
@@ -89,7 +133,7 @@ unit_drawer::unit_drawer(display & thedisp) :
 	assert(disp.team_valid());
 }
 
-void unit_drawer::redraw_unit (const unit & u) const
+void unit_drawer::redraw_unit(const unit& u) const
 {
 	unit_animation_component & ac = u.anim_comp();
 	map_location loc = u.get_location();
@@ -117,6 +161,10 @@ void unit_drawer::redraw_unit (const unit & u) const
 
 	const bool is_highlighted_enemy = units_that_can_reach_goal.count(loc) > 0;
 	const bool is_selected_hex = (loc == sel_hex || is_highlighted_enemy);
+
+	// Override the filled area's color's alpha.
+	hp_color.a = (loc == mouse_hex || is_selected_hex) ? 255u : float_to_color(0.8);
+	xp_color.a = hp_color.a;
 
 	if(hidden || is_blindfolded || !u.is_visible_to_team(viewing_team_ref, show_everything)) {
 		ac.clear_haloes();
@@ -197,28 +245,15 @@ void unit_drawer::redraw_unit (const unit & u) const
 	const int xdst = disp.get_location_x(dst);
 	const int ydst = disp.get_location_y(dst);
 
-	const int x = static_cast<int>(adjusted_params.offset * xdst + (1.0-adjusted_params.offset) * xsrc) + hex_size_by_2;
-	const int y = static_cast<int>(adjusted_params.offset * ydst + (1.0-adjusted_params.offset) * ysrc) + hex_size_by_2;
-
-	bool has_halo = ac.unit_halo_ && ac.unit_halo_->valid();
-	if(!has_halo && !u.image_halo().empty()) {
-		ac.unit_halo_ = halo_man.add(x, y - height_adjust, u.image_halo()+u.TC_image_mods(), map_location(-1, -1));
-	}
-	if(has_halo && u.image_halo().empty()) {
-		halo_man.remove(ac.unit_halo_);
-		ac.unit_halo_.reset();
-	} else if(has_halo) {
-		halo_man.set_location(ac.unit_halo_, x, y - height_adjust);
-	}
-
 	// We draw bars only if wanted, visible on the map view
 	bool draw_bars = ac.draw_bars_ ;
 	if (draw_bars) {
-		SDL_Rect unit_rect {xsrc, ysrc +adjusted_params.y, hex_size, hex_size};
-		draw_bars = sdl::rects_overlap(unit_rect, disp.map_outside_area());
+		rect unit_rect {xsrc, ysrc +adjusted_params.y, hex_size, hex_size};
+		draw_bars = unit_rect.overlaps(disp.map_outside_area());
 	}
-	surface ellipse_front(nullptr);
-	surface ellipse_back(nullptr);
+
+	texture ellipse_front;
+	texture ellipse_back;
 	int ellipse_floating = 0;
 	// Always show the ellipse for selected units
 	if(draw_bars && (preferences::show_side_colors() || is_selected_hex)) {
@@ -244,21 +279,24 @@ void unit_drawer::redraw_unit (const unit & u) const
 			const std::string ellipse_bot = formatter() << ellipse << "-" << leader << nozoc << selected << "bottom.png~RC(ellipse_red>" << tc << ")";
 
 			// Load the ellipse parts recolored to match team color
-			ellipse_back = image::get_image(image::locator(ellipse_top), image::SCALED_TO_ZOOM);
-			ellipse_front = image::get_image(image::locator(ellipse_bot), image::SCALED_TO_ZOOM);
+			ellipse_back = image::get_texture(image::locator(ellipse_top));
+			ellipse_front = image::get_texture(image::locator(ellipse_bot));
 		}
 	}
-	if (ellipse_back != nullptr) {
-		//disp.drawing_buffer_add(display::LAYER_UNIT_BG, loc,
-		disp.drawing_buffer_add(display::LAYER_UNIT_FIRST, loc,
-			xsrc, ysrc +adjusted_params.y-ellipse_floating, ellipse_back);
-	}
 
-	if (ellipse_front != nullptr) {
-		//disp.drawing_buffer_add(display::LAYER_UNIT_FG, loc,
-		disp.drawing_buffer_add(display::LAYER_UNIT_FIRST, loc,
-			xsrc, ysrc +adjusted_params.y-ellipse_floating, ellipse_front);
-	}
+	disp.drawing_buffer_add(display::LAYER_UNIT_FIRST, loc, [=, adj_y = adjusted_params.y](const rect& d) {
+		// Both front and back have the same origin
+		const point origin { d.x, d.y + adj_y - ellipse_floating };
+
+		if(ellipse_back) {
+			draw::blit(ellipse_back, display::scaled_to_zoom({origin.x, origin.y, ellipse_back.w(), ellipse_back.h()}));
+		}
+
+		if(ellipse_front) {
+			draw::blit(ellipse_front, display::scaled_to_zoom({origin.x, origin.y, ellipse_front.w(), ellipse_front.h()}));
+		}
+	});
+
 	if(draw_bars) {
 		const auto& type_cfg = u.type().get_cfg();
 		const auto& cfg_offset_x = type_cfg["bar_offset_x"];
@@ -266,19 +304,20 @@ void unit_drawer::redraw_unit (const unit & u) const
 		int xoff;
 		int yoff;
 		if(cfg_offset_x.empty() && cfg_offset_y.empty()) {
-			const surface unit_img = image::get_image(u.default_anim_image(), image::SCALED_TO_ZOOM);
-			xoff = !unit_img ? 0 : (hex_size - unit_img->w)/2;
-			yoff = !unit_img ? 0 : (hex_size - unit_img->h)/2;
+			const point s = display::scaled_to_zoom(
+				image::get_size(u.default_anim_image())
+			);
+			xoff = !s.x ? 0 : (hex_size - s.x)/2;
+			yoff = !s.y ? 0 : (hex_size - s.x)/2;
 		}
 		else {
 			xoff = cfg_offset_x.to_int();
 			yoff = cfg_offset_y.to_int();
 		}
 
-		const std::string* energy_file = &game_config::images::energy;
-
 		using namespace orb_status_helper;
 		std::unique_ptr<image::locator> orb_img = nullptr;
+
 		if(viewing_team_ref.is_enemy(side)) {
 			if(!u.incapacitated())
 				orb_img = get_orb_image(orb_status::enemy);
@@ -297,46 +336,51 @@ void unit_drawer::redraw_unit (const unit & u) const
 			orb_img = get_orb_image(os);
 		}
 
+		// All the various overlay textures to draw with the HP/XP bars
+		std::vector<texture> textures;
+
 		if(orb_img != nullptr) {
-			surface orb(image::get_image(*orb_img, image::SCALED_TO_ZOOM));
-			disp.drawing_buffer_add(display::LAYER_UNIT_BAR, loc, xsrc + xoff, ysrc + yoff + adjusted_params.y, orb);
+			textures.push_back(image::get_texture(*orb_img));
 		}
 
-		double unit_energy = 0.0;
-		if(max_hitpoints > 0) {
-			unit_energy = static_cast<double>(hitpoints)/static_cast<double>(max_hitpoints);
-		}
-		const int bar_shift = static_cast<int>(-5*zoom_factor);
-		const int hp_bar_height = static_cast<int>(max_hitpoints * u.hp_bar_scaling());
-
-		const int32_t bar_alpha = (loc == mouse_hex || is_selected_hex) ? floating_to_fixed_point(1.0): floating_to_fixed_point(0.8);
-
-		draw_bar(*energy_file, xsrc+xoff+bar_shift, ysrc+yoff+adjusted_params.y,
-			loc, hp_bar_height, unit_energy,hp_color, bar_alpha);
-
-		if(experience > 0 && can_advance) {
-			const double filled = static_cast<double>(experience) / static_cast<double>(max_experience);
-			const int xp_bar_height = static_cast<int>(max_experience * u.xp_bar_scaling() / std::max<int>(u.level(),1));
-
-			draw_bar(*energy_file, xsrc+xoff, ysrc+yoff+adjusted_params.y,
-				loc, xp_bar_height, filled, xp_color, bar_alpha);
-		}
-
-		if (can_recruit) {
-			surface crown(image::get_image(u.leader_crown(),image::SCALED_TO_ZOOM));
-			if(crown) {
-				disp.drawing_buffer_add(display::LAYER_UNIT_BAR,
-					loc, xsrc+xoff, ysrc+yoff+adjusted_params.y, crown);
+		if(can_recruit) {
+			if(texture tex = image::get_texture(u.leader_crown())) {
+				textures.push_back(std::move(tex));
 			}
 		}
 
 		for(const std::string& ov : u.overlays()) {
-			const surface ov_img(image::get_image(ov, image::SCALED_TO_ZOOM));
-			if(ov_img != nullptr) {
-				disp.drawing_buffer_add(display::LAYER_UNIT_BAR,
-					loc, xsrc+xoff, ysrc+yoff+adjusted_params.y, ov_img);
+			if(texture tex = image::get_texture(ov)) {
+				textures.push_back(std::move(tex));
 			}
-		}
+		};
+
+		disp.drawing_buffer_add(display::LAYER_UNIT_BAR, loc, [=,
+			textures      = std::move(textures),
+			adj_y         = adjusted_params.y,
+			//origin        = point{xsrc + xoff, ysrc + yoff + adjusted_params.y},
+			bar_hp_height = static_cast<int>(max_hitpoints  * u.hp_bar_scaling()),
+			bar_xp_height = static_cast<int>(max_experience * u.xp_bar_scaling() / std::max<int>(u.level(), 1))
+		](const rect& d) {
+			const point origin { d.x + xoff, d.y + yoff + adj_y };
+
+			for(const texture& tex : textures) {
+				draw::blit(tex, display::scaled_to_zoom({origin.x, origin.y, tex.w(), tex.h()}));
+			}
+
+			if(max_hitpoints > 0) {
+				// Offset slightly to make room for the XP bar
+				const int hp_offset = static_cast<int>(-5 * display::get_zoom_factor());
+
+				double filled = static_cast<double>(hitpoints) / static_cast<double>(max_hitpoints);
+				draw_bar(origin.x + hp_offset, origin.y, bar_hp_height, filled, hp_color);
+			}
+
+			if(experience > 0 && can_advance) {
+				double filled = static_cast<double>(experience) / static_cast<double>(max_experience);
+				draw_bar(origin.x, origin.y, bar_xp_height, filled, xp_color);
+			}
+		});
 	}
 
 	// Smooth unit movements from terrain of different elevation.
@@ -354,114 +398,36 @@ void unit_drawer::redraw_unit (const unit & u) const
 	}
 	params.y -= height_adjust_unit - height_adjust;
 	params.halo_y -= height_adjust_unit - height_adjust;
+	// TODO: params.halo_y is not used. Why is it set?
+
+	const int halo_x =
+		static_cast<int>(
+			adjusted_params.offset * xdst
+			+ (1.0 - adjusted_params.offset) * xsrc
+		)
+		+ hex_size_by_2;
+	const int halo_y =
+		static_cast<int>(
+			adjusted_params.offset * ydst
+			+ (1.0 - adjusted_params.offset) * ysrc
+		)
+		+ hex_size_by_2 - height_adjust_unit * zoom_factor;
+
+	bool has_halo = ac.unit_halo_ && ac.unit_halo_->valid();
+	if(!has_halo && !u.image_halo().empty()) {
+		ac.unit_halo_ = halo_man.add(
+			halo_x, halo_y,
+			u.image_halo() + u.TC_image_mods(),
+			map_location(-1, -1)
+		);
+	}
+	if(has_halo && u.image_halo().empty()) {
+		halo_man.remove(ac.unit_halo_);
+		ac.unit_halo_.reset();
+	} else if(has_halo) {
+		halo_man.set_location(ac.unit_halo_, halo_x, halo_y);
+	}
 
 	ac.anim_->redraw(params, halo_man);
 	ac.refreshing_ = false;
-}
-
-void unit_drawer::draw_bar(const std::string& image, int xpos, int ypos,
-		const map_location& loc, std::size_t height, double filled,
-		const color_t& col, int32_t alpha) const
-{
-
-	filled = std::min<double>(std::max<double>(filled,0.0),1.0);
-	height = static_cast<std::size_t>(height*zoom_factor);
-
-	surface surf(image::get_image(image,image::SCALED_TO_HEX));
-
-	// We use UNSCALED because scaling (and bilinear interpolation)
-	// is bad for calculate_energy_bar.
-	// But we will do a geometric scaling later.
-	surface bar_surf(image::get_image(image));
-	if(surf == nullptr || bar_surf == nullptr) {
-		return;
-	}
-
-	// calculate_energy_bar returns incorrect results if the surface colors
-	// have changed (for example, due to bilinear interpolation)
-	const SDL_Rect& unscaled_bar_loc = calculate_energy_bar(bar_surf);
-
-	SDL_Rect bar_loc;
-	if (surf->w == bar_surf->w && surf->h == bar_surf->h)
-		bar_loc = unscaled_bar_loc;
-	else {
-		const int32_t xratio = fixed_point_divide(surf->w,bar_surf->w);
-		const int32_t yratio = fixed_point_divide(surf->h,bar_surf->h);
-		const SDL_Rect scaled_bar_loc {
-			    fixed_point_to_int(unscaled_bar_loc.x * xratio)
-			  , fixed_point_to_int(unscaled_bar_loc.y * yratio + 127)
-			  , fixed_point_to_int(unscaled_bar_loc.w * xratio + 255)
-			  , fixed_point_to_int(unscaled_bar_loc.h * yratio + 255)
-		};
-		bar_loc = scaled_bar_loc;
-	}
-
-	if(height > static_cast<std::size_t>(bar_loc.h)) {
-		height = bar_loc.h;
-	}
-
-	const std::size_t skip_rows = bar_loc.h - height;
-
-	SDL_Rect top {0, 0, surf->w, bar_loc.y};
-	SDL_Rect bot = sdl::create_rect(0, bar_loc.y + skip_rows, surf->w, 0);
-	bot.h = surf->w - bot.y;
-
-	disp.drawing_buffer_add(display::LAYER_UNIT_BAR, loc, xpos, ypos, surf, top);
-	disp.drawing_buffer_add(display::LAYER_UNIT_BAR, loc, xpos, ypos + top.h, surf, bot);
-
-	std::size_t unfilled = static_cast<std::size_t>(height * (1.0 - filled));
-
-	if(unfilled < height && alpha >= floating_to_fixed_point(0.3)) {
-		const uint8_t r_alpha = std::min<unsigned>(fixed_point_multiply(alpha,255),255);
-		surface filled_surf(bar_loc.w, height - unfilled);
-		SDL_Rect filled_area = sdl::create_rect(0, 0, bar_loc.w, height-unfilled);
-		sdl::fill_surface_rect(filled_surf,&filled_area,SDL_MapRGBA(bar_surf->format,col.r,col.g,col.b, r_alpha));
-		disp.drawing_buffer_add(display::LAYER_UNIT_BAR, loc, xpos + bar_loc.x, ypos + bar_loc.y + unfilled, filled_surf);
-	}
-}
-
-struct is_energy_color {
-	bool operator()(uint32_t color) const { return (color&0xFF000000) > 0x10000000 &&
-	                                              (color&0x00FF0000) < 0x00100000 &&
-												  (color&0x0000FF00) < 0x00001000 &&
-												  (color&0x000000FF) < 0x00000010; }
-};
-
-const SDL_Rect& unit_drawer::calculate_energy_bar(surface surf) const
-{
-	const std::map<surface,SDL_Rect>::const_iterator i = energy_bar_rects.find(surf);
-	if(i != energy_bar_rects.end()) {
-		return i->second;
-	}
-
-	int first_row = -1, last_row = -1, first_col = -1, last_col = -1;
-
-	const_surface_lock image_lock(surf);
-	const uint32_t* const begin = image_lock.pixels();
-
-	for(int y = 0; y != surf->h; ++y) {
-		const uint32_t* const i1 = begin + surf->w*y;
-		const uint32_t* const i2 = i1 + surf->w;
-		const uint32_t* const itor = std::find_if(i1,i2,is_energy_color());
-		const int count = std::count_if(itor,i2,is_energy_color());
-
-		if(itor != i2) {
-			if(first_row == -1) {
-				first_row = y;
-			}
-
-			first_col = itor - i1;
-			last_col = first_col + count;
-			last_row = y;
-		}
-	}
-
-	const SDL_Rect res {
-			  first_col
-			, first_row
-			, last_col-first_col
-			, last_row+1-first_row
-	};
-	energy_bar_rects.emplace(surf, res);
-	return calculate_energy_bar(surf);
 }

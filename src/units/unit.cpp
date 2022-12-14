@@ -162,7 +162,7 @@ namespace
 			}
 			int comp = cur->first.compare(*cur_known);
 			if(comp < 0) {
-				WRN_UT << "Unknown attribute '" << cur->first << "' discarded." << std::endl;
+				WRN_UT << "Unknown attribute '" << cur->first << "' discarded.";
 				++cur;
 			}
 			else if(comp == 0) {
@@ -175,7 +175,7 @@ namespace
 		}
 
 		while(cur != end) {
-			WRN_UT << "Unknown attribute '" << cur->first << "' discarded." << std::endl;
+			WRN_UT << "Unknown attribute '" << cur->first << "' discarded.";
 			++cur;
 		}
 	}
@@ -421,8 +421,8 @@ void unit::init(const config& cfg, bool use_traits, const vconfig* vcfg)
 		}
 	}
 
-	if(resources::game_events) {
-		resources::game_events->add_events(events_.child_range("event"));
+	if(resources::game_events && resources::lua_kernel) {
+		resources::game_events->add_events(events_.child_range("event"), *resources::lua_kernel);
 	}
 
 	random_traits_ = cfg["random_traits"].to_bool(true);
@@ -719,8 +719,10 @@ unit::~unit()
 			units_with_cache.erase(itor);
 		}
 	} catch(const std::exception & e) {
-		ERR_UT << "Caught exception when destroying unit: " << e.what() << std::endl;
-	} catch(...) {}
+		ERR_UT << "Caught exception when destroying unit: " << e.what();
+	} catch(...) {
+		DBG_UT << "Caught general exception when destroying unit: " << utils::get_unknown_exception_type();
+	}
 }
 
 /**
@@ -801,7 +803,7 @@ void unit::generate_name()
 
 void unit::generate_traits(bool must_have_only)
 {
-	LOG_UT << "Generating a trait for unit type " << type().log_id() << " with must_have_only " << must_have_only  << std::endl;
+	LOG_UT << "Generating a trait for unit type " << type().log_id() << " with must_have_only " << must_have_only;
 	const unit_type& u_type = type();
 
 	// Calculate the unit's traits
@@ -997,8 +999,8 @@ void unit::advance_to(const unit_type& u_type, bool use_traits)
 	}
 
 	// In case the unit carries EventWML, apply it now
-	if(resources::game_events) {
-		resources::game_events->add_events(new_type.events(), new_type.id());
+	if(resources::game_events && resources::lua_kernel) {
+		resources::game_events->add_events(new_type.events(), *resources::lua_kernel, new_type.id());
 	}
 	bool bool_small_profile = get_attr_changed(UA_SMALL_PROFILE);
 	bool bool_profile = get_attr_changed(UA_PROFILE);
@@ -1162,7 +1164,7 @@ const std::vector<std::string> unit::advances_to_translated() const
 			result.push_back(adv_type->type_name());
 		} else {
 			WRN_UT << "unknown unit in advances_to list of type "
-			<< type().log_id() << ": " << adv_type_id << std::endl;
+			<< type().log_id() << ": " << adv_type_id;
 		}
 	}
 
@@ -1431,7 +1433,7 @@ void unit::write(config& cfg, bool write_all) const
 	};
 
 	if(write_all || get_attr_changed(UA_MOVEMENT_TYPE)) {
-		movement_type_.write(cfg);
+		movement_type_.write(cfg, false);
 	}
 	if(write_all || get_attr_changed(UA_SMALL_PROFILE)) {
 		cfg["small_profile"] = small_profile_;
@@ -1613,7 +1615,7 @@ int unit::defense_modifier(const t_translation::terrain_code & terrain) const
 	// Left as a comment in case someone ever wonders why it isn't a good idea.
 	unit_ability_list defense_abilities = get_abilities("defense");
 	if(!defense_abilities.empty()) {
-		unit_abilities::effect defense_effect(defense_abilities, def, false);
+		unit_abilities::effect defense_effect(defense_abilities, def);
 		def = defense_effect.get_composite_value();
 	}
 #endif
@@ -1653,16 +1655,12 @@ int unit::resistance_against(const std::string& damage_name,bool attacker,const 
 	int res = movement_type_.resistance_against(damage_name);
 
 	unit_ability_list resistance_abilities = get_abilities_weapons("resistance",loc, weapon, opp_weapon);
-	for(unit_ability_list::iterator i = resistance_abilities.begin(); i != resistance_abilities.end();) {
-		if(!resistance_filter_matches(*i->ability_cfg, attacker, damage_name, 100-res)) {
-			i = resistance_abilities.erase(i);
-		} else {
-			++i;
-		}
-	}
+	utils::erase_if(resistance_abilities, [&](const unit_ability& i) {
+		return !resistance_filter_matches(*i.ability_cfg, attacker, damage_name, 100-res);
+	});
 
 	if(!resistance_abilities.empty()) {
-		unit_abilities::effect resist_effect(resistance_abilities, 100-res, false);
+		unit_abilities::effect resist_effect(resistance_abilities, 100-res);
 
 		res = 100 - std::min<int>(
 			resist_effect.get_composite_value(),
@@ -1954,7 +1952,7 @@ void unit::apply_builtin_effect(std::string apply_to, const config& effect)
 			a->apply_modification(effect);
 		}
 	} else if(apply_to == "hitpoints") {
-		LOG_UT << "applying hitpoint mod..." << hit_points_ << "/" << max_hit_points_ << std::endl;
+		LOG_UT << "applying hitpoint mod..." << hit_points_ << "/" << max_hit_points_;
 		const std::string& increase_hp = effect["increase"];
 		const std::string& increase_total = effect["increase_total"];
 		const std::string& set_hp = effect["set"];
@@ -1995,9 +1993,9 @@ void unit::apply_builtin_effect(std::string apply_to, const config& effect)
 			hit_points_ = utils::apply_modifier(hit_points_, increase_hp);
 		}
 
-		LOG_UT << "modded to " << hit_points_ << "/" << max_hit_points_ << std::endl;
+		LOG_UT << "modded to " << hit_points_ << "/" << max_hit_points_;
 		if(hit_points_ > max_hit_points_ && !violate_max) {
-			LOG_UT << "resetting hp to max" << std::endl;
+			LOG_UT << "resetting hp to max";
 			hit_points_ = max_hit_points_;
 		}
 
@@ -2122,12 +2120,12 @@ void unit::apply_builtin_effect(std::string apply_to, const config& effect)
 			}
 		}
 	} else if(apply_to == "image_mod") {
-		LOG_UT << "applying image_mod" << std::endl;
+		LOG_UT << "applying image_mod";
 		std::string mod = effect["replace"];
 		if(!mod.empty()){
 			image_mods_ = mod;
 		}
-		LOG_UT << "applying image_mod" << std::endl;
+		LOG_UT << "applying image_mod";
 		mod = effect["add"].str();
 		if(!mod.empty()){
 			if(!image_mods_.empty()) {
@@ -2138,7 +2136,7 @@ void unit::apply_builtin_effect(std::string apply_to, const config& effect)
 		}
 
 		game_config::add_color_info(game_config_view::wrap(effect));
-		LOG_UT << "applying image_mod" << std::endl;
+		LOG_UT << "applying image_mod";
 	} else if(apply_to == "new_animation") {
 		anim_comp_->apply_new_animation_effect(effect);
 	} else if(apply_to == "ellipse") {
@@ -2245,7 +2243,7 @@ void unit::apply_builtin_effect(std::string apply_to, const config& effect)
 				heal_fully();
 			}
 		} else {
-			WRN_UT << "unknown variation '" << variation_id << "' (name=) in [effect]apply_to=variation, ignoring" << std::endl;
+			WRN_UT << "unknown variation '" << variation_id << "' (name=) in [effect]apply_to=variation, ignoring";
 		}
 	} else if(effect["apply_to"] == "type") {
 		std::string prev_type = effect["prev_type"];
@@ -2261,7 +2259,7 @@ void unit::apply_builtin_effect(std::string apply_to, const config& effect)
 				heal_fully();
 			}
 		} else {
-			WRN_UT << "unknown type '" << new_type_id << "' (name=) in [effect]apply_to=type, ignoring" << std::endl;
+			WRN_UT << "unknown type '" << new_type_id << "' (name=) in [effect]apply_to=type, ignoring";
 		}
 	}
 }
@@ -2439,7 +2437,7 @@ void unit::apply_modifications()
 bool unit::invisible(const map_location& loc, bool see_all) const
 {
 	if(loc != get_location()) {
-		DBG_UT << "unit::invisible called: id = " << id() << " loc = " << loc << " get_loc = " << get_location() << std::endl;
+		DBG_UT << "unit::invisible called: id = " << id() << " loc = " << loc << " get_loc = " << get_location();
 	}
 
 	// This is a quick condition to check, and it does not depend on the
@@ -2553,7 +2551,7 @@ unit& unit::mark_clone(bool is_temporary)
 		if(pos != std::string::npos && pos+1 < id_.size()
 		&& id_.find_first_not_of("0123456789", pos+1) == std::string::npos) {
 			// this appears to be a duplicate of a generic unit, so give it a new id
-			WRN_UT << "assigning new id to clone of generic unit " << id_ << std::endl;
+			WRN_UT << "assigning new id to clone of generic unit " << id_;
 			id_.clear();
 			set_underlying_id(ids);
 		}
@@ -2580,11 +2578,13 @@ unit_movement_resetter::~unit_movement_resetter()
 			* It might be valid that the unit is not in the unit map.
 			* It might also mean a no longer valid unit will be assigned to.
 			*/
-			DBG_UT << "The unit to be removed is not in the unit map." << std::endl;
+			DBG_UT << "The unit to be removed is not in the unit map.";
 		}
 
 		u_.set_movement(moves_);
-	} catch(...) {}
+	} catch(...) {
+		DBG_UT << "Caught exception when destroying unit_movement_resetter: " << utils::get_unknown_exception_type();
+	}
 }
 
 std::string unit::TC_image_mods() const
@@ -2639,6 +2639,7 @@ void unit::set_hidden(bool state) const
 		return;
 	}
 
+	// TODO: this should really hide the halo, not destroy it
 	// We need to get rid of haloes immediately to avoid display glitches
 	anim_comp_->clear_haloes();
 }
@@ -2659,7 +2660,7 @@ void unit::parse_upkeep(const config::attribute_value& upkeep)
 	try {
 		upkeep_ = upkeep.apply_visitor(upkeep_parser_visitor{});
 	} catch(std::invalid_argument& e) {
-		WRN_UT << "Found invalid upkeep=\"" << e.what() <<  "\" in a unit" << std::endl;
+		WRN_UT << "Found invalid upkeep=\"" << e.what() <<  "\" in a unit";
 		upkeep_ = upkeep_full{};
 	}
 }

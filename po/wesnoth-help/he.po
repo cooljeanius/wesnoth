@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: he\n"
 "Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
-"POT-Creation-Date: 2022-05-15 17:27+0300\n"
+"POT-Creation-Date: 2022-11-19 23:31-0600\n"
 "PO-Revision-Date: 2009-07-13 00:55+0300\n"
 "Last-Translator: Oron Peled <oron@actcom.co.il>\n"
 "Language-Team: Hebrew\n"
@@ -30,10 +30,33 @@ msgstr ""
 msgid "Underground"
 msgstr "תת קרקעי"
 
+#. [label]
+#. [trait]: id=undead
+#: data/campaigns/Secrets_of_the_Ancients/gui/zombie_recruit_dialog.cfg:183
+#: data/core/macros/traits.cfg:55
+msgid "undead"
+msgstr "אל-מת"
+
+#. [label]
+#. [chance]
+#. [trait]: id=fearless
+#: data/campaigns/Secrets_of_the_Ancients/gui/zombie_recruit_dialog.cfg:196
+#: data/campaigns/World_Conquest/resources/data/training.cfg:285
+#: data/core/macros/traits.cfg:252 data/core/macros/traits.cfg:269
+msgid "fearless"
+msgstr "חסר פחד"
+
+#. [label]
+#. [plague]: id=plague({TYPE}), type={TYPE}
+#. [plague]: id=plague, type=Walking Corpse
+#: data/campaigns/Secrets_of_the_Ancients/gui/zombie_recruit_dialog.cfg:244
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:48
+#: data/core/macros/abilities.cfg:430 data/core/macros/abilities.cfg:441
+msgid "plague"
+msgstr "מגיפה"
+
 #. [heals]: id=healing
 #: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:16
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:65
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:68
 #: data/core/macros/abilities.cfg:9
 msgid "heals +4"
 msgstr "ריפוי +4"
@@ -85,8 +108,6 @@ msgstr " יחידה זו יכולה לרפא באופן בסיסי. "
 
 #. [heals]: id=healing
 #: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:40
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:32
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:71
 #: data/core/macros/abilities.cfg:35
 msgid "heals +8"
 msgstr "ריפוי +8"
@@ -184,229 +205,141 @@ msgid ""
 "curing them of poison."
 msgstr " יחידה זו יכולה לרפא את אלו שלידיה מפגעים או מרעל. "
 
-#. [trait]: id=healthy
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:11
-#: data/core/macros/traits.cfg:229
-msgid "Always rest heals"
-msgstr ""
+#. [artifact]
+#. [chance]
+#. [teleport]: id=teleport
+#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:656
+#: data/campaigns/World_Conquest/resources/data/training.cfg:782
+#: data/core/macros/abilities.cfg:250
+msgid "teleport"
+msgstr "טלפורטציה"
 
-#. [hides]: id=ambush
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:14
-#: data/core/macros/abilities.cfg:282
-msgid "ambush"
-msgstr "מארב"
-
-#. [damage]: id=backstab
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:17
-#: data/core/macros/abilities.cfg:410
-msgid "backstab"
-msgstr "דקירה בגב"
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:20
-msgid "Castle"
-msgstr "טירה"
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:23
-msgid "Cave"
-msgstr "מערה"
-
-#. [damage]: id=charge
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:26
-#: data/core/macros/abilities.cfg:528
-msgid "charge"
-msgstr "הסתערות"
-
-#. [hides]: id=concealment
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:29
-#: data/core/macros/abilities.cfg:343
-msgid "concealment"
-msgstr "הסתתרות"
-
-# END SKIPPING
-#. [heals]: id=curing
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:32
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:68
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:137
-#: data/core/macros/abilities.cfg:61
-msgid "cures"
-msgstr "מרפא"
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:35
-#: src/help/help_topic_generators.cpp:739
-msgid "Defense"
-msgstr "הגנה"
-
-#. [drains]: id=drains
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:38
-#: data/core/macros/abilities.cfg:555
-msgid "drains"
-msgstr "יניקה"
-
-#. [trait]: id=fearless
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:41
-#: data/core/macros/traits.cfg:252 data/core/macros/traits.cfg:269
-msgid "fearless"
-msgstr "חסר פחד"
-
-#. [dummy]: id=feeding
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:44
-#: data/core/macros/abilities.cfg:384
-msgid "feeding"
-msgstr "אכילה"
-
-#. [dummy]: id=feeding
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:47
-#: data/core/macros/abilities.cfg:386
-#, fuzzy
-#| msgid ""
-#| " This unit gains 1 hitpoint added to its maximum whenever it kills a "
-#| "living unit."
-msgid ""
-"This unit gains 1 hitpoint added to its maximum whenever it kills a unit, "
-"except units that are immune to plague."
-msgstr " יחידה זו מקבלת נק\"פ אחד יותר לנק\"פ המלא כשהי הורגת יצור חי."
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:50
-#: data/lua/feeding.lua:31 data/lua/feeding.lua:44
-msgid "+1 max HP"
-msgstr "+1 נק\"פ מלא"
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:53
-msgid "firststrike"
-msgstr "תקיפה ראשונה"
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:56
-msgid "Flat"
-msgstr "שטוח"
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:59
-msgid "Forest"
-msgstr "יער"
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:62
-msgid "Frozen"
-msgstr "שלג"
-
-#. [trait]: id=healthy
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:74
-#: data/core/macros/traits.cfg:227
-msgid "healthy"
-msgstr "בריא"
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:77
-msgid "Hills"
-msgstr "גבעות"
-
-#. [illuminates]: id=illumination
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:80
-#: data/core/macros/abilities.cfg:235
-msgid "illuminates"
-msgstr "מאיר"
-
-#. [leadership]: id=leadership
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:83
-#: data/core/macros/abilities.cfg:199
-msgid "leadership"
-msgstr "מנהיגות"
-
-#. [chance_to_hit]: id=magical
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:86
-#: data/core/macros/abilities.cfg:504
-msgid "magical"
-msgstr "קסום"
-
-#. [chance_to_hit]: id=marksman
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:89
-#: data/core/macros/abilities.cfg:475
-msgid "marksman"
-msgstr "צליפה"
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:92
-msgid "Mushroom Grove"
-msgstr "חורשת פיטריות"
-
-#. [hides]: id=nightstalk
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:95
-#: data/core/macros/abilities.cfg:323 data/core/macros/abilities.cfg:324
-msgid "nightstalk"
-msgstr "התגנבות לילה"
-
-#. [plague]: id=plague({TYPE}), type={TYPE}
-#. [plague]: id=plague, type=Walking Corpse
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:98
-#: data/core/macros/abilities.cfg:430 data/core/macros/abilities.cfg:441
-msgid "plague"
-msgstr "מגיפה"
-
-#. [poison]: id=poison
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:101
-#: data/core/macros/abilities.cfg:577
-msgid "poison"
-msgstr "רעל"
-
+#. [artifact]
 #. [regenerate]: id=regenerates
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:104
+#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:717
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:54
 #: data/core/macros/abilities.cfg:94
 msgid "regenerates"
 msgstr "התחדשות"
 
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:107
-#: src/help/help_topic_generators.cpp:700
-msgid "Resistances"
-msgstr "עמידויות"
+#. [chance]
+#. [trait]: id=healthy
+#: data/campaigns/World_Conquest/resources/data/training.cfg:257
+#: data/core/macros/traits.cfg:229
+msgid "Always rest heals"
+msgstr ""
 
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:110
+#. [chance]
+#. [damage]: id=backstab
+#: data/campaigns/World_Conquest/resources/data/training.cfg:438
+#: data/core/macros/abilities.cfg:410
+msgid "backstab"
+msgstr "דקירה בגב"
+
+#. [chance]
+#. [dummy]: id=feeding
+#: data/campaigns/World_Conquest/resources/data/training.cfg:500
+#: data/core/macros/abilities.cfg:384
+msgid "feeding"
+msgstr "אכילה"
+
+#. [chance]
+#. [leadership]: id=leadership
+#: data/campaigns/World_Conquest/resources/data/training.cfg:527
+#: data/core/macros/abilities.cfg:199
+msgid "leadership"
+msgstr "מנהיגות"
+
+#. [hides]: id=ambush
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:12
+#: data/core/macros/abilities.cfg:282
+msgid "ambush"
+msgstr "מארב"
+
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:15
+msgid "Castle"
+msgstr "טירה"
+
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:18
+msgid "Cave"
+msgstr "מערה"
+
+#. [hides]: id=concealment
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:21
+#: data/core/macros/abilities.cfg:343
+msgid "concealment"
+msgstr "הסתתרות"
+
+#. [drains]: id=drains
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:24
+#: data/core/macros/abilities.cfg:555
+msgid "drains"
+msgstr "יניקה"
+
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:27
+msgid "firststrike"
+msgstr "תקיפה ראשונה"
+
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:30
+msgid "Forest"
+msgstr "יער"
+
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:33
+msgid "Frozen"
+msgstr "שלג"
+
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:36
+msgid "Hills"
+msgstr "גבעות"
+
+#. [chance_to_hit]: id=marksman
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:39
+#: data/core/macros/abilities.cfg:475
+msgid "marksman"
+msgstr "צליפה"
+
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:42
+msgid "Mushroom Grove"
+msgstr "חורשת פיטריות"
+
+#. [hides]: id=nightstalk
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:45
+#: data/core/macros/abilities.cfg:323 data/core/macros/abilities.cfg:324
+msgid "nightstalk"
+msgstr "התגנבות לילה"
+
+#. [poison]: id=poison
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:51
+#: data/core/macros/abilities.cfg:577
+msgid "poison"
+msgstr "רעל"
+
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:57
 msgid "Sand"
 msgstr "חול"
 
 #. [skirmisher]: id=skirmisher
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:113
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:60
 #: data/core/macros/abilities.cfg:219
 msgid "skirmisher"
 msgstr "מסתנן"
 
 #. [slow]: id=slow
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:116
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:63
 #: data/core/macros/abilities.cfg:453
 msgid "slows"
 msgstr "מאט"
 
-#. [resistance]: id=steadfast
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:119
-#: data/core/macros/abilities.cfg:130
-msgid "steadfast"
-msgstr "קור רוח"
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:122
-#: src/help/help_topic_generators.cpp:619
-msgid "Strikes"
-msgstr "נסיונות פגיעה"
-
-#. [hides]: id=submerge
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:125
-#: data/core/macros/abilities.cfg:363
-msgid "submerge"
-msgstr "צלילה"
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:128
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:66
 msgid "Swamp"
 msgstr "ביצה"
 
-#. [teleport]: id=teleport
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:131
-#: data/core/macros/abilities.cfg:250
-msgid "teleport"
-msgstr "טלפורטציה"
-
-#. [trait]: id=undead
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:134
-#: data/core/macros/traits.cfg:55
-msgid "undead"
-msgstr "אל-מת"
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:140
-msgid "Village"
-msgstr "כפר"
+# END SKIPPING
+#. [heals]: id=curing
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:69
+#: data/core/macros/abilities.cfg:61
+msgid "cures"
+msgstr "מרפא"
 
 #. [section]: id=editor
 #: data/core/editor/help.cfg:5
@@ -1606,8 +1539,8 @@ msgstr "אפשרויות משחק"
 #. [section]: id=traits_section
 #. [topic]: id=..traits_section
 #: data/core/help.cfg:29 data/core/help.cfg:531
-#: src/help/help_topic_generators.cpp:476
-#: src/help/help_topic_generators.cpp:499
+#: src/help/help_topic_generators.cpp:475
+#: src/help/help_topic_generators.cpp:498
 msgid "Traits"
 msgstr "כשרונות"
 
@@ -1863,8 +1796,9 @@ msgstr ""
 "\n"
 "\n"
 "כשאתה מנצח היתקלות, המפה תהפוך לאפורה וכפתור 'סיים תור' יהפוך לכפתור 'סיים "
-"התקלות'. בינתיים תוכל לעשות דברים כמו לשנות את הגדרות השמירה או (במשחק רב-"
-"משתתפים) לדבר עם המשתתפים האחרים לפני שתלחוץ על הכפתור ותעבור להתקלות הבאה. "
+"התקלות'. בינתיים תוכל לעשות דברים כמו לשנות את הגדרות השמירה או (במשחק "
+"רב-משתתפים) לדבר עם המשתתפים האחרים לפני שתלחוץ על הכפתור ותעבור להתקלות "
+"הבאה. "
 
 #. [topic]: id=victory_and_defeat
 #: data/core/help.cfg:190
@@ -2199,8 +2133,8 @@ msgstr ""
 "הולכת ונהיית קשה יותר עבור כל קאד\"מ שהיחידה קיבלה, כך שלעיתים קרובות יעיל "
 "יותר לנסות לקדם את יחידותיך שבדרגה נמוכה יותר.\n"
 "\n"
-"שים לב שרק מספר קטן של יחידות, כמו לדוגמה טורף גופות, באמת יתרפאו מהשפעת הקאד"
-"\"מ. רוב היחידות רק יזכו בבונוס לנק\"פ המירבי שלהן."
+"שים לב שרק מספר קטן של יחידות, כמו לדוגמה טורף גופות, באמת יתרפאו מהשפעת "
+"הקאד\"מ. רוב היחידות רק יזכו בבונוס לנק\"פ המירבי שלהן."
 
 #. [topic]: id=movement
 #: data/core/help.cfg:263
@@ -2229,9 +2163,9 @@ msgstr ""
 "במעבר למשבצת חדשה תלוי בסוג השטח של המשבצת המדובר. לדוגמה, כניסה לאדמת מרעה "
 "עולה כמעט תמיד נקודת תנועה אחת. המספר המדוייק של נקודות התנועה שדרושות "
 "לכניסה למשבצת תלויה בסוג היחידה - יחידות אלפיות ישקיעו רק נקודת תנועה אחת "
-"כדי להכנס ליער, אבל רוב היחידות של האורקים ובני האדם ישקיעו 2, ופרשים בני-"
-"אנוש ישקיעו 3. (פרשים אלפיים ישקיעו 1 ורוכבי זאבים 2). אתה יכול ללמוד כמה "
-"נקודות תנועה דרושות ליחידה כדי להכנס לסוג שטח מסויים על ידי לחיצה ימנית "
+"כדי להכנס ליער, אבל רוב היחידות של האורקים ובני האדם ישקיעו 2, ופרשים "
+"בני-אנוש ישקיעו 3. (פרשים אלפיים ישקיעו 1 ורוכבי זאבים 2). אתה יכול ללמוד "
+"כמה נקודות תנועה דרושות ליחידה כדי להכנס לסוג שטח מסויים על ידי לחיצה ימנית "
 "עליה, בחירת בתאור יחידה, ואז הסתכל ב<italic>text=מתאמי שטח</italic> (למטה "
 "בתאור).italic>."
 
@@ -2636,9 +2570,9 @@ msgstr ""
 "ואז לחץ על האויב שאתה רוצה להתקיף: היחידה שלך תזוז לעבר יחידת האוייב, וכאשר "
 "הן יגיעו אחת ליד השנייה, הקרב יתחיל. המתקיף והמגן ינסו לפגוע לסרוגין עד שהם "
 "יסיימו את מספר ניסיונות הפגיעה המוקצה להם. המתקיף בוחר עם איזה מכלי הנשק שלו "
-"להתקיף, והמגן מגיב עם אחת מההתקפות שלו שמאותו סוג. ישנם שני סוגי התקפות: קפא"
-"\"פ, שבדרך כלל כרוך בשימוש בכלי נשק כמו חרבות, גרזנים או ניבים; והתקפה לטווח "
-"רחוק שבדרך כלל כרוכה בשימוש בכלי נשק כמו קשתות, חניתות או כדורי אש."
+"להתקיף, והמגן מגיב עם אחת מההתקפות שלו שמאותו סוג. ישנם שני סוגי התקפות: "
+"קפא\"פ, שבדרך כלל כרוך בשימוש בכלי נשק כמו חרבות, גרזנים או ניבים; והתקפה "
+"לטווח רחוק שבדרך כלל כרוכה בשימוש בכלי נשק כמו קשתות, חניתות או כדורי אש."
 
 #. [topic]: id=combat
 #: data/core/help.cfg:349
@@ -3223,9 +3157,9 @@ msgid ""
 "and in some cases <italic>text='fearless'</italic>, and woses do not receive "
 "any traits. "
 msgstr ""
-"לרוב היחידות יש שני כשרונות. אולם ליחידות אל-מתות יש כשרון בודד - 'אל-"
-"מוות' , וליחידות ווס אין אף כשרון. מאפיינים של יחידה משנים מעט את תכונותיה, "
-"ולרוב מוקצים לה באופן אקראי בעת גיוסה."
+"לרוב היחידות יש שני כשרונות. אולם ליחידות אל-מתות יש כשרון בודד - "
+"'אל-מוות' , וליחידות ווס אין אף כשרון. מאפיינים של יחידה משנים מעט את "
+"תכונותיה, ולרוב מוקצים לה באופן אקראי בעת גיוסה."
 
 #. [topic]: id=..traits_section
 #: data/core/help.cfg:533
@@ -4220,6 +4154,11 @@ msgid ""
 msgstr " יחידה זו מתחדשת, ויכולה להתרפאות כאילו היא תמיד נמצאת בכפר."
 
 #. [resistance]: id=steadfast
+#: data/core/macros/abilities.cfg:130
+msgid "steadfast"
+msgstr "קור רוח"
+
+#. [resistance]: id=steadfast
 #: data/core/macros/abilities.cfg:131
 msgid "female^steadfast"
 msgstr "קור רוח"
@@ -4313,6 +4252,11 @@ msgstr ""
 "מסתננת:\n"
 "יחידה זו מוכשרת במעבר מהיר של קווי האויב, תוך התעלמות מכל אזורי השליטה של "
 "האויב. "
+
+#. [illuminates]: id=illumination
+#: data/core/macros/abilities.cfg:235
+msgid "illuminates"
+msgstr "מאיר"
 
 #. [illuminates]: id=illumination
 #: data/core/macros/abilities.cfg:236
@@ -4467,8 +4411,8 @@ msgstr "הסתתרות"
 #| "they have units next to it. Any enemy unit that first discovers this unit "
 #| "immediately loses all its remaining movement."
 msgid ""
-"This unit can hide in villages (with the exception of water villages), and "
-"remain undetected by its enemies, except by those standing next to it.\n"
+"This unit can hide in villages, and remain undetected by its enemies, except "
+"by those standing next to it.\n"
 "\n"
 "Enemy units cannot see this unit while it is in a village, except if they "
 "have units next to it. Any enemy unit that first discovers this unit "
@@ -4480,6 +4424,11 @@ msgstr ""
 "\n"
 "יחידות אויב לא יכולות לראות או להתקיף יחידה זו כשהיא (חוץ מכפרי מים), חוץ "
 "מאשר בתור שמיד אחרי שיחידה זו התקיפה, או אם יש יחידות אוייב ליד יחידה זו."
+
+#. [hides]: id=submerge
+#: data/core/macros/abilities.cfg:363
+msgid "submerge"
+msgstr "צלילה"
 
 #. [hides]: id=submerge
 #: data/core/macros/abilities.cfg:364
@@ -4513,6 +4462,17 @@ msgstr ""
 #: data/core/macros/abilities.cfg:385
 msgid "female^feeding"
 msgstr "אכילה"
+
+#. [dummy]: id=feeding
+#: data/core/macros/abilities.cfg:386
+#, fuzzy
+#| msgid ""
+#| " This unit gains 1 hitpoint added to its maximum whenever it kills a "
+#| "living unit."
+msgid ""
+"This unit gains 1 hitpoint added to its maximum whenever it kills a unit, "
+"except units that are immune to plague."
+msgstr " יחידה זו מקבלת נק\"פ אחד יותר לנק\"פ המלא כשהי הורגת יצור חי."
 
 #. [berserk]: id=berserk
 #: data/core/macros/abilities.cfg:398
@@ -4662,6 +4622,11 @@ msgid ""
 msgstr ""
 
 #. [chance_to_hit]: id=magical
+#: data/core/macros/abilities.cfg:504
+msgid "magical"
+msgstr "קסום"
+
+#. [chance_to_hit]: id=magical
 #: data/core/macros/abilities.cfg:505
 #, fuzzy
 #| msgid ""
@@ -4699,6 +4664,11 @@ msgstr ""
 "מספר נסיונות הפגיעה בתור של התקפה זו יורד כאשר היחידה נפגעת. מספר נסיונות "
 "הפגיעה בתור הוא באותו יחס כמו הנק\"פ הנוכחי \\ הנק\"פ המירבי של היחידה. "
 "לדוגמא יחידה שיש לה 3/4 מהנק\"פ המירבי תקבל 3/4 ממספר נסיונות הפגיעה בתור."
+
+#. [damage]: id=charge
+#: data/core/macros/abilities.cfg:528
+msgid "charge"
+msgstr "הסתערות"
 
 #. [damage]: id=charge
 #: data/core/macros/abilities.cfg:529
@@ -5317,8 +5287,8 @@ msgid ""
 msgstr ""
 
 #: data/core/macros/special-notes.cfg:116
-#: src/help/help_topic_generators.cpp:185
-#: src/help/help_topic_generators.cpp:602
+#: src/help/help_topic_generators.cpp:184
+#: src/help/help_topic_generators.cpp:601
 #, fuzzy
 #| msgid ""
 #| "\n"
@@ -5668,6 +5638,11 @@ msgid ""
 "<italic>text='Resilient'</italic> units have an additional 4 hitpoints, and "
 "gain 1 more per level."
 msgstr "ליחידות חסונות יש 4 נק\"פ + נק\"פ 1/דרגה יותר מהרגיל."
+
+#. [trait]: id=healthy
+#: data/core/macros/traits.cfg:227
+msgid "healthy"
+msgstr "בריא"
 
 #. [trait]: id=healthy
 #: data/core/macros/traits.cfg:228
@@ -6870,36 +6845,40 @@ msgid ""
 "home."
 msgstr ""
 
-#: src/help/help.cpp:213
+#: data/lua/feeding.lua:30 data/lua/feeding.lua:43
+msgid "+1 max HP"
+msgstr "+1 נק\"פ מלא"
+
+#: src/help/help.cpp:211
 msgid "Close"
 msgstr "סגור"
 
-#: src/help/help.cpp:216
+#: src/help/help.cpp:215
 msgid "Help"
 msgstr "עזרה"
 
-#: src/help/help.cpp:270 src/help/help.cpp:274
+#: src/help/help.cpp:267 src/help/help.cpp:271
 #, fuzzy
 #| msgid "Parse error when parsing help text: "
 msgid "Parse error when parsing help text:"
 msgstr "טעות ניתוח בניתוח טקסט העזרה: "
 
-#: src/help/help_topic_generators.cpp:65
+#: src/help/help_topic_generators.cpp:64
 msgid "Best of"
 msgstr ""
 
-#: src/help/help_topic_generators.cpp:65
+#: src/help/help_topic_generators.cpp:64
 msgid "Worst of"
 msgstr ""
 
-#: src/help/help_topic_generators.cpp:162
+#: src/help/help_topic_generators.cpp:161
 msgid ""
 "Villages allow any unit stationed therein to heal, or to be cured of poison."
 msgstr ""
 
 #. TRANSLATORS: special note for terrains such as the oasis; the only terrain in core with this property heals 8 hp just like a village.
 #. For the single-hitpoint variant, the wording is different because I assume the player will be more interested in the curing-poison part than the minimal healing.
-#: src/help/help_topic_generators.cpp:167
+#: src/help/help_topic_generators.cpp:166
 msgid ""
 "This terrain allows units to be cured of poison, or to heal a single "
 "hitpoint."
@@ -6909,95 +6888,95 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/help/help_topic_generators.cpp:174
+#: src/help/help_topic_generators.cpp:173
 msgid ""
 "This terrain is a castle — units can be recruited onto it from a connected "
 "keep."
 msgstr ""
 
 #. TRANSLATORS: The "this terrain is a castle" note will also be shown directly above this one.
-#: src/help/help_topic_generators.cpp:178
+#: src/help/help_topic_generators.cpp:177
 msgid ""
 "This terrain is a keep — a leader can recruit from this hex onto connected "
 "castle hexes."
 msgstr ""
 
 #. TRANSLATORS: Special note for a terrain, but none of the terrains in mainline do this.
-#: src/help/help_topic_generators.cpp:181
+#: src/help/help_topic_generators.cpp:180
 msgid ""
 "This unusual keep allows a leader to recruit while standing on it, but does "
 "not allow a leader on a connected keep to recruit onto this hex."
 msgstr ""
 
-#: src/help/help_topic_generators.cpp:194
+#: src/help/help_topic_generators.cpp:193
 #, fuzzy
 #| msgid "Terrain"
 msgid "Base Terrain: "
 msgstr "סוג שטח"
 
-#: src/help/help_topic_generators.cpp:214
+#: src/help/help_topic_generators.cpp:213
 #, fuzzy
 #| msgid "Movement Cost"
 msgid "Movement properties: "
 msgstr "מחיר תנועה"
 
-#: src/help/help_topic_generators.cpp:218
+#: src/help/help_topic_generators.cpp:217
 msgid "Defense properties: "
 msgstr ""
 
-#: src/help/help_topic_generators.cpp:298
+#: src/help/help_topic_generators.cpp:297
 #, fuzzy
 #| msgid "level"
 msgid "Level"
 msgstr "רמה"
 
-#: src/help/help_topic_generators.cpp:359
+#: src/help/help_topic_generators.cpp:358
 msgid "Advances from: "
 msgstr "מתקדמת מ: "
 
-#: src/help/help_topic_generators.cpp:361
+#: src/help/help_topic_generators.cpp:360
 #, fuzzy
 #| msgid "Advances from: "
 msgid "Advances to: "
 msgstr "מתקדמת מ: "
 
-#: src/help/help_topic_generators.cpp:390
+#: src/help/help_topic_generators.cpp:389
 #, fuzzy
 #| msgid "Terrain"
 msgid "Base unit: "
 msgstr "סוג שטח"
 
-#: src/help/help_topic_generators.cpp:395
+#: src/help/help_topic_generators.cpp:394
 #, fuzzy
 #| msgid "Terrain"
 msgid "Base units: "
 msgstr "סוג שטח"
 
-#: src/help/help_topic_generators.cpp:413
+#: src/help/help_topic_generators.cpp:412
 #, fuzzy
 msgid "Variations: "
 msgstr "סיעה"
 
-#: src/help/help_topic_generators.cpp:437
+#: src/help/help_topic_generators.cpp:436
 msgid "race^Miscellaneous"
 msgstr "שונות"
 
-#: src/help/help_topic_generators.cpp:439
+#: src/help/help_topic_generators.cpp:438
 msgid "Race: "
 msgstr "גזע: "
 
-#: src/help/help_topic_generators.cpp:509
+#: src/help/help_topic_generators.cpp:508
 msgid "Abilities: "
 msgstr "יכולות: "
 
-#: src/help/help_topic_generators.cpp:535
+#: src/help/help_topic_generators.cpp:534
 msgid "Ability Upgrades: "
 msgstr "תגבורי יכולות: "
 
 #. TRANSLATORS: This string is used in the help page of a single unit.  If the translation
 #. uses spaces, use non-breaking spaces as appropriate for the target language to prevent
 #. unpleasant line breaks (issue #3256).
-#: src/help/help_topic_generators.cpp:565
+#: src/help/help_topic_generators.cpp:564
 #, fuzzy
 #| msgid "HP: "
 msgid "HP:"
@@ -7006,7 +6985,7 @@ msgstr "נק\"פ: "
 #. TRANSLATORS: This string is used in the help page of a single unit.  If the translation
 #. uses spaces, use non-breaking spaces as appropriate for the target language to prevent
 #. unpleasant line breaks (issue #3256).
-#: src/help/help_topic_generators.cpp:569
+#: src/help/help_topic_generators.cpp:568
 #, fuzzy
 #| msgid "Moves: "
 msgid "Moves:"
@@ -7015,14 +6994,14 @@ msgstr "מהלכים: "
 #. TRANSLATORS: This string is used in the help page of a single unit.  If the translation
 #. uses spaces, use non-breaking spaces as appropriate for the target language to prevent
 #. unpleasant line breaks (issue #3256).
-#: src/help/help_topic_generators.cpp:574
+#: src/help/help_topic_generators.cpp:573
 msgid "Vision:"
 msgstr ""
 
 #. TRANSLATORS: This string is used in the help page of a single unit.  If the translation
 #. uses spaces, use non-breaking spaces as appropriate for the target language to prevent
 #. unpleasant line breaks (issue #3256).
-#: src/help/help_topic_generators.cpp:580
+#: src/help/help_topic_generators.cpp:579
 #, fuzzy
 msgid "Jamming:"
 msgstr "נחיל"
@@ -7030,7 +7009,7 @@ msgstr "נחיל"
 #. TRANSLATORS: This string is used in the help page of a single unit.  If the translation
 #. uses spaces, use non-breaking spaces as appropriate for the target language to prevent
 #. unpleasant line breaks (issue #3256).
-#: src/help/help_topic_generators.cpp:585
+#: src/help/help_topic_generators.cpp:584
 #, fuzzy
 #| msgid "Cost: "
 msgid "Cost:"
@@ -7039,7 +7018,7 @@ msgstr "עלות: "
 #. TRANSLATORS: This string is used in the help page of a single unit.  If the translation
 #. uses spaces, use non-breaking spaces as appropriate for the target language to prevent
 #. unpleasant line breaks (issue #3256).
-#: src/help/help_topic_generators.cpp:589
+#: src/help/help_topic_generators.cpp:588
 #, fuzzy
 #| msgid "Alignment: "
 msgid "Alignment:"
@@ -7048,37 +7027,45 @@ msgstr "נטייה: "
 #. TRANSLATORS: This string is used in the help page of a single unit.  It uses
 #. non-breaking spaces to prevent unpleasant line breaks (issue #3256).  In the
 #. translation use non-breaking spaces as appropriate for the target language.
-#: src/help/help_topic_generators.cpp:596
+#: src/help/help_topic_generators.cpp:595
 #, fuzzy
 #| msgid "Required XP: "
 msgid "Required XP:"
 msgstr "נק\"פ נדרש: "
 
-#: src/help/help_topic_generators.cpp:611
+#: src/help/help_topic_generators.cpp:613
 msgid "unit help^Attacks"
 msgstr "התקפות"
 
-#: src/help/help_topic_generators.cpp:618
+#: src/help/help_topic_generators.cpp:620
 msgid "unit help^Name"
 msgstr "שם"
 
-#: src/help/help_topic_generators.cpp:620
+#: src/help/help_topic_generators.cpp:621
+msgid "Strikes"
+msgstr "נסיונות פגיעה"
+
+#: src/help/help_topic_generators.cpp:622
 msgid "Range"
 msgstr "טווח"
 
-#: src/help/help_topic_generators.cpp:621
+#: src/help/help_topic_generators.cpp:623
 msgid "Type"
 msgstr "סוג"
 
-#: src/help/help_topic_generators.cpp:622
+#: src/help/help_topic_generators.cpp:624
 msgid "Special"
 msgstr "מיוחד"
 
-#: src/help/help_topic_generators.cpp:704
+#: src/help/help_topic_generators.cpp:699
+msgid "Resistances"
+msgstr "עמידויות"
+
+#: src/help/help_topic_generators.cpp:703
 msgid "Attack Type"
 msgstr "סוג תקיפה"
 
-#: src/help/help_topic_generators.cpp:705
+#: src/help/help_topic_generators.cpp:704
 msgid "Resistance"
 msgstr "עמידות"
 
@@ -7091,6 +7078,10 @@ msgstr "מתאמי שטח"
 #: src/help/help_topic_generators.cpp:738
 msgid "Terrain"
 msgstr "סוג שטח"
+
+#: src/help/help_topic_generators.cpp:739
+msgid "Defense"
+msgstr "הגנה"
 
 #: src/help/help_topic_generators.cpp:740
 msgid "Movement Cost"
@@ -7109,6 +7100,12 @@ msgstr ""
 #: src/help/help_topic_generators.cpp:753
 msgid "Jamming Cost"
 msgstr ""
+
+#~ msgid "Flat"
+#~ msgstr "שטוח"
+
+#~ msgid "Village"
+#~ msgstr "כפר"
 
 #, fuzzy
 #~| msgid ""

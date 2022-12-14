@@ -89,13 +89,13 @@ void multimenu_button::set_state(const state_t state)
 {
 	if(state != state_) {
 		state_ = state;
-		set_is_dirty(true);
+		queue_redraw();
 	}
 }
 
 void multimenu_button::signal_handler_mouse_enter(const event::ui_event event, bool& handled)
 {
-	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	set_state(FOCUSED);
 	handled = true;
@@ -103,7 +103,7 @@ void multimenu_button::signal_handler_mouse_enter(const event::ui_event event, b
 
 void multimenu_button::signal_handler_mouse_leave(const event::ui_event event, bool& handled)
 {
-	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	set_state(ENABLED);
 	handled = true;
@@ -111,7 +111,7 @@ void multimenu_button::signal_handler_mouse_leave(const event::ui_event event, b
 
 void multimenu_button::signal_handler_left_button_down(const event::ui_event event, bool& handled)
 {
-	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	window* window = get_window();
 	if(window) {
@@ -124,7 +124,7 @@ void multimenu_button::signal_handler_left_button_down(const event::ui_event eve
 
 void multimenu_button::signal_handler_left_button_up(const event::ui_event event, bool& handled)
 {
-	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	set_state(FOCUSED);
 	handled = true;
@@ -133,7 +133,7 @@ void multimenu_button::signal_handler_left_button_up(const event::ui_event event
 void multimenu_button::signal_handler_left_button_click(const event::ui_event event, bool& handled)
 {
 	assert(get_window());
-	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	sound::play_UI_sound(settings::sound_button_click);
 
@@ -229,7 +229,7 @@ void multimenu_button::select_options(boost::dynamic_bitset<> states)
 
 void multimenu_button::set_values(const std::vector<::config>& values)
 {
-	set_is_dirty(true);
+	queue_redraw(); // TODO: draw_manager - does this need a relayout first?
 
 	values_ = values;
 	toggle_states_.resize(values_.size(), false);
@@ -243,7 +243,7 @@ void multimenu_button::set_values(const std::vector<::config>& values)
 multimenu_button_definition::multimenu_button_definition(const config& cfg)
 	: styled_widget_definition(cfg)
 {
-	DBG_GUI_P << "Parsing multimenu_button " << id << '\n';
+	DBG_GUI_P << "Parsing multimenu_button " << id;
 
 	load_resolutions<resolution>(cfg);
 }
@@ -283,7 +283,7 @@ std::unique_ptr<widget> builder_multimenu_button::build() const
 	}
 
 	DBG_GUI_G << "Window builder: placed multimenu_button '" << id
-	          << "' with definition '" << definition << "'.\n";
+	          << "' with definition '" << definition << "'.";
 
 	return widget;
 }

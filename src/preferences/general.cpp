@@ -32,7 +32,7 @@
 #include "sdl/point.hpp"
 #include "serialization/parser.hpp"
 #include "sound.hpp"
-#include "video.hpp" // non_interactive()
+#include "video.hpp"
 #include "game_config_view.hpp"
 
 #include <sys/stat.h> // for setting the permissions of the preferences file
@@ -112,7 +112,7 @@ base_manager::~base_manager()
 /*
  * Hook for setting window state variables on window resize and maximize
  * events. Since there is no fullscreen window event, that setter is called
- * from the CVideo function instead.
+ * from the video function instead.
  */
 void prefs_event_handler::handle_window_event(const SDL_Event& event)
 {
@@ -122,7 +122,7 @@ void prefs_event_handler::handle_window_event(const SDL_Event& event)
 
 	switch(event.window.event) {
 	case SDL_WINDOWEVENT_RESIZED:
-		_set_resolution(CVideo::get_singleton().window_size());
+		_set_resolution(video::window_size());
 
 		break;
 
@@ -141,26 +141,24 @@ void prefs_event_handler::handle_window_event(const SDL_Event& event)
 void write_preferences()
 {
 #ifndef _WIN32
-    bool prefs_file_existed = access(filesystem::get_prefs_file().c_str(), F_OK) == 0;
+	bool prefs_file_existed = access(filesystem::get_prefs_file().c_str(), F_OK) == 0;
 #endif
 
 	try {
 		filesystem::scoped_ostream prefs_file = filesystem::ostream_file(filesystem::get_prefs_file());
 		write(*prefs_file, prefs);
 	} catch(const filesystem::io_exception&) {
-		ERR_FS << "error writing to preferences file '" << filesystem::get_prefs_file() << "'" << std::endl;
+		ERR_FS << "error writing to preferences file '" << filesystem::get_prefs_file() << "'";
 	}
 
 	preferences::save_credentials();
 
 #ifndef _WIN32
-    if(!prefs_file_existed) {
-
-        if(chmod(filesystem::get_prefs_file().c_str(), 0600) == -1) {
-			ERR_FS << "error setting permissions of preferences file '" << filesystem::get_prefs_file() << "'" << std::endl;
-        }
-
-    }
+	if(!prefs_file_existed) {
+		if(chmod(filesystem::get_prefs_file().c_str(), 0600) == -1) {
+			ERR_FS << "error setting permissions of preferences file '" << filesystem::get_prefs_file() << "'";
+		}
+	}
 #endif
 }
 
@@ -256,9 +254,7 @@ void load_base_prefs() {
 		read(prefs, *stream);
 #endif
 	} catch(const config::error& e) {
-		ERR_CFG << "Error loading preference, message: "
-				<< e.what()
-				<< std::endl;
+		ERR_CFG << "Error loading preference, message: " << e.what();
 	}
 }
 
@@ -471,7 +467,7 @@ void set_vsync(bool ison)
 
 bool turbo()
 {
-	if(CVideo::get_singleton().non_interactive()) {
+	if(video::headless()) {
 		return true;
 	}
 
@@ -507,6 +503,16 @@ void set_font_scaling(int scale)
 int font_scaled(int size)
 {
 	return (size * font_scaling()) / 100;
+}
+
+int keepalive_timeout()
+{
+	return prefs["keepalive_timeout"].to_int(10);
+}
+
+void keepalive_timeout(int seconds)
+{
+	prefs["keepalive_timeout"] = std::abs(seconds);
 }
 
 bool idle_anim()

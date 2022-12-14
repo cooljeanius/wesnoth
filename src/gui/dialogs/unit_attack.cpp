@@ -46,7 +46,8 @@ unit_attack::unit_attack(const unit_map::iterator& attacker_itor,
 						   const unit_map::iterator& defender_itor,
 						   std::vector<battle_context>&& weapons,
 						   const int best_weapon)
-	: selected_weapon_(-1)
+	: modal_dialog(window_id())
+	, selected_weapon_(-1)
 	, attacker_itor_(attacker_itor)
 	, defender_itor_(defender_itor)
 	, weapons_(std::move(weapons))
@@ -116,7 +117,7 @@ void unit_attack::pre_show(window& window)
 		);
 
 		const std::set<std::string> checking_tags_other = {"disable", "berserk", "drains", "heal_on_hit", "plague", "slow", "petrifies", "firststrike", "poison"};
-		std::string attw_specials = attacker_weapon.weapon_specials(attacker.backstab_pos);
+		std::string attw_specials = attacker_weapon.weapon_specials();
 		std::string attw_specials_dmg = attacker_weapon.weapon_specials_value({"leadership", "damage"});
 		std::string attw_specials_atk = attacker_weapon.weapon_specials_value({"attacks", "swarm"});
 		std::string attw_specials_cth = attacker_weapon.weapon_specials_value({"chance_to_hit"});
@@ -170,7 +171,7 @@ void unit_attack::pre_show(window& window)
 		attacker_tooltip << translation::dsgettext("wesnoth", "Weapon: ") << "<b>" << attw_name << "</b>" << "\n"
 			<< translation::dsgettext("wesnoth", "Damage: ") << attacker.damage <<  "<i>" << attw_specials_dmg <<  "</i>" << "\n"
 			<< translation::dsgettext("wesnoth", "Attacks: ") << attacker.num_blows <<  "<i>" << attw_specials_atk <<  "</i>" << "\n"
-			<< translation::dsgettext("wesnoth", "Chance to hit: ") << font::span_color(a_cth_color) << attacker.chance_to_hit << "%</span>"<<  "<i>" << attw_specials_cth << "</i>"
+			<< translation::dsgettext("wesnoth-lib", "Chance to hit") << ": " << font::span_color(a_cth_color) << attacker.chance_to_hit << "%</span>"<<  "<i>" << attw_specials_cth << "</i>"
 			<< attw_specials_others;
 
 		defender_stats << "<b>" << defw_name << "</b>" << "\n"
@@ -181,11 +182,11 @@ void unit_attack::pre_show(window& window)
 		defender_tooltip << translation::dsgettext("wesnoth", "Weapon: ") << "<b>" << defw_name << "</b>" << "\n"
 			<< translation::dsgettext("wesnoth", "Damage: ") << defender.damage << "<i>" << defw_specials_dmg << "</i>" << "\n"
 			<< translation::dsgettext("wesnoth", "Attacks: ") << defender.num_blows <<  "<i>" << defw_specials_atk <<  "</i>" << "\n"
-			<< translation::dsgettext("wesnoth", "Chance to hit: ") << font::span_color(d_cth_color) << defender.chance_to_hit << "%</span>"<<  "<i>" << defw_specials_cth << "</i>"
+			<< translation::dsgettext("wesnoth-lib", "Chance to hit") << ": " << font::span_color(d_cth_color) << defender.chance_to_hit << "%</span>"<<  "<i>" << defw_specials_cth << "</i>"
 			<< defw_specials_others;
 
-		std::map<std::string, string_map> data;
-		string_map item;
+		widget_data data;
+		widget_item item;
 
 		item["use_markup"] = "true";
 

@@ -44,7 +44,8 @@ namespace gui2::dialogs
 REGISTER_DIALOG(help_browser)
 
 help_browser::help_browser()
-	: initial_topic_("introduction")
+	: modal_dialog(window_id())
+	, initial_topic_("introduction")
 	, help_cfg_(game_config_manager::get()->game_config().child("help"))
 {
 }
@@ -62,8 +63,8 @@ void help_browser::pre_show(window& window)
 	unsigned id = 0;
 
 	for(const auto& topic : help_cfg_.child_range("topic")) {
-		std::map<std::string, string_map> data;
-		string_map item;
+		widget_data data;
+		widget_item item;
 
 		item["label"] = topic["title"];
 		data.emplace("topic_name", item);

@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wesnoth-1.16\n"
 "Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
-"POT-Creation-Date: 2022-05-15 17:27+0300\n"
-"PO-Revision-Date: 2021-07-19 02:00+0800\n"
+"POT-Creation-Date: 2022-11-19 23:31-0600\n"
+"PO-Revision-Date: 2022-05-31 09:41+0800\n"
 "Last-Translator: 李信融 <magiclen0810@gmail.com>\n"
 "Language-Team: Wesnoth Traditional Chinese Team\n"
 "Language: zh_TW\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n>1);\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 3.0.1\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
 #. [time]: id=underground
@@ -27,10 +27,33 @@ msgstr ""
 msgid "Underground"
 msgstr "地下"
 
+#. [label]
+#. [trait]: id=undead
+#: data/campaigns/Secrets_of_the_Ancients/gui/zombie_recruit_dialog.cfg:183
+#: data/core/macros/traits.cfg:55
+msgid "undead"
+msgstr "不死"
+
+#. [label]
+#. [chance]
+#. [trait]: id=fearless
+#: data/campaigns/Secrets_of_the_Ancients/gui/zombie_recruit_dialog.cfg:196
+#: data/campaigns/World_Conquest/resources/data/training.cfg:285
+#: data/core/macros/traits.cfg:252 data/core/macros/traits.cfg:269
+msgid "fearless"
+msgstr "無畏"
+
+#. [label]
+#. [plague]: id=plague({TYPE}), type={TYPE}
+#. [plague]: id=plague, type=Walking Corpse
+#: data/campaigns/Secrets_of_the_Ancients/gui/zombie_recruit_dialog.cfg:244
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:48
+#: data/core/macros/abilities.cfg:430 data/core/macros/abilities.cfg:441
+msgid "plague"
+msgstr "瘟疫"
+
 #. [heals]: id=healing
 #: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:16
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:65
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:68
 #: data/core/macros/abilities.cfg:9
 msgid "heals +4"
 msgstr "治療 +4"
@@ -67,8 +90,6 @@ msgstr "這個單位有基本治療以及減緩脫水的能力。"
 
 #. [heals]: id=healing
 #: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:40
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:32
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:71
 #: data/core/macros/abilities.cfg:35
 msgid "heals +8"
 msgstr "治療 +8"
@@ -130,225 +151,140 @@ msgid ""
 "curing them of poison."
 msgstr "這個單位有治療那些在他附近的單位的能力，也能減緩脫水、治癒他們的毒。"
 
-#. [trait]: id=healthy
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:11
-#: data/core/macros/traits.cfg:229
-msgid "Always rest heals"
-msgstr "總是休息治療"
+#. [artifact]
+#. [chance]
+#. [teleport]: id=teleport
+#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:656
+#: data/campaigns/World_Conquest/resources/data/training.cfg:782
+#: data/core/macros/abilities.cfg:250
+msgid "teleport"
+msgstr "傳送"
 
-#. [hides]: id=ambush
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:14
-#: data/core/macros/abilities.cfg:282
-msgid "ambush"
-msgstr "埋伏"
-
-#. [damage]: id=backstab
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:17
-#: data/core/macros/abilities.cfg:410
-msgid "backstab"
-msgstr "背刺"
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:20
-msgid "Castle"
-msgstr "城堡"
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:23
-msgid "Cave"
-msgstr "洞穴"
-
-#. [damage]: id=charge
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:26
-#: data/core/macros/abilities.cfg:528
-msgid "charge"
-msgstr "衝鋒"
-
-#. [hides]: id=concealment
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:29
-#: data/core/macros/abilities.cfg:343
-msgid "concealment"
-msgstr "隱藏"
-
-#. [heals]: id=curing
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:32
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:68
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:137
-#: data/core/macros/abilities.cfg:61
-msgid "cures"
-msgstr "治癒"
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:35
-#: src/help/help_topic_generators.cpp:739
-msgid "Defense"
-msgstr "防禦力"
-
-#. [drains]: id=drains
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:38
-#: data/core/macros/abilities.cfg:555
-msgid "drains"
-msgstr "吸血"
-
-#. [trait]: id=fearless
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:41
-#: data/core/macros/traits.cfg:252 data/core/macros/traits.cfg:269
-msgid "fearless"
-msgstr "無畏"
-
-#. [dummy]: id=feeding
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:44
-#: data/core/macros/abilities.cfg:384
-msgid "feeding"
-msgstr "食屍"
-
-#. [dummy]: id=feeding
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:47
-#: data/core/macros/abilities.cfg:386
-msgid ""
-"This unit gains 1 hitpoint added to its maximum whenever it kills a unit, "
-"except units that are immune to plague."
-msgstr "這個單位每次殺死一個沒有對瘟疫免疫的單位，就會增加1點生命值上限。"
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:50
-#: data/lua/feeding.lua:31 data/lua/feeding.lua:44
-msgid "+1 max HP"
-msgstr "+1 最大生命值"
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:53
-msgid "firststrike"
-msgstr "先制"
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:56
-msgid "Flat"
-msgstr "平地"
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:59
-msgid "Forest"
-msgstr "森林"
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:62
-msgid "Frozen"
-msgstr "冰雪"
-
-#. [trait]: id=healthy
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:74
-#: data/core/macros/traits.cfg:227
-msgid "healthy"
-msgstr "健壯"
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:77
-msgid "Hills"
-msgstr "丘陵"
-
-#. [illuminates]: id=illumination
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:80
-#: data/core/macros/abilities.cfg:235
-msgid "illuminates"
-msgstr "照明"
-
-#. [leadership]: id=leadership
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:83
-#: data/core/macros/abilities.cfg:199
-msgid "leadership"
-msgstr "領導"
-
-#. [chance_to_hit]: id=magical
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:86
-#: data/core/macros/abilities.cfg:504
-msgid "magical"
-msgstr "魔法"
-
-#. [chance_to_hit]: id=marksman
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:89
-#: data/core/macros/abilities.cfg:475
-msgid "marksman"
-msgstr "精準"
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:92
-msgid "Mushroom Grove"
-msgstr "蘑菇林"
-
-#. [hides]: id=nightstalk
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:95
-#: data/core/macros/abilities.cfg:323 data/core/macros/abilities.cfg:324
-msgid "nightstalk"
-msgstr "夜行"
-
-#. [plague]: id=plague({TYPE}), type={TYPE}
-#. [plague]: id=plague, type=Walking Corpse
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:98
-#: data/core/macros/abilities.cfg:430 data/core/macros/abilities.cfg:441
-msgid "plague"
-msgstr "瘟疫"
-
-#. [poison]: id=poison
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:101
-#: data/core/macros/abilities.cfg:577
-msgid "poison"
-msgstr "毒素"
-
+#. [artifact]
 #. [regenerate]: id=regenerates
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:104
+#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:717
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:54
 #: data/core/macros/abilities.cfg:94
 msgid "regenerates"
 msgstr "恢復"
 
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:107
-#: src/help/help_topic_generators.cpp:700
-msgid "Resistances"
-msgstr "抗性"
+#. [chance]
+#. [trait]: id=healthy
+#: data/campaigns/World_Conquest/resources/data/training.cfg:257
+#: data/core/macros/traits.cfg:229
+msgid "Always rest heals"
+msgstr "總是休息治療"
 
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:110
+#. [chance]
+#. [damage]: id=backstab
+#: data/campaigns/World_Conquest/resources/data/training.cfg:438
+#: data/core/macros/abilities.cfg:410
+msgid "backstab"
+msgstr "背刺"
+
+#. [chance]
+#. [dummy]: id=feeding
+#: data/campaigns/World_Conquest/resources/data/training.cfg:500
+#: data/core/macros/abilities.cfg:384
+msgid "feeding"
+msgstr "食屍"
+
+#. [chance]
+#. [leadership]: id=leadership
+#: data/campaigns/World_Conquest/resources/data/training.cfg:527
+#: data/core/macros/abilities.cfg:199
+msgid "leadership"
+msgstr "領導"
+
+#. [hides]: id=ambush
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:12
+#: data/core/macros/abilities.cfg:282
+msgid "ambush"
+msgstr "埋伏"
+
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:15
+msgid "Castle"
+msgstr "城堡"
+
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:18
+msgid "Cave"
+msgstr "洞穴"
+
+#. [hides]: id=concealment
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:21
+#: data/core/macros/abilities.cfg:343
+msgid "concealment"
+msgstr "隱藏"
+
+#. [drains]: id=drains
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:24
+#: data/core/macros/abilities.cfg:555
+msgid "drains"
+msgstr "吸血"
+
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:27
+msgid "firststrike"
+msgstr "先制"
+
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:30
+msgid "Forest"
+msgstr "森林"
+
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:33
+msgid "Frozen"
+msgstr "冰雪"
+
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:36
+msgid "Hills"
+msgstr "丘陵"
+
+#. [chance_to_hit]: id=marksman
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:39
+#: data/core/macros/abilities.cfg:475
+msgid "marksman"
+msgstr "精準"
+
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:42
+msgid "Mushroom Grove"
+msgstr "蘑菇林"
+
+#. [hides]: id=nightstalk
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:45
+#: data/core/macros/abilities.cfg:323 data/core/macros/abilities.cfg:324
+msgid "nightstalk"
+msgstr "夜行"
+
+#. [poison]: id=poison
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:51
+#: data/core/macros/abilities.cfg:577
+msgid "poison"
+msgstr "毒素"
+
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:57
 msgid "Sand"
 msgstr "沙地"
 
 #. [skirmisher]: id=skirmisher
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:113
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:60
 #: data/core/macros/abilities.cfg:219
 msgid "skirmisher"
 msgstr "游撃"
 
 #. [slow]: id=slow
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:116
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:63
 #: data/core/macros/abilities.cfg:453
 msgid "slows"
 msgstr "緩速"
 
-#. [resistance]: id=steadfast
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:119
-#: data/core/macros/abilities.cfg:130
-msgid "steadfast"
-msgstr "堅守"
-
-# 這用來表示幫助中單位頁的「傷害×次數」那行。
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:122
-#: src/help/help_topic_generators.cpp:619
-msgid "Strikes"
-msgstr "傷害×次數"
-
-#. [hides]: id=submerge
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:125
-#: data/core/macros/abilities.cfg:363
-msgid "submerge"
-msgstr "潛水"
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:128
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:66
 msgid "Swamp"
 msgstr "沼澤"
 
-#. [teleport]: id=teleport
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:131
-#: data/core/macros/abilities.cfg:250
-msgid "teleport"
-msgstr "傳送"
-
-#. [trait]: id=undead
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:134
-#: data/core/macros/traits.cfg:55
-msgid "undead"
-msgstr "不死"
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:140
-msgid "Village"
-msgstr "村莊"
+#. [heals]: id=curing
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:69
+#: data/core/macros/abilities.cfg:61
+msgid "cures"
+msgstr "治癒"
 
 #. [section]: id=editor
 #: data/core/editor/help.cfg:5
@@ -621,7 +557,7 @@ msgstr ""
 #. [topic]: id=editor_terrain_overlays
 #: data/core/editor/help.cfg:127
 msgid "Editor Terrain-Overlay Graphics"
-msgstr ""
+msgstr "編輯器地形覆蓋層圖形"
 
 #. [topic]: id=editor_terrain_overlays
 #: data/core/editor/help.cfg:128
@@ -631,6 +567,9 @@ msgid ""
 "editor; all the overlays described here are found in the terrain palette’s "
 "“special” group."
 msgstr ""
+"地圖在編輯器中的通常與它們在遊戲中的看起來相似。有一些例外情況，那就是在編輯"
+"器中使用了不同的圖形。此處描述的所有覆蓋層都可以在地形調色盤的「特殊」群組中"
+"找到。"
 
 #. [topic]: id=editor_terrain_overlays
 #. The images here have text, while they could be translated I assume editor-only images won’t be.
@@ -649,7 +588,19 @@ msgid ""
 "mixed terrain with the movement costs set to “impassable” or “unwalkable” "
 "respectively."
 msgstr ""
+"<bold>text='移動覆蓋層'</bold>\n"
+"\n"
+"<img>src='terrain/grass/green.png~BLIT(terrain/impassable-editor."
+"png~O(0.5))' align=here box=yes</img> <img>src='terrain/grass/green."
+"png~BLIT(terrain/unwalkable-editor.png~O(0.5))' align=here box=yes</img> 無法"
+"通過(Impassable)和無法行走(Unwalkable)\n"
+"\n"
+"雖然在編輯器中很容易注意到，但它們在遊戲中是不可見的，因此它們建立的混合地形"
+"看起來像基本地形。它們會建立一個混合地形，移動消耗分別設置為「無法通過」或"
+"「無法行走」。"
 
+# 不照翻。
+# 不確定這裡的blocked是什麼意思。
 #. [topic]: id=editor_terrain_overlays
 #. The images here have text, while they could be translated I assume editor-only images won’t be.
 #. In English these images are the literal text “Castle overlay” and “Keep overlay”.
@@ -671,6 +622,19 @@ msgid ""
 "this requires the connecting hexes to be occupied or blocked to prevent "
 "units being recruited onto them."
 msgstr ""
+"<bold>text='主堡/城堡覆蓋層'</bold>\n"
+"\n"
+"<img>src='terrain/grass/green.png~BLIT(terrain/castle/castle-overlay-editor."
+"png~O(0.5))' align=here box=yes</img> <img>src='terrain/grass/green."
+"png~BLIT(terrain/castle/keep-overlay-editor.png~O(0.5))' align=here box=yes</"
+"img>\n"
+"\n"
+"加入主堡/城堡覆蓋層到可以通過的格子上能允許單位被招募到這個格子上。主堡能允許"
+"首領在上面進行招募。\n"
+"\n"
+"這些可以被加到無法通過的格子上來連接城堡到一個看起來被分割（透過無法通過的"
+"牆）的主堡。用它也可以做到建立出一個主堡和塔樓間有綠地的風格的城堡，然而這個"
+"需要連接的格子被佔用以防單位被招募到它們上面。"
 
 #. [topic]: id=editor_terrain_overlays
 #. The image here has text, while it could be translated I assume editor-only images won’t be.
@@ -684,6 +648,12 @@ msgid ""
 "\n"
 "This turns any base terrain into a village, providing income and healing."
 msgstr ""
+"<bold>text='村莊覆蓋層'</bold>\n"
+"\n"
+"<img>src='terrain/grass/green.png~BLIT(terrain/village/village-overlay-"
+"editor.png~O(0.5))' align=here box=yes</img>\n"
+"\n"
+"這個可以將任意的基本地形轉成村莊，提供收入和治療。"
 
 #. [topic]: id=editor_terrain_overlays
 #. The image is an “S” on a solid black background.
@@ -696,14 +666,19 @@ msgid ""
 "Fake Shroud looks like an unexplored area, even in scenarios that have "
 "shroud disabled and even when the player’s units can see the hex."
 msgstr ""
+"<bold>text='假的戰場黑幕'</bold>\n"
+"\n"
+"<img>src=terrain/void/shroud-editor.png align=left box=yes</img>\n"
+"\n"
+"假的戰場黑幕看起來像未被探索過的區域，即便在章節中戰場黑幕被禁用且玩家的單位"
+"可以看到這個格子。"
 
 #. [topic]: id=editor_deprecated_overlay
 #: data/core/editor/help.cfg:170
-#, fuzzy
-#| msgid "Base Terrain: "
 msgid "Deprecated Terrain"
-msgstr "基礎地形："
+msgstr "廢棄地形"
 
+# 不照翻。
 #. [topic]: id=editor_deprecated_overlay
 #. The main reason for choosing “D” is that the hole in the middle of the letter makes it easier to see which terrain is underneath it. This uses a hardcoded image and doesn’t expect the image to be translated.
 #. The Xol and ^Efs terrains’ help pages aren’t given hyperlinks, because they both have hide_help enabled. Even when on a map with Xol on it, ctrl+t will show the hidden page but the ref still won’t link to it.
@@ -721,6 +696,17 @@ msgid ""
 "The help pages for these terrains may have additional text that’s only shown "
 "in the editor, describing the deprecation and the recommended replacements."
 msgstr ""
+"<img>src='terrain/grass/green.png~BLIT(terrain/deprecated-editor.png)' "
+"align=left box=yes</img>桃紅「D」（廢棄用）\n"
+"\n"
+"被廢棄的地形代碼會顯示出這個。舉例來說：\n"
+"• <ref>dst='terrain_fungus_grove_old' text='代碼為「^Uf」的純種蘑菇林地形'</"
+"ref>,\n"
+"• 代碼為「Xol」的點燃的石牆，這個被廢棄是因為有幾個牆現在支援「^Efs」壁燈裝"
+"飾。\n"
+"\n"
+"這些地形的幫助頁面也許只有在編輯器內會顯示額外的文字，描述廢棄原因以及建議的"
+"替代作法。"
 
 #. [topic]: id=editor_tool_label
 #: data/core/editor/help.cfg:186
@@ -1081,22 +1067,6 @@ msgstr ""
 
 #. [topic]: id=..editor_mode_scenario
 #: data/core/editor/help.cfg:342
-#, fuzzy
-#| msgid ""
-#| "<header>text='The files: .map and .cfg'</header>\n"
-#| "\n"
-#| "The map editor saves exactly one file, either a .map (for terrain mode) "
-#| "or a .cfg (for scenario mode). In scenario mode the terrain map is saved "
-#| "inside the .cfg file; there is no separate .map file. If you start "
-#| "editing in terrain mode and then switch to scenaro mode then an old .map "
-#| "file might remain, but this is not updated by the scenario editor.\n"
-#| "\n"
-#| "Loading a .cfg file has different results depending on the contents of "
-#| "the .cfg file. For .cfg files that were created by the scenario editor, "
-#| "it will open the .cfg in the scenario editor. However, for .cfg files "
-#| "that use a separate .map file (which can't be created by the scenario "
-#| "editor), the editor may follow the link and open the corresponding .map "
-#| "in terrain-only mode, as if the .map file was chosen in the file selector."
 msgid ""
 "<header>text='The files: .map and .cfg'</header>\n"
 "\n"
@@ -2019,8 +1989,8 @@ msgstr "玩法"
 #. [section]: id=traits_section
 #. [topic]: id=..traits_section
 #: data/core/help.cfg:29 data/core/help.cfg:531
-#: src/help/help_topic_generators.cpp:476
-#: src/help/help_topic_generators.cpp:499
+#: src/help/help_topic_generators.cpp:475
+#: src/help/help_topic_generators.cpp:498
 msgid "Traits"
 msgstr "特質"
 
@@ -3373,32 +3343,6 @@ msgstr ""
 #. [topic]: id=orbs
 #. The help page has a set of images above this paragraph, in the same order as the bullet points
 #: data/core/help.cfg:395
-#, fuzzy
-#| msgid ""
-#| "The orbs show whether the unit can move or attack. The statuses and their "
-#| "standard colors are:\n"
-#| "• <bold>text='Green'</bold> if it has neither moved nor attacked this "
-#| "turn.\n"
-#| "• <bold>text='Yellow'</bold> if it has moved (or attacked), and can still "
-#| "attack. It might still be able to move further too.\n"
-#| "• <bold>text='Red'</bold> if it can neither move further nor attack again "
-#| "this turn.\n"
-#| "    • Red is also used after the ‘end unit turn’ command, and,\n"
-#| "    • when a unit is in the middle of a multi-turn move (has been told to "
-#| "move further than it can in the current turn).\n"
-#| "• <bold>text='Red and yellow'</bold> if it has moved (or attacked), can "
-#| "still move further, but it can no longer attack.\n"
-#| "    • This can happen due to campaign-specific events or abilities, for "
-#| "example the <italic>text='disengage'</italic> ability in the campaign "
-#| "<italic>text='Under the Burning Suns'</italic>.\n"
-#| "• <bold>text='Blue'</bold> for allied units, except during that ally’s "
-#| "own turn.\n"
-#| "    • During the ally’s own turn, their units will be shown with the "
-#| "green/yellow/red/white colors; however their moves, and the corresponding "
-#| "orb changes, are delayed as explained in <ref>dst='shroud_and_fog' "
-#| "text='Shroud and Fog of War'</ref>.\n"
-#| "• Enemy units normally don’t have orbs, however these can be enabled in "
-#| "the advanced preference “Customize orb colors”."
 msgid ""
 "The orbs show whether the unit can move or attack. The statuses and their "
 "standard colors are:\n"
@@ -3437,9 +3381,9 @@ msgstr ""
 "    • 這個可能會是戰役特製的事件或是技能，例如<italic>text='在灼燒的太陽下'</"
 "italic>戰役的<italic>text='脫離'</italic>技能。\n"
 "• <bold>text='藍色'</bold>：表示同盟陣營的單位。\n"
-"    • 在同盟陣營自己的回合中，他們的單位的狀態球會顯示綠色/黃色/紅色/白色。他"
-"們的移動，以及對應的狀態球變化，則在<ref>dst='shroud_and_fog' text='戰場黑幕"
-"與戰爭迷霧'</ref>頁面中被解釋。\n"
+"    • 在同盟陣營自己的回合中，他們的單位的狀態球會顯示顏色來表示這些單位是否"
+"仍可以移動和攻擊。他們的移動，以及對應的狀態球變化，則在"
+"<ref>dst='shroud_and_fog' text='戰場黑幕與戰爭迷霧'</ref>頁面中被解釋。\n"
 "• • 敵人的單位通常沒有狀態球，不過它可以在進階設定的「自訂狀態球顏色」中被啟"
 "用。"
 
@@ -3814,6 +3758,7 @@ msgstr ""
 msgid "License"
 msgstr "授權"
 
+# 由於是中文，句子最後不加空格。
 #. [topic]: id=..traits_section
 #: data/core/help.cfg:533
 msgid ""
@@ -4445,6 +4390,9 @@ msgid ""
 "of only things that have changed.\n"
 "\n"
 msgstr ""
+"\n"
+"與「fps」指令類似，但它同時強制所有東西重新繪製，而不是只有發生改變的那些。\n"
+"\n"
 
 #. [topic]: id=general_commands
 #: data/core/help.cfg:684
@@ -4920,6 +4868,11 @@ msgid ""
 msgstr "這個單位每回合治療他自己，不過治療量不比駐紮在村莊時多。"
 
 #. [resistance]: id=steadfast
+#: data/core/macros/abilities.cfg:130
+msgid "steadfast"
+msgstr "堅守"
+
+#. [resistance]: id=steadfast
 #: data/core/macros/abilities.cfg:131
 msgid "female^steadfast"
 msgstr "堅守"
@@ -4973,6 +4926,9 @@ msgid ""
 "All adjacent lower-level units from the same side deal 25% more damage for "
 "each difference in level."
 msgstr ""
+"這個單位可以在戰鬥中領導其它部隊。\n"
+"\n"
+"所有相鄰的較低等級的同盟單位每差一個等級，他的攻擊就能多造成25%的傷害。"
 
 #. [skirmisher]: id=skirmisher
 #: data/core/macros/abilities.cfg:220
@@ -4985,6 +4941,11 @@ msgid ""
 "This unit is skilled in moving past enemies quickly, and ignores all enemy "
 "Zones of Control."
 msgstr "這個單位能熟練地迅速穿越敵人，並忽略所有敵人的控制區域。"
+
+#. [illuminates]: id=illumination
+#: data/core/macros/abilities.cfg:235
+msgid "illuminates"
+msgstr "照明"
 
 #. [illuminates]: id=illumination
 #: data/core/macros/abilities.cfg:236
@@ -5082,9 +5043,18 @@ msgstr "隱藏"
 
 #. [hides]: id=concealment
 #: data/core/macros/abilities.cfg:345
+#, fuzzy
+#| msgid ""
+#| "This unit can hide in villages (with the exception of water villages), "
+#| "and remain undetected by its enemies, except by those standing next to "
+#| "it.\n"
+#| "\n"
+#| "Enemy units cannot see this unit while it is in a village, except if they "
+#| "have units next to it. Any enemy unit that first discovers this unit "
+#| "immediately loses all its remaining movement."
 msgid ""
-"This unit can hide in villages (with the exception of water villages), and "
-"remain undetected by its enemies, except by those standing next to it.\n"
+"This unit can hide in villages, and remain undetected by its enemies, except "
+"by those standing next to it.\n"
 "\n"
 "Enemy units cannot see this unit while it is in a village, except if they "
 "have units next to it. Any enemy unit that first discovers this unit "
@@ -5095,6 +5065,11 @@ msgstr ""
 "\n"
 "當這個單位在村莊中時，敵方單位不能看到這個單位，除非敵方有單位在這個單位的旁"
 "邊。任何首次發現這個單位的敵方單位，會立刻失去所有他剩下的移動點數。"
+
+#. [hides]: id=submerge
+#: data/core/macros/abilities.cfg:363
+msgid "submerge"
+msgstr "潛水"
 
 #. [hides]: id=submerge
 #: data/core/macros/abilities.cfg:364
@@ -5119,6 +5094,13 @@ msgstr ""
 #: data/core/macros/abilities.cfg:385
 msgid "female^feeding"
 msgstr "食屍"
+
+#. [dummy]: id=feeding
+#: data/core/macros/abilities.cfg:386
+msgid ""
+"This unit gains 1 hitpoint added to its maximum whenever it kills a unit, "
+"except units that are immune to plague."
+msgstr "這個單位每次殺死一個沒有對瘟疫免疫的單位，就會增加1點生命值上限。"
 
 #. [berserk]: id=berserk
 #: data/core/macros/abilities.cfg:398
@@ -5214,6 +5196,11 @@ msgid ""
 msgstr "這個單位的防禦技巧會減少敵人攻擊的成功率。"
 
 #. [chance_to_hit]: id=magical
+#: data/core/macros/abilities.cfg:504
+msgid "magical"
+msgstr "魔法"
+
+#. [chance_to_hit]: id=magical
 #: data/core/macros/abilities.cfg:505
 msgid ""
 "This attack always has a 70% chance to hit regardless of the defensive "
@@ -5236,6 +5223,11 @@ msgstr ""
 "當這個單位受傷時，這種攻擊的攻擊次數會減少。攻擊次數與這個單位擁有的最大生命"
 "值的百分比成比例。例如，一個擁有3/4的最大生命值的單位，會得到3/4倍的攻擊次"
 "數。"
+
+#. [damage]: id=charge
+#: data/core/macros/abilities.cfg:528
+msgid "charge"
+msgstr "衝鋒"
 
 #. [damage]: id=charge
 #: data/core/macros/abilities.cfg:529
@@ -5676,8 +5668,8 @@ msgstr ""
 "獲得更高的防禦率。"
 
 #: data/core/macros/special-notes.cfg:116
-#: src/help/help_topic_generators.cpp:185
-#: src/help/help_topic_generators.cpp:602
+#: src/help/help_topic_generators.cpp:184
+#: src/help/help_topic_generators.cpp:601
 msgid "Special Notes:"
 msgstr "特別備註："
 
@@ -5999,6 +5991,11 @@ msgstr ""
 "1點額外的生命值。"
 
 #. [trait]: id=healthy
+#: data/core/macros/traits.cfg:227
+msgid "healthy"
+msgstr "健壯"
+
+#. [trait]: id=healthy
 #: data/core/macros/traits.cfg:228
 msgid "female^healthy"
 msgstr "健壯"
@@ -6261,7 +6258,7 @@ msgstr "龍族"
 #| "Drakes are inherently magical creatures, with a mysterious internal fire "
 #| "fueling their very lives. This can easily be witnessed when one of their "
 #| "kind perishes in combat; its internal fire is released, burning their "
-#| "remains in to ashes. Their internal fire is also their greatest weakness; "
+#| "remains into ashes. Their internal fire is also their greatest weakness; "
 #| "it makes them extremely vulnerable to cold attacks. Despite their magical "
 #| "nature, drakes are incapable of channeling magic in a controlled manner. "
 #| "While the magic imbued within a drake’s body enables it to spit fire and "
@@ -6763,18 +6760,6 @@ msgstr "馬"
 
 #. [race]: id=horse
 #: data/core/units.cfg:186
-#, fuzzy
-#| msgid ""
-#| "Domesticated horses come in many shapes and sizes, from mighty war "
-#| "chargers, to sturdy draught horses or agile stock horses.  While they are "
-#| "more fragile than many beasts, their speed and cunning allow feral horses "
-#| "to thrive in the wild, alongside their wild brethren.\n"
-#| "\n"
-#| "Horses have been an important part of many civilizations, so it is not "
-#| "surprising that there are many myths and stories centered around them.  "
-#| "Winged horses, man-horse hybrids, and ghost horses have made their way "
-#| "into written history, though few can honestly claim to have seen such "
-#| "things."
 msgid ""
 "Domesticated horses come in many shapes and sizes, from mighty war chargers, "
 "to sturdy draught horses or agile stock horses. While they are more fragile "
@@ -7659,190 +7644,209 @@ msgstr ""
 "於像哨兵一樣站著渡過好幾世紀，對於文明世界的發展不感興趣，他們只有在前去保護"
 "大自然和他們稱之為家的森林時才會動起來。"
 
-#: src/help/help.cpp:213
+#: data/lua/feeding.lua:30 data/lua/feeding.lua:43
+msgid "+1 max HP"
+msgstr "+1 最大生命值"
+
+#: src/help/help.cpp:211
 msgid "Close"
 msgstr "關閉"
 
-#: src/help/help.cpp:216
+#: src/help/help.cpp:215
 msgid "Help"
 msgstr "幫助"
 
-#: src/help/help.cpp:270 src/help/help.cpp:274
+#: src/help/help.cpp:267 src/help/help.cpp:271
 msgid "Parse error when parsing help text:"
 msgstr "解析幫助文本時語法錯誤："
 
-#: src/help/help_topic_generators.cpp:65
+#: src/help/help_topic_generators.cpp:64
 msgid "Best of"
 msgstr "最佳於"
 
-#: src/help/help_topic_generators.cpp:65
+#: src/help/help_topic_generators.cpp:64
 msgid "Worst of"
 msgstr "最差於"
 
-#: src/help/help_topic_generators.cpp:162
+#: src/help/help_topic_generators.cpp:161
 msgid ""
 "Villages allow any unit stationed therein to heal, or to be cured of poison."
-msgstr ""
+msgstr "村莊允許任何單位駐守進來以進行治療或是治癒毒素。"
 
 #. TRANSLATORS: special note for terrains such as the oasis; the only terrain in core with this property heals 8 hp just like a village.
 #. For the single-hitpoint variant, the wording is different because I assume the player will be more interested in the curing-poison part than the minimal healing.
-#: src/help/help_topic_generators.cpp:167
+#: src/help/help_topic_generators.cpp:166
 msgid ""
 "This terrain allows units to be cured of poison, or to heal a single "
 "hitpoint."
 msgid_plural ""
 "This terrain allows units to heal $amount hitpoints, or to be cured of "
 "poison, as if stationed in a village."
-msgstr[0] ""
+msgstr[0] "這個地形允許單位治癒毒素，或是恢復 1 點生命值。"
 msgstr[1] ""
+"這個地形允許單位治癒毒素，或是恢復 $amount hitpoints 點生命值，就像是駐守在一"
+"個村莊裡。"
 
-#: src/help/help_topic_generators.cpp:174
+# 為了解釋更淺顯易懂一些，不照翻。
+#: src/help/help_topic_generators.cpp:173
 msgid ""
 "This terrain is a castle — units can be recruited onto it from a connected "
 "keep."
-msgstr ""
+msgstr "這個地形是一個城堡，單位可以從相鄰的主堡被招募到這個格子上。"
 
 #. TRANSLATORS: The "this terrain is a castle" note will also be shown directly above this one.
-#: src/help/help_topic_generators.cpp:178
+#: src/help/help_topic_generators.cpp:177
 msgid ""
 "This terrain is a keep — a leader can recruit from this hex onto connected "
 "castle hexes."
-msgstr ""
+msgstr "這個地形是一個主堡，首領可以在這個格子上招募單位到相鄰的城堡格子上。"
 
+# 為了解釋更淺顯易懂一些，不照翻。
 #. TRANSLATORS: Special note for a terrain, but none of the terrains in mainline do this.
-#: src/help/help_topic_generators.cpp:181
+#: src/help/help_topic_generators.cpp:180
 msgid ""
 "This unusual keep allows a leader to recruit while standing on it, but does "
 "not allow a leader on a connected keep to recruit onto this hex."
 msgstr ""
+"這個不尋常的主堡可以讓首領站在上面時進行招募，但是不允許首領在相鄰的主堡上將"
+"單位招募到這個格子上。"
 
-#: src/help/help_topic_generators.cpp:194
+#: src/help/help_topic_generators.cpp:193
 msgid "Base Terrain: "
 msgstr "基礎地形："
 
-#: src/help/help_topic_generators.cpp:214
+#: src/help/help_topic_generators.cpp:213
 msgid "Movement properties: "
 msgstr "移動性質："
 
-#: src/help/help_topic_generators.cpp:218
+#: src/help/help_topic_generators.cpp:217
 msgid "Defense properties: "
 msgstr "防禦性質："
 
-#: src/help/help_topic_generators.cpp:298
+#: src/help/help_topic_generators.cpp:297
 msgid "Level"
 msgstr "等級"
 
-#: src/help/help_topic_generators.cpp:359
+#: src/help/help_topic_generators.cpp:358
 msgid "Advances from: "
 msgstr "升級自："
 
-#: src/help/help_topic_generators.cpp:361
+#: src/help/help_topic_generators.cpp:360
 msgid "Advances to: "
 msgstr "升級成："
 
-#: src/help/help_topic_generators.cpp:390
+#: src/help/help_topic_generators.cpp:389
 msgid "Base unit: "
 msgstr "基本單位："
 
-#: src/help/help_topic_generators.cpp:395
+#: src/help/help_topic_generators.cpp:394
 msgid "Base units: "
 msgstr "基本單位："
 
-#: src/help/help_topic_generators.cpp:413
+#: src/help/help_topic_generators.cpp:412
 msgid "Variations: "
 msgstr "變體："
 
-#: src/help/help_topic_generators.cpp:437
+#: src/help/help_topic_generators.cpp:436
 msgid "race^Miscellaneous"
 msgstr "其它"
 
-#: src/help/help_topic_generators.cpp:439
+#: src/help/help_topic_generators.cpp:438
 msgid "Race: "
 msgstr "種族："
 
-#: src/help/help_topic_generators.cpp:509
+#: src/help/help_topic_generators.cpp:508
 msgid "Abilities: "
 msgstr "技能："
 
-#: src/help/help_topic_generators.cpp:535
+#: src/help/help_topic_generators.cpp:534
 msgid "Ability Upgrades: "
 msgstr "技能升級："
 
 #. TRANSLATORS: This string is used in the help page of a single unit.  If the translation
 #. uses spaces, use non-breaking spaces as appropriate for the target language to prevent
 #. unpleasant line breaks (issue #3256).
-#: src/help/help_topic_generators.cpp:565
+#: src/help/help_topic_generators.cpp:564
 msgid "HP:"
 msgstr "生命值："
 
 #. TRANSLATORS: This string is used in the help page of a single unit.  If the translation
 #. uses spaces, use non-breaking spaces as appropriate for the target language to prevent
 #. unpleasant line breaks (issue #3256).
-#: src/help/help_topic_generators.cpp:569
+#: src/help/help_topic_generators.cpp:568
 msgid "Moves:"
 msgstr "移動點數："
 
 #. TRANSLATORS: This string is used in the help page of a single unit.  If the translation
 #. uses spaces, use non-breaking spaces as appropriate for the target language to prevent
 #. unpleasant line breaks (issue #3256).
-#: src/help/help_topic_generators.cpp:574
+#: src/help/help_topic_generators.cpp:573
 msgid "Vision:"
 msgstr "視野："
 
 #. TRANSLATORS: This string is used in the help page of a single unit.  If the translation
 #. uses spaces, use non-breaking spaces as appropriate for the target language to prevent
 #. unpleasant line breaks (issue #3256).
-#: src/help/help_topic_generators.cpp:580
+#: src/help/help_topic_generators.cpp:579
 msgid "Jamming:"
 msgstr "干擾："
 
 #. TRANSLATORS: This string is used in the help page of a single unit.  If the translation
 #. uses spaces, use non-breaking spaces as appropriate for the target language to prevent
 #. unpleasant line breaks (issue #3256).
-#: src/help/help_topic_generators.cpp:585
+#: src/help/help_topic_generators.cpp:584
 msgid "Cost:"
 msgstr "價格："
 
 #. TRANSLATORS: This string is used in the help page of a single unit.  If the translation
 #. uses spaces, use non-breaking spaces as appropriate for the target language to prevent
 #. unpleasant line breaks (issue #3256).
-#: src/help/help_topic_generators.cpp:589
+#: src/help/help_topic_generators.cpp:588
 msgid "Alignment:"
 msgstr "立場："
 
 #. TRANSLATORS: This string is used in the help page of a single unit.  It uses
 #. non-breaking spaces to prevent unpleasant line breaks (issue #3256).  In the
 #. translation use non-breaking spaces as appropriate for the target language.
-#: src/help/help_topic_generators.cpp:596
+#: src/help/help_topic_generators.cpp:595
 msgid "Required XP:"
 msgstr "升級所需經驗值："
 
-#: src/help/help_topic_generators.cpp:611
+#: src/help/help_topic_generators.cpp:613
 msgid "unit help^Attacks"
 msgstr "攻擊招數"
 
-#: src/help/help_topic_generators.cpp:618
+#: src/help/help_topic_generators.cpp:620
 msgid "unit help^Name"
 msgstr "名稱"
 
-#: src/help/help_topic_generators.cpp:620
+# 這用來表示幫助中單位頁的「傷害×次數」那行。
+#: src/help/help_topic_generators.cpp:621
+msgid "Strikes"
+msgstr "傷害×次數"
+
+#: src/help/help_topic_generators.cpp:622
 msgid "Range"
 msgstr "範圍"
 
-#: src/help/help_topic_generators.cpp:621
+#: src/help/help_topic_generators.cpp:623
 msgid "Type"
 msgstr "傷害類型"
 
-#: src/help/help_topic_generators.cpp:622
+#: src/help/help_topic_generators.cpp:624
 msgid "Special"
 msgstr "特殊效果"
 
+#: src/help/help_topic_generators.cpp:699
+msgid "Resistances"
+msgstr "抗性"
+
 # 雖然這邊是寫「Attack Type」，但在說明敘述中大部分是寫damage type，為了避免混淆還是翻成「傷害類型」。
-#: src/help/help_topic_generators.cpp:704
+#: src/help/help_topic_generators.cpp:703
 msgid "Attack Type"
 msgstr "傷害類型"
 
-#: src/help/help_topic_generators.cpp:705
+#: src/help/help_topic_generators.cpp:704
 msgid "Resistance"
 msgstr "抗性"
 
@@ -7853,6 +7857,10 @@ msgstr "地形影響"
 #: src/help/help_topic_generators.cpp:738
 msgid "Terrain"
 msgstr "地形"
+
+#: src/help/help_topic_generators.cpp:739
+msgid "Defense"
+msgstr "防禦力"
 
 #: src/help/help_topic_generators.cpp:740
 msgid "Movement Cost"
@@ -7869,6 +7877,12 @@ msgstr "視野成本"
 #: src/help/help_topic_generators.cpp:753
 msgid "Jamming Cost"
 msgstr "干擾成本"
+
+#~ msgid "Flat"
+#~ msgstr "平地"
+
+#~ msgid "Village"
+#~ msgstr "村莊"
 
 # 「your own units」應換成「its own side's units」會比較正確。
 #~ msgid ""

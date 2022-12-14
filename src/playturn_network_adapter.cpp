@@ -14,13 +14,14 @@
 
 #include "playturn_network_adapter.hpp"
 #include "log.hpp"
+#include "utils/general.hpp"
 
 #include <functional>
-#include <iostream>
 #include <cassert>
 
 
 static lg::log_domain log_network("network");
+#define DBG_NW LOG_STREAM(debug, log_network)
 #define LOG_NW LOG_STREAM(info, log_network)
 #define ERR_NW LOG_STREAM(err, log_network)
 
@@ -37,7 +38,8 @@ void playturn_network_adapter::read_from_network()
 	}
 	catch(...)
 	{
-		//Readin from network can throw, we want to ignore the possibly corrupt packet in this case.
+		//Reading from network can throw, we want to ignore the possibly corrupt packet in this case.
+		DBG_NW << "Caught exception reading from the network: " << utils::get_unknown_exception_type();
 		this->data_.pop_back();
 		throw;
 	}
@@ -52,7 +54,7 @@ void playturn_network_adapter::read_from_network()
 
 	if(!back.attribute_range().empty() )
 	{
-		ERR_NW << "found unexpected attribute:" <<back.debug() << std::endl;
+		ERR_NW << "found unexpected attribute:" <<back.debug();
 		this->data_.pop_back();
 		//ignore those here
 	}
@@ -142,7 +144,7 @@ playturn_network_adapter::~playturn_network_adapter()
 	try {
 		if(!is_at_end())
 		{
-			LOG_NW << "Destroying playturn_network_adapter with an non empty buffer, this means loss of network data" << std::endl;
+			LOG_NW << "Destroying playturn_network_adapter with an non empty buffer, this means loss of network data";
 		}
 	} catch (...) {}
 }

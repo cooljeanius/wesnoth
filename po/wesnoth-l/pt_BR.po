@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
-"POT-Creation-Date: 2022-02-20 10:43 UTC\n"
-"PO-Revision-Date: 2022-01-30 11:09-0300\n"
+"POT-Creation-Date: 2022-07-20 00:21 UTC\n"
+"PO-Revision-Date: 2022-08-12 17:23-0300\n"
 "Last-Translator: Andrei Machado <andreisp.machado@yahoo.com>\n"
 "Language-Team: none\n"
 "Language: pt_BR\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.4.3\n"
+"X-Generator: Poedit 3.1.1\n"
 
 #. [campaign]: id=Liberty
 #: data/campaigns/Liberty/_main.cfg:10 data/campaigns/Liberty/_main.cfg:11
@@ -658,10 +658,8 @@ msgstr "Guarde o portão."
 
 #. [message]: speaker=Harper
 #: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:225
-#, fuzzy
-#| msgid "<i>Uncle, since when did we have a Queen?</i>"
 msgid "<i>Uncle, since when did we have a queen?</i>"
-msgstr "<i>Tio, desde quando temos uma Raínha?</i>"
+msgstr "<i>Tio, desde quando temos uma raínha?</i>"
 
 #. [message]: speaker=Baldras
 #: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:229
@@ -2004,13 +2002,6 @@ msgstr "Quais são seus objetivos?"
 
 #. [message]: speaker=Helicrom
 #: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:265
-#, fuzzy
-#| msgid ""
-#| "The former King’s magic ministry kept a tight control on the training and "
-#| "employment of mages in Wesnoth. Those of us who dared to... depart from "
-#| "the curriculum were dealt with harshly. Many of us were forced to escape "
-#| "here to continue our study of our brand of magic. Our security and "
-#| "secrecy are not cheap."
 msgid ""
 "The former king’s magic ministry kept a tight control on the training and "
 "employment of mages in Wesnoth. Those of us who dared to... depart from the "
@@ -2018,7 +2009,7 @@ msgid ""
 "continue our study of our brand of magic. Our security and secrecy are not "
 "cheap."
 msgstr ""
-"O ex-ministério de magia do Rei mantinha um controle estrito sobre o "
+"O ex-ministério de magia do rei mantinha um controle estrito sobre o "
 "treinamento e emprego dos magos em Wesnoth. Aqueles de nós que se "
 "atreveressem a... afastar-se do currículo, eram tratados de forma severa. "
 "Muitos de nós tivemos de fugir para cá para continuar com os nossos estudos "
@@ -2045,18 +2036,13 @@ msgstr "Soldados. Magos não são bom numa luta, eu sei. Mas pra quê?"
 
 #. [message]: speaker=Helicrom
 #: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:281
-#, fuzzy
-#| msgid ""
-#| "Understand this. Any weakening of the Throne of Wesnoth, whether it be "
-#| "occupied by King or Queen, aids us. To accomplish that, we must "
-#| "destabilize their forces in this region. The key is Halstead."
 msgid ""
 "Understand this. Any weakening of the Throne of Wesnoth, whether it be "
 "occupied by king or queen, aids us. To accomplish that, we must destabilize "
 "their forces in this region. The key is Halstead."
 msgstr ""
 "Entenda uma coisa. Qualquer coisa que enfraqueça o Trono de Wesnoth, esteja "
-"ele ocupdo por um Rei ou uma Rainha, nos ajuda. Para tanto, precisamos "
+"ele ocupdo por um rei ou uma rainha, nos ajuda. Para tanto, precisamos "
 "desestabilizar as forças dele nesta região. Halstead é a chave."
 
 #. [message]: speaker=Harper
@@ -2079,15 +2065,6 @@ msgstr ""
 
 #. [message]: speaker=Helicrom
 #: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:293
-#, fuzzy
-#| msgid ""
-#| "Know this, Baldras. During the past week, several patrols have again "
-#| "ventured across the Great River into Annuvin. A woman named Relana "
-#| "opposed them with a small militia and was victorious, but with heavy "
-#| "loses. The Crown, however, has begun to take notice of this rebellion and "
-#| "is massing forces within Halstead. When its armies are raised, none of "
-#| "your little villages will be able to resist them. Your only choice would "
-#| "be to flee farther north into orcish territory."
 msgid ""
 "Know this, Baldras. During the past week, several patrols have again "
 "ventured across the Great River into Annuvin. A woman named Relana opposed "
@@ -3111,47 +3088,6 @@ msgstr ""
 "Então eles sobreviveram! Essas ilhas são um pouco longe, mas esse saco de "
 "ossoestá pronto pra uma última aventura..."
 
-#. [unit_type]: id=Bone Knight, race=undead
-#: data/campaigns/Liberty/units/Bone_Knight.cfg:5
-msgid "Bone Knight"
-msgstr "Cavaleiro Esqueleto"
-
-#. [unit_type]: id=Bone Knight, race=undead
-#: data/campaigns/Liberty/units/Bone_Knight.cfg:27
-msgid ""
-"Once great warriors across the plains, these mounted riders atop their "
-"skeletal horses were raised from the ground by unholy magic to spread fear "
-"and destruction."
-msgstr ""
-"Grandes guerreiros das planícies de tempos passados, estes soldados montados "
-"sobre seus cavalos esqueléticos foram animados por magia negra para espalhar "
-"medo e destruição."
-
-#. [attack]: type=impact
-#: data/campaigns/Liberty/units/Bone_Knight.cfg:42
-msgid "trample"
-msgstr "atropelar"
-
-#. [unit_type]: id=Death Squire, race=undead
-#: data/campaigns/Liberty/units/Death_Squire.cfg:4
-msgid "Death Squire"
-msgstr "Escudeiro da Morte"
-
-#. [unit_type]: id=Death Squire, race=undead
-#: data/campaigns/Liberty/units/Death_Squire.cfg:26
-msgid ""
-"Sometimes the mightiest warriors and generals, cursed with hate and angst, "
-"came back to this world as Death Knights. Death Squires serve them whilst "
-"accruing enough unholy power to become Death Knights. In the process they "
-"pick up a good deal of the Knight’s power, including the ability to command "
-"underlings."
-msgstr ""
-"As vezes os mais poderosos guerreiros e generais, amaldiçoados com ódio e "
-"angústia, voltam para esse mundo como Cavaleiros da Morte. Escudeiros da "
-"Morte os servem enquanto acumulam poder profano suficiente para se tornarem "
-"Cavaleiros da Morte. Durante esse tempo eles reccebem uma boa porção do "
-"poder dos Cavaleiros, incluindo a habilidade de comandar subordinados."
-
 #. [unit_type]: id=Rogue Mage, race=human
 #: data/campaigns/Liberty/units/Rogue_Mage.cfg:5
 msgid "Rogue Mage"
@@ -3237,22 +3173,6 @@ msgstr ""
 "outros usuários de magia preferindo, em vez disso, canalizar suas energias "
 "em devastadores ataques corpo-a-corpo. Apesar de seu poder ofensivo, a "
 "corrupção de suas almas começou a afetar negativamente sua saúde."
-
-#. [unit_type]: id=Skeleton Rider, race=undead
-#: data/campaigns/Liberty/units/Skeleton_Rider.cfg:5
-msgid "Skeleton Rider"
-msgstr "Esqueleto Montado"
-
-#. [unit_type]: id=Skeleton Rider, race=undead
-#: data/campaigns/Liberty/units/Skeleton_Rider.cfg:33
-msgid ""
-"Once great warriors thundering across the plains, these mounted riders atop "
-"their skeletal horses were raised from the grave by unholy magic to spread "
-"fear and destruction."
-msgstr ""
-"Grandes guerreiros das planícies de tempos passados, estes soldados montados "
-"sobre seus cavalos esqueléticos foram animados de seus túmulos por magia "
-"negra para espalhar medo e destruição."
 
 #. [unit_type]: id=Thug_Peasant
 #: data/campaigns/Liberty/units/Villagers.cfg:20
@@ -3432,6 +3352,50 @@ msgstr "Esse é o meu fim..."
 #: data/campaigns/Liberty/utils/utils.cfg:66
 msgid "How can this be?"
 msgstr "Mas o que?"
+
+#~ msgid "Bone Knight"
+#~ msgstr "Cavaleiro Esqueleto"
+
+#~ msgid ""
+#~ "Once great warriors across the plains, these mounted riders atop their "
+#~ "skeletal horses were raised from the ground by unholy magic to spread "
+#~ "fear and destruction."
+#~ msgstr ""
+#~ "Grandes guerreiros das planícies de tempos passados, estes soldados "
+#~ "montados sobre seus cavalos esqueléticos foram animados por magia negra "
+#~ "para espalhar medo e destruição."
+
+#~ msgid "trample"
+#~ msgstr "atropelar"
+
+#~ msgid "Death Squire"
+#~ msgstr "Escudeiro da Morte"
+
+#~ msgid ""
+#~ "Sometimes the mightiest warriors and generals, cursed with hate and "
+#~ "angst, came back to this world as Death Knights. Death Squires serve them "
+#~ "whilst accruing enough unholy power to become Death Knights. In the "
+#~ "process they pick up a good deal of the Knight’s power, including the "
+#~ "ability to command underlings."
+#~ msgstr ""
+#~ "As vezes os mais poderosos guerreiros e generais, amaldiçoados com ódio e "
+#~ "angústia, voltam para esse mundo como Cavaleiros da Morte. Escudeiros da "
+#~ "Morte os servem enquanto acumulam poder profano suficiente para se "
+#~ "tornarem Cavaleiros da Morte. Durante esse tempo eles reccebem uma boa "
+#~ "porção do poder dos Cavaleiros, incluindo a habilidade de comandar "
+#~ "subordinados."
+
+#~ msgid "Skeleton Rider"
+#~ msgstr "Esqueleto Montado"
+
+#~ msgid ""
+#~ "Once great warriors thundering across the plains, these mounted riders "
+#~ "atop their skeletal horses were raised from the grave by unholy magic to "
+#~ "spread fear and destruction."
+#~ msgstr ""
+#~ "Grandes guerreiros das planícies de tempos passados, estes soldados "
+#~ "montados sobre seus cavalos esqueléticos foram animados de seus túmulos "
+#~ "por magia negra para espalhar medo e destruição."
 
 #~ msgid "Difficult"
 #~ msgstr "Difícil"

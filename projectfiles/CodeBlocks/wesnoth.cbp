@@ -40,6 +40,8 @@
 			<Add option="-Wunused" />
 			<Add option="-Wunused-parameter" />
 			<Add option="-DHAVE_LIBPNG" />
+			<Add option="-D_GLIBCXX_USE_DEPRECATED=0" />
+			<Add option="-DBOOST_NO_CXX98_FUNCTION_BASE" />
 			<Add option="-D_WIN32_WINDOWS" />
 			<Add option="-D_WIN32_WINNT=0x0601" />
 			<Add option="-D_WIN32_IE=0x0601" />
@@ -68,6 +70,7 @@
 			<Add library="libpng" />
 			<Add library="libjpeg" />
 			<Add library="libwebp" />
+			<Add library="libbcrypt" />
 			<Add library="libboost_iostreams" />
 			<Add library="libboost_bzip2" />
 			<Add library="libboost_filesystem" />
@@ -283,6 +286,10 @@
 		<Unit filename="../../src/display_chat_manager.hpp" />
 		<Unit filename="../../src/display_context.cpp" />
 		<Unit filename="../../src/display_context.hpp" />
+		<Unit filename="../../src/draw.cpp" />
+		<Unit filename="../../src/draw.hpp" />
+		<Unit filename="../../src/draw_manager.cpp" />
+		<Unit filename="../../src/draw_manager.hpp" />
 		<Unit filename="../../src/editor/action/action.cpp" />
 		<Unit filename="../../src/editor/action/action.hpp" />
 		<Unit filename="../../src/editor/action/action_base.hpp" />
@@ -499,8 +506,12 @@
 		<Unit filename="../../src/gui/auxiliary/iterator/policy_order.hpp" />
 		<Unit filename="../../src/gui/auxiliary/iterator/policy_visit.hpp" />
 		<Unit filename="../../src/gui/auxiliary/iterator/walker.hpp" />
+		<Unit filename="../../src/gui/auxiliary/iterator/walker_container.cpp" />
+		<Unit filename="../../src/gui/auxiliary/iterator/walker_container.hpp" />
 		<Unit filename="../../src/gui/auxiliary/iterator/walker_grid.cpp" />
 		<Unit filename="../../src/gui/auxiliary/iterator/walker_grid.hpp" />
+		<Unit filename="../../src/gui/auxiliary/iterator/walker_scrollbar_container.cpp" />
+		<Unit filename="../../src/gui/auxiliary/iterator/walker_scrollbar_container.hpp" />
 		<Unit filename="../../src/gui/auxiliary/iterator/walker_tree_node.cpp" />
 		<Unit filename="../../src/gui/auxiliary/iterator/walker_tree_node.hpp" />
 		<Unit filename="../../src/gui/auxiliary/iterator/walker_widget.cpp" />
@@ -539,6 +550,8 @@
 		<Unit filename="../../src/gui/core/static_registry.hpp" />
 		<Unit filename="../../src/gui/core/timer.cpp" />
 		<Unit filename="../../src/gui/core/timer.hpp" />
+		<Unit filename="../../src/gui/core/top_level_drawable.cpp" />
+		<Unit filename="../../src/gui/core/top_level_drawable.hpp" />
 		<Unit filename="../../src/gui/core/widget_definition.cpp" />
 		<Unit filename="../../src/gui/core/widget_definition.hpp" />
 		<Unit filename="../../src/gui/core/window_builder.cpp" />
@@ -601,6 +614,8 @@
 		<Unit filename="../../src/gui/dialogs/end_credits.hpp" />
 		<Unit filename="../../src/gui/dialogs/file_dialog.cpp" />
 		<Unit filename="../../src/gui/dialogs/file_dialog.hpp" />
+		<Unit filename="../../src/gui/dialogs/file_progress.cpp" />
+		<Unit filename="../../src/gui/dialogs/file_progress.hpp" />
 		<Unit filename="../../src/gui/dialogs/folder_create.cpp" />
 		<Unit filename="../../src/gui/dialogs/folder_create.hpp" />
 		<Unit filename="../../src/gui/dialogs/formula_debugger.cpp" />
@@ -669,6 +684,8 @@
 		<Unit filename="../../src/gui/dialogs/multiplayer/mp_method_selection.hpp" />
 		<Unit filename="../../src/gui/dialogs/multiplayer/mp_options_helper.cpp" />
 		<Unit filename="../../src/gui/dialogs/multiplayer/mp_options_helper.hpp" />
+		<Unit filename="../../src/gui/dialogs/multiplayer/mp_report.cpp" />
+		<Unit filename="../../src/gui/dialogs/multiplayer/mp_report.hpp" />
 		<Unit filename="../../src/gui/dialogs/multiplayer/mp_staging.cpp" />
 		<Unit filename="../../src/gui/dialogs/multiplayer/mp_staging.hpp" />
 		<Unit filename="../../src/gui/dialogs/multiplayer/player_info.cpp" />
@@ -1071,10 +1088,12 @@
 		<Unit filename="../../src/sdl/point.cpp" />
 		<Unit filename="../../src/sdl/point.hpp" />
 		<Unit filename="../../src/sdl/rect.cpp" />
+		<Unit filename="../../src/sdl/rect.hpp" />
 		<Unit filename="../../src/sdl/surface.cpp" />
 		<Unit filename="../../src/sdl/surface.hpp" />
 		<Unit filename="../../src/sdl/texture.cpp" />
 		<Unit filename="../../src/sdl/texture.hpp" />
+		<Unit filename="../../src/sdl/userevent.hpp" />
 		<Unit filename="../../src/sdl/utils.cpp" />
 		<Unit filename="../../src/sdl/utils.hpp" />
 		<Unit filename="../../src/sdl/window.cpp" />
@@ -1171,8 +1190,6 @@
 		<Unit filename="../../src/tod_manager.hpp" />
 		<Unit filename="../../src/tooltips.cpp" />
 		<Unit filename="../../src/tooltips.hpp" />
-		<Unit filename="../../src/tracer.cpp" />
-		<Unit filename="../../src/tracer.hpp" />
 		<Unit filename="../../src/tstring.cpp" />
 		<Unit filename="../../src/tstring.hpp" />
 		<Unit filename="../../src/units/abilities.cpp" />
@@ -1217,6 +1234,7 @@
 		<Unit filename="../../src/utils/const_clone.hpp" />
 		<Unit filename="../../src/utils/context_free_grammar_generator.cpp" />
 		<Unit filename="../../src/utils/context_free_grammar_generator.hpp" />
+		<Unit filename="../../src/utils/general.cpp" />
 		<Unit filename="../../src/utils/general.hpp" />
 		<Unit filename="../../src/utils/irdya_datetime.cpp" />
 		<Unit filename="../../src/utils/irdya_datetime.hpp" />

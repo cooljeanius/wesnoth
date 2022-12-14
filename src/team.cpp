@@ -262,7 +262,7 @@ void team::team_info::read(const config& cfg)
 	share_vision = team_shared_vision::get_enum(cfg["share_vision"].str()).value_or(team_shared_vision::type::all);
 	handle_legacy_share_vision(cfg);
 
-	LOG_NG << "team_info::team_info(...): team_name: " << team_name << ", share_vision: " << team_shared_vision::get_string(share_vision) << ".\n";
+	LOG_NG << "team_info::team_info(...): team_name: " << team_name << ", share_vision: " << team_shared_vision::get_string(share_vision) << ".";
 }
 
 void team::team_info::handle_legacy_share_vision(const config& cfg)
@@ -362,7 +362,7 @@ void team::build(const config& cfg, const gamemap& map, int gold)
 	auto_shroud_updates_ = cfg["auto_shroud"].to_bool(auto_shroud_updates_);
 
 	LOG_NG << "team::team(...): team_name: " << info_.team_name << ", shroud: " << uses_shroud()
-		   << ", fog: " << uses_fog() << ".\n";
+		   << ", fog: " << uses_fog() << ".";
 
 	// Load the WML-cleared fog.
 	const config& fog_override = cfg.child("fog_override");
@@ -389,8 +389,7 @@ void team::build(const config& cfg, const gamemap& map, int gold)
 		if(map.is_village(loc)) {
 			villages_.insert(loc);
 		} else {
-			WRN_NG << "[side] " << current_player() << " [village] points to a non-village location " << loc
-				   << std::endl;
+			WRN_NG << "[side] " << current_player() << " [village] points to a non-village location " << loc;
 		}
 	}
 
@@ -532,16 +531,14 @@ bool team::calculate_is_enemy(std::size_t index) const
 
 	for(const std::string& t : our_teams) {
 		if(std::find(their_teams.begin(), their_teams.end(), t) != their_teams.end()) {
-			LOG_NGE << "team " << info_.side << " found same team name [" << t << "] in team " << index + 1
-					<< std::endl;
+			LOG_NGE << "team " << info_.side << " found same team name [" << t << "] in team " << index + 1;
 			return false;
 		} else {
-			LOG_NGE << "team " << info_.side << " not found same team name [" << t << "] in team " << index + 1
-					<< std::endl;
+			LOG_NGE << "team " << info_.side << " not found same team name [" << t << "] in team " << index + 1;
 		}
 	}
 
-	LOG_NGE << "team " << info_.side << " has enemy in team " << index + 1 << std::endl;
+	LOG_NGE << "team " << info_.side << " has enemy in team " << index + 1;
 	return true;
 }
 
@@ -585,18 +582,18 @@ void team::change_controller_by_wml(const std::string& new_controller_string)
 {
 	auto new_controller = side_controller::get_enum(new_controller_string);
 	if(!new_controller) {
-		WRN_NG << "ignored attempt to change controller to " << new_controller_string << std::endl;
+		WRN_NG << "ignored attempt to change controller to " << new_controller_string;
 		return;
 	}
 
 	if(new_controller == side_controller::type::none && resources::controller->current_side() == this->side()) {
-		WRN_NG << "ignored attempt to change the currently playing side's controller to 'null'" << std::endl;
+		WRN_NG << "ignored attempt to change the currently playing side's controller to 'null'";
 		return;
 	}
 
 	config choice = synced_context::ask_server_choice(controller_server_choice(*new_controller, *this));
 	if(!side_controller::get_enum(choice["controller"].str())) {
-		WRN_NG << "Received an invalid controller string from the server" << choice["controller"] << std::endl;
+		WRN_NG << "Received an invalid controller string from the server" << choice["controller"];
 	} else {
 		new_controller = side_controller::get_enum(choice["controller"].str());
 	}
@@ -808,10 +805,10 @@ void shroud_map::place(int x, int y)
 
 	if(x >= static_cast<int>(data_.size())) {
 		DBG_NG << "Couldn't place shroud on invalid x coordinate: (" << x << ", " << y
-			   << ") - max x: " << data_.size() - 1 << "\n";
+			   << ") - max x: " << data_.size() - 1;
 	} else if(y >= static_cast<int>(data_[x].size())) {
 		DBG_NG << "Couldn't place shroud on invalid y coordinate: (" << x << ", " << y
-			   << ") - max y: " << data_[x].size() - 1 << "\n";
+			   << ") - max y: " << data_[x].size() - 1;
 	} else {
 		data_[x][y] = false;
 	}
@@ -1035,12 +1032,12 @@ std::string team::get_side_highlight_pango(int side)
 
 void team::log_recruitable() const
 {
-	LOG_NG << "Adding recruitable units: \n";
+	LOG_NG << "Adding recruitable units:";
 	for(const std::string& recruit : info_.can_recruit) {
-		LOG_NG << recruit << std::endl;
+		LOG_NG << recruit;
 	}
 
-	LOG_NG << "Added all recruitable units\n";
+	LOG_NG << "Added all recruitable units";
 }
 
 config team::to_config() const

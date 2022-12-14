@@ -50,7 +50,7 @@ gui_definition::gui_definition(const config& cfg)
 	VALIDATE(!id_.empty(), missing_mandatory_wml_key("gui", "id"));
 	VALIDATE(!description_.empty(), missing_mandatory_wml_key("gui", "description"));
 
-	DBG_GUI_P << "Parsing gui " << id_ << std::endl;
+	DBG_GUI_P << "Parsing gui " << id_;
 
 	//
 	// Widget parsing
@@ -73,7 +73,7 @@ gui_definition::gui_definition(const config& cfg)
 			const std::string& def_id = def_ptr->id;
 
 			if(def_map.find(def_id) != def_map.end()) {
-				ERR_GUI_P << "Skipping duplicate definition '" << def_id << "' for '" << type_id << "'\n";
+				ERR_GUI_P << "Skipping duplicate definition '" << def_id << "' for '" << type_id << "'";
 				continue;
 			}
 
@@ -230,7 +230,7 @@ resolution_definition_ptr get_control(const std::string& control_type, const std
 		if(!found_fallback) {
 			if(definition != "default") {
 				LOG_GUI_G << "Control: type '" << control_type << "' definition '" << definition
-						  << "' not found, falling back to 'default'.\n";
+						  << "' not found, falling back to 'default'.";
 				return get_control(control_type, "default");
 			}
 

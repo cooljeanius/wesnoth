@@ -23,7 +23,6 @@
 #include "formula/callable_objects.hpp"
 #include "game_config.hpp"
 #include "game_errors.hpp" //thrown sometimes
-//#include "gettext.hpp"
 #include "language.hpp" // for string_table
 #include "log.hpp"
 #include "units/abilities.hpp"
@@ -149,7 +148,7 @@ unit_type::unit_type(defaut_ctor_t, const config& cfg, const std::string & paren
 {
 	if(const config& base_unit = cfg.child("base_unit")) {
 		base_unit_id_ = base_unit["id"].str();
-		LOG_UT << "type '" <<  id_ << "' has base unit '" << base_unit_id_ << "'\n";
+		LOG_UT << "type '" <<  id_ << "' has base unit '" << base_unit_id_ << "'";
 	}
 	check_id(id_);
 	check_id(parent_id_);
@@ -326,10 +325,10 @@ void unit_type::build_help_index(
 	const movement_type_map::const_iterator find_it = mv_types.find(move_type);
 
 	if(find_it != mv_types.end()) {
-		DBG_UT << "inheriting from movement_type '" << move_type << "'\n";
+		DBG_UT << "inheriting from movement_type '" << move_type << "'";
 		movement_type_ = find_it->second;
 	} else if(!move_type.empty()) {
-		DBG_UT << "movement_type '" << move_type << "' not found\n";
+		DBG_UT << "movement_type '" << move_type << "' not found";
 	}
 
 	// Override parts of the movement type with what is in our config.
@@ -403,7 +402,7 @@ void unit_type::build_created()
 	type_name_ = cfg["name"].t_str();
 	variation_name_ = cfg["variation_name"].t_str();
 
-	DBG_UT << "unit_type '" << log_id() << "' advances to : " << advances_to_val << "\n";
+	DBG_UT << "unit_type '" << log_id() << "' advances to : " << advances_to_val;
 
 	experience_needed_ = cfg["experience"].to_int(500);
 	cost_ = cfg["cost"].to_int(1);
@@ -421,7 +420,7 @@ void unit_type::build(BUILD_STATUS status,
 		const race_map& races,
 		const config_array_view& traits)
 {
-	DBG_UT << "Building unit type " << log_id() << ", level " << status << '\n';
+	DBG_UT << "Building unit type " << log_id() << ", level " << status;
 
 	switch(status) {
 	case NOT_BUILT:
@@ -444,7 +443,7 @@ void unit_type::build(BUILD_STATUS status,
 		return;
 
 	default:
-		ERR_UT << "Build of unit_type to unrecognized status (" << status << ") requested." << std::endl;
+		ERR_UT << "Build of unit_type to unrecognized status (" << status << ") requested.";
 		// Build as much as possible.
 		build_full(movement_types, races, traits);
 		return;
@@ -791,7 +790,7 @@ int unit_type::resistance_against(const std::string& damage_name, bool attacker)
 	}
 
 	if(!resistance_abilities.empty()) {
-		unit_abilities::effect resist_effect(resistance_abilities, 100 - resistance, false);
+		unit_abilities::effect resist_effect(resistance_abilities, 100 - resistance);
 
 		resistance = 100 - std::min<int>(
 			resist_effect.get_composite_value(),
@@ -883,7 +882,7 @@ void throw_base_unit_recursion_error(const std::vector<std::string>& base_tree, 
 	}
 
 	ss << base_id;
-	ERR_CF << ss.str() << '\n';
+	ERR_CF << ss.str();
 
 	throw config::error(ss.str());
 }
@@ -899,9 +898,9 @@ void patch_movetype(movetype& mt,
 	int default_val,
 	bool replace)
 {
-	LOG_CONFIG << "Patching " << new_key << " into movetype." << type_to_patch << std::endl;
+	LOG_CONFIG << "Patching " << new_key << " into movetype." << type_to_patch;
 	config mt_cfg;
-	mt.write(mt_cfg);
+	mt.write(mt_cfg, false);
 
 	if(!replace && mt_cfg.child_or_empty(type_to_patch).has_attribute(new_key)) {
 		// Don't replace if this type already exists in the config
@@ -957,7 +956,7 @@ void patch_movetype(movetype& mt,
 			}
 		}
 
-		LOG_CONFIG << " formula=" << formula_str << ", resolves to " << formula(original) << std::endl;
+		LOG_CONFIG << " formula=" << formula_str << ", resolves to " << formula(original);
 		temp_cfg[new_key] = formula(original);
 	}
 	mt.merge(temp_cfg, type_to_patch, true);
@@ -999,7 +998,7 @@ void unit_type_data::apply_base_unit(unit_type& type, std::vector<std::string>& 
 		type.writable_cfg().inherit_from(base_type.get_cfg());
 	}
 	else {
-		ERR_CF << "[base_unit]: unit type not found: " << type.base_unit_id_ << std::endl;
+		ERR_CF << "[base_unit]: unit type not found: " << type.base_unit_id_;
 		throw config::error("unit type not found: " + type.base_unit_id_);
 	}
 }
@@ -1047,7 +1046,7 @@ void unit_type::fill_variations()
 		std::tie(ut, success) = variations_.emplace(var_cfg["variation_id"].str(), std::move(*var));
 		if(!success) {
 			ERR_CF << "Skipping duplicate unit variation ID: '" << var_cfg["variation_id"]
-				<< "' of unit_type '" << get_cfg()["id"] << "'\n";
+				<< "' of unit_type '" << get_cfg()["id"] << "'";
 		}
 	}
 
@@ -1080,7 +1079,7 @@ void unit_type::fill_variations_and_gender()
  */
 void unit_type_data::set_config(const game_config_view& cfg)
 {
-	LOG_UT << "unit_type_data::set_config, nunits: " << cfg.child_range("unit_type").size() << "\n";
+	LOG_UT << "unit_type_data::set_config, nunits: " << cfg.child_range("unit_type").size();
 
 	clear();
 	units_cfg_ = cfg;
@@ -1099,7 +1098,7 @@ void unit_type_data::set_config(const game_config_view& cfg)
 	}
 
 	// Movetype resistance patching
-	DBG_CF << "Start of movetype patching" << std::endl;
+	DBG_CF << "Start of movetype patching";
 	for(const config& r : cfg.child_range("resistance_defaults")) {
 		const std::string& dmg_type = r["id"];
 
@@ -1110,7 +1109,7 @@ void unit_type_data::set_config(const game_config_view& cfg)
 				continue;
 			}
 
-			DBG_CF << "Patching specific movetype " << mt << std::endl;
+			DBG_CF << "Patching specific movetype " << mt;
 			patch_movetype(movement_types_[mt], "resistance", dmg_type, attr.second, 100, true);
 		}
 
@@ -1129,7 +1128,7 @@ void unit_type_data::set_config(const game_config_view& cfg)
 			}
 		}
 	}
-	DBG_CF << "Split between resistance and cost patching" << std::endl;
+	DBG_CF << "Split between resistance and cost patching";
 
 	// Movetype move/defend patching
 	for(const config& terrain : cfg.child_range("terrain_defaults")) {
@@ -1193,7 +1192,7 @@ void unit_type_data::set_config(const game_config_view& cfg)
 			}
 		}
 	}
-	DBG_CF << "End of movetype patching" << std::endl;
+	DBG_CF << "End of movetype patching";
 
 	for(const config& ut : cfg.child_range("unit_type")) {
 		// Every type is required to have an id.
@@ -1204,9 +1203,9 @@ void unit_type_data::set_config(const game_config_view& cfg)
 		}
 
 		if(types_.emplace(id, unit_type(ut)).second) {
-			LOG_CONFIG << "added " << id << " to unit_type list (unit_type_data.unit_types)\n";
+			LOG_CONFIG << "added " << id << " to unit_type list (unit_type_data.unit_types)";
 		} else {
-			ERR_CF << "Multiple [unit_type]s with id=" << id << " encountered." << std::endl;
+			ERR_CF << "Multiple [unit_type]s with id=" << id << " encountered.";
 		}
 	}
 
@@ -1233,7 +1232,7 @@ void unit_type_data::set_config(const game_config_view& cfg)
 		hide_help_all_ = hide_help["all"].to_bool();
 		read_hide_help(hide_help);
 	}
-	DBG_UT << "Finished creatign unti types\n";
+	DBG_UT << "Finished creating unit types";
 }
 
 void unit_type_data::build_unit_type(const unit_type & ut, unit_type::BUILD_STATUS status) const
@@ -1250,12 +1249,12 @@ const unit_type* unit_type_data::find(const std::string& key, unit_type::BUILD_S
 		return nullptr;
 	}
 
-	DBG_CF << "trying to find " << key << " in unit_type list (unit_type_data.unit_types)\n";
+	DBG_CF << "trying to find " << key << " in unit_type list (unit_type_data.unit_types)";
 	const unit_type_map::iterator itor = types_.find(key);
 
 	// This might happen if units of another era are requested (for example for savegames)
 	if(itor == types_.end()) {
-		DBG_CF << "unable to find " << key << " in unit_type list (unit_type_data.unit_types)\n";
+		DBG_CF << "unable to find " << key << " in unit_type list (unit_type_data.unit_types)";
 		return nullptr;
 	}
 
@@ -1454,7 +1453,7 @@ void unit_type::check_id(std::string& id)
 
 		if(!valid) {
 			if(!gave_warning) {
-				ERR_UT << "Found unit type id with invalid characters: \"" << id << "\"\n";
+				ERR_UT << "Found unit type id with invalid characters: \"" << id << "\"";
 				gave_warning = true;
 			}
 

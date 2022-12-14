@@ -24,8 +24,8 @@ REGISTER_DIALOG(surrender_quit)
 
 
 surrender_quit::surrender_quit()
+	: modal_dialog(window_id())
 {
-	set_restore(true);
 }
 
 } // namespace dialogs

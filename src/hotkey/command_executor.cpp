@@ -34,6 +34,7 @@
 #include "../resources.hpp"
 #include "../playmp_controller.hpp"
 #include "sdl/input.hpp" // get_mouse_state
+#include "video.hpp" // toggle_fullscreen
 
 #include <functional>
 
@@ -588,9 +589,9 @@ static void event_queue(const SDL_Event& event, command_executor* executor)
 
 void command_executor::queue_command(const SDL_Event& event, int index)
 {
-	LOG_HK << "event 0x" << std::hex << event.type << std::dec << std::endl;
+	LOG_HK << "event 0x" << std::hex << event.type << std::dec;
 	if(event.type == SDL_TEXTINPUT) {
-		LOG_HK << "SDL_TEXTINPUT \"" << event.text.text << "\"\n";
+		LOG_HK << "SDL_TEXTINPUT \"" << event.text.text << "\"";
 	}
 
 	const hotkey_ptr hk = get_hotkey(event);
@@ -606,7 +607,7 @@ void command_executor::queue_command(const SDL_Event& event, int index)
 	bool release = event.type == SDL_KEYUP;
 	if(press) {
 		LOG_HK << "sending press event (keypress = " <<
-			std::boolalpha << keypress << std::noboolalpha << ")\n";
+			std::boolalpha << keypress << std::noboolalpha << ")";
 	}
 	if(keypress) {
 		press_event_sent_ = true;
@@ -624,11 +625,11 @@ void command_executor::execute_command_wrap(const command_executor::queued_comma
 
 	if (!command.press) {
 		return; // none of the commands here respond to a key release
-    }
+	}
 
 	switch(command.command->command) {
 		case HOTKEY_FULLSCREEN:
-			CVideo::get_singleton().toggle_fullscreen();
+			video::toggle_fullscreen();
 			break;
 		case HOTKEY_SCREENSHOT:
 			make_screenshot(_("Screenshot"), false);
@@ -664,7 +665,7 @@ void command_executor::execute_command_wrap(const command_executor::queued_comma
 			}
 			break;
 		default:
-			DBG_G << "command_executor: unknown command number " << command.command->command << ", ignoring.\n";
+			DBG_G << "command_executor: unknown command number " << command.command->command << ", ignoring.";
 			break;
 	}
 }

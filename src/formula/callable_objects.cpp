@@ -30,6 +30,9 @@
 #include "game_board.hpp"
 #include "game_version.hpp"
 #include "resources.hpp"
+#include "tod_manager.hpp"
+#include "play_controller.hpp"
+#include "game_events/pump.hpp"
 
 static lg::log_domain log_scripting_formula("scripting/formula");
 #define LOG_SF LOG_STREAM(info, log_scripting_formula)
@@ -812,13 +815,13 @@ variant set_var_callable::execute_self(variant ctxt)
 {
 	//if(infinite_loop_guardian_.set_var_check()) {
 	if(auto obj = ctxt.try_convert<formula_callable>()) {
-		LOG_SF << "Setting variable: " << key_ << " -> " << value_.to_debug_string() << "\n";
+		LOG_SF << "Setting variable: " << key_ << " -> " << value_.to_debug_string();
 		obj->mutate_value(key_, value_);
 		return variant(true);
 	}
 	//}
 	//too many calls in a row - possible infinite loop
-	ERR_SF << "ERROR #" << 5001 << " while executing 'set_var' formula function" << std::endl;
+	ERR_SF << "ERROR #" << 5001 << " while executing 'set_var' formula function";
 
 	return variant(std::make_shared<safe_call_result>(fake_ptr(), 5001));
 }
@@ -890,6 +893,91 @@ void safe_call_result::get_inputs(formula_input_vector& inputs) const
 	if(current_unit_location_ != map_location()) {
 		add_input(inputs, "current_loc");
 	}
+}
+
+void gamestate_callable::get_inputs(formula_input_vector &inputs) const
+{
+	add_input(inputs, "turn_number");
+	add_input(inputs, "time_of_day");
+	add_input(inputs, "side_number");
+	add_input(inputs, "sides");
+	add_input(inputs, "units");
+	add_input(inputs, "map");
+}
+
+variant gamestate_callable::get_value(const std::string &key) const
+{
+	if(key == "turn_number") {
+		return variant(resources::tod_manager->turn());
+	} else if(key == "time_of_day") {
+		return variant(resources::tod_manager->get_time_of_day().id);
+	} else if(key == "side_number") {
+		return variant(resources::controller->current_side());
+	} else if(key == "sides") {
+		std::vector<variant> vars;
+		for(const auto& team : resources::gameboard->teams()) {
+			vars.emplace_back(std::make_shared<team_callable>(team));
+		}
+		return variant(vars);
+	} else if(key == "units") {
+		std::vector<variant> vars;
+		for(const auto& unit : resources::gameboard->units()) {
+			vars.emplace_back(std::make_shared<unit_callable>(unit));
+		}
+		return variant(vars);
+	} else if(key == "map") {
+		return variant(std::make_shared<gamemap_callable>(*resources::gameboard));
+	}
+
+	return variant();
+}
+
+void event_callable::get_inputs(formula_input_vector &inputs) const
+{
+	add_input(inputs, "event");
+	add_input(inputs, "event_id");
+	add_input(inputs, "event_data");
+	add_input(inputs, "loc");
+	add_input(inputs, "unit");
+	add_input(inputs, "weapon");
+	add_input(inputs, "second_loc");
+	add_input(inputs, "second_unit");
+	add_input(inputs, "second_weapon");
+}
+
+variant event_callable::get_value(const std::string &key) const
+{
+	if(key == "event") {
+		return variant(event_info.name);
+	} else if(key == "event_id") {
+		return variant(event_info.id);
+	} else if(key == "loc") {
+		return variant(std::make_shared<location_callable>(event_info.loc1));
+	} else if(key == "second_loc") {
+		return variant(std::make_shared<location_callable>(event_info.loc2));
+	} else if(key == "event_data") {
+		return variant(std::make_shared<config_callable>(event_info.data));
+	} else if(key == "unit") {
+		if(auto u1 = event_info.loc1.get_unit()) {
+			return variant(std::make_shared<unit_callable>(*u1));
+		}
+	} else if(key == "second_unit") {
+		if(auto u2 = event_info.loc2.get_unit()) {
+			return variant(std::make_shared<unit_callable>(*u2));
+		}
+	} else if(key == "weapon") {
+		if(event_info.data.has_child("first")) {
+			first_weapon = std::make_shared<attack_type>(event_info.data.child("first"));
+			return variant(std::make_shared<attack_type_callable>(*first_weapon));
+		}
+	} else if(key == "second_weapon") {
+		if(event_info.data.has_child("second")) {
+			second_weapon = std::make_shared<attack_type>(event_info.data.child("second"));
+			return variant(std::make_shared<attack_type_callable>(*second_weapon));
+		}
+	}
+
+	return variant();
 }
 
 } // namespace wfl

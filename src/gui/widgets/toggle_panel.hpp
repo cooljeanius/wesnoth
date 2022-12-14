@@ -77,8 +77,7 @@ public:
 	 * @param data                Map with the key value pairs to set the
 	 *                            members.
 	 */
-	void set_child_members(
-			const std::map<std::string /* widget id */, string_map>& data);
+	void set_child_members(const widget_data& data);
 
 	/***** ***** ***** ***** Inherited ***** ***** ***** *****/
 
@@ -176,10 +175,10 @@ private:
 	std::function<void(widget&)> callback_mouse_left_double_click_;
 
 	/** See @ref widget::impl_draw_background. */
-	virtual void impl_draw_background(int x_offset, int y_offset) override;
+	virtual void impl_draw_background() override;
 
 	/** See @ref widget::impl_draw_foreground. */
-	virtual void impl_draw_foreground(int x_offset, int y_offset) override;
+	virtual void impl_draw_foreground() override;
 
 public:
 	/** Static type getter that does not rely on the widget being constructed. */

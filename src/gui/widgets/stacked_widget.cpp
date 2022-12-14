@@ -91,7 +91,7 @@ void stacked_widget::finalize(std::unique_ptr<generator_base> generator, const s
 	generator_ = generator.get();
 	assert(generator_);
 
-	string_map empty_data;
+	widget_item empty_data;
 	for(const auto & builder : widget_builders) {
 		generator->create_item(-1, builder, empty_data, nullptr);
 	}
@@ -209,7 +209,7 @@ const widget* stacked_widget::find(const std::string& id, const bool must_be_act
 stacked_widget_definition::stacked_widget_definition(const config& cfg)
 	: styled_widget_definition(cfg)
 {
-	DBG_GUI_P << "Parsing stacked widget " << id << '\n';
+	DBG_GUI_P << "Parsing stacked widget " << id;
 
 	load_resolutions<resolution>(cfg);
 }
@@ -252,7 +252,7 @@ std::unique_ptr<widget> builder_stacked_widget::build() const
 	auto widget = std::make_unique<stacked_widget>(*this);
 
 	DBG_GUI_G << "Window builder: placed stacked widget '" << id
-			  << "' with definition '" << definition << "'.\n";
+			  << "' with definition '" << definition << "'.";
 
 	const auto conf = widget->cast_config_to<stacked_widget_definition>();
 	assert(conf);

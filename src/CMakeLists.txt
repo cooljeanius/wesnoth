@@ -41,7 +41,7 @@ if(MSVC)
 elseif(MINGW)
 	set(common-external-libs ${common-external-libs} wsock32 ws2_32 shlwapi winmm crypt32)
 elseif(APPLE)
-	set(common-external-libs ${common-external-libs} ${IOKIT_LIBRARY} ${SECURITY_LIBRARY})
+	set(common-external-libs ${common-external-libs} ${APPKIT_LIBRARY} ${FOUNDATION_LIBRARY} ${IOKIT_LIBRARY} ${SECURITY_LIBRARY})
 endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "SunOS")
@@ -142,7 +142,7 @@ endif()
 
 ########### Conf Tests ###########
 
-if(NOT MSVC)
+if((ENABLE_GAME OR ENABLE_TESTS) AND NOT MSVC)
 	# test for SDL2
 	add_executable(sdl2 conftests/sdl2.cpp)
 	set_target_properties(sdl2 PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/Testing)
@@ -250,8 +250,8 @@ if(ENABLE_GAME)
 		SDL2::SDL2main
 	)
 	if(MSVC)
-		target_link_libraries(wesnoth SDL2::SDL2_image)
-		target_link_libraries(wesnoth SDL2::SDL2_mixer)
+		target_link_libraries(wesnoth SDL2_image::SDL2_image)
+		target_link_libraries(wesnoth SDL2_mixer::SDL2_mixer)
 	endif()
 
 	if(ENABLE_DISPLAY_REVISION)
@@ -297,8 +297,8 @@ if(ENABLE_TESTS)
 		SDL2::SDL2main
 	)
 	if(MSVC)
-		target_link_libraries(boost_unit_tests SDL2::SDL2_image)
-		target_link_libraries(boost_unit_tests SDL2::SDL2_mixer)
+		target_link_libraries(boost_unit_tests SDL2_image::SDL2_image)
+		target_link_libraries(boost_unit_tests SDL2_mixer::SDL2_mixer)
 	endif()
 
 	if(ENABLE_DISPLAY_REVISION)

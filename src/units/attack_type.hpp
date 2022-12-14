@@ -82,14 +82,14 @@ public:
 	bool has_special(const std::string& special, bool simple_check=false, bool special_id=true, bool special_tags=true) const;
 	unit_ability_list get_specials(const std::string& special) const;
 	std::vector<std::pair<t_string, t_string>> special_tooltips(boost::dynamic_bitset<>* active_list = nullptr) const;
-	std::string weapon_specials(bool is_backstab=false) const;
+	std::string weapon_specials() const;
 	std::string weapon_specials_value(const std::set<std::string> checking_tags) const;
 
 	/** Calculates the number of attacks this weapon has, considering specials. */
-	void modified_attacks(bool is_backstab, unsigned & min_attacks,
+	void modified_attacks(unsigned & min_attacks,
 	                      unsigned & max_attacks) const;
 	/** Returns the damage per attack of this weapon, considering specials. */
-	int modified_damage(bool is_backstab) const;
+	int modified_damage() const;
 	/** Returns list for weapon like abilities for each ability type. */
 	unit_ability_list get_weapon_ability(const std::string& ability) const;
 	/** Returns list who contains get_weapon_ability and get_specials list for each ability type */
@@ -127,13 +127,17 @@ private:
 
 	// Configured as a bit field, in case that is useful.
 	enum AFFECTS { AFFECT_SELF=1, AFFECT_OTHER=2, AFFECT_EITHER=3 };
-	/** overwrite_special_checking : return an unit_ability_list list after checking presence or not of overwrite_specials
+	/**
+	 * Filter a list of abilities or weapon specials, removing any entries that are overridden by
+	 * the overwrite_specials attributes of a second list.
+	 *
 	 * @param ability The special ability type who is being checked.
-	 * @param temp_list the list checked and returned.
-	 * @param abil_list list checked for verify presence of overwrite_specials .
-	 * @param filter_self name of [filter_"self/student"] if is abilities or specials who are checked
+	 * @param input list to check, a filtered copy of this list is returned by the function.
+	 * @param overwriters list that may have overwrite_specials attributes.
+	 * @param filter_self name of [filter_"self/student"] if is abilities or specials who are checked.
+	 * @param is_special if true, input contains weapon specials; if false, it contains abilities.
 	 */
-	unit_ability_list overwrite_special_checking(const std::string& ability, unit_ability_list temp_list, const unit_ability_list& abil_list, const std::string& filter_self = "filter_self") const;
+	unit_ability_list overwrite_special_checking(const std::string& ability, unit_ability_list input, unit_ability_list overwriters, const std::string& filter_self, bool is_special) const;
 	/** check_self_abilities : return an boolean value for checking of activities of abilities used like weapon
 	 * @return True if the special @a special is active.
 	 * @param cfg the config to one special ability checked.
@@ -149,7 +153,7 @@ private:
 	 */
 	bool check_adj_abilities(const config& cfg, const std::string& special, int dir, const unit& from) const;
 	bool special_active(const config& special, AFFECTS whom, const std::string& tag_name,
-	                    bool include_backstab=true, const std::string& filter_self ="filter_self") const;
+	                    const std::string& filter_self ="filter_self") const;
 
 /** weapon_specials_impl_self and weapon_specials_impl_adj : check if special name can be added.
 	 * @param[in,out] temp_string the string modified and returned
@@ -241,7 +245,6 @@ private:
 		const config& special,
 		AFFECTS whom,
 		const std::string& tag_name,
-		bool include_backstab=true,
 		const std::string& filter_self ="filter_self"
 	);
 

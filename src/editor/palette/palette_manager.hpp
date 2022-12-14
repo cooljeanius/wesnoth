@@ -50,7 +50,6 @@ public:
 	bool can_scroll_down();
 
 	void scroll_top();
-	void restore_palette_bg(bool scroll_top);
 	void scroll_bottom();
 
 //TODO
@@ -58,8 +57,11 @@ public:
 
 	void adjust_size();
 
-	sdl_handler_vector handler_members();
-	virtual void handle_event(const SDL_Event& event);
+	sdl_handler_vector handler_members() override;
+	virtual void handle_event(const SDL_Event& event) override;
+
+	/** Called by draw_manager to validate layout before drawing. */
+	virtual void layout() override;
 
 	/**
 	 * Draw the palette.
@@ -68,7 +70,7 @@ public:
 	 * even though it is not invalidated.
 	 */
 	//void draw(bool force=false);
-	void draw_contents(); // { draw(false); };
+	void draw_contents() override; // { draw(false); };
 
 public:
 

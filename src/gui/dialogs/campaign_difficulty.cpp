@@ -18,15 +18,16 @@
 #include "gui/dialogs/campaign_difficulty.hpp"
 
 #include "config.hpp"
+#include "deprecation.hpp"
 #include "font/text_formatting.hpp"
 #include "formatter.hpp"
+#include "game_version.hpp"
 #include "gui/auxiliary/find_widget.hpp"
-#include "preferences/game.hpp"
 #include "gui/widgets/listbox.hpp"
 #include "gui/widgets/window.hpp"
 #include "log.hpp"
+#include "preferences/game.hpp"
 #include "serialization/string_utils.hpp"
-#include "deprecation.hpp"
 
 static lg::log_domain log_wml("wml");
 #define WRN_WML LOG_STREAM(warn, log_wml)
@@ -55,11 +56,11 @@ config generate_difficulty_config(const config& source)
 }
 
 campaign_difficulty::campaign_difficulty(const config& campaign)
-	: difficulties_(generate_difficulty_config(campaign))
+	: modal_dialog(window_id())
+	, difficulties_(generate_difficulty_config(campaign))
 	, campaign_id_(campaign["id"])
 	, selected_difficulty_("CANCEL")
 {
-	set_restore(true);
 }
 
 void campaign_difficulty::pre_show(window& window)
@@ -68,8 +69,8 @@ void campaign_difficulty::pre_show(window& window)
 	window.keyboard_capture(&list);
 
 	for(const config& d : difficulties_.child_range("difficulty")) {
-		std::map<std::string, string_map> data;
-		string_map item;
+		widget_data data;
+		widget_item item;
 
 		item["label"] = d["image"];
 		data.emplace("icon", item);

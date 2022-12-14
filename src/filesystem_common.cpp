@@ -132,7 +132,7 @@ std::string get_prefs_file()
 
 std::string get_credentials_file()
 {
-	return get_user_config_dir() + "/credentials";
+	return get_user_config_dir() + "/credentials-aes";
 }
 
 std::string get_default_prefs_file()
@@ -262,7 +262,7 @@ const file_tree_checksum& data_tree_checksum(bool reset)
 		get_file_tree_checksum_internal(get_user_data_dir() + "/data/",checksum);
 		LOG_FS << "calculated data tree checksum: "
 			   << checksum.nfiles << " files; "
-			   << checksum.sum_size << " bytes" << std::endl;
+			   << checksum.sum_size << " bytes";
 	}
 
 	return checksum;

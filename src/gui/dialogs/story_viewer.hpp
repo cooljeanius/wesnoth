@@ -42,10 +42,14 @@ public:
 		} catch(const std::out_of_range&) {}
 	}
 
+	/** top_level_drawable hook to animate the view */
+	virtual void update() override;
+
 private:
 	virtual const std::string& window_id() const override;
 
 	virtual void pre_show(window& window) override;
+	virtual void post_show(window& window) override;
 
 	void clear_image_timer();
 
@@ -69,8 +73,6 @@ private:
 	void begin_fade_draw(bool fade_in);
 	void halt_fade_draw();
 
-	void draw_callback();
-
 	void flag_stack_as_dirty();
 
 	storyscreen::controller controller_;
@@ -91,6 +93,8 @@ private:
 	};
 
 	FADE_STATE fade_state_;
+
+	bool game_was_already_hidden_;
 };
 
 } // namespace dialogs

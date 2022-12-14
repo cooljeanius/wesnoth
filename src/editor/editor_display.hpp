@@ -42,25 +42,39 @@ public:
 		return controller_;
 	}
 
-protected:
-	void pre_draw() override;
 	/**
-	* The editor uses different rules for terrain highlighting (e.g. selections)
-	*/
-	image::TYPE get_image_type(const map_location& loc) override;
+	 * TLD layout() override. Replaces old refresh_reports(). Be sure to
+	 * call the base class method as well.
+	 *
+	 * This updates some reports that may need to be refreshed every frame.
+	 */
+	virtual void layout() override;
 
+	/** Sets texture to be drawn in hex under the mouse's location. */
+	void set_mouseover_hex_overlay(const texture& image)
+	{
+		mouseover_hex_overlay_ = image;
+	}
+
+	void clear_mouseover_hex_overlay()
+	{
+		mouseover_hex_overlay_.reset();
+	}
+
+protected:
 	void draw_hex(const map_location& loc) override;
 
 	/** Inherited from display. */
 	virtual overlay_map& get_overlays() override;
 
-	const SDL_Rect& get_clip_rect() override;
-	void draw_sidebar() override;
+	rect get_clip_rect() const override;
 
 	std::set<map_location> brush_locations_;
 
 	/* The controller that owns this display. */
 	editor_controller& controller_;
+
+	texture mouseover_hex_overlay_;
 };
 
 } //end namespace editor

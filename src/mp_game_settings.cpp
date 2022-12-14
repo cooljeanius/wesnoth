@@ -175,7 +175,7 @@ void mp_game_settings::addon_version_info::write(config & cfg) const {
 
 void mp_game_settings::update_addon_requirements(const config & cfg) {
 	if (cfg["id"].empty()) {
-		WRN_NG << "Tried to add add-on metadata to a game, missing mandatory id field... skipping.\n" << cfg.debug() << "\n";
+		WRN_NG << "Tried to add add-on metadata to a game, missing mandatory id field... skipping.\n" << cfg.debug();
 		return;
 	}
 
@@ -203,7 +203,7 @@ void mp_game_settings::update_addon_requirements(const config & cfg) {
 		}
 
 		if(addon.version != new_data.version) {
-			ERR_NG << "Addon version data mismatch! Not all local WML has same version of the addon: '" << cfg["id"].str() << "'.\n";
+			ERR_NG << "Addon version data mismatch! Not all local WML has same version of the addon: '" << cfg["id"].str() << "'.";
 		}
 
 		if(new_data.required) {

@@ -363,7 +363,7 @@ namespace { // Private helpers for move_unit()
 		, real_end_(begin_)
 		// Unit information:
 		, move_it_(resources::gameboard->units().find(*begin_))
-		, orig_side_(( assert(move_it_ != resources::gameboard->units().end()), move_it_->side() ))
+		, orig_side_(( static_cast<void>(assert(move_it_ != resources::gameboard->units().end())), move_it_->side() ))
 		, orig_moves_(move_it_->movement_left())
 		, orig_dir_(move_it_->facing())
 		, goto_( is_ai_move() ? move_it_->get_goto() : route.back() )
@@ -1165,9 +1165,7 @@ namespace { // Private helpers for move_unit()
 
 
 static std::size_t move_unit_internal(undo_list* undo_stack,
-                 bool show_move,
-                 bool* interrupted,
-				 unit_mover& mover)
+	bool show_move, bool* interrupted, unit_mover& mover)
 {
 	const events::command_disabler disable_commands;
 	// Default return value.
@@ -1230,16 +1228,14 @@ static std::size_t move_unit_internal(undo_list* undo_stack,
  *          than steps.size() ).
  */
 std::size_t move_unit_and_record(const std::vector<map_location> &steps,
-                 undo_list* undo_stack,
-                 bool continued_move, bool show_move,
-                 bool* interrupted,
-                 move_unit_spectator* move_spectator)
+	undo_list* undo_stack, bool continued_move, bool show_move,
+	bool* interrupted, move_unit_spectator* move_spectator)
 {
 
 	// Avoid some silliness.
 	if ( steps.size() < 2  ||  (steps.size() == 2 && steps.front() == steps.back()) ) {
 		DBG_NG << "Ignoring a unit trying to jump on its hex at " <<
-		          ( steps.empty() ? map_location::null_location() : steps.front() ) << ".\n";
+		          ( steps.empty() ? map_location::null_location() : steps.front() ) << ".";
 		return 0;
 	}
 	//if we have no fog activated then we always skip sighted
@@ -1276,8 +1272,8 @@ std::size_t move_unit_and_record(const std::vector<map_location> &steps,
 }
 
 std::size_t move_unit_from_replay(const std::vector<map_location> &steps,
-                 undo_list* undo_stack,
-                 bool continued_move,bool skip_ally_sighted, bool show_move)
+	undo_list* undo_stack, bool continued_move, bool skip_ally_sighted,
+	bool show_move)
 {
 	// Evaluate this move.
 	unit_mover mover(steps, nullptr, continued_move,skip_ally_sighted);

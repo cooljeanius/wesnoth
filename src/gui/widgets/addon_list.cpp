@@ -168,8 +168,8 @@ void addon_list::set_addons(const addons_list& addons)
 
 		addon_vector_.push_back(&addon);
 
-		std::map<std::string, string_map> data;
-		string_map item;
+		widget_data data;
+		widget_item item;
 
 		if(!tracking_info.can_publish) {
 			item["label"] = addon.display_icon();
@@ -415,7 +415,7 @@ void addon_list::select_first_addon()
 addon_list_definition::addon_list_definition(const config& cfg)
 	: styled_widget_definition(cfg)
 {
-	DBG_GUI_P << "Parsing add-on list " << id << "\n";
+	DBG_GUI_P << "Parsing add-on list " << id;
 
 	load_resolutions<resolution>(cfg);
 }
@@ -468,7 +468,7 @@ std::unique_ptr<widget> builder_addon_list::build() const
 	auto widget = std::make_unique<addon_list>(*this);
 
 	DBG_GUI_G << "Window builder: placed add-on list '" << id <<
-		"' with definition '" << definition << "'.\n";
+		"' with definition '" << definition << "'.";
 
 	const auto conf = widget->cast_config_to<addon_list_definition>();
 	assert(conf != nullptr);

@@ -44,7 +44,7 @@ dispatcher::dispatcher()
 dispatcher::~dispatcher()
 {
 	if(connected_) {
-		disconnect_dispatcher(this);
+		disconnect();
 	}
 }
 
@@ -55,11 +55,18 @@ void dispatcher::connect()
 	connect_dispatcher(this);
 }
 
+void dispatcher::disconnect()
+{
+	assert(connected_);
+	connected_ = false;
+	disconnect_dispatcher(this);
+}
+
 bool dispatcher::has_event(const ui_event event, const event_queue_type event_type)
 {
 #if 0
 	const bool res = dispatcher_implementation::has_handler(*this, event_type, event);
-	std::cerr << "Event '" << event << " '" << (res ? "found" : "not found") << "in queue\n";
+	PLAIN_LOG << "Event '" << event << " '" << (res ? "found" : "not found") << "in queue";
 	return res;
 #else
 	return dispatcher_implementation::has_handler(*this, event_type, event);

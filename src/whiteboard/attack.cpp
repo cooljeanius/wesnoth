@@ -24,6 +24,7 @@
 
 #include "arrow.hpp"
 #include "config.hpp"
+#include "draw.hpp"
 #include "fake_unit_ptr.hpp"
 #include "game_board.hpp"
 #include "play_controller.hpp"
@@ -121,7 +122,7 @@ void attack::execute(bool& success, bool& complete)
 		return;
 	}
 
-	LOG_WB << "Executing: " << shared_from_this() << "\n";
+	LOG_WB << "Executing: " << shared_from_this();
 
 	if (route_->steps.size() >= 2)
 	{
@@ -154,7 +155,7 @@ void attack::apply_temp_modifier(unit_map& unit_map)
 	assert(get_unit());
 	unit& unit = *get_unit();
 	DBG_WB << unit.name() << " [" << unit.id()
-					<< "] has " << unit.attacks_left() << " attacks, decreasing by one" << "\n";
+					<< "] has " << unit.attacks_left() << " attacks, decreasing by one";
 	assert(unit.attacks_left() > 0);
 	unit.set_attacks(unit.attacks_left() - 1);
 
@@ -162,7 +163,7 @@ void attack::apply_temp_modifier(unit_map& unit_map)
 	temp_movement_subtracted_ = unit.movement_left() >= attack_movement_cost_ ? attack_movement_cost_ : 0 ;
 	DBG_WB << "Attack: Changing movement points for unit " << unit.name() << " [" << unit.id()
 				<< "] from " << unit.movement_left() << " to "
-				<< unit.movement_left() - temp_movement_subtracted_ << ".\n";
+				<< unit.movement_left() - temp_movement_subtracted_ << ".";
 	unit.set_movement(unit.movement_left() - temp_movement_subtracted_, true);
 
 	//Update status of fake unit (not undone by remove_temp_modifiers)
@@ -178,44 +179,48 @@ void attack::remove_temp_modifier(unit_map& unit_map)
 	assert(get_unit());
 	unit& unit = *get_unit();
 	DBG_WB << unit.name() << " [" << unit.id()
-					<< "] has " << unit.attacks_left() << " attacks, increasing by one" << "\n";
+					<< "] has " << unit.attacks_left() << " attacks, increasing by one";
 	unit.set_attacks(unit.attacks_left() + 1);
 	DBG_WB << "Attack: Changing movement points for unit " << unit.name() << " [" << unit.id()
 				<< "] from " << unit.movement_left() << " to "
-				<< unit.movement_left() + temp_movement_subtracted_ << ".\n";
+				<< unit.movement_left() + temp_movement_subtracted_ << ".";
 	unit.set_movement(unit.movement_left() + temp_movement_subtracted_, true);
 	temp_movement_subtracted_ = 0;
 	move::remove_temp_modifier(unit_map);
 }
 
+// Draws the attack indicator.
 void attack::draw_hex(const map_location& hex)
 {
-	if (hex == get_dest_hex() || hex == target_hex_) //draw attack indicator
+	if (hex != get_dest_hex() && hex != target_hex_) {
+		return;
+	}
+
+	//@todo: replace this by either the use of transparency + LAYER_ATTACK_INDICATOR,
+	//or a dedicated layer
+	const display::drawing_layer layer = display::LAYER_FOOTSTEPS;
+
+	//calculate direction (valid for both hexes)
+	std::string direction_text = map_location::write_direction(
+			get_dest_hex().get_relative_dir(target_hex_));
+
+	if (hex == get_dest_hex()) //add symbol to attacker hex
 	{
-		//@todo: replace this by either the use of transparency + LAYER_ATTACK_INDICATOR,
-		//or a dedicated layer
-		const display::drawing_layer layer = display::LAYER_FOOTSTEPS;
+		auto disp = display::get_singleton();
 
-		//calculate direction (valid for both hexes)
-		std::string direction_text = map_location::write_direction(
-				get_dest_hex().get_relative_dir(target_hex_));
+		disp->drawing_buffer_add(layer, get_dest_hex(),
+			[=, tex = image::get_texture("whiteboard/attack-indicator-src-" + direction_text + ".png", image::HEXED)](const rect& d) {
+				draw::blit(tex, disp->scaled_to_zoom({d.x, d.y, tex.w(), tex.h()}));
+			});
+	}
+	else if (hex == target_hex_) //add symbol to defender hex
+	{
+		auto disp = display::get_singleton();
 
-		if (hex == get_dest_hex()) //add symbol to attacker hex
-		{
-			int xpos = display::get_singleton()->get_location_x(get_dest_hex());
-			int ypos = display::get_singleton()->get_location_y(get_dest_hex());
-
-			display::get_singleton()->drawing_buffer_add(layer, get_dest_hex(), xpos, ypos,
-					image::get_image("whiteboard/attack-indicator-src-" + direction_text + ".png", image::SCALED_TO_HEX));
-		}
-		else if (hex == target_hex_) //add symbol to defender hex
-		{
-			int xpos = display::get_singleton()->get_location_x(target_hex_);
-			int ypos = display::get_singleton()->get_location_y(target_hex_);
-
-			display::get_singleton()->drawing_buffer_add(layer, target_hex_, xpos, ypos,
-					image::get_image("whiteboard/attack-indicator-dst-" + direction_text + ".png", image::SCALED_TO_HEX));
-		}
+		disp->drawing_buffer_add(layer, target_hex_,
+			[=, tex = image::get_texture("whiteboard/attack-indicator-dst-" + direction_text + ".png", image::HEXED)](const rect& d) {
+				draw::blit(tex, disp->scaled_to_zoom({d.x, d.y, tex.w(), tex.h()}));
+			});
 	}
 }
 

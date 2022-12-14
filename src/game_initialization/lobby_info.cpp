@@ -160,7 +160,7 @@ bool lobby_info::process_gamelist_diff_impl(const config& data)
 	try {
 		gamelist_.apply_diff(data, true);
 	} catch(const config::error& e) {
-		ERR_LB << "Error while applying the gamelist diff: '" << e.message << "' Getting a new gamelist.\n";
+		ERR_LB << "Error while applying the gamelist diff: '" << e.message << "' Getting a new gamelist.";
 		return false;
 	}
 
@@ -168,11 +168,11 @@ bool lobby_info::process_gamelist_diff_impl(const config& data)
 	DBG_LB << dump_games_map(games_by_id_);
 
 	for(config& c : gamelist_.child("gamelist").child_range("game")) {
-		DBG_LB << "data process: " << c["id"] << " (" << c[config::diff_track_attribute] << ")\n";
+		DBG_LB << "data process: " << c["id"] << " (" << c[config::diff_track_attribute] << ")";
 
 		const int game_id = c["id"];
 		if(game_id == 0) {
-			ERR_LB << "game with id 0 in gamelist config" << std::endl;
+			ERR_LB << "game with id 0 in gamelist config";
 			return false;
 		}
 
@@ -196,7 +196,7 @@ bool lobby_info::process_gamelist_diff_impl(const config& data)
 			current_i->second.display_status = game_info::disp_status::UPDATED;
 		} else if(diff_result == "deleted") {
 			if(current_i == games_by_id_.end()) {
-				WRN_LB << "Would have to delete a game that I don't have: " << game_id << std::endl;
+				WRN_LB << "Would have to delete a game that I don't have: " << game_id;
 				continue;
 			}
 
@@ -215,7 +215,7 @@ bool lobby_info::process_gamelist_diff_impl(const config& data)
 	try {
 		gamelist_.clear_diff_track(data);
 	} catch(const config::error& e) {
-		ERR_LB << "Error while applying the gamelist diff (2): '" << e.message << "' Getting a new gamelist.\n";
+		ERR_LB << "Error while applying the gamelist diff (2): '" << e.message << "' Getting a new gamelist.";
 		return false;
 	}
 
@@ -239,7 +239,7 @@ void lobby_info::process_userlist()
 
 		game_info* g = get_game_by_id(ui.game_id);
 		if(!g) {
-			WRN_NG << "User " << ui.name << " has unknown game_id: " << ui.game_id << std::endl;
+			WRN_NG << "User " << ui.name << " has unknown game_id: " << ui.game_id;
 			continue;
 		}
 
@@ -280,7 +280,7 @@ std::function<void()> lobby_info::begin_state_sync()
 			}
 		}
 
-		DBG_LB << " -> " << games_by_id_.size() << std::endl;
+		DBG_LB << " -> " << games_by_id_.size();
 
 		make_games_vector();
 

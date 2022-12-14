@@ -67,8 +67,6 @@ struct message_implementation
 
 void message::pre_show(window& window)
 {
-	set_restore(true);
-
 	// ***** Validate the required buttons ***** ***** ***** *****
 	message_implementation::init_button(window, buttons_[left_1], "left_side");
 	message_implementation::init_button(window, buttons_[cancel], "cancel");
@@ -206,7 +204,7 @@ int show_message(const std::string& title,
 void show_error_message(const std::string& msg,
 						bool message_use_markup)
 {
-	LOG_STREAM(err, lg::general()) << msg << '\n';
+	LOG_STREAM(err, lg::general()) << msg;
 	(void) show_message(
 				 _("Error"),
 				 msg,

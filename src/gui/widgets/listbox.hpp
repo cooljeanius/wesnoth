@@ -74,7 +74,7 @@ public:
 	 * @param index               The item before which to add the new item,
 	 *                            0 == begin, -1 == end.
 	 */
-	grid& add_row(const string_map& item, const int index = -1);
+	grid& add_row(const widget_item& item, const int index = -1);
 
 	/**
 	 * Adds single row to the grid.
@@ -93,7 +93,7 @@ public:
 	 * @param index               The item before which to add the new item,
 	 *                            0 == begin, -1 == end.
 	 */
-	grid& add_row(const std::map<std::string /* widget id */, string_map>& data, const int index = -1);
+	grid& add_row(const widget_data& data, const int index = -1);
 
 	/**
 	 * Removes a row in the listbox.
@@ -253,12 +253,6 @@ public:
 	/** See @ref widget::place. */
 	virtual void place(const point& origin, const point& size) override;
 
-	/** See @ref widget::layout_children. */
-	virtual void layout_children() override;
-
-	/** See @ref widget::child_populate_dirty_list. */
-	virtual void child_populate_dirty_list(window& caller, const std::vector<widget*>& call_stack) override;
-
 	/***** ***** ***** setters / getters for members ***** ****** *****/
 
 	void order_by(const generator_base::order_func& func);
@@ -354,7 +348,7 @@ private:
 	void finalize(std::unique_ptr<generator_base> generator,
 			builder_grid_const_ptr header,
 			builder_grid_const_ptr footer,
-			const std::vector<std::map<std::string, string_map>>& list_data);
+			const std::vector<widget_data>& list_data);
 
 	/**
 	 * Contains a pointer to the generator.
@@ -368,8 +362,6 @@ private:
 
 	/** Contains the builder for the new items. */
 	builder_grid_const_ptr list_builder_;
-
-	bool need_layout_;
 
 	typedef std::vector<std::pair<selectable_item*, generator_sort_array>> torder_list;
 	torder_list orders_;
@@ -407,8 +399,8 @@ private:
 	 */
 	void resize_content(const widget& row);
 
-	/** Layouts the children if needed. */
-	void layout_children(const bool force);
+	/** Updates internal layout. */
+	void update_layout();
 
 	/** Inherited from scrollbar_container. */
 	virtual void set_content_size(const point& origin, const point& size) override;
@@ -507,7 +499,7 @@ struct builder_listbox : public builder_styled_widget
 	 * Contains a vector with the data to set in every cell, it's used to
 	 * serialize the data in the config, so the config is no longer required.
 	 */
-	std::vector<std::map<std::string, string_map>> list_data;
+	std::vector<widget_data> list_data;
 
 	bool has_minimum_, has_maximum_;
 };
@@ -552,7 +544,7 @@ struct builder_horizontal_listbox : public builder_styled_widget
 	 * Contains a vector with the data to set in every cell, it's used to
 	 * serialize the data in the config, so the config is no longer required.
 	 */
-	std::vector<std::map<std::string, string_map>> list_data;
+	std::vector<widget_data> list_data;
 
 	bool has_minimum_, has_maximum_;
 };
@@ -598,7 +590,7 @@ struct builder_grid_listbox : public builder_styled_widget
 	 * Contains a vector with the data to set in every cell, it's used to
 	 * serialize the data in the config, so the config is no longer required.
 	 */
-	std::vector<std::map<std::string, string_map>> list_data;
+	std::vector<widget_data> list_data;
 
 	bool has_minimum_, has_maximum_;
 };

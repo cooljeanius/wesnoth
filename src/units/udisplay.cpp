@@ -31,6 +31,7 @@
 #include "units/filter.hpp"
 #include "units/map.hpp"
 #include "utils/scope_exit.hpp"
+#include "video.hpp"
 
 #define LOG_DP LOG_STREAM(info, display)
 
@@ -109,7 +110,6 @@ void teleport_unit_between(const map_location& a, const map_location& b, unit& t
 	}
 
 	temp_unit.anim_comp().set_standing();
-	disp.update_display();
 	events::pump();
 }
 
@@ -167,7 +167,7 @@ int move_unit_between(const map_location& a,
 bool do_not_show_anims(display* disp)
 {
 
-	return !disp || disp->video().update_locked() || disp->video().faked();
+	return !disp || video::headless();
 }
 
 } // end anon namespace
@@ -177,8 +177,7 @@ bool do_not_show_anims(display* disp)
  */
 unit_mover::unit_mover(const std::vector<map_location>& path, bool animate, bool force_scroll) :
 	disp_(game_display::get_singleton()),
-	can_draw_(disp_  &&  !disp_->video().update_locked()  &&
-	          !disp_->video().faked()  &&  path.size() > 1),
+	can_draw_(disp_ && !video::headless() && path.size() > 1),
 	animate_(animate),
 	force_scroll_(force_scroll),
 	animator_(),
@@ -600,7 +599,9 @@ void unit_die(const map_location& loc, unit& loser,
 void unit_attack(display * disp, game_board & board,
                  const map_location& a, const map_location& b, int damage,
                  const attack_type& attack, const_attack_ptr secondary_attack,
-                 int swing,const std::string& hit_text,int drain_amount,const std::string& att_text, const std::vector<std::string>* extra_hit_sounds,
+                 int swing, const std::string& hit_text, int drain_amount,
+                 const std::string& att_text,
+                 const std::vector<std::string>* extra_hit_sounds,
                  bool attacking)
 {
 	if(do_not_show_anims(disp) || (disp->fogged(a) && disp->fogged(b)) || !preferences::show_combat()) {
@@ -672,6 +673,7 @@ void unit_attack(display * disp, game_board & board,
 		unit_map::const_iterator leader = board.units().find(ability.teacher_loc);
 		assert(leader.valid());
 		leader->set_facing(ability.teacher_loc.get_relative_dir(a));
+		leader->anim_comp().invalidate(*disp);
 		animator.add_animation(leader.get_shared_ptr(), "leading", ability.teacher_loc,
 			att->get_location(), damage, true,  "", {0,0,0},
 			hit_type, weapon, secondary_attack, swing);
@@ -838,8 +840,6 @@ void unit_recruited(const map_location& loc,const map_location& leader_loc)
 				animator.add_animation(leader.get_shared_ptr(), "recruiting", leader_loc, loc, 0, true);
 			}
 		}
-
-		disp->draw();
 	}
 	animator.add_animation(u.get_shared_ptr(), "recruited", loc, leader_loc);
 	animator.start_animations();

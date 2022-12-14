@@ -186,7 +186,7 @@ void menu_handler::preferences()
 {
 	gui2::dialogs::preferences_dialog::display();
 	// Needed after changing fullscreen/windowed mode or display resolution
-	gui_->redraw_everything();
+	gui_->queue_rerender();
 }
 
 void menu_handler::show_chat_log()
@@ -250,7 +250,7 @@ void menu_handler::recruit(int side_num, const map_location& last_hex)
 	for(const auto& recruit : recruits) {
 		const unit_type* type = unit_types.find(recruit);
 		if(!type) {
-			ERR_NG << "could not find unit '" << recruit << "'" << std::endl;
+			ERR_NG << "could not find unit '" << recruit << "'";
 			unknown_units.emplace_back(recruit);
 			continue;
 		}
@@ -386,9 +386,9 @@ void menu_handler::recall(int side_num, const map_location& last_hex)
 		empty = current_team.recall_list().empty();
 	}
 
-	DBG_WB << "menu_handler::recall: Contents of wb-modified recall list:\n";
+	DBG_WB << "menu_handler::recall: Contents of wb-modified recall list:";
 	for(const unit_const_ptr& unit : recall_list_team) {
-		DBG_WB << unit->name() << " [" << unit->id() << "]\n";
+		DBG_WB << unit->name() << " [" << unit->id() << "]";
 	}
 
 	if(empty) {
@@ -432,7 +432,7 @@ void menu_handler::recall(int side_num, const map_location& last_hex)
 		return;
 	}
 
-	LOG_NG << "recall index: " << res << "\n";
+	LOG_NG << "recall index: " << res;
 	const events::command_disabler disable_commands;
 
 	map_location recall_location = last_hex;
@@ -456,7 +456,7 @@ void menu_handler::recall(int side_num, const map_location& last_hex)
 				synced_context::ignore_error_function);
 
 		if(!success) {
-			ERR_NG << "menu_handler::recall(): Unit does not exist in the recall list." << std::endl;
+			ERR_NG << "menu_handler::recall(): Unit does not exist in the recall list.";
 		}
 	}
 }
@@ -714,7 +714,7 @@ type_gender_variation choose_unit()
 	const std::string& ut_id = create_dlg.choice();
 	const unit_type* utp = unit_types.find(ut_id);
 	if(!utp) {
-		ERR_NG << "Create unit dialog returned nonexistent or unusable unit_type id '" << ut_id << "'." << std::endl;
+		ERR_NG << "Create unit dialog returned nonexistent or unusable unit_type id '" << ut_id << "'.";
 		return type_gender_variation(static_cast<const unit_type*>(nullptr), unit_race::NUM_GENDERS, "");
 	}
 	const unit_type& ut = *utp;
@@ -890,7 +890,7 @@ void menu_handler::move_unit_to_loc(const unit_map::iterator& ui,
 	gui_->unhighlight_reach();
 
 	{
-		LOG_NG << "move_unit_to_loc " << route.steps.front() << " to " << route.steps.back() << "\n";
+		LOG_NG << "move_unit_to_loc " << route.steps.front() << " to " << route.steps.back();
 		actions::move_unit_and_record(route.steps, &pc_.get_undo_stack(), continue_move);
 	}
 
@@ -968,7 +968,7 @@ void menu_handler::execute_gotos(mouse_handler& mousehandler, int side)
 			gui_->set_route(&route);
 
 			{
-				LOG_NG << "execute goto from " << route.steps.front() << " to " << route.steps.back() << "\n";
+				LOG_NG << "execute goto from " << route.steps.front() << " to " << route.steps.back();
 				int moves = actions::move_unit_and_record(route.steps, &pc_.get_undo_stack());
 				change = moves > 0;
 			}
@@ -1220,6 +1220,7 @@ protected:
 		chmap::get_command("remove")->flags = "";  // clear network-only flag
 
 		chmap::set_cmd_prefix(":");
+		chmap::set_cmd_flag(true);
 
 		register_command("refresh", &console_handler::do_refresh, _("Refresh gui."));
 		register_command("droid", &console_handler::do_droid, _("Switch a side to/from AI control."),
@@ -1461,7 +1462,7 @@ void console_handler::do_refresh()
 	sound::flush_cache();
 
 	menu_handler_.gui_->create_buttons();
-	menu_handler_.gui_->redraw_everything();
+	menu_handler_.gui_->queue_rerender();
 }
 
 void console_handler::do_droid()
@@ -1732,7 +1733,8 @@ void console_handler::do_clear()
 
 void console_handler::do_foreground()
 {
-	menu_handler_.gui_->toggle_debug_foreground();
+	menu_handler_.gui_->toggle_debug_flag(display::DEBUG_FOREGROUND);
+	menu_handler_.gui_->invalidate_all();
 }
 
 void console_handler::do_layers()
@@ -1763,7 +1765,7 @@ void console_handler::do_fps()
 
 void console_handler::do_benchmark()
 {
-	menu_handler_.gui_->toggle_benchmark();
+	menu_handler_.gui_->toggle_debug_flag(display::DEBUG_BENCHMARK);
 }
 
 void console_handler::do_save()
@@ -1981,6 +1983,11 @@ void console_handler::do_unit()
 
 	unit_map::iterator i = menu_handler_.current_unit();
 	if(i == menu_handler_.pc_.get_units().end()) {
+		utils::string_map symbols;
+		symbols["unit"] = get_arg(1);
+		command_failed(VGETTEXT(
+			"Debug command 'unit: $unit' failed: no unit selected or hovered over.",
+			symbols));
 		return;
 	}
 
@@ -2070,18 +2077,18 @@ void console_handler::do_event()
 
 void console_handler::do_toggle_draw_coordinates()
 {
-	menu_handler_.gui_->set_draw_coordinates(!menu_handler_.gui_->get_draw_coordinates());
+	menu_handler_.gui_->toggle_debug_flag(display::DEBUG_COORDINATES);
 	menu_handler_.gui_->invalidate_all();
 }
 void console_handler::do_toggle_draw_terrain_codes()
 {
-	menu_handler_.gui_->set_draw_terrain_codes(!menu_handler_.gui_->get_draw_terrain_codes());
+	menu_handler_.gui_->toggle_debug_flag(display::DEBUG_TERRAIN_CODES);
 	menu_handler_.gui_->invalidate_all();
 }
 
 void console_handler::do_toggle_draw_num_of_bitmaps()
 {
-	menu_handler_.gui_->set_draw_num_of_bitmaps(!menu_handler_.gui_->get_draw_num_of_bitmaps());
+	menu_handler_.gui_->toggle_debug_flag(display::DEBUG_NUM_BITMAPS);
 	menu_handler_.gui_->invalidate_all();
 }
 
@@ -2111,7 +2118,7 @@ void menu_handler::do_ai_formula(const std::string& str, int side_num, mouse_han
 		add_chat_message(std::time(nullptr), "wfl", 0, ai::manager::get_singleton().evaluate_command(side_num, str));
 	} catch(const wfl::formula_error&) {
 	} catch(...) {
-		add_chat_message(std::time(nullptr), "wfl", 0, "UNKNOWN ERROR IN FORMULA");
+		add_chat_message(std::time(nullptr), "wfl", 0, "UNKNOWN ERROR IN FORMULA: "+utils::get_unknown_exception_type());
 	}
 }
 

@@ -4,15 +4,15 @@
 #
 # Nils Kneuper <crazy-ivanovic@gmx.net>, 2005.
 # ihsan Haluk AKIN <ihsan_akin@yahoo.com>, 2005, 2006.
-# Nilgün Belma Bugüner <nilgun@belgeler.gen.tr>, 2008, ..., 2022.
+# Nilgün Belma Bugüner <nillguine@gmail.com>, 2008, ..., 2022.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: wesnoth-units\n"
 "Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
-"POT-Creation-Date: 2022-05-15 14:27 UTC\n"
-"PO-Revision-Date: 2022-01-06 03:37+0300\n"
-"Last-Translator: Nilgün Belma Bugüner <nilgun@belgeler.gen.tr>\n"
+"POT-Creation-Date: 2022-11-20 05:31 UTC\n"
+"PO-Revision-Date: 2022-08-21 15:09+0300\n"
+"Last-Translator: Nilgün Belma Bugüner <nillguine@gmail.com>\n"
 "Language-Team: Turkish\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
@@ -46,7 +46,6 @@ msgstr "kuyruk"
 
 #. [attack]: type=impact
 #: data/campaigns/Dead_Water/units/Kraken.cfg:27
-#: data/campaigns/Winds_of_Fate/units/Kraken.cfg:28
 #: data/core/units/monsters/Cuttle_Fish.cfg:29
 #: data/core/units/monsters/Tentacle.cfg:33
 msgid "tentacle"
@@ -54,7 +53,6 @@ msgstr "dokunaç"
 
 #. [attack]: type=pierce
 #: data/campaigns/Dead_Water/units/Kraken.cfg:38
-#: data/campaigns/Winds_of_Fate/units/Kraken.cfg:39
 #: data/core/units/monsters/Cuttle_Fish.cfg:40
 msgid "ink"
 msgstr "mürekkep"
@@ -123,10 +121,10 @@ msgstr "asa"
 #: data/campaigns/Descent_Into_Darkness/units/Malin_Keshar.cfg:535
 #: data/campaigns/Liberty/units/Rogue_Mage.cfg:23
 #: data/campaigns/Liberty/units/Shadow_Mage.cfg:32
-#: data/core/units/dunefolk/Falconer.cfg:140
-#: data/core/units/dunefolk/Sky_Hunter.cfg:138
+#: data/core/units/dunefolk/Falconer.cfg:141
+#: data/core/units/dunefolk/Sky_Hunter.cfg:139
 #: data/core/units/humans/Loyalist_Bowman.cfg:23
-#: data/core/units/orcs/Crossbowman.cfg:23 data/core/units/orcs/Slurbow.cfg:28
+#: data/core/units/orcs/Crossbowman.cfg:32 data/core/units/orcs/Slurbow.cfg:34
 msgid "short sword"
 msgstr "kısa kılıç"
 
@@ -174,32 +172,10 @@ msgid "sling"
 msgstr "sapan"
 
 #. [attack]: type=blade
-#: data/campaigns/Eastern_Invasion/units/Bone_Knight.cfg:32
-#: data/campaigns/Eastern_Invasion/units/Skeleton_Rider.cfg:41
-#: data/campaigns/Liberty/units/Bone_Knight.cfg:32
-#: data/campaigns/Liberty/units/Skeleton_Rider.cfg:41
-#: data/campaigns/The_Hammer_of_Thursagan/units/Dwarvish_Masked_Fighter.cfg:32
-#: data/campaigns/Under_the_Burning_Suns/units/undead/Undead_Horseman.cfg:39
-#: data/core/units/dunefolk/Explorer.cfg:34
-#: data/core/units/dunefolk/Rover.cfg:31
-#: data/core/units/dunefolk/Wayfarer.cfg:43
-#: data/core/units/dwarves/Explorer.cfg:33
-#: data/core/units/dwarves/Fighter.cfg:57
-#: data/core/units/dwarves/Pathfinder.cfg:36
-#: data/core/units/dwarves/Pathfinder.cfg:44
-#: data/core/units/dwarves/Scout.cfg:35 data/core/units/dwarves/Scout.cfg:43
-#: data/core/units/undead/Skele_Deathblade.cfg:53
-#: data/core/units/undead/Skele_Draug.cfg:30
-#: data/core/units/undead/Skele_Revenant.cfg:31
-#: data/core/units/undead/Skeleton.cfg:49
-msgid "axe"
-msgstr "balta"
-
-#. [attack]: type=blade
 #: data/campaigns/Eastern_Invasion/units/Horse_Lord.cfg:24
 #: data/campaigns/Eastern_Invasion/units/Mounted_Warrior.cfg:23
 #: data/core/units/orcs/Ruler.cfg:27 data/core/units/orcs/Sovereign.cfg:28
-#: data/core/units/orcs/Warlord.cfg:24 data/core/units/orcs/Warrior.cfg:22
+#: data/core/units/orcs/Warlord.cfg:24 data/core/units/orcs/Warrior.cfg:38
 msgid "greatsword"
 msgstr "büyük kılıç"
 
@@ -228,7 +204,6 @@ msgstr "harmandöver"
 #: data/campaigns/Heir_To_The_Throne/units/Princess.cfg:34
 #: data/campaigns/Heir_To_The_Throne/units/Princess.cfg:91
 #: data/campaigns/Heir_To_The_Throne/units/Sea_Orc.cfg:36
-#: data/campaigns/Liberty/units/Death_Squire.cfg:32
 #: data/campaigns/Sceptre_of_Fire/units/Haldric_II.cfg:26
 #: data/campaigns/The_Rise_Of_Wesnoth/units/Noble_Commander.cfg:34
 #: data/campaigns/The_Rise_Of_Wesnoth/units/Noble_Fighter.cfg:23
@@ -268,8 +243,9 @@ msgstr "harmandöver"
 #: data/core/units/humans/Loyalist_Swordsman.cfg:29
 #: data/core/units/humans/Woodsman_Ranger.cfg:44
 #: data/core/units/nagas/Fighter.cfg:30 data/core/units/nagas/Myrmidon.cfg:29
-#: data/core/units/nagas/Warrior.cfg:27 data/core/units/orcs/Grunt.cfg:82
+#: data/core/units/nagas/Warrior.cfg:27 data/core/units/orcs/Grunt.cfg:88
 #: data/core/units/orcs/Leader.cfg:27
+#: data/core/units/undead/Skele_Death_Squire.cfg:32
 msgid "sword"
 msgstr "kılıç"
 
@@ -329,7 +305,7 @@ msgstr "yay"
 #: data/core/units/monsters/Skeletal_Dragon.cfg:42
 #: data/core/units/undead/Corpse_Ghoul.cfg:32
 #: data/core/units/undead/Corpse_Necrophage.cfg:26
-#: data/core/units/undead/Spirit_Nightgaunt.cfg:36
+#: data/core/units/undead/Spirit_Nightgaunt.cfg:92
 #: data/core/units/undead/Spirit_Shadow.cfg:62
 msgid "claws"
 msgstr "tırmalar"
@@ -369,7 +345,7 @@ msgstr "eskrim kılıcı"
 #: data/campaigns/Secrets_of_the_Ancients/units/SotA_Corpses.cfg:267
 #: data/campaigns/Secrets_of_the_Ancients/units/SotA_Corpses.cfg:282
 #: data/campaigns/Secrets_of_the_Ancients/units/SotA_Corpses.cfg:298
-#: data/core/units/undead/Corpse_Walking.cfg:75
+#: data/core/units/undead/Corpse_Walking.cfg:97
 msgid "Walking Corpse"
 msgstr "Yürüyen Ceset"
 
@@ -377,7 +353,7 @@ msgstr "Yürüyen Ceset"
 #. [unit_type]: id=Walking Corpse, race=undead
 #: data/campaigns/Secrets_of_the_Ancients/units/Corpse_Shynal.cfg:17
 #: data/campaigns/Secrets_of_the_Ancients/units/SotA_Corpses.cfg:11
-#: data/core/units/undead/Corpse_Walking.cfg:85
+#: data/core/units/undead/Corpse_Walking.cfg:107
 msgid ""
 "Walking Corpses are the bodies of the dead, re-animated by dark magic. "
 "Though not especially dangerous to a trained soldier, the sight of one’s "
@@ -433,8 +409,8 @@ msgstr ""
 #: data/campaigns/Under_the_Burning_Suns/units/quenoth/Sun_Singer.cfg:27
 #: data/campaigns/Under_the_Burning_Suns/units/quenoth/Sun_Sylph.cfg:30
 #: data/campaigns/Under_the_Burning_Suns/units/undead/Spider_Lich.cfg:23
-#: data/core/units/undead/Corpse_Soulless.cfg:91
-#: data/core/units/undead/Corpse_Walking.cfg:90
+#: data/core/units/undead/Corpse_Soulless.cfg:113
+#: data/core/units/undead/Corpse_Walking.cfg:112
 #: data/core/units/undead/Necro_Ancient_Lich.cfg:29
 #: data/core/units/undead/Necro_Lich.cfg:35
 #: data/core/units/undead/Spirit_Ghost.cfg:57
@@ -513,6 +489,9 @@ msgstr "beddua"
 #: data/core/units/goblins/Pillager.cfg:32
 #: data/core/units/goblins/Wolf_Rider.cfg:46
 #: data/core/units/monsters/Ant.cfg:33 data/core/units/monsters/Bear.cfg:42
+#: data/core/units/monsters/Caribe.cfg:112
+#: data/core/units/monsters/Caribe_Hunter.cfg:113
+#: data/core/units/monsters/Caribe_Nibbler.cfg:125
 #: data/core/units/monsters/Fire_Ant.cfg:64
 #: data/core/units/monsters/Giant_Spider.cfg:28
 #: data/core/units/monsters/Sea_Serpent.cfg:27
@@ -545,14 +524,14 @@ msgstr "pençeleme"
 #: data/core/units/monsters/Seahorse.cfg:34
 #: data/core/units/monsters/Wild_Wyvern.cfg:95
 #: data/core/units/undead/Corpse_Ghast.cfg:27
-#: data/core/units/undead/Corpse_Soulless.cfg:251
-#: data/core/units/undead/Corpse_Walking.cfg:250
+#: data/core/units/undead/Corpse_Soulless.cfg:273
+#: data/core/units/undead/Corpse_Walking.cfg:272
 msgid "bite"
 msgstr "ısırma"
 
 #. [unit_type]: id=Soulless, race=undead
 #: data/campaigns/Secrets_of_the_Ancients/units/SotA_Soulless.cfg:14
-#: data/core/units/undead/Corpse_Soulless.cfg:86
+#: data/core/units/undead/Corpse_Soulless.cfg:108
 msgid ""
 "The technique of animating a dead body is unfortunately well-known in the "
 "dark arts; practitioners often use it to raise servants and soldiers from "
@@ -594,7 +573,7 @@ msgstr ""
 #: data/campaigns/Secrets_of_the_Ancients/units/SotA_Soulless.cfg:245
 #: data/campaigns/Secrets_of_the_Ancients/units/SotA_Soulless.cfg:260
 #: data/campaigns/Secrets_of_the_Ancients/units/SotA_Soulless.cfg:274
-#: data/core/units/undead/Corpse_Soulless.cfg:75
+#: data/core/units/undead/Corpse_Soulless.cfg:97
 msgid "Soulless"
 msgstr "Ruhsuz"
 
@@ -658,7 +637,7 @@ msgstr ""
 #: data/core/units/humans/Woodsman_Poacher.cfg:33
 #: data/core/units/humans/Woodsman_Trapper.cfg:33
 #: data/core/units/nagas/Dirkfang.cfg:29 data/core/units/orcs/Archer.cfg:24
-#: data/core/units/orcs/Assassin.cfg:26 data/core/units/orcs/Slayer.cfg:26
+#: data/core/units/orcs/Assassin.cfg:26 data/core/units/orcs/Slayer.cfg:34
 #: data/core/units/undead/Skele_Banebow.cfg:31
 #: data/core/units/undead/Skele_Bone_Shooter.cfg:29
 msgid "dagger"
@@ -684,6 +663,25 @@ msgstr ""
 "mesafe dövüşte korkulan rakipler yapar. Dağlık arazi veya yeraltında çok "
 "iyidirler. Süratli değillerdir, ama güç ve dayanıklılıkları bunu fazlası ile "
 "telafi eder."
+
+#. [attack]: type=blade
+#: data/campaigns/The_Hammer_of_Thursagan/units/Dwarvish_Masked_Fighter.cfg:32
+#: data/core/units/dunefolk/Explorer.cfg:34
+#: data/core/units/dunefolk/Rover.cfg:31
+#: data/core/units/dunefolk/Wayfarer.cfg:43
+#: data/core/units/dwarves/Explorer.cfg:33
+#: data/core/units/dwarves/Fighter.cfg:57
+#: data/core/units/dwarves/Pathfinder.cfg:36
+#: data/core/units/dwarves/Pathfinder.cfg:44
+#: data/core/units/dwarves/Scout.cfg:35 data/core/units/dwarves/Scout.cfg:43
+#: data/core/units/undead/Skele_Bone_Knight.cfg:31
+#: data/core/units/undead/Skele_Deathblade.cfg:53
+#: data/core/units/undead/Skele_Draug.cfg:30
+#: data/core/units/undead/Skele_Revenant.cfg:31
+#: data/core/units/undead/Skeleton.cfg:49
+#: data/core/units/undead/Skeleton_Rider.cfg:40
+msgid "axe"
+msgstr "balta"
 
 #. [attack]: type=impact
 #: data/campaigns/The_Hammer_of_Thursagan/units/Dwarvish_Masked_Fighter.cfg:40
@@ -736,7 +734,7 @@ msgstr ""
 #: data/core/units/goblins/Spearman.cfg:26
 #: data/core/units/goblins/Spearman.cfg:36
 #: data/core/units/humans/Horseman.cfg:23
-#: data/core/units/humans/Loyalist_Javelineer.cfg:27
+#: data/core/units/humans/Loyalist_Javelineer.cfg:30
 #: data/core/units/humans/Loyalist_Spearman.cfg:80
 #: data/core/units/merfolk/Hoplite.cfg:35 data/core/units/merfolk/Hunter.cfg:24
 #: data/core/units/merfolk/Hunter.cfg:32
@@ -748,8 +746,12 @@ msgstr ""
 #: data/core/units/saurians/Ambusher.cfg:34
 #: data/core/units/saurians/Flanker.cfg:26
 #: data/core/units/saurians/Flanker.cfg:35
+#: data/core/units/saurians/Javelineer.cfg:23
+#: data/core/units/saurians/Javelineer.cfg:32
 #: data/core/units/saurians/Skirmisher.cfg:35
 #: data/core/units/saurians/Skirmisher.cfg:44
+#: data/core/units/saurians/Spearthrower.cfg:22
+#: data/core/units/saurians/Spearthrower.cfg:31
 #: data/core/units/undead/Skele_Chocobone.cfg:35
 msgid "spear"
 msgstr "mızrak"
@@ -767,7 +769,7 @@ msgstr "mızrak"
 #: data/core/units/dwarves/Guardsman.cfg:37
 #: data/core/units/dwarves/Sentinel.cfg:47
 #: data/core/units/dwarves/Stalwart.cfg:42
-#: data/core/units/humans/Loyalist_Javelineer.cfg:38
+#: data/core/units/humans/Loyalist_Javelineer.cfg:41
 #: data/core/units/humans/Loyalist_Spearman.cfg:92
 msgid "javelin"
 msgstr "mızrak"
@@ -1121,8 +1123,8 @@ msgstr ""
 
 #. [attack]: type=blade
 #. [attack]: type=pierce
-#: data/core/units/drakes/Arbiter.cfg:30 data/core/units/drakes/Arbiter.cfg:39
-#: data/core/units/drakes/Warden.cfg:31 data/core/units/drakes/Warden.cfg:40
+#: data/core/units/drakes/Arbiter.cfg:36 data/core/units/drakes/Arbiter.cfg:45
+#: data/core/units/drakes/Warden.cfg:37 data/core/units/drakes/Warden.cfg:46
 #: data/core/units/humans/Loyalist_Halberdier.cfg:31
 #: data/core/units/humans/Loyalist_Halberdier.cfg:43
 msgid "halberd"
@@ -1798,7 +1800,7 @@ msgid "female^Dune Falconer"
 msgstr "Kumul Şahinci"
 
 #. [unit_type]: id=Dune Falconer, race=dunefolk
-#: data/core/units/dunefolk/Falconer.cfg:38
+#: data/core/units/dunefolk/Falconer.cfg:39
 msgid ""
 "While well respected among the dunefolk, the art of falconry is relatively "
 "rare due to the time and skill required to properly train birds of prey. "
@@ -1829,7 +1831,7 @@ msgstr ""
 "terketmeye zorlayabilir."
 
 #. [attack]: type=blade
-#: data/core/units/dunefolk/Falconer.cfg:152
+#: data/core/units/dunefolk/Falconer.cfg:153
 msgid "falcon"
 msgstr "şahin"
 
@@ -2234,7 +2236,7 @@ msgid "female^Dune Sky Hunter"
 msgstr "Kumul Gök Avcısı"
 
 #. [unit_type]: id=Dune Sky Hunter, race=dunefolk
-#: data/core/units/dunefolk/Sky_Hunter.cfg:38
+#: data/core/units/dunefolk/Sky_Hunter.cfg:39
 msgid ""
 "Often mistaken for young Rocs, desert eagles are large, majestic birds of "
 "prey who are notoriously aggressive and nearly impossible to tame. In the "
@@ -2260,7 +2262,7 @@ msgstr ""
 "değerli yoldaşları haline gelirler."
 
 #. [attack]: type=blade
-#: data/core/units/dunefolk/Sky_Hunter.cfg:150
+#: data/core/units/dunefolk/Sky_Hunter.cfg:151
 msgid "eagle"
 msgstr "kartal"
 
@@ -3043,6 +3045,7 @@ msgstr ""
 #. [attack]: type=impact
 #: data/core/units/elves/Enchantress.cfg:36 data/core/units/elves/Shaman.cfg:42
 #: data/core/units/elves/Sorceress.cfg:36
+#: data/core/units/monsters/Caribe_Hunter.cfg:122
 #: data/core/units/wose/Wose_Shaman.cfg:43
 msgid "entangle"
 msgstr "dolaştırma"
@@ -4046,10 +4049,10 @@ msgstr ""
 #: data/core/units/humans/Loyalist_Lieutenant.cfg:36
 #: data/core/units/humans/Loyalist_Master_at_Arms.cfg:40
 #: data/core/units/humans/Loyalist_Sergeant.cfg:36
-#: data/core/units/orcs/Crossbowman.cfg:32
-#: data/core/units/orcs/Crossbowman.cfg:41 data/core/units/orcs/Leader.cfg:36
-#: data/core/units/orcs/Ruler.cfg:36 data/core/units/orcs/Slurbow.cfg:37
-#: data/core/units/orcs/Slurbow.cfg:46 data/core/units/orcs/Sovereign.cfg:37
+#: data/core/units/orcs/Crossbowman.cfg:41
+#: data/core/units/orcs/Crossbowman.cfg:50 data/core/units/orcs/Leader.cfg:36
+#: data/core/units/orcs/Ruler.cfg:36 data/core/units/orcs/Slurbow.cfg:43
+#: data/core/units/orcs/Slurbow.cfg:52 data/core/units/orcs/Sovereign.cfg:37
 #: data/core/units/undead/Skele_Death_Knight.cfg:42
 msgid "crossbow"
 msgstr "tatar yayı"
@@ -4321,6 +4324,19 @@ msgstr ""
 "uzaktaki düşmanlarla da savaşabildiklerinden Ciritçiler bir ordunun iyi "
 "askerlerindendir. Onlar düşman askerlerine, çoğu zaman misilleme olmadan, "
 "yakın savaş konumlarını korurken uzaktan cirit savurabilirler."
+
+#. [special_note]
+#: data/core/units/humans/Loyalist_Javelineer.cfg:20
+#, fuzzy
+#| msgid ""
+#| "Compared to other loyalists, Halberdiers have a higher resistance to "
+#| "‘pierce’ attacks."
+msgid ""
+"Compared to other loyalists, Javelineers have a higher resistance to "
+"‘pierce’ attacks."
+msgstr ""
+"Diğer sadıklarla karşılaştırıldığında, Teberciler  'delme' saldırılarına "
+"daha dirençlidir."
 
 #. [unit_type]: id=Lieutenant, race=human
 #: data/core/units/humans/Loyalist_Lieutenant.cfg:4
@@ -4858,10 +4874,6 @@ msgstr ""
 
 #. [special_note]
 #: data/core/units/humans/Mage_Silver.cfg:25
-#, fuzzy
-#| msgid ""
-#| "SPECIAL_NOTE^Silver Magi are well-attuned to their magical natures and "
-#| "are highly resistant to non-physical damage."
 msgid ""
 "SPECIAL_NOTE^Silver Magi are well-attuned to their magical natures and are "
 "highly resistant to non-physical damage."
@@ -5015,7 +5027,7 @@ msgstr ""
 #: data/core/units/humans/Outlaw_Assassin.cfg:39
 #: data/core/units/humans/Outlaw_Rogue.cfg:38
 #: data/core/units/orcs/Assassin.cfg:35 data/core/units/orcs/Nightblade.cfg:43
-#: data/core/units/orcs/Slayer.cfg:35
+#: data/core/units/orcs/Slayer.cfg:43
 msgid "throwing knives"
 msgstr "fırlatma bıçakları"
 
@@ -5758,8 +5770,8 @@ msgstr ""
 #. [attack]: type=pierce
 #. [variation]
 #: data/core/units/monsters/Boar.cfg:59
-#: data/core/units/undead/Corpse_Soulless.cfg:338
-#: data/core/units/undead/Corpse_Walking.cfg:337
+#: data/core/units/undead/Corpse_Soulless.cfg:378
+#: data/core/units/undead/Corpse_Walking.cfg:377
 msgid "tusk"
 msgstr "diş"
 
@@ -5779,6 +5791,46 @@ msgstr ""
 "Genç domuzcuklar meraklıdır, ancak savaşta daha az olsa da, ebeveynleri "
 "kadar huysuzdur. Ancak nadiren bazı domuzcuklar tek başınadır; onları "
 "izleyen yetişkin, koruyucu bir yaban domuzu her zaman bulunmayabilir."
+
+#. [unit_type]: id=Caribe, race=monster
+#: data/core/units/monsters/Caribe.cfg:8
+msgid "Caribe"
+msgstr ""
+
+#. [unit_type]: id=Caribe, race=monster
+#: data/core/units/monsters/Caribe.cfg:28
+msgid ""
+"The giant caribe are seldom encountered in the inland rivers near Weldyn, "
+"but tales of their ferocious attacks have spread far and wide. Their angry "
+"red eyes are embedded in an armored face. While it is their teeth that are a "
+"dangerous weapon, they do posses small, bony arms and claws, which they can "
+"use to extricate themselves from situations dire to most other fish. These "
+"fish are unusually clever and should not be underestimated."
+msgstr ""
+
+#. [unit_type]: id=Hunter Caribe, race=monster
+#: data/core/units/monsters/Caribe_Hunter.cfg:8
+msgid "Hunter Caribe"
+msgstr ""
+
+#. [unit_type]: id=Hunter Caribe, race=monster
+#: data/core/units/monsters/Caribe_Hunter.cfg:29
+msgid ""
+"As they age, the giant caribe become bigger and more dangerous. They also "
+"learn to use seaweed to ensnare prey or enemies."
+msgstr ""
+
+#. [unit_type]: id=Nibbler, race=monster
+#: data/core/units/monsters/Caribe_Nibbler.cfg:8
+msgid "Nibbler"
+msgstr ""
+
+#. [unit_type]: id=Nibbler, race=monster
+#: data/core/units/monsters/Caribe_Nibbler.cfg:41
+msgid ""
+"Nibblers are juvenile predator fish, often more curious than dangerous. A "
+"single individual may not be a threat, but these fish seldom travel alone."
+msgstr ""
 
 #. [unit_type]: id=Swamp Lizard, race=monster
 #: data/core/units/monsters/Crocodile.cfg:13
@@ -6021,16 +6073,6 @@ msgstr ""
 msgid "ice claw"
 msgstr "buz pençesi"
 
-#. [unit_type]: id=Giant Stoat # wmllint: noconvert
-#: data/core/units/monsters/Frost_Stoat.cfg:169
-msgid "Giant Stoat"
-msgstr "Dev Kakım"
-
-#. [unit_type]: id=Giant Stoat # wmllint: noconvert
-#: data/core/units/monsters/Frost_Stoat.cfg:170
-msgid "Giant Stoats are obsolete, use Frost Stoat."
-msgstr "Dev Kakımların kullanımı önerilmiyor, Buz Kakımlarını kullanın."
-
 #. [unit_type]: id=Giant Mudcrawler, race=monster
 #: data/core/units/monsters/Giant_Mudcrawler.cfg:4
 msgid "Giant Mudcrawler"
@@ -6115,7 +6157,7 @@ msgid "Sand Scuttler"
 msgstr "Kum Akrebi"
 
 #. [variation]
-#: data/core/units/monsters/Giant_Scorpion.cfg:117
+#: data/core/units/monsters/Giant_Scorpion.cfg:118
 msgid ""
 "Making their homes in sandy dunes, these critters are an odd mix of mundane "
 "creature and elemental beast. Though usually timid, Sand Scuttlers sometimes "
@@ -6185,12 +6227,6 @@ msgstr "Doru At"
 
 #. [unit_type]: id=Bay Horse, race=horse
 #: data/core/units/monsters/Horse.cfg:19
-#, fuzzy
-#| msgid ""
-#| "Bay horses are defined more by their coloration than their size or "
-#| "temperment, and can be found anywhere from the battlefield to the farm to "
-#| "the wild plains and woodlands. Though an unencumbered horse will tend to "
-#| "flee if possible, they will fight back with a powerful kick when cornered."
 msgid ""
 "Bay horses are defined more by their coloration than their size or "
 "temperament, and can be found anywhere from the battlefield to the farm to "
@@ -6199,71 +6235,25 @@ msgid ""
 msgstr ""
 "Doru Atlar, büyüklüklerinden veya mizaçlarından çok renkleriyle tanımlanır "
 "ve savaş alanından çiftliğe, vahşi ovalara ve ormanlık alanlara kadar her "
-"yerde bulunabilir. Serbest bir at mümkünse kaçma eğiliminde olsa da, köşeye "
-"sıkıştırıldığında güçlü bir çifte ile karşılık verecektir."
+"yerde bulunabilir. Serbest bırakılan bir at mümkünse kaçma eğiliminde olsa "
+"da, köşeye sıkıştırıldığında güçlü bir çifte ile karşılık verecektir."
 
 #. [attack]: type=impact
-#: data/core/units/monsters/Horse.cfg:32 data/core/units/monsters/Horse.cfg:98
-#: data/core/units/monsters/Horse.cfg:170
-#: data/core/units/monsters/Horse_Black.cfg:41
-#: data/core/units/monsters/Horse_Great.cfg:33
+#: data/core/units/monsters/Horse.cfg:32
+#: data/core/units/monsters/Horse_Black.cfg:50
+#: data/core/units/monsters/Horse_Dark.cfg:44
+#: data/core/units/monsters/Horse_Great.cfg:34
+#: data/core/units/monsters/Horse_White.cfg:38
 msgid "hooves"
 msgstr "toynaklar"
 
-#. [unit_type]: id=White Horse
-#: data/core/units/monsters/Horse.cfg:74
-msgid "White Horse"
-msgstr "Beyaz At"
-
-#. [unit_type]: id=White Horse
-#: data/core/units/monsters/Horse.cfg:85
-msgid ""
-"Some horses have a white color, and they are merely white horses. But there "
-"exist a special breed, found only in the wild woods, that are White Horses. "
-"As if blessed by the faerie world, they have a grace and agility not found "
-"in their more common relatives."
-msgstr ""
-"Bazı atların rengi beyazdır ve onlar sadece beyaz atlardır. Ancak sadece "
-"vahşi ormanlarda bulunan özel bir cinsi vardır, bunlar Beyaz Atlardır. Peri "
-"dünyası tarafından kutsanmış gibi, daha yaygın akrabalarında bulunmayan bir "
-"zarafet ve çevikliğe sahiptir."
-
-#. [unit_type]: id=Dark Horse
-#: data/core/units/monsters/Horse.cfg:140
-msgid "Dark Horse"
-msgstr "Kara At"
-
-#. [unit_type]: id=Dark Horse
-#: data/core/units/monsters/Horse.cfg:166
-msgid ""
-"Dark Horses are wild animals, but they seem to take an odd interest in the "
-"civilized races. They leave no signs of their passage, but they have been "
-"noticed scouting camps and outposts during the night."
-msgstr ""
-"Kara Atlar vahşi hayvanlardır, ancak medeni ırklara tuhaf bir ilgi duyarlar. "
-"Geçip gittiklerinde hiçbir iz bırakmazlar, ancak gece boyunca kampları ve "
-"ileri karakolları gözetledikleri fark edilir."
-
-#. [attack]: type=cold
-#: data/core/units/monsters/Horse.cfg:179
-#: data/core/units/monsters/Horse_Black.cfg:50
-msgid "whinny"
-msgstr "kişneme"
-
-#. [male]
-#. [female]
-#: data/core/units/monsters/Horse.cfg:214
-#: data/core/units/monsters/Horse.cfg:218
-msgid "female^Dark Horse"
-msgstr "Kara At"
-
 #. [unit_type]: id=Black Horse, race=horse
-#: data/core/units/monsters/Horse_Black.cfg:5
+#: data/core/units/monsters/Horse_Black.cfg:14
 msgid "Black Horse"
 msgstr "Siyah At"
 
 #. [unit_type]: id=Black Horse, race=horse
-#: data/core/units/monsters/Horse_Black.cfg:25
+#: data/core/units/monsters/Horse_Black.cfg:34
 msgid ""
 "The true nature of Black Horses is impossible to discern, but the fire in "
 "their eyes and the unnerving, unnatural sound of their calls suggest they "
@@ -6273,16 +6263,50 @@ msgstr ""
 "ateş ve kişnemelerinin sinir bozucu, doğal olmayan sesi, onların kötü "
 "niyetli ruhlar olduklarını gösterir."
 
+#. [attack]: type=cold
+#: data/core/units/monsters/Horse_Black.cfg:59
+#: data/core/units/monsters/Horse_Dark.cfg:53
+msgid "whinny"
+msgstr "kişneme"
+
 #. [male]
-#: data/core/units/monsters/Horse_Black.cfg:85
+#: data/core/units/monsters/Horse_Black.cfg:94
 msgid "Black Stallion"
 msgstr "Siyah Aygır"
 
 #. [female]
 #. Female variant of the Black Horse or Black Stallion; in English this is a pun on the word "Mare"
-#: data/core/units/monsters/Horse_Black.cfg:91
+#: data/core/units/monsters/Horse_Black.cfg:100
 msgid "female^Black Nightmare"
 msgstr "Kara Kabus"
+
+#. [unit_type]: id=Dark Horse
+#: data/core/units/monsters/Horse_Dark.cfg:14
+msgid "Dark Horse"
+msgstr "Kara At"
+
+#. [unit_type]: id=Dark Horse
+#: data/core/units/monsters/Horse_Dark.cfg:40
+msgid ""
+"Dark Horses are wild animals, but they seem to take an odd interest in the "
+"civilized races. They leave no signs of their passage, but they have been "
+"noticed scouting camps and outposts during the night."
+msgstr ""
+"Kara Atlar vahşi hayvanlardır, ancak medeni ırklara tuhaf bir ilgi duyarlar. "
+"Geçip gittiklerinde hiçbir iz bırakmazlar, ancak gece boyunca kampları ve "
+"ileri karakolları gözetledikleri fark edilir."
+
+#. [male]
+#: data/core/units/monsters/Horse_Dark.cfg:88
+#, fuzzy
+#| msgid "female^Dark Horse"
+msgid "male^Dark Horse"
+msgstr "Kara At"
+
+#. [female]
+#: data/core/units/monsters/Horse_Dark.cfg:92
+msgid "female^Dark Horse"
+msgstr "Kara At"
 
 #. [unit_type]: id=Great Horse, race=horse
 #: data/core/units/monsters/Horse_Great.cfg:5
@@ -6301,6 +6325,24 @@ msgstr ""
 "ancak benzer görünümlerine rağmen vahşi hayvanlardır. İnatçı ve çoğu zaman "
 "alıngan mizaçlarından dolayı evcilleştirilmeleri oldukça zordur, birçok "
 "kibirli prens veya savaş beyi denemiş ve başarısız olmuştur."
+
+#. [unit_type]: id=White Horse
+#: data/core/units/monsters/Horse_White.cfg:14
+msgid "White Horse"
+msgstr "Beyaz At"
+
+#. [unit_type]: id=White Horse
+#: data/core/units/monsters/Horse_White.cfg:25
+msgid ""
+"Some horses have a white color, and they are merely white horses. But there "
+"exist a special breed, found only in the wild woods, that are White Horses. "
+"As if blessed by the faerie world, they have a grace and agility not found "
+"in their more common relatives."
+msgstr ""
+"Bazı atların rengi beyazdır ve onlar sadece beyaz atlardır. Ancak sadece "
+"vahşi ormanlarda bulunan özel bir cinsi vardır, bunlar Beyaz Atlardır. Peri "
+"dünyası tarafından kutsanmış gibi, daha yaygın akrabalarında bulunmayan bir "
+"zarafet ve çevikliğe sahiptir."
 
 #. [unit_type]: id=Icemonax, race=monster
 #: data/core/units/monsters/Icemonax.cfg:4
@@ -6764,14 +6806,6 @@ msgstr "Naga Yüksek Muhafız"
 
 #. [unit_type]: id=Naga High Guard, race=naga
 #: data/core/units/nagas/Guard_High.cfg:23
-#, fuzzy
-#| msgid ""
-#| "The elite naga guards are a rigid barrier to any invaders of a naga "
-#| "stronghold. They have powerful stikes and, like the lesser Shield Guard, "
-#| "they are difficult to dislodge from their posts because of effective use "
-#| "of a shield in melee techniques. This tactic does nothing against ranged "
-#| "attacks, but the nagas can usually seek better terrain advantage in such "
-#| "situations."
 msgid ""
 "The elite naga guards are a rigid barrier to any invaders of a naga "
 "stronghold. They have powerful strikes and, like the lesser Shield Guard, "
@@ -6781,10 +6815,11 @@ msgid ""
 "situations."
 msgstr ""
 "Naga Yüksek Muhafızları, bir naga kalesinin işgalcilerine karşı katı bir "
-"bariyerdir. Güçlü vuruşları vardır ve daha düşük Kalkan Muhafızı gibi, yakın "
-"dövüş tekniklerinde etkili bir kalkan kullanımı nedeniyle görevlerinden "
-"ayrılmaları zordur. Bu taktik, menzilli saldırılara karşı hiçbir şey yapmaz, "
-"ancak nagalar bu gibi durumlarda genellikle araziden daha iyi yararlanır."
+"bariyerdir. Güçlü vuruşları vardır ve yakın dövüş tekniklerinde etkili bir "
+"kalkan kullanımı nedeniyle genç bir Kalkanlı Muhafız gibi görevlerinden "
+"kolayca ayrılmaları zordur. Bu taktik, menzilli saldırılara karşı hiçbir şey "
+"yapmaz, ancak nagalar bu gibi durumlarda genellikle araziden daha iyi "
+"yararlanır."
 
 #. [attack]: type=impact
 #: data/core/units/nagas/Guard_High.cfg:45
@@ -7321,7 +7356,7 @@ msgid "Orcish Slayer"
 msgstr "Ork Katil"
 
 #. [unit_type]: id=Orcish Slayer, race=orc
-#: data/core/units/orcs/Slayer.cfg:21
+#: data/core/units/orcs/Slayer.cfg:20
 msgid ""
 "Skilled orcish assassins are surprisingly nimble covert troops who achieve "
 "great agility by forgoing the heavy armor of their brethren. Their weapon of "
@@ -7519,6 +7554,22 @@ msgstr ""
 "düşmanlardan sayılırlar. Ok gibi atılmaları ve gözünü budaktan sakınmamaları "
 "onları özellikle bir kuşatmada tehlikeli yapar."
 
+#. [unit_type]: id=Saurian Javelineer, race=lizard
+#: data/core/units/saurians/Javelineer.cfg:4
+#, fuzzy
+#| msgid "female^Saurian Flanker"
+msgid "female^Saurian Javelineer"
+msgstr "Sürüngen Kuşatmacı"
+
+#. [unit_type]: id=Saurian Javelineer, race=lizard
+#: data/core/units/saurians/Javelineer.cfg:19
+msgid ""
+"After years of combat practice, saurians warriors that are the most talented "
+"in the skill of spear throwing might advance to the ranks of the "
+"javelineers. With better equipment and exceptional aim, saurian javelineers "
+"are not to be underestimated."
+msgstr ""
+
 #. [unit_type]: id=Saurian Oracle, race=lizard
 #: data/core/units/saurians/Oracle.cfg:4
 msgid "Saurian Oracle"
@@ -7580,6 +7631,21 @@ msgstr ""
 "Sürüngenler biraz mistik biraz da sihre dayanan bazı tuhaf yetenekleriyle "
 "tanınırlar. Bazıları özellikle tedavi konusunda uzmanlaşmış olduğundan "
 "sürüngenler savaşta tehlikeli rakipler haline gelirler."
+
+#. [unit_type]: id=Saurian Spearthrower, race=lizard
+#: data/core/units/saurians/Spearthrower.cfg:4
+#, fuzzy
+#| msgid "female^Saurian Skirmisher"
+msgid "female^Saurian Spearthrower"
+msgstr "Sürüngen Avcı"
+
+#. [unit_type]: id=Saurian Spearthrower, race=lizard
+#: data/core/units/saurians/Spearthrower.cfg:18
+msgid ""
+"Some saurians  with particularly good aim prefer to aid their allies from "
+"the backlines rather than to infiltrate enemy formations. Their deadly spear "
+"throwing skills allow them to support other saurian warriors from afar."
+msgstr ""
 
 #. [unit_type]: id=Great Troll, race=troll
 #: data/core/units/trolls/Great.cfg:4
@@ -7800,116 +7866,124 @@ msgstr ""
 "bilinmediği, ancak kabustan başka bir şey olamayacak bir süreç."
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:117
-#: data/core/units/undead/Corpse_Walking.cfg:116
+#: data/core/units/undead/Corpse_Soulless.cfg:139
+#: data/core/units/undead/Corpse_Walking.cfg:138
 msgid "wc_variation^Drake"
 msgstr "Ejder"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:132
-#: data/core/units/undead/Corpse_Walking.cfg:131
+#: data/core/units/undead/Corpse_Soulless.cfg:154
+#: data/core/units/undead/Corpse_Walking.cfg:153
 msgid "wc_variation^Dwarf"
 msgstr "Cüce"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:145
-#: data/core/units/undead/Corpse_Walking.cfg:144
+#: data/core/units/undead/Corpse_Soulless.cfg:167
+#: data/core/units/undead/Corpse_Walking.cfg:166
 msgid "wc_variation^Falcon"
 msgstr "Şahin"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:179
-#: data/core/units/undead/Corpse_Walking.cfg:178
+#: data/core/units/undead/Corpse_Soulless.cfg:201
+#: data/core/units/undead/Corpse_Walking.cfg:200
 msgid "wc_variation^Goblin"
 msgstr "Goblin"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:189
-#: data/core/units/undead/Corpse_Walking.cfg:211
+#: data/core/units/undead/Corpse_Soulless.cfg:211
+#: data/core/units/undead/Corpse_Walking.cfg:233
 msgid "wc_variation^Horse"
 msgstr "At"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:198
-#: data/core/units/undead/Corpse_Walking.cfg:220
+#: data/core/units/undead/Corpse_Soulless.cfg:220
+#: data/core/units/undead/Corpse_Walking.cfg:242
 msgid "wc_variation^Mounted"
 msgstr "Binici"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:207
-#: data/core/units/undead/Corpse_Walking.cfg:229
+#: data/core/units/undead/Corpse_Soulless.cfg:229
+#: data/core/units/undead/Corpse_Walking.cfg:251
 msgid "wc_variation^Beast-Rider"
 msgstr "Canavar-Binici"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:216
-#: data/core/units/undead/Corpse_Walking.cfg:188
+#: data/core/units/undead/Corpse_Soulless.cfg:238
+#: data/core/units/undead/Corpse_Walking.cfg:210
 msgid "wc_variation^Gryphon"
 msgstr "Grifin"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:239
-#: data/core/units/undead/Corpse_Walking.cfg:238
+#: data/core/units/undead/Corpse_Soulless.cfg:261
+#: data/core/units/undead/Corpse_Walking.cfg:260
 msgid "wc_variation^Rat"
 msgstr "Sıçan"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:256
-#: data/core/units/undead/Corpse_Walking.cfg:255
+#: data/core/units/undead/Corpse_Soulless.cfg:278
+#: data/core/units/undead/Corpse_Walking.cfg:277
 msgid "wc_variation^Saurian"
 msgstr "Kertenkele"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:266
-#: data/core/units/undead/Corpse_Walking.cfg:265
+#: data/core/units/undead/Corpse_Soulless.cfg:288
+#: data/core/units/undead/Corpse_Walking.cfg:287
 msgid "wc_variation^Scorpion"
 msgstr "Akrep"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:275
-#: data/core/units/undead/Corpse_Walking.cfg:274
+#: data/core/units/undead/Corpse_Soulless.cfg:306
+#: data/core/units/undead/Corpse_Walking.cfg:305
+#, fuzzy
+#| msgid "wc_variation^Spider"
+msgid "wc_variation^Scuttler"
+msgstr "Örümcek"
+
+#. [variation]
+#: data/core/units/undead/Corpse_Soulless.cfg:315
+#: data/core/units/undead/Corpse_Walking.cfg:314
 msgid "wc_variation^Spider"
 msgstr "Örümcek"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:284
-#: data/core/units/undead/Corpse_Walking.cfg:283
+#: data/core/units/undead/Corpse_Soulless.cfg:324
+#: data/core/units/undead/Corpse_Walking.cfg:323
 msgid "wc_variation^Serpent"
 msgstr "Yılan"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:303
-#: data/core/units/undead/Corpse_Walking.cfg:302
+#: data/core/units/undead/Corpse_Soulless.cfg:343
+#: data/core/units/undead/Corpse_Walking.cfg:342
 msgid "wc_variation^Swimmer"
 msgstr "Yüzücü"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:321
-#: data/core/units/undead/Corpse_Walking.cfg:320
+#: data/core/units/undead/Corpse_Soulless.cfg:361
+#: data/core/units/undead/Corpse_Walking.cfg:360
 msgid "wc_variation^Troll"
 msgstr "Trol"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:330
-#: data/core/units/undead/Corpse_Walking.cfg:329
+#: data/core/units/undead/Corpse_Soulless.cfg:370
+#: data/core/units/undead/Corpse_Walking.cfg:369
 msgid "wc_variation^Boar"
 msgstr "Domuz"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:343
-#: data/core/units/undead/Corpse_Walking.cfg:342
+#: data/core/units/undead/Corpse_Soulless.cfg:383
+#: data/core/units/undead/Corpse_Walking.cfg:382
 msgid "wc_variation^Wose"
 msgstr "Ulu Ağaç"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:355
-#: data/core/units/undead/Corpse_Walking.cfg:354
+#: data/core/units/undead/Corpse_Soulless.cfg:395
+#: data/core/units/undead/Corpse_Walking.cfg:394
 msgid "wc_variation^Wolf"
 msgstr "Kurt"
 
 #. [variation]
-#: data/core/units/undead/Corpse_Soulless.cfg:368
-#: data/core/units/undead/Corpse_Walking.cfg:367
+#: data/core/units/undead/Corpse_Soulless.cfg:408
+#: data/core/units/undead/Corpse_Walking.cfg:407
 msgid "wc_variation^Bat"
 msgstr "Yarasa"
 
@@ -8116,6 +8190,26 @@ msgstr ""
 "düşmanlık bilir. Onlar sadece varlıklarının manasızlığı ve varoluşlarının "
 "ızdırabı ile hareket ederler."
 
+#. [unit_type]: id=Bone Knight, race=undead
+#: data/core/units/undead/Skele_Bone_Knight.cfg:5
+#, fuzzy
+#| msgid "Goblin Knight"
+msgid "Bone Knight"
+msgstr "Goblin Şövalye"
+
+#. [unit_type]: id=Bone Knight, race=undead
+#: data/core/units/undead/Skele_Bone_Knight.cfg:27
+msgid ""
+"Once great warriors across the plains, these mounted riders atop their "
+"skeletal horses were raised from the ground by unholy magic to spread fear "
+"and destruction."
+msgstr ""
+
+#. [attack]: type=impact
+#: data/core/units/undead/Skele_Bone_Knight.cfg:41
+msgid "trample"
+msgstr ""
+
 #. [unit_type]: id=Bone Shooter, race=undead
 #: data/core/units/undead/Skele_Bone_Shooter.cfg:4
 msgid "Bone Shooter"
@@ -8171,6 +8265,21 @@ msgstr ""
 "olarak geri dönen kahraman cengaver ve komutanların hikayesi anlatılır. "
 "Eskiden sahip oldukları silahları kullanır, intikam avlarında yarı ölülere "
 "komuta ederler."
+
+#. [unit_type]: id=Death Squire, race=undead
+#: data/core/units/undead/Skele_Death_Squire.cfg:5
+msgid "Death Squire"
+msgstr ""
+
+#. [unit_type]: id=Death Squire, race=undead
+#: data/core/units/undead/Skele_Death_Squire.cfg:27
+msgid ""
+"Sometimes the mightiest warriors and generals, cursed with hate and angst, "
+"came back to this world as Death Knights. Death Squires serve them whilst "
+"accruing enough unholy power to become Death Knights. In the process they "
+"pick up a good deal of the Knight’s power, including the ability to command "
+"underlings."
+msgstr ""
 
 #. [unit_type]: id=Deathblade, race=undead
 #: data/core/units/undead/Skele_Deathblade.cfg:4
@@ -8273,6 +8382,21 @@ msgstr ""
 "cengaverin savaşmak için ölümden uyandırılması doğaya karşı bir günahtır. "
 "Efendilerinin elinde bu askerler önlerindeki görevi başarmak için her şeyi "
 "yaparlar, zaten ölmüş olanlar için ölmenin verebileceği bir korku yoktur."
+
+#. [unit_type]: id=Skeleton Rider, race=undead
+#: data/core/units/undead/Skeleton_Rider.cfg:5
+#, fuzzy
+#| msgid "Skeleton Archer"
+msgid "Skeleton Rider"
+msgstr "İskelet Okçu"
+
+#. [unit_type]: id=Skeleton Rider, race=undead
+#: data/core/units/undead/Skeleton_Rider.cfg:33
+msgid ""
+"Once great warriors thundering across the plains, these mounted riders atop "
+"their skeletal horses were raised from the grave by unholy magic to spread "
+"fear and destruction."
+msgstr ""
 
 #. [unit_type]: id=Ghost, race=undead
 #: data/core/units/undead/Spirit_Ghost.cfg:4
@@ -8503,3 +8627,9 @@ msgid ""
 msgstr ""
 "Şaman Ulu Ağaçlar, düşmanlarını engellemek için asma, sarmaşık gibi orman "
 "bitkilerine komuta edebilir."
+
+#~ msgid "Giant Stoat"
+#~ msgstr "Dev Kakım"
+
+#~ msgid "Giant Stoats are obsolete, use Frost Stoat."
+#~ msgstr "Dev Kakımların kullanımı önerilmiyor, Buz Kakımlarını kullanın."

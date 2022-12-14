@@ -78,7 +78,7 @@ public:
 	 * @param data                Map with the key value pairs to set the
 	 *                            members.
 	 */
-	virtual void set_members(const string_map& data);
+	virtual void set_members(const widget_item& data);
 
 	/***** ***** ***** ***** State handling ***** ***** ***** *****/
 
@@ -297,12 +297,12 @@ public:
 	}
 
 protected:
-	resolution_definition_ptr config()
+	resolution_definition_ptr get_config()
 	{
 		return config_;
 	}
 
-	resolution_definition_const_ptr config() const
+	resolution_definition_const_ptr get_config() const
 	{
 		return config_;
 	}
@@ -323,7 +323,7 @@ protected:
 			"Given type's resolution object does not derive from resolution_definition."
 		);
 
-		return std::static_pointer_cast<const typename T::resolution>(config());
+		return std::static_pointer_cast<const typename T::resolution>(get_config());
 	}
 
 	void set_config(resolution_definition_ptr config)
@@ -459,10 +459,10 @@ public:
 
 protected:
 	/** See @ref widget::impl_draw_background. */
-	virtual void impl_draw_background(int x_offset, int y_offset) override;
+	virtual void impl_draw_background() override;
 
 	/** See @ref widget::impl_draw_foreground. */
-	virtual void impl_draw_foreground(int x_offset, int y_offset) override;
+	virtual void impl_draw_foreground() override;
 
 	/** Exposes font::pango_text::get_token, for the text label of this styled_widget */
 	std::string get_label_token(const point & position, const char * delimiters = " \n\r\t") const;

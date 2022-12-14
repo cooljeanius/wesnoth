@@ -18,6 +18,7 @@
 #include "gui/dialogs/modeless_dialog.hpp"
 
 #include "gui/core/event/dispatcher.hpp"
+#include "gui/core/top_level_drawable.hpp"
 
 namespace gui2
 {
@@ -49,20 +50,7 @@ namespace dialogs
 class debug_clock : public modeless_dialog
 {
 public:
-	debug_clock()
-		: modeless_dialog()
-		, hour_percentage_(nullptr)
-		, minute_percentage_(nullptr)
-		, second_percentage_(nullptr)
-		, hour_(nullptr)
-		, minute_(nullptr)
-		, second_(nullptr)
-		, pane_(nullptr)
-		, clock_(nullptr)
-		, signal_()
-		, time_()
-	{
-	}
+	debug_clock();
 
 private:
 	/** Progress bar for displaying the hours as a percentage. */
@@ -138,11 +126,8 @@ private:
 	 */
 	time time_;
 
+	/** The type of window this is. */
 	virtual const std::string& window_id() const override;
-
-	virtual void pre_show(window& window) override;
-
-	virtual void post_show(CVideo& video);
 
 	/**
 	 * The callback for the drawing routine.
@@ -154,6 +139,9 @@ private:
 	 *                            initially.)
 	 */
 	void update_time(const bool force);
+
+	/* top_level_drawable interface */
+	virtual void update() override;
 };
 
 } // namespace dialogs

@@ -15,8 +15,10 @@
 
 #include <cassert>
 #include <cmath>
-#include <iostream>
 #include <cstring>
+#include <cassert>
+#include <cmath>
+#include <memory>
 #include <stack>
 
 #include "formatter.hpp"
@@ -30,9 +32,6 @@ static lg::log_domain log_scripting_formula("scripting/formula");
 #define WRN_SF LOG_STREAM(warn, log_scripting_formula)
 #define ERR_SF LOG_STREAM(err, log_scripting_formula)
 
-#include <cassert>
-#include <cmath>
-#include <memory>
 
 namespace wfl
 {
@@ -58,7 +57,7 @@ static std::string was_expecting(const std::string& message, const variant& v)
 
 type_error::type_error(const std::string& str) : game::error(str)
 {
-	std::cerr << "ERROR: " << message << "\n" << call_stack_manager::get();
+	PLAIN_LOG << "ERROR: " << message << "\n" << call_stack_manager::get();
 }
 
 variant_iterator::variant_iterator()
@@ -164,7 +163,7 @@ variant::variant(double n, variant::DECIMAL_VARIANT_TYPE)
 }
 
 variant::variant(const std::vector<variant>& vec)
-    : value_((std::make_shared<variant_list>(vec)))
+	: value_((std::make_shared<variant_list>(vec)))
 {
 	assert(value_.get());
 }
@@ -634,6 +633,7 @@ void variant::serialize_from_string(const std::string& str)
 	try {
 		*this = formula(str).evaluate();
 	} catch(...) {
+		DBG_SF << "Evaluation failed with exception: " << utils::get_unknown_exception_type();
 		*this = variant(str);
 	}
 }
@@ -683,7 +683,7 @@ variant variant::execute_variant(const variant& var)
 				made_moves.push_back(vars.top());
 //			} else {
 				//too many calls in a row - possible infinite loop
-//				ERR_SF << "ERROR #5001 while executing 'continue' formula keyword" << std::endl;
+//				ERR_SF << "ERROR #5001 while executing 'continue' formula keyword";
 
 //				if(safe_call)
 //					error = variant(new game_logic::safe_call_result(nullptr, 5001));
@@ -692,7 +692,7 @@ variant variant::execute_variant(const variant& var)
 			break;
 		} else {
 			//this information is unneeded when evaluating formulas from commandline
-			ERR_SF << "UNRECOGNIZED MOVE: " << vars.top().to_debug_string() << std::endl;
+			ERR_SF << "UNRECOGNIZED MOVE: " << vars.top().to_debug_string();
 		}
 
 		vars.pop();

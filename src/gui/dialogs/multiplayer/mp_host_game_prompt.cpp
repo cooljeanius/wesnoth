@@ -41,9 +41,8 @@ static void set_do_not_show_again(const bool do_not_show_again)
 }
 
 mp_host_game_prompt::mp_host_game_prompt()
+	: modal_dialog(window_id())
 {
-	set_restore(true);
-
 	register_bool("do_not_show_again",
 				  true,
 				  &get_do_not_show_again,

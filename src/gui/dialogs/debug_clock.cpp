@@ -34,42 +34,43 @@ namespace gui2::dialogs
 
 REGISTER_DIALOG(debug_clock)
 
-void debug_clock::pre_show(window& window)
+debug_clock::debug_clock()
+	: modeless_dialog(window_id())
+	, signal_()
+	, time_()
 {
 	hour_percentage_ = find_widget<progress_bar>(
-			&window, "hour_percentage", false, false);
+			this, "hour_percentage", false, false);
 	minute_percentage_ = find_widget<progress_bar>(
-			&window, "minute_percentage", false, false);
+			this, "minute_percentage", false, false);
 	second_percentage_ = find_widget<progress_bar>(
-			&window, "second_percentage", false, false);
+			this, "second_percentage", false, false);
 
-	hour_ = find_widget<integer_selector>(&window, "hour", false, false);
+	hour_ = find_widget<integer_selector>(this, "hour", false, false);
 	if(styled_widget *hour = dynamic_cast<styled_widget*>(hour_)) { //Note that the standard specifies that a dynamic cast of a null pointer is null
 		hour->set_active(false);
 	}
-	minute_ = find_widget<integer_selector>(&window, "minute", false, false);
+	minute_ = find_widget<integer_selector>(this, "minute", false, false);
 	if(styled_widget *minute = dynamic_cast<styled_widget*>(minute_)) {
 		minute->set_active(false);
 	}
-	second_ = find_widget<integer_selector>(&window, "second", false, false);
+	second_ = find_widget<integer_selector>(this, "second", false, false);
 	if(styled_widget *second = dynamic_cast<styled_widget*>(second_)) {
 		second->set_active(false);
 	}
 
-	pane_ = find_widget<pane>(&window, "pane", false, false);
+	pane_ = find_widget<pane>(this, "pane", false, false);
 
-	clock_ = find_widget<styled_widget>(&window, "clock", false, false);
-
-	signal_ = std::bind(&debug_clock::update_time, this, false);
-	connect_signal_on_draw(window, signal_);
+	clock_ = find_widget<styled_widget>(this, "clock", false, false);
 
 	time_.set_current_time();
 	update_time(true);
 }
 
-void debug_clock::post_show(CVideo& /*video*/)
+void debug_clock::update()
 {
-	get_window()->disconnect_signal<event::DRAW>(signal_);
+	update_time(false);
+	window::update();
 }
 
 void debug_clock::update_time(const bool force)
@@ -109,12 +110,12 @@ void debug_clock::update_time(const bool force)
 			canvas.set_variable("minute", wfl::variant(minute_stamp));
 			canvas.set_variable("second", wfl::variant(second_stamp));
 		}
-		clock_->set_is_dirty(true);
+		clock_->queue_redraw();
 	}
 
 	const std::map<std::string, std::string> tags;
-	std::map<std::string, string_map> item_data;
-	string_map item;
+	widget_data item_data;
+	widget_item item;
 
 	item["label"] = std::to_string(second_stamp);
 	item_data.emplace("time", item);

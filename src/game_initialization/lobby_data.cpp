@@ -143,6 +143,7 @@ game_info::game_info(const config& game, const std::vector<std::string>& install
 	, have_all_mods(true)
 	, has_friends(false)
 	, has_ignored(false)
+	, auto_hosted(game["auto_hosted"].to_bool())
 	, display_status(disp_status::NEW)
 	, required_addons()
 	, addons_outcome(addon_req::SATISFIED)
@@ -239,7 +240,7 @@ game_info::game_info(const config& game, const std::vector<std::string>& install
 		} catch(const incorrect_map_format_error&) {
 			verified = false;
 		} catch(const wml_exception& e) {
-			ERR_CF << "map could not be loaded: " << e.dev_message << '\n';
+			ERR_CF << "map could not be loaded: " << e.dev_message;
 			verified = false;
 		}
 	}
@@ -440,7 +441,7 @@ game_info::addon_req game_info::check_addon_version_compatibility(const config& 
 				<< "' addon_min_version_parsed='" << local_min_ver.str()
 				<< "' addon_version='" << local_item["addon_version"]
 				<< "' remote_ver='" << remote_ver.str()
-				<< "'\n";
+				<< "'";
 			r.outcome = addon_req::CANNOT_SATISFY;
 
 			r.message = VGETTEXT("The host's version of <i>$addon</i> is incompatible. They have version <b>$host_ver</b> while you have version <b>$local_ver</b>.", {
@@ -493,7 +494,7 @@ const char* game_info::display_status_string() const
 		case game_info::disp_status::UPDATED:
 			return "updated";
 		default:
-			ERR_CF << "BAD display_status " << static_cast<int>(display_status) << " in game " << id << "\n";
+			ERR_CF << "BAD display_status " << static_cast<int>(display_status) << " in game " << id;
 			return "?";
 	}
 }

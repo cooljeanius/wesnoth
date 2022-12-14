@@ -124,14 +124,14 @@ static std::string do_interpolation(const std::string &str, const variable_set& 
 				}
 			} while(++var_end != res.end() && paren_nesting_level > 0);
 			if(utils::detail::evaluate_formula == nullptr) {
-				WRN_NG << "Formula substitution ignored (and removed) because WFL engine is not present in the server.\n";
+				WRN_NG << "Formula substitution ignored (and removed) because WFL engine is not present in the server.";
 				res.replace(var_begin, var_end, "");
 				continue;
 			}
 			if(paren_nesting_level > 0) {
 				ERR_NG << "Formula in WML string cannot be evaluated due to "
 					<< "a missing closing parenthesis:\n\t--> \""
-					<< std::string(var_begin, var_end) << "\"\n";
+					<< std::string(var_begin, var_end) << "\"";
 				res.replace(var_begin, var_end, "");
 				continue;
 			}

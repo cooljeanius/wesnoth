@@ -41,7 +41,7 @@ multi_page::multi_page(const implementation::builder_multi_page& builder)
 {
 }
 
-grid& multi_page::add_page(const string_map& item)
+grid& multi_page::add_page(const widget_item& item)
 {
 	assert(generator_);
 	grid& page = generator_->create_item(-1, *page_builders_.begin()->second, item, nullptr);
@@ -49,7 +49,7 @@ grid& multi_page::add_page(const string_map& item)
 	return page;
 }
 
-grid& multi_page::add_page(const std::string& type, int insert_pos, const string_map& item)
+grid& multi_page::add_page(const std::string& type, int insert_pos, const widget_item& item)
 {
 	assert(generator_);
 	auto it_builder = page_builders_.find(type);
@@ -57,8 +57,7 @@ grid& multi_page::add_page(const std::string& type, int insert_pos, const string
 	return generator_->create_item(insert_pos, *it_builder->second, item, nullptr);
 }
 
-grid& multi_page::add_page(
-	const std::map<std::string /* widget id */, string_map>& data)
+grid& multi_page::add_page(const widget_data& data)
 {
 	assert(generator_);
 	grid& page = generator_->create_item(-1, *page_builders_.begin()->second, data, nullptr);
@@ -66,8 +65,7 @@ grid& multi_page::add_page(
 	return page;
 }
 
-grid& multi_page::add_page(
-	const std::string& type, int insert_pos, const std::map<std::string /* widget id */, string_map>& data)
+grid& multi_page::add_page(const std::string& type, int insert_pos, const widget_data& data)
 {
 	assert(generator_);
 	auto it_builder = page_builders_.find(type);
@@ -141,7 +139,7 @@ unsigned multi_page::get_state() const
 	return 0;
 }
 
-void multi_page::finalize(std::unique_ptr<generator_base> generator, const std::vector<string_map>& page_data)
+void multi_page::finalize(std::unique_ptr<generator_base> generator, const std::vector<widget_item>& page_data)
 {
 	// Save our *non-owning* pointer before this gets moved into the grid.
 	generator_ = generator.get();
@@ -151,7 +149,7 @@ void multi_page::finalize(std::unique_ptr<generator_base> generator, const std::
 	swap_grid(nullptr, &get_grid(), std::move(generator), "_content_grid");
 }
 
-void multi_page::impl_draw_background(int /*x_offset*/, int /*y_offset*/)
+void multi_page::impl_draw_background()
 {
 	/* DO NOTHING */
 }
@@ -166,7 +164,7 @@ void multi_page::set_self_active(const bool /*active*/)
 multi_page_definition::multi_page_definition(const config& cfg)
 	: styled_widget_definition(cfg)
 {
-	DBG_GUI_P << "Parsing multipage " << id << '\n';
+	DBG_GUI_P << "Parsing multipage " << id;
 
 	load_resolutions<resolution>(cfg);
 }
@@ -230,7 +228,7 @@ std::unique_ptr<widget> builder_multi_page::build() const
 	widget->set_page_builders(builders);
 
 	DBG_GUI_G << "Window builder: placed multi_page '" << id
-			  << "' with definition '" << definition << "'.\n";
+			  << "' with definition '" << definition << "'.";
 
 	const auto conf = widget->cast_config_to<multi_page_definition>();
 	assert(conf);

@@ -14,8 +14,8 @@
 
 #include "sdl/surface.hpp"
 
+#include "color.hpp"
 #include "sdl/rect.hpp"
-#include "video.hpp"
 
 const SDL_PixelFormat surface::neutral_pixel_format = []() {
 	return *SDL_CreateRGBSurfaceWithFormat(0, 1, 1, 32, SDL_PIXELFORMAT_ARGB8888)->format;
@@ -79,66 +79,6 @@ void surface::free_surface()
 	if(surface_) {
 		SDL_FreeSurface(surface_);
 	}
-}
-
-surface_restorer::surface_restorer()
-	: target_(nullptr)
-	, rect_(sdl::empty_rect)
-	, surface_(nullptr)
-{
-}
-
-surface_restorer::surface_restorer(CVideo* target, const SDL_Rect& rect)
-	: target_(target)
-	, rect_(rect)
-	, surface_(nullptr)
-{
-	update();
-}
-
-surface_restorer::~surface_restorer()
-{
-	restore();
-}
-
-void surface_restorer::restore(const SDL_Rect& dst) const
-{
-	if(!surface_) {
-		return;
-	}
-
-	SDL_Rect dst2 = sdl::intersect_rects(dst, rect_);
-	if(dst2.w == 0 || dst2.h == 0) {
-		return;
-	}
-
-	SDL_Rect src = dst2;
-	src.x -= rect_.x;
-	src.y -= rect_.y;
-	target_->blit_surface(dst2.x, dst2.y, surface_, &src, nullptr);
-}
-
-void surface_restorer::restore() const
-{
-	if(!surface_) {
-		return;
-	}
-
-	target_->blit_surface(rect_.x, rect_.y, surface_);
-}
-
-void surface_restorer::update()
-{
-	if(rect_.w <= 0 || rect_.h <= 0) {
-		surface_ = nullptr;
-	} else {
-		surface_ = target_->read_pixels_low_res(&rect_);
-	}
-}
-
-void surface_restorer::cancel()
-{
-	surface_ = nullptr;
 }
 
 bool operator<(const surface& a, const surface& b)

@@ -91,8 +91,7 @@ editor_controller::editor_controller()
 	get_current_map_context().set_starting_position_labels(gui());
 	cursor::set(cursor::NORMAL);
 
-	gui().create_buttons();
-	gui().redraw_everything();
+	gui().queue_rerender();
 }
 
 void editor_controller::init_gui()
@@ -100,9 +99,9 @@ void editor_controller::init_gui()
 	gui_->change_display_context(&get_current_map_context());
 	gui_->add_redraw_observer(std::bind(&editor_controller::display_redraw_callback, this, std::placeholders::_1));
 	floating_label_manager_.reset(new font::floating_label_context());
-	gui().set_draw_coordinates(preferences::editor::draw_hex_coordinates());
-	gui().set_draw_terrain_codes(preferences::editor::draw_terrain_codes());
-	gui().set_draw_num_of_bitmaps(preferences::editor::draw_num_of_bitmaps());
+	gui().set_debug_flag(display::DEBUG_COORDINATES, preferences::editor::draw_hex_coordinates());
+	gui().set_debug_flag(display::DEBUG_TERRAIN_CODES, preferences::editor::draw_terrain_codes());
+	gui().set_debug_flag(display::DEBUG_NUM_BITMAPS, preferences::editor::draw_num_of_bitmaps());
 //	halo_manager_.reset(new halo::manager(*gui_));
 //	resources::halo = halo_manager_.get();
 //	^ These lines no longer necessary, the gui owns its halo manager.
@@ -118,7 +117,7 @@ void editor_controller::init_tods(const game_config_view& game_config)
 		const std::string& schedule_id = schedule["id"];
 		const std::string& schedule_name = schedule["name"];
 		if (schedule_id.empty()) {
-			ERR_ED << "Missing ID attribute in a TOD Schedule." << std::endl;
+			ERR_ED << "Missing ID attribute in a TOD Schedule.";
 			continue;
 		}
 
@@ -129,7 +128,7 @@ void editor_controller::init_tods(const game_config_view& game_config)
 
 			times = new_times.first;
 		} else {
-			ERR_ED << "Duplicate TOD Schedule identifiers." << std::endl;
+			ERR_ED << "Duplicate TOD Schedule identifiers.";
 			continue;
 		}
 
@@ -140,7 +139,7 @@ void editor_controller::init_tods(const game_config_view& game_config)
 	}
 
 	if (tods_.empty()) {
-		ERR_ED << "No editor time-of-day defined" << std::endl;
+		ERR_ED << "No editor time-of-day defined";
 	}
 }
 
@@ -148,14 +147,14 @@ void editor_controller::init_music(const game_config_view& game_config)
 {
 	const std::string tag_name = "editor_music";
 	if (game_config.child_range(tag_name).size() == 0) {
-		ERR_ED << "No editor music defined" << std::endl;
+		ERR_ED << "No editor music defined";
 	}
 	else {
 		for (const config& editor_music : game_config.child_range(tag_name)) {
 			for (const config& music : editor_music.child_range("music")) {
 				sound::music_track track(music);
 				if (track.file_path().empty())
-					WRN_ED << "Music track " << track.id() << " not found." << std::endl;
+					WRN_ED << "Music track " << track.id() << " not found.";
 				else
 					music_tracks_.emplace_back(music);
 			}
@@ -194,7 +193,7 @@ void editor_controller::do_screenshot(const std::string& screenshot_filename /* 
 	try {
 		surface screenshot = gui().screenshot(true);
 		if(!screenshot || image::save_image(screenshot, screenshot_filename) != image::save_result::success) {
-			ERR_ED << "Screenshot creation failed!\n";
+			ERR_ED << "Screenshot creation failed!";
 		}
 	} catch (const wml_exception& e) {
 		e.show();
@@ -511,11 +510,11 @@ hotkey::ACTION_STATE editor_controller::get_action_state(hotkey::HOTKEY_COMMAND 
 	case HOTKEY_EDITOR_TOOL_ITEM:
 		return toolkit_->is_mouse_action_set(command) ? ACTION_ON : ACTION_OFF;
 	case HOTKEY_EDITOR_DRAW_COORDINATES:
-		return gui_->get_draw_coordinates() ? ACTION_ON : ACTION_OFF;
+		return gui_->debug_flag_set(display::DEBUG_COORDINATES) ? ACTION_ON : ACTION_OFF;
 	case HOTKEY_EDITOR_DRAW_TERRAIN_CODES:
-		return gui_->get_draw_terrain_codes() ? ACTION_ON : ACTION_OFF;
+		return gui_->debug_flag_set(display::DEBUG_TERRAIN_CODES) ? ACTION_ON : ACTION_OFF;
 	case HOTKEY_EDITOR_DRAW_NUM_OF_BITMAPS:
-		return gui_->get_draw_num_of_bitmaps() ? ACTION_ON : ACTION_OFF;
+		return gui_->debug_flag_set(display::DEBUG_NUM_BITMAPS) ? ACTION_ON : ACTION_OFF;
 
 	case HOTKEY_MINIMAP_DRAW_VILLAGES:
 		return (preferences::minimap_draw_villages()) ? hotkey::ACTION_ON : hotkey::ACTION_OFF;
@@ -705,7 +704,7 @@ bool editor_controller::do_execute_command(const hotkey::hotkey_command& cmd, in
 //			std::vector< std::pair< std::string, std::string >> blah_items;
 //			toolkit_->get_palette_manager()->active_palette().expand_palette_groups_menu(blah_items);
 //			int selected = 1; //toolkit_->get_palette_manager()->active_palette().get_selected;
-//			gui2::teditor_select_palette_group::execute(selected, blah_items, gui_->video());
+//			gui2::teditor_select_palette_group::execute(selected, blah_items);
 		}
 			return true;
 		case HOTKEY_EDITOR_PALETTE_UPSCROLL:
@@ -858,7 +857,7 @@ bool editor_controller::do_execute_command(const hotkey::hotkey_command& cmd, in
 			context_manager_->perform_refresh(editor_action_select_none());
 			return true;
 		case HOTKEY_EDITOR_SELECTION_FILL:
-            context_manager_->fill_selection();
+			context_manager_->fill_selection();
 			return true;
 		case HOTKEY_EDITOR_SELECTION_RANDOMIZE:
 			context_manager_->perform_refresh(editor_action_shuffle_area(
@@ -964,18 +963,18 @@ bool editor_controller::do_execute_command(const hotkey::hotkey_command& cmd, in
 			return true;
 
 		case HOTKEY_EDITOR_DRAW_COORDINATES:
-			gui().set_draw_coordinates(!gui().get_draw_coordinates());
-			preferences::editor::set_draw_hex_coordinates(gui().get_draw_coordinates());
+			gui().toggle_debug_flag(display::DEBUG_COORDINATES);
+			preferences::editor::set_draw_hex_coordinates(gui().debug_flag_set(display::DEBUG_COORDINATES));
 			gui().invalidate_all();
 			return true;
 		case HOTKEY_EDITOR_DRAW_TERRAIN_CODES:
-			gui().set_draw_terrain_codes(!gui().get_draw_terrain_codes());
-			preferences::editor::set_draw_terrain_codes(gui().get_draw_terrain_codes());
+			gui().toggle_debug_flag(display::DEBUG_TERRAIN_CODES);
+			preferences::editor::set_draw_terrain_codes(gui().debug_flag_set(display::DEBUG_TERRAIN_CODES));
 			gui().invalidate_all();
 			return true;
 		case HOTKEY_EDITOR_DRAW_NUM_OF_BITMAPS:
-			gui().set_draw_num_of_bitmaps(!gui().get_draw_num_of_bitmaps());
-			preferences::editor::set_draw_num_of_bitmaps(gui().get_draw_num_of_bitmaps());
+			gui().toggle_debug_flag(display::DEBUG_NUM_BITMAPS);
+			preferences::editor::set_draw_num_of_bitmaps(gui().debug_flag_set(display::DEBUG_NUM_BITMAPS));
 			gui().invalidate_all();
 			return true;
 		case HOTKEY_EDITOR_REMOVE_LOCATION: {
@@ -1099,10 +1098,10 @@ void editor_controller::show_menu(const std::vector<config>& items_arg, int xloc
 
 void editor_controller::preferences()
 {
-	gui_->video().clear_all_help_strings();
+	font::clear_help_string();
 	gui2::dialogs::preferences_dialog::display();
 
-	gui_->redraw_everything();
+	gui_->queue_rerender();
 }
 
 void editor_controller::toggle_grid()
@@ -1232,7 +1231,6 @@ void editor_controller::display_redraw_callback(display&)
 {
 	set_button_state();
 	toolkit_->adjust_size();
-	toolkit_->get_palette_manager()->draw_contents();
 	get_current_map_context().get_labels().recalculate_labels();
 }
 
@@ -1304,12 +1302,12 @@ bool editor_controller::left_click(int x, int y, const bool browse)
 	if (mouse_handler_base::left_click(x, y, browse))
 		return true;
 
-	LOG_ED << "Left click, after generic handling\n";
+	LOG_ED << "Left click, after generic handling";
 	map_location hex_clicked = gui().hex_clicked_on(x, y);
 	if (!get_current_map_context().map().on_board_with_border(hex_clicked))
 		return true;
 
-	LOG_ED << "Left click action " << hex_clicked << "\n";
+	LOG_ED << "Left click action " << hex_clicked;
 	auto a = get_mouse_action().click_left(*gui_, x, y);
 	if(a) {
 		perform_refresh_delete(std::move(a), true);
@@ -1340,10 +1338,10 @@ bool editor_controller::right_click(int x, int y, const bool browse)
 {
 	toolkit_->clear_mouseover_overlay();
 	if (mouse_handler_base::right_click(x, y, browse)) return true;
-	LOG_ED << "Right click, after generic handling\n";
+	LOG_ED << "Right click, after generic handling";
 	map_location hex_clicked = gui().hex_clicked_on(x, y);
 	if (!get_current_map_context().map().on_board_with_border(hex_clicked)) return true;
-	LOG_ED << "Right click action " << hex_clicked << "\n";
+	LOG_ED << "Right click action " << hex_clicked;
 	auto a = get_mouse_action().click_right(*gui_, x, y);
 	if(a) {
 		perform_refresh_delete(std::move(a), true);

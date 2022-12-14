@@ -1,24 +1,144 @@
-## Version 1.17.4+dev
+## Version 1.17.10+dev
  ### Add-ons client
  ### Add-ons server
  ### Campaigns
-   * Eastern Invasion
-     * S1: Fixed campfire not having a sound (issue #5766)
-     * S07a:
-       * Better handling for side 2 (issue #4145)
-       * Fixed Grug upkeep, added dialogue about ogres joining (issue #4145)
  ### Editor
  ### Multiplayer
  ### Lua API
  ### Packaging
  ### Terrain
  ### Translations
-   * Updated translations: Czech, French, Japanese
+   * Updated translations: Arabic, British English, Finnish, French
  ### Units
+   * Moved Kraken from campaigns to core, updated sprite
+   * Added some dragonfly units to "monsters"
  ### User interface
  ### WML Engine
+
+## Version 1.17.10
+ ### Terrain
+   * `^Qhhf` and `^Qhuf` terrain codes available to allow forest terrain on bluff/gulch hexes
+ ### Translations
+   * Updated translations: British English, Czech, French, Polish, Portuguese (Brazil)
+ ### Units
+   * Merkfolk units movement cost on forest and hills reduced from 5 to 4.
+   * Orcish Slayer can advance to the Orcish Nightblade by default.
+   * Orcish Slayer's xp required to level up reduced from 100 to 64.
+   * Dunefolk Falconer portrait added.
+ ### Miscellaneous and Bug Fixes
+   * Fixed not being able to undo moves (bug #6898)
+
+## Version 1.17.9
+ ### Terrain
+   * Change codes "Irs, Ias, Icr, Ior, and Icn" to "Isr, Isa, Isc, Iwo, and Iwc", respectively
+ ### Translations
+   * Updated translations: British English, Czech, French, Italian, Portuguese (Brazil)
+ ### User interface
+   * Bot hosted games are now show on a separate tab from player hosted games.
+ ### Miscellaneous and Bug Fixes
+   * Add disconnect check to alert users when they lose connection to the multiplayer server (issue #1336)
+
+## Version 1.17.8
+ ### Editor
+   * add "elevation" terrain group
+ ### Multiplayer
+   * The /report command now opens a dialog rather than simply allowing free-form text after the command.
+ ### Terrain
+   * Expansion of cosmetic "lower terrain" to "higher terrain" and more transition graphics.
+ ### Translations
+   * Updated translations: British English, Chinese (Simplified), Czech, French, Italian, Portuguese (Brazil), Russian, Turkish
+ ### Miscellaneous and Bug Fixes
+   * Fixed highlighted movement range when hovering over units after their owner ends turn. It now shows their max movement next turn, instead of the remaining moves from their previous turn. (issue #6716)
+   * Stopped wmllint adding `wesnoth-icon.png` to `[message]`s that don’t already have an image. (PR #6991)
+
+## Version 1.17.7
+ ### Terrain
+   * Generalized "lower terrain" similar to the mid-level in lava/chasm.  Cosmetic and unwalkable versions. (PR #6927)
+ ### Translations
+   * Updated translations: Arabic, British English, Bulgarian, Chinese (Traditional), Czech, Finnish, French, Italian, Portuguese (Brazil)
+ ### WML Engine
+   * Add the pre_attack event.
+ ### Miscellaneous and Bug Fixes
+   * Implemented logging to file for Linux and macOS, and enabled it be default for Steam Linux.
+   * Fixed drake flare leadership animation over water (issue #3996)
+   * Fixed animations not clearing properly when zoomed (issues #6589, #6891, #6892)
+   * Fixed inconsistent cropping of unusually-sized item images (issue #6118)
+   * Fixed the `{IS_HERO}` macro to avoid losing the hero ellipse when a unit levels up
+   * Stored credentials are now encrypted with AES rather than RC4. This will result in credentials needing to be re-entered the first time when logging in with this version.
+   * The cache directory is now configurable through a command-line option in the same way as data, user data and user config directories.
+
+## Version 1.17.6
+ ### Campaigns
+   * The South Guard
+     * S4: Fixed replay OOS on victory event (issue #6832)
+   * Under the Burning Suns
+     * S8: Fixed replay OOS on victory event (issue #6267)
+   * World Conquest
+     * Fixed Bezoar artifact being bugged and broken.
+ ### Lua API
+   * New `wesnoth.interface.screen_fade` function applies an overlay colour to the game display, fading over the given duration (PR #6864).
+   * New functions have been added to register game events from Lua: `wesnoth.game_events.add`, `wesnoth.game_events.add_menu`, `wesnoth.game_events.add_repeating`, `wesnoth.game_events.add_wml`.
+     * Both the action and the filter can now be a native Lua function, if needed.
+     * All features of the `[event]` tag are available.
+     * The primary API is `wesnoth.game_event.add` - the others are shortcuts for common use-cases.
+   * `wesnoth.game_events.fire` (renamed from `wesnoth.fire_event`) now supports passing unusual event-specific data such as damage in an attack event or previous owner in a village capture event.
+   * `wesnoth.fire_event_by_id` is renamed to `wesnoth.game_events.fire_by_id`.
+   * `wesnoth.current.event_context` now has an additional `data` attribute that contains the full event data, including the former owner in a village capture event (which was previously never exposed anywhere).
+   * `wesnoth.remove_event_handler` renamed to `wesnoth.game_events.remove` for consistency with other event functions.
+ ### Packaging
+   * Increased minimum required version of SDL to 2.0.10 for non-macOS platforms.
+   * Increased minimum required version of SDL to 2.0.22 and the minimum required OS version to 10.12 for macOS due to needing the fix https://github.com/libsdl-org/SDL/commit/3bebdaccb7bff8c40438856081d404a7ce3def30.
+ ### Rendering Engine
+   * Large changes have been made to Wesnoth's rendering engine, enabling hardware acceleration for the majority of components and resolving many long-standing issues. Performance should be greatly increased, and CPU and GPU usage greatly decreased in almost all situations. Issues confirmed resolved: #1291, #1350, #1605, #1755, #2059, #2458, #2618, #2865, #3238, #3255, #3421, #3592, #3798, #3937, #4210, #4460, #4877, #5115, #5420, #5494.
+ ### Translations
+   * Updated translations: Arabic, British English, Czech, Finnish, French, Italian, Japanese, Swedish
+ ### Units
+   * Fixed Warden’s and Arbiter’s animations popping on water tiles (issue #6508)
+   * Updated some Loyalist sprites: Sergeant, Lieutenant, Swordsman, Pikeman, Royal Guard, Halberdier
+   * Animations for Nightgaunt
+ ### WML Engine
+   * A new interface action `[screen_fade]` provides a smooth screen fade effect which also covers units (issue #6745).
+   * Events now support filter conditions using the Wesnoth Formula Language with a new `filter_formula` key.
+   * It is now possible for variable interpolation in an event name to expand to multiple event names - the name is split on commas both before and after variable interpolation.
+   * The `[fire_event]` tag now supports a `[data]` subtag that can be used to pass any arbitrary information to the event. In particular, it supports passing damage to an attack event and former owner to a village capture event.
+ ### Miscellaneous and Bug Fixes
+   * Fixed being unable to interact with units when Scroll Lock is active (issue #6759)
+   * Fixed the addon manager UI blanking incorrectly (issue #6787)
+   * Implemented a workaround for bad SDL rectangle drawing in some versions (issue #6799)
+
+## Version 1.17.5
+ ### Campaigns
+   * Eastern Invasion
+     * S1: Fixed campfire not having a sound (issue #5766)
+     * S07a:
+       * Better handling for side 2 (issue #4145)
+       * Fixed Grug upkeep, added dialogue about ogres joining (issue #4145)
+   * Northern Rebirth
+     * S1: Fixed Al'Tar confusing an orc for a slave (issue #6735)
+ ### Translations
+   * Updated translations: Arabic, Chinese (Traditional), Czech, Finnish, French, Japanese, Polish
+ ### User interface
+   * High-DPI font and image rendering is now enabled across the entire UI.
+   * Resolved broken layout in some low-resolution configurations (issue #5620, #6544)
  ### Miscellaneous and Bug Fixes
    * wmllint automatically removes the obsolete lines `{SOUND:SLOW}` and `{SOUND:POISON}`
+   * Fixed path finding visibility bug that sometimes caused OOS errors on maps with tunnels and at least three sides that do not share vision (PR #6744)
+   * Fixed transparency of submerged units when zoomed (issue #3746)
+   * Fixed mouse input mapping problems on MacOS (issue #6715)
+   * Removing the Protect Unit Micro AI no longer causes a Lua error
+   * Fixed chance of being unscathed in damage calculation for some fights in which both units can die (issue #6590)
+   * Fixed visibility bug in ai_helper.get_attackable_enemies() for some complex filters
+   * Fixed bug in Bottleneck Micro AI involving units without moves on terrain with multiple open passages (issue #6599)
+   * Fixed error in Castle Switch CA of the Experimental AI after a leader was killed (issue #6440)
+   * Fixed error in retreat-injured CA when regenerate ability code does not include a value= key
+   * Retreat-injured CA no longer takes villages from allies by default, but this can be allowed with new aspect allow_ally_villages
+   * Recruit Rushers Micro AI: new parameter reset_cache_each_turn
+   * Experimental AI no longer uses generic_recruit_engine: fixes a data leakage bug between Experimental AIs of different sides
+   * Experimental AI recruit rushers: include unit types from extra_recruit (issue #4924)
+   * Fix segfault when weapon is removed during attack (issues #4927 and #5914)
+   * Add no-unit error message for unit debug command (issue #6116)
+   * Significantly improve efficiency of move-to-any-enemy CA (issue #6504)
+   * Logger: do not show user name in paths
 
 ## Version 1.17.4
  ### Campaigns
@@ -192,6 +312,52 @@
    * wmllint now automatically removes {MAGENTA_IS_THE_TEAM_COLOR}.
    * wmllint, wmlscope and wmlindent now support the command line `--version` flag, which reports the current version of Wesnoth (issue #6346).
    * wmllint is now capable of handling unit levels and types when checking recruitment patterns.
+
+## Version 1.16.6
+ ### Translations
+   * Updated translations: Arabic, British English, Bulgarian, Chinese (Simplified), Chinese (Traditional), Czech, French, Italian, Japanese, Portuguese (Brazil), Russian, Swedish, Turkish
+ ### Miscellaneous and Bug Fixes
+   * Fixed drake flare leadership animation over water (issue #3996)
+   * Fixed animations not clearing properly when zoomed (issue #6589)
+   * Fixed the `{IS_HERO}` macro to avoid losing the hero ellipse when a unit levels up
+   * Fixed highlighted movement range when hovering over units after their owner ends turn. It now shows their max movement next turn, instead of the remaining moves from their previous turn. (issue #6716)
+   * Fixed out of sync errors occurring when unused add-ons contain the [resistance_defaults] or [terrain_defaults] tags (issue #6650)
+
+## Version 1.16.5
+ ### Miscellaneous and Bug Fixes
+   * Fixed frequent crashes occurring in multiplayer matches (issue #6863).
+
+## Version 1.16.4
+ ### Campaigns
+   * Eastern Invasion
+     * S07a:
+       * Better handling for side 2 (issue #4145)
+       * Fixed Grug upkeep, added dialogue about ogres joining (issue #4145)
+   * Northern Rebirth
+     * S1: Fixed Al'Tar confusing an orc for a slave (issue #6735)
+   * Under the Burning Suns
+     * S5: Enforce encounter with the Cloaked Figure (issue #6364)
+ ### Translations
+   * Updated translations: Arabic, British English, Chinese (Traditional), Czech, Polish, Finnish, French
+ ### Units
+    * Fixed Warden’s and Arbiter’s animations popping on water tiles (issue #6508)
+ ### User interface
+   * Resolved broken layout in some low-resolution configurations (issue #5620, #6544)
+ ### Miscellaneous and Bug Fixes
+   * Fixed path finding visibility bug that sometimes caused OOS errors on maps with tunnels and at least three sides that do not share vision (PR #6744)
+   * Fixed being unable to interact with units when Scroll Lock is active (issue #6759)
+   * Removing the Protect Unit Micro AI no longer causes a Lua error
+   * Fixed chance of being unscathed in damage calculation for some fights in which both units can die (issue #6590)
+   * Fixed visibility bug in ai_helper.get_attackable_enemies() for some complex filters
+   * Fixed bug in Bottleneck Micro AI involving units without moves on terrain with multiple open passages (issue #6599)
+   * Fixed error in Castle Switch CA of the Experimental AI after a leader was killed (issue #6440)
+   * Fixed error in retreat-injured CA when regenerate ability code does not include a value= key
+   * Retreat-injured CA no longer takes villages from allies
+   * Experimental AI no longer uses generic_recruit_engine: fixes a data leakage bug between Experimental AIs of different sides
+   * Experimental AI recruit rushers: include unit types from extra_recruit (issue #4924)
+   * Fix segfault when weapon is removed during attack (issues #4927 and #5914)
+   * Add no-unit error message for unit debug command (issue #6116)
+   * Significantly improve efficiency of move-to-any-enemy CA
 
 ## Version 1.16.3
  ### Add-ons client

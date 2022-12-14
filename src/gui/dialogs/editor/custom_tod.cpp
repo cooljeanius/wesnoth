@@ -57,7 +57,8 @@ static custom_tod::string_pair tod_getter_sound(const time_of_day& tod)
 REGISTER_DIALOG(custom_tod)
 
 custom_tod::custom_tod(const std::vector<time_of_day>& times, int current_time)
-	: times_(times)
+	: modal_dialog(window_id())
+	, times_(times)
 	, current_tod_(current_time)
 	, color_field_r_(register_integer("tod_red",   true))
 	, color_field_g_(register_integer("tod_green", true))
@@ -234,30 +235,11 @@ void custom_tod::update_tod_display()
 	display* disp = display::get_singleton();
 	assert(disp && "Display pointer is null!");
 
-	// Prevent a floating slice of window appearing alone over the
-	// theme UI sidebar after redrawing tiles and before we have a
-	// chance to redraw the rest of this window.
-	get_window()->undraw();
-
-	// NOTE: We only really want to re-render the gamemap tiles here.
-	// Redrawing everything is a significantly more expensive task.
-	// At this time, tiles are the only elements on which ToD tint is
-	// meant to have a visible effect. This is very strongly tied to
-	// the image caching mechanism.
-	//
-	// If this ceases to be the case in the future, you'll need to call
-	// redraw_everything() instead.
-
+	// The display handles invaliding whatever tiles need invalidating.
 	disp->update_tod(&get_selected_tod());
 
-	// invalidate all tiles so they are redrawn with the new ToD tint next
-	disp->invalidate_all();
-
-	// redraw tiles
-	disp->draw(false);
-
 	// NOTE: revert to invalidate_layout if necessary to display the ToD mask image.
-	get_window()->set_is_dirty(true);
+	get_window()->queue_redraw();
 }
 
 void custom_tod::update_lawful_bonus()

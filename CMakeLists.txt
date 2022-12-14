@@ -73,6 +73,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 find_package(OpenSSL 1.0 REQUIRED)
 
 if(APPLE)
+	find_library(APPKIT_LIBRARY AppKit REQUIRED)
+	find_library(FOUNDATION_LIBRARY Foundation REQUIRED)
 	find_library(IOKIT_LIBRARY IOKit REQUIRED)
 	find_library(SECURITY_LIBRARY Security REQUIRED)
 endif()
@@ -152,6 +154,7 @@ option(ENABLE_DESIGN_DOCUMENTS "Enables the generation of design documents, and 
 option(ENABLE_LTO "Sets Link Time Optimization for Release builds" OFF)
 option(GLIBCXX_DEBUG "Whether to define _GLIBCXX_DEBUG and _GLIBCXX_DEBUG_PEDANTIC" OFF)
 option(ENABLE_POT_UPDATE_TARGET "Enables the tools to update the pot files and manuals. This target has extra dependencies." OFF)
+option(FORCE_COLOR_OUTPUT "Always produce ANSI-colored output (GNU/Clang only)." FALSE)
 
 if(UNIX AND NOT APPLE AND NOT CYGWIN)
 	option(ENABLE_NOTIFICATIONS "Enable Window manager notification messages" ON)
@@ -212,6 +215,16 @@ if(NOT MSVC)
 		set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=${SANITIZE}")
 		# manually disable some optimizations to get better stacktraces if sanitizers are used
 		set(COMPILER_FLAGS "${COMPILER_FLAGS} -fno-omit-frame-pointer -fno-optimize-sibling-calls")
+	endif()
+
+### Force colour output (for example for Ninja, or piped CI)
+
+	if(FORCE_COLOR_OUTPUT)
+		if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+			set(COMPILER_FLAGS "${COMPILER_FLAGS} -fdiagnostics-color=always")
+		elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+			set(COMPILER_FLAGS "${COMPILER_FLAGS} -fcolor-diagnostics")
+		endif()
 	endif()
 
 ### Set the final compiler flags.
@@ -478,7 +491,7 @@ if(ENABLE_GAME OR ENABLE_TESTS)
 	find_package(VorbisFile REQUIRED)
 	find_package(PkgConfig REQUIRED)
 	find_package(Fontconfig REQUIRED)
-	find_package(SDL2 2.0.8 REQUIRED)
+	find_package(SDL2 2.0.10 REQUIRED)
 	if(NOT MSVC)
 		# for everything else, use pkgconfig
 		# SDL2_image and SDL2_mixer don't seem to have any cmake configuration available at all
@@ -487,12 +500,12 @@ if(ENABLE_GAME OR ENABLE_TESTS)
 	else()
 		# for MSVC, vcpkg builds and provides custom SDL2-related modules for cmake to use, so use those
 		# this also fixes the issue with our previous FindSDL2* scripts incorrectly using the Release version of these libs instead of the Debug version
-		find_package(sdl2-image CONFIG REQUIRED)
-		find_package(sdl2-mixer CONFIG REQUIRED)
+		find_package(SDL2_image CONFIG REQUIRED)
+		find_package(SDL2_mixer CONFIG REQUIRED)
 	endif()
 	pkg_check_modules(CAIRO REQUIRED cairo>=1.10)
-	pkg_check_modules(PANGOCAIRO REQUIRED pangocairo>=1.22.0)
-	pkg_check_modules(PANGO REQUIRED pango>=1.22.0)
+	pkg_check_modules(PANGOCAIRO REQUIRED pangocairo>=1.44.0)
+	pkg_check_modules(PANGO REQUIRED pango>=1.44.0)
 	pkg_check_modules(LIBREADLINE readline)
 endif()
 

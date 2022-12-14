@@ -38,7 +38,8 @@ namespace gui2::dialogs
 REGISTER_DIALOG(end_credits)
 
 end_credits::end_credits(const std::string& campaign)
-	: focus_on_(campaign)
+	: modal_dialog(window_id())
+	, focus_on_(campaign)
 	, backgrounds_()
 	, text_widget_(nullptr)
 	, scroll_speed_(100)
@@ -48,13 +49,8 @@ end_credits::end_credits(const std::string& campaign)
 
 void end_credits::pre_show(window& window)
 {
-	window.set_callback_next_draw([this]()
-	{
-		// Delay a little before beginning the scrolling
-		last_scroll_ = SDL_GetTicks() + 3000;
-	});
-
-	connect_signal_on_draw(window, std::bind(&end_credits::timer_callback, this));
+	// Delay a little before beginning the scrolling
+	last_scroll_ = SDL_GetTicks() + 3000;
 
 	connect_signal_pre_key_press(window, std::bind(&end_credits::key_press_callback, this, std::placeholders::_5));
 
@@ -111,7 +107,7 @@ void end_credits::pre_show(window& window)
 	}
 }
 
-void end_credits::timer_callback()
+void end_credits::update()
 {
 	uint32_t now = SDL_GetTicks();
 	if(last_scroll_ > now) {

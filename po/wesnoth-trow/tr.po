@@ -3,14 +3,14 @@
 # This file is distributed under the same license as the Battle for Wesnoth package.
 #
 # ihsan Haluk AKIN <ihsan_akin@yahoo.com>, 2005, 2006.
-# Nilgün Belma Bugüner <nilgun@belgeler.gen.tr>, 2008, ..., 2022.
+# Nilgün Belma Bugüner <nillguine@gmail.com>, 2008, ..., 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: wesnoth-trow\n"
 "Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
-"POT-Creation-Date: 2022-05-15 14:27 UTC\n"
-"PO-Revision-Date: 2022-01-06 03:13+0300\n"
-"Last-Translator: Nilgün Belma Bugüner <nilgun@belgeler.gen.tr>\n"
+"POT-Creation-Date: 2022-11-20 05:31 UTC\n"
+"PO-Revision-Date: 2022-08-21 16:04+0300\n"
+"Last-Translator: Nilgün Belma Bugüner <nillguine@gmail.com>\n"
 "Language-Team: Turkish\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
@@ -318,10 +318,6 @@ msgstr "Kral Eldrarik’in ölümü"
 
 #. [message]: speaker=narrator
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/01_A_Summer_of_Storms.cfg:147
-#, fuzzy
-#| msgid ""
-#| "The trouble seems to have finally reached the heart of the Isle, to the "
-#| "isolated lands of King Eldaric IV."
 msgid ""
 "The trouble seems to have finally reached the heart of the Isle, to the "
 "isolated lands of King Eldaric IV."
@@ -340,18 +336,11 @@ msgstr ""
 
 #. [message]: speaker=Prince Haldric
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/01_A_Summer_of_Storms.cfg:156
-#, fuzzy
-#| msgid "Father, I am of age now. May I lead our forces into battle?"
 msgid "Father, I am of age now. May I lead our forces into battle?"
 msgstr "Daha yaşım ne, Baba. Kuvvetlerimize savaşta önderlik yapabilir miyim?"
 
 #. [message]: speaker=King Eldaric IV
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/01_A_Summer_of_Storms.cfg:160
-#, fuzzy
-#| msgid ""
-#| "You’re showing initiative, son! I’m proud of you! Yes, you may lead our "
-#| "forces into battle, it is time — but I’ll stay near to keep an eye on "
-#| "you. There is more to this raid than meets the eye, I think."
 msgid ""
 "You’re showing initiative, son! I’m proud of you! Yes, you may lead our "
 "forces into battle, it is time — but I’ll stay near to keep an eye on you. "
@@ -1001,12 +990,6 @@ msgstr "DEFOL! KİMSEYİ GÖRMEK İSTEMİYOM!"
 
 #. [message]: speaker=Prince Haldric
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/03_A_Harrowing_Escape.cfg:272
-#, fuzzy
-#| msgid ""
-#| "Now, should I go southeast on the river road, or southwest through the "
-#| "Midlands? The river road crosses the Swamp of Esten, so I doubt that even "
-#| "orcs would go there. The Midlands were nice, but who knows what’s going "
-#| "on there now."
 msgid ""
 "Now, should I go southeast on the river road, or southwest through the "
 "Midlands? The river road crosses the Swamp of Esten, so I doubt that even "
@@ -1247,10 +1230,6 @@ msgstr "Bakan Edren"
 
 #. [message]: speaker=Minister Edren
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/04a_The_Swamp_of_Esten.cfg:373
-#, fuzzy
-#| msgid ""
-#| "Back you vile— Oh, sorry, I thought you were undead. When are those goofs "
-#| "in Clearwater Port going to clear the swamp again?"
 msgid ""
 "Back you vile— Oh, sorry, I thought you were undead. When are those goofs in "
 "Clearwater Port going to clear the swamp again?"
@@ -1284,8 +1263,6 @@ msgstr ""
 
 #. [message]: speaker=Lollyra
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/04a_The_Swamp_of_Esten.cfg:495
-#, fuzzy
-#| msgid "May I live forever in Undeath!"
 msgid "May I live forever in Undeath!"
 msgstr "Yarı ölü olarak sonsuza kadar yaşayabilirim!"
 
@@ -1340,11 +1317,6 @@ msgstr "Anlat bana, Temiz Su Limanı hala dayanıyor mu? Liman özgür mü?"
 
 #. [message]: speaker=Sir Ruddry
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/04a_The_Swamp_of_Esten.cfg:580
-#, fuzzy
-#| msgid ""
-#| "As far as I know, Sir. We have a large army, and they were pressing all "
-#| "able-bodied men and boys into service when I left. That orcish army is "
-#| "huge, but they haven’t met the main body of our forces yet."
 msgid ""
 "As far as I know, Sir. We have a large army, and they were pressing all able-"
 "bodied men and boys into service when I left. That orcish army is huge, but "
@@ -1400,13 +1372,6 @@ msgstr "Orta Bölgeler"
 
 #. [part]
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/04b_The_Midlands.cfg:22
-#, fuzzy
-#| msgid ""
-#| "To the southwest lay the Midlands. These were prosperous kingdoms, "
-#| "nestled between hill and forest. These had been the breadbasket of the "
-#| "Green Isle, exporting lumber and gemstones as well. The Midland kingdoms "
-#| "fed the city of Southbay, the largest city on the Isle. The coming of the "
-#| "orcs threatened to lay waste to all this."
 msgid ""
 "To the southwest lay the Midlands. These were prosperous kingdoms, nestled "
 "between hill and forest. These had been the breadbasket of the Green Isle, "
@@ -1509,9 +1474,6 @@ msgstr "Vrogar"
 
 #. [message]: speaker=Vrogar
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/04b_The_Midlands.cfg:308
-#, fuzzy
-#| msgid ""
-#| "They’re attacking the Chief! Kill the meat before it gets any farther!"
 msgid "They’re attacking the Chief! Kill the meat before it gets any farther!"
 msgstr "Şef! Saldırıyorlar! Daha ileri gitmeden eti gebert!"
 
@@ -2043,18 +2005,11 @@ msgstr "Bu havuzun görünüşünü hiç sevmedim."
 
 #. [message]: speaker=narrator
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/06_Temple_in_the_Deep.cfg:208
-#, fuzzy
-#| msgid "Haldric already has the Ruby of Fire."
 msgid "Haldric already has the Ruby of Fire."
 msgstr "Haldrik zaten Ateş Yakutuna sahip."
 
 #. [message]: speaker=narrator
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/06_Temple_in_the_Deep.cfg:232
-#, fuzzy
-#| msgid ""
-#| "As Haldric opens the chest, he sees it — the Ruby of Fire. It is the size "
-#| "of an apple and burns with an internal fire, which is refracted through "
-#| "its faces. He can feel the power flowing from it..."
 msgid ""
 "As Haldric opens the chest, he sees it — the Ruby of Fire. It is the size of "
 "an apple and burns with an internal fire, which is refracted through its "
@@ -2081,10 +2036,6 @@ msgstr "Belki de sandığa başka birini göndermelisin."
 
 #. [message]: speaker=Prince Haldric
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/06_Temple_in_the_Deep.cfg:292
-#, fuzzy
-#| msgid ""
-#| "I’m glad that’s over! We have the Ruby of Fire, and that Lich-Lord is now "
-#| "a pile of dust. Let’s get out of these catacombs!"
 msgid ""
 "I’m glad that’s over! We have the Ruby of Fire, and that Lich-Lord is now a "
 "pile of dust. Let’s get out of these catacombs!"
@@ -2160,10 +2111,6 @@ msgstr ""
 
 #. [message]: speaker=Prince Haldric
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/07_Return_to_Oldwood.cfg:120
-#, fuzzy
-#| msgid ""
-#| "Yes, it was a tough battle, but we prevailed. Now, I have a problem. I "
-#| "know not what I should do next."
 msgid ""
 "Yes, it was a tough battle, but we prevailed. Now, I have a problem. I know "
 "not what I should do next."
@@ -2422,7 +2369,7 @@ msgstr "İnsanlar"
 #. [side]: type=Lieutenant, id=Commander Aethyr
 #. [case]
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/08_Clearwater_Port.cfg:40
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:526
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:530
 msgid "Commander Aethyr"
 msgstr "Komutan Agetir"
 
@@ -2772,10 +2719,6 @@ msgstr "Onu buradan çıkarmalıyız. Tuzağa düştük!"
 
 #. [message]: speaker=Prince Haldric
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/08_Clearwater_Port.cfg:821
-#, fuzzy
-#| msgid ""
-#| "We’ve escaped from the orcs before the winter ice could trap us! Now, on "
-#| "to Southbay."
 msgid ""
 "We’ve escaped from the orcs before the winter ice could trap us! Now, on to "
 "Southbay."
@@ -2933,10 +2876,6 @@ msgstr "Bekleyin! Bir gemi gördüm! İnsanlar geliyor! Onları bi güzel ezin!"
 
 #. [message]: speaker=narrator
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/09_Fallen_Lich_Point.cfg:247
-#, fuzzy
-#| msgid ""
-#| "Prince Haldric has arrived at Fallen Lich Point, to retrieve Lich-Lord "
-#| "Caror’s Book of Fire and Darkness, and flee into the sewers of Southbay."
 msgid ""
 "Prince Haldric has arrived at Fallen Lich Point, to retrieve Lich-Lord "
 "Caror’s Book of Fire and Darkness, and flee into the sewers of Southbay."
@@ -3005,12 +2944,6 @@ msgstr ""
 
 #. [message]: speaker=narrator
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/09_Fallen_Lich_Point.cfg:347
-#, fuzzy
-#| msgid ""
-#| "This monolith was erected by me, ― (<i>chipped away</i>), First Mage of "
-#| "the good people of the Green Isle. By its power, the Lich-Lord is bound "
-#| "in stone. To end the spell, a noble of the line of kings should utter the "
-#| "following..."
 msgid ""
 "This monolith was erected by me, ― (<i>chipped away</i>), First Mage of the "
 "good people of the Green Isle. By its power, the Lich-Lord is bound in "
@@ -3029,10 +2962,6 @@ msgstr "Sanırım sihirli cümleyi ben söyleyeceğim."
 
 #. [message]: speaker=Prince Haldric
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/09_Fallen_Lich_Point.cfg:391
-#, fuzzy
-#| msgid ""
-#| "The lich is free! Let’s bash him and grab that book. This sounds like a "
-#| "job for you, Lady Jessene!"
 msgid ""
 "The lich is free! Let’s bash him and grab that book. This sounds like a job "
 "for you, Lady Jessene!"
@@ -3242,10 +3171,6 @@ msgstr "Bu nehir yatağının sonlarında. Bir efsanesi bile var..."
 
 #. [message]: speaker=Tinry the Red
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/10_Sewer_of_Southbay.cfg:166
-#, fuzzy
-#| msgid ""
-#| "That a king banished a pair of twin magi and their devoted followers down "
-#| "here after the Wesfolk war!"
 msgid ""
 "That a king banished a pair of twin magi and their devoted followers down "
 "here after the Wesfolk war!"
@@ -3548,13 +3473,6 @@ msgstr ""
 
 #. [message]: speaker=King Addroran IX
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/11_Southbay_in_Winter.cfg:185
-#, fuzzy
-#| msgid ""
-#| "Hmm. There is wisdom in your words, and my end should be in this place. "
-#| "We can hold out for the rest of the winter here. When the orcs last came "
-#| "it was fall and the harvest was in. We can hunt the great schools of fish "
-#| "that live under the ice. You might even be able to depart in well-"
-#| "provisioned ships!"
 msgid ""
 "Hmm. There is wisdom in your words, and my end should be in this place. We "
 "can hold out for the rest of the winter here. When the orcs last came it was "
@@ -3573,11 +3491,6 @@ msgstr "Bizimle gelmek istemiyor musunuz?"
 
 #. [message]: speaker=King Addroran IX
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/11_Southbay_in_Winter.cfg:193
-#, fuzzy
-#| msgid ""
-#| "No. Flee, and flee east. It is my duty to hold this city as long as I can "
-#| "for the sake of all who can be evacuated. That means it shall fall on "
-#| "Haldric and you to lead the evacuation."
 msgid ""
 "No. Flee, and flee east. It is my duty to hold this city as long as I can "
 "for the sake of all who can be evacuated. That means it shall fall on "
@@ -3796,8 +3709,8 @@ msgstr "Aynı koşullar altında?"
 #. [message]: speaker=Lord El’Isomithir
 #. [message]: speaker=Lord Logalmier
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/12_A_Final_Spring.cfg:445
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:420
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:424
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:428
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/18_A_Spy_in_the_Woods.cfg:141
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/18_A_Spy_in_the_Woods.cfg:149
 msgid "Agreed."
@@ -3805,10 +3718,6 @@ msgstr "Kabul."
 
 #. [message]: speaker=Lord Typhon
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/12_A_Final_Spring.cfg:449
-#, fuzzy
-#| msgid ""
-#| "Good. We need the steel for our own war in the deep. I formally place the "
-#| "might of the merfolk at your disposal!"
 msgid ""
 "Good. We need the steel for our own war in the deep. I formally place the "
 "might of the merfolk at your disposal!"
@@ -3963,11 +3872,6 @@ msgstr ""
 
 #. [message]: speaker=Lady Jessene
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/12_A_Final_Spring.cfg:747
-#, fuzzy
-#| msgid ""
-#| "With the help of the merfolk, and my knowledge of an island that will "
-#| "make a good re-provisioning point, we should be able to embark for the "
-#| "great lands that are to the east."
 msgid ""
 "With the help of the merfolk, and my knowledge of an island that will make a "
 "good re-provisioning point, we should be able to embark for the great lands "
@@ -4090,10 +3994,6 @@ msgstr "Kara! Kara! Tanrıya şükürler olsun!"
 
 #. [message]: speaker=Lady Jessene
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/13_Peoples_in_Decline.cfg:208
-#, fuzzy
-#| msgid ""
-#| "This is the Elder Prince’s island all right. We had a heck of a time "
-#| "pacifying the drakes who live here. Oh my, it looks like they’ve rearmed!"
 msgid ""
 "This is the Elder Prince’s island all right. We had a heck of a time "
 "pacifying the drakes who live here. Oh my, it looks like they’ve rearmed!"
@@ -4242,11 +4142,6 @@ msgstr "Buna daha fazla katlanamayacağım. Kendimi hasta hissediyorum!"
 
 #. [message]: speaker=Lord Typhon
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/14_Rough_Landing.cfg:194
-#, fuzzy
-#| msgid ""
-#| "Be careful, these islands aren’t safe. We’re in naga territory. But this "
-#| "is the only place to stop with soft sand beaches to make landfall... The "
-#| "nagas like to scavenge metal from ships that they capture here."
 msgid ""
 "Be careful, these islands aren’t safe. We’re in naga territory. But this is "
 "the only place to stop with soft sand beaches to make landfall... The nagas "
@@ -4332,11 +4227,6 @@ msgstr "Yeni Bir Ülke"
 
 #. [part]
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/15_A_New_Land.cfg:16
-#, fuzzy
-#| msgid ""
-#| "After the defeat of the nagas, Haldric’s refugees take on fresh water and "
-#| "hunt small game, relieved to have land beneath their feet. When they "
-#| "depart, even the sea-weather is milder."
 msgid ""
 "After the defeat of the nagas, Haldric’s refugees take on fresh water and "
 "hunt small game, relieved to have land beneath their feet. When they depart, "
@@ -4711,44 +4601,42 @@ msgid "Lord Logalmier, I shall defeat your dragon."
 msgstr "Komutan Logalmiyer, ejderini yeneceğim."
 
 #. [option]
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:173
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:174
 msgid "Let’s get those saurians and nagas on that beach!"
 msgstr "Haydi kumsaldaki şu naga ve sürüngenleri halledelim."
 
 #. [message]: speaker=Prince Haldric
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:185
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:186
 msgid "Those cold blooded monsters will feel my wrath!"
 msgstr "Bu soğuk kanlı hayvanlar benim gazabımı hissedecekler."
 
 #. [option]
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:202
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:204
 msgid "Let’s clear out that troll hole!"
 msgstr "Haydi şu Trol Deliğini temizleyelim!"
 
 #. [message]: speaker=Prince Haldric
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:214
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:216
 msgid "So what exactly is a troll?"
 msgstr "Trol tam olarak nedir?"
 
 #. [option]
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:230
-#, fuzzy
-#| msgid "Let’s put those souls on the cursed isle to rest!"
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:233
 msgid "Let’s put those souls on the cursed isle to rest!"
 msgstr "Haydi Lanetli adadaki şu ruhları huzura kavuşturalım!"
 
 #. [message]: speaker=Prince Haldric
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:242
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:245
 msgid "Undead. Bah! We’re pros at fighting them."
 msgstr "Yarı ölüler. Hıh! onlarla savaşmakta profesyoneliz biz."
 
 #. [message]: speaker=Prince Haldric
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:260
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:264
 msgid "In the name of peace between our peoples:"
 msgstr "Halklarımız arasındaki barış adına:"
 
 #. [message]: speaker=Lord Logalmier
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:277
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:281
 msgid ""
 "I fear my kin are too easy on you. I decree that you should be made to fight "
 "the Dragon of the Green Swamp and its saurian minions. If you can defeat "
@@ -4759,7 +4647,7 @@ msgstr ""
 "yenerseniz, bu bölgedeki yerinizi gerçekten kazanmış olursunuz."
 
 #. [message]: speaker=Lady Dionli
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:290
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:294
 msgid ""
 "There is a group of saurians, friends of the dragon I’m sure, who are "
 "trading metal with the nagas of the sea. We should put a stop to this. They "
@@ -4770,7 +4658,7 @@ msgstr ""
 "yakın bir kumsaldalar."
 
 #. [message]: speaker=Lord Aryad
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:303
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:307
 msgid ""
 "We are having a problem with a troll-hole in the Brown Hills. While I find "
 "the thought of those dwarves stumbling on the trolls vaguely amusing, this "
@@ -4781,12 +4669,7 @@ msgstr ""
 "görev olur."
 
 #. [message]: speaker=Lord El'Isomithir
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:316
-#, fuzzy
-#| msgid ""
-#| "Long ago, a clan of elves on the Isle of Tears fell under the sway of a "
-#| "dark curse. Their souls still haunt that place and no elf will go there. "
-#| "You should clear this isle, and put their souls to rest."
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:320
 msgid ""
 "Long ago, a clan of elves on the Isle of Tears fell under the sway of a dark "
 "curse. Their souls still haunt that place and no elf will go there. You "
@@ -4797,7 +4680,7 @@ msgstr ""
 "Sen bu adayı temizlemeli ve ruhlarını huzura erdirmelisin."
 
 #. [message]: speaker=Lord Logalmier
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:330
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:334
 msgid ""
 "Ahh, you have defeated the dragon, man of the west-north, you are truly "
 "impressive for a human."
@@ -4806,25 +4689,23 @@ msgstr ""
 "çok etkileyicisin."
 
 #. [message]: speaker=Lord Aryad
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:337
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:341
 msgid "So, you have defeated the trolls. Welcome back, Haldric."
 msgstr "Öyle ise, sen trolleri yendin. Hoşgelin Haldrik."
 
 #. [message]: speaker=Lord El'Isomithir
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:344
-#, fuzzy
-#| msgid "Finally, the souls of our poor kin may rest. Thank you."
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:348
 msgid "Finally, the souls of our poor kin may rest. Thank you."
 msgstr "Sonunda zavallı akrabalarımın ruhları huzur bulabilir. Teşekkürler."
 
 #. [message]: speaker=Lady Dionli
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:351
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:355
 msgid "Our beaches are free again. I knew I could trust you, Haldric."
 msgstr ""
 "Kumsalımız artık tekrar özgür. Sana güvenebileceğimizi biliyordum, Haldrik."
 
 #. [message]: speaker=narrator
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:361
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:365
 msgid ""
 "Haldric and his companions find themselves before the Ka’lian, or the "
 "Council of Elven Lords."
@@ -4832,12 +4713,12 @@ msgstr ""
 "Haldrik ve arkadaşları kendilerini Kalya’da bulurlar, ya da elf Konseyinde."
 
 #. [message]: speaker=Lord Logalmier
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:371
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:375
 msgid "Dionli, why have you brought these humans before us?"
 msgstr "Dionli, Bu insanları neden bizden önce buraya getirdin?"
 
 #. [message]: speaker=Lady Dionli
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:375
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:379
 msgid ""
 "They are of the same people as the Prince of Southbay. They come as "
 "refugees. I can see a use for them."
@@ -4846,13 +4727,13 @@ msgstr ""
 "geldiler. Onların bize faydalı olacağını görebiliyorum."
 
 #. [message]: speaker=Lord Aryad
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:380
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:384
 msgid ""
 "What use would that be? What need could we have for the shortliveds here?"
 msgstr "Bu ne olabilir? Bu kısa hayatlılara burada ne ihtiyacımız olabilir?"
 
 #. [message]: speaker=Lady Dionli
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:384
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:388
 msgid ""
 "The dwarves have come to the Brown Hills. While they live long, even they "
 "grow like weeds when in an empty field. There is trouble brewing."
@@ -4861,7 +4742,7 @@ msgstr ""
 "otlar gibi her yerde bitiyorlar. Sorun giderek büyüyor."
 
 #. [message]: speaker=Lady Dionli
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:388
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:392
 msgid ""
 "It is better to be the greater of three than the lesser of two. The Prince "
 "of Southbay was good, he was a credit to his people. Maybe these ones are "
@@ -4872,12 +4753,12 @@ msgstr ""
 "aynı mayadandır."
 
 #. [message]: speaker=Lord El'Isomithir
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:392
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:396
 msgid "But why then do they come as refugees? Speak, human."
 msgstr "Ama neden o halde sığınmacı olarak geldiler? Konuş insan."
 
 #. [message]: speaker=Prince Haldric
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:396
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:400
 msgid ""
 "Our people come in peace. There was a war in our homeland. We are refugees. "
 "We come seeking a new home, since our island to the west and north is now "
@@ -4887,7 +4768,7 @@ msgstr ""
 "sığınmacıyız. Kuzeybatıdaki adamızı kaybettiğimizden, yeni bir yurt arıyoruz."
 
 #. [message]: speaker=Lord El'Isomithir
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:400
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:404
 msgid ""
 "So you come to steal our land? We know your kind, humans of the west-north."
 msgstr ""
@@ -4895,7 +4776,7 @@ msgstr ""
 "kuzeybatının insanları."
 
 #. [message]: speaker=Prince Haldric
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:404
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:408
 msgid ""
 "We only wish to live in peace. The dwarves are peoples of mountain and hill, "
 "the elves are people of the forests, we only seek some of the space in "
@@ -4905,7 +4786,7 @@ msgstr ""
 "halkı, elfler ise ormanların, biz sadece onların arasında bir yer arıyoruz."
 
 #. [message]: speaker=Lady Dionli
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:408
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:412
 msgid ""
 "I suggest that we grant these humans the plains to the north and south of "
 "the Great River."
@@ -4914,33 +4795,27 @@ msgstr ""
 "öneriyorum."
 
 #. [message]: speaker=Lord Aryad
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:412
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:416
 msgid "They should be put to the test before such a grant is made."
 msgstr "Böyle bir bağışı yapmadan önce onları denemeliyiz."
 
 #. [message]: speaker=Lord El'Isomithir
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:416
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:420
 msgid "A quest for each of us then?"
 msgstr "Her birimiz için bir görev?"
 
 #. [message]: speaker=Lord Logalmier
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:428
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:432
 msgid "Agreed. (<i>Sigh</i>)"
 msgstr "Kabul. (<i>İç çeker</i>)"
 
 #. [message]: speaker=Prince Haldric
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:432
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:436
 msgid "Umm, agreed."
 msgstr "Umm, kabul."
 
 #. [message]: speaker=Lord Aryad
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:436
-#, fuzzy
-#| msgid ""
-#| "Well then, human. Each of us lords has a specific quest for you. If you "
-#| "complete them all you will be granted all of the plains in our domain and "
-#| "the hills south of the Great River; if not you will be forced to depart. "
-#| "So, which quest do you wish to undertake first?"
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:440
 msgid ""
 "Well then, human. Each of us lords has a specific quest for you. If you "
 "complete them all you will be granted all of the plains in our domain and "
@@ -4953,7 +4828,7 @@ msgstr ""
 "ilk olarak hangi görevi almak istersin?"
 
 #. [message]: speaker=Lord Logalmier
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:448
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:452
 msgid ""
 "Very good, but this is just the start, human. There is still much more for "
 "you to do."
@@ -4962,38 +4837,38 @@ msgstr ""
 "şeyler var."
 
 #. [message]: speaker=Lord Logalmier
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:461
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:465
 msgid "You are victorious again. You may yet earn your place in this land."
 msgstr "Tekrar başarılısın. Burada henüz bir yer kazanamadın."
 
 #. [message]: speaker=Lord Logalmier
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:474
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:478
 msgid "Ahh, my young prince, you’re not as soft as I thought."
 msgstr "Ahh, genç Prensim, düşündüğüm kadar nazik değilmişsin."
 
 #. [message]: speaker=Lady Dionli
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:486
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:490
 msgid "You were successful, Prince Haldric. I knew you could do it."
 msgstr "Başarılıydın, Prens Haldrik. Başarabileceğini biliyordum."
 
 #. [message]: speaker=Lord Logalmier
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:491
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:495
 msgid ""
 "Man of the west-north, you have earned your place on this great continent."
 msgstr "Kuzeybatının insanları bu büyük kıtadaki yerinizi kazandınız."
 
 #. [message]: speaker=Lord Aryad
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:496
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:500
 msgid "As per our agreement, you and your people—"
 msgstr "Anlaştığımız gibi, sen ve halkın—"
 
 #. [message]: speaker=Lord El'Isomithir
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:501
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:505
 msgid "—may stay."
 msgstr "...kalabilir."
 
 #. [message]: speaker=Lord Logalmier
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:506
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:510
 msgid ""
 "We hereby grant you the plains to the north of the Great River, and the "
 "plains and hills to the south of the Great River. Be kind to the land. In a "
@@ -5004,11 +4879,7 @@ msgstr ""
 "Yardımınıza ihtiyacımız olduğu zaman, cömertliğimizi hatırlayın."
 
 #. [message]: speaker=Prince Haldric
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:511
-#, fuzzy
-#| msgid ""
-#| "Fair enough. I decree a ‘Pact of Mutual Aid’ between our peoples. But— "
-#| "aren’t you setting us in conflict with the dwarves?"
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:515
 msgid ""
 "Fair enough. I decree a ‘Pact of Mutual Aid’ between our peoples. But— "
 "aren’t you setting us in conflict with the dwarves?"
@@ -5018,12 +4889,7 @@ msgstr ""
 "koymaya çalışmıyor musunuz?"
 
 #. [message]: speaker=Lord Logalmier
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:516
-#, fuzzy
-#| msgid ""
-#| "No. The dwarves have returned to the north. But humans mine as well, no? "
-#| "They are your resources to guard now. In the future we would be willing "
-#| "to trade with you."
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:520
 msgid ""
 "No. The dwarves have returned to the north. But humans mine as well, no? "
 "They are your resources to guard now. In the future we would be willing to "
@@ -5034,12 +4900,12 @@ msgstr ""
 "Gelecekte sizinle ticaret yapmak isteyebiliriz."
 
 #. [message]: speaker=Lord Logalmier
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:534
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:538
 msgid "Who is this?"
 msgstr "Bu kim?"
 
 #. [message]: speaker=Prince Haldric
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:539
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:543
 msgid ""
 "It’s Commander Aethyr, of Clearwater Port. I was sure you perished in the "
 "fighting there."
@@ -5048,7 +4914,7 @@ msgstr ""
 "emindim."
 
 #. [message]: speaker=Commander Aethyr
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:544
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:548
 msgid ""
 "No, sir. I was leading the final survivors of Clearwater Port. We were "
 "making our last stand at the lighthouse when one of your ships came. One of "
@@ -5060,7 +4926,7 @@ msgstr ""
 "uyandım."
 
 #. [message]: speaker=Commander Aethyr
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:549
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:553
 msgid ""
 "I come bearing news. Some ‘old friends’ have decided to make an appearance. "
 "You should go ‘greet’ them."
@@ -5069,7 +4935,7 @@ msgstr ""
 "Onları ‘karşılamaya’ gitmelisiniz."
 
 #. [message]: speaker=Lady Jessene
-#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:554
+#: data/campaigns/The_Rise_Of_Wesnoth/scenarios/16_The_Kalian.cfg:558
 msgid ""
 "I fear our friend has said too much. You go on ahead, I’ll catch up with you."
 msgstr ""
@@ -5582,12 +5448,6 @@ msgstr "Gizlenen Cessika"
 
 #. [message]: speaker=Lord Logalmier
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/18_A_Spy_in_the_Woods.cfg:120
-#, fuzzy
-#| msgid ""
-#| "So, a doom has followed them here from their old home. My Outriders have "
-#| "reported that orcs have made landfall. Orcs! The tree-killers of our most "
-#| "ancient legends. Some thought them only a nightmare to frighten children, "
-#| "and never real at all."
 msgid ""
 "So, a doom has followed them here from their old home. My Outriders have "
 "reported that orcs have made landfall. Orcs! The tree-killers of our most "
@@ -5610,12 +5470,6 @@ msgstr ""
 
 #. [message]: speaker=Lord Aryad
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/18_A_Spy_in_the_Woods.cfg:128
-#, fuzzy
-#| msgid ""
-#| "We may have decided wrongly. If the humans drive the orcs off we should "
-#| "honor our pledge. If more trouble follows them here we should let them "
-#| "fight it out, then we should ‘deal’ with the survivors, and make a "
-#| "compromise with the dwarves."
 msgid ""
 "We may have decided wrongly. If the humans drive the orcs off we should "
 "honor our pledge. If more trouble follows them here we should let them fight "
@@ -5635,13 +5489,6 @@ msgstr "Ama biz Haldrik ve kuzeybatı insanlarıyla bir anlaşma yaptık..."
 
 #. [message]: speaker=Lord Logalmier
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/18_A_Spy_in_the_Woods.cfg:137
-#, fuzzy
-#| msgid ""
-#| "We are the people of the forest, you know that all words spoken to these "
-#| "un-people are of secondary importance to our own needs. As Lord Aryad "
-#| "said, <i>“If more trouble follows them here we should let them fight it "
-#| "out, then we should ‘deal’ with the survivors, and make a compromise with "
-#| "the dwarves.”</i>"
 msgid ""
 "We are the people of the forest, you know that all words spoken to these un-"
 "people are of secondary importance to our own needs. As Lord Aryad said, "
@@ -6138,10 +5985,6 @@ msgstr "Fliksta"
 
 #. [message]: speaker=Flixta
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/20_Return_of_the_Fleet.cfg:517
-#, fuzzy
-#| msgid ""
-#| "You again! You will sssuffer for your attack against my people! "
-#| "Shek’kahan, our naga friendsss— You’ll pay! We have new friends now."
 msgid ""
 "You again! You will sssuffer for your attack against my people! Shek’kahan, "
 "our naga friendsss— You’ll pay! We have new friends now."
@@ -6174,11 +6017,6 @@ msgstr "Planın nedir?"
 
 #. [message]: speaker=Prince Haldric
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/21_The_Plan.cfg:116
-#, fuzzy
-#| msgid ""
-#| "We’re going to convince Jevyan that we gave the elves the Ruby of Fire to "
-#| "secure our place in this new land. Then, if the orcs return, hopefully "
-#| "they’ll go looking for our not-so-loyal elven allies first."
 msgid ""
 "We’re going to convince Jevyan that we gave the elves the Ruby of Fire to "
 "secure our place in this new land. Then, if the orcs return, hopefully "
@@ -6805,10 +6643,8 @@ msgstr "Üstünlüğümüz engellendi, şu yaratık köprüyü yok etti!"
 
 #. [message]
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/22_The_Rise_of_Wesnoth.cfg:1312
-#, fuzzy
-#| msgid "Our advance is thwarted, that monster has destroyed the bridge!"
 msgid "Our retreat is thwarted, that monster has destroyed the bridge!"
-msgstr "Üstünlüğümüz engellendi, şu yaratık köprüyü yok etti!"
+msgstr "Geri çekilmemiz engellendi, şu yaratık köprüyü yok etti!"
 
 #. [message]: speaker=Abraxas
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/22_The_Rise_of_Wesnoth.cfg:1341
@@ -6958,9 +6794,6 @@ msgstr ""
 
 #. [message]: speaker=Minister Edren
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/23_Epilogue.cfg:198
-#, fuzzy
-#| msgid ""
-#| "May the Lords of Light have mercy on you. But, I am bound by my word."
 msgid "May the Lords of Light have mercy on you. But, I am bound by my word."
 msgstr "Işığın Hakimleri sana merhamet etsin. Ama, ben sözüme sadığım."
 
@@ -7035,11 +6868,6 @@ msgstr ""
 
 #. [message]: speaker=Minister Edren
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/23_Epilogue.cfg:252
-#, fuzzy
-#| msgid ""
-#| "We have lost much in the last few months, but we should not lose all of "
-#| "our knowledge. I will go forth amongst the people and spread wisdom, and "
-#| "see about establishing a new order of magi in this new land."
 msgid ""
 "We have lost much in the last few months, but we should not lose all of our "
 "knowledge. I will go forth amongst the people and spread wisdom, and see "
@@ -7154,14 +6982,6 @@ msgstr ""
 
 #. [message]: speaker=narrator
 #: data/campaigns/The_Rise_Of_Wesnoth/scenarios/23_Epilogue.cfg:312
-#, fuzzy
-#| msgid ""
-#| "It was never said afterwards that the marriage of Haldric and Jessene was "
-#| "exactly tranquil. But it was also said that neither could long stand to "
-#| "be separated from the other, and she bore him strong children that "
-#| "mingled the blood of their diverse ancestries. Many followed their "
-#| "example, and the two refugee peoples from the Green Isle became fused "
-#| "into one in the new kingdom."
 msgid ""
 "It was never said afterwards that the marriage of Haldric and Jessene was "
 "exactly tranquil. But it was also said that neither could long stand to be "
@@ -7359,14 +7179,6 @@ msgstr "Batılı Serseri"
 
 #. [unit_type]: id=Wesfolk Outcast, race=human
 #: data/campaigns/The_Rise_Of_Wesnoth/units/Wesfolk_Outcast.cfg:21
-#, fuzzy
-#| msgid ""
-#| "Born in the Wesfolk aristocracy, she and her people were excluded from "
-#| "society by their lords, who betrayed their loyalty when a war against "
-#| "Haldric’s people was being lost. This outcast still conserves her "
-#| "nobleness in her veins, and on the battlefield she has earned valuable "
-#| "experience, which she can lend to her people for turning a fight in their "
-#| "favor."
 msgid ""
 "Born in the Wesfolk aristocracy, she and her people were excluded from "
 "society by their lords, who betrayed their loyalty when a war against "
@@ -7497,10 +7309,6 @@ msgstr "Kötü olan bunun sahildeki kadar iyi gibi gitmeyişi... Sahili özledim
 
 #. [message]: speaker=Lady Jessene
 #: data/campaigns/The_Rise_Of_Wesnoth/utils/trow-nlmsg.cfg:90
-#, fuzzy
-#| msgid ""
-#| "Haldric, just before we arrived here I got word that your ‘third of a "
-#| "fleet’ has departed for our old home, the Green Isle."
 msgid ""
 "Haldric, just before we arrived here I got word that your ‘third of a fleet’ "
 "has departed for our old home, the Green Isle."

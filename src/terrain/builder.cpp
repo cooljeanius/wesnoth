@@ -466,7 +466,7 @@ bool terrain_builder::load_images(building_rule& rule)
 							try {
 								time = std::stoi(items.back());
 							} catch(const std::invalid_argument&) {
-								ERR_NG << "Invalid 'time' value in terrain image builder: " << items.back() << "\n";
+								ERR_NG << "Invalid 'time' value in terrain image builder: " << items.back();
 							}
 						}
 						image::locator locator;
@@ -569,9 +569,6 @@ void terrain_builder::rotate(terrain_constraint& ret, int angle)
 
 		itor->basex = static_cast<int>(rx + tilewidth_ / 2);
 		itor->basey = static_cast<int>(ry + tilewidth_ / 2);
-
-		// std::cerr << "Rotation: from " << vx << ", " << vy << " to " << itor->basex <<
-		//	", " << itor->basey << "\n";
 	}
 }
 
@@ -631,7 +628,7 @@ void terrain_builder::replace_rotate_tokens(building_rule& rule, int angle, cons
 void terrain_builder::rotate_rule(building_rule& ret, int angle, const std::vector<std::string>& rot)
 {
 	if(rot.size() != 6) {
-		ERR_NG << "invalid rotations" << std::endl;
+		ERR_NG << "invalid rotations";
 		return;
 	}
 
@@ -694,7 +691,7 @@ void terrain_builder::add_images_from_config(rule_imagelist& images, const confi
 					basex = std::stoi(base[0]);
 					basey = std::stoi(base[1]);
 				} catch(const std::invalid_argument&) {
-					ERR_NG << "Invalid 'base' value in terrain image builder: " << base[0] << ", " << base[1] << "\n";
+					ERR_NG << "Invalid 'base' value in terrain image builder: " << base[0] << ", " << base[1];
 				}
 			}
 		}
@@ -707,8 +704,7 @@ void terrain_builder::add_images_from_config(rule_imagelist& images, const confi
 					center_x = std::stoi(center[0]);
 					center_y = std::stoi(center[1]);
 				} catch(const std::invalid_argument&) {
-					ERR_NG << "Invalid 'center' value in terrain image builder: " << center[0] << ", " << center[1]
-						   << "\n";
+					ERR_NG << "Invalid 'center' value in terrain image builder: " << center[0] << ", " << center[1];
 				}
 			}
 		}
@@ -825,8 +821,7 @@ void terrain_builder::parse_mapstring(
 			} else if(terrain.base == t_translation::TB_STAR) {
 				add_constraints(br.constraints, map_location(x, y), t_translation::STAR, global_images);
 			} else {
-				ERR_NG << "Invalid terrain (" << t_translation::write_terrain_code(terrain) << ") in builder map"
-					   << std::endl;
+				ERR_NG << "Invalid terrain (" << t_translation::write_terrain_code(terrain) << ") in builder map";
 				assert(false);
 				return;
 			}
@@ -925,7 +920,7 @@ void terrain_builder::parse_config(const game_config_view& cfg, bool local)
 			if(const config::attribute_value* v = tc.get("pos")) {
 				int pos = *v;
 				if(anchors.find(pos) == anchors.end()) {
-					WRN_NG << "Invalid anchor!" << std::endl;
+					WRN_NG << "Invalid anchor!";
 					continue;
 				}
 
@@ -966,28 +961,28 @@ void terrain_builder::parse_config(const game_config_view& cfg, bool local)
 
 // Debug output for the terrain rules
 #if 0
-	std::cerr << "Built terrain rules: \n";
+	PLAIN_LOG << "Built terrain rules: ";
 
 	building_ruleset::const_iterator rule;
 	for(rule = building_rules_.begin(); rule != building_rules_.end(); ++rule) {
-		std::cerr << ">> New rule: image_background = "
+		PLAIN_LOG << ">> New rule: image_background = "
 			<< "\n>> Location " << rule->second.location_constraints
 			<< "\n>> Probability " << rule->second.probability
 
 		for(constraint_set::const_iterator constraint = rule->second.constraints.begin();
 		    constraint != rule->second.constraints.end(); ++constraint) {
 
-			std::cerr << ">>>> New constraint: location = (" << constraint->second.loc
-			          << "), terrain types = '" << t_translation::write_list(constraint->second.terrain_types_match.terrain) << "'\n";
+			PLAIN_LOG << ">>>> New constraint: location = (" << constraint->second.loc
+			          << "), terrain types = '" << t_translation::write_list(constraint->second.terrain_types_match.terrain) << "'";
 
 			std::vector<std::string>::const_iterator flag;
 
 			for(flag  = constraint->second.set_flag.begin(); flag != constraint->second.set_flag.end(); ++flag) {
-				std::cerr << ">>>>>> Set_flag: " << *flag << "\n";
+				PLAIN_LOG << ">>>>>> Set_flag: " << *flag;
 			}
 
 			for(flag = constraint->second.no_flag.begin(); flag != constraint->second.no_flag.end(); ++flag) {
-				std::cerr << ">>>>>> No_flag: " << *flag << "\n";
+				PLAIN_LOG << ">>>>>> No_flag: " << *flag;
 			}
 		}
 

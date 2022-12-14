@@ -22,6 +22,7 @@
 
 #include <cstdint>
 #include <string>
+#include <string_view>
 
 struct SDL_Rect;
 struct point;
@@ -34,16 +35,6 @@ class map_formula_callable;
 
 namespace gui2
 {
-/**
- * Creates a rectangle.
- *
- * @param origin                  The top left corner.
- * @param size                    The width (x) and height (y).
- *
- * @returns                       SDL_Rect with the proper rectangle.
- */
-SDL_Rect create_rect(const point& origin, const point& size);
-
 /**
  * Converts a color string to a color.
  *
@@ -122,6 +113,6 @@ point get_mouse_position();
  *
  * @returns                       The truncated text.
  */
-std::string debug_truncate(const std::string& text);
+std::string_view debug_truncate(std::string_view text);
 
 } // namespace gui2

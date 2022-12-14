@@ -294,7 +294,7 @@ constexpr std::array<hotkey_command_temp, HOTKEY_NULL - 1> master_hotkey_list {{
 	{ TITLE_SCREEN__CORES, "title_screen__cores", N_("Manage Cores"), false	, scope_main, HKCAT_GENERAL, "" },
 	{ TITLE_SCREEN__EDITOR, "title_screen__editor", N_("Start Editor"), false, scope_main, HKCAT_GENERAL, "" },
 	{ TITLE_SCREEN__CREDITS, "title_screen__credits", N_("Show Credits"), false	, scope_main, HKCAT_GENERAL, "" },
-	{ TITLE_SCREEN__TEST, "title_screen__test", N_("Start Test Scenario"), false	, scope_main, HKCAT_GENERAL, "" },
+	{ TITLE_SCREEN__TEST, "title_screen__test", N_("Choose Test Scenario"), false	, scope_main, HKCAT_GENERAL, "" },
 
 	{ GLOBAL__HELPTIP, "global__helptip", N_("Show Helptip"), false, scope_game | scope_editor | scope_main, HKCAT_GENERAL, "" },
 
@@ -374,7 +374,7 @@ wml_hotkey_record::wml_hotkey_record(const std::string& id, const t_string& desc
 	: cleanup_()
 {
 	if(id == "null") {
-		LOG_G << "Couldn't add wml hotkey with null id and description = '" << description << "'.\n";
+		LOG_G << "Couldn't add wml hotkey with null id and description = '" << description << "'.";
 		return;
 	}
 
@@ -382,9 +382,9 @@ wml_hotkey_record::wml_hotkey_record(const std::string& id, const t_string& desc
 		id, hotkey::HOTKEY_WML, id, description, false, false, scope_game, HKCAT_CUSTOM, t_string(""));
 
 	if(inserted) {
-		DBG_G << "Added wml hotkey with id = '" << id << "' and description = '" << description << "'.\n";
+		DBG_G << "Added wml hotkey with id = '" << id << "' and description = '" << description << "'.";
 	} else {
-		LOG_G << "Hotkey with id '" << id << "' already exists.\n";
+		LOG_G << "Hotkey with id '" << id << "' already exists.";
 		return;
 	}
 

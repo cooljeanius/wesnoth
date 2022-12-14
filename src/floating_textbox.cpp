@@ -88,7 +88,6 @@ namespace gui{
 		}
 
 		if(box_ != nullptr) {
-			box_->set_volatile(true);
 			const SDL_Rect rect {
 				  area.x + label_area.w + border_size * 2
 				, ypos
@@ -100,7 +99,6 @@ namespace gui{
 		}
 
 		if(check_ != nullptr) {
-			check_->set_volatile(true);
 			check_->set_location(box_->location().x,box_->location().y + box_->location().h + border_size);
 		}
 	}
@@ -114,12 +112,12 @@ namespace gui{
 		mode_ = mode;
 
 		if(!check_label.empty()) {
-			check_.reset(new gui::button(gui.video(),check_label,gui::button::TYPE_CHECK));
+			check_.reset(new gui::button(check_label,gui::button::TYPE_CHECK));
 			check_->set_check(checked);
 		}
 
 
-		box_.reset(new gui::textbox(gui.video(),100,"",true,256,font::SIZE_NORMAL,0.8,0.6));
+		box_.reset(new gui::textbox(100,"",true,256,font::SIZE_NORMAL,0.8,0.6));
 
 		update_location(gui);
 	}

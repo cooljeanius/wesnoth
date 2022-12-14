@@ -16,17 +16,20 @@
 #include "video.hpp"
 
 #include "display.hpp"
+#include "draw_manager.hpp"
 #include "floating_label.hpp"
 #include "font/sdl_ttf_compat.hpp"
-#include "picture.hpp"
+#include "font/text.hpp"
 #include "log.hpp"
+#include "picture.hpp"
 #include "preferences/general.hpp"
+#include "sdl/input.hpp"
 #include "sdl/point.hpp"
+#include "sdl/texture.hpp"
 #include "sdl/userevent.hpp"
 #include "sdl/utils.hpp"
 #include "sdl/window.hpp"
-#include "sdl/input.hpp"
-#include "sdl/texture.hpp"
+#include "widgets/menu.hpp" // for bluebg_style.unload_images
 
 #ifdef TARGET_OS_OSX
 #include "desktop/apple_video.hpp"
@@ -41,216 +44,180 @@
 static lg::log_domain log_display("display");
 #define LOG_DP LOG_STREAM(info, log_display)
 #define ERR_DP LOG_STREAM(err, log_display)
+#define WRN_DP LOG_STREAM(warn, log_display)
 #define DBG_DP LOG_STREAM(debug, log_display)
-
-CVideo* CVideo::singleton_ = nullptr;
 
 namespace
 {
-surface drawingSurface = nullptr;
-bool fake_interactive = false;
+/** The SDL window object. Will be null only if headless_. */
+std::unique_ptr<sdl::window> window;
 
-const unsigned MAGIC_DPI_SCALE_NUMBER = 96;
-}
+/** The main offscreen render target. */
+texture render_texture_ = {};
 
-namespace video2
+/** The current offscreen render target. */
+texture current_render_target_ = {};
+
+bool headless_ = false; /**< running with no window at all */
+bool testing_ = false; /**< running unit tests */
+point test_resolution_ = {1024, 768}; /**< resolution for unit tests */
+int refresh_rate_ = 0;
+point game_canvas_size_ = {0, 0};
+int pixel_scale_ = 1;
+rect input_area_ = {};
+
+} // anon namespace
+
+namespace video
 {
-std::list<events::sdl_handler*> draw_layers;
 
-draw_layering::draw_layering(const bool auto_join)
-	: sdl_handler(auto_join)
+// Non-public interface
+void render_screen(); // exposed and used only in draw_manager.cpp
+
+// Internal functions
+static void init_window();
+static void init_test_window();
+static void init_fake();
+static void init_test();
+static bool update_framebuffer();
+static bool update_test_framebuffer();
+static point draw_offset();
+
+
+void init(fake type)
 {
-	draw_layers.push_back(this);
-}
-
-draw_layering::~draw_layering()
-{
-	draw_layers.remove(this);
-
-	video2::trigger_full_redraw();
-}
-
-void trigger_full_redraw()
-{
-	SDL_Event event;
-	event.type = SDL_WINDOWEVENT;
-	event.window.event = SDL_WINDOWEVENT_RESIZED;
-	event.window.data1 = (*drawingSurface).h;
-	event.window.data2 = (*drawingSurface).w;
-
-	for(const auto& layer : draw_layers) {
-		layer->handle_window_event(event);
+	LOG_DP << "initializing video";
+	if(SDL_WasInit(SDL_INIT_VIDEO)) {
+		throw error("video subsystem already initialized");
 	}
-
-	SDL_Event drawEvent;
-	sdl::UserEvent data(DRAW_ALL_EVENT);
-
-	drawEvent.type = DRAW_ALL_EVENT;
-	drawEvent.user = data;
-	SDL_FlushEvent(DRAW_ALL_EVENT);
-	SDL_PushEvent(&drawEvent);
-}
-
-} // video2
-
-CVideo::CVideo(FAKE_TYPES type)
-	: window()
-	, drawing_texture_(nullptr)
-	, render_texture_(nullptr)
-	, fake_screen_(false)
-	, help_string_(0)
-	, updated_locked_(0)
-	, flip_locked_(0)
-	, refresh_rate_(0)
-	, offset_x_(0)
-	, offset_y_(0)
-	, pixel_scale_(1)
-{
-	assert(!singleton_);
-	singleton_ = this;
-
-	initSDL();
-
-	switch(type) {
-	case NO_FAKE:
-		break;
-	case FAKE:
-		make_fake();
-		break;
-	case FAKE_TEST:
-		make_test_fake();
-		break;
-	}
-}
-
-void CVideo::initSDL()
-{
-	const int res = SDL_InitSubSystem(SDL_INIT_VIDEO);
-
-	if(res < 0) {
-		ERR_DP << "Could not initialize SDL_video: " << SDL_GetError() << std::endl;
+	if(SDL_InitSubSystem(SDL_INIT_VIDEO) < 0) {
+		ERR_DP << "Could not initialize SDL_video: " << SDL_GetError();
 		throw error("Video initialization failed");
 	}
+
+	switch(type) {
+	case fake::none:
+		init_window();
+		break;
+	case fake::window:
+		init_fake();
+		break;
+	case fake::draw:
+		init_test();
+		break;
+	default:
+		throw error("unrecognized fake type passed to video::init");
+	}
 }
 
-CVideo::~CVideo()
+void deinit()
 {
-	LOG_DP << "calling SDL_Quit()\n";
-	SDL_Quit();
-	assert(singleton_);
-	singleton_ = nullptr;
-	LOG_DP << "called SDL_Quit()\n";
+	LOG_DP << "deinitializing video";
+
+	// SDL_INIT_TIMER is always initialized at program start.
+	// If it is not initialized here, there is a problem.
+	assert(SDL_WasInit(SDL_INIT_TIMER));
+
+	// Clear any static texture caches,
+	// lest they try to delete textures after SDL_Quit.
+	image::flush_cache();
+	font::flush_texture_cache();
+	render_texture_.reset();
+	current_render_target_.reset();
+	gui::menu::bluebg_style.unload_images();
+
+	// Destroy the window, and thus also the renderer.
+	window.reset();
+
+	// Close the video subsystem.
+	if(SDL_WasInit(SDL_INIT_VIDEO)) {
+		LOG_DP << "quitting SDL video subsystem";
+		SDL_QuitSubSystem(SDL_INIT_VIDEO);
+	}
+	if(SDL_WasInit(SDL_INIT_VIDEO)) {
+		// This should not have been initialized multiple times
+		throw error("video subsystem still initialized after deinit");
+	}
 }
 
-bool CVideo::non_interactive() const
+bool headless()
 {
-	return fake_interactive ? false : (window == nullptr);
+	return headless_;
 }
 
-bool CVideo::surface_initialized() const
+bool testing()
 {
-	return drawingSurface != nullptr;
+	return testing_;
 }
 
-void CVideo::video_event_handler::handle_window_event(const SDL_Event& event)
+void init_fake()
 {
-	if(event.type == SDL_WINDOWEVENT) {
-		switch(event.window.event) {
-		case SDL_WINDOWEVENT_RESIZED:
-		case SDL_WINDOWEVENT_RESTORED:
-		case SDL_WINDOWEVENT_SHOWN:
-		case SDL_WINDOWEVENT_EXPOSED:
-			// if(display::get_singleton())
-			// display::get_singleton()->redraw_everything();
-			SDL_Event drawEvent;
-			sdl::UserEvent data(DRAW_ALL_EVENT);
+	headless_ = true;
+	refresh_rate_ = 1;
+	game_canvas_size_ = {800,600};
+}
 
-			drawEvent.type = DRAW_ALL_EVENT;
-			drawEvent.user = data;
+void init_test()
+{
+	testing_ = true;
+	refresh_rate_ = 1;
+	init_test_window();
+}
 
-			SDL_FlushEvent(DRAW_ALL_EVENT);
-			SDL_PushEvent(&drawEvent);
-			break;
+/** Returns true if the buffer was changed */
+bool update_test_framebuffer()
+{
+	if (!window) {
+		throw("trying to update test framebuffer with no window");
+	}
+
+	bool changed = false;
+
+	// TODO: code unduplication
+	// Build or update the current render texture.
+	if (render_texture_) {
+		int w, h;
+		SDL_QueryTexture(render_texture_, nullptr, nullptr, &w, &h);
+		if (w != test_resolution_.x || h != test_resolution_.y) {
+			// Delete it and let it be recreated.
+			LOG_DP << "destroying old render texture";
+			render_texture_.reset();
 		}
 	}
-}
-
-int CVideo::fill(
-	const SDL_Rect& area,
-	uint8_t r, uint8_t g, uint8_t b, uint8_t a)
-{
-	int e = SDL_SetRenderDrawColor(*window, r, g, b, a);
-	if (e == 0) {
-		return SDL_RenderFillRect(*window, &area);
-	} else {
-		return e;
+	if (!render_texture_) {
+		LOG_DP << "creating offscreen render texture";
+		render_texture_.assign(SDL_CreateTexture(
+			*window,
+			window->pixel_format(),
+			SDL_TEXTUREACCESS_TARGET,
+			test_resolution_.x, test_resolution_.y
+		));
+		LOG_DP << "updated render target to " << test_resolution_.x
+			<< "x" << test_resolution_.y;
+		changed = true;
 	}
+
+	pixel_scale_ = 1;
+	game_canvas_size_ = test_resolution_;
+	input_area_ = {{}, test_resolution_};
+
+	// The render texture is always the render target in this case.
+	force_render_target(render_texture_);
+
+	return changed;
 }
 
-void CVideo::blit_surface(const surface& surf, SDL_Rect* dst)
+bool update_framebuffer()
 {
-	// Ensure alpha gets transferred as well
-	SDL_BlendMode b;
-	SDL_GetSurfaceBlendMode(surf, &b);
-	SDL_SetSurfaceBlendMode(surf, SDL_BLENDMODE_NONE);
-
-	sdl_blit(surf, nullptr, drawingSurface, dst);
-	render_low_res(dst);
-
-	// Reset the blend mode to whatever it originally was
-	SDL_SetSurfaceBlendMode(surf, b);
-}
-
-void CVideo::blit_surface(int x, int y, const surface& surf)
-{
-	SDL_Rect dst{x, y, 0, 0};
-	blit_surface(surf, &dst);
-}
-
-void CVideo::blit_surface(int x, int y, const surface& surf, const SDL_Rect* srcrect, const SDL_Rect* clip_rect)
-{
-	// Ensure alpha gets transferred as well
-	SDL_BlendMode b;
-	SDL_GetSurfaceBlendMode(surf, &b);
-	SDL_SetSurfaceBlendMode(surf, SDL_BLENDMODE_NONE);
-
-	SDL_Rect dst{x, y, 0, 0};
-
-	const clip_rect_setter clip_setter(drawingSurface, clip_rect, clip_rect != nullptr);
-	sdl_blit(surf, srcrect, drawingSurface, &dst);
-	// dst gets updated by SDL_BlitSurface to reflect clipping etc.
-	render_low_res(&dst);
-
-	// Reset the input surface blend mode to whatever it originally was
-	SDL_SetSurfaceBlendMode(surf, b);
-}
-
-void CVideo::blit_texture(texture& tex, const SDL_Rect* dst_rect, const SDL_Rect* src_rect)
-{
-	SDL_RenderCopy(*window.get(), tex, src_rect, dst_rect);
-}
-
-void CVideo::make_fake()
-{
-	fake_screen_ = true;
-	refresh_rate_ = 1;
-
-	drawingSurface = SDL_CreateRGBSurfaceWithFormat(0, 16, 16, 24, SDL_PIXELFORMAT_BGR888);
-}
-
-void CVideo::make_test_fake(const unsigned width, const unsigned height)
-{
-	drawingSurface = SDL_CreateRGBSurfaceWithFormat(0, width, height, 32, SDL_PIXELFORMAT_BGR888);
-
-	fake_interactive = true;
-	refresh_rate_ = 1;
-}
-
-void CVideo::update_framebuffer()
-{
-	if(!window) {
-		return;
+	if (!window) {
+		throw error("trying to update framebuffer with no window");
 	}
+
+	if (testing_) {
+		return update_test_framebuffer();
+	}
+
+	bool changed = false;
 
 	// Make sure we're getting values from the native window.
 	SDL_SetRenderTarget(*window, nullptr);
@@ -284,7 +251,10 @@ void CVideo::update_framebuffer()
 		scale = std::min(max_scale, preferences::pixel_scale());
 	}
 	// Cache it for easy access.
-	pixel_scale_ = scale;
+	if (pixel_scale_ != scale) {
+		pixel_scale_ = scale;
+		changed = true;
+	}
 
 	// Update logical size if it doesn't match the current resolution and scale.
 	point lsize(window->get_logical_size());
@@ -293,64 +263,26 @@ void CVideo::update_framebuffer()
 		if (!preferences::auto_pixel_scale() && scale < preferences::pixel_scale()) {
 			LOG_DP << "reducing pixel scale from desired "
 				<< preferences::pixel_scale() << " to maximum allowable "
-				<< scale << std::endl;
+				<< scale;
 		}
-		LOG_DP << "pixel scale: " << scale << std::endl;
-		LOG_DP << "overriding logical size" << std::endl;
-		LOG_DP << "  old lsize: " << lsize << std::endl;
-		LOG_DP << "  old wsize: " << wsize << std::endl;
-		LOG_DP << "  old osize: " << osize << std::endl;
+		LOG_DP << "pixel scale: " << scale;
+		LOG_DP << "overriding logical size";
+		LOG_DP << "  old lsize: " << lsize;
+		LOG_DP << "  old wsize: " << wsize;
+		LOG_DP << "  old osize: " << osize;
 		window->set_logical_size(osize.x / scale, osize.y / scale);
 		lsize = window->get_logical_size();
 		wsize = window->get_size();
 		osize = window->get_output_size();
-		LOG_DP << "  new lsize: " << lsize << std::endl;
-		LOG_DP << "  new wsize: " << wsize << std::endl;
-		LOG_DP << "  new osize: " << osize << std::endl;
+		LOG_DP << "  new lsize: " << lsize;
+		LOG_DP << "  new wsize: " << wsize;
+		LOG_DP << "  new osize: " << osize;
 		float sx, sy;
 		SDL_RenderGetScale(*window, &sx, &sy);
-		LOG_DP << "  render scale: " << sx << ", " << sy << std::endl;
+		LOG_DP << "  render scale: " << sx << ", " << sy;
 	}
-
-	// Update the drawing surface if required.
-	if (!drawingSurface
-		|| drawingSurface->w != lsize.x
-		|| drawingSurface->h != lsize.y)
-	{
-		uint32_t format = window->pixel_format();
-		int bpp = SDL_BITSPERPIXEL(format);
-
-		// This should match the old system, and so shouldn't cause any
-		// problems that weren't there already.
-		LOG_DP << "creating " << bpp << "bpp drawing surface with format "
-			<< SDL_GetPixelFormatName(format) << std::endl;
-		// Note: "surface" destructor automatically frees the old surface
-		drawingSurface = SDL_CreateRGBSurfaceWithFormat(
-			0,
-			lsize.x,
-			lsize.y,
-			bpp,
-			format
-		);
-		// Always transfer verbatim to the drawing texture.
-		SDL_SetSurfaceBlendMode(drawingSurface, SDL_BLENDMODE_NONE);
-
-		// Also update the drawing texture, with matching format and size.
-		if (drawing_texture_) {
-			LOG_DP << "destroying old drawing texture" << std::endl;
-			SDL_DestroyTexture(drawing_texture_);
-		}
-		LOG_DP << "creating drawing texture" << std::endl;
-		drawing_texture_ = SDL_CreateTexture(
-			*window.get(),
-			drawingSurface->format->format,
-			SDL_TEXTUREACCESS_STREAMING,
-			drawingSurface->w,
-			drawingSurface->h
-		);
-		// Always use alpha blending to render.
-		SDL_SetTextureBlendMode(drawing_texture_, SDL_BLENDMODE_BLEND);
-	}
+	// Cache it for easy access
+	game_canvas_size_ = lsize;
 
 	// Build or update the current render texture.
 	if (render_texture_) {
@@ -358,42 +290,66 @@ void CVideo::update_framebuffer()
 		SDL_QueryTexture(render_texture_, nullptr, nullptr, &w, &h);
 		if (w != osize.x || h != osize.y) {
 			// Delete it and let it be recreated.
-			LOG_DP << "destroying old render texture" << std::endl;
-			SDL_DestroyTexture(render_texture_);
-			render_texture_ = nullptr;
+			LOG_DP << "destroying old render texture";
+			render_texture_.reset();
 		}
 	}
 	if (!render_texture_) {
-		LOG_DP << "creating offscreen render texture" << std::endl;
-		render_texture_ = SDL_CreateTexture(
+		LOG_DP << "creating offscreen render texture";
+		render_texture_.assign(SDL_CreateTexture(
 			*window,
-			drawingSurface->format->format,
+			window->pixel_format(),
 			SDL_TEXTUREACCESS_TARGET,
 			osize.x, osize.y
-		);
+		));
+		// This isn't really necessary, but might be nice to have attached
+		render_texture_.set_draw_size(lsize);
+		changed = true;
 	}
 
 	// Assign the render texture now. It will be used for all drawing.
-	SDL_SetRenderTarget(*window, render_texture_);
-	// It also resets the rendering scale, so set logical size once more.
-	window->set_logical_size(lsize.x, lsize.y);
+	force_render_target(render_texture_);
 
-	// Update sizes for input conversion.
-	sdl::update_input_dimensions(lsize.x, lsize.y, wsize.x, wsize.y);
+	// By default input area is the same as the window area.
+	input_area_ = {{}, wsize};
 
-	// If we are using pixel scale, and also have a window of awkward size,
-	// there may be a very slight offset in real pixels.
-	// SDL doesn't provide any way of retrieving this offset,
-	// so we just have to base our calculation on known behaviour.
-	offset_x_ = (osize.x - (scale * lsize.x)) / 2;
-	offset_y_ = (osize.y - (scale * lsize.y)) / 2;
-	if (offset_x_ || offset_y_) {
-		LOG_DP << "render target viewport offset: "
-		       << offset_x_ << ", " << offset_y_ << std::endl;
+	rect active_area = to_output(draw_area());
+	if (active_area.size() != osize) {
+		LOG_DP << "render target offset: LT " << active_area.pos() << " RB "
+		       << osize - active_area.size() - active_area.pos();
+		// Translate active_area into display coordinates as input_area_
+		input_area_ = {
+			(active_area.pos() * wsize) / osize,
+			(active_area.size() * wsize) / osize
+		};
+		LOG_DP << "input area: " << input_area_;
 	}
+
+	return changed;
 }
 
-void CVideo::init_window()
+void init_test_window()
+{
+	LOG_DP << "creating test window " << test_resolution_.x
+		<< "x" << test_resolution_.y;
+
+	uint32_t window_flags = 0;
+	window_flags |= SDL_WINDOW_HIDDEN;
+	// The actual window won't be used, as we'll be rendering to texture.
+
+	uint32_t renderer_flags = 0;
+	renderer_flags |= SDL_RENDERER_TARGETTEXTURE;
+	// All we need is to be able to render to texture.
+
+	window.reset(new sdl::window(
+		"", 0, 0, test_resolution_.x, test_resolution_.y,
+		window_flags, renderer_flags
+	));
+
+	update_test_framebuffer();
+}
+
+void init_window()
 {
 	// Position
 	const int x = preferences::fullscreen() ? SDL_WINDOWPOS_UNDEFINED : SDL_WINDOWPOS_CENTERED;
@@ -408,9 +364,7 @@ void CVideo::init_window()
 
 	// Add any more default flags here
 	window_flags |= SDL_WINDOW_RESIZABLE;
-#ifdef __APPLE__
 	window_flags |= SDL_WINDOW_ALLOW_HIGHDPI;
-#endif
 
 	if(preferences::fullscreen()) {
 		window_flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
@@ -420,8 +374,8 @@ void CVideo::init_window()
 
 	uint32_t renderer_flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE;
 
-	if(/*supports_vsync() &&*/ preferences::vsync()) {
-		LOG_DP << "VSYNC on\n";
+	if(preferences::vsync()) {
+		LOG_DP << "VSYNC on";
 		renderer_flags |= SDL_RENDERER_PRESENTVSYNC;
 	}
 
@@ -430,9 +384,9 @@ void CVideo::init_window()
 
 	// It is assumed that this function is only ever called once.
 	// If that is no longer true, then you should clean things up.
-	assert(!render_texture_ && !drawing_texture_);
+	assert(!render_texture_);
 
-	std::cerr << "Setting mode to " << w << "x" << h << std::endl;
+	PLAIN_LOG << "Setting mode to " << w << "x" << h;
 
 	window->set_minimum_size(preferences::min_window_width, preferences::min_window_height);
 
@@ -440,297 +394,239 @@ void CVideo::init_window()
 	SDL_GetCurrentDisplayMode(window->get_display_index(), &currentDisplayMode);
 	refresh_rate_ = currentDisplayMode.refresh_rate != 0 ? currentDisplayMode.refresh_rate : 60;
 
-	event_handler_.join_global();
-
 	update_framebuffer();
 }
 
-void CVideo::set_window_mode(const MODE_EVENT mode, const point& size)
+point output_size()
 {
-	assert(window);
-	if(fake_screen_) {
-		return;
+	if (testing_) {
+		return test_resolution_;
 	}
-
-	switch(mode) {
-	case TO_FULLSCREEN:
-		window->full_screen();
-		break;
-
-	case TO_WINDOWED:
-		window->to_window();
-		window->restore();
-		break;
-
-	case TO_MAXIMIZED_WINDOW:
-		window->to_window();
-		window->maximize();
-		break;
-
-	case TO_RES:
-		window->restore();
-		window->set_size(size.x, size.y);
-		window->center();
-		break;
-	}
-
-	update_framebuffer();
-}
-
-SDL_Point CVideo::output_size() const
-{
-	// As we are rendering to the drawingSurface, we should never need this.
+	// As we are rendering via an abstraction, we should never need this.
 	return window->get_output_size();
 }
 
-SDL_Point CVideo::window_size() const
+point window_size()
 {
+	if (testing_) {
+		return test_resolution_;
+	}
 	return window->get_size();
 }
 
-SDL_Rect CVideo::draw_area() const
+rect game_canvas()
 {
-	return {0, 0, drawingSurface->w, drawingSurface->h};
+	return {0, 0, game_canvas_size_.x, game_canvas_size_.y};
 }
 
-SDL_Rect CVideo::input_area() const
+point game_canvas_size()
 {
-	// This should always match draw_area.
-	SDL_Point p(window->get_logical_size());
+	return game_canvas_size_;
+}
+
+point draw_size()
+{
+	return current_render_target_.draw_size();
+}
+
+rect draw_area()
+{
+	return {0, 0, current_render_target_.w(), current_render_target_.h()};
+}
+
+point draw_offset()
+{
+	// As we are using SDL_RenderSetIntegerScale, there may be a slight
+	// offset of the drawable area on the render target if the target size
+	// is not perfectly divisble by the scale.
+	// SDL doesn't provide any way of retrieving this offset,
+	// so we just have to base our calculation on the known behaviour.
+	point osize = output_size();
+	point dsize = draw_size();
+	point scale = osize / dsize;
+	return (osize - (scale * dsize)) / 2;
+}
+
+rect output_area()
+{
+	point p = output_size();
 	return {0, 0, p.x, p.y};
 }
 
-int CVideo::get_width() const
+rect to_output(const rect& r)
 {
-	return drawingSurface->w;
+	// Multiply r by integer scale, adding draw_offset to the position.
+	point dsize = current_render_target_.draw_size();
+	point osize = current_render_target_.get_raw_size();
+	point pos = (r.pos() * (osize / dsize)) + draw_offset();
+	point size = r.size() * (osize / dsize);
+	return {pos, size};
 }
 
-int CVideo::get_height() const
+rect input_area()
 {
-	return drawingSurface->h;
+	return input_area_;
 }
 
-void CVideo::delay(unsigned int milliseconds)
+int get_pixel_scale()
 {
-	if(!game_config::no_delay) {
-		SDL_Delay(milliseconds);
+	return pixel_scale_;
+}
+
+int current_refresh_rate()
+{
+	// TODO: this should be more clever, depending on usage
+	return refresh_rate_;
+}
+
+void force_render_target(const texture& t)
+{
+	if (SDL_SetRenderTarget(get_renderer(), t)) {
+		ERR_DP << "failed to set render target to "
+			<< static_cast<void*>(t.get()) << ' '
+			<< t.draw_size() << " / " << t.get_raw_size();
+		ERR_DP << "last SDL error: " << SDL_GetError();
+		throw error("failed to set render target");
 	}
-}
+	current_render_target_ = t;
 
-CVideo::clip_setter CVideo::set_clip(const SDL_Rect& clip)
-{
-	return CVideo::clip_setter(*this, clip);
-}
-
-void CVideo::force_clip(const SDL_Rect& clip)
-{
-	// Set the clipping area both on the drawing surface,
-	SDL_SetClipRect(drawingSurface, &clip);
-	// and on the render target.
-	if (SDL_RenderSetClipRect(get_renderer(), &clip)) {
-		throw error("Failed to set render clip rect");
-	}
-}
-
-SDL_Rect CVideo::get_clip() const
-{
-	if (!drawingSurface) {
-		return sdl::empty_rect;
+	if (testing_) {
+		return;
 	}
 
-	SDL_Rect r_draw;
-	SDL_GetClipRect(drawingSurface, &r_draw);
-	return r_draw;
-}
-
-SDL_Rect CVideo::clip_to_draw_area(const SDL_Rect* r) const
-{
-	if (r) {
-		return sdl::intersect_rects(*r, draw_area());
+	// The scale factor gets reset when the render target changes,
+	// so make sure it gets set back appropriately.
+	if (!t) {
+		DBG_DP << "rendering to window / screen";
+		window->set_logical_size(game_canvas_size_);
+	} else if (t == render_texture_) {
+		DBG_DP << "rendering to primary buffer";
+		window->set_logical_size(game_canvas_size_);
 	} else {
-		return draw_area();
+		DBG_DP << "rendering to custom target "
+			<< static_cast<void*>(t.get()) << ' '
+			<< t.draw_size() << " / " << t.get_raw_size();
+		window->set_logical_size(t.w(), t.h());
 	}
 }
 
-SDL_Rect CVideo::to_output(const SDL_Rect& r) const
+void clear_render_target()
 {
-	int s = get_pixel_scale();
-	return {s*r.x, s*r.y, s*r.w, s*r.h};
+	force_render_target({});
 }
 
-void CVideo::render_low_res()
+texture get_render_target()
 {
-	if (!drawingSurface) {
-		throw error("Trying to render with no drawingSurface");
-	}
-	if (!drawing_texture_) {
-		throw error("Trying to render with no drawing_texture_");
-	}
-	// Upload the drawing surface to the drawing texture.
-	void* pixels_out; // somewhere we can write raw pixel data to
-	int pitch; // the length of one row of pixels in bytes
-	SDL_LockTexture(drawing_texture_, nullptr, &pixels_out, &pitch);
-	if (pitch != drawingSurface->pitch) {
-		// If these don't match we are not gonna have a good time.
-		throw error("Drawing surface and texture are incompatible");
-	}
-	// The pitch and pixel format should be the same,
-	// so we can just copy the whole chunk of memory directly.
-	size_t num_bytes = drawingSurface->h * pitch;
-	memcpy(pixels_out, drawingSurface->pixels, num_bytes);
-	SDL_UnlockTexture(drawing_texture_);
-
-	// Copy the whole drawing texture to the render target.
-	SDL_RenderCopy(*window.get(), drawing_texture_, nullptr, nullptr);
+	// This should always be up-to-date, but assert for sanity.
+	assert(current_render_target_ == SDL_GetRenderTarget(get_renderer()));
+	return current_render_target_;
 }
 
-void CVideo::render_low_res(SDL_Rect* src_rect)
+// Note: this is not thread-safe.
+// Drawing functions should not be called while this is active.
+// SDL renderer usage is not thread-safe anyway, so this is fine.
+void render_screen()
 {
-	if (!drawingSurface) {
-		throw error("Trying to render with no drawingSurface");
-	}
-	if (!drawing_texture_) {
-		throw error("Trying to render with no drawing_texture_");
-	}
-
-	SDL_Rect r = clip_to_draw_area(src_rect);
-	if(SDL_RectEmpty(&r)) {
+	if(headless_ || testing_) {
+		// No need to present anything in this case
 		return;
 	}
 
-	uint8_t bytes_per_pixel = SDL_BYTESPERPIXEL(drawingSurface->format->format);
-
-	// Upload the drawing surface to the drawing texture.
-	void* pixels_out; // somewhere we can write raw pixel data to
-	int pitch; // the length of one row of pixels in bytes
-	SDL_LockTexture(drawing_texture_, &r, &pixels_out, &pitch);
-	if (pitch != drawingSurface->pitch) {
-		// If these don't match we are not gonna have a good time.
-		throw error("Drawing surface and texture are incompatible");
-	}
-	char* pixels_in = static_cast<char*>(drawingSurface->pixels);
-	pixels_in += (r.x * bytes_per_pixel) + (r.y * pitch);
-	size_t row_bytes = r.w * bytes_per_pixel;
-	for (int y = 0; y < r.h; ++y) {
-		size_t row_offset = y * pitch;
-		memcpy(
-			static_cast<char*>(pixels_out) + row_offset,
-			pixels_in + row_offset,
-			row_bytes
-		);
-	}
-	SDL_UnlockTexture(drawing_texture_);
-
-	// Copy the drawing texture to the render target.
-	// SDL will adapt the destination rect coordinates automatically
-	// in high-dpi contexts, thanks to set_logical_size().
-	SDL_RenderCopy(*window.get(), drawing_texture_, &r, &r);
-}
-
-void CVideo::render_screen()
-{
-	if(fake_screen_ || flip_locked_ > 0) {
+	if(!window) {
+		WRN_DP << "trying to render with no window";
 		return;
 	}
 
-	if(window) {
-		// Reset the render target to the window.
-		SDL_SetRenderTarget(*window, nullptr);
-
-		// Copy the render texture to the window.
-		SDL_RenderCopy(*window, render_texture_, nullptr, nullptr);
-
-		// Finalize and display the frame.
-		SDL_RenderPresent(*window);
-
-		// Reset the render target to the render texture.
-		SDL_SetRenderTarget(*window, render_texture_);
-
-		// SDL resets the logical size when setting a render texture target,
-		// so we also have to reset that every time.
-		window->set_logical_size(get_width(), get_height());
+	// This should only ever be called when the main render texture is the
+	// current render target. It could be adapted otherwise... but let's not.
+	if(SDL_GetRenderTarget(*window) != render_texture_) {
+		ERR_DP << "trying to render screen, but current render texture is "
+			<< static_cast<void*>(SDL_GetRenderTarget(*window))
+			<< " | " << static_cast<void*>(current_render_target_.get())
+			<< ". It should be " << static_cast<void*>(render_texture_.get());
+		throw error("tried to render screen from wrong render target");
 	}
+
+	// Clear the render target so we're drawing to the window.
+	clear_render_target();
+
+	// Copy the render texture to the window.
+	SDL_RenderCopy(*window, render_texture_, nullptr, nullptr);
+
+	// Finalize and display the frame.
+	SDL_RenderPresent(*window);
+
+	// Reset the render target to the render texture.
+	force_render_target(render_texture_);
 }
 
-surface CVideo::read_pixels(SDL_Rect* r)
+surface read_pixels(SDL_Rect* r)
 {
-	SDL_Rect d = draw_area();
-	SDL_Rect r_clipped = d;
+	if (!window) {
+		WRN_DP << "trying to read pixels with no window";
+		return surface();
+	}
+
+	// This should be what we want to read from.
+	texture& target = current_render_target_;
+
+	// Make doubly sure.
+	if (target != SDL_GetRenderTarget(*window)) {
+		SDL_Texture* t = SDL_GetRenderTarget(*window);
+		ERR_DP << "render target " << static_cast<void*>(target.get())
+			<< ' ' << target.draw_size() << " / " << target.get_raw_size()
+			<< " doesn't match window render target "
+			<< static_cast<void*>(t);
+		throw error("unexpected render target while reading pixels");
+	}
+
+	// Intersect the draw area with the given rect.
+	rect r_clipped = draw_area();
 	if (r) {
-		r_clipped = sdl::intersect_rects(*r, d);
+		r_clipped.clip(*r);
 		if (r_clipped != *r) {
-			DBG_DP << "modifying pixel read area\n"
-			       << "  from " << *r << "\n"
-			       << "    to " << r_clipped << std::endl;
+			DBG_DP << "modifying pixel read area from " << *r
+			       << " to " << r_clipped;
 			*r = r_clipped;
 		}
 	}
-	SDL_Rect o = to_output(r_clipped);
+
+	// Convert the rect to output coordinates, if necessary.
+	rect o = to_output(r_clipped);
+
+	// Create surface and read pixels
 	surface s(o.w, o.h);
-	// the draw-space viewport may be slightly offset on the render target,
-	// if the scale doesn't match precisely with the window size.
-	o.x += offset_x_;
-	o.y += offset_y_;
 	SDL_RenderReadPixels(*window, &o, s->format->format, s->pixels, s->pitch);
 	return s;
 }
 
-surface CVideo::read_pixels_low_res(SDL_Rect* r)
+surface read_pixels_low_res(SDL_Rect* r)
 {
+	if(!window) {
+		WRN_DP << "trying to read pixels with no window";
+		return surface();
+	}
 	surface s = read_pixels(r);
-	if (r) {
+	if(r) {
 		return scale_surface(s, r->w, r->h);
 	} else {
-		return scale_surface(s, get_width(), get_height());
+		return scale_surface(s, draw_size().x, draw_size().y);
 	}
 }
 
-texture CVideo::read_texture(SDL_Rect* r)
-{
-	return texture(read_pixels(r));
-}
-
-void CVideo::lock_updates(bool value)
-{
-	if(value == true) {
-		++updated_locked_;
-	} else {
-		--updated_locked_;
-	}
-}
-
-bool CVideo::update_locked() const
-{
-	return updated_locked_ > 0;
-}
-
-void CVideo::set_window_title(const std::string& title)
+void set_window_title(const std::string& title)
 {
 	assert(window);
 	window->set_title(title);
 }
 
-void CVideo::set_window_icon(surface& icon)
+void set_window_icon(surface& icon)
 {
 	assert(window);
 	window->set_icon(icon);
 }
 
-void CVideo::clear_screen()
-{
-	if(!window) {
-		return;
-	}
-
-	window->fill(0, 0, 0, 255);
-}
-
-sdl::window* CVideo::get_window()
-{
-	return window.get();
-}
-
-SDL_Renderer* CVideo::get_renderer()
+SDL_Renderer* get_renderer()
 {
 	if(window) {
 		return *window;
@@ -739,13 +635,18 @@ SDL_Renderer* CVideo::get_renderer()
 	}
 }
 
-std::string CVideo::current_driver()
+SDL_Window* get_window()
+{
+	return *window;
+}
+
+std::string current_driver()
 {
 	const char* const drvname = SDL_GetCurrentVideoDriver();
 	return drvname ? drvname : "<not initialized>";
 }
 
-std::vector<std::string> CVideo::enumerate_drivers()
+std::vector<std::string> enumerate_drivers()
 {
 	std::vector<std::string> res;
 	int num_drivers = SDL_GetNumVideoDrivers();
@@ -758,54 +659,32 @@ std::vector<std::string> CVideo::enumerate_drivers()
 	return res;
 }
 
-bool CVideo::window_has_flags(uint32_t flags) const
+/**
+ * Tests whether the given flags are currently set on the SDL window.
+ *
+ * @param flags               The flags to test, OR'd together.
+ */
+static bool window_has_flags(uint32_t flags)
 {
-	if(!window) {
-		return false;
-	}
-
-	return (window->get_flags() & flags) != 0;
+	return window && (window->get_flags() & flags) != 0;
 }
 
-std::pair<float, float> CVideo::get_dpi() const
+bool window_is_visible()
 {
-	float hdpi, vdpi;
-	if(window && SDL_GetDisplayDPI(window->get_display_index(), nullptr, &hdpi, &vdpi) == 0) {
-#ifdef TARGET_OS_OSX
-		// SDL 2.0.12 changes SDL_GetDisplayDPI. Function now returns DPI
-		// multiplied by screen's scale factor. This part of code reverts
-		// this multiplication.
-		//
-		// For more info see issue: https://github.com/wesnoth/wesnoth/issues/5019
-
-		if(sdl_get_version() >= version_info{2, 0, 12}) {
-			float scale_factor = desktop::apple::get_scale_factor(window->get_display_index());
-			hdpi /= scale_factor;
-			vdpi /= scale_factor;
-		}
-#endif
-		return { hdpi, vdpi };
-	}
-	// SDL doesn't know the screen dpi, there's a configuration issue, or we
-	// don't have a window yet.
-	return { 0.0f, 0.0f };
+	return window_has_flags(SDL_WINDOW_SHOWN);
 }
 
-std::pair<float, float> CVideo::get_dpi_scale_factor() const
+bool window_has_focus()
 {
-	auto dpi = get_dpi();
-	if(dpi.first != 0.0f && dpi.second != 0.0f) {
-		// adjust for pixel scale
-		SDL_Point wsize = window_size();
-		dpi.first *= float(get_width()) / wsize.x;
-		dpi.second *= float(get_height()) / wsize.y;
-		return { dpi.first / MAGIC_DPI_SCALE_NUMBER, dpi.second / MAGIC_DPI_SCALE_NUMBER };
-	}
-	// Assume a scale factor of 1.0 if the screen dpi is currently unknown.
-	return { 1.0f, 1.0f };
+	return window_has_flags(SDL_WINDOW_MOUSE_FOCUS | SDL_WINDOW_INPUT_FOCUS);
 }
 
-std::vector<point> CVideo::get_available_resolutions(const bool include_current)
+bool window_has_mouse_focus()
+{
+	return window_has_flags(SDL_WINDOW_MOUSE_FOCUS);
+}
+
+std::vector<point> get_available_resolutions(const bool include_current)
 {
 	std::vector<point> result;
 
@@ -817,16 +696,11 @@ std::vector<point> CVideo::get_available_resolutions(const bool include_current)
 
 	const int modes = SDL_GetNumDisplayModes(display_index);
 	if(modes <= 0) {
-		std::cerr << "No modes supported\n";
+		PLAIN_LOG << "No modes supported";
 		return result;
 	}
 
 	const point min_res(preferences::min_window_width, preferences::min_window_height);
-
-#if 0
-	// DPI scale factor.
-	auto [scale_h, scale_v] = get_dpi_scale_factor();
-#endif
 
 	// The maximum size to which this window can be set. For some reason this won't
 	// pop up as a display mode of its own.
@@ -862,150 +736,91 @@ std::vector<point> CVideo::get_available_resolutions(const bool include_current)
 	return result;
 }
 
-point CVideo::current_resolution()
+point current_resolution()
 {
+	if (testing_) {
+		return test_resolution_;
+	}
 	return point(window->get_size()); // Convert from plain SDL_Point
 }
 
-bool CVideo::is_fullscreen() const
+bool is_fullscreen()
 {
+	if (testing_) {
+		return true;
+	}
 	return (window->get_flags() & SDL_WINDOW_FULLSCREEN_DESKTOP) != 0;
 }
 
-bool CVideo::supports_vsync() const
+void set_fullscreen(bool fullscreen)
 {
-	return sdl_get_version() >= version_info{2, 0, 17};
-}
+	if (headless_ || testing_) {
+		return;
+	}
 
-int CVideo::set_help_string(const std::string& str)
-{
-	font::remove_floating_label(help_string_);
-
-	const color_t color{0, 0, 0, 0xbb};
-
-	int size = font::SIZE_LARGE;
-
-	while(size > 0) {
-		if(font::pango_line_width(str, size) > get_width()) {
-			size--;
+	// Only do anything if the current value differs from the desired value
+	if (window && is_fullscreen() != fullscreen) {
+		if (fullscreen) {
+			window->full_screen();
+		} else if (preferences::maximized()) {
+			window->to_window();
+			window->maximize();
 		} else {
-			break;
+			window->to_window();
+			window->restore();
 		}
+		update_buffers();
 	}
 
-	const int border = 5;
-
-	font::floating_label flabel(str);
-	flabel.set_font_size(size);
-	flabel.set_position(get_width() / 2, get_height());
-	flabel.set_bg_color(color);
-	flabel.set_border_size(border);
-
-	help_string_ = font::add_floating_label(flabel);
-
-	const SDL_Rect& rect = font::get_floating_label_rect(help_string_);
-	font::move_floating_label(help_string_, 0.0, -double(rect.h));
-
-	return help_string_;
+	// Update the config value in any case.
+	preferences::_set_fullscreen(fullscreen);
 }
 
-void CVideo::clear_help_string(int handle)
-{
-	if(handle == help_string_) {
-		font::remove_floating_label(handle);
-		help_string_ = 0;
-	}
-}
-
-void CVideo::clear_all_help_strings()
-{
-	clear_help_string(help_string_);
-}
-
-void CVideo::set_fullscreen(bool ison)
-{
-	if(window && is_fullscreen() != ison) {
-		const point& res = preferences::resolution();
-
-		MODE_EVENT mode;
-
-		if(ison) {
-			mode = TO_FULLSCREEN;
-		} else {
-			mode = preferences::maximized() ? TO_MAXIMIZED_WINDOW : TO_WINDOWED;
-		}
-
-		set_window_mode(mode, res);
-
-		if(display* d = display::get_singleton()) {
-			d->redraw_everything();
-		}
-	}
-
-	// Change the config value.
-	preferences::_set_fullscreen(ison);
-}
-
-void CVideo::toggle_fullscreen()
+void toggle_fullscreen()
 {
 	set_fullscreen(!preferences::fullscreen());
 }
 
-bool CVideo::set_resolution(const unsigned width, const unsigned height)
-{
-	return set_resolution(point(width, height));
-}
-
-bool CVideo::set_resolution(const point& resolution)
+bool set_resolution(const point& resolution)
 {
 	if(resolution == current_resolution()) {
 		return false;
 	}
 
-	set_window_mode(TO_RES, resolution);
-
-	if(display* d = display::get_singleton()) {
-		d->redraw_everything();
+	if(!window) {
+		throw error("tried to set resolution with no window");
 	}
 
+	if(testing_) {
+		LOG_DP << "resizing test resolution to " << resolution;
+		test_resolution_ = resolution;
+		return update_test_framebuffer();
+	}
+
+	window->restore();
+	window->set_size(resolution.x, resolution.y);
+	window->center();
+
+	update_buffers();
+
 	// Change the saved values in preferences.
-	LOG_DP << "updating resolution to " << resolution << std::endl;
+	LOG_DP << "updating resolution to " << resolution;
 	preferences::_set_resolution(resolution);
 	preferences::_set_maximized(false);
-
-	// Push a window-resized event to the queue. This is necessary so various areas
-	// of the game (like GUI2) update properly with the new size.
-	events::raise_resize_event();
 
 	return true;
 }
 
-void CVideo::update_buffers()
+void update_buffers(bool autoupdate)
 {
-	LOG_DP << "updating buffers" << std::endl;
-	// We could also double-check the resolution here.
-	/*if (preferences::resolution() != current_resolution()) {
-		LOG_DP << "updating resolution from " << current_resolution()
-			<< " to " << preferences::resolution() << std::endl;
-		set_window_mode(TO_RES, preferences::resolution());
-	}*/
-
-	update_framebuffer();
-
-	if(display* d = display::get_singleton()) {
-		d->redraw_everything();
+	if(headless_) {
+		return;
 	}
 
-	// Push a window-resized event to the queue. This is necessary so various areas
-	// of the game (like GUI2) update properly with the new size.
-	events::raise_resize_event();
-}
-
-void CVideo::lock_flips(bool lock)
-{
-	if(lock) {
-		++flip_locked_;
-	} else {
-		--flip_locked_;
+	LOG_DP << "updating video buffers";
+	if(update_framebuffer() && autoupdate) {
+		draw_manager::invalidate_all();
 	}
 }
+
+} // namespace video

@@ -22,6 +22,7 @@
 #include "scripting/lua_common.hpp"	// for chat_message, luaW_pcall
 #include "scripting/push_check.hpp"
 #include "picture.hpp"
+#include "sdl/point.hpp"
 #include "sdl/surface.hpp"
 
 #include <algorithm>
@@ -45,9 +46,9 @@ static int intf_get_image_size(lua_State *L)
 	char const *m = luaL_checkstring(L, 1);
 	image::locator img(m);
 	if(!img.file_exists()) return 0;
-	surface s = get_image(img);
-	lua_pushinteger(L, s->w);
-	lua_pushinteger(L, s->h);
+	const point s = get_size(img);
+	lua_pushinteger(L, s.x);
+	lua_pushinteger(L, s.y);
 	return 2;
 }
 
@@ -264,12 +265,12 @@ public:
 		//int newpos = lfs->pistream_->tellg();
 		*size = lfs->pistream_->gcount();
 #if 0
-		ERR_LUA << "read bytes from " << startpos << " to " << newpos << " in total " *size << " from steam\n";
+		ERR_LUA << "read bytes from " << startpos << " to " << newpos << " in total " *size << " from steam";
 		ERR_LUA << "streamstate being "
 			<< " goodbit:" << lfs->pistream_->good()
 			<< " endoffile:" << lfs->pistream_->eof()
 			<< " badbit:" <<  lfs->pistream_->bad()
-			<< " failbit:" << lfs->pistream_->fail() << "\n";
+			<< " failbit:" << lfs->pistream_->fail();
 #endif
 		return lfs->buff_;
 	}
@@ -279,7 +280,7 @@ public:
 		lua_filestream lfs(fname);
 		//lua uses '@' to know that this is a file (as opposed to something loaded via loadstring )
 		std::string chunkname = '@' + relativename;
-		LOG_LUA << "starting to read from " << fname << "\n";
+		LOG_LUA << "starting to read from " << fname;
 		return  lua_load(L, &lua_filestream::lua_read_data, &lfs, chunkname.c_str(), "t");
 	}
 private:

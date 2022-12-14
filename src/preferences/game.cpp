@@ -27,6 +27,7 @@
 #include "serialization/unicode_cast.hpp"
 #include "units/map.hpp"
 #include "units/unit.hpp"
+#include "video.hpp"
 #include "wml_exception.hpp"
 
 #include <cassert>
@@ -800,7 +801,7 @@ void set_autosavemax(int value)
 
 std::string theme()
 {
-	if(CVideo::get_singleton().non_interactive()) {
+	if(video::headless()) {
 		static const std::string null_theme = "null";
 		return null_theme;
 	}

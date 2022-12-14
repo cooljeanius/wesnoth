@@ -16,6 +16,8 @@
 #pragma once
 
 #include "color.hpp"
+#include "sdl/point.hpp"
+#include "sdl/rect.hpp"
 #include "sdl/surface.hpp"
 #include "sdl/texture.hpp"
 #include <string>
@@ -58,7 +60,6 @@ public:
 	void set_color(const color_t& color) {color_ = color;}
 	void set_bg_color(const color_t& bg_color) {
 		bgcolor_ = bg_color;
-		bgalpha_ = bg_color.a;
 	}
 	void set_border_size(int border) {border_ = border;}
 	// set width for word wrapping (use -1 to disable it)
@@ -69,9 +70,14 @@ public:
 	void set_scroll_mode(LABEL_SCROLL_MODE scroll) {scroll_ = scroll;}
 	void use_markup(bool b) {use_markup_ = b;}
 
-	void move(double xmove, double ymove);
-	void draw(int time);
+	/** Mark the last drawn location as requiring redraw. */
 	void undraw();
+	/** Change the floating label's position. */
+	void move(double xmove, double ymove);
+	/** Finalize draw position and alpha, and queue redrawing if changed. */
+	void update(int time);
+	/** Draw the label to the screen. */
+	void draw();
 
 	/**
 	 * Ensure a texture for this floating label exists, creating one if needed.
@@ -81,7 +87,10 @@ public:
 	bool create_texture();
 
 	/** Return the size of the label in drawing coordinates */
-	SDL_Point get_draw_size() const { return draw_size_; }
+	SDL_Point get_draw_size() const
+	{
+		return get_bg_rect({0, 0, tex_.w(), tex_.h()}).size();
+	}
 
 	bool expired(int time) const { return lifetime_ >= 0 && get_time_alive(time) > lifetime_ + fadeout_; }
 
@@ -96,17 +105,17 @@ private:
 
 	int get_time_alive(int current_time) const { return current_time - time_start_; }
 	int xpos(std::size_t width) const;
-	SDL_Point get_loc(int time);
+	point get_pos(int time);
 	uint8_t get_alpha(int time);
-	texture tex_, buf_;
-	SDL_Rect buf_pos_;
-	SDL_Point draw_size_;
+	rect get_bg_rect(const rect& text_rect) const;
+	texture tex_;
+	rect screen_loc_;
+	uint8_t alpha_;
 	int fadeout_;
 	int time_start_;
 	std::string text_;
 	int font_size_;
 	color_t color_, bgcolor_;
-	int bgalpha_;
 	double xpos_, ypos_, xmove_, ymove_;
 	int lifetime_;
 	int width_, height_;
@@ -142,6 +151,17 @@ void show_floating_label(int handle, bool show);
 
 SDL_Rect get_floating_label_rect(int handle);
 void draw_floating_labels();
-void undraw_floating_labels();
+void update_floating_labels();
+
+/**
+ * Displays a help string with the given text. A 'help string' is like a tooltip,
+ * but appears at the bottom of the screen so as to not be intrusive.
+ *
+ * @param str                 The text to display.
+ */
+void set_help_string(const std::string& str);
+
+/** Removes the help string. */
+void clear_help_string();
 
 } // end namespace font

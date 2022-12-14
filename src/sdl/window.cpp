@@ -13,11 +13,12 @@
 	See the COPYING file for more details.
 */
 
-#include "sdl/surface.hpp"
 #include "sdl/window.hpp"
-#include "sdl/input.hpp"
 
 #include "sdl/exception.hpp"
+#include "sdl/input.hpp"
+#include "sdl/surface.hpp"
+#include "sdl/utils.hpp"
 
 #include <SDL2/SDL_render.h>
 
@@ -31,18 +32,19 @@ window::window(const std::string& title,
 				 const int h,
 				 const uint32_t window_flags,
 				 const uint32_t render_flags)
-	: window_(SDL_CreateWindow(title.c_str(), x, y, w, h, window_flags))
+	: window_(SDL_CreateWindow(
+		title.c_str(), x, y, w, h, window_flags | SDL_WINDOW_HIDDEN))
 	, pixel_format_(SDL_PIXELFORMAT_UNKNOWN)
 {
 	if(!window_) {
 		throw exception("Failed to create a SDL_Window object.", true);
 	}
 
-#if SDL_VERSION_ATLEAST(2, 0, 10)
-	// Rendering in batches (for efficiency) is enabled by default from SDL 2.0.10
-	// The way Wesnoth uses SDL as of September 2019 does not work well with this rendering mode (eg story-only scenarios)
-	SDL_SetHint(SDL_HINT_RENDER_BATCHING, "0");
-#endif
+	if(sdl::runtime_at_least(2,0,10)) {
+		// Rendering in batches (for efficiency) is enabled by default from SDL 2.0.10
+		// The way Wesnoth uses SDL as of September 2019 does not work well with this rendering mode (eg story-only scenarios)
+		SDL_SetHint(SDL_HINT_RENDER_BATCHING, "0");
+	}
 
 	if(!SDL_CreateRenderer(window_, -1, render_flags)) {
 		throw exception("Failed to create a SDL_Renderer object.", true);
@@ -74,10 +76,12 @@ window::window(const std::string& title,
 
 	fill(0,0,0);
 
-	// Now that we have a window and renderer we can scale input correctly.
-	update_input_dimensions(get_logical_size(), get_size());
-
 	render();
+
+	// If we didn't explicitly ask for the window to be hidden, show it
+	if(!(window_flags & SDL_WINDOW_HIDDEN)) {
+		SDL_ShowWindow(window_);
+	}
 }
 
 window::~window()
@@ -90,7 +94,6 @@ window::~window()
 void window::set_size(const int w, const int h)
 {
 	SDL_SetWindowSize(window_, w, h);
-	update_input_dimensions(get_logical_size(), get_size());
 }
 
 SDL_Point window::get_size()
@@ -117,25 +120,21 @@ void window::center()
 void window::maximize()
 {
 	SDL_MaximizeWindow(window_);
-	update_input_dimensions(get_logical_size(), get_size());
 }
 
 void window::to_window()
 {
 	SDL_SetWindowFullscreen(window_, 0);
-	update_input_dimensions(get_logical_size(), get_size());
 }
 
 void window::restore()
 {
 	SDL_RestoreWindow(window_);
-	update_input_dimensions(get_logical_size(), get_size());
 }
 
 void window::full_screen()
 {
 	SDL_SetWindowFullscreen(window_, SDL_WINDOW_FULLSCREEN_DESKTOP);
-	update_input_dimensions(get_logical_size(), get_size());
 }
 
 void window::fill(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
@@ -170,8 +169,6 @@ uint32_t window::get_flags()
 void window::set_minimum_size(int min_w, int min_h)
 {
 	SDL_SetWindowMinimumSize(window_, min_w, min_h);
-	// Can this change the size of the window?
-	update_input_dimensions(get_logical_size(), get_size());
 }
 
 int window::get_display_index()
@@ -183,10 +180,14 @@ void window::set_logical_size(int w, int h)
 {
 	SDL_Renderer* r = SDL_GetRenderer(window_);
 	SDL_RenderSetLogicalSize(r, w, h);
-	update_input_dimensions(get_logical_size(), get_size());
 }
 
-SDL_Point window::get_logical_size() const
+void window::set_logical_size(const point& p)
+{
+	set_logical_size(p.x, p.y);
+}
+
+point window::get_logical_size() const
 {
 	SDL_Renderer* r = SDL_GetRenderer(window_);
 	int w, h;

@@ -114,7 +114,8 @@ opts.AddVariables(
     BoolVariable("autorevision", 'Use autorevision tool to fetch current git revision that will be embedded in version string', True),
     BoolVariable("lockfile", "Create a lockfile to prevent multiple instances of scons from being run at the same time on this working copy.", False),
     BoolVariable("OS_ENV", "Forward the entire OS environment to scons", False),
-    BoolVariable("history", "Clear to disable GNU history support in lua console", True)
+    BoolVariable("history", "Clear to disable GNU history support in lua console", True),
+    BoolVariable('force_color', 'Always produce ANSI-colored output (GNU/Clang only).', False),
     )
 
 #
@@ -161,7 +162,8 @@ else:
     from cross_compile import *
     setup_cross_compile(env)
 
-env.Tool("system_include")
+if sys.platform != 'win32':
+    env.Tool("system_include")
 
 if 'HOME' in os.environ:
     env['ENV']['HOME'] = os.environ['HOME']
@@ -350,7 +352,7 @@ if env["prereqs"]:
 
     def have_sdl_other():
         return \
-            conf.CheckSDL2('2.0.8') & \
+            conf.CheckSDL2('2.0.10') & \
             conf.CheckSDL2Mixer() & \
             conf.CheckSDL2Image()
 
@@ -392,7 +394,7 @@ if env["prereqs"]:
     have_client_prereqs = have_client_prereqs & conf.CheckJPG()
     have_client_prereqs = have_client_prereqs & conf.CheckWebP()
     have_client_prereqs = have_client_prereqs & conf.CheckCairo(min_version = "1.10")
-    have_client_prereqs = have_client_prereqs & conf.CheckPango("cairo", require_version = "1.22.0")
+    have_client_prereqs = have_client_prereqs & conf.CheckPango("cairo", require_version = "1.44.0")
     have_client_prereqs = have_client_prereqs & conf.CheckPKG("fontconfig")
     have_client_prereqs = have_client_prereqs & conf.CheckBoost("regex")
 
@@ -488,6 +490,8 @@ for env in [test_env, client_env, env]:
 
         if env['pedantic']:
             env.AppendUnique(CXXFLAGS = Split("-Wdocumentation -Wno-documentation-deprecated-sync"))
+        if env['force_color']:
+            env.AppendUnique(CCFLAGS = ["-fcolor-diagnostics"])
 
     if "gcc" in env["TOOLS"]:
         env.AppendUnique(CCFLAGS = Split("-Wno-unused-local-typedefs -Wno-maybe-uninitialized -Wtrampolines"))
@@ -501,6 +505,9 @@ for env in [test_env, client_env, env]:
         if env['sanitize']:
             env.AppendUnique(CCFLAGS = ["-fsanitize=" + env["sanitize"]], LINKFLAGS = ["-fsanitize=" + env["sanitize"]])
             env.AppendUnique(CCFLAGS = Split("-fno-omit-frame-pointer -fno-optimize-sibling-calls"))
+        if env['force_color']:
+            env.AppendUnique(CCFLAGS = ["-fdiagnostics-color=always"])
+
 
 # #
 # Determine optimization level

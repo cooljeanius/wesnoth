@@ -249,7 +249,7 @@ void saved_game::set_defaults()
 
 		if(!is_loaded_game && !side["current_player"].empty()) {
 			ERR_NG << "Removed invalid 'current_player' attribute from [side] while loading a scenario. Consider using "
-					  "'side_name' instead\n";
+					  "'side_name' instead";
 
 			side["current_player"] = config::attribute_value();
 		}
@@ -287,7 +287,7 @@ void saved_game::expand_scenario()
 			update_label();
 			set_defaults();
 		} else {
-			ERR_NG << "Couldn't find [" << classification().get_tagname() << "] with id=" << carryover_["next_scenario"] << std::endl;
+			ERR_NG << "Couldn't find [" << classification().get_tagname() << "] with id=" << carryover_["next_scenario"];
 			starting_point_type_ = starting_point::INVALID;
 			starting_point_.clear();
 		}
@@ -361,7 +361,7 @@ void saved_game::load_non_scenario(const std::string& type, const std::string& i
 		}
 	} else {
 		// TODO: A user message instead?
-		ERR_NG << "Couldn't find [" << type << "] with id=" << id << std::endl;
+		ERR_NG << "Couldn't find [" << type << "] with id=" << id;
 	}
 }
 
@@ -431,11 +431,11 @@ void saved_game::expand_mp_options()
 					try {
 						variable_access_create(option["id"], variables).as_scalar() = option["value"];
 					} catch(const invalid_variablename_exception&) {
-						ERR_NG << "variable " << option["id"] << "cannot be set to " << option["value"] << std::endl;
+						ERR_NG << "variable " << option["id"] << "cannot be set to " << option["value"];
 					}
 				}
 			} else {
-				LOG_NG << "Couldn't find [" << mod.type << "] with id=" << mod.id << " for [option]s" << std::endl;
+				LOG_NG << "Couldn't find [" << mod.type << "] with id=" << mod.id << " for [option]s";
 			}
 		}
 	}
@@ -481,7 +481,7 @@ void saved_game::expand_random_scenario()
 	if(starting_point_type_ == starting_point::SCENARIO) {
 		// If the entire scenario should be randomly generated
 		if(!starting_point_["scenario_generation"].empty()) {
-			LOG_NG << "randomly generating scenario...\n";
+			LOG_NG << "randomly generating scenario...";
 			const cursor::setter cursor_setter(cursor::WAIT);
 
 			config scenario_new =
@@ -499,7 +499,7 @@ void saved_game::expand_random_scenario()
 		// If the map should be randomly generated
 		// We don’t want that we accidentally to this twice so we check for starting_point_["map_data"].empty()
 		if(starting_point_["map_data"].empty() && !starting_point_["map_generation"].empty()) {
-			LOG_NG << "randomly generating map...\n";
+			LOG_NG << "randomly generating map...";
 			const cursor::setter cursor_setter(cursor::WAIT);
 
 			starting_point_["map_data"] =
@@ -776,7 +776,7 @@ void saved_game::set_data(config& cfg)
 		starting_point_.clear();
 	}
 
-	LOG_NG << "scenario: '" << carryover_["next_scenario"].str() << "'\n";
+	LOG_NG << "scenario: '" << carryover_["next_scenario"].str() << "'";
 
 	if(const config& stats = cfg.child("statistics")) {
 		statistics::fresh_stats();

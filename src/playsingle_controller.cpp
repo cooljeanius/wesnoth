@@ -49,6 +49,7 @@
 #include "statistics.hpp"
 #include "synced_context.hpp"
 #include "units/unit.hpp"
+#include "video.hpp"
 #include "wesnothd_connection_error.hpp"
 #include "whiteboard/manager.hpp"
 
@@ -61,12 +62,13 @@ static lg::log_domain log_aitesting("ai/testing");
 static lg::log_domain log_engine("engine");
 #define ERR_NG LOG_STREAM(err, log_engine)
 #define LOG_NG LOG_STREAM(info, log_engine)
+#define DBG_NG LOG_STREAM(debug, log_engine)
 
 static lg::log_domain log_enginerefac("enginerefac");
 #define LOG_RG LOG_STREAM(info, log_enginerefac)
 
 playsingle_controller::playsingle_controller(const config& level, saved_game& state_of_game, bool skip_replay)
-	: play_controller(level, state_of_game, skip_replay)
+	: play_controller(level, state_of_game, skip_replay, true) // start faded
 	, cursor_setter_(cursor::NORMAL)
 	, textbox_info_()
 	, replay_sender_(*resources::recorder)
@@ -100,7 +102,7 @@ std::string playsingle_controller::describe_result() const
 
 void playsingle_controller::init_gui()
 {
-	LOG_NG << "Initializing GUI... " << (SDL_GetTicks() - ticks()) << "\n";
+	LOG_NG << "Initializing GUI... " << (SDL_GetTicks() - ticks());
 	play_controller::init_gui();
 
 	// Scroll to the starting position of the first team. If there is a
@@ -113,7 +115,7 @@ void playsingle_controller::init_gui()
 	// overriding those found in the map (if any).
 	if(map_start_.valid()) {
 		gui_->scroll_to_tile(map_start_, game_display::WARP, false);
-		LOG_NG << "Found good stored ui location " << map_start_ << "\n";
+		LOG_NG << "Found good stored ui location " << map_start_;
 	} else {
 		int scroll_team = gamestate().first_human_team_ + 1;
 		if(scroll_team == 0) {
@@ -123,13 +125,21 @@ void playsingle_controller::init_gui()
 		map_location loc(get_map().starting_position(scroll_team));
 		if((loc.x >= 0) && (loc.y >= 0)) {
 			gui_->scroll_to_tile(loc, game_display::WARP);
-			LOG_NG << "Found bad stored ui location " << map_start_ << " using side starting location " << loc << "\n";
+			LOG_NG << "Found bad stored ui location " << map_start_ << " using side starting location " << loc;
 		} else {
-			LOG_NG << "Found bad stored ui location\n";
+			LOG_NG << "Found bad stored ui location";
 		}
 	}
 
-	update_locker lock_display(gui_->video(), is_skipping_replay());
+	// Fade in
+	gui_->set_prevent_draw(false);
+	gui_->queue_repaint();
+	if(!video::headless() && !video::testing()) {
+		gui_->fade_to({0,0,0,0}, 500);
+	} else {
+		gui_->set_fade({0,0,0,0});
+	}
+
 	get_hotkey_command_executor()->set_button_state();
 }
 
@@ -156,11 +166,11 @@ void playsingle_controller::play_scenario_init()
 
 void playsingle_controller::play_scenario_main_loop()
 {
-	LOG_NG << "starting main loop\n" << (SDL_GetTicks() - ticks()) << "\n";
+	LOG_NG << "starting main loop\n" << (SDL_GetTicks() - ticks());
 
 	ai_testing::log_game_start();
 	if(get_teams().empty()) {
-		ERR_NG << "Playing game with 0 teams." << std::endl;
+		ERR_NG << "Playing game with 0 teams.";
 	}
 
 	while(true) {
@@ -226,7 +236,7 @@ void playsingle_controller::play_scenario_main_loop()
 
 level_result::type playsingle_controller::play_scenario(const config& level)
 {
-	LOG_NG << "in playsingle_controller::play_scenario()...\n";
+	LOG_NG << "in playsingle_controller::play_scenario()...";
 
 	// Start music.
 	for(const config& m : level.child_range("music")) {
@@ -257,13 +267,13 @@ level_result::type playsingle_controller::play_scenario(const config& level)
 			soundsource::sourcespec spec(s);
 			soundsources_manager_->add(spec);
 		} catch(const bad_lexical_cast&) {
-			ERR_NG << "Error when parsing sound_source config: bad lexical cast." << std::endl;
-			ERR_NG << "sound_source config was: " << s.debug() << std::endl;
-			ERR_NG << "Skipping this sound source..." << std::endl;
+			ERR_NG << "Error when parsing sound_source config: bad lexical cast.";
+			ERR_NG << "sound_source config was: " << s.debug();
+			ERR_NG << "Skipping this sound source...";
 		}
 	}
 
-	LOG_NG << "entering try... " << (SDL_GetTicks() - ticks()) << "\n";
+	LOG_NG << "entering try... " << (SDL_GetTicks() - ticks());
 
 	try {
 		play_scenario_init();
@@ -279,9 +289,9 @@ level_result::type playsingle_controller::play_scenario(const config& level)
 		}
 		const bool is_victory = get_end_level_data().is_victory;
 
-		if(gamestate().gamedata_.phase() <= game_data::PRESTART) {
-			gui_->video().clear_screen();
-		}
+		//if(gamestate().gamedata_.phase() <= game_data::PRESTART) {
+		//	video::clear_screen();
+		//}
 
 		ai_testing::log_game_end();
 
@@ -296,7 +306,7 @@ level_result::type playsingle_controller::play_scenario(const config& level)
 		}
 
 		if(linger_) {
-			LOG_NG << "resuming from loaded linger state...\n";
+			LOG_NG << "resuming from loaded linger state...";
 			// as carryover information is stored in the snapshot, we have to re-store it after loading a linger state
 			saved_game_.set_snapshot(config());
 			if(!is_observer()) {
@@ -406,7 +416,7 @@ void playsingle_controller::play_side_impl()
 			replay_controller_.reset();
 		}
 	} else if((current_team().is_local_human() && current_team().is_proxy_human())) {
-		LOG_NG << "is human...\n";
+		LOG_NG << "is human...";
 		// If a side is dead end the turn, but play at least side=1's
 		// turn in case all sides are dead
 		if(gamestate().board_.side_units(current_side()) == 0 && !(get_units().empty() && current_side() == 1)) {
@@ -423,7 +433,7 @@ void playsingle_controller::play_side_impl()
 			after_human_turn();
 		}
 
-		LOG_NG << "human finished turn...\n";
+		LOG_NG << "human finished turn...";
 	} else if(current_team().is_local_ai() || (current_team().is_local_human() && current_team().is_droid())) {
 		play_ai_turn();
 	} else if(current_team().is_network()) {
@@ -439,7 +449,7 @@ void playsingle_controller::play_side_impl()
 	} else {
 		// we should have skipped over empty controllers before so this shouldn't be possible
 		ERR_NG << "Found invalid side controller " << side_controller::get_string(current_team().controller()) << " ("
-			   << side_proxy_controller::get_string(current_team().proxy_controller()) << ") for side " << current_team().side() << "\n";
+			   << side_proxy_controller::get_string(current_team().proxy_controller()) << ") for side " << current_team().side();
 	}
 }
 
@@ -466,8 +476,7 @@ void playsingle_controller::show_turn_dialog()
 {
 	if(preferences::turn_dialog() && !is_regular_game_end()) {
 		blindfold b(*gui_, true); // apply a blindfold for the duration of this dialog
-		gui_->redraw_everything();
-		gui_->recalculate_minimap();
+		gui_->queue_rerender();
 		std::string message = _("It is now $name|’s turn");
 		utils::string_map symbols;
 		symbols["name"] = gamestate().board_.get_team(current_side()).side_name();
@@ -506,7 +515,7 @@ void playsingle_controller::play_human_turn()
 
 void playsingle_controller::linger()
 {
-	LOG_NG << "beginning end-of-scenario linger\n";
+	LOG_NG << "beginning end-of-scenario linger";
 	linger_ = true;
 
 	// If we need to set the status depending on the completion state
@@ -518,8 +527,7 @@ void playsingle_controller::linger()
 
 	// change the end-turn button text to its alternate label
 	gui_->get_theme().refresh_title2("button-endturn", "title2");
-	gui_->invalidate_theme();
-	gui_->redraw_everything();
+	gui_->queue_rerender();
 
 	try {
 		// Same logic as single-player human turn, but
@@ -537,11 +545,10 @@ void playsingle_controller::linger()
 
 	// revert the end-turn button text to its normal label
 	gui_->get_theme().refresh_title2("button-endturn", "title");
-	gui_->invalidate_theme();
-	gui_->redraw_everything();
+	gui_->queue_rerender();
 	gui_->set_game_mode(game_display::RUNNING);
 
-	LOG_NG << "ending end-of-scenario linger\n";
+	LOG_NG << "ending end-of-scenario linger";
 }
 
 void playsingle_controller::end_turn_enable(bool /*enable*/)
@@ -561,7 +568,7 @@ void playsingle_controller::after_human_turn()
 
 void playsingle_controller::play_ai_turn()
 {
-	LOG_NG << "is ai...\n";
+	LOG_NG << "is ai...";
 
 	end_turn_enable(false);
 	gui_->recalculate_minimap();
@@ -593,6 +600,7 @@ void playsingle_controller::play_ai_turn()
 			ai_fallback_ = true;
 		}
 	} catch(...) {
+		DBG_NG << "Caught exception playing ai turn: " << utils::get_unknown_exception_type();
 		turn_data_.sync_network();
 		throw;
 	}
@@ -624,7 +632,7 @@ void playsingle_controller::do_idle_notification()
 void playsingle_controller::play_network_turn()
 {
 	// There should be no networked sides in single-player.
-	ERR_NG << "Networked team encountered by playsingle_controller." << std::endl;
+	ERR_NG << "Networked team encountered by playsingle_controller.";
 }
 
 void playsingle_controller::handle_generic_event(const std::string& name)
@@ -707,7 +715,7 @@ void playsingle_controller::reset_replay()
 		replay_controller_->stop_replay();
 		throw reset_gamestate_exception(replay_controller_->get_reset_state(), {}, false);
 	} else {
-		ERR_NG << "received invalid reset replay\n";
+		ERR_NG << "received invalid reset replay";
 	}
 }
 
