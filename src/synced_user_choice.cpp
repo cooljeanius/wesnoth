@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2015 - 2021
+	Copyright (C) 2015 - 2023
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -114,13 +114,21 @@ std::map<int,config> mp_sync::get_user_choice_multiple_sides(const std::string &
 		return std::map<int,config>();
 	}
 
+	for(int side : sides)
+	{
+		if(1 > side || side > max_side)
+		{
+			replay::process_error("MP synchronization with an invalid side number.\n");
+			return std::map<int,config>();
+		}
+	}
+
 	/*
 		for empty sides we want to use random choice instead.
 	*/
 	std::set<int> empty_sides;
 	for(int side : sides)
 	{
-		assert(1 <= side && side <= max_side);
 		if( resources::gameboard->get_team(side).is_empty())
 		{
 			empty_sides.insert(side);
@@ -148,7 +156,7 @@ std::map<int,config> mp_sync::get_user_choice_multiple_sides(const std::string &
 config mp_sync::get_user_choice(const std::string &name, const mp_sync::user_choice &uch,
 	int side)
 {
-	const bool is_too_early = resources::gamedata->phase() != game_data::START && resources::gamedata->phase() != game_data::PLAY;
+	const bool is_too_early = resources::gamedata->is_before_screen();
 	const bool is_synced = synced_context::is_synced();
 	const bool is_mp_game = resources::controller->is_networked_mp();//Only used in debugging output below
 	const int max_side  = static_cast<int>(resources::gameboard->teams().size());
@@ -157,11 +165,11 @@ config mp_sync::get_user_choice(const std::string &name, const mp_sync::user_cho
 	/* side = 0 should default to the currently active side per definition. */
 	if(side < 1 || max_side < side) {
 		if(side != 0) {
-			ERR_REPLAY << "Invalid parameter for side in get_user_choice." << std::endl;
+			ERR_REPLAY << "Invalid parameter for side in get_user_choice.";
 		}
 
 		side = resources::controller->current_side();
-		LOG_REPLAY << " side changed to " << side << "\n";
+		LOG_REPLAY << " side changed to " << side;
 	}
 
 	if(!is_synced)
@@ -169,7 +177,7 @@ config mp_sync::get_user_choice(const std::string &name, const mp_sync::user_cho
 		//we got called from inside lua's wesnoth.synchronize_choice or from a select event (or maybe a preload event?).
 		//This doesn't cause problems and someone could use it for example to use a [message][option] inside a wesnoth.synchronize_choice which could be useful,
 		//so just give a warning.
-		LOG_REPLAY << "MP synchronization called during an unsynced context.\n";
+		LOG_REPLAY << "MP synchronization called during an unsynced context.";
 		return uch.query_user(side);
 	}
 	if(is_too_early && uch.is_visible())
@@ -178,6 +186,9 @@ config mp_sync::get_user_choice(const std::string &name, const mp_sync::user_cho
 		//Although we are able to sync them, we cannot use query_user,
 		//because we cannot (or shouldn't) put things on the screen inside a prestart event, this is true for SP and MP games.
 		//Quotation form event wiki: "For things displayed on-screen such as character dialog, use start instead"
+
+		//Note: it seems like get_user_choice_multiple_sides doesn't reject this case.
+
 		return uch.random_choice(side);
 	}
 	//in start events it's unclear to decide on which side the function should be executed (default= side1 still).
@@ -191,11 +202,11 @@ config mp_sync::get_user_choice(const std::string &name, const mp_sync::user_cho
 			<< " name=" << name
 			<< " is_synced=" << is_synced
 			<< " is_mp_game=" << is_mp_game
-			<< " is_side_null_controlled=" << is_side_null_controlled << "\n";
+			<< " is_side_null_controlled=" << is_side_null_controlled;
 
 	if (is_side_null_controlled)
 	{
-		DBG_REPLAY << "MP synchronization: side 1 being null-controlled in get_user_choice.\n";
+		DBG_REPLAY << "MP synchronization: side 1 being null-controlled in get_user_choice.";
 		//most likely we are in a start event with an empty side 1
 		//but calling [set_global_variable] to an empty side might also cause this.
 		//i think in that case we should better use uch.random_choice(),
@@ -259,7 +270,7 @@ void user_choice_manager::search_in_replay()
 			return;
 		}
 
-		DBG_REPLAY << "MP synchronization: extracting choice from replay with has_local_side=" << has_local_choice() << "\n";
+		DBG_REPLAY << "MP synchronization: extracting choice from replay with has_local_side=" << has_local_choice();
 
 		const config *action = resources::recorder->get_next_action();
 		assert(action); //action cannot be null because resources::recorder->at_end() returned false.
@@ -287,7 +298,7 @@ void user_choice_manager::search_in_replay()
 		{
 			replay::process_error("MP synchronization: we got already our answer from side " + std::to_string(from_side) + "for [" + tagname_ + "] now we have it twice.\n");
 		}
-		res_[from_side] = action->child(tagname_);
+		res_[from_side] = action->mandatory_child(tagname_);
 		changed_event_.notify_observers();
 	}
 }
@@ -345,7 +356,7 @@ void user_choice_manager::ask_local_choice()
 	leave_synced_context sync;
 	/* At least one of the decisions is ours, and it will be inserted
 	into the replay. */
-	DBG_REPLAY << "MP synchronization: local choice\n";
+	DBG_REPLAY << "MP synchronization: local choice";
 	config cfg = uch_.query_user(local_choice_);
 	if(res_.find(local_choice_) != res_.end()) {
 		// It might be possible that we this choice was already made by another client while we were in uch_.query_user
@@ -359,7 +370,7 @@ void user_choice_manager::ask_local_choice()
 	//send data to others.
 	//but if there wasn't any data sent during this turn, we don't want to begin with that now.
 	//TODO: we should send user choices during nonundoable actions immediately.
-	if(synced_context::is_simultaneous() || current_side_ != local_choice_)
+	if(synced_context::undo_blocked() || current_side_ != local_choice_)
 	{
 		synced_context::send_user_choice();
 	}
@@ -369,12 +380,12 @@ void user_choice_manager::ask_local_choice()
 void user_choice_manager::fix_oos()
 {
 	assert(oos_);
-	ERR_REPLAY << "A sync error appeared while waiting for a synced user choice of type '" << uch_.description() << "' ([" + tagname_ + "]), doing the choice locally\n";
+	ERR_REPLAY << "A sync error appeared while waiting for a synced user choice of type '" << uch_.description() << "' ([" + tagname_ + "]), doing the choice locally";
 	for(int side : required_)
 	{
 		if(res_.find(side) == res_.end())
 		{
-			ERR_REPLAY << "Doing a local choice for side " << side << "\n";
+			ERR_REPLAY << "Doing a local choice for side " << side;
 			res_[side] = uch_.query_user(side);
 		}
 	}
@@ -386,7 +397,8 @@ static void wait_ingame(user_choice_manager& man)
 	user_choice_notifer_ingame notifer;
 	while(!man.finished() && man.waiting())
 	{
-		if(resources::gamedata->phase() == game_data::PLAY || resources::gamedata->phase() == game_data::START)
+		//TODO: didn't we already check for this?
+		if(!resources::gamedata->is_before_screen())
 		{
 			//during the prestart/preload event the screen is locked and we shouldn't call user_interact.
 			//because that might result in crashes if someone clicks anywhere during screenlock.
@@ -406,7 +418,7 @@ static void wait_prestart(user_choice_manager& man)
 
 std::map<int, config> user_choice_manager::get_user_choice_internal(const std::string &name, const mp_sync::user_choice &uch, const std::set<int>& sides)
 {
-	const bool is_too_early = resources::gamedata->phase() != game_data::START && resources::gamedata->phase() != game_data::PLAY;
+	const bool is_too_early = resources::gamedata->is_before_screen();
 	user_choice_manager man(name, uch, sides);
 	while(!man.finished())
 	{

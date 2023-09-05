@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2015 - 2021
+	Copyright (C) 2015 - 2023
 	by Iris Morelle <shadowm2006@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -217,10 +217,11 @@ std::map<std::string, std::string> parse_fdo_osrelease(const std::string& path)
 std::string os_version()
 {
 #if defined(__APPLE__) || defined(_X11)
-	utsname u;
+	// Some systems, e.g. SunOS, need "struct" here
+	struct utsname u;
 
 	if(uname(&u) != 0) {
-		ERR_DU << "os_version: uname error (" << strerror(errno) << ")\n";
+		ERR_DU << "os_version: uname error (" << strerror(errno) << ")";
 	}
 #endif
 
@@ -313,8 +314,7 @@ std::string os_version()
 #pragma warning(disable:4996)
 #endif
 	if(!GetVersionEx(reinterpret_cast<OSVERSIONINFO*>(&v))) {
-		ERR_DU << "os_version: GetVersionEx error ("
-			   << GetLastError() << ")\n";
+		ERR_DU << "os_version: GetVersionEx error (" << GetLastError() << ')';
 		return base;
 	}
 #ifdef _MSC_VER
@@ -381,7 +381,7 @@ std::string os_version()
 			}
 	}
 
-	if(v.szCSDVersion && *v.szCSDVersion) {
+	if(*v.szCSDVersion) {
 		version += " ";
 		version += unicode_cast<std::string>(std::wstring(v.szCSDVersion));
 	}
@@ -402,7 +402,7 @@ std::string os_version()
 	// "I don't know where I am" version.
 	//
 
-	ERR_DU << "os_version(): unsupported platform\n";
+	ERR_DU << "os_version(): unsupported platform";
 	return _("operating_system^<unknown>");
 
 #endif

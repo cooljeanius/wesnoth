@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2011 - 2021
+	Copyright (C) 2011 - 2023
 	by Lukasz Dobrogowski <lukasz.dobrogowski@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -26,7 +26,7 @@
 class bad_commandline_resolution : public boost::program_options::error
 {
 public:
-    bad_commandline_resolution(const std::string& resolution);
+	bad_commandline_resolution(const std::string& resolution);
 };
 
 class bad_commandline_tuple : public boost::program_options::error
@@ -210,6 +210,10 @@ public:
 	bool noreplaycheck;
 	/** True if --mp-test was given on the command line. */
 	bool mptest;
+	/** True if --usercache-path was given on the command line. Prints path to cache directory and exits. */
+	bool usercache_path;
+	/** Non-empty if --usercache-dir was given on the command line. Sets the cache dir to the specified one. */
+	std::optional<std::string> usercache_dir;
 	/** True if --userconfig-path was given on the command line. Prints path to user config directory and exits. */
 	bool userconfig_path;
 	/** Non-empty if --userconfig-dir was given on the command line. Sets the user config dir to the specified one. */
@@ -237,6 +241,8 @@ public:
 	std::string diff_left, diff_right;
 	/** True if --version was given on the command line. Prints version and exits. */
 	bool version;
+	/** True if --simple-version was given on the command line. Prints version and nothing else then exits. */
+	bool simple_version;
 	/** True if --report was given on the command line. Prints a bug report-style info dump and exits. */
 	bool report;
 	/** True if --windowed was given on the command line. Starts Wesnoth in windowed mode. */

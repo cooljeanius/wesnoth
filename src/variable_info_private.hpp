@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2005 - 2021
+	Copyright (C) 2005 - 2023
 	by Philippe Plantier <ayin@anathas.org>
 	Copyright (C) 2003 by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
@@ -403,7 +403,7 @@ public:
 		if(endindex > 0) {
 			// NOTE: currently this is only called from as_range_visitor_base<vi_policy_create>
 			// Based on that assumption we use vi_policy_create::get_child_at here instead of making this
-            // a class template.
+			// a class template.
 			vi_policy_create::get_child_at(child, key, endindex - 1);
 		}
 
@@ -421,7 +421,7 @@ public:
 		}
 
 		for(; index < datasource_.size(); ++index) {
-			child.child(key, startindex + index).swap(datasource_[index]);
+			child.mandatory_child(key, startindex + index).swap(datasource_[index]);
 		}
 
 		return get_child_range(child, key, startindex, datasource_.size());

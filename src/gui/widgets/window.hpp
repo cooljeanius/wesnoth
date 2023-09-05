@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2007 - 2021
+	Copyright (C) 2007 - 2023
 	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -25,9 +25,12 @@
 #include "formula/function.hpp"
 #include "gui/auxiliary/typed_formula.hpp"
 #include "gui/core/event/handler.hpp"
+#include "gui/core/top_level_drawable.hpp"
 #include "gui/core/window_builder.hpp"
 #include "gui/widgets/panel.hpp"
 #include "gui/widgets/retval.hpp"
+
+#include "sdl/texture.hpp"
 
 #include <functional>
 #include <map>
@@ -35,8 +38,6 @@
 #include <string>
 #include <vector>
 
-class CVideo;
-class surface;
 struct point;
 
 namespace gui2
@@ -62,7 +63,7 @@ class distributor;
  * base class of top level items, the only item which needs to store the final canvases to draw on.
  * A window is a kind of panel see the panel for which fields exist.
  */
-class window : public panel
+class window : public panel, public top_level_drawable
 {
 	friend class debug_layout_graph;
 	friend std::unique_ptr<window> build(const builder_window::window_resolution&);
@@ -73,7 +74,7 @@ class window : public panel
 public:
 	explicit window(const builder_window::window_resolution& definition);
 
-	~window();
+	virtual ~window();
 
 	/**
 	 * Returns the instance of a window.
@@ -87,17 +88,11 @@ public:
 	/** Gets the retval for the default buttons. */
 	static retval get_retval_by_id(const std::string& id);
 
-	/**
-	 * @todo Clean up the show functions.
-	 *
-	 * the show functions are a bit messy and can use a proper cleanup.
-	 */
+	void finish_build(const builder_window::window_resolution&);
 
 	/**
-	 * Shows the window.
+	 * Shows the window, running an event loop until it should close.
 	 *
-	 * @param restore             Restore the screenarea the window was on
-	 *                            after closing it?
 	 * @param auto_close_timeout  The time in ms after which the window will
 	 *                            automatically close, if 0 it doesn't close.
 	 *                            @note the timeout is a minimum time and
@@ -107,7 +102,7 @@ public:
 	 * @returns                   The close code of the window, predefined
 	 *                            values are listed in retval.
 	 */
-	int show(const bool restore = true, const unsigned auto_close_timeout = 0);
+	int show(unsigned auto_close_timeout = 0);
 
 	/**
 	 * Shows the window as a tooltip.
@@ -149,21 +144,26 @@ public:
 	 */
 	void draw();
 
-	/**
-	 * Undraws the window.
-	 */
-	void undraw();
+	/** Hides the window. It will not draw until it is shown again. */
+	void hide();
 
 	/**
-	 * Adds an item to the dirty_list_.
+	 * Lays out the window.
 	 *
-	 * @param call_stack          The list of widgets traversed to get to the
-	 *                            dirty widget.
+	 * This part does the pre and post processing for the actual layout
+	 * algorithm.
+	 *
+	 * See @ref layout_algorithm for more information.
+	 *
+	 * This is also called by draw_manager to finalize screen layout.
 	 */
-	void add_to_dirty_list(const std::vector<widget*>& call_stack)
-	{
-		dirty_list_.push_back(call_stack);
-	}
+	virtual void layout() override;
+
+	/** Called by draw_manager when it believes a redraw is necessary. */
+	virtual bool expose(const rect& region) override;
+
+	/** The current draw location of the window, on the screen. */
+	virtual rect screen_location() override;
 
 	/** The status of the window. */
 	enum class status {
@@ -385,7 +385,7 @@ public:
 	void set_variable(const std::string& key, const wfl::variant& value)
 	{
 		variables_.add(key, value);
-		set_is_dirty(true);
+		queue_redraw();
 	}
 	point get_linked_size(const std::string& linked_group_id) const
 	{
@@ -397,32 +397,30 @@ public:
 		return point(-1, -1);
 	}
 
+	enum class exit_hook {
+		/** Always run hook */
+		on_all,
+		/** Run hook *only* if result is OK. */
+		on_ok,
+	};
+
 	/**
 	 * Sets the window's exit hook.
 	 *
-	 * A window will only close if this function returns true.
-	 *
-	 * @param func A function taking a window reference and returning a boolean result.
+	 * A window will only close if the given function returns true under the specified mode.
 	 */
-	void set_exit_hook(std::function<bool(window&)> func)
+	void set_exit_hook(exit_hook mode, std::function<bool(window&)> func)
 	{
-		exit_hook_ = func;
-	}
-
-	void set_exit_hook_ok_only(std::function<bool(window&)> func)
-	{
-		exit_hook_ = [func](window& w)->bool { return w.get_retval() != OK || func(w); };
-	}
-
-	/**
-	 * Sets a callback that will be called after the window is drawn next time.
-	 * The callback is automatically removed after calling it once.
-	 * Useful if you need to do something after the window is drawn for the first time
-	 * and it's timing-sensitive (i.e. pre_show is too early).
-	 */
-	void set_callback_next_draw(std::function<void()> func)
-	{
-		callback_next_draw_ = func;
+		exit_hook_ = [mode, func](window& w) {
+			switch(mode) {
+			case exit_hook::on_all:
+				return func(w);
+			case exit_hook::on_ok:
+				return w.get_retval() != OK || func(w);
+			default:
+				return true;
+			}
+		};
 	}
 
 	enum class show_mode {
@@ -433,9 +431,6 @@ public:
 	};
 
 private:
-	/** Needed so we can change what's drawn on the screen. */
-	CVideo& video_;
-
 	/** The status of the window. */
 	status status_;
 
@@ -467,16 +462,7 @@ private:
 	bool invalidate_layout_blocked_;
 
 	/** Avoid drawing the window.  */
-	bool suspend_drawing_;
-
-	/** Whether the window should undraw the window using restorer_ */
-	bool restore_;
-
-	/** Whether the window has other windows behind it */
-	bool is_toplevel_;
-
-	/** When the window closes this surface is used to undraw the window. */
-	surface restorer_;
+	bool hidden_;
 
 	/** Do we wish to place the widget automatically? */
 	const bool automatic_placement_;
@@ -583,16 +569,6 @@ private:
 	std::vector<widget*> tab_order;
 
 	/**
-	 * Layouts the window.
-	 *
-	 * This part does the pre and post processing for the actual layout
-	 * algorithm.
-	 *
-	 * See @ref layout_algorithm for more information.
-	 */
-	void layout();
-
-	/**
 	 * Layouts the linked widgets.
 	 *
 	 * See @ref layout_algorithm for more information.
@@ -636,14 +612,6 @@ public:
 private:
 	/** Inherited from styled_widget, implemented by REGISTER_WIDGET. */
 	virtual const std::string& get_control_type() const override;
-
-	/**
-	 * The list with dirty items in the window.
-	 *
-	 * When drawing only the widgets that are dirty are updated. The draw()
-	 * function has more information about the dirty_list_.
-	 */
-	std::vector<std::vector<widget*>> dirty_list_;
 
 	/**
 	 * In how many consecutive frames the window has changed. This is used to
@@ -762,7 +730,6 @@ private:
 	void signal_handler_close_window();
 
 	std::function<bool(window&)> exit_hook_;
-	std::function<void()> callback_next_draw_;
 };
 
 // }---------- DEFINITION ---------{

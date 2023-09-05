@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Battle for Wesnoth 1.9.10+dev\n"
 "Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
-"POT-Creation-Date: 2021-06-23 11:42-0400\n"
+"POT-Creation-Date: 2023-08-19 20:56-0500\n"
 "PO-Revision-Date: 2015-08-08 15:21+0300\n"
 "Last-Translator: Gvido Bruveris <huhims@gmail.com>\n"
 "Language-Team: none\n"
@@ -22,27 +22,209 @@ msgstr ""
 
 #. [time]: id=underground
 #. [editor_times]: id=underground
-#: data/campaigns/Heir_To_The_Throne/utils/httt_utils.cfg:495
+#: data/campaigns/Heir_To_The_Throne/utils/httt_utils.cfg:500
 #: data/core/editor/time-of-day.cfg:41 data/core/macros/schedules.cfg:113
 msgid "Underground"
 msgstr "Pazeme"
 
-#. [heals]: id=healing
+#. [label]
+#. [trait]: id=undead
+#: data/campaigns/Secrets_of_the_Ancients/gui/zombie_recruit_dialog.cfg:183
+#: data/core/macros/traits.cfg:55
+msgid "undead"
+msgstr "nedzīvs"
+
+#. [label]
+#. [chance]
+#. [trait]: id=fearless
+#: data/campaigns/Secrets_of_the_Ancients/gui/zombie_recruit_dialog.cfg:196
+#: data/campaigns/World_Conquest/resources/data/training.cfg:285
+#: data/core/macros/traits.cfg:252 data/core/macros/traits.cfg:269
+msgid "fearless"
+msgstr "bezbailīgs"
+
+#. [label]
+#. [plague]: id=SotA_plague, type=null # prevents normal corpse, and allows SotA code to handle it
+#. [plague]: id=plague({TYPE}), type={TYPE}
+#. [plague]: id=plague, type=Walking Corpse
+#: data/campaigns/Secrets_of_the_Ancients/gui/zombie_recruit_dialog.cfg:244
+#: data/campaigns/Secrets_of_the_Ancients/utils/zombie-utils.cfg:6
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:48
+#: data/core/macros/weapon_specials.cfg:41
+#: data/core/macros/weapon_specials.cfg:52
+msgid "plague"
+msgstr "mēris"
+
+#. [plague]: id=SotA_plague, type=null # prevents normal corpse, and allows SotA code to handle it
+#. [plague]: id=plague, type=Walking Corpse
+#: data/campaigns/Secrets_of_the_Ancients/utils/zombie-utils.cfg:7
+#: data/core/macros/weapon_specials.cfg:53
+msgid ""
+"When a unit is killed by a Plague attack, that unit is replaced with a "
+"Walking Corpse on the same side as the unit with the Plague attack. This "
+"doesn’t work on Undead or units in villages."
+msgstr ""
+"Kad vienību nogalina sērga, tā tiek aizstāta ar staigājošu līķi, kas ir "
+"uzbrucēja pusē. Tas nestrādā uz nedzīvajiem un vienībām ciemos."
+
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:4
+msgid "uses 1 attack"
+msgstr ""
+
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:7
+msgid "uses 2 attacks"
+msgstr ""
+
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:10
+msgid "uses 3 attacks"
+msgstr ""
+
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:13
+msgid "uses 4 attacks"
+msgstr ""
+
 #: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:16
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:65
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:68
+msgid "uses 5 attacks"
+msgstr ""
+
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:19
+msgid "uses 6 attacks"
+msgstr ""
+
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:22
+msgid "This attack uses 1 attack"
+msgstr ""
+
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:25
+msgid "This attack uses 2 attacks"
+msgstr ""
+
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:28
+msgid "This attack uses 3 attacks"
+msgstr ""
+
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:31
+msgid "This attack uses 4 attacks"
+msgstr ""
+
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:34
+msgid "This attack uses 5 attacks"
+msgstr ""
+
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:37
+msgid "This attack uses 6 attacks"
+msgstr ""
+
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:77
+msgid ""
+"This attack is the first verse of the Song of Sun Ascension, which "
+"progresses by one verse each turn this unit uses a song verse attack. When "
+"the last verse is sung or the song sequence is broken due to not attacking "
+"for a turn, the song starts again from the first verse."
+msgstr ""
+
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:80
+msgid ""
+"This attack is the second verse of the Song of Sun Ascension, which "
+"progresses by one verse each turn this unit uses a song verse attack. When "
+"the last verse is sung or the song sequence is broken due to not attacking "
+"for a turn, the song starts again from the first verse."
+msgstr ""
+
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:83
+msgid ""
+"This attack is the third verse of the Song of Sun Ascension, which "
+"progresses by one verse each turn this unit uses a song verse attack. When "
+"the last verse is sung or the song sequence is broken due to not attacking "
+"for a turn, the song starts again from the first verse."
+msgstr ""
+
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:86
+#, fuzzy
+#| msgid "first strike"
+msgid "first verse"
+msgstr "pirmais trieciens"
+
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:89
+#, fuzzy
+#| msgid "Second Dusk"
+msgid "second verse"
+msgstr "Otrā krēsla"
+
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:92
+msgid "third verse"
+msgstr ""
+
+#. [disable]: id=once_per_turn
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:324
+msgid "once per turn"
+msgstr ""
+
+#. [disable]: id=once_per_turn
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:325
+msgid "This attack can be used offensively only once per turn"
+msgstr ""
+
+#. [dummy]: id=nova
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:403
+msgid "nova"
+msgstr ""
+
+#. [dummy]: id=nova
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:404
+msgid ""
+"This weapon, when used offensively, deals damage to all units adjacent to "
+"the caster when it hits."
+msgstr ""
+
+#. [dummy]: id=nova
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:405
+msgid "This unit has wide-area attacks centered on the caster."
+msgstr ""
+
+#. [dummy]: id=ray
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:440
+msgid "ray"
+msgstr ""
+
+#. [dummy]: id=ray
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:441
+msgid ""
+"This weapon, when used offensively, also deals damage to a unit behind the "
+"target."
+msgstr ""
+
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:565
+msgid ""
+"At the start of the turn this unit increases movement points of surrounding "
+"units by +1"
+msgstr ""
+
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:568
+msgid ""
+"At the start of the turn this unit increases movement points of surrounding "
+"units by +2"
+msgstr ""
+
+#. [dummy]: description={STR_TAILWIND_RESTRICT_{X}}
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:572
+msgid "tailwind +"
+msgstr ""
+
+#. [heals]: id=healing
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:590
 #: data/core/macros/abilities.cfg:9
 msgid "heals +4"
 msgstr "dziedē +4"
 
 #. [heals]: id=healing
-#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:17
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:591
 #: data/core/macros/abilities.cfg:10
 msgid "female^heals +4"
 msgstr "dziedē +4"
 
 #. [heals]: id=healing
-#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:18
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:592
 msgid ""
 "Allows the unit to heal adjacent allied units at the beginning of our turn.\n"
 "\n"
@@ -60,30 +242,28 @@ msgstr ""
 
 #. [heals]: id=healing
 #. [heals]
-#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:22
-#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:61
-#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:91
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:596
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:635
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:665
 #, fuzzy
 #| msgid " This unit is capable of basic healing."
 msgid "This unit is capable of basic healing and slowing dehydration."
 msgstr " Šī vienība ir spējīga veikt pamata dziedināšanu."
 
 #. [heals]: id=healing
-#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:40
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:32
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:71
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:614
 #: data/core/macros/abilities.cfg:35
 msgid "heals +8"
 msgstr "dziedē +8"
 
 #. [heals]: id=healing
-#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:41
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:615
 #: data/core/macros/abilities.cfg:36
 msgid "female^heals +8"
 msgstr "dziedē +8"
 
 #. [heals]: id=healing
-#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:42
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:616
 msgid ""
 "This unit combines herbal remedies with magic to heal units more quickly "
 "than is normally possible on the battlefield.\n"
@@ -102,21 +282,21 @@ msgstr ""
 "vienības kurai ir pretinde."
 
 #. [heals]: id=healing
-#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:70
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:644
 #, fuzzy
 #| msgid "heals +4"
 msgid "heals +12"
 msgstr "dziedē +4"
 
 #. [heals]: id=healing
-#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:71
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:645
 #, fuzzy
 #| msgid "female^heals +4"
 msgid "female^heals +12"
 msgstr "dziedē +4"
 
 #. [heals]: id=healing
-#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:72
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:646
 #, fuzzy
 #| msgid ""
 #| "This unit combines herbal remedies with magic to heal units more quickly "
@@ -144,7 +324,7 @@ msgstr ""
 "vienības kurai ir pretinde."
 
 #. [heals]
-#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:97
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:671
 #, fuzzy
 #| msgid ""
 #| " This unit is capable of healing those around it, and curing them of "
@@ -154,232 +334,144 @@ msgid ""
 "curing them of poison."
 msgstr " Šī vienība ir spējīga dziedēt un izārstēt no indes."
 
+#. [artifact]
+#. [chance]
+#. [teleport]: id=teleport
+#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:656
+#: data/campaigns/World_Conquest/resources/data/training.cfg:782
+#: data/core/macros/abilities.cfg:250
+msgid "teleport"
+msgstr "teleportētājs"
+
+#. [artifact]
+#. [regenerate]: id=regenerates
+#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:717
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:54
+#: data/core/macros/abilities.cfg:94
+msgid "regenerates"
+msgstr "atjaunojas"
+
+#. [chance]
 #. [trait]: id=healthy
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:11
+#: data/campaigns/World_Conquest/resources/data/training.cfg:257
 #: data/core/macros/traits.cfg:229
 msgid "Always rest heals"
 msgstr "Atpūta vienmēr dziedē"
 
+#. [chance]
+#. [damage]: id=backstab
+#: data/campaigns/World_Conquest/resources/data/training.cfg:438
+#: data/core/macros/weapon_specials.cfg:21
+msgid "backstab"
+msgstr "uzbrūk no muguras"
+
+#. [chance]
+#. [dummy]: id=feeding
+#: data/campaigns/World_Conquest/resources/data/training.cfg:500
+#: data/core/macros/abilities.cfg:384
+msgid "feeding"
+msgstr "sūcējs"
+
+#. [chance]
+#. [leadership]: id=leadership
+#: data/campaigns/World_Conquest/resources/data/training.cfg:527
+#: data/core/macros/abilities.cfg:199
+msgid "leadership"
+msgstr "vadītājs"
+
 #. [hides]: id=ambush
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:14
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:12
 #: data/core/macros/abilities.cfg:282
 msgid "ambush"
 msgstr "ložņa"
 
-#. [damage]: id=backstab
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:17
-#: data/core/macros/abilities.cfg:410
-msgid "backstab"
-msgstr "uzbrūk no muguras"
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:20
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:15
 #, fuzzy
 #| msgid "Caste"
 msgid "Castle"
 msgstr "Kasta"
 
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:23
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:18
 msgid "Cave"
 msgstr ""
 
-#. [damage]: id=charge
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:26
-#: data/core/macros/abilities.cfg:528
-msgid "charge"
-msgstr "lādiņš"
-
 #. [hides]: id=concealment
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:29
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:21
 #: data/core/macros/abilities.cfg:343
 msgid "concealment"
 msgstr "maskējas"
 
-#. [heals]: id=curing
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:32
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:68
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:137
-#: data/core/macros/abilities.cfg:61
-msgid "cures"
-msgstr "ārstē"
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:35
-#: src/help/help_topic_generators.cpp:701
-msgid "Defense"
-msgstr "Aizsardzība"
-
 #. [drains]: id=drains
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:38
-#: data/core/macros/abilities.cfg:555
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:24
+#: data/core/macros/weapon_specials.cfg:166
 msgid "drains"
 msgstr "izsūkšana"
 
-#. [trait]: id=fearless
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:41
-#: data/core/macros/traits.cfg:252 data/core/macros/traits.cfg:269
-msgid "fearless"
-msgstr "bezbailīgs"
-
-#. [dummy]: id=feeding
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:44
-#: data/core/macros/abilities.cfg:384
-msgid "feeding"
-msgstr "sūcējs"
-
-#. [dummy]: id=feeding
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:47
-#: data/core/macros/abilities.cfg:386
-msgid ""
-"This unit gains 1 hitpoint added to its maximum whenever it kills a unit, "
-"except units that are immune to plague."
-msgstr ""
-"Šī vienība palielina maksimālo veselību par 1 katru reizi, kad nogalina kādu "
-"ienaidnieku (izņemot tos, kuriem ir imuinitāte)."
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:50
-#: data/lua/feeding.lua:31 data/lua/feeding.lua:44
-msgid "+1 max HP"
-msgstr "+1 maksimālajiem veselības punktiem"
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:53
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:27
 #, fuzzy
 #| msgid "first strike"
 msgid "firststrike"
 msgstr "pirmais trieciens"
 
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:56
-msgid "Flat"
-msgstr ""
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:59
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:30
 msgid "Forest"
 msgstr ""
 
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:62
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:33
 msgid "Frozen"
 msgstr ""
 
-#. [trait]: id=healthy
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:74
-#: data/core/macros/traits.cfg:227
-msgid "healthy"
-msgstr "veselīgs"
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:77
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:36
 msgid "Hills"
 msgstr ""
 
-#. [illuminates]: id=illumination
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:80
-#: data/core/macros/abilities.cfg:235
-msgid "illuminates"
-msgstr "izgaismotājs"
-
-#. [leadership]: id=leadership
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:83
-#: data/core/macros/abilities.cfg:199
-msgid "leadership"
-msgstr "vadītājs"
-
-#. [chance_to_hit]: id=magical
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:86
-#: data/core/macros/abilities.cfg:504
-msgid "magical"
-msgstr "maģija"
-
 #. [chance_to_hit]: id=marksman
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:89
-#: data/core/macros/abilities.cfg:475
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:39
+#: data/core/macros/weapon_specials.cfg:86
 msgid "marksman"
 msgstr "snaipers"
 
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:92
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:42
 msgid "Mushroom Grove"
 msgstr ""
 
 #. [hides]: id=nightstalk
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:95
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:45
 #: data/core/macros/abilities.cfg:323 data/core/macros/abilities.cfg:324
 msgid "nightstalk"
 msgstr "nakts ložņa"
 
-#. [plague]: id=plague({TYPE}), type={TYPE}
-#. [plague]: id=plague, type=Walking Corpse
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:98
-#: data/core/macros/abilities.cfg:430 data/core/macros/abilities.cfg:441
-#: data/scenario-test.cfg:407
-msgid "plague"
-msgstr "mēris"
-
 #. [poison]: id=poison
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:101
-#: data/core/macros/abilities.cfg:577
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:51
+#: data/core/macros/weapon_specials.cfg:188
 msgid "poison"
 msgstr "inde"
 
-#. [regenerate]: id=regenerates
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:104
-#: data/core/macros/abilities.cfg:94
-msgid "regenerates"
-msgstr "atjaunojas"
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:107
-#: src/help/help_topic_generators.cpp:662
-msgid "Resistances"
-msgstr "Izturība"
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:110
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:57
 msgid "Sand"
 msgstr ""
 
 #. [skirmisher]: id=skirmisher
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:113
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:60
 #: data/core/macros/abilities.cfg:219
 msgid "skirmisher"
 msgstr "nenotverams"
 
 #. [slow]: id=slow
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:116
-#: data/core/macros/abilities.cfg:453
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:63
+#: data/core/macros/weapon_specials.cfg:64
 msgid "slows"
 msgstr "sapīšana"
 
-#. [resistance]: id=steadfast
-#. [resistance]: id=melee_steadfast
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:119
-#: data/core/macros/abilities.cfg:130 data/scenario-test.cfg:367
-msgid "steadfast"
-msgstr "izturīgs"
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:122
-#: src/help/help_topic_generators.cpp:581
-msgid "Strikes"
-msgstr "Sitieni"
-
-#. [hides]: id=submerge
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:125
-#: data/core/macros/abilities.cfg:363
-msgid "submerge"
-msgstr "nirējs"
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:128
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:66
 msgid "Swamp"
 msgstr ""
 
-#. [teleport]: id=teleport
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:131
-#: data/core/macros/abilities.cfg:250
-msgid "teleport"
-msgstr "teleportētājs"
-
-#. [trait]: id=undead
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:134
-#: data/core/macros/traits.cfg:55
-msgid "undead"
-msgstr "nedzīvs"
-
-#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:140
-msgid "Village"
-msgstr ""
+#. [heals]: id=curing
+#: data/campaigns/World_Conquest/resources/strings/mainline.cfg:69
+#: data/core/macros/abilities.cfg:61
+msgid "cures"
+msgstr "ārstē"
 
 #. [section]: id=editor
 #: data/core/editor/help.cfg:5
@@ -388,7 +480,7 @@ msgstr ""
 
 #. [section]: id=editor_mode_terrain
 #. [topic]: id=..editor_mode_terrain
-#: data/core/editor/help.cfg:13 data/core/editor/help.cfg:255
+#: data/core/editor/help.cfg:13 data/core/editor/help.cfg:372
 #, fuzzy
 #| msgid "Terrain Modifiers"
 msgid "Terrain Editor"
@@ -396,7 +488,7 @@ msgstr "Apvidus modifikatori"
 
 #. [section]: id=editor_mode_scenario
 #. [topic]: id=..editor_mode_scenario
-#: data/core/editor/help.cfg:20 data/core/editor/help.cfg:267
+#: data/core/editor/help.cfg:20 data/core/editor/help.cfg:384
 #, fuzzy
 #| msgid "Terrain Modifiers"
 msgid "Scenario Editor"
@@ -557,7 +649,8 @@ msgid "Starting Locations Tool"
 msgstr ""
 
 #. [topic]: id=editor_tool_starting
-#: data/core/editor/help.cfg:109
+#. the parts about "10" being shown as "Player 10" use the translatable string "Player $side_num" in the wesnoth-editor textdomain
+#: data/core/editor/help.cfg:110
 msgid ""
 "Defines the side leader starting position.\n"
 "\n"
@@ -590,13 +683,206 @@ msgid ""
 "the editor palette."
 msgstr ""
 
-#. [topic]: id=editor_tool_label
+#. [topic]: id=editor_terrain_overlays
+#: data/core/editor/help.cfg:128
+msgid "Editor Terrain-Overlay Graphics"
+msgstr ""
+
+#. [topic]: id=editor_terrain_overlays
 #: data/core/editor/help.cfg:129
+msgid ""
+"editor^Maps generally look similar in the editor to their appearance in the "
+"game. There are a few exceptions, where different graphics are used in the "
+"editor; all the overlays described here are found in the terrain palette’s "
+"“special” group."
+msgstr ""
+
+#. [topic]: id=editor_terrain_overlays
+#. The images here have text, while they could be translated I assume editor-only images won’t be.
+#. In English the text is “IO” for impassable and “UO” for unwalkable.
+#: data/core/editor/help.cfg:134
+msgid ""
+"editor^<bold>text='Movement Overlays'</bold>\n"
+"\n"
+"<img>src='terrain/grass/green.png~BLIT(terrain/impassable-editor."
+"png~O(0.5))' align=here box=yes</img> <img>src='terrain/grass/green."
+"png~BLIT(terrain/unwalkable-editor.png~O(0.5))' align=here box=yes</img> "
+"Impassable and Unwalkable\n"
+"\n"
+"While easily noticeable in the editor, these are invisible in the game, so "
+"the mixed terrains created by them look like the base terrain. They create a "
+"mixed terrain with the movement costs set to “impassable” or “unwalkable” "
+"respectively."
+msgstr ""
+
+#. [topic]: id=editor_terrain_overlays
+#. The images here have text, while they could be translated I assume editor-only images won’t be.
+#. In English these images are the literal text “Castle overlay” and “Keep overlay”.
+#: data/core/editor/help.cfg:143
+msgid ""
+"editor^<bold>text='Castle Overlays'</bold>\n"
+"\n"
+"<img>src='terrain/grass/green.png~BLIT(terrain/castle/castle-overlay-editor."
+"png~O(0.5))' align=here box=yes</img> <img>src='terrain/grass/green."
+"png~BLIT(terrain/castle/keep-overlay-editor.png~O(0.5))' align=here box=yes</"
+"img>\n"
+"\n"
+"Adding either of these overlays to a passable hex allows units to be "
+"recruited onto a hex. The keep also allows a leader to recruit from there.\n"
+"\n"
+"These can be added to an impassable hex to connect a castle to a visually-"
+"separate keep through an impassable wall. It’s also possible to create a "
+"castle that seems to have grassland between the keep and towers, however "
+"this requires the connecting hexes to be occupied or blocked to prevent "
+"units being recruited onto them."
+msgstr ""
+
+#. [topic]: id=editor_terrain_overlays
+#. The image here has text, while it could be translated I assume editor-only images won’t be.
+#. In English this image is the literal text “Village overlay”.
+#: data/core/editor/help.cfg:154
+msgid ""
+"editor^<bold>text='Village Overlay'</bold>\n"
+"\n"
+"<img>src='terrain/grass/green.png~BLIT(terrain/village/village-overlay-"
+"editor.png~O(0.5))' align=here box=yes</img>\n"
+"\n"
+"This turns any base terrain into a village, providing income and healing."
+msgstr ""
+
+#. [topic]: id=editor_terrain_overlays
+#. The image is an “S” on a solid black background.
+#: data/core/editor/help.cfg:162
+msgid ""
+"editor^<bold>text='Fake Shroud'</bold>\n"
+"\n"
+"<img>src=terrain/void/shroud-editor.png align=left box=yes</img>\n"
+"\n"
+"Fake Shroud looks like an unexplored area, even in scenarios that have "
+"shroud disabled and even when the player’s units can see the hex."
+msgstr ""
+
+#. [topic]: id=editor_terrain_elevation
+#: data/core/editor/help.cfg:171
+#, fuzzy
+#| msgid "Terrain Modifiers"
+msgid "Terrain Elevation Graphics"
+msgstr "Apvidus modifikatori"
+
+#. [topic]: id=editor_terrain_elevation
+#: data/core/editor/help.cfg:172
+msgid ""
+"A cosmetic elevation effect that looks a little different in the editor than "
+"in the game due to visual aids in the editor; all the overlays described "
+"here are found in the terrain palette’s “elevation” group."
+msgstr ""
+
+#. [topic]: id=editor_terrain_elevation
+#: data/core/editor/help.cfg:175
+msgid "editor^<bold>text='Direct Overlays'</bold>"
+msgstr ""
+
+#. [topic]: id=editor_terrain_elevation
+#: data/core/editor/help.cfg:177
+msgid ""
+"Bluffs and Gulch\n"
+"\n"
+"The bluffs, gulches, and similar variations are much like a standard terrain "
+"overlay, and can simply be used that way. However, for larger areas of the "
+"map, where you will want to allow the use of other overlay terrains, you "
+"will want to combine these with the “markers” described in the next section."
+msgstr ""
+
+#. [topic]: id=editor_terrain_elevation
+#: data/core/editor/help.cfg:182
+msgid "editor^<bold>text='Elevation Floodfill'</bold>"
+msgstr ""
+
+#. [topic]: id=editor_terrain_elevation
+#: data/core/editor/help.cfg:184
+msgid "Raised elevation on-map marker"
+msgstr ""
+
+#. [topic]: id=editor_terrain_elevation
+#: data/core/editor/help.cfg:185
+msgid ""
+"Raised elevation editor palette icon\n"
+"\n"
+"To make a patch of terrain higher or lower, and still be able to use other "
+"overlay terrains such as trees, you will need to use these markers. Placing "
+"one of these arrows on the map will flood-fill the map with a color-coded "
+"haze; neither the haze nor the arrow will be visible in game. The hazed area "
+"will have a border ledge, making it look higher or lower than the adjacent "
+"tiles.\n"
+"\n"
+"There are two high markers and two low markers, so it is possible to make "
+"terraces of up to five levels (lowest, lower, normal, higher, highest). "
+"Placing a high region next to a low region does not result in larger "
+"cliffs.\n"
+msgstr ""
+
+#. [topic]: id=editor_terrain_elevation
+#: data/core/editor/help.cfg:192
+msgid ""
+"editor^<bold>text='How to Use'</bold>\n"
+"\n"
+"The marker arrows are not very useful by themselves, but the bluffs/gulch-"
+"type terrains can be used to contain the floodfilled area.\n"
+"\n"
+"An example use case would be:\n"
+"1.  Select the Bluffs (^Qhh) from the editor palette and use single-hex "
+"paint tool to outline a big blob over an empty, all-grass map.\n"
+"2.  Place a Marker High (^_mh) arrow on a tile inside the blob (not on the "
+"Bluffs border).\n"
+"3.  The blob should all be raised now, and as long as you don't overwrite "
+"the Marker or Bluffs overlays, you can add other terrain overlays as "
+"needed.\n"
+"\n"
+"The graphics used to represent the ledge borders are determined by the base "
+"terrain.\n"
+msgstr ""
+
+#. [topic]: id=editor_terrain_elevation
+#: data/core/editor/help.cfg:203
+msgid ""
+"editor^<format>text='Note for UMC authors: The flood-filled tiles do not "
+"have their terrain codes changed, or any other properties affected, so "
+"filtering a location by elevation is not simple.' italic='yes' font_size=10 "
+"</format>"
+msgstr ""
+
+#. [topic]: id=editor_deprecated_overlay
+#: data/core/editor/help.cfg:208
+#, fuzzy
+#| msgid "Base Terrain: "
+msgid "Deprecated Terrain"
+msgstr "Bāzes Apvidus: "
+
+#. [topic]: id=editor_deprecated_overlay
+#. The main reason for choosing “D” is that the hole in the middle of the letter makes it easier to see which terrain is underneath it. This uses a hardcoded image and doesn’t expect the image to be translated.
+#. The Xol and ^Efs terrains’ help pages aren’t given hyperlinks, because they both have hide_help enabled. Even when on a map with Xol on it, ctrl+t will show the hidden page but the ref still won’t link to it.
+#: data/core/editor/help.cfg:211
+msgid ""
+"editor^<img>src='terrain/grass/green.png~BLIT(terrain/deprecated-editor."
+"png)' align=left box=yes</img>The magenta ‘D’ (for “Deprecated”).\n"
+"\n"
+"This is shown in the editor over deprecated terrain codes. Examples are:\n"
+"• the <ref>dst='terrain_fungus_grove_old' text='“^Uf” mushroom terrain'</"
+"ref>,\n"
+"• the “Xol” Lit Stone Wall, which is deprecated because several wall "
+"terrains now support the “^Efs” Sconce embellishment.\n"
+"\n"
+"The help pages for these terrains may have additional text that’s only shown "
+"in the editor, describing the deprecation and the recommended replacements."
+msgstr ""
+
+#. [topic]: id=editor_tool_label
+#: data/core/editor/help.cfg:224
 msgid "Label Tool"
 msgstr ""
 
 #. [topic]: id=editor_tool_label
-#: data/core/editor/help.cfg:130
+#: data/core/editor/help.cfg:225
 msgid ""
 "Put text labels on the map.\n"
 "\n"
@@ -610,12 +896,12 @@ msgid ""
 msgstr ""
 
 #. [topic]: id=editor_tool_scenery
-#: data/core/editor/help.cfg:145
+#: data/core/editor/help.cfg:240
 msgid "Item Tool (Scenery Tool)"
 msgstr ""
 
 #. [topic]: id=editor_tool_scenery
-#: data/core/editor/help.cfg:146
+#: data/core/editor/help.cfg:241
 msgid ""
 "The Item Tool allows placing decorations such as windmills, bookcases and "
 "monoliths. Multiple items can be placed on the same hex.\n"
@@ -630,12 +916,12 @@ msgid ""
 msgstr ""
 
 #. [topic]: id=editor_tool_village
-#: data/core/editor/help.cfg:159
+#: data/core/editor/help.cfg:254
 msgid "Village Ownership Tool"
 msgstr ""
 
 #. [topic]: id=editor_tool_village
-#: data/core/editor/help.cfg:160
+#: data/core/editor/help.cfg:255
 msgid ""
 "This tool assigns ownership of villages at the start of a scenario. The "
 "villages must first be placed on the terrain with the "
@@ -650,12 +936,12 @@ msgid ""
 msgstr ""
 
 #. [topic]: id=editor_tool_unit
-#: data/core/editor/help.cfg:174
+#: data/core/editor/help.cfg:269
 msgid "Unit Tool"
 msgstr ""
 
 #. [topic]: id=editor_tool_unit
-#: data/core/editor/help.cfg:175
+#: data/core/editor/help.cfg:270
 msgid ""
 "Place units belonging to the currently-selected side.\n"
 "\n"
@@ -670,12 +956,12 @@ msgid ""
 msgstr ""
 
 #. [topic]: id=editor_named_area
-#: data/core/editor/help.cfg:190
+#: data/core/editor/help.cfg:285
 msgid "Named Areas"
 msgstr ""
 
 #. [topic]: id=editor_named_area
-#: data/core/editor/help.cfg:191
+#: data/core/editor/help.cfg:286
 msgid ""
 "This tool create sets of tiles that can be used in WML scripts’ Standard "
 "Location Filters (a concept explained in detail on the Wiki), by using the "
@@ -702,12 +988,12 @@ msgid ""
 msgstr ""
 
 #. [topic]: id=editor_playlist
-#: data/core/editor/help.cfg:212
+#: data/core/editor/help.cfg:307
 msgid "Playlist Manager"
 msgstr ""
 
 #. [topic]: id=editor_playlist
-#: data/core/editor/help.cfg:213
+#: data/core/editor/help.cfg:308
 msgid ""
 "Shows a list of music tracks known to the editor, with toggle-boxes to "
 "enable them.\n"
@@ -716,17 +1002,46 @@ msgid ""
 "<italic>text='[music]'</italic> tags to the scenario."
 msgstr ""
 
+#. [topic]: id=editor_addon_id
+#: data/core/editor/help.cfg:319
+#, fuzzy
+#| msgid "Using Add-ons"
+msgid "Change Add-on ID"
+msgstr "Papildinājumu lietošana"
+
+#. [topic]: id=editor_addon_id
+#: data/core/editor/help.cfg:320
+msgid ""
+"Allows changing the ID of an add-on, which is the name of the folder it’s "
+"in. This will only rename that folder and update any references to it in the "
+"_main.cfg file. Any other place will need to be updated manually."
+msgstr ""
+
+#. [topic]: id=editor_pbl_editor
+#: data/core/editor/help.cfg:329
+msgid "Add-on Publishing Editor"
+msgstr ""
+
+#. [topic]: id=editor_pbl_editor
+#: data/core/editor/help.cfg:330
+msgid ""
+"Allows setting up an add-on’s _server.pbl file, which is required for "
+"publishing an add-on to the add-ons server for other players to download. "
+"The Validate button will check whether all required fields have valid values."
+msgstr ""
+
 #. [topic]: id=..editor
-#: data/core/editor/help.cfg:223
+#: data/core/editor/help.cfg:338
 msgid "Map/Scenario Editor"
 msgstr ""
 
 #. [topic]: id=..editor
-#: data/core/editor/help.cfg:224
+#: data/core/editor/help.cfg:339
 msgid ""
 "Wesnoth’s Map and Scenario Editor allows users to create and edit the maps "
 "on which every Wesnoth scenario takes place. It also provides a limited set "
-"of features for setting up a basic scenario.\n"
+"of features for setting up a basic scenario as well as initializing an add-"
+"on which can be used to distribute the scenarios you create.\n"
 "\n"
 "The editor can be launched from the <italic>text='Map Editor'</italic> "
 "option at the title screen.\n"
@@ -754,7 +1069,19 @@ msgid ""
 msgstr ""
 
 #. [topic]: id=..editor
-#: data/core/editor/help.cfg:236
+#: data/core/editor/help.cfg:351
+msgid ""
+"In either mode, you will be prompted to choose an add-on to use for the "
+"scenarios you create. This can be an existing add-on or a brand new add-on. "
+"If you choose to use a brand new add-on, then the add-on will have all the "
+"required files and folders automatically created as well as a default ID "
+"assigned. Unless you are editing an already existing map file, using "
+"scenario mode is required in order for your maps to be selectable during "
+"game creation."
+msgstr ""
+
+#. [topic]: id=..editor
+#: data/core/editor/help.cfg:353
 msgid ""
 "<header>text='What you do *not* get'</header>\n"
 "\n"
@@ -780,7 +1107,7 @@ msgid ""
 msgstr ""
 
 #. [topic]: id=..editor_mode_terrain
-#: data/core/editor/help.cfg:256
+#: data/core/editor/help.cfg:373
 msgid ""
 "The terrain editor’s functionality is similar to a simple paint "
 "application.\n"
@@ -795,7 +1122,7 @@ msgid ""
 msgstr ""
 
 #. [topic]: id=..editor_mode_scenario
-#: data/core/editor/help.cfg:268
+#: data/core/editor/help.cfg:385
 msgid ""
 "The scenario editor mode adds support for some map-related WML features, "
 "such as areas and scenery items. Most scenarios will still require "
@@ -804,7 +1131,7 @@ msgid ""
 msgstr ""
 
 #. [topic]: id=..editor_mode_scenario
-#: data/core/editor/help.cfg:270
+#: data/core/editor/help.cfg:387
 msgid ""
 "<header>text='Checking whether the editor is in scenario mode'</header>\n"
 "\n"
@@ -815,7 +1142,7 @@ msgid ""
 msgstr ""
 
 #. [topic]: id=..editor_mode_scenario
-#: data/core/editor/help.cfg:277
+#: data/core/editor/help.cfg:394
 msgid ""
 "<header>text='Entering scenario mode'</header>\n"
 "\n"
@@ -830,89 +1157,68 @@ msgid ""
 msgstr ""
 
 #. [topic]: id=..editor_mode_scenario
-#: data/core/editor/help.cfg:285
+#: data/core/editor/help.cfg:402
 msgid ""
 "<header>text='The files: .map and .cfg'</header>\n"
 "\n"
-"The map editor saves exactly one file, either a .map (for terrain mode) or "
-"a .cfg (for scenario mode). In scenario mode the terrain map is saved inside "
-"the .cfg file; there is no separate .map file. If you start editing in "
-"terrain mode and then switch to scenaro mode then an old .map file might "
-"remain, but this is not updated by the scenario editor.\n"
+"The map editor saves one file when in terrain mode (a .map) or two files "
+"when in scenario mode (both a .map and a .cfg).\n"
 "\n"
 "Loading a .cfg file has different results depending on the contents of the ."
 "cfg file. For .cfg files that were created by the scenario editor, it will "
-"open the .cfg in the scenario editor. However, for .cfg files that use a "
-"separate .map file (which can't be created by the scenario editor), the "
-"editor may follow the link and open the corresponding .map in terrain-only "
-"mode, as if the .map file was chosen in the file selector."
+"open the .cfg in the scenario editor. However, for .cfg files that cannot be "
+"opened by the scenario editor, the editor will attempt to find the "
+"scenario's map data and open the corresponding .map file in terrain-only "
+"mode, as if the .map file was chosen in the file selector. It is recommended "
+"in those cases to simply load the .map file directly instead."
 msgstr ""
 
 #. [topic]: id=editor_separate_events_file
-#: data/core/editor/help.cfg:297
+#: data/core/editor/help.cfg:414
 msgid "Using a separate file for WML events"
 msgstr ""
 
 #. [topic]: id=editor_separate_events_file
-#: data/core/editor/help.cfg:298
+#: data/core/editor/help.cfg:415
 msgid ""
 "When loading a .cfg file, the scenario editor understands files created by "
 "the scenario editor, but is likely to have difficulty with files that have "
 "been edited by hand.\n"
 "\n"
-"Files created by the scenario editor omit the opening [scenario] and closing "
-"[/scenario] tags. If you are creating a campaign (or other add-on), then "
-"those tags need to be added; there is more detail about this in the "
-"<ref>dst='editor_map_format' text='map file format'</ref> documentation.\n"
-"\n"
-"One workflow is to create a separate WML file, also with the .cfg extension, "
+"One option is to create a separate WML file, also with the .cfg extension, "
 "which uses the WML preprocessor to include the editor-created file. This "
 "separate file contains both the [scenario] tag and any hand-edited WML such "
 "as events. With this workflow, the add-on’s file structure could look like "
 "this:\n"
 "\n"
-"<header>text='For Wesnoth 1.14'</header>\n"
-"\n"
-"• _main.cfg:\n"
-"  ◦ use “{./scenarios}” to include the “scenarios” directory\n"
-"• maps/map_from_01.cfg\n"
-"  ◦ this is the file created by the scenario editor\n"
-"• scenarios/01_Forest.cfg, instead of the opening [scenario] tag put in "
-"these four lines:\n"
-"  ◦ [scenario]\n"
-"  ◦     {~add-ons/NAME_OF_ADD_ON/maps/map_from_01.cfg}\n"
-"  ◦ [/scenario]\n"
-"  ◦ [+scenario]\n"
-"\n"
-"The first three of those lines insert the scenario-generated file inside a "
-"[scenario] tag. The ‘+’ sign on the fourth line means that two scenario tags "
-"will be combined, with attributes in the second one overriding attributes in "
-"the first one.\n"
-"\n"
-"<header>text='1.16 and later'</header>\n"
-"\n"
-"If your add-on will only be used on 1.16 and later, there are new features "
-"to load .cfg files via map_file, and to avoid repeating the add-on’s name "
-"within the .cfg files.\n"
+"<header>text='Example'</header>\n"
+"If your add-on will only be used on 1.18 and later, it is instead "
+"recommended to use the new include_file attribute to load a .cfg file "
+"containing additional WML into the scenario.\n"
 "\n"
 "• _main.cfg:\n"
 "  ◦ use “[binary_path]” to add add-on’s directories to the binary path, "
-"which makes “map_file” search the “maps” directory.\n"
-"  ◦ use “{./scenarios}” to include the “scenarios” directory\n"
-"• maps/map_from_01.cfg\n"
-"  ◦ this is the file created by the scenario editor\n"
-"• scenarios/01_Forest.cfg\n"
-"  ◦ inside the [scenario] element, use “map_file=\"map_from_01.cfg\"” to "
-"load that file"
+"which makes “map_file” search the “maps” directory\n"
+"• maps/first.map\n"
+"  ◦ this is the .map file created by the scenario editor when saving in "
+"scenario mode\n"
+"• scenarios/other.cfg\n"
+"  ◦ this is the .cfg file containing everything that the scenario editor "
+"doesn't understand\n"
+"• scenarios/first.cfg\n"
+"  ◦ inside the [scenario] element, use “map_file=\"first.map\"” to load the "
+"map file\n"
+"  ◦ inside the [scenario] element, use “include_file=\"other.cfg\"” to load "
+"the additional cfg file"
 msgstr ""
 
 #. [topic]: id=editor_masks
-#: data/core/editor/help.cfg:336
+#: data/core/editor/help.cfg:438
 msgid "Editor Mask Usage"
 msgstr ""
 
 #. [topic]: id=editor_masks
-#: data/core/editor/help.cfg:337
+#: data/core/editor/help.cfg:439
 msgid ""
 "Masks can be applied to a base map for reusal in several scenarios playing "
 "at the same locations."
@@ -920,14 +1226,14 @@ msgstr ""
 
 #. [topic]: id=editor_time_schedule
 #. Time of Day and Schedule Editor, please use a short string as it will be used in the left-hand pane of the help browser
-#: data/core/editor/help.cfg:345
+#: data/core/editor/help.cfg:447
 #, fuzzy
 #| msgid "Time of Day"
 msgid "ToD and Schedule Editor"
 msgstr "Diennakts laiks"
 
 #. [topic]: id=editor_time_schedule
-#: data/core/editor/help.cfg:346
+#: data/core/editor/help.cfg:448
 msgid ""
 "This button at the top-right of the screen accesses the time-of-day preview "
 "and the schedule editor.\n"
@@ -940,13 +1246,13 @@ msgid ""
 msgstr ""
 
 #. [topic]: id=editor_palette
-#: data/core/editor/help.cfg:357
+#: data/core/editor/help.cfg:459
 msgid "Editor Palette"
 msgstr ""
 
 #. [topic]: id=editor_palette
 #. the “Player 1”, “Player 2”, ... list is translated using "Player $side_num" in the wesnoth-editor textdomain
-#: data/core/editor/help.cfg:359
+#: data/core/editor/help.cfg:461
 msgid ""
 "The editor palette contains the applicable items you may use with the "
 "currently selected tool. For example, the Paint tool will display a full "
@@ -962,32 +1268,32 @@ msgid ""
 msgstr ""
 
 #. [topic]: id=editor_palette
-#: data/core/editor/help.cfg:364
+#: data/core/editor/help.cfg:466
 msgid "Show all kinds of terrain"
 msgstr ""
 
 #. [topic]: id=editor_palette
-#: data/core/editor/help.cfg:365
+#: data/core/editor/help.cfg:467
 msgid "Show only water terrains"
 msgstr ""
 
 #. [topic]: id=editor_palette
-#: data/core/editor/help.cfg:366
+#: data/core/editor/help.cfg:468
 msgid "Show only villages"
 msgstr ""
 
 #. [topic]: id=editor_map_format
-#: data/core/editor/help.cfg:377
+#: data/core/editor/help.cfg:480
 msgid "Wesnoth Map Format"
 msgstr ""
 
 #. [topic]: id=editor_map_format
-#: data/core/editor/help.cfg:378
+#: data/core/editor/help.cfg:481
 msgid "Wesnoth stores its maps in human readable plain text files."
 msgstr ""
 
 #. [topic]: id=editor_map_format
-#: data/core/editor/help.cfg:380
+#: data/core/editor/help.cfg:483
 msgid ""
 "<header>text='Native'</header>\n"
 "\n"
@@ -1018,7 +1324,7 @@ msgid ""
 msgstr ""
 
 #. [topic]: id=editor_map_format
-#: data/core/editor/help.cfg:393
+#: data/core/editor/help.cfg:496
 msgid ""
 "<header>text='Embedded'</header>\n"
 "\n"
@@ -1038,48 +1344,27 @@ msgid ""
 msgstr ""
 
 #. [topic]: id=editor_map_format
-#: data/core/editor/help.cfg:401
+#: data/core/editor/help.cfg:504
 msgid ""
 "<header>text='Files created by the Scenario Editor'</header>\n"
 "\n"
-"In scenario mode, the editor saves the data as a .cfg file with embedded map "
-"data. When loading a .cfg file, the scenario editor understands files "
-"created by the scenario editor itself, but is likely to have difficulty with "
-"files that have been edited by hand; problems can be avoided by "
-"<ref>dst='editor_separate_events_file' text='using a separate .cfg file'</"
+"In scenario mode, the editor saves the scenario data as a .cfg file and the "
+"map data as a separate .map file. The scenario then references the .map file "
+"via map_file. When loading a .cfg file, the scenario editor understands "
+"files created by the scenario editor itself, but is likely to have "
+"difficulty with files that have been edited by hand; problems can be avoided "
+"by <ref>dst='editor_separate_events_file' text='using a separate .cfg file'</"
 "ref> for the hand-edited parts."
 msgstr ""
 
-#. [topic]: id=editor_map_format
-#: data/core/editor/help.cfg:405
-msgid ""
-"<header>text='Which scenario files use the [scenario] tag'</header>\n"
-"\n"
-"Files created by the scenario editor have the contents of a WML scenario "
-"element, but don’t include the opening [scenario] and closing [/scenario] "
-"tags. For each .cfg file in the userdata folder’s editor/scenarios "
-"subfolder, the game will automatically try to load a scenario from it to "
-"include in the “Custom Scenarios” list (files that fail to load are "
-"ignored). In this folder each file is a separate item - files that fail to "
-"parse as a scenario are ignored, and files must not contain the [scenario][/"
-"scenario] tags.\n"
-"\n"
-"The opposite applies when a scenario is part of a campaign or other add-on. "
-"Typically each scenario has its own .cfg file, however this is unnecessary - "
-"all of the WML in an add-on will be combined by the preprocessor, it doesn’t "
-"matter whether the add-on is written as separate files or not. The engine "
-"needs the [scenario]...[/scenario] (or [multiplayer]...[/multiplayer]) tags "
-"to know which WML is part of each scenario."
-msgstr ""
-
-#. [time]: id=deep_underground
 #. [editor_times]: id=deep_underground
+#. [time]: id=deep_underground
 #: data/core/editor/time-of-day.cfg:47 data/core/macros/schedules.cfg:127
 msgid "Deep Underground"
 msgstr "Dziļi pazemē"
 
-#. [time]: id=indoors
 #. [editor_times]: id=indoors
+#. [time]: id=indoors
 #: data/core/editor/time-of-day.cfg:53 data/core/macros/schedules.cfg:104
 msgid "Indoors"
 msgstr "Iekštelpās"
@@ -1827,8 +2112,8 @@ msgstr "Spēles gaita"
 #. [section]: id=traits_section
 #. [topic]: id=..traits_section
 #: data/core/help.cfg:29 data/core/help.cfg:531
-#: src/help/help_topic_generators.cpp:438
-#: src/help/help_topic_generators.cpp:461
+#: src/help/help_topic_generators.cpp:475
+#: src/help/help_topic_generators.cpp:498
 msgid "Traits"
 msgstr "Iezīmes"
 
@@ -3185,10 +3470,10 @@ msgid ""
 "<italic>text='Under the Burning Suns'</italic>.\n"
 "• <bold>text='Blue'</bold> for allied units, except during that ally’s own "
 "turn.\n"
-"    • During the ally’s own turn, their units will be shown with the green/"
-"yellow/red/white colors; however their moves, and the corresponding orb "
-"changes, are delayed as explained in <ref>dst='shroud_and_fog' text='Shroud "
-"and Fog of War'</ref>.\n"
+"    • During the ally’s own turn, their units will be shown with the colors "
+"showing whether the units can still move and attack; however their moves, "
+"and the corresponding orb changes, are delayed as explained in "
+"<ref>dst='shroud_and_fog' text='Shroud and Fog of War'</ref>.\n"
 "• Enemy units normally don’t have orbs, however these can be enabled in the "
 "advanced preference “Customize orb colors”."
 msgstr ""
@@ -4186,7 +4471,7 @@ msgstr "Vispārējas komandas"
 #. [topic]: id=general_commands
 #. [topic]: id=mp_commands
 #. [topic]: id=debug_commands
-#: data/core/help.cfg:679 data/core/help.cfg:721 data/core/help.cfg:759
+#: data/core/help.cfg:679 data/core/help.cfg:724 data/core/help.cfg:762
 msgid ""
 "These commands can either be issued via the command line by prefixing them "
 "with ':' (as shown here) or via the chat by prefixing them with '/' (press "
@@ -4201,6 +4486,15 @@ msgstr ""
 #: data/core/help.cfg:681
 msgid ""
 "\n"
+"Similar to the 'fps' command, but also forces everything to redraw instead "
+"of only things that have changed.\n"
+"\n"
+msgstr ""
+
+#. [topic]: id=general_commands
+#: data/core/help.cfg:684
+msgid ""
+"\n"
 "Clear chat messages.\n"
 "\n"
 msgstr ""
@@ -4209,7 +4503,7 @@ msgstr ""
 "\n"
 
 #. [topic]: id=general_commands
-#: data/core/help.cfg:684
+#: data/core/help.cfg:687
 msgid ""
 "\n"
 "Switch debug mode on (does not work in multiplayer). See "
@@ -4224,7 +4518,7 @@ msgstr ""
 "\n"
 
 #. [topic]: id=general_commands
-#: data/core/help.cfg:688
+#: data/core/help.cfg:691
 msgid ""
 "\n"
 "Switch a side between human and AI control. The second parameter can be "
@@ -4237,7 +4531,7 @@ msgid ""
 msgstr ""
 
 #. [topic]: id=general_commands
-#: data/core/help.cfg:691
+#: data/core/help.cfg:694
 msgid ""
 "\n"
 "Display the controller status of a side.\n"
@@ -4248,7 +4542,7 @@ msgstr ""
 "\n"
 
 #. [topic]: id=general_commands
-#: data/core/help.cfg:694
+#: data/core/help.cfg:697
 #, fuzzy
 #| msgid ""
 #| "\n"
@@ -4265,7 +4559,7 @@ msgstr ""
 "\n"
 
 #. [topic]: id=general_commands
-#: data/core/help.cfg:697
+#: data/core/help.cfg:700
 msgid ""
 "\n"
 "Switch a log domain to a different log level.\n"
@@ -4276,7 +4570,7 @@ msgstr ""
 "\n"
 
 #. [topic]: id=general_commands
-#: data/core/help.cfg:700
+#: data/core/help.cfg:703
 msgid ""
 "\n"
 "Redraws the screen and reloads any image files that have been changed.\n"
@@ -4287,7 +4581,7 @@ msgstr ""
 "\n"
 
 #. [topic]: id=general_commands
-#: data/core/help.cfg:703
+#: data/core/help.cfg:706
 msgid ""
 "\n"
 "Bring up theme selection menu.\n"
@@ -4298,7 +4592,7 @@ msgstr ""
 "\n"
 
 #. [topic]: id=general_commands
-#: data/core/help.cfg:706
+#: data/core/help.cfg:709
 msgid ""
 "\n"
 "Quit the scenario (without prompting).\n"
@@ -4309,7 +4603,7 @@ msgstr ""
 "\n"
 
 #. [topic]: id=general_commands
-#: data/core/help.cfg:709
+#: data/core/help.cfg:712
 msgid ""
 "\n"
 "Save the game (without prompting).\n"
@@ -4320,7 +4614,7 @@ msgstr ""
 "\n"
 
 #. [topic]: id=general_commands
-#: data/core/help.cfg:712
+#: data/core/help.cfg:715
 msgid ""
 "\n"
 "Save the game and quit the scenario (without prompting)."
@@ -4329,14 +4623,14 @@ msgstr ""
 "Saglabāt spēli un pamest scenāriju (bez jautāšanas)."
 
 #. [topic]: id=mp_commands
-#: data/core/help.cfg:720
+#: data/core/help.cfg:723
 #, fuzzy
 #| msgid "Multiplayer commands"
 msgid "Multiplayer Commands"
 msgstr "Daudzspēlētāju komandas"
 
 #. [topic]: id=mp_commands
-#: data/core/help.cfg:723
+#: data/core/help.cfg:726
 msgid ""
 "\n"
 "Ban a user in a multiplayer game by the IP address used by that username and "
@@ -4352,7 +4646,7 @@ msgstr ""
 "\n"
 
 #. [topic]: id=mp_commands
-#: data/core/help.cfg:726
+#: data/core/help.cfg:729
 msgid ""
 "\n"
 "Change the controller for side (write here the number of the side) to "
@@ -4373,7 +4667,7 @@ msgstr ""
 "\n"
 
 #. [topic]: id=mp_commands
-#: data/core/help.cfg:729
+#: data/core/help.cfg:732
 msgid ""
 "\n"
 "Launch a dialog to assist the host in changing the human controllers of "
@@ -4386,7 +4680,7 @@ msgstr ""
 "\n"
 
 #. [topic]: id=mp_commands
-#: data/core/help.cfg:732
+#: data/core/help.cfg:735
 msgid ""
 "\n"
 "Toggle the idle state for a side. The host may make a side idle after a "
@@ -4399,7 +4693,7 @@ msgstr ""
 "\n"
 
 #. [topic]: id=mp_commands
-#: data/core/help.cfg:735
+#: data/core/help.cfg:738
 msgid ""
 "\n"
 "Kick a user in multiplayer. They will be able to rejoin the game. If you "
@@ -4414,7 +4708,7 @@ msgstr ""
 "\n"
 
 #. [topic]: id=mp_commands
-#: data/core/help.cfg:738
+#: data/core/help.cfg:741
 msgid ""
 "\n"
 "Send a private message to a user. When in a game, it is not possible to send "
@@ -4428,7 +4722,7 @@ msgstr ""
 "\n"
 
 #. [topic]: id=mp_commands
-#: data/core/help.cfg:741
+#: data/core/help.cfg:744
 msgid ""
 "\n"
 "Mute a specific observer. If no username is supplied the muted usernames are "
@@ -4441,7 +4735,7 @@ msgstr ""
 "\n"
 
 #. [topic]: id=mp_commands
-#: data/core/help.cfg:744
+#: data/core/help.cfg:747
 msgid ""
 "\n"
 "Toggle muting/silencing of all observers on/off.\n"
@@ -4452,7 +4746,7 @@ msgstr ""
 "\n"
 
 #. [topic]: id=mp_commands
-#: data/core/help.cfg:747
+#: data/core/help.cfg:750
 msgid ""
 "\n"
 "Unban a user in a multiplayer game by the IP address used by that username. "
@@ -4466,7 +4760,7 @@ msgstr ""
 "\n"
 
 #. [topic]: id=mp_commands
-#: data/core/help.cfg:750
+#: data/core/help.cfg:753
 msgid ""
 "\n"
 "Unmute a specific observer. If no username is supplied the list of muted "
@@ -4477,14 +4771,14 @@ msgstr ""
 "lietotājvārds, tad tiek notīrīts viss apklusināto lietāju saraksts."
 
 #. [topic]: id=debug_commands
-#: data/core/help.cfg:758
+#: data/core/help.cfg:761
 #, fuzzy
 #| msgid "Debug mode commands"
 msgid "Debug Mode Commands"
 msgstr "Atkļūdošanas darbības"
 
 #. [topic]: id=debug_commands
-#: data/core/help.cfg:761
+#: data/core/help.cfg:764
 msgid ""
 "\n"
 "Brings up a menu for choosing a scenario to immediately advance to in a "
@@ -4497,7 +4791,7 @@ msgstr ""
 "\n"
 
 #. [topic]: id=debug_commands
-#: data/core/help.cfg:764
+#: data/core/help.cfg:767
 msgid ""
 "\n"
 "Create a unit of the specified type on the selected hex.\n"
@@ -4508,7 +4802,7 @@ msgstr ""
 "\n"
 
 #. [topic]: id=debug_commands
-#: data/core/help.cfg:767
+#: data/core/help.cfg:770
 msgid ""
 "\n"
 "Toggle fog/shroud for the current side.\n"
@@ -4519,7 +4813,7 @@ msgstr ""
 "\n"
 
 #. [topic]: id=debug_commands
-#: data/core/help.cfg:770
+#: data/core/help.cfg:773
 msgid ""
 "\n"
 "Adds the specified amount to the current side’s gold.\n"
@@ -4530,7 +4824,7 @@ msgstr ""
 "\n"
 
 #. [topic]: id=debug_commands
-#: data/core/help.cfg:773
+#: data/core/help.cfg:776
 msgid ""
 "\n"
 "Immediately advances to the next scenario in a campaign.\n"
@@ -4541,7 +4835,7 @@ msgstr ""
 "\n"
 
 #. [topic]: id=debug_commands
-#: data/core/help.cfg:776
+#: data/core/help.cfg:779
 msgid ""
 "\n"
 "Manually set a gamestate variable to value.\n"
@@ -4552,7 +4846,7 @@ msgstr ""
 "\n"
 
 #. [topic]: id=debug_commands
-#: data/core/help.cfg:779
+#: data/core/help.cfg:782
 msgid ""
 "\n"
 "Show a gamestate variable.\n"
@@ -4563,7 +4857,7 @@ msgstr ""
 "\n"
 
 #. [topic]: id=debug_commands
-#: data/core/help.cfg:782
+#: data/core/help.cfg:785
 msgid ""
 "\n"
 "Manually fire the specified event.\n"
@@ -4574,7 +4868,7 @@ msgstr ""
 "\n"
 
 #. [topic]: id=debug_commands
-#: data/core/help.cfg:785
+#: data/core/help.cfg:788
 msgid ""
 "\n"
 "Modifies the specified property of the selected unit. Example: :unit "
@@ -4586,7 +4880,7 @@ msgstr ""
 "\n"
 
 #. [topic]: id=debug_commands
-#: data/core/help.cfg:788
+#: data/core/help.cfg:791
 msgid ""
 "\n"
 "Makes the selected unit level up N times. Example: :unit advances=2"
@@ -4715,8 +5009,12 @@ msgid ""
 msgstr " Šī vienība katrā gājienā reģenerējas."
 
 #. [resistance]: id=steadfast
-#. [resistance]: id=melee_steadfast
-#: data/core/macros/abilities.cfg:131 data/scenario-test.cfg:368
+#: data/core/macros/abilities.cfg:130
+msgid "steadfast"
+msgstr "izturīgs"
+
+#. [resistance]: id=steadfast
+#: data/core/macros/abilities.cfg:131
 msgid "female^steadfast"
 msgstr "izturīga"
 
@@ -4779,30 +5077,12 @@ msgstr "vadītāja"
 
 #. [leadership]: id=leadership
 #: data/core/macros/abilities.cfg:201
-#, fuzzy
-#| msgid ""
-#| "This unit can lead our own units that are next to it, making them fight "
-#| "better.\n"
-#| "\n"
-#| "Adjacent own units of lower level will do more damage in battle. When a "
-#| "unit adjacent to, of a lower level than, and on the same side as a unit "
-#| "with Leadership engages in combat, its attacks do 25% more damage times "
-#| "the difference in their levels."
 msgid ""
-"This unit can lead your own units that are next to it, making them fight "
-"better.\n"
+"This unit can lead other troops in battle.\n"
 "\n"
-"Adjacent own units of lower level will do more damage in battle. When a unit "
-"adjacent to, of a lower level than, and on the same side as a unit with "
-"Leadership engages in combat, its attacks do 25% more damage times the "
-"difference in their levels."
+"All adjacent lower-level units from the same side deal 25% more damage for "
+"each difference in level."
 msgstr ""
-"Šī vienība spēj vadīt vienības, kas tai ir blakus, motivējot tām cīnīties "
-"labāk.\n"
-"\n"
-"Blakus esošās mūsu vienības ar zemāku līmeni nodarīs lielākus bojājumus "
-"cīņā. Kad vienībai ar mazāku līmeni blakus stāv vadītājs tās uzbrukumi "
-"nodara par 25% lielākus bojājumus."
 
 #. [skirmisher]: id=skirmisher
 #: data/core/macros/abilities.cfg:220
@@ -4817,6 +5097,11 @@ msgid ""
 msgstr ""
 "Šī vienība prasmīgi paiet garām ienaidniekam, un tā ignorē visas ienaidnieku "
 "'kontroles zonas'."
+
+#. [illuminates]: id=illumination
+#: data/core/macros/abilities.cfg:235
+msgid "illuminates"
+msgstr "izgaismotājs"
 
 #. [illuminates]: id=illumination
 #: data/core/macros/abilities.cfg:236
@@ -4941,8 +5226,8 @@ msgstr "maskējas"
 #| "they have units next to it. Any enemy unit that first discovers this unit "
 #| "immediately loses all its remaining movement."
 msgid ""
-"This unit can hide in villages (with the exception of water villages), and "
-"remain undetected by its enemies, except by those standing next to it.\n"
+"This unit can hide in villages, and remain undetected by its enemies, except "
+"by those standing next to it.\n"
 "\n"
 "Enemy units cannot see this unit while it is in a village, except if they "
 "have units next to it. Any enemy unit that first discovers this unit "
@@ -4954,6 +5239,11 @@ msgstr ""
 "Ienaidnieka vienības neredz šo vienību kamēr tā ir ciematā, To var pamanīt "
 "tikai ja pienāks klāt ciematam. Pretinieks kurš pirmais atklāj šo vienību, "
 "nekavējoties zaudē visus atlikušos gājienu punktus."
+
+#. [hides]: id=submerge
+#: data/core/macros/abilities.cfg:363
+msgid "submerge"
+msgstr "nirējs"
 
 #. [hides]: id=submerge
 #: data/core/macros/abilities.cfg:364
@@ -4980,201 +5270,14 @@ msgstr ""
 msgid "female^feeding"
 msgstr "sūcēja"
 
-#. [berserk]: id=berserk
-#: data/core/macros/abilities.cfg:398
-msgid "berserk"
-msgstr "cīņasspars"
-
-#. [berserk]: id=berserk
-#: data/core/macros/abilities.cfg:399
+#. [dummy]: id=feeding
+#: data/core/macros/abilities.cfg:386
 msgid ""
-"Whether used offensively or defensively, this attack presses the engagement "
-"until one of the combatants is slain, or 30 rounds of attacks have occurred."
+"This unit gains 1 hitpoint added to its maximum whenever it kills a unit, "
+"except units that are immune to plague."
 msgstr ""
-"Gan uzbrūkot, gan aizstāvoties cīnītājs ar dusmās veic līdz 30 sitienu. "
-"Parasti šādas saķeršanās beidzas ar to ka kādam ir jāmirst."
-
-#. [damage]: id=backstab
-#: data/core/macros/abilities.cfg:411
-msgid ""
-"When used offensively, this attack deals double damage if there is an enemy "
-"of the target on the opposite side of the target, and that unit is not "
-"incapacitated (turned to stone or otherwise paralyzed)."
-msgstr ""
-"Uzbrūkot no muguras šis uzbrukums nodara dubultus bojājumus, lai to izdarītu "
-"- jāpielavās no muguras, un uzbrukuma brīdī mērķim jācīnās ar kādu "
-"pretinieku no priekšpuses (kurš nav pārakmeņots vai kā citādi paralizēts)."
-
-#. [plague]: id=plague({TYPE}), type={TYPE}
-#: data/core/macros/abilities.cfg:431
-#, fuzzy
-#| msgid ""
-#| "When a unit is killed by a Plague attack, that unit is replaced with a "
-#| "Walking Corpse on the same side as the unit with the Plague attack. This "
-#| "doesn’t work on Undead or units in villages."
-msgid ""
-"When a unit is killed by a Plague attack, that unit is replaced with a unit "
-"on the same side as the unit with the Plague attack. This doesn’t work on "
-"Undead or units in villages."
-msgstr ""
-"Kad vienību nogalina sērga, tā tiek aizstāta ar staigājošu līķi, kas ir "
-"uzbrucēja pusē. Tas nestrādā uz nedzīvajiem un vienībām ciemos."
-
-#. [plague]: id=plague, type=Walking Corpse
-#: data/core/macros/abilities.cfg:442 data/scenario-test.cfg:408
-msgid ""
-"When a unit is killed by a Plague attack, that unit is replaced with a "
-"Walking Corpse on the same side as the unit with the Plague attack. This "
-"doesn’t work on Undead or units in villages."
-msgstr ""
-"Kad vienību nogalina sērga, tā tiek aizstāta ar staigājošu līķi, kas ir "
-"uzbrucēja pusē. Tas nestrādā uz nedzīvajiem un vienībām ciemos."
-
-#. [slow]: id=slow
-#: data/core/macros/abilities.cfg:454
-msgid ""
-"This attack slows the target until it ends a turn. Slow halves the damage "
-"caused by attacks and the movement cost for a slowed unit is doubled. A unit "
-"that is slowed will feature a snail icon in its sidebar information when it "
-"is selected."
-msgstr ""
-"Šis uzbrukums palēlina mērķi līdz tas pabeidz gājienu. Sapīšana uz pusi "
-"samazina uzbrukumu spēku un pārvietošanās izmaksa sapītajai vienībai ir "
-"dubultota. Vienībai, kura ir sapīta, informācijas joslā būs redzama gliemeža "
-"ikona."
-
-#. [petrifies]: id=petrifies
-#: data/core/macros/abilities.cfg:464
-msgid "petrifies"
-msgstr "pārakmeņot"
-
-#. [petrifies]: id=petrifies
-#: data/core/macros/abilities.cfg:465
-msgid ""
-"This attack petrifies the target, turning it to stone. Units that have been "
-"petrified may not move or attack."
-msgstr ""
-"Šis uzbrukums pārakmeņo mērķi. Pārakmeņotās vienības nespēj ne pārvietoties, "
-"ne uzbrukt."
-
-#. [chance_to_hit]: id=marksman
-#: data/core/macros/abilities.cfg:476
-msgid ""
-"When used offensively, this attack always has at least a 60% chance to hit."
-msgstr "Šim uzbrukumam vienmēr ir vismaz 60% iespējamība trāpīt."
-
-#. [chance_to_hit]: id=deflect
-#: data/core/macros/abilities.cfg:489
-msgid "deflect"
-msgstr ""
-
-#. [chance_to_hit]: id=deflect
-#: data/core/macros/abilities.cfg:490
-#, fuzzy
-#| msgid ""
-#| "When used offensively, this attack always has at least a 60% chance to "
-#| "hit."
-msgid ""
-"When used defensively, this attack reduces the opponent's chance to hit by "
-"10%."
-msgstr "Šim uzbrukumam vienmēr ir vismaz 60% iespējamība trāpīt."
-
-#. [chance_to_hit]: id=deflect
-#: data/core/macros/abilities.cfg:491
-msgid ""
-"This unit’s defensive techniques reduce the chance of a successful enemy "
-"attack."
-msgstr ""
-
-#. [chance_to_hit]: id=magical
-#: data/core/macros/abilities.cfg:505
-msgid ""
-"This attack always has a 70% chance to hit regardless of the defensive "
-"ability of the unit being attacked."
-msgstr ""
-"Šim uzbrukumam vienmēr ir 70% iespēja trāpīt, nerēķinoties ar pretinieka "
-"aizsardzību. "
-
-#. [swarm]: id=swarm
-#: data/core/macros/abilities.cfg:517
-msgid "swarm"
-msgstr "spiets"
-
-#. [swarm]: id=swarm
-#: data/core/macros/abilities.cfg:518
-msgid ""
-"The number of strikes of this attack decreases when the unit is wounded. The "
-"number of strikes is proportional to the percentage of its of maximum HP the "
-"unit has. For example a unit with 3/4 of its maximum HP will get 3/4 of the "
-"number of strikes."
-msgstr ""
-"Šī uzbrukuma sitienu skaits samazinās, kad vienība ir ievainota. Sitienu "
-"skaits ir proporcionāls vienības procentuālajam veselības daudzumam no tās "
-"maksimālās veselības. Piemēram, vienībai ar 3/4 no tās maksimālajiem "
-"veselības punktiem būs 3/4 no tās sitienu skaita."
-
-#. [damage]: id=charge
-#: data/core/macros/abilities.cfg:529
-msgid ""
-"When used offensively, this attack deals double damage to the target. It "
-"also causes this unit to take double damage from the target’s counterattack."
-msgstr ""
-"Kad izmantots uzbrukumā, lādiņš nodara dubultus bojājumus mērķim. Tas arī "
-"izraisa dubultus bojājumus no mērķa pretuzbrukumiem."
-
-#. [damage]: id=absorb
-#: data/core/macros/abilities.cfg:542
-msgid "absorb"
-msgstr ""
-
-#. [damage]: id=absorb
-#: data/core/macros/abilities.cfg:543
-msgid ""
-"This attack puts the unit in good defensive position, and it absorbs some of "
-"the damage dealt by an enemy strike."
-msgstr ""
-
-#. [damage]: id=absorb
-#: data/core/macros/abilities.cfg:544
-msgid ""
-"This unit can block enemy strikes, so that it takes reduced damage when hit."
-msgstr ""
-
-#. [drains]: id=drains
-#: data/core/macros/abilities.cfg:556
-msgid ""
-"This unit drains health from living units, healing itself for half the "
-"amount of damage it deals (rounded down)."
-msgstr ""
-"Šī vienība izsūc veselību no dzīvām vienībām, tā dziedējot sevi ar pusi no "
-"izsūktās veselības daudzuma (noapaļojot uz leju)."
-
-#. [firststrike]: id=firststrike
-#: data/core/macros/abilities.cfg:566
-msgid "first strike"
-msgstr "pirmais trieciens"
-
-#. [firststrike]: id=firststrike
-#: data/core/macros/abilities.cfg:567
-msgid ""
-"This unit always strikes first with this attack, even if they are defending."
-msgstr "Šī vienība vienmēr iesit pirmā, pat ja tā aizstāvas."
-
-#. [poison]: id=poison
-#: data/core/macros/abilities.cfg:578
-#, fuzzy
-#| msgid ""
-#| "This attack poisons living targets. Poisoned units lose 8 HP every turn "
-#| "until they are cured or are reduced to 1 HP. Poison can not, of itself, "
-#| "kill a unit."
-msgid ""
-"This attack poisons living targets. Poisoned units lose 8 HP every turn "
-"until they are cured or are reduced to 1 HP. Poison cannot, of itself, kill "
-"a unit."
-msgstr ""
-"Šis uzbrukums saindē dzīvos mērķus. Saindētās vienības zaudē 6 VP katrā "
-"gājienā līdz kamēr tās tiek izārstētas vai to veselība tiek samazināta līdz "
-"1 punktam. Inde nespēj nogalināt vienību."
+"Šī vienība palielina maksimālo veselību par 1 katru reizi, kad nogalina kādu "
+"ienaidnieku (izņemot tos, kuriem ir imuinitāte)."
 
 #. [advancement]: id=amla_default
 #: data/core/macros/amla.cfg:10
@@ -5368,7 +5471,7 @@ msgstr "Gara tumsa (3)"
 msgid "The Long Dark (4)"
 msgstr "Gara tumsa (4)"
 
-#: data/core/macros/special-notes.cfg:12
+#: data/core/macros/special-notes.cfg:9
 #, fuzzy
 #| msgid ""
 #| " Spirits have very unusual resistances to damage, and move quite slowly "
@@ -5380,7 +5483,7 @@ msgstr ""
 " Gariem ir ļoti neparasta izturība pret uzbrukumiem, un tie pārvietojas ļoti "
 "lēni pāri ūdeņiem."
 
-#: data/core/macros/special-notes.cfg:15
+#: data/core/macros/special-notes.cfg:12
 #, fuzzy
 #| msgid ""
 #| " This unit’s arcane attack deals tremendous damage to magical creatures, "
@@ -5392,19 +5495,19 @@ msgstr ""
 " Šīs vienības mistiskais uzbrukums rada milzīgus bojājumus maģiskiem "
 "radījumiem."
 
-#: data/core/macros/special-notes.cfg:22
+#: data/core/macros/special-notes.cfg:19
 #, fuzzy
 #| msgid " This unit is capable of basic healing."
 msgid "This unit is capable of basic healing."
 msgstr " Šī vienība ir spējīga veikt pamata dziedināšanu."
 
-#: data/core/macros/special-notes.cfg:25
+#: data/core/macros/special-notes.cfg:22
 #, fuzzy
 #| msgid " This unit is capable of rapid healing."
 msgid "This unit is capable of rapid healing."
 msgstr " Šī vienība ir spējīga veikt ātru dziedināšanu."
 
-#: data/core/macros/special-notes.cfg:28
+#: data/core/macros/special-notes.cfg:25
 #, fuzzy
 #| msgid ""
 #| " This unit is capable of healing those around it, and curing them of "
@@ -5413,7 +5516,7 @@ msgid ""
 "This unit is capable of healing those around it, and curing them of poison."
 msgstr " Šī vienība ir spējīga dziedēt un izārstēt no indes."
 
-#: data/core/macros/special-notes.cfg:31
+#: data/core/macros/special-notes.cfg:28
 #, fuzzy
 #| msgid ""
 #| " This unit is capable of neutralizing the effects of poison in units "
@@ -5423,7 +5526,7 @@ msgid ""
 "it."
 msgstr " Šī vienība ir spējīga neitralizēt indi."
 
-#: data/core/macros/special-notes.cfg:34
+#: data/core/macros/special-notes.cfg:31
 #, fuzzy
 #| msgid ""
 #| " This unit regenerates, which allows it to heal as though always "
@@ -5433,7 +5536,7 @@ msgid ""
 "a village."
 msgstr " Šī vienība katrā gājienā reģenerējas."
 
-#: data/core/macros/special-notes.cfg:37
+#: data/core/macros/special-notes.cfg:34
 #, fuzzy
 #| msgid ""
 #| " The steadiness of this unit reduces damage from some attacks, but only "
@@ -5445,7 +5548,7 @@ msgstr ""
 " Šīs vienības nosvērtība samazina dažu uzbrukumu radītos bojājumus, bet "
 "tikai aizstāvoties."
 
-#: data/core/macros/special-notes.cfg:40
+#: data/core/macros/special-notes.cfg:37
 #, fuzzy
 #| msgid ""
 #| " The leadership of this unit enables adjacent units of the same side to "
@@ -5458,7 +5561,7 @@ msgstr ""
 " Šīs vienības līdera prasmes ļauj blakus esošām vienībām nodarīt lielākus "
 "bojājumus, bet tas attiecās tikai uz zemāka līmeņa vienībām."
 
-#: data/core/macros/special-notes.cfg:43
+#: data/core/macros/special-notes.cfg:40
 #, fuzzy
 #| msgid ""
 #| " This unit’s skill at skirmishing allows it to ignore enemies’ zones of "
@@ -5470,13 +5573,13 @@ msgstr ""
 " Šīs vienības veiklība ļauj ignorēt ienaidnieka kontroles zonas un "
 "netraucēti pārvietoties tām cauri."
 
-#: data/core/macros/special-notes.cfg:46
+#: data/core/macros/special-notes.cfg:43
 #, fuzzy
 #| msgid " Illumination increases the lighting level in adjacent areas."
 msgid "Illumination increases the lighting level in adjacent areas."
 msgstr " Izgaismošana palielina redzamību."
 
-#: data/core/macros/special-notes.cfg:49
+#: data/core/macros/special-notes.cfg:46
 #, fuzzy
 #| msgid ""
 #| " This unit can use one move to teleport between any two empty villages "
@@ -5488,7 +5591,7 @@ msgstr ""
 " Šī vienība var izmantot vienu gājienu, lai teleportētos starp jebkuriem "
 "diviem (pārvaldītiem) ciemiem."
 
-#: data/core/macros/special-notes.cfg:52
+#: data/core/macros/special-notes.cfg:49
 #, fuzzy
 #| msgid ""
 #| " In woodlands, this unit’s ambush skill renders it invisible to enemies "
@@ -5499,14 +5602,14 @@ msgid ""
 msgstr ""
 " Mežos šī vienība ir neredzama ienaidniekam; ja vien tā nav tieši blakus."
 
-#: data/core/macros/special-notes.cfg:55
+#: data/core/macros/special-notes.cfg:52
 #, fuzzy
 #| msgid ""
 #| " This unit is able to hide at night, leaving no trace of its presence."
 msgid "This unit is able to hide at night, leaving no trace of its presence."
 msgstr " Šī vienība spēj slēpties naktī."
 
-#: data/core/macros/special-notes.cfg:58
+#: data/core/macros/special-notes.cfg:55
 #, fuzzy
 #| msgid ""
 #| " This unit can hide in villages (with the exception of water villages), "
@@ -5518,7 +5621,7 @@ msgstr ""
 " Šī vienība spēj slēpties ciematos (izņemot ūdens ciemus), un palikt "
 "nemanīta ienaidniekam; ja vien pretinieks nestāv blakus."
 
-#: data/core/macros/special-notes.cfg:61
+#: data/core/macros/special-notes.cfg:58
 #, fuzzy
 #| msgid ""
 #| " This unit can move unseen in deep water, requiring no air from the "
@@ -5527,7 +5630,7 @@ msgid ""
 "This unit can move unseen in deep water, requiring no air from the surface."
 msgstr " Šī vienība spēj pārvietoties dziļos ūdeņos."
 
-#: data/core/macros/special-notes.cfg:64
+#: data/core/macros/special-notes.cfg:61
 #, fuzzy
 #| msgid ""
 #| " This unit gains 1 hitpoint added to its maximum whenever it kills a "
@@ -5539,7 +5642,7 @@ msgstr ""
 " Šī vienība gūst 1 veselības punktu pie maksimuma ikreiz, kad tā nogalina "
 "dzīvo vienību."
 
-#: data/core/macros/special-notes.cfg:67
+#: data/core/macros/special-notes.cfg:64
 #, fuzzy
 #| msgid ""
 #| " Whenever its berserk attack is used, this unit continues to push the "
@@ -5551,7 +5654,7 @@ msgstr ""
 " Vienmēr, kad tiek lietots 'dusmu izvirdums', cīņa turpinās kamēr kāds no "
 "cīnītājiem mirst."
 
-#: data/core/macros/special-notes.cfg:70
+#: data/core/macros/special-notes.cfg:67
 #, fuzzy
 #| msgid ""
 #| " If there is an enemy of the target on the opposite side of the target "
@@ -5565,7 +5668,7 @@ msgstr ""
 " Ja upurim pretējā pusē  ir ienaidnieks - šī vienība var iedurt mugurā, "
 "radot divkāršus bojājumus."
 
-#: data/core/macros/special-notes.cfg:73
+#: data/core/macros/special-notes.cfg:70
 #, fuzzy
 #| msgid ""
 #| " Foes who lose their life to the plague will rise again in unlife, unless "
@@ -5577,7 +5680,7 @@ msgstr ""
 " Pretinieki, kuri zaudē dzīvību no nedzīvo sērgas, pēc nāves pārtop zombijos "
 "(ja vien tie nestāv ciemā)."
 
-#: data/core/macros/special-notes.cfg:76
+#: data/core/macros/special-notes.cfg:73
 #, fuzzy
 #| msgid ""
 #| " This unit is able to slow its enemies, halving their movement speed and "
@@ -5589,7 +5692,7 @@ msgstr ""
 " Šī vienība spēj palēnināt ienaidnieku, samazinot uz pusi to pārvietošanās "
 "ātrumu un uzbrukuma spēku (līdz gājiena beigām)."
 
-#: data/core/macros/special-notes.cfg:79
+#: data/core/macros/special-notes.cfg:76
 #, fuzzy
 #| msgid ""
 #| " The ability to turn the living to stone makes this unit extremely "
@@ -5598,7 +5701,7 @@ msgid ""
 "The ability to turn the living to stone makes this unit extremely dangerous."
 msgstr " Spēj pārvērst dzīvus radijumus akmenī."
 
-#: data/core/macros/special-notes.cfg:82
+#: data/core/macros/special-notes.cfg:79
 #, fuzzy
 #| msgid ""
 #| " This unit’s marksmanship gives it a high chance of hitting targeted "
@@ -5610,7 +5713,7 @@ msgstr ""
 " Šīs vienības precizitāte piešķir lielas iespējas trāpīt pretiniekam (bet "
 "tikai uzbrūkot)."
 
-#: data/core/macros/special-notes.cfg:85
+#: data/core/macros/special-notes.cfg:82
 #, fuzzy
 #| msgid ""
 #| " This unit has magical attacks, which always have a high chance of "
@@ -5620,7 +5723,7 @@ msgid ""
 "opponent."
 msgstr " Šai vienībai ir maģiski uzbrukumi, kas vienmēr palielina precizitāti."
 
-#: data/core/macros/special-notes.cfg:88
+#: data/core/macros/special-notes.cfg:85
 #, fuzzy
 #| msgid ""
 #| " The swarming attacks of this unit become less deadly whenever its "
@@ -5631,7 +5734,7 @@ msgid ""
 msgstr ""
 " Šīs vienības uzbrukumi kļūst mazāk nāvējoši, kad tās biedri ir ievainoti."
 
-#: data/core/macros/special-notes.cfg:91
+#: data/core/macros/special-notes.cfg:88
 #, fuzzy
 #| msgid ""
 #| " Using a charging attack doubles both damage dealt and received; this "
@@ -5643,7 +5746,7 @@ msgstr ""
 " Izmantojot triecienuzbrukumu tiek dubultots gan nodarīto, gan saņemto "
 "bojājumu apjoms. Tas neietekmē aizsardzības pretuzbrukumus."
 
-#: data/core/macros/special-notes.cfg:94
+#: data/core/macros/special-notes.cfg:91
 #, fuzzy
 #| msgid ""
 #| " During battle, this unit can drain life from victims to renew its own "
@@ -5654,7 +5757,7 @@ msgstr ""
 " Kaujas laikā šī vienība spēj izsūkt dzīvību no saviem upuriem, lai "
 "atjaunotu savu veselību."
 
-#: data/core/macros/special-notes.cfg:97
+#: data/core/macros/special-notes.cfg:94
 #, fuzzy
 #| msgid ""
 #| " The length of this unit’s weapon allows it to strike first in melee, "
@@ -5664,7 +5767,7 @@ msgid ""
 "defense."
 msgstr " Ieroča garums ļauj aizstāvoties iesist pirmajam."
 
-#: data/core/macros/special-notes.cfg:100
+#: data/core/macros/special-notes.cfg:97
 #, fuzzy
 #| msgid ""
 #| " The victims of this unit’s poison will continually take damage until "
@@ -5676,10 +5779,17 @@ msgstr ""
 " Šī radijuma inde nodarīs upurim bojājumus, kamēr tas netiks izārstēts "
 "ciematā, vai ar ārsta palīdzību."
 
-#: data/core/macros/special-notes.cfg:103
+#: data/core/macros/special-notes.cfg:100
 msgid ""
 "This unit has a defense cap on certain terrain types — it cannot achieve a "
 "higher defense rating on mixed terrains with such terrain types."
+msgstr ""
+
+#. User-visible string, but only shown in the help pages of UMC units that haven't yet been updated to the 1.16 special notes format.
+#: data/core/macros/special-notes.cfg:119
+msgid ""
+"Special Notes (1.14-style, please update to the new list format to avoid "
+"duplicates):"
 msgstr ""
 
 #. [trait]: id=loyal
@@ -6033,6 +6143,11 @@ msgstr ""
 "veselības punkts par katru līmeni vairāk kā parasti."
 
 #. [trait]: id=healthy
+#: data/core/macros/traits.cfg:227
+msgid "healthy"
+msgstr "veselīgs"
+
+#. [trait]: id=healthy
 #: data/core/macros/traits.cfg:228
 msgid "female^healthy"
 msgstr "veselīga"
@@ -6218,6 +6333,226 @@ msgstr ""
 "punktiem mazāk un par vienu punktu samazināta pārvietošanās un tuvcīņas "
 "spēks."
 
+#. [berserk]: id=berserk
+#: data/core/macros/weapon_specials.cfg:9
+msgid "berserk"
+msgstr "cīņasspars"
+
+#. [berserk]: id=berserk
+#: data/core/macros/weapon_specials.cfg:10
+msgid ""
+"Whether used offensively or defensively, this attack presses the engagement "
+"until one of the combatants is slain, or 30 rounds of attacks have occurred."
+msgstr ""
+"Gan uzbrūkot, gan aizstāvoties cīnītājs ar dusmās veic līdz 30 sitienu. "
+"Parasti šādas saķeršanās beidzas ar to ka kādam ir jāmirst."
+
+#. [damage]: id=backstab
+#: data/core/macros/weapon_specials.cfg:22
+msgid ""
+"When used offensively, this attack deals double damage if there is an enemy "
+"of the target on the opposite side of the target, and that unit is not "
+"incapacitated (turned to stone or otherwise paralyzed)."
+msgstr ""
+"Uzbrūkot no muguras šis uzbrukums nodara dubultus bojājumus, lai to izdarītu "
+"- jāpielavās no muguras, un uzbrukuma brīdī mērķim jācīnās ar kādu "
+"pretinieku no priekšpuses (kurš nav pārakmeņots vai kā citādi paralizēts)."
+
+#. [plague]: id=plague({TYPE}), type={TYPE}
+#: data/core/macros/weapon_specials.cfg:42
+#, fuzzy
+#| msgid ""
+#| "When a unit is killed by a Plague attack, that unit is replaced with a "
+#| "Walking Corpse on the same side as the unit with the Plague attack. This "
+#| "doesn’t work on Undead or units in villages."
+msgid ""
+"When a unit is killed by a Plague attack, that unit is replaced with a unit "
+"on the same side as the unit with the Plague attack. This doesn’t work on "
+"Undead or units in villages."
+msgstr ""
+"Kad vienību nogalina sērga, tā tiek aizstāta ar staigājošu līķi, kas ir "
+"uzbrucēja pusē. Tas nestrādā uz nedzīvajiem un vienībām ciemos."
+
+#. [slow]: id=slow
+#: data/core/macros/weapon_specials.cfg:65
+msgid ""
+"This attack slows the target until it ends a turn. Slow halves the damage "
+"caused by attacks and the movement cost for a slowed unit is doubled. A unit "
+"that is slowed will feature a snail icon in its sidebar information when it "
+"is selected."
+msgstr ""
+"Šis uzbrukums palēlina mērķi līdz tas pabeidz gājienu. Sapīšana uz pusi "
+"samazina uzbrukumu spēku un pārvietošanās izmaksa sapītajai vienībai ir "
+"dubultota. Vienībai, kura ir sapīta, informācijas joslā būs redzama gliemeža "
+"ikona."
+
+#. [petrifies]: id=petrifies
+#: data/core/macros/weapon_specials.cfg:75
+msgid "petrifies"
+msgstr "pārakmeņot"
+
+#. [petrifies]: id=petrifies
+#: data/core/macros/weapon_specials.cfg:76
+msgid ""
+"This attack petrifies the target, turning it to stone. Units that have been "
+"petrified may not move or attack."
+msgstr ""
+"Šis uzbrukums pārakmeņo mērķi. Pārakmeņotās vienības nespēj ne pārvietoties, "
+"ne uzbrukt."
+
+#. [chance_to_hit]: id=marksman
+#: data/core/macros/weapon_specials.cfg:87
+msgid ""
+"When used offensively, this attack always has at least a 60% chance to hit."
+msgstr "Šim uzbrukumam vienmēr ir vismaz 60% iespējamība trāpīt."
+
+#. [chance_to_hit]: id=deflect
+#: data/core/macros/weapon_specials.cfg:100
+msgid "deflect"
+msgstr ""
+
+#. [chance_to_hit]: id=deflect
+#: data/core/macros/weapon_specials.cfg:101
+#, fuzzy
+#| msgid ""
+#| "When used offensively, this attack always has at least a 60% chance to "
+#| "hit."
+msgid ""
+"When used defensively, this attack reduces the opponent's chance to hit by "
+"10%."
+msgstr "Šim uzbrukumam vienmēr ir vismaz 60% iespējamība trāpīt."
+
+#. [chance_to_hit]: id=deflect
+#: data/core/macros/weapon_specials.cfg:102
+msgid ""
+"This unit’s defensive techniques reduce the chance of a successful enemy "
+"attack."
+msgstr ""
+
+#. [chance_to_hit]: id=magical
+#: data/core/macros/weapon_specials.cfg:115
+msgid "magical"
+msgstr "maģija"
+
+#. [chance_to_hit]: id=magical
+#: data/core/macros/weapon_specials.cfg:116
+msgid ""
+"This attack always has a 70% chance to hit regardless of the defensive "
+"ability of the unit being attacked."
+msgstr ""
+"Šim uzbrukumam vienmēr ir 70% iespēja trāpīt, nerēķinoties ar pretinieka "
+"aizsardzību. "
+
+#. [swarm]: id=swarm
+#: data/core/macros/weapon_specials.cfg:128
+msgid "swarm"
+msgstr "spiets"
+
+#. [swarm]: id=swarm
+#: data/core/macros/weapon_specials.cfg:129
+msgid ""
+"The number of strikes of this attack decreases when the unit is wounded. The "
+"number of strikes is proportional to the percentage of its of maximum HP the "
+"unit has. For example a unit with 3/4 of its maximum HP will get 3/4 of the "
+"number of strikes."
+msgstr ""
+"Šī uzbrukuma sitienu skaits samazinās, kad vienība ir ievainota. Sitienu "
+"skaits ir proporcionāls vienības procentuālajam veselības daudzumam no tās "
+"maksimālās veselības. Piemēram, vienībai ar 3/4 no tās maksimālajiem "
+"veselības punktiem būs 3/4 no tās sitienu skaita."
+
+#. [damage]: id=charge
+#: data/core/macros/weapon_specials.cfg:139
+msgid "charge"
+msgstr "lādiņš"
+
+#. [damage]: id=charge
+#: data/core/macros/weapon_specials.cfg:140
+msgid ""
+"When used offensively, this attack deals double damage to the target. It "
+"also causes this unit to take double damage from the target’s counterattack."
+msgstr ""
+"Kad izmantots uzbrukumā, lādiņš nodara dubultus bojājumus mērķim. Tas arī "
+"izraisa dubultus bojājumus no mērķa pretuzbrukumiem."
+
+#. [damage]: id=absorb
+#: data/core/macros/weapon_specials.cfg:153
+msgid "absorb"
+msgstr ""
+
+#. [damage]: id=absorb
+#: data/core/macros/weapon_specials.cfg:154
+msgid ""
+"This attack puts the unit in good defensive position, and it absorbs some of "
+"the damage dealt by an enemy strike."
+msgstr ""
+
+#. [damage]: id=absorb
+#: data/core/macros/weapon_specials.cfg:155
+msgid ""
+"This unit can block enemy strikes, so that it takes reduced damage when hit."
+msgstr ""
+
+#. [drains]: id=drains
+#: data/core/macros/weapon_specials.cfg:167
+msgid ""
+"This unit drains health from living units, healing itself for half the "
+"amount of damage it deals (rounded down)."
+msgstr ""
+"Šī vienība izsūc veselību no dzīvām vienībām, tā dziedējot sevi ar pusi no "
+"izsūktās veselības daudzuma (noapaļojot uz leju)."
+
+#. [firststrike]: id=firststrike
+#: data/core/macros/weapon_specials.cfg:177
+msgid "first strike"
+msgstr "pirmais trieciens"
+
+#. [firststrike]: id=firststrike
+#: data/core/macros/weapon_specials.cfg:178
+msgid ""
+"This unit always strikes first with this attack, even if they are defending."
+msgstr "Šī vienība vienmēr iesit pirmā, pat ja tā aizstāvas."
+
+#. [poison]: id=poison
+#: data/core/macros/weapon_specials.cfg:189
+#, fuzzy
+#| msgid ""
+#| "This attack poisons living targets. Poisoned units lose 8 HP every turn "
+#| "until they are cured or are reduced to 1 HP. Poison can not, of itself, "
+#| "kill a unit."
+msgid ""
+"This attack poisons living targets. Poisoned units lose 8 HP every turn "
+"until they are cured or are reduced to 1 HP. Poison cannot, of itself, kill "
+"a unit."
+msgstr ""
+"Šis uzbrukums saindē dzīvos mērķus. Saindētās vienības zaudē 6 VP katrā "
+"gājienā līdz kamēr tās tiek izārstētas vai to veselība tiek samazināta līdz "
+"1 punktam. Inde nespēj nogalināt vienību."
+
+#. [stun]: id=stun
+#: data/core/macros/weapon_specials.cfg:199
+msgid "stun"
+msgstr ""
+
+#. [stun]: id=stun
+#: data/core/macros/weapon_specials.cfg:200
+msgid ""
+"This attack hits so hard that the opponent is dazed and can no longer "
+"enforce a zone of control. The effect wears off on the opponent’s next turn."
+msgstr ""
+
+#. [stun]: id=stun
+#: data/core/macros/weapon_specials.cfg:201
+#, fuzzy
+#| msgid ""
+#| " This unit is able to slow its enemies, halving their movement speed and "
+#| "attack damage until they end a turn."
+msgid ""
+"This unit is able to stun its enemies, disrupting their zones of control."
+msgstr ""
+" Šī vienība spēj palēnināt ienaidnieku, samazinot uz pusi to pārvietošanās "
+"ātrumu un uzbrukuma spēku (līdz gājiena beigām)."
+
 #: data/core/units.cfg:4
 msgid ""
 "Despite orcs’ reliance on raw strength, few of their children are destined "
@@ -6358,15 +6693,13 @@ msgid ""
 "quickly. However, their sheer weight and bulk limits their flight ability "
 "somewhat, making them ungainly in the air. Where possible, they make use of "
 "terrain features such as hills, mountains and trees as launch points in "
-"order to gain greater height and speed. Fortunately for their enemies, they "
-"are still quite clumsy creatures and surprisingly slow in combat. This, "
-"combined with their large size, renders them easy targets for those who dare "
-"attack them.\n"
+"order to gain greater height and speed. Fortunately for their enemies, their "
+"large size renders them easy targets for those who dare attack them.\n"
 "\n"
 "Drakes are inherently magical creatures, with a mysterious internal fire "
 "fueling their very lives. This can easily be witnessed when one of their "
 "kind perishes in combat; its internal fire is released, burning their "
-"remains in to ashes. Their internal fire is also their greatest weakness; it "
+"remains into ashes. Their internal fire is also their greatest weakness; it "
 "makes them extremely vulnerable to cold attacks. Despite their magical "
 "nature, drakes are incapable of channeling magic in a controlled manner. "
 "While the magic imbued within a drake’s body enables it to spit fire and "
@@ -6397,11 +6730,10 @@ msgid ""
 "in quality, only matched by those produced in the finest Dwarvish "
 "foundries.\n"
 "\n"
-"Drakes hatch from eggs and usually live naturally between 20 to 30 years. "
-"Death in battle is the most preferred way for a drake to leave this world. "
-"Unlike the elder members of other races, drakes naturally grow more "
-"aggressive and reckless towards the ends of their natural lives, perhaps to "
-"help ensure their place in the heroic legends of their kind.\n"
+"Drakes hatch from eggs and may live naturally for several decades, although "
+"some have been known to survive for longer. However, death in battle is the "
+"most preferred way for a drake to leave this world. As such, most drakes do "
+"not live to see the end of their natural lifespan.\n"
 "\n"
 "<header>text='Geography'</header>\n"
 "Drakes originated from an archipelago of volcanic islands called "
@@ -6867,12 +7199,12 @@ msgstr "Voses"
 #: data/core/units.cfg:186
 msgid ""
 "Domesticated horses come in many shapes and sizes, from mighty war chargers, "
-"to sturdy draught horses or agile stock horses.  While they are more fragile "
+"to sturdy draught horses or agile stock horses. While they are more fragile "
 "than many beasts, their speed and cunning allow feral horses to thrive in "
 "the wild, alongside their wild brethren.\n"
 "\n"
 "Horses have been an important part of many civilizations, so it is not "
-"surprising that there are many myths and stories centered around them.  "
+"surprising that there are many myths and stories centered around them. "
 "Winged horses, man-horse hybrids, and ghost horses have made their way into "
 "written history, though few can honestly claim to have seen such things."
 msgstr ""
@@ -7919,7 +8251,28 @@ msgstr ""
 "pasaules daļā. No sava miega pamostās tikai priekš meža aizstāvēšanas, kuru "
 "tie sauc par mājām."
 
-#: src/help/help.cpp:212
+#: data/lua/feeding.lua:30 data/lua/feeding.lua:43
+msgid "+1 max HP"
+msgstr "+1 maksimālajiem veselības punktiem"
+
+#. [lua]: wesnoth.interface.game_display.unit_status
+#: data/lua/stun.lua:14
+msgid "stunned: This unit is stunned. It cannot enforce its Zone of Control."
+msgstr ""
+
+#. [lua]: on_hit
+#: data/lua/stun.lua:24
+#, fuzzy
+#| msgid "female^undead"
+msgid "female^stunned"
+msgstr "nedzīva"
+
+#. [lua]: on_hit
+#: data/lua/stun.lua:26
+msgid "stunned"
+msgstr ""
+
+#: src/help/help.cpp:211
 msgid "Close"
 msgstr "Aizvērt"
 
@@ -7927,142 +8280,60 @@ msgstr "Aizvērt"
 msgid "Help"
 msgstr "Palīdzība"
 
-#: src/help/help.cpp:269 src/help/help.cpp:273
+#: src/help/help.cpp:267 src/help/help.cpp:271
 #, fuzzy
 #| msgid "Parse error when parsing help text: "
 msgid "Parse error when parsing help text:"
 msgstr "Parsēšanas kļūda palīdzības tekstā: "
 
-#: src/help/help_topic_generators.cpp:63
+#: src/help/help_topic_generators.cpp:64
 msgid "Best of"
 msgstr ""
 
-#: src/help/help_topic_generators.cpp:63
+#: src/help/help_topic_generators.cpp:64
 msgid "Worst of"
 msgstr ""
 
-#: src/help/help_topic_generators.cpp:156
-msgid "Base Terrain: "
-msgstr "Bāzes Apvidus: "
-
-#: src/help/help_topic_generators.cpp:176
-#, fuzzy
-#| msgid "Movement Cost"
-msgid "Movement properties: "
-msgstr "Pārvietošanās izmaksas"
-
-#: src/help/help_topic_generators.cpp:180
-msgid "Defense properties: "
+#: src/help/help_topic_generators.cpp:161
+msgid ""
+"Villages allow any unit stationed therein to heal, or to be cured of poison."
 msgstr ""
 
-#: src/help/help_topic_generators.cpp:260
-#, fuzzy
-#| msgid "level"
-msgid "Level"
-msgstr "līmenis"
+#. TRANSLATORS: special note for terrains such as the oasis; the only terrain in core with this property heals 8 hp just like a village.
+#. For the single-hitpoint variant, the wording is different because I assume the player will be more interested in the curing-poison part than the minimal healing.
+#: src/help/help_topic_generators.cpp:166
+msgid ""
+"This terrain allows units to be cured of poison, or to heal a single "
+"hitpoint."
+msgid_plural ""
+"This terrain allows units to heal $amount hitpoints, or to be cured of "
+"poison, as if stationed in a village."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
-#: src/help/help_topic_generators.cpp:321
-msgid "Advances from: "
-msgstr "Attīstās no: "
+#: src/help/help_topic_generators.cpp:173
+msgid ""
+"This terrain is a castle — units can be recruited onto it from a connected "
+"keep."
+msgstr ""
 
-#: src/help/help_topic_generators.cpp:323
-#, fuzzy
-#| msgid "Advances from: "
-msgid "Advances to: "
-msgstr "Attīstās no: "
+#. TRANSLATORS: The "this terrain is a castle" note will also be shown directly above this one.
+#: src/help/help_topic_generators.cpp:177
+msgid ""
+"This terrain is a keep — a leader can recruit from this hex onto connected "
+"castle hexes."
+msgstr ""
 
-#: src/help/help_topic_generators.cpp:352
-msgid "Base unit: "
-msgstr "Bāzes vienība: "
+#. TRANSLATORS: Special note for a terrain, but none of the terrains in mainline do this.
+#: src/help/help_topic_generators.cpp:180
+msgid ""
+"This unusual keep allows a leader to recruit while standing on it, but does "
+"not allow a leader on a connected keep to recruit onto this hex."
+msgstr ""
 
-#: src/help/help_topic_generators.cpp:357
-msgid "Base units: "
-msgstr "Bāzes vienības: "
-
-#: src/help/help_topic_generators.cpp:375
-msgid "Variations: "
-msgstr "Variācijas: "
-
-#: src/help/help_topic_generators.cpp:399
-msgid "race^Miscellaneous"
-msgstr "Dažādi"
-
-#: src/help/help_topic_generators.cpp:401
-msgid "Race: "
-msgstr "Rase: "
-
-#: src/help/help_topic_generators.cpp:471
-msgid "Abilities: "
-msgstr "Spējas: "
-
-#: src/help/help_topic_generators.cpp:497
-msgid "Ability Upgrades: "
-msgstr "Spēju uzlabojumi:"
-
-#. TRANSLATORS: This string is used in the help page of a single unit.  If the translation
-#. uses spaces, use non-breaking spaces as appropriate for the target language to prevent
-#. unpleasant line breaks (issue #3256).
-#: src/help/help_topic_generators.cpp:527
-#, fuzzy
-#| msgid "HP: "
-msgid "HP:"
-msgstr "Veselība: "
-
-#. TRANSLATORS: This string is used in the help page of a single unit.  If the translation
-#. uses spaces, use non-breaking spaces as appropriate for the target language to prevent
-#. unpleasant line breaks (issue #3256).
-#: src/help/help_topic_generators.cpp:531
-#, fuzzy
-#| msgid "Moves: "
-msgid "Moves:"
-msgstr "Gājieni: "
-
-#. TRANSLATORS: This string is used in the help page of a single unit.  If the translation
-#. uses spaces, use non-breaking spaces as appropriate for the target language to prevent
-#. unpleasant line breaks (issue #3256).
-#: src/help/help_topic_generators.cpp:536
-#, fuzzy
-#| msgid "Vision: "
-msgid "Vision:"
-msgstr "Vīzija: "
-
-#. TRANSLATORS: This string is used in the help page of a single unit.  If the translation
-#. uses spaces, use non-breaking spaces as appropriate for the target language to prevent
-#. unpleasant line breaks (issue #3256).
-#: src/help/help_topic_generators.cpp:542
-#, fuzzy
-#| msgid "Jamming: "
-msgid "Jamming:"
-msgstr "Traucējums: "
-
-#. TRANSLATORS: This string is used in the help page of a single unit.  If the translation
-#. uses spaces, use non-breaking spaces as appropriate for the target language to prevent
-#. unpleasant line breaks (issue #3256).
-#: src/help/help_topic_generators.cpp:547
-#, fuzzy
-#| msgid "Cost: "
-msgid "Cost:"
-msgstr "Izmaksas: "
-
-#. TRANSLATORS: This string is used in the help page of a single unit.  If the translation
-#. uses spaces, use non-breaking spaces as appropriate for the target language to prevent
-#. unpleasant line breaks (issue #3256).
-#: src/help/help_topic_generators.cpp:551
-#, fuzzy
-#| msgid "Alignment: "
-msgid "Alignment:"
-msgstr "Īpašība: "
-
-#. TRANSLATORS: This string is used in the help page of a single unit.  It uses
-#. non-breaking spaces to prevent unpleasant line breaks (issue #3256).  In the
-#. translation use non-breaking spaces as appropriate for the target language.
-#: src/help/help_topic_generators.cpp:558
-#, fuzzy
-#| msgid "Required XP: "
-msgid "Required XP:"
-msgstr "Nepieciešamie PP: "
-
-#: src/help/help_topic_generators.cpp:564
+#: src/help/help_topic_generators.cpp:184
+#: src/help/help_topic_generators.cpp:601
 #, fuzzy
 #| msgid ""
 #| "\n"
@@ -8074,61 +8345,219 @@ msgstr ""
 "\n"
 "Īpašas piezīmes:"
 
+#: src/help/help_topic_generators.cpp:193
+msgid "Base Terrain: "
+msgstr "Bāzes Apvidus: "
+
+#: src/help/help_topic_generators.cpp:213
+#, fuzzy
+#| msgid "Movement Cost"
+msgid "Movement properties: "
+msgstr "Pārvietošanās izmaksas"
+
+#: src/help/help_topic_generators.cpp:217
+msgid "Defense properties: "
+msgstr ""
+
+#: src/help/help_topic_generators.cpp:297
+#, fuzzy
+#| msgid "level"
+msgid "Level"
+msgstr "līmenis"
+
+#: src/help/help_topic_generators.cpp:358
+msgid "Advances from: "
+msgstr "Attīstās no: "
+
+#: src/help/help_topic_generators.cpp:360
+#, fuzzy
+#| msgid "Advances from: "
+msgid "Advances to: "
+msgstr "Attīstās no: "
+
+#: src/help/help_topic_generators.cpp:389
+msgid "Base unit: "
+msgstr "Bāzes vienība: "
+
+#: src/help/help_topic_generators.cpp:394
+msgid "Base units: "
+msgstr "Bāzes vienības: "
+
+#: src/help/help_topic_generators.cpp:412
+msgid "Variations: "
+msgstr "Variācijas: "
+
+#: src/help/help_topic_generators.cpp:436
+msgid "race^Miscellaneous"
+msgstr "Dažādi"
+
+#: src/help/help_topic_generators.cpp:438
+msgid "Race: "
+msgstr "Rase: "
+
+#: src/help/help_topic_generators.cpp:508
+msgid "Abilities: "
+msgstr "Spējas: "
+
+#: src/help/help_topic_generators.cpp:534
+msgid "Ability Upgrades: "
+msgstr "Spēju uzlabojumi:"
+
+#. TRANSLATORS: This string is used in the help page of a single unit.  If the translation
+#. uses spaces, use non-breaking spaces as appropriate for the target language to prevent
+#. unpleasant line breaks (issue #3256).
+#: src/help/help_topic_generators.cpp:564
+#, fuzzy
+#| msgid "HP: "
+msgid "HP:"
+msgstr "Veselība: "
+
+#. TRANSLATORS: This string is used in the help page of a single unit.  If the translation
+#. uses spaces, use non-breaking spaces as appropriate for the target language to prevent
+#. unpleasant line breaks (issue #3256).
+#: src/help/help_topic_generators.cpp:568
+#, fuzzy
+#| msgid "Moves: "
+msgid "Moves:"
+msgstr "Gājieni: "
+
+#. TRANSLATORS: This string is used in the help page of a single unit.  If the translation
+#. uses spaces, use non-breaking spaces as appropriate for the target language to prevent
+#. unpleasant line breaks (issue #3256).
 #: src/help/help_topic_generators.cpp:573
+#, fuzzy
+#| msgid "Vision: "
+msgid "Vision:"
+msgstr "Vīzija: "
+
+#. TRANSLATORS: This string is used in the help page of a single unit.  If the translation
+#. uses spaces, use non-breaking spaces as appropriate for the target language to prevent
+#. unpleasant line breaks (issue #3256).
+#: src/help/help_topic_generators.cpp:579
+#, fuzzy
+#| msgid "Jamming: "
+msgid "Jamming:"
+msgstr "Traucējums: "
+
+#. TRANSLATORS: This string is used in the help page of a single unit.  If the translation
+#. uses spaces, use non-breaking spaces as appropriate for the target language to prevent
+#. unpleasant line breaks (issue #3256).
+#: src/help/help_topic_generators.cpp:584
+#, fuzzy
+#| msgid "Cost: "
+msgid "Cost:"
+msgstr "Izmaksas: "
+
+#. TRANSLATORS: This string is used in the help page of a single unit.  If the translation
+#. uses spaces, use non-breaking spaces as appropriate for the target language to prevent
+#. unpleasant line breaks (issue #3256).
+#: src/help/help_topic_generators.cpp:588
+#, fuzzy
+#| msgid "Alignment: "
+msgid "Alignment:"
+msgstr "Īpašība: "
+
+#. TRANSLATORS: This string is used in the help page of a single unit.  It uses
+#. non-breaking spaces to prevent unpleasant line breaks (issue #3256).  In the
+#. translation use non-breaking spaces as appropriate for the target language.
+#: src/help/help_topic_generators.cpp:595
+#, fuzzy
+#| msgid "Required XP: "
+msgid "Required XP:"
+msgstr "Nepieciešamie PP: "
+
+#: src/help/help_topic_generators.cpp:613
 msgid "unit help^Attacks"
 msgstr "Uzbrukumi"
 
-#: src/help/help_topic_generators.cpp:580
+#: src/help/help_topic_generators.cpp:620
 msgid "unit help^Name"
 msgstr "Nosaukums"
 
-#: src/help/help_topic_generators.cpp:582
+#: src/help/help_topic_generators.cpp:621
+msgid "Strikes"
+msgstr "Sitieni"
+
+#: src/help/help_topic_generators.cpp:622
 msgid "Range"
 msgstr "Diapazons"
 
-#: src/help/help_topic_generators.cpp:583
+#: src/help/help_topic_generators.cpp:623
 msgid "Type"
 msgstr "Tips"
 
-#: src/help/help_topic_generators.cpp:584
+#: src/help/help_topic_generators.cpp:624
 msgid "Special"
 msgstr "Paņēmiens"
 
-#: src/help/help_topic_generators.cpp:666
+#: src/help/help_topic_generators.cpp:699
+msgid "Resistances"
+msgstr "Izturība"
+
+#: src/help/help_topic_generators.cpp:703
 msgid "Attack Type"
 msgstr "Uzbrukuma tips"
 
-#: src/help/help_topic_generators.cpp:667
+#: src/help/help_topic_generators.cpp:704
 msgid "Resistance"
 msgstr "Izturība"
 
-#: src/help/help_topic_generators.cpp:696
+#: src/help/help_topic_generators.cpp:734
 #, fuzzy
 #| msgid "Terrain Modifiers"
 msgid "Terrain Modifiers"
 msgstr "Apvidus modifikatori"
 
-#: src/help/help_topic_generators.cpp:700
+#: src/help/help_topic_generators.cpp:738
 msgid "Terrain"
 msgstr "Apvidus"
 
-#: src/help/help_topic_generators.cpp:702
+#: src/help/help_topic_generators.cpp:739
+msgid "Defense"
+msgstr "Aizsardzība"
+
+#: src/help/help_topic_generators.cpp:740
 msgid "Movement Cost"
 msgstr "Pārvietošanās izmaksas"
 
-#: src/help/help_topic_generators.cpp:706
+#: src/help/help_topic_generators.cpp:744
 #, fuzzy
 #| msgid "Defense"
 msgid "Defense Cap"
 msgstr "Aizsardzība"
 
-#: src/help/help_topic_generators.cpp:711
+#: src/help/help_topic_generators.cpp:749
 msgid "Vision Cost"
 msgstr "Vīzijas cena"
 
-#: src/help/help_topic_generators.cpp:715
+#: src/help/help_topic_generators.cpp:753
 msgid "Jamming Cost"
 msgstr "Traucējuma cena"
+
+#, fuzzy
+#~| msgid ""
+#~| "This unit can lead our own units that are next to it, making them fight "
+#~| "better.\n"
+#~| "\n"
+#~| "Adjacent own units of lower level will do more damage in battle. When a "
+#~| "unit adjacent to, of a lower level than, and on the same side as a unit "
+#~| "with Leadership engages in combat, its attacks do 25% more damage times "
+#~| "the difference in their levels."
+#~ msgid ""
+#~ "This unit can lead your own units that are next to it, making them fight "
+#~ "better.\n"
+#~ "\n"
+#~ "Adjacent own units of lower level will do more damage in battle. When a "
+#~ "unit adjacent to, of a lower level than, and on the same side as a unit "
+#~ "with Leadership engages in combat, its attacks do 25% more damage times "
+#~ "the difference in their levels."
+#~ msgstr ""
+#~ "Šī vienība spēj vadīt vienības, kas tai ir blakus, motivējot tām cīnīties "
+#~ "labāk.\n"
+#~ "\n"
+#~ "Blakus esošās mūsu vienības ar zemāku līmeni nodarīs lielākus bojājumus "
+#~ "cīņā. Kad vienībai ar mazāku līmeni blakus stāv vadītājs tās uzbrukumi "
+#~ "nodara par 25% lielākus bojājumus."
 
 #~ msgid "The Battle for Wesnoth Help"
 #~ msgstr "Kaujas par Vesnotu palīdzība"

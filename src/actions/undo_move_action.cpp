@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2017 - 2021
+	Copyright (C) 2017 - 2023
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -56,7 +56,7 @@ void move_action::write(config & cfg) const
 	shroud_clearing_action::write(cfg);
 	cfg["starting_direction"] = map_location::write_direction(starting_dir);
 	cfg["starting_moves"] = starting_moves;
-	config & child = cfg.child("unit");
+	config & child = cfg.mandatory_child("unit");
 	child["goto_x"] = goto_hex.wml_x();
 	child["goto_y"] = goto_hex.wml_y();
 }
@@ -80,7 +80,7 @@ bool move_action::undo(int)
 	const unit_map::iterator u_end = units.find(rev_route.back());
 	if ( u == units.end()  ||  u_end != units.end() ) {
 		//this can actually happen if the scenario designer has abused the [allow_undo] command
-		ERR_NG << "Illegal 'undo' found. Possible abuse of [allow_undo]?" << std::endl;
+		ERR_NG << "Illegal 'undo' found. Possible abuse of [allow_undo]?";
 		return false;
 	}
 	this->return_village();

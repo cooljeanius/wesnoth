@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 - 2021
+	Copyright (C) 2016 - 2023
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -27,10 +27,10 @@ namespace gui2::dialogs
 REGISTER_DIALOG(hotkey_bind)
 
 hotkey_bind::hotkey_bind(const std::string& hotkey_id)
-	: hotkey_id_(hotkey_id)
+	: modal_dialog(window_id())
+	, hotkey_id_(hotkey_id)
 	, new_binding_()
 {
-	set_restore(true);
 }
 
 void hotkey_bind::pre_show(window& window)

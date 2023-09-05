@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008 - 2021
+	Copyright (C) 2008 - 2023
 	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -33,7 +33,8 @@ editor_resize_map::editor_resize_map(int& width,
 									   int& height,
 									   EXPAND_DIRECTION& expand_direction,
 									   bool& copy_edge_terrain)
-	: width_(register_integer("width", true, width))
+	: modal_dialog(window_id())
+	, width_(register_integer("width", true, width))
 	, height_(register_integer("height", true, height))
 	, old_width_(width)
 	, old_height_(height)
@@ -112,8 +113,8 @@ void editor_resize_map::update_expand_direction()
 		set_direction_icon(i, "none");
 	}
 
-	int xdiff = width_->get_widget_value(*get_window()) - old_width_;
-	int ydiff = height_->get_widget_value(*get_window()) - old_height_;
+	int xdiff = width_->get_widget_value() - old_width_;
+	int ydiff = height_->get_widget_value() - old_height_;
 	int x = static_cast<int>(expand_direction_) % 3;
 	int y = static_cast<int>(expand_direction_) / 3;
 	set_direction_icon(expand_direction_, "center");

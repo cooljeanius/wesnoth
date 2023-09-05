@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008 - 2021
+	Copyright (C) 2008 - 2023
 	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -26,7 +26,6 @@
 
 #include "help/help.hpp"
 #include "gettext.hpp"
-#include "gui/auxiliary/filter.hpp"
 #include "gui/auxiliary/find_widget.hpp"
 #include "gui/dialogs/addon/license_prompt.hpp"
 #include "gui/dialogs/addon/addon_auth.hpp"
@@ -40,11 +39,12 @@
 #include "gui/widgets/drawing.hpp"
 #include "gui/widgets/image.hpp"
 #include "gui/widgets/listbox.hpp"
-#include "gui/widgets/pane.hpp"
 #include "gui/widgets/settings.hpp"
 #include "gui/widgets/toggle_button.hpp"
 #include "gui/widgets/text_box.hpp"
 #include "gui/widgets/window.hpp"
+#include "preferences/credentials.hpp"
+#include "preferences/game.hpp"
 #include "serialization/string_utils.hpp"
 #include "formula/string_utils.hpp"
 #include "picture.hpp"
@@ -55,8 +55,8 @@
 #include "config.hpp"
 
 #include <functional>
-
 #include <iomanip>
+#include <set>
 #include <sstream>
 #include <stdexcept>
 
@@ -145,7 +145,7 @@ namespace {
 
 	std::string langcode_to_string(const std::string& lcode)
 	{
-		for(const auto & ld : get_languages())
+		for(const auto & ld : get_languages(true))
 		{
 			if(ld.localename == lcode || ld.localename.substr(0, 2) == lcode) {
 				return ld.language;
@@ -242,7 +242,8 @@ const std::vector<addon_tag> tag_filter_types_{
 };
 
 addon_manager::addon_manager(addons_client& client)
-	: orders_()
+	: modal_dialog(window_id())
+	, orders_()
 	, cfg_()
 	, client_(client)
 	, addons_()
@@ -390,6 +391,38 @@ void addon_manager::pre_show(window& window)
 	connect_signal_notify_modified(type_filter,
 		std::bind(&addon_manager::apply_filters, this));
 
+	// Language filter
+	// Prepare shown languages, source all available languages from the addons themselves
+	std::set<std::string> languages_available;
+	for(const auto& a : addons_) {
+		for (const auto& b : a.second.locales) {
+			languages_available.insert(b);
+		}
+	}
+	std::set<std::string> language_strings_available;
+	for (const auto& i: languages_available) {
+		// Only show languages, which have a translation as per langcode_to_string() method
+		// Do not show tranlations with their langcode e.g. "sv_SV"
+		// Also put them into a set, so same lang strings are not producing doublettes
+		if (std::string lang_code_string = langcode_to_string(i); !lang_code_string.empty()) {
+			language_strings_available.insert(lang_code_string);
+		}
+	}
+	for (auto& i: language_strings_available) {
+		language_filter_types_.emplace_back(language_filter_types_.size(), std::move(i));
+	}
+	// The language filter
+	multimenu_button& language_filter = find_widget<multimenu_button>(&window, "language_filter", false);
+	std::vector<config> language_filter_entries;
+	for(const auto& f : language_filter_types_) {
+		language_filter_entries.emplace_back("label", f.second, "checkbox", false);
+	}
+
+	language_filter.set_values(language_filter_entries);
+
+	connect_signal_notify_modified(language_filter,
+		std::bind(&addon_manager::apply_filters, this));
+
 	// Sorting order
 	menu_button& order_dropdown = find_widget<menu_button>(&window, "order_dropdown", false);
 
@@ -412,8 +445,7 @@ void addon_manager::pre_show(window& window)
 	order_dropdown.set_values(order_dropdown_entries);
 	{
 		const std::string saved_order_name = preferences::addon_manager_saved_order_name();
-		const preferences::SORT_ORDER saved_order_direction =
-			static_cast<preferences::SORT_ORDER>(preferences::addon_manager_saved_order_direction());
+		const sort_order::type saved_order_direction = preferences::addon_manager_saved_order_direction();
 
 		if(!saved_order_name.empty()) {
 			auto order_it = std::find_if(all_orders_.begin(), all_orders_.end(),
@@ -421,7 +453,7 @@ void addon_manager::pre_show(window& window)
 			if(order_it != all_orders_.end()) {
 				int index = 2 * (std::distance(all_orders_.begin(), order_it));
 				addon_list::addon_sort_func func;
-				if(saved_order_direction == preferences::SORT_ORDER::ASCENDING) {
+				if(saved_order_direction == sort_order::type::ascending) {
 					func = order_it->sort_func_asc;
 				} else {
 					func = order_it->sort_func_desc;
@@ -493,11 +525,10 @@ void addon_manager::pre_show(window& window)
 	window.keyboard_capture(&filter);
 	list.add_list_to_keyboard_chain();
 
-	list.set_callback_order_change(std::bind(&addon_manager::on_order_changed, this,
-		std::placeholders::_1, std::placeholders::_2));
+	list.set_callback_order_change(std::bind(&addon_manager::on_order_changed, this, std::placeholders::_1, std::placeholders::_2));
 
 	// Use handle the special addon_list retval to allow installing addons on double click
-	window.set_exit_hook(std::bind(&addon_manager::exit_hook, this, std::placeholders::_1));
+	window.set_exit_hook(window::exit_hook::on_all, std::bind(&addon_manager::exit_hook, this, std::placeholders::_1));
 }
 
 void addon_manager::toggle_details(button& btn, stacked_widget& stk)
@@ -513,8 +544,8 @@ void addon_manager::toggle_details(button& btn, stacked_widget& stk)
 
 void addon_manager::fetch_addons_list()
 {
-	client_.request_addons_list(cfg_);
-	if(!cfg_) {
+	bool success = client_.request_addons_list(cfg_);
+	if(!success) {
 		gui2::show_error_message(_("An error occurred while downloading the add-ons list from the server."));
 		get_window()->close();
 	}
@@ -537,16 +568,18 @@ void addon_manager::load_addon_list()
 			// to match add-ons in the config list. It also fills in addon_info's id field. It's also
 			// neccessay to set local_only here so that flag can be properly set after addons_ is cleared
 			// and recreated by read_addons_list.
-			config pbl_cfg = get_addon_pbl_info(id);
-			pbl_cfg["name"] = id;
-			pbl_cfg["local_only"] = true;
+			try {
+				config pbl_cfg = get_addon_pbl_info(id, false);
+				pbl_cfg["name"] = id;
+				pbl_cfg["local_only"] = true;
 
-			// Add the add-on to the list.
-			addon_info addon(pbl_cfg);
-			addons_[id] = addon;
+				// Add the add-on to the list.
+				addon_info addon(pbl_cfg);
+				addons_[id] = addon;
 
-			// Add the addon to the config entry
-			cfg_.add_child("campaign", std::move(pbl_cfg));
+				// Add the addon to the config entry
+				cfg_.add_child("campaign", std::move(pbl_cfg));
+			} catch(invalid_pbl_exception&) {}
 		}
 	}
 
@@ -678,7 +711,42 @@ boost::dynamic_bitset<> addon_manager::get_type_filter_visibility() const
 				);
 			res.push_back(toggle_states[index]);
 		}
+		return res;
+	}
+}
 
+boost::dynamic_bitset<> addon_manager::get_lang_filter_visibility() const
+{
+	const multimenu_button& lang_filter = find_widget<const multimenu_button>(get_window(), "language_filter", false);
+
+	boost::dynamic_bitset<> toggle_states = lang_filter.get_toggle_states();
+
+	if(toggle_states.none()) {
+		boost::dynamic_bitset<> res_flipped(addons_.size());
+		return ~res_flipped;
+	} else {
+		boost::dynamic_bitset<> res;
+		for(const auto& a : addons_) {
+			bool retval = false;
+			// langcode -> string conversion vector, to be able to detect either
+			// langcodes or langstring entries
+			std::vector<std::string> lang_string_vector;
+			for (long unsigned int i = 0; i < a.second.locales.size(); i++) {
+				lang_string_vector.push_back(langcode_to_string(a.second.locales[i]));
+			}
+			// Find all toggle states, where toggle = true and lang = lang
+			for (long unsigned int i = 0; i < toggle_states.size(); i++) {
+				if (toggle_states[i] == true) {
+					// does lang_code match?
+					bool contains_lang_code = utils::contains(a.second.locales, language_filter_types_[i].second);
+					// does land_string match?
+					bool contains_lang_string = utils::contains(lang_string_vector, language_filter_types_[i].second);
+					if ((contains_lang_code || contains_lang_string) == true)
+						retval = true;
+				}
+			}
+			res.push_back(retval);
+		}
 		return res;
 	}
 }
@@ -688,7 +756,8 @@ void addon_manager::apply_filters()
 	// In the small-screen layout, the text_box for the filter keeps keyboard focus even when the
 	// details panel is visible, which means this can be called when the list isn't visible. That
 	// causes problems both because find_widget can throw exceptions, but also because changing the
-	// filters can trigger on_addon_select and thus affect which add-on's details are shown.
+	// filters can hide the currently-shown add-on, triggering a different one to be selected in a
+	// way that would seem random unless the user realised that they were typing into a filter box.
 	//
 	// Quick workaround is to not process the new filter if the list isn't visible.
 	auto list = find_widget<addon_list>(get_window(), "addons", false, false);
@@ -700,6 +769,7 @@ void addon_manager::apply_filters()
 		get_status_filter_visibility()
 		& get_tag_filter_visibility()
 		& get_type_filter_visibility()
+		& get_lang_filter_visibility()
 		& get_name_filter_visibility();
 	list->set_addon_shown(res);
 }
@@ -708,9 +778,9 @@ void addon_manager::order_addons()
 {
 	const menu_button& order_menu = find_widget<const menu_button>(get_window(), "order_dropdown", false);
 	const addon_order& order_struct = all_orders_.at(order_menu.get_value() / 2);
-	preferences::SORT_ORDER order = order_menu.get_value() % 2 == 0 ? preferences::SORT_ORDER::ASCENDING : preferences::SORT_ORDER::DESCENDING;
+	sort_order::type order = order_menu.get_value() % 2 == 0 ? sort_order::type::ascending : sort_order::type::descending;
 	addon_list::addon_sort_func func;
-	if(order == preferences::SORT_ORDER::ASCENDING) {
+	if(order == sort_order::type::ascending) {
 		func = order_struct.sort_func_asc;
 	} else {
 		func = order_struct.sort_func_desc;
@@ -721,13 +791,13 @@ void addon_manager::order_addons()
 	preferences::set_addon_manager_saved_order_direction(order);
 }
 
-void addon_manager::on_order_changed(unsigned int sort_column, preferences::SORT_ORDER order)
+void addon_manager::on_order_changed(unsigned int sort_column, sort_order::type order)
 {
 	menu_button& order_menu = find_widget<menu_button>(get_window(), "order_dropdown", false);
 	auto order_it = std::find_if(all_orders_.begin(), all_orders_.end(),
 		[sort_column](const addon_order& order) {return order.column_index == static_cast<int>(sort_column);});
 	int index = 2 * (std::distance(all_orders_.begin(), order_it));
-	if(order == preferences::SORT_ORDER::DESCENDING) {
+	if(order == sort_order::type::descending) {
 		++index;
 	}
 	order_menu.set_value(index);
@@ -839,7 +909,8 @@ void addon_manager::publish_addon(const addon_info& addon)
 	std::string server_msg;
 
 	const std::string addon_id = addon.id;
-	config cfg = get_addon_pbl_info(addon_id);
+	// Since the user is planning to upload an addon, this is the right time to validate the .pbl.
+	config cfg = get_addon_pbl_info(addon_id, true);
 
 	const version_info& version_to_publish = cfg["version"].str();
 
@@ -853,11 +924,18 @@ void addon_manager::publish_addon(const addon_info& addon)
 		}
 	}
 
-	// the passphrase isn't provided, prompt for it
+	// if the passphrase isn't provided from the _server.pbl, try to pre-populate it from the preferences before prompting for it
 	if(cfg["passphrase"].empty()) {
+		cfg["passphrase"] = preferences::password(preferences::campaign_server(), cfg["author"]);
 		if(!gui2::dialogs::addon_auth::execute(cfg)) {
 			return;
+		} else {
+			preferences::set_password(preferences::campaign_server(), cfg["author"], cfg["passphrase"]);
 		}
+	} else if(cfg["forum_auth"].to_bool()) {
+		// if the uploader's forum password is present in the _server.pbl
+		gui2::show_error_message(_("The passphrase attribute cannot be present when forum_auth is used."));
+		return;
 	}
 
 	if(!::image::exists(cfg["icon"].str())) {
@@ -955,11 +1033,13 @@ static std::string format_addon_time(std::time_t time)
 	if(time) {
 		std::ostringstream ss;
 
-		const char* format = preferences::use_twelve_hour_clock_format()
-			? "%B %d %Y, %I:%M %p"
-			: "%B %d %Y, %H:%M";
+		const std::string format = preferences::use_twelve_hour_clock_format()
+			// TRANSLATORS: Month + day of month + year + 12-hour time, eg 'November 02 2021, 1:59 PM'. Format for your locale.
+			? _("%B %d %Y, %I:%M %p")
+			// TRANSLATORS: Month + day of month + year + 24-hour time, eg 'November 02 2021, 13:59'. Format for your locale.
+			: _("%B %d %Y, %H:%M");
 
-		ss << std::put_time(std::localtime(&time), format);
+		ss << translation::strftime(format, std::localtime(&time));
 
 		return ss.str();
 	}
@@ -969,15 +1049,17 @@ static std::string format_addon_time(std::time_t time)
 
 void addon_manager::on_addon_select()
 {
-	const addon_info* info = find_widget<addon_list>(get_window(), "addons", false).get_selected_addon();
+	widget* parent = get_window();
+	widget* parent_of_addons_list = parent;
+	if(stacked_widget* stk = find_widget<stacked_widget>(get_window(), "main_stack", false, false)) {
+		parent = stk->get_layer_grid(1);
+		parent_of_addons_list = stk->get_layer_grid(0);
+	}
+
+	const addon_info* info = find_widget<addon_list>(parent_of_addons_list, "addons", false).get_selected_addon();
 
 	if(info == nullptr) {
 		return;
-	}
-
-	widget* parent = get_window();
-	if(stacked_widget* stk = find_widget<stacked_widget>(get_window(), "main_stack", false, false)) {
-		parent = stk->get_layer_grid(1);
 	}
 
 	find_widget<drawing>(parent, "image", false).set_label(info->display_icon());
@@ -1017,6 +1099,7 @@ void addon_manager::on_addon_select()
 
 	const std::string& feedback_url = info->feedback_url;
 	find_widget<label>(parent, "url", false).set_label(!feedback_url.empty() ? feedback_url : _("url^None"));
+	find_widget<label>(parent, "id", false).set_label(info->id);
 
 	bool installed = is_installed_addon_status(tracking_info_[info->id].state);
 	bool updatable = tracking_info_[info->id].state == ADDON_INSTALLED_UPGRADABLE;

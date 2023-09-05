@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2009 - 2021
+	Copyright (C) 2009 - 2023
 	by Guillaume Melquiond <guillaume.melquiond@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -25,7 +25,6 @@
 #include "utils/const_clone.hpp"
 
 #include "lua/lauxlib.h"
-#include "lua/lua.h"                    // for lua_State, lua_settop, etc
 
 #include <type_traits>
 
@@ -265,6 +264,7 @@ static int impl_unit_attack_get(lua_State *L)
 	return_float_attrib("defense_weight", attack.defense_weight());
 	return_int_attrib("accuracy", attack.accuracy());
 	return_int_attrib("movement_used", attack.movement_used());
+	return_int_attrib("attacks_used", attack.attacks_used());
 	return_int_attrib("parry", attack.parry());
 	return_cfgref_attrib("specials", attack.specials());
 	return_cfgref_attrib("__cfg", attack.to_config());
@@ -297,6 +297,7 @@ static int impl_unit_attack_set(lua_State *L)
 	modify_int_attrib("defense_weight", attack.set_defense_weight(value));
 	modify_int_attrib("accuracy", attack.set_accuracy(value));
 	modify_int_attrib("movement_used", attack.set_movement_used(value));
+	modify_int_attrib("attacks_used", attack.set_attacks_used(value));
 	modify_int_attrib("parry", attack.set_parry(value));
 
 	if(strcmp(m, "specials") == 0) {

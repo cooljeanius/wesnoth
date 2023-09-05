@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2010 - 2021
+	Copyright (C) 2010 - 2023
 	by Fabian Müller <fabianmueller5@gmx.de>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -29,13 +29,15 @@ namespace gui2::dialogs
 REGISTER_DIALOG(editor_edit_side)
 
 editor_edit_side::editor_edit_side(editor::editor_team_info& info)
-	: controller_(info.controller)
+	: modal_dialog(window_id())
+	, controller_(info.controller)
 	, share_vision_(info.share_vision)
 {
 	register_label("side_number", true, std::to_string(info.side), true);
 
 	register_text("team_name", true, info.id, true);
 	register_text("user_team_name", true, info.name, false);
+	register_text("recruit_list", true, info.recruit_list, false);
 
 	register_integer("gold", true, info.gold);
 	register_integer("income", true, info.income);
@@ -52,20 +54,21 @@ editor_edit_side::editor_edit_side(editor::editor_team_info& info)
 
 void editor_edit_side::pre_show(window& window)
 {
-	controller_group.add_member(find_widget<toggle_button>(&window, "controller_human", false, true), team::CONTROLLER::HUMAN);
-	controller_group.add_member(find_widget<toggle_button>(&window, "controller_ai", false, true),    team::CONTROLLER::AI);
-	controller_group.add_member(find_widget<toggle_button>(&window, "controller_null", false, true),  team::CONTROLLER::EMPTY);
+	controller_group.add_member(find_widget<toggle_button>(&window, "controller_human", false, true), side_controller::type::human);
+	controller_group.add_member(find_widget<toggle_button>(&window, "controller_ai", false, true),    side_controller::type::ai);
+	controller_group.add_member(find_widget<toggle_button>(&window, "controller_null", false, true),  side_controller::type::none);
 
 	controller_group.set_member_states(controller_);
 
-	vision_group.add_member(find_widget<toggle_button>(&window, "vision_all", false, true),    team::SHARE_VISION::ALL);
-	vision_group.add_member(find_widget<toggle_button>(&window, "vision_shroud", false, true), team::SHARE_VISION::SHROUD);
-	vision_group.add_member(find_widget<toggle_button>(&window, "vision_null", false, true),   team::SHARE_VISION::NONE);
+	vision_group.add_member(find_widget<toggle_button>(&window, "vision_all", false, true),    team_shared_vision::type::all);
+	vision_group.add_member(find_widget<toggle_button>(&window, "vision_shroud", false, true), team_shared_vision::type::shroud);
+	vision_group.add_member(find_widget<toggle_button>(&window, "vision_null", false, true),   team_shared_vision::type::none);
 
 	vision_group.set_member_states(share_vision_);
 
 	window.add_to_tab_order(find_widget<text_box>(&window, "team_name", false, true));
 	window.add_to_tab_order(find_widget<text_box>(&window, "user_team_name", false, true));
+	window.add_to_tab_order(find_widget<text_box>(&window, "recruit_list", false, true));
 }
 
 void editor_edit_side::post_show(window&)

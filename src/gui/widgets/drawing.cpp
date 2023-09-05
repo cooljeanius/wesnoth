@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2010 - 2021
+	Copyright (C) 2010 - 2023
 	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -22,6 +22,9 @@
 
 #include "gui/core/register_widget.hpp"
 #include "gui/widgets/settings.hpp"
+
+#include "gettext.hpp"
+#include "wml_exception.hpp"
 
 #include <functional>
 
@@ -87,7 +90,7 @@ bool drawing::disable_click_dismiss() const
 drawing_definition::drawing_definition(const config& cfg)
 	: styled_widget_definition(cfg)
 {
-	DBG_GUI_P << "Parsing drawing " << id << '\n';
+	DBG_GUI_P << "Parsing drawing " << id;
 
 	load_resolutions<resolution>(cfg);
 }
@@ -113,14 +116,14 @@ builder_drawing::builder_drawing(const config& cfg)
 	: builder_styled_widget(cfg)
 	, width(cfg["width"])
 	, height(cfg["height"])
-	, draw(cfg.child("draw"))
+	, draw(VALIDATE_WML_CHILD(cfg, "draw", _("Missing [draw] in drawing")))
 {
 	assert(!draw.empty());
 }
 
-widget* builder_drawing::build() const
+std::unique_ptr<widget> builder_drawing::build() const
 {
-	drawing* widget = new drawing(*this);
+	auto widget = std::make_unique<drawing>(*this);
 
 	const wfl::map_formula_callable& size = get_screen_size_variables();
 
@@ -134,7 +137,7 @@ widget* builder_drawing::build() const
 	widget->set_drawing_data(draw);
 
 	DBG_GUI_G << "Window builder: placed drawing '" << id
-			  << "' with definition '" << definition << "'.\n";
+			  << "' with definition '" << definition << "'.";
 
 	return widget;
 }

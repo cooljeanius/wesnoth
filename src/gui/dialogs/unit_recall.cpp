@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 - 2021
+	Copyright (C) 2016 - 2023
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -53,13 +53,14 @@ namespace gui2::dialogs
 {
 
 // Index 2 is by-level
-static listbox::order_pair sort_last    {-1, preferences::SORT_ORDER::NONE};
-static listbox::order_pair sort_default { 2, preferences::SORT_ORDER::DESCENDING};
+static listbox::order_pair sort_last    {-1, sort_order::type::none};
+static listbox::order_pair sort_default { 2, sort_order::type::descending};
 
 REGISTER_DIALOG(unit_recall)
 
 unit_recall::unit_recall(std::vector<unit_const_ptr>& recall_list, team& team)
-	: recall_list_(recall_list)
+	: modal_dialog(window_id())
+	, recall_list_(recall_list)
 	, team_(team)
 	, selected_index_()
 	, filter_options_()
@@ -72,11 +73,11 @@ static void dump_recall_list_to_console(const T& units)
 {
 	log_scope2(log_display, "dump_recall_list_to_console()")
 
-	LOG_DP << "size: " << units.size() << "\n";
+	LOG_DP << "size: " << units.size();
 
 	std::size_t idx = 0;
 	for(const auto& u_ptr : units) {
-		LOG_DP << "\tunit[" << (idx++) << "]: " << u_ptr->id() << " name = '" << u_ptr->name() << "'\n";
+		LOG_DP << "\tunit[" << (idx++) << "]: " << u_ptr->id() << " name = '" << u_ptr->name() << "'";
 	}
 }
 
@@ -190,8 +191,8 @@ void unit_recall::pre_show(window& window)
 		std::bind(&unit_recall::show_help, this));
 
 	for(const unit_const_ptr& unit : recall_list_) {
-		std::map<std::string, string_map> row_data;
-		string_map column;
+		widget_data row_data;
+		widget_item column;
 
 		std::string mods = unit->image_mods();
 
@@ -342,7 +343,7 @@ void unit_recall::rename_unit()
 
 void unit_recall::dismiss_unit()
 {
-	LOG_DP << "Recall list units:\n"; dump_recall_list_to_console(recall_list_);
+	LOG_DP << "Recall list units:"; dump_recall_list_to_console(recall_list_);
 
 	listbox& list = find_widget<listbox>(get_window(), "recall_list", false);
 	const int index = list.get_selected_row();
@@ -388,8 +389,8 @@ void unit_recall::dismiss_unit()
 	filter_options_.erase(filter_options_.begin() + index);
 	assert(filter_options_.size() == list.get_item_count());
 
-	LOG_DP << "Dismissing a unit, side = " << u.side() << ", id = '" << u.id() << "'\n";
-	LOG_DP << "That side's recall list:\n";
+	LOG_DP << "Dismissing a unit, side = " << u.side() << ", id = '" << u.id() << "'";
+	LOG_DP << "That side's recall list:";
 	dump_recall_list_to_console(team_.recall_list());
 
 	// Find the unit in the recall list.

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 - 2021
+	Copyright (C) 2016 - 2023
 	by Charles Dang <exodia339gmail.com>
 	Copyright (C) 2011, 2015 by Iris Morelle <shadowm2006@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
@@ -22,6 +22,7 @@
 #include "hotkey/hotkey_command.hpp"
 #include "preferences/advanced.hpp"
 #include "preferences/game.hpp"
+#include "theme.hpp"
 
 // This file is not named preferences.hpp in order -I conflicts with
 // src/preferences.hpp.
@@ -31,6 +32,7 @@ namespace hotkey {
 }
 
 struct point;
+//struct theme_info;
 
 namespace preferences {
 	enum PREFERENCE_VIEW {
@@ -74,24 +76,25 @@ public:
 	/** The display function -- see @ref modal_dialog for more information. */
 	DEFINE_SIMPLE_DISPLAY_WRAPPER(preferences_dialog)
 
-	typedef std::vector<const hotkey::hotkey_command*> visible_hotkeys_t;
-
 private:
 	virtual const std::string& window_id() const override;
 
-	virtual void post_build(window& window) override;
 	virtual void pre_show(window& window) override;
 	virtual void post_show(window& /*window*/) override;
 
 	/** Initializers */
+	void initialize_callbacks();
 	void initialize_tabs(listbox& selector);
 	void set_resolution_list(menu_button& res_list);
+	void set_theme_list(menu_button& theme_list);
 	listbox& setup_hotkey_list();
 
 	template<bool(*toggle_getter)(), bool(*toggle_setter)(bool), int(*vol_getter)(), void(*vol_setter)(int)>
 	void initialize_sound_option_group(const std::string& id_suffix);
 
-	std::map<std::string, string_map> get_friends_list_row_data(const preferences::acquaintance& entry);
+	void apply_pixel_scale();
+
+	widget_data get_friends_list_row_data(const preferences::acquaintance& entry);
 
 	void add_friend_list_entry(const bool is_friend, text_box& textbox);
 	void remove_friend_list_entry(listbox& friends_list, text_box& textbox);
@@ -108,24 +111,27 @@ private:
 
 	/** Special callback functions */
 	void handle_res_select();
+	void handle_theme_select();
 	void fullscreen_toggle_callback();
 	void add_hotkey_callback(listbox& hotkeys);
 	void remove_hotkey_callback(listbox& hotkeys);
 	void default_hotkey_callback();
-	void hotkey_filter_callback() const;
+	void hotkey_filter_callback();
 
-	group<preferences::LOBBY_JOINS> lobby_joins_group;
+	group<preferences::lobby_joins> lobby_joins_group;
 
 	const preferences::advanced_pref_list& adv_preferences_;
 
 	std::vector<point> resolutions_;
+	std::vector<theme_info> themes_;
 
 	int last_selected_item_;
 
 	std::vector<double> accl_speeds_;
-	visible_hotkeys_t visible_hotkeys_;
 
-	std::map<hotkey::HOTKEY_CATEGORY, t_string> cat_names_;
+	std::vector<const hotkey::hotkey_command*> visible_hotkeys_;
+
+	std::set<hotkey::HOTKEY_CATEGORY> visible_categories_;
 
 	// The page/tab index pairs for setting visible pages
 	const std::pair<int, int>& initial_index_;

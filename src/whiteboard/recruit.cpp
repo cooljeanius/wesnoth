@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2010 - 2021
+	Copyright (C) 2010 - 2023
 	by Gabriel Morin <gabrielmorin (at) gmail (dot) com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -68,7 +68,7 @@ recruit::recruit(std::size_t team_index, bool hidden, const std::string& unit_na
 recruit::recruit(const config& cfg, bool hidden)
 	: action(cfg,hidden)
 	, unit_name_(cfg["unit_name_"])
-	, recruit_hex_(cfg.child("recruit_hex_")["x"],cfg.child("recruit_hex_")["y"], wml_loc())
+	, recruit_hex_(cfg.mandatory_child("recruit_hex_")["x"],cfg.mandatory_child("recruit_hex_")["y"], wml_loc())
 	, temp_unit_()
 	, fake_unit_()
 	, cost_(0)
@@ -137,7 +137,7 @@ void recruit::apply_temp_modifier(unit_map& unit_map)
 	temp_unit_->set_location(recruit_hex_);
 
 	DBG_WB << "Inserting future recruit [" << temp_unit_->id()
-			<< "] at position " << temp_unit_->get_location() << ".\n";
+			<< "] at position " << temp_unit_->get_location() << ".";
 
 	// Add cost to money spent on recruits.
 	resources::gameboard->teams().at(team_index()).get_side_actions()->change_gold_spent_by(cost_);

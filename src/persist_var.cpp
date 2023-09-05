@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2010 - 2021
+	Copyright (C) 2010 - 2023
 	by Jody Northup
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -68,25 +68,21 @@ static void get_global_variable(persist_context &ctx, const vconfig &pcfg)
 	config::attribute_value pcfg_side = pcfg["side"];
 	const int side = pcfg_side.to_int(resources::controller->current_side());
 	persist_choice choice(ctx, global, side);
-	config cfg = mp_sync::get_user_choice("global_variable",choice,side).child("variables");
+	config cfg = mp_sync::get_user_choice("global_variable",choice,side).mandatory_child("variables");
 	try
 	{
-		if (cfg) {
-			std::size_t arrsize = cfg.child_count(global);
-			if (arrsize == 0) {
-				resources::gamedata->set_variable(local,cfg[global]);
-			} else {
-				resources::gamedata->clear_variable(local);
-				for (std::size_t i = 0; i < arrsize; i++)
-					resources::gamedata->add_variable_cfg(local,cfg.child(global,i));
-			}
+		std::size_t arrsize = cfg.child_count(global);
+		if (arrsize == 0) {
+			resources::gamedata->set_variable(local,cfg[global]);
 		} else {
-			resources::gamedata->set_variable(local,"");
+			resources::gamedata->clear_variable(local);
+			for (std::size_t i = 0; i < arrsize; i++)
+				resources::gamedata->add_variable_cfg(local, cfg.mandatory_child(global,i));
 		}
 	}
 	catch(const invalid_variablename_exception&)
 	{
-		ERR_PERSIST << "cannot store global variable into invalid variablename " << local << std::endl;
+		ERR_PERSIST << "cannot store global variable into invalid variablename " << local;
 	}
 }
 
@@ -117,7 +113,7 @@ static void set_global_variable(persist_context &ctx, const vconfig &pcfg)
 			}
 		} else {
 			for (std::size_t i = 0; i < arraylen; i++)
-				val.add_child(global,vars.child(local,i));
+				val.add_child(global, vars.mandatory_child(local,i));
 		}
 		ctx.set_var(global, val, pcfg["immediate"].to_bool());
 	}
@@ -139,14 +135,14 @@ void verify_and_get_global_variable(const vconfig &pcfg)
 		valid = false;
 	}
 	if (resources::controller->is_networked_mp()) {
-			DBG_PERSIST << "verify_and_get_global_variable with from_global=" << pcfg["from_global"] << " from side " << pcfg["side"] << "\n";
+			DBG_PERSIST << "verify_and_get_global_variable with from_global=" << pcfg["from_global"] << " from side " << pcfg["side"];
 			config::attribute_value pcfg_side = pcfg["side"];
 			int side = (pcfg_side.str() == "global" || pcfg_side.empty()) ? resources::controller->current_side() : pcfg_side.to_int();
 			if (!resources::gameboard->has_team(side)) {
-				ERR_PERSIST << "[get_global_variable] attribute \"side\" specifies invalid side number." << "\n";
+				ERR_PERSIST << "[get_global_variable] attribute \"side\" specifies invalid side number.";
 				valid = false;
 			}
-			DBG_PERSIST <<  "end verify_and_get_global_variable with from_global=" << pcfg["from_global"] << " from side " << pcfg["side"] << "\n";
+			DBG_PERSIST <<  "end verify_and_get_global_variable with from_global=" << pcfg["from_global"] << " from side " << pcfg["side"];
 	}
 	if (valid)
 	{

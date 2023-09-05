@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2015 - 2021
+	Copyright (C) 2015 - 2023
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -76,8 +76,7 @@ replay_controller::replay_controller(play_controller& controller, bool control_v
 		vision_ = HUMAN_TEAM;
 	}
 	controller_.get_display().get_theme().theme_reset_event().attach_handler(this);
-	controller_.get_display().create_buttons();
-	controller_.get_display().redraw_everything();
+	controller_.get_display().queue_rerender();
 }
 replay_controller::~replay_controller()
 {
@@ -85,21 +84,16 @@ replay_controller::~replay_controller()
 		controller_.toggle_skipping_replay();
 	}
 	controller_.get_display().get_theme().theme_reset_event().detach_handler(this);
-	controller_.get_display().create_buttons();
-	controller_.get_display().redraw_everything();
-	controller_.get_display().create_buttons();
+	controller_.get_display().queue_rerender();
 }
 void replay_controller::add_replay_theme()
 {
-	const config &theme_cfg = controller_.get_theme(game_config_manager::get()->game_config(), controller_.theme());
+	const config& theme_cfg = theme::get_theme_config(controller_.theme());
 	if (const auto res = theme_cfg.optional_child("resolution"))
 	{
 		if (const auto replay_theme_cfg = res->optional_child("replay")) {
 			controller_.get_display().get_theme().modify(replay_theme_cfg.value());
 		}
-		//Make sure we get notified if the theme is redrawn completely. That way we have
-		//a chance to restore the replay controls of the theme as well.
-		controller_.get_display().invalidate_theme();
 	}
 }
 
@@ -136,16 +130,12 @@ void replay_controller::play_replay()
 
 void replay_controller::update_gui()
 {
-	controller_.get_display().recalculate_minimap();
-	controller_.get_display().redraw_minimap();
-	controller_.get_display().invalidate_all();
-	controller_.get_display().redraw_everything();
+	controller_.get_display().queue_rerender();
 }
 
 void replay_controller::update_enabled_buttons()
 {
-	controller_.get_display().invalidate_theme();
-	controller_.get_display().redraw_everything();
+	controller_.get_display().queue_rerender();
 }
 
 void replay_controller::handle_generic_event(const std::string& name)
@@ -164,7 +154,7 @@ bool replay_controller::recorder_at_end() const
 	return resources::recorder->at_end();
 }
 
-REPLAY_RETURN replay_controller::play_side_impl()
+void replay_controller::play_side_impl()
 {
 	update_enabled_buttons();
 	while(!return_to_play_side_ && !static_cast<playsingle_controller&>(controller_).get_player_type_changed())
@@ -180,9 +170,13 @@ REPLAY_RETURN replay_controller::play_side_impl()
 				if(res == REPLAY_FOUND_END_MOVE) {
 					stop_condition_->move_done();
 				}
-				if(res == REPLAY_FOUND_END_TURN) {
-					return res;
+				if(controller_.is_regular_game_end()) {
+					return;
 				}
+				if(res == REPLAY_FOUND_END_TURN) {
+					return;
+				}
+				// TODO: how can this be the case when we just checked for "resources::recorder->at_end()" above?
 				if(res == REPLAY_RETURN_AT_END) {
 					stop_replay();
 				}
@@ -206,13 +200,11 @@ REPLAY_RETURN replay_controller::play_side_impl()
 			controller_.play_slice(true);
 		}
 	}
-	return REPLAY_FOUND_END_MOVE;
+	return;
 }
-bool replay_controller::can_execute_command(const hotkey::hotkey_command& cmd, int) const
+bool replay_controller::can_execute_command(const hotkey::ui_command& cmd) const
 {
-	hotkey::HOTKEY_COMMAND command = cmd.id;
-
-	switch(command) {
+	switch(cmd.hotkey_command) {
 	case hotkey::HOTKEY_REPLAY_SKIP_ANIMATION:
 		return true;
 	case hotkey::HOTKEY_REPLAY_SHOW_EVERYTHING:
@@ -264,7 +256,10 @@ void replay_controller::update_teams()
 void replay_controller::update_viewing_player()
 {
 	assert(vision_);
-	controller_.update_gui_to_player(vision_ == HUMAN_TEAM ? controller_.gamestate().first_human_team_ : controller_.current_side() - 1, *vision_ == SHOW_ALL);
+	int viewing_side_num = vision_ == HUMAN_TEAM ? controller_.find_viewing_side() : controller_.current_side();
+	if(viewing_side_num != 0) {
+		controller_.update_gui_to_player(viewing_side_num - 1, *vision_ == SHOW_ALL);
+	}
 }
 
 bool replay_controller::see_all()

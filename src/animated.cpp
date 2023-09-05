@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2007 - 2021
+	Copyright (C) 2007 - 2023
 	by Jeremy Rosen <jeremy.rosen@enst-bretagne.fr>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 

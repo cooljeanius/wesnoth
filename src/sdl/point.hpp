@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008 - 2021
+	Copyright (C) 2008 - 2023
 	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -20,69 +20,110 @@
 #include <iosfwd>
 #include <tuple>
 
-/** Holds a 2D point. */
-struct point
+/** Holds a 2D point. This is a thin wrapper over SDL_Point. */
+struct point : SDL_Point
 {
-	point()
-		: x(0)
-		, y(0)
-	{
-	}
+	/** Initialize to 0 by default. */
+	constexpr point() : SDL_Point{0, 0} {}
 
-	point(const int x_, const int y_)
-		: x(x_)
-		, y(y_)
-	{
-	}
+	constexpr point(int x, int y) : SDL_Point{x, y} {}
 
-	point(const SDL_Point& p)
-		: x(p.x)
-		, y(p.y)
-	{
-	}
+	constexpr point(const SDL_Point& p) : SDL_Point{p} {}
 
-	/** x coordinate. */
-	int x;
-
-	/** y coordinate. */
-	int y;
-
-	/** Allow implicit conversion to SDL_Point. */
-	operator SDL_Point() const;
-
-	bool operator==(const point& point) const
+	constexpr bool operator==(const point& point) const
 	{
 		return x == point.x && y == point.y;
 	}
 
-	bool operator!=(const point& point) const
+	constexpr bool operator!=(const point& point) const
 	{
 		return !operator==(point);
 	}
 
-	bool operator<(const point& point) const
+	constexpr bool operator<(const point& point) const
 	{
 		return std::tie(x, y) < std::tie(point.x, point.y);
 	}
 
-	bool operator<=(const point& point) const
+	constexpr bool operator<=(const point& point) const
 	{
 		return x < point.x || (x == point.x && y <= point.y);
 	}
 
-	point operator+(const point& point) const
+	constexpr point operator+(const point& point) const
 	{
 		return {x + point.x, y + point.y};
 	}
 
-	point& operator+=(const point& point);
+	constexpr point& operator+=(const point& point)
+	{
+		x += point.x;
+		y += point.y;
+		return *this;
+	}
 
-	point operator-(const point& point) const
+	constexpr point operator-(const point& point) const
 	{
 		return {x - point.x, y - point.y};
 	}
 
-	point& operator-=(const point& point);
+	constexpr point& operator-=(const point& point)
+	{
+		x -= point.x;
+		y -= point.y;
+		return *this;
+	}
+
+	constexpr point operator*(int s) const
+	{
+		return {x * s, y * s};
+	}
+
+	constexpr point& operator*=(int s)
+	{
+		x *= s;
+		y *= s;
+		return *this;
+	}
+
+	constexpr point operator/(int s) const
+	{
+		return {x / s, y / s};
+	}
+
+	constexpr point& operator/=(int s)
+	{
+		x /= s;
+		y /= s;
+		return *this;
+	}
+
+	// Multiplication and division of points works elementwise.
+
+	constexpr point operator*(const point& p) const
+	{
+		return {x * p.x, y * p.y};
+	}
+
+	constexpr point& operator*=(const point& p)
+	{
+		x *= p.x;
+		y *= p.y;
+		return *this;
+	}
+
+	constexpr point operator/(const point& p) const
+	{
+		return {x / p.x, y / p.y};
+	}
+
+	constexpr point& operator/=(const point& p)
+	{
+		x /= p.x;
+		y /= p.y;
+		return *this;
+	}
+
 };
 
 std::ostream& operator<<(std::ostream& stream, const point& point);

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008 - 2021
+	Copyright (C) 2008 - 2023
 	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -24,6 +24,8 @@
 #include "preferences/game.hpp"
 #include "serialization/unicode.hpp"
 #include <functional>
+#include "wml_exception.hpp"
+#include "gettext.hpp"
 
 #define LOG_SCOPE_HEADER get_control_type() + " [" + id() + "] " + __func__
 #define LOG_HEADER LOG_SCOPE_HEADER + ':'
@@ -267,14 +269,12 @@ void text_box::handle_mouse_selection(point mouse, const bool start_selection)
 
 	set_cursor(offset, !start_selection);
 	update_canvas();
-	set_is_dirty(true);
+	queue_redraw();
 	dragging_ |= start_selection;
 }
 
 void text_box::update_offsets()
 {
-	assert(config());
-
 	const auto conf = cast_config_to<text_box_definition>();
 	assert(conf);
 
@@ -347,7 +347,7 @@ void text_box::signal_handler_mouse_motion(const event::ui_event event,
 											bool& handled,
 											const point& coordinate)
 {
-	DBG_GUI_E << get_control_type() << "[" << id() << "]: " << event << ".\n";
+	DBG_GUI_E << get_control_type() << "[" << id() << "]: " << event << ".";
 
 	if(dragging_) {
 		handle_mouse_selection(coordinate, false);
@@ -359,7 +359,7 @@ void text_box::signal_handler_mouse_motion(const event::ui_event event,
 void text_box::signal_handler_left_button_down(const event::ui_event event,
 												bool& handled)
 {
-	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	/*
 	 * Copied from the base class see how we can do inheritance with the new
@@ -376,7 +376,7 @@ void text_box::signal_handler_left_button_down(const event::ui_event event,
 void text_box::signal_handler_left_button_up(const event::ui_event event,
 											  bool& handled)
 {
-	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	dragging_ = false;
 	handled = true;
@@ -386,7 +386,7 @@ void
 text_box::signal_handler_left_button_double_click(const event::ui_event event,
 												   bool& handled)
 {
-	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	select_all();
 	handled = true;
@@ -397,7 +397,7 @@ text_box::signal_handler_left_button_double_click(const event::ui_event event,
 text_box_definition::text_box_definition(const config& cfg)
 	: styled_widget_definition(cfg)
 {
-	DBG_GUI_P << "Parsing text_box " << id << '\n';
+	DBG_GUI_P << "Parsing text_box " << id;
 
 	load_resolutions<resolution>(cfg);
 }
@@ -408,10 +408,10 @@ text_box_definition::resolution::resolution(const config& cfg)
 	, text_y_offset(cfg["text_y_offset"])
 {
 	// Note the order should be the same as the enum state_t in text_box.hpp.
-	state.emplace_back(cfg.child("state_enabled"));
-	state.emplace_back(cfg.child("state_disabled"));
-	state.emplace_back(cfg.child("state_focused"));
-	state.emplace_back(cfg.child("state_hovered"));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_enabled", _("Missing required state for editable text box")));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_disabled", _("Missing required state for editable text box")));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_focused", _("Missing required state for editable text box")));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_hovered", _("Missing required state for editable text box")));
 }
 
 // }---------- BUILDER -----------{
@@ -428,9 +428,9 @@ builder_text_box::builder_text_box(const config& cfg)
 {
 }
 
-widget* builder_text_box::build() const
+std::unique_ptr<widget> builder_text_box::build() const
 {
-	text_box* widget = new text_box(*this);
+	auto widget = std::make_unique<text_box>(*this);
 
 	// A textbox doesn't have a label but a text
 	widget->set_value(label_string);
@@ -443,7 +443,7 @@ widget* builder_text_box::build() const
 	widget->set_hint_data(hint_text, hint_image);
 
 	DBG_GUI_G << "Window builder: placed text box '" << id
-			  << "' with definition '" << definition << "'.\n";
+			  << "' with definition '" << definition << "'.";
 
 	return widget;
 }

@@ -1,9 +1,10 @@
 ﻿# set minimum version
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 3.14)
 
 project(wesnoth)
 
 include(CheckCXXCompilerFlag)
+include(CTest)
 
 # use our own version of FindBoost.cmake and other Find* scripts
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
@@ -28,6 +29,12 @@ endfunction()
 # Options
 #
 
+if(NOT EXISTS "${CMAKE_SOURCE_DIR}/src/modules/lua/.git")
+	message(FATAL_ERROR "Lua submodule does not exist. You must run 'git submodule update --init --recursive' to initialize it.")
+else()
+	message("-- Lua submodule found.")
+endif()
+
 # Adhere to GNU filesystem layout conventions
 include(GNUInstallDirs)
 
@@ -51,7 +58,7 @@ option(ENABLE_MYSQL "Enable building MP/add-ons servers with mysql support" OFF)
 option(ENABLE_TESTS "Build unit tests")
 option(ENABLE_NLS "Enable building of translations" ${ENABLE_GAME})
 
-set(BOOST_VERSION "1.66")
+set(BOOST_VERSION "1.67")
 
 # set what std version to use
 if(NOT CXX_STD)
@@ -63,9 +70,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # forbid defaulting to gnu++NN instead of c++NN
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-find_package(OpenSSL 1.0 REQUIRED)
+find_package(OpenSSL 3.0 REQUIRED)
 
 if(APPLE)
+	find_library(APPKIT_LIBRARY AppKit REQUIRED)
+	find_library(FOUNDATION_LIBRARY Foundation REQUIRED)
 	find_library(IOKIT_LIBRARY IOKit REQUIRED)
 	find_library(SECURITY_LIBRARY Security REQUIRED)
 endif()
@@ -75,23 +84,13 @@ find_package(ICU REQUIRED COMPONENTS data i18n uc)
 
 # no, gettext executables are not required when NLS is deactivated
 find_package(Gettext)
+find_package(Python)
 
 find_package(X11)
 
 if(NOT WIN32)
-	# needed to get some SDL2 defines in... (as of rev31694 -D_GNU_SOURCE=1 is required!)
-	if(NOT MINGW)
-		set(SDL2_CONFIG "sdl2-config" CACHE STRING "Path to sdl2-config script")
-		exec_program(${SDL2_CONFIG} ARGS "--cflags" OUTPUT_VARIABLE SDL2_CFLAGS)
-		add_definitions(${SDL2_CFLAGS})
-	else()
-		# equivalent to sdl2-config --cflags --libs
-		# since cmake cannot execute sdl2-config in msys2 shell
-		set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} -I/mingw64/include/SDL2 -Dmain=SDL_main -L/mingw64/lib -lmingw32 -lSDL2main -lSDL2 -mwindows)
-	endif()
-
-		# Use the safer `mkstemp' instead of `tmpnam' on POSIX systems.
-		add_definitions(-DLUA_USE_POSIX)
+	# Use the safer `mkstemp' instead of `tmpnam' on POSIX systems.
+	add_definitions(-DLUA_USE_POSIX)
 endif()
 
 #check for some compiler/arch specific things and export defines accordingly...
@@ -154,8 +153,10 @@ option(ENABLE_PEDANTIC_COMPILATION "Sets the pedantic compilation mode" OFF)
 option(ENABLE_DEBUG_WINDOW_LAYOUT "Add the debug option to allow the generation of debug layout files in dot format" OFF)
 option(ENABLE_DESIGN_DOCUMENTS "Enables the generation of design documents, and has additional dependencies" OFF)
 option(ENABLE_LTO "Sets Link Time Optimization for Release builds" OFF)
-option(GLIBCXX_DEBUG "Whether to define _GLIBCXX_DEBUG and _GLIBCXX_DEBUG_PEDANTIC" OFF)
+option(GLIBCXX_ASSERTIONS "Whether to define _GLIBCXX_ASSERTIONS" OFF)
+option(GLIBCXX_DEBUG "Whether to define _GLIBCXX_DEBUG and _GLIBCXX_DEBUG_PEDANTIC. Requires a version of Boost's program_options that's compiled with __GLIBCXX_DEBUG too." OFF)
 option(ENABLE_POT_UPDATE_TARGET "Enables the tools to update the pot files and manuals. This target has extra dependencies." OFF)
+option(FORCE_COLOR_OUTPUT "Always produce ANSI-colored output (GNU/Clang only)." FALSE)
 
 if(UNIX AND NOT APPLE AND NOT CYGWIN)
 	option(ENABLE_NOTIFICATIONS "Enable Window manager notification messages" ON)
@@ -170,7 +171,7 @@ set(BINARY_PREFIX "" CACHE STRING "Prefix in front of all binaries")
 
 ### Set the environment compiler flags.
 
-if(NOT WIN32)
+if(NOT MSVC)
 	if(NOT DEFINED CXX_FLAGS_USER)
 
 		MESSAGE(STATUS "Environment compiler flags set to »${CXX_FLAGS_USER}«")
@@ -218,6 +219,16 @@ if(NOT WIN32)
 		set(COMPILER_FLAGS "${COMPILER_FLAGS} -fno-omit-frame-pointer -fno-optimize-sibling-calls")
 	endif()
 
+### Force colour output (for example for Ninja, or piped CI)
+
+	if(FORCE_COLOR_OUTPUT)
+		if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+			set(COMPILER_FLAGS "${COMPILER_FLAGS} -fdiagnostics-color=always")
+		elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+			set(COMPILER_FLAGS "${COMPILER_FLAGS} -fcolor-diagnostics")
+		endif()
+	endif()
+
 ### Set the final compiler flags.
 
 	set(COMPILER_FLAGS "${COMPILER_FLAGS} ${CXX_FLAGS_USER}")
@@ -260,6 +271,8 @@ if(NOT WIN32)
 
 		if(APPLE)
 			set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fPIE -Wl,-pie")
+		elseif(WIN32 AND MINGW)
+			set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fPIE -pie")
 		else()
 			set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fPIE -pie -Wl,-z,relro,-z,now")
 		endif()
@@ -388,7 +401,14 @@ if(NOT WIN32)
 	set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DDEBUG -ggdb3 ${EXTRA_FLAGS_CONFIG} ${EXTRA_FLAGS_DEBUG}" CACHE STRING "change cmake's Debug flags to match scons' flags" FORCE)
 	set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${LINK_EXTRA_FLAGS_CONFIG} ${LINK_EXTRA_FLAGS_DEBUG}" CACHE STRING "" FORCE)
 
-# adds GLIBCXX_DEBUG definitions
+# Enabling GLIBCXX_ASSERTIONS puts bounds-checks on std::vector::operator[], etc
+	if(GLIBCXX_ASSERTIONS)
+		MESSAGE("Defining _GLIBCXX_ASSERTIONS")
+		add_definitions(-D_GLIBCXX_ASSERTIONS)
+	endif()
+
+# GLIBCXX_DEBUG enables more checks that GLIBCXX_ASSERTIONS, but changes the ABI of Boost's program_options library.
+# When _GLIBCXX_DEBUG is defined, _GLIBCXX_ASSERTIONS is automatically implied (Gnu's c++config.h will define it).
 	if(GLIBCXX_DEBUG)
 		MESSAGE("Defining _GLIBCXX_DEBUG and _GLIBCXX_DEBUG_PEDANTIC")
 		add_definitions(-D_GLIBCXX_DEBUG)
@@ -426,13 +446,14 @@ if(NOT WIN32)
 # End setting profiler build options
 # #
 else()
-	set(CMAKE_CXX_FLAGS "/W3 /WX /wd4503 /wd4351 /wd4250 /wd4244 /wd4267 /we4239 /wd4275 /EHsc /utf-8" CACHE STRING "Global flags used by the CXX compiler during all builds." FORCE)
-	add_definitions(-D_WIN32_WINNT=_WIN32_WINNT_WIN7 -D_CRT_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS -DNOMINMAX)
+	set(CMAKE_CXX_FLAGS "/W3 /WX /wd4503 /wd4351 /wd4250 /wd4244 /wd4267 /we4239 /wd4275 /EHsc /utf-8 /Zc:__cplusplus" CACHE STRING "Global flags used by the CXX compiler during all builds." FORCE)
+	set(CMAKE_C_FLAGS "/WX" CACHE STRING "Global flags used by the C compiler during all builds." FORCE)
+	add_definitions(-D_WIN32_WINNT=0x0601 -D_CRT_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS -DNOMINMAX)
 
 	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG_LUA")
 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MANIFEST:NO")
 	set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} /NODEFAULTLIB:MSVCRT")
-	
+
 # -DNDEBUG is automatically added to all release build types, so manually remove this define from the related variables
 	RemoveFlag(CMAKE_CXX_FLAGS_RELEASE CACHE "/DNDEBUG" "Default C++ flags for RELEASE")
 	RemoveFlag(CMAKE_C_FLAGS_RELEASE CACHE "/DNDEBUG" "Default C flags for RELEASE")
@@ -476,16 +497,26 @@ endif()
 #
 
 if(ENABLE_GAME OR ENABLE_TESTS)
-# TODO: SDL2::SDL2 etc component target available with cmake 3.19+
-	find_package(SDL2 2.0.8 REQUIRED)
-	find_package(SDL2_image 2.0.2 REQUIRED)
-	find_package(SDL2_mixer 2.0.0 REQUIRED)
+	find_package(CURL REQUIRED)
 	find_package(VorbisFile REQUIRED)
 	find_package(PkgConfig REQUIRED)
+	find_package(Fontconfig REQUIRED)
+	find_package(SDL2 2.0.10 REQUIRED)
+	if(NOT MSVC)
+		# for everything else, use pkgconfig
+		# SDL2_image and SDL2_mixer don't seem to have any cmake configuration available at all
+		pkg_check_modules(SDL2IMAGE REQUIRED SDL2_image>=2.0.2)
+		pkg_check_modules(SDL2MIXER REQUIRED SDL2_mixer>=2.0.0)
+	else()
+		# for MSVC, vcpkg builds and provides custom SDL2-related modules for cmake to use, so use those
+		# this also fixes the issue with our previous FindSDL2* scripts incorrectly using the Release version of these libs instead of the Debug version
+		find_package(SDL2_image CONFIG REQUIRED)
+		find_package(SDL2_mixer CONFIG REQUIRED)
+	endif()
 	pkg_check_modules(CAIRO REQUIRED cairo>=1.10)
-	pkg_check_modules(PANGOCAIRO REQUIRED pangocairo>=1.22.0)
-# TODO: can use find_package and Fontconfig::Fontconfig with cmake 3.14+
-	pkg_check_modules(FONTCONFIG REQUIRED fontconfig>=2.4.1)
+	pkg_check_modules(PANGOCAIRO REQUIRED pangocairo>=1.44.0)
+	pkg_check_modules(PANGO REQUIRED pango>=1.44.0)
+	pkg_check_modules(LIBREADLINE readline)
 endif()
 
 if(ENABLE_TESTS)
@@ -527,7 +558,7 @@ endif()
 
 add_subdirectory(doc)
 
-if(GETTEXT_FOUND AND ENABLE_NLS)
+if(GETTEXT_FOUND AND Python_FOUND AND ENABLE_NLS)
 	add_subdirectory(po)
 endif()
 

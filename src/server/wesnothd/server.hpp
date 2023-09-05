@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2009 - 2021
+	Copyright (C) 2009 - 2023
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -35,7 +35,7 @@ namespace wesnothd
 class server : public server_base
 {
 public:
-	server(int port, bool keep_alive, const std::string& config_file, std::size_t, std::size_t);
+	server(int port, bool keep_alive, const std::string& config_file);
 
 	// We keep this flag for coroutines. Since they get their stack unwinding done after player_connections_
 	// is already destroyed they need to know to avoid calling remove_player() on invalid iterators.
@@ -49,7 +49,7 @@ private:
 	void handle_new_client(tls_socket_ptr socket);
 
 	template<class SocketPtr> void login_client(boost::asio::yield_context yield, SocketPtr socket);
-	template<class SocketPtr> bool is_login_allowed(SocketPtr socket, const simple_wml::node* const login, const std::string& username, bool& registered, bool& is_moderator);
+	template<class SocketPtr> bool is_login_allowed(boost::asio::yield_context yield, SocketPtr socket, const simple_wml::node* const login, const std::string& username, bool& registered, bool& is_moderator);
 	template<class SocketPtr> bool authenticate(SocketPtr socket, const std::string& username, const std::string& password, bool name_taken, bool& registered);
 	template<class SocketPtr> void send_password_request(SocketPtr socket, const std::string& msg, const char* error_code = "", bool force_confirmation = false);
 	bool accepting_connections() const { return !graceful_restart; }

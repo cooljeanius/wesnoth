@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2010 - 2021
+	Copyright (C) 2010 - 2023
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -35,7 +35,8 @@ static int min_size = 20;
 REGISTER_DIALOG(generator_settings)
 
 generator_settings::generator_settings(generator_data& data)
-	: players_(register_integer("players", true, data.nplayers))
+	: modal_dialog(window_id())
+	, players_(register_integer("players", true, data.nplayers))
 	, width_(register_integer("width",     true, data.width))
 	, height_(register_integer("height",   true, data.height))
 	, update_width_label_()
@@ -75,7 +76,7 @@ void generator_settings::pre_show(window& window)
 
 void generator_settings::adjust_minimum_size_by_players()
 {
-	const int extra_size = (players_->get_widget_value(*get_window()) - 2) * extra_size_per_player;
+	const int extra_size = (players_->get_widget_value() - 2) * extra_size_per_player;
 
 	const auto update_dimension_slider = [&](field_integer* field) {
 		slider& w = dynamic_cast<slider&>(*field->get_widget());

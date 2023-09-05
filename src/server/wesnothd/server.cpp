@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2021
+	Copyright (C) 2003 - 2023
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -22,7 +22,6 @@
 
 #include "config.hpp"
 #include "filesystem.hpp"
-#include "game_config.hpp"
 #include "log.hpp"
 #include "multiplayer_error_codes.hpp"
 #include "serialization/parser.hpp"
@@ -54,8 +53,8 @@
 #include <csignal>
 #include <cstdlib>
 #include <functional>
-#include <iomanip>
 #include <iostream>
+#include <iomanip>
 #include <map>
 #include <queue>
 #include <set>
@@ -210,9 +209,7 @@ const std::string help_msg =
 
 server::server(int port,
 		bool keep_alive,
-		const std::string& config_file,
-		std::size_t /*min_threads*/,
-		std::size_t /*max_threads*/)
+		const std::string& config_file)
 	: server_base(port, keep_alive)
 	, ban_manager_()
 	, ip_log_()
@@ -279,7 +276,7 @@ void server::handle_sighup(const boost::system::error_code& error, int)
 {
 	assert(!error);
 
-	WRN_SERVER << "SIGHUP caught, reloading config\n";
+	WRN_SERVER << "SIGHUP caught, reloading config";
 
 	cfg_ = read_config();
 	load_config();
@@ -294,7 +291,7 @@ void server::handle_graceful_timeout(const boost::system::error_code& error)
 
 	if(games().empty()) {
 		process_command("msg All games ended. Shutting down now. Reconnect to the new server instance.", "system");
-		throw server_shutdown("graceful shutdown timeout");
+		BOOST_THROW_EXCEPTION(server_shutdown("graceful shutdown timeout"));
 	} else {
 		timer_.expires_from_now(std::chrono::seconds(1));
 		timer_.async_wait(std::bind(&server::handle_graceful_timeout, this, std::placeholders::_1));
@@ -317,7 +314,7 @@ void server::handle_lan_server_shutdown(const boost::system::error_code& error)
 	if(error)
 		return;
 
-	throw server_shutdown("lan server shutdown");
+	BOOST_THROW_EXCEPTION(server_shutdown("lan server shutdown"));
 }
 
 void server::setup_fifo()
@@ -325,12 +322,12 @@ void server::setup_fifo()
 #ifndef _WIN32
 	const int res = mkfifo(input_path_.c_str(), 0660);
 	if(res != 0 && errno != EEXIST) {
-		ERR_SERVER << "could not make fifo at '" << input_path_ << "' (" << strerror(errno) << ")\n";
+		ERR_SERVER << "could not make fifo at '" << input_path_ << "' (" << strerror(errno) << ")";
 		return;
 	}
 	int fifo = open(input_path_.c_str(), O_RDWR | O_NONBLOCK);
 	input_.assign(fifo);
-	LOG_SERVER << "opened fifo at '" << input_path_ << "'. Server commands may be written to this file.\n";
+	LOG_SERVER << "opened fifo at '" << input_path_ << "'. Server commands may be written to this file.";
 	read_from_fifo();
 #endif
 }
@@ -348,7 +345,7 @@ void server::handle_read_from_fifo(const boost::system::error_code& error, std::
 	std::string cmd;
 	std::getline(is, cmd);
 
-	LOG_SERVER << "Admin Command: type: " << cmd << "\n";
+	LOG_SERVER << "Admin Command: type: " << cmd;
 
 	const std::string res = process_command(cmd, "*socket*");
 
@@ -356,9 +353,9 @@ void server::handle_read_from_fifo(const boost::system::error_code& error, std::
 	if(!cmd.empty() && cmd.at(0) == '+') {
 		LOG_SERVER << "[admin_command_response]\n"
 				   << res << "\n"
-				   << "[/admin_command_response]\n";
+				   << "[/admin_command_response]";
 	} else {
-		LOG_SERVER << res << "\n";
+		LOG_SERVER << res;
 	}
 
 	read_from_fifo();
@@ -420,9 +417,9 @@ config server::read_config() const
 	try {
 		filesystem::scoped_istream stream = preprocess_file(config_file_);
 		read(configuration, *stream);
-		LOG_SERVER << "Server configuration from file: '" << config_file_ << "' read.\n";
+		LOG_SERVER << "Server configuration from file: '" << config_file_ << "' read.";
 	} catch(const config::error& e) {
-		ERR_CONFIG << "ERROR: Could not read configuration file: '" << config_file_ << "': '" << e.message << "'.\n";
+		ERR_CONFIG << "ERROR: Could not read configuration file: '" << config_file_ << "': '" << e.message << "'.";
 	}
 
 	return configuration;
@@ -530,13 +527,13 @@ void server::load_config()
 	user_handler_.reset();
 
 #ifdef HAVE_MYSQLPP
-	if(const config& user_handler = cfg_.child("user_handler")) {
+	if(auto user_handler = cfg_.optional_child("user_handler")) {
 		if(server_id_ == "") {
-			ERR_SERVER << "The server id must be set when database support is used" << std::endl;
+			ERR_SERVER << "The server id must be set when database support is used";
 			exit(1);
 		}
 
-		user_handler_.reset(new fuh(user_handler));
+		user_handler_.reset(new fuh(*user_handler));
 		uuid_ = user_handler_->get_uuid();
 		tournaments_ = user_handler_->get_tournaments();
 	}
@@ -599,12 +596,12 @@ void server::start_dump_stats()
 void server::dump_stats(const boost::system::error_code& ec)
 {
 	if(ec) {
-		ERR_SERVER << "Error waiting for dump stats timer: " << ec.message() << "\n";
+		ERR_SERVER << "Error waiting for dump stats timer: " << ec.message();
 		return;
 	}
 	LOG_SERVER << "Statistics:"
-			   << "\tnumber_of_games = " << games().size() << "\tnumber_of_users = " << player_connections_.size()
-			   << "\n";
+	           << "\tnumber_of_games = " << games().size()
+	           << "\tnumber_of_users = " << player_connections_.size();
 	start_dump_stats();
 }
 
@@ -617,12 +614,12 @@ void server::start_dummy_player_updates()
 void server::dummy_player_updates(const boost::system::error_code& ec)
 {
 	if(ec) {
-		ERR_SERVER << "Error waiting for dummy player timer: " << ec.message() << "\n";
+		ERR_SERVER << "Error waiting for dummy player timer: " << ec.message();
 		return;
 	}
 
 	int size = games_and_users_list_.root().children("user").size();
-	LOG_SERVER << "player count: " << size << std::endl;
+	LOG_SERVER << "player count: " << size;
 	if(size % 2 == 0) {
 		simple_wml::node* dummy_user = games_and_users_list_.root().children("user").at(size-1);
 
@@ -660,7 +657,7 @@ void server::start_tournaments_timer()
 void server::refresh_tournaments(const boost::system::error_code& ec)
 {
 	if(ec) {
-		ERR_SERVER << "Error waiting for tournament refresh timer: " << ec.message() << "\n";
+		ERR_SERVER << "Error waiting for tournament refresh timer: " << ec.message();
 		return;
 	}
 	if(user_handler_) {
@@ -682,13 +679,10 @@ void server::handle_new_client(tls_socket_ptr socket)
 template<class SocketPtr>
 void server::login_client(boost::asio::yield_context yield, SocketPtr socket)
 {
-	boost::system::error_code ec;
+	coro_send_doc(socket, version_query_response_, yield);
 
-	coro_send_doc(socket, version_query_response_, yield[ec]);
-	if(check_error(ec, socket)) return;
-
-	auto doc { coro_receive_doc(socket, yield[ec]) };
-	if(check_error(ec, socket) || !doc) return;
+	auto doc { coro_receive_doc(socket, yield) };
+	if(!doc) return;
 
 	std::string client_version, client_source;
 	if(const simple_wml::node* const version = doc->child("version")) {
@@ -704,9 +698,8 @@ void server::login_client(boost::asio::yield_context yield, SocketPtr socket)
 
 		if(accepted_it != accepted_versions_.end()) {
 			LOG_SERVER << log_address(socket) << "\tplayer joined using accepted version " << client_version
-					   << ":\ttelling them to log in.\n";
-			coro_send_doc(socket, login_response_, yield[ec]);
-			if(check_error(ec, socket)) return;
+					   << ":\ttelling them to log in.";
+			coro_send_doc(socket, login_response_, yield);
 		} else {
 			simple_wml::document response;
 
@@ -715,7 +708,7 @@ void server::login_client(boost::asio::yield_context yield, SocketPtr socket)
 				if(utils::wildcard_string_match(client_version, redirect_version.first)) {
 					LOG_SERVER << log_address(socket) << "\tplayer joined using version " << client_version
 						   << ":\tredirecting them to " << redirect_version.second["host"] << ":"
-						   << redirect_version.second["port"] << "\n";
+						   << redirect_version.second["port"];
 
 					simple_wml::node& redirect = response.root().add_child("redirect");
 					for(const auto& attr : redirect_version.second.attribute_range()) {
@@ -728,7 +721,7 @@ void server::login_client(boost::asio::yield_context yield, SocketPtr socket)
 			}
 
 			LOG_SERVER << log_address(socket) << "\tplayer joined using unknown version " << client_version
-				   << ":\trejecting them\n";
+				   << ":\trejecting them";
 
 			// For compatibility with older clients
 			response.set_attr_dup("version", accepted_versions_.begin()->c_str());
@@ -739,7 +732,7 @@ void server::login_client(boost::asio::yield_context yield, SocketPtr socket)
 			return;
 		}
 	} else {
-		LOG_SERVER << log_address(socket) << "\tclient didn't send its version: rejecting\n";
+		LOG_SERVER << log_address(socket) << "\tclient didn't send its version: rejecting";
 		return;
 	}
 
@@ -747,13 +740,13 @@ void server::login_client(boost::asio::yield_context yield, SocketPtr socket)
 	bool registered, is_moderator;
 
 	while(true) {
-		auto login_response { coro_receive_doc(socket, yield[ec]) };
-		if(check_error(ec, socket) || !login_response) return;
+		auto login_response { coro_receive_doc(socket, yield) };
+		if(!login_response) return;
 
 		if(const simple_wml::node* const login = login_response->child("login")) {
 			username = (*login)["username"].to_string();
 
-			if(is_login_allowed(socket, login, username, registered, is_moderator)) {
+			if(is_login_allowed(yield, socket, login, username, registered, is_moderator)) {
 				break;
 			} else continue;
 		}
@@ -764,28 +757,27 @@ void server::login_client(boost::asio::yield_context yield, SocketPtr socket)
 	simple_wml::document join_lobby_response;
 	join_lobby_response.root().add_child("join_lobby").set_attr("is_moderator", is_moderator ? "yes" : "no");
 	join_lobby_response.root().child("join_lobby")->set_attr_dup("profile_url_prefix", "https://r.wesnoth.org/u");
-	coro_send_doc(socket, join_lobby_response, yield[ec]);
-	if(check_error(ec, socket)) return;
+	coro_send_doc(socket, join_lobby_response, yield);
 
 	simple_wml::node& player_cfg = games_and_users_list_.root().add_child("user");
-	wesnothd::player new_player(
-		username,
-		player_cfg,
-		user_handler_ ? user_handler_->get_forum_id(username) : 0,
-		registered,
-		client_version,
-		client_source,
-		user_handler_ ? user_handler_->db_insert_login(username, client_address(socket), client_version) : 0,
-		default_max_messages_,
-		default_time_period_,
-		is_moderator
-	);
+
 	boost::asio::spawn(io_service_,
-		[this, socket, new_player](boost::asio::yield_context yield) { handle_player(yield, socket, new_player); }
+		[this, socket, new_player = wesnothd::player{
+			username,
+			player_cfg,
+			user_handler_ ? user_handler_->get_forum_id(username) : 0,
+			registered,
+			client_version,
+			client_source,
+			user_handler_ ? user_handler_->db_insert_login(username, client_address(socket), client_version) : 0,
+			default_max_messages_,
+			default_time_period_,
+			is_moderator
+		}](boost::asio::yield_context yield) { handle_player(yield, socket, new_player); }
 	);
 
 	LOG_SERVER << log_address(socket) << "\t" << username << "\thas logged on"
-			   << (registered ? " to a registered account" : "") << "\n";
+			   << (registered ? " to a registered account" : "");
 
 	std::shared_ptr<game> last_sent;
 	for(const auto& record : player_connections_.get<game_t>()) {
@@ -812,7 +804,7 @@ void server::login_client(boost::asio::yield_context yield, SocketPtr socket)
 	}
 }
 
-template<class SocketPtr> bool server::is_login_allowed(SocketPtr socket, const simple_wml::node* const login, const std::string& username, bool& registered, bool& is_moderator)
+template<class SocketPtr> bool server::is_login_allowed(boost::asio::yield_context yield, SocketPtr socket, const simple_wml::node* const login, const std::string& username, bool& registered, bool& is_moderator)
 {
 	// Check if the username is valid (all alpha-numeric plus underscore and hyphen)
 	if(!utils::isvalid_username(username)) {
@@ -900,7 +892,7 @@ template<class SocketPtr> bool server::is_login_allowed(SocketPtr socket, const 
 
 		if(!is_moderator) {
 			LOG_SERVER << log_address(socket) << "\t" << username << "\tis banned by user_handler (" << ban_type_desc
-					   << ")\n";
+					   << ")";
 			if(auth_ban.duration) {
 				// Temporary ban
 				async_send_error(socket, "You are banned from this server: " + ban_reason, msg_numeric, {{"duration", ban_duration}});
@@ -911,14 +903,18 @@ template<class SocketPtr> bool server::is_login_allowed(SocketPtr socket, const 
 			return false;
 		} else {
 			LOG_SERVER << log_address(socket) << "\t" << username << "\tis banned by user_handler (" << ban_type_desc
-					   << "), " << "ignoring due to moderator flag\n";
+					   << "), " << "ignoring due to moderator flag";
 		}
 	}
 
 	if(name_taken) {
 		if(registered) {
 			// If there is already a client using this username kick it
-			process_command("kick " + p->info().name() + " autokick by registered user", username);
+			process_command("kick " + username + " autokick by registered user", username);
+			// need to wait for it to process
+			while(player_connections_.get<name_t>().count(username) > 0) {
+				boost::asio::post(yield);
+			}
 		} else {
 			async_send_error(socket, "The nickname '" + username + "' is already taken.", MP_NAME_TAKEN_ERROR);
 			return false;
@@ -1025,14 +1021,12 @@ template<class SocketPtr> bool server::authenticate(
 
 				// Log the failure
 				LOG_SERVER << log_address(socket) << "\t"
-						   << "Login attempt with incorrect password for nickname '" << username << "'.\n";
+						   << "Login attempt with incorrect password for nickname '" << username << "'.";
 				return false;
 			}
 
 			// This name exists and the password was neither empty nor incorrect
 			registered = true;
-
-			// Reset the random seed
 			user_handler_->user_logged_in(username);
 		}
 	}
@@ -1094,25 +1088,28 @@ template<class SocketPtr> void server::handle_player(boost::asio::yield_context 
 	send_to_lobby(diff, player);
 
 	while(true) {
-		boost::system::error_code ec;
-		auto doc { coro_receive_doc(socket, yield[ec]) };
-		if(check_error(ec, socket) || !doc) return;
+		auto doc { coro_receive_doc(socket, yield) };
+		if(!doc) return;
 
-		// DBG_SERVER << client_address(socket) << "\tWML received:\n" << doc->output() << std::endl;
+		// DBG_SERVER << client_address(socket) << "\tWML received:\n" << doc->output();
 		if(doc->child("refresh_lobby")) {
 			async_send_doc_queued(socket, games_and_users_list_);
+			continue;
 		}
 
 		if(simple_wml::node* whisper = doc->child("whisper")) {
 			handle_whisper(player, *whisper);
+			continue;
 		}
 
 		if(simple_wml::node* query = doc->child("query")) {
 			handle_query(player, *query);
+			continue;
 		}
 
 		if(simple_wml::node* nickserv = doc->child("nickserv")) {
 			handle_nickserv(player, *nickserv);
+			continue;
 		}
 
 		if(!player_is_in_game(player)) {
@@ -1137,6 +1134,33 @@ void server::handle_player_in_lobby(player_iterator player, simple_wml::document
 
 	if(simple_wml::node* join = data.child("join")) {
 		handle_join_game(player, *join);
+		return;
+	}
+
+ 	if(simple_wml::node* request = data.child("game_history_request")) {
+		if(user_handler_) {
+			int offset = request->attr("offset").to_int();
+			int player_id = 0;
+
+			// if search_for attribute for offline player -> query the forum database for the forum id
+			// if search_for attribute for online player -> get the forum id from wesnothd's player info
+			if(request->has_attr("search_player") && request->attr("search_player").to_string() != "") {
+				std::string player_name = request->attr("search_player").to_string();
+				auto player_ptr = player_connections_.get<name_t>().find(player_name);
+				if(player_ptr == player_connections_.get<name_t>().end()) {
+					player_id = user_handler_->get_forum_id(player_name);
+				} else {
+					player_id = player_ptr->info().config_address()->attr("forum_id").to_int();
+				}
+			}
+
+			std::string search_game_name = request->attr("search_game_name").to_string();
+			int search_content_type = request->attr("search_content_type").to_int();
+			std::string search_content = request->attr("search_content").to_string();
+			LOG_SERVER << "Querying game history requested by player `" << player->info().name() << "` for player id `" << player_id << "`."
+					   << "Searching for game name `" << search_game_name << "`, search content type `" << search_content_type << "`, search content `" << search_content << "`.";
+			user_handler_->async_get_and_send_game_history(io_service_, *this, player, player_id, offset, search_game_name, search_content_type, search_content);
+		}
 		return;
 	}
 }
@@ -1212,8 +1236,7 @@ void server::handle_query(player_iterator iter, simple_wml::node& query)
 		response << process_command(command, player.name());
 	} else if(player.is_moderator()) {
 		if(command == "signout") {
-			LOG_SERVER << "Admin signed out: IP: " << iter->client_ip() << "\tnick: " << player.name()
-					   << std::endl;
+			LOG_SERVER << "Admin signed out: IP: " << iter->client_ip() << "\tnick: " << player.name();
 			player.set_moderator(false);
 			// This string is parsed by the client!
 			response << "You are no longer recognized as an administrator.";
@@ -1222,9 +1245,9 @@ void server::handle_query(player_iterator iter, simple_wml::node& query)
 			}
 		} else {
 			LOG_SERVER << "Admin Command: type: " << command << "\tIP: " << iter->client_ip()
-					   << "\tnick: " << player.name() << std::endl;
+					   << "\tnick: " << player.name();
 			response << process_command(command, player.name());
-			LOG_SERVER << response.str() << std::endl;
+			LOG_SERVER << response.str();
 		}
 	} else if(command == "help" || command.empty()) {
 		response << query_help_msg;
@@ -1240,8 +1263,7 @@ void server::handle_query(player_iterator iter, simple_wml::node& query)
 		}
 
 		if(passwd == admin_passwd_) {
-			LOG_SERVER << "New Admin recognized: IP: " << iter->client_ip() << "\tnick: " << player.name()
-					   << std::endl;
+			LOG_SERVER << "New Admin recognized: IP: " << iter->client_ip() << "\tnick: " << player.name();
 			player.set_moderator(true);
 			// This string is parsed by the client!
 			response << "You are now recognized as an administrator.";
@@ -1251,7 +1273,7 @@ void server::handle_query(player_iterator iter, simple_wml::node& query)
 			}
 		} else {
 			WRN_SERVER << "FAILED Admin attempt with password: '" << passwd << "'\tIP: " << iter->client_ip()
-					   << "\tnick: " << player.name() << std::endl;
+					   << "\tnick: " << player.name();
 			response << "Error: wrong password";
 		}
 	} else {
@@ -1305,9 +1327,9 @@ void server::handle_message(player_iterator user, simple_wml::node& message)
 
 	if(msg.size() >= 3 && simple_wml::string_span(msg.begin(), 4) == "/me ") {
 		LOG_SERVER << user->client_ip() << "\t<" << user->name()
-				   << simple_wml::string_span(msg.begin() + 3, msg.size() - 3) << ">\n";
+				   << simple_wml::string_span(msg.begin() + 3, msg.size() - 3) << ">";
 	} else {
-		LOG_SERVER << user->client_ip() << "\t<" << user->name() << "> " << msg << "\n";
+		LOG_SERVER << user->client_ip() << "\t<" << user->name() << "> " << msg;
 	}
 
 	send_to_lobby(relay_message, user);
@@ -1332,7 +1354,7 @@ void server::handle_create_game(player_iterator player, simple_wml::node& create
 	const std::string initial_bans = create_game["ignored"].to_string();
 
 	DBG_SERVER << player->client_ip() << "\t" << player->info().name()
-			   << "\tcreates a new game: \"" << game_name << "\".\n";
+			   << "\tcreates a new game: \"" << game_name << "\".";
 
 	// Create the new game, remove the player from the lobby
 	// and set the player as the host/owner.
@@ -1345,7 +1367,7 @@ void server::handle_create_game(player_iterator player, simple_wml::node& create
 
 	wesnothd::game& g = *player->get_game();
 
-	DBG_SERVER << "initial bans: " << initial_bans << "\n";
+	DBG_SERVER << "initial bans: " << initial_bans;
 	if(initial_bans != "") {
 		g.set_name_bans(utils::split(initial_bans,','));
 	}
@@ -1383,8 +1405,10 @@ void server::cleanup_game(game* game_ptr)
 		gamelist->remove_child("game", index);
 	} else {
 		// Can happen when the game ends before the scenario was transferred.
-		LOG_SERVER << "Could not find game (" << game_ptr->id() << ", " << game_ptr->db_id() << ") to delete in games_and_users_list_.\n";
+		LOG_SERVER << "Could not find game (" << game_ptr->id() << ", " << game_ptr->db_id() << ") to delete in games_and_users_list_.";
 	}
+
+	if(destructed) game_ptr->emergency_cleanup();
 
 	delete game_ptr;
 }
@@ -1405,14 +1429,14 @@ void server::handle_join_game(player_iterator player, simple_wml::node& join)
 	static simple_wml::document leave_game_doc("[leave_game]\n[/leave_game]\n", simple_wml::INIT_COMPRESSED);
 	if(!g) {
 		WRN_SERVER << player->client_ip() << "\t" << player->info().name()
-				   << "\tattempted to join unknown game:\t" << game_id << ".\n";
+				   << "\tattempted to join unknown game:\t" << game_id << ".";
 		send_to_player(player, leave_game_doc);
 		send_server_message(player, "Attempt to join unknown game.", "error");
 		send_to_player(player, games_and_users_list_);
 		return;
 	} else if(!g->level_init()) {
 		WRN_SERVER << player->client_ip() << "\t" << player->info().name()
-				   << "\tattempted to join uninitialized game:\t\"" << g->name() << "\" (" << game_id << ").\n";
+				   << "\tattempted to join uninitialized game:\t\"" << g->name() << "\" (" << game_id << ").";
 		send_to_player(player, leave_game_doc);
 		send_server_message(player, "Attempt to join an uninitialized game.", "error");
 		send_to_player(player, games_and_users_list_);
@@ -1422,14 +1446,14 @@ void server::handle_join_game(player_iterator player, simple_wml::node& join)
 	} else if(g->player_is_banned(player, player->info().name())) {
 		DBG_SERVER << player->client_ip()
 				   << "\tReject banned player: " << player->info().name()
-				   << "\tfrom game:\t\"" << g->name() << "\" (" << game_id << ").\n";
+				   << "\tfrom game:\t\"" << g->name() << "\" (" << game_id << ").";
 		send_to_player(player, leave_game_doc);
 		send_server_message(player, "You are banned from this game.", "error");
 		send_to_player(player, games_and_users_list_);
 		return;
 	} else if(!g->password_matches(password)) {
 		WRN_SERVER << player->client_ip() << "\t" << player->info().name()
-				   << "\tattempted to join game:\t\"" << g->name() << "\" (" << game_id << ") with bad password\n";
+				   << "\tattempted to join game:\t\"" << g->name() << "\" (" << game_id << ") with bad password";
 		send_to_player(player, leave_game_doc);
 		send_server_message(player, "Incorrect password.", "error");
 		send_to_player(player, games_and_users_list_);
@@ -1440,7 +1464,7 @@ void server::handle_join_game(player_iterator player, simple_wml::node& join)
 	if(!joined) {
 		WRN_SERVER << player->client_ip() << "\t" << player->info().name()
 				   << "\tattempted to observe game:\t\"" << g->name() << "\" (" << game_id
-				   << ") which doesn't allow observers.\n";
+				   << ") which doesn't allow observers.";
 		send_to_player(player, leave_game_doc);
 
 		send_server_message(player,
@@ -1469,7 +1493,7 @@ void server::handle_join_game(player_iterator player, simple_wml::node& join)
 
 void server::handle_player_in_game(player_iterator p, simple_wml::document& data)
 {
-	DBG_SERVER << "in process_data_game...\n";
+	DBG_SERVER << "in process_data_game...";
 
 	wesnothd::player& player { p->info() };
 
@@ -1490,7 +1514,7 @@ void server::handle_player_in_game(player_iterator p, simple_wml::document& data
 		// g.level() should then receive the full data for the game.
 		if(!g.level_init()) {
 			LOG_SERVER << p->client_ip() << "\t" << player.name() << "\tcreated game:\t\"" << g.name() << "\" ("
-					   << g.id() << ", " << g.db_id() << ").\n";
+					   << g.id() << ", " << g.db_id() << ").";
 			// Update our config object which describes the open games,
 			// and save a pointer to the description in the new game.
 			simple_wml::node* const gamelist = games_and_users_list_.child("gamelist");
@@ -1503,7 +1527,7 @@ void server::handle_player_in_game(player_iterator p, simple_wml::document& data
 				m->copy_into(desc);
 			} else {
 				WRN_SERVER << p->client_ip() << "\t" << player.name() << "\tsent scenario data in game:\t\""
-						   << g.name() << "\" (" << g.id() << ", " << g.db_id() << ") without a 'multiplayer' child.\n";
+						   << g.name() << "\" (" << g.id() << ", " << g.db_id() << ") without a 'multiplayer' child.";
 				// Set the description so it can be removed in delete_game().
 				g.set_description(&desc);
 				delete_game(g.id());
@@ -1518,7 +1542,7 @@ void server::handle_player_in_game(player_iterator p, simple_wml::document& data
 			desc.set_attr_dup("id", std::to_string(g.id()).c_str());
 		} else {
 			WRN_SERVER << p->client_ip() << "\t" << player.name() << "\tsent scenario data in game:\t\""
-					   << g.name() << "\" (" << g.id() << ", " << g.db_id() << ") although it's already initialized.\n";
+					   << g.name() << "\" (" << g.id() << ", " << g.db_id() << ") although it's already initialized.";
 			return;
 		}
 
@@ -1579,7 +1603,7 @@ void server::handle_player_in_game(player_iterator p, simple_wml::document& data
 		// Everything below should only be processed if the game is already initialized.
 	} else if(!g.level_init()) {
 		WRN_SERVER << p->client_ip() << "\tReceived unknown data from: " << player.name()
-				   << " while the scenario wasn't yet initialized.\n"
+				   << " while the scenario wasn't yet initialized."
 				   << data.output();
 		return;
 		// If the host is sending the next scenario data.
@@ -1610,7 +1634,7 @@ void server::handle_player_in_game(player_iterator p, simple_wml::document& data
 
 		if(g.description() == nullptr) {
 			ERR_SERVER << p->client_ip() << "\tERROR: \"" << g.name() << "\" (" << g.id()
-					   << ", " << g.db_id() << ") is initialized but has no description_.\n";
+					   << ", " << g.db_id() << ") is initialized but has no description_.";
 			return;
 		}
 
@@ -1621,7 +1645,7 @@ void server::handle_player_in_game(player_iterator p, simple_wml::document& data
 			m->copy_into(desc);
 		} else {
 			WRN_SERVER << p->client_ip() << "\t" << player.name() << "\tsent scenario data in game:\t\""
-					   << g.name() << "\" (" << g.id() << ", " << g.db_id() << ") without a 'multiplayer' child.\n";
+					   << g.name() << "\" (" << g.id() << ", " << g.db_id() << ") without a 'multiplayer' child.";
 
 			delete_game(g.id());
 
@@ -1674,12 +1698,23 @@ void server::handle_player_in_game(player_iterator p, simple_wml::document& data
 
 		if(user_handler_) {
 			const simple_wml::node& m = *g.level().root().child("multiplayer");
-			DBG_SERVER << simple_wml::node_to_string(m) << '\n';
+			DBG_SERVER << simple_wml::node_to_string(m);
 			// [addon] info handling
+			std::set<std::string> primary_keys;
 			for(const auto& addon : m.children("addon")) {
 				for(const auto& content : addon->children("content")) {
-					user_handler_->db_insert_game_content_info(uuid_, g.db_id(), content->attr("type").to_string(), content->attr("name").to_string(), content->attr("id").to_string(), addon->attr("id").to_string(), addon->attr("version").to_string());
+					std::string key = uuid_+"-"+std::to_string(g.db_id())+"-"+content->attr("type").to_string()+"-"+content->attr("id").to_string()+"-"+addon->attr("id").to_string();
+					if(primary_keys.count(key) == 0) {
+						primary_keys.emplace(key);
+						unsigned long long rows_inserted = user_handler_->db_insert_game_content_info(uuid_, g.db_id(), content->attr("type").to_string(), content->attr("name").to_string(), content->attr("id").to_string(), addon->attr("id").to_string(), addon->attr("version").to_string());
+						if(rows_inserted == 0) {
+							WRN_SERVER << "Did not insert content row for [addon] data with uuid '" << uuid_ << "', game ID '" << g.db_id() << "', type '" << content->attr("type").to_string() << "', and content ID '" << content->attr("id").to_string() << "'";
+						}
+					}
 				}
+			}
+			if(m.children("addon").size() == 0) {
+				WRN_SERVER << "Game content info missing for game with uuid '" << uuid_ << "', game ID '" << g.db_id() << "', named '" << g.name() << "'";
 			}
 
 			user_handler_->db_insert_game_info(uuid_, g.db_id(), server_id_, g.name(), g.is_reload(), m["observer"].to_bool(), !m["private_replay"].to_bool(), g.has_password());
@@ -1703,7 +1738,27 @@ void server::handle_player_in_game(player_iterator p, simple_wml::document& data
 						source = "Default";
 					}
 				}
-				user_handler_->db_insert_game_player_info(uuid_, g.db_id(), side["player_id"].to_string(), side["side"].to_int(), side["is_host"].to_bool(), side["faction"].to_string(), version, source, side["current_player"].to_string());
+
+				// approximately determine leader(s) for the side like the client does
+				// useful generally to know how often leaders are used vs other leaders
+				// also as an indication for which faction was chosen if a custom recruit list is provided since that results in "Custom" in the faction field
+				std::vector<std::string> leaders;
+				// if a type= attribute is specified for the side, add it
+				if(side.attr("type") != "") {
+					leaders.emplace_back(side.attr("type").to_string());
+				}
+				// add each [unit] in the side that has canrecruit=yes
+				for(const auto unit : side.children("unit")) {
+					if(unit->attr("canrecruit") == "yes") {
+						leaders.emplace_back(unit->attr("type").to_string());
+					}
+				}
+				// add any [leader] specified for the side
+				for(const auto leader : side.children("leader")) {
+					leaders.emplace_back(leader->attr("type").to_string());
+				}
+
+				user_handler_->db_insert_game_player_info(uuid_, g.db_id(), side["player_id"].to_string(), side["side"].to_int(), side["is_host"].to_bool(), side["faction"].to_string(), version, source, side["current_player"].to_string(), utils::join(leaders));
 			}
 		}
 
@@ -1747,9 +1802,7 @@ void server::handle_player_in_game(player_iterator p, simple_wml::document& data
 		g.level().root().apply_diff(*scenario_diff);
 		const simple_wml::node* cfg_change = scenario_diff->child("change_child");
 
-		// it is very likeley that the diff changes a side so this check isn't that important.
-		// Note that [side] is not at toplevel but inside [scenario] or [snapshot]
-		if(cfg_change /** && cfg_change->child("side") */) {
+		if(cfg_change) {
 			g.update_side_data();
 		}
 
@@ -1858,32 +1911,6 @@ void server::handle_player_in_game(player_iterator p, simple_wml::document& data
 	} else if(data.child("stop_updates")) {
 		g.send_data(data, p);
 		return;
-	} else if(simple_wml::node* request = data.child("game_history_request")) {
-		if(user_handler_) {
-			int offset = request->attr("offset").to_int();
-			int player_id = 0;
-
-			// if no search_for attribute -> get the requestor's forum id
-			// if search_for attribute for offline player -> query the forum database for the forum id
-			// if search_for attribute for online player -> get the forum id from wesnothd's player info
-			if(!request->has_attr("search_for")) {
-				player_id = player.config_address()->attr("forum_id").to_int();
-			} else {
-				std::string player_name = request->attr("search_for").to_string();
-				auto player_ptr = player_connections_.get<name_t>().find(player_name);
-				if(player_ptr == player_connections_.get<name_t>().end()) {
-					player_id = user_handler_->get_forum_id(player_name);
-				} else {
-					player_id = player_ptr->info().config_address()->attr("forum_id").to_int();
-				}
-			}
-
-			if(player_id != 0) {
-				LOG_SERVER << "Querying game history requested by player `" << player.name() << "` for player id `" << player_id << "`." << std::endl;
-				user_handler_->async_get_and_send_game_history(io_service_, *this, p, player_id, offset);
-			}
-		}
-		return;
 	// Data to ignore.
 	} else if(
 		data.child("error") ||
@@ -1914,7 +1941,9 @@ void server::disconnect_player(player_iterator player)
 {
 	utils::visit([](auto&& socket) {
 		if constexpr (utils::decayed_is_same<tls_socket_ptr, decltype(socket)>) {
-			socket->shutdown();
+			socket->async_shutdown([socket](...) {});
+			const char buffer[] = "";
+			async_write(*socket, boost::asio::buffer(buffer), [socket](...) { socket->lowest_layer().close(); });
 		} else {
 			socket->lowest_layer().shutdown(boost::asio::ip::tcp::socket::shutdown_receive);
 		}
@@ -1943,7 +1972,7 @@ void server::remove_player(player_iterator iter)
 
 	games_and_users_list_.root().remove_child("user", index);
 
-	LOG_SERVER << ip << "\t" << iter->info().name() << "\thas logged off\n";
+	LOG_SERVER << ip << "\t" << iter->info().name() << "\thas logged off";
 
 	// Find the matching nick-ip pair in the log and update the sign off time
 	if(user_handler_) {
@@ -2004,9 +2033,9 @@ void server::start_new_server()
 	// restart_command="./wesnothd-debug -d -c ~/.wesnoth1.5/server.cfg"
 	// remember to make new one as a daemon or it will block old one
 	if(std::system(restart_command.c_str())) {
-		ERR_SERVER << "Failed to start new server with command: " << restart_command << std::endl;
+		ERR_SERVER << "Failed to start new server with command: " << restart_command;
 	} else {
-		LOG_SERVER << "New server started with command: " << restart_command << "\n";
+		LOG_SERVER << "New server started with command: " << restart_command;
 	}
 }
 
@@ -2047,8 +2076,8 @@ std::string server::process_command(std::string query, std::string issuer_name)
 				handler(issuer_name, query, parameters, &out);
 			} catch(const std::bad_function_call& ex) {
 				ERR_SERVER << "While handling a command '" << command
-						   << "', caught a std::bad_function_call exception.\n";
-				ERR_SERVER << ex.what() << std::endl;
+						   << "', caught a std::bad_function_call exception.";
+				ERR_SERVER << ex.what();
 				out << "An internal server error occurred (std::bad_function_call) while executing '" << command
 					<< "'\n";
 			}
@@ -2059,7 +2088,7 @@ std::string server::process_command(std::string query, std::string issuer_name)
 	} catch(const utf8::invalid_utf8_exception& e) {
 		std::string msg = "While handling a command, caught an invalid utf8 exception: ";
 		msg += e.what();
-		ERR_SERVER << msg << std::endl;
+		ERR_SERVER << msg;
 		return (msg + '\n');
 	}
 }
@@ -2076,7 +2105,7 @@ void server::shut_down_handler(
 	}
 
 	if(parameters == "now") {
-		throw server_shutdown("shut down by admin command");
+		BOOST_THROW_EXCEPTION(server_shutdown("shut down by admin command"));
 	} else {
 		// Graceful shut down.
 		graceful_restart = true;
@@ -2168,8 +2197,7 @@ void server::stats_handler(const std::string& /*issuer_name*/,
 {
 	assert(out != nullptr);
 
-	*out << "Number of games = " << games().size() << "\nTotal number of users = " << player_connections_.size()
-		 << "\n";
+	*out << "Number of games = " << games().size() << "\nTotal number of users = " << player_connections_.size();
 }
 
 void server::metrics_handler(const std::string& /*issuer_name*/,
@@ -2264,8 +2292,7 @@ void server::adminmsg_handler(
 	const std::string& sender = issuer_name;
 	const std::string& message = parameters;
 	LOG_SERVER << "Admin message: <" << sender
-			   << (message.find("/me ") == 0 ? std::string(message.begin() + 3, message.end()) + ">" : "> " + message)
-			   << "\n";
+			   << (message.find("/me ") == 0 ? std::string(message.begin() + 3, message.end()) + ">" : "> " + message);
 
 	simple_wml::document data;
 	simple_wml::node& msg = data.root().add_child("whisper");
@@ -2356,8 +2383,7 @@ void server::msg_handler(const std::string& /*issuer_name*/,
 	LOG_SERVER << "<server"
 			   << (parameters.find("/me ") == 0
 			   		? std::string(parameters.begin() + 3, parameters.end()) + ">"
-					: "> " + parameters)
-			   << "\n";
+					: "> " + parameters);
 
 	*out << "message '" << parameters << "' relayed to players";
 }
@@ -2378,8 +2404,7 @@ void server::lobbymsg_handler(const std::string& /*issuer_name*/,
 	LOG_SERVER << "<server"
 			   << (parameters.find("/me ") == 0
 					? std::string(parameters.begin() + 3, parameters.end()) + ">"
-					: "> " + parameters)
-			   << "\n";
+					: "> " + parameters);
 
 	*out << "message '" << parameters << "' relayed to players";
 }
@@ -2501,7 +2526,7 @@ void server::bans_handler(const std::string& /*issuer_name*/,
 		}
 
 	} catch(const utf8::invalid_utf8_exception& e) {
-		ERR_SERVER << "While handling bans, caught an invalid utf8 exception: " << e.what() << std::endl;
+		ERR_SERVER << "While handling bans, caught an invalid utf8 exception: " << e.what();
 	}
 }
 
@@ -2880,8 +2905,7 @@ void server::dul_handler(const std::string& /*issuer_name*/,
 		}
 
 	} catch(const utf8::invalid_utf8_exception& e) {
-		ERR_SERVER << "While handling dul (deny unregistered logins), caught an invalid utf8 exception: " << e.what()
-				   << std::endl;
+		ERR_SERVER << "While handling dul (deny unregistered logins), caught an invalid utf8 exception: " << e.what();
 	}
 }
 
@@ -2924,7 +2948,7 @@ void server::delete_game(int gameid, const std::string& reason)
 		if(make_change_diff(games_and_users_list_.root(), nullptr, "user", it->info().config_address(), udiff)) {
 			send_to_lobby(udiff);
 		} else {
-			ERR_SERVER << "ERROR: delete_game(): Could not find user in players_.\n";
+			ERR_SERVER << "ERROR: delete_game(): Could not find user in players_.";
 		}
 	}
 
@@ -2965,8 +2989,6 @@ int main(int argc, char** argv)
 {
 	int port = 15000;
 	bool keep_alive = false;
-	std::size_t min_threads = 5;
-	std::size_t max_threads = 0;
 
 	srand(static_cast<unsigned>(std::time(nullptr)));
 
@@ -2994,7 +3016,7 @@ int main(int argc, char** argv)
 		} else if(val.substr(0, 6) == "--log-") {
 			std::size_t p = val.find('=');
 			if(p == std::string::npos) {
-				std::cerr << "unknown option: " << val << '\n';
+				PLAIN_LOG << "unknown option: " << val;
 				return 2;
 			}
 
@@ -3010,7 +3032,7 @@ int main(int argc, char** argv)
 			} else if(s == "debug") {
 				severity = lg::debug().get_severity();
 			} else {
-				std::cerr << "unknown debug level: " << s << '\n';
+				PLAIN_LOG << "unknown debug level: " << s;
 				return 2;
 			}
 
@@ -3019,7 +3041,7 @@ int main(int argc, char** argv)
 				s = val.substr(p + 1, q == std::string::npos ? q : q - (p + 1));
 
 				if(!lg::set_log_domain_severity(s, severity)) {
-					std::cerr << "unknown debug domain: " << s << '\n';
+					PLAIN_LOG << "unknown debug domain: " << s;
 					return 2;
 				}
 
@@ -3041,7 +3063,6 @@ int main(int argc, char** argv)
 					  << "                             Available levels: error, warning, info, debug.\n"
 					  << "  -p, --port <port>          Binds the server to the specified port.\n"
 					  << "  --keepalive                Enable TCP keepalive.\n"
-					  << "  -t, --threads <n>          Uses n worker threads for network I/O (default: 5).\n"
 					  << "  -v  --verbose              Turns on more verbose logging.\n"
 					  << "  -V, --version              Returns the server version.\n"
 					  << "  -w, --dump-wml             Print all WML sent to clients to stdout.\n";
@@ -3051,12 +3072,12 @@ int main(int argc, char** argv)
 			return 0;
 		} else if(val == "--daemon" || val == "-d") {
 #ifdef _WIN32
-			ERR_SERVER << "Running as a daemon is not supported on this platform" << std::endl;
+			ERR_SERVER << "Running as a daemon is not supported on this platform";
 			return -1;
 #else
 			const pid_t pid = fork();
 			if(pid < 0) {
-				ERR_SERVER << "Could not fork and run as a daemon" << std::endl;
+				ERR_SERVER << "Could not fork and run as a daemon";
 				return -1;
 			} else if(pid > 0) {
 				std::cout << "Started wesnothd as a daemon with process id " << pid << "\n";
@@ -3065,27 +3086,13 @@ int main(int argc, char** argv)
 
 			setsid();
 #endif
-		} else if((val == "--threads" || val == "-t") && arg + 1 != argc) {
-			min_threads = atoi(argv[++arg]);
-			if(min_threads > 30) {
-				min_threads = 30;
-			}
-		} else if((val == "--max-threads" || val == "-T") && arg + 1 != argc) {
-			max_threads = atoi(argv[++arg]);
 		} else if(val == "--request_sample_frequency" && arg + 1 != argc) {
 			wesnothd::request_sample_frequency = atoi(argv[++arg]);
 		} else {
-			ERR_SERVER << "unknown option: " << val << std::endl;
+			ERR_SERVER << "unknown option: " << val;
 			return 2;
 		}
 	}
 
-	try {
-		wesnothd::server(port, keep_alive, config_file, min_threads, max_threads).run();
-	} catch(const std::exception& e) {
-		ERR_SERVER << "terminated by C++ exception: " << e.what() << std::endl;
-		return 1;
-	}
-
-	return 0;
+	return wesnothd::server(port, keep_alive, config_file).run();
 }

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2009 - 2021
+	Copyright (C) 2009 - 2023
 	by Tomasz Sniatowski <kailoran@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -17,6 +17,7 @@
 
 #include <array>
 #include <functional>
+#include <map>
 #include <string>
 
 namespace mp
@@ -37,7 +38,7 @@ public:
 	void init(window& w);
 
 	/** Updates the tree contents based on the given user data. */
-	void update(std::vector<mp::user_info>& user_info);
+	void update(const std::vector<mp::user_info>& user_info, int focused_game);
 
 private:
 	struct sub_list
@@ -59,14 +60,20 @@ private:
 	tree_view* tree;
 
 	/** The double click callback bound to each player's tree node. */
-	std::function<void(mp::user_info*)> user_callback;
+	std::function<void(const mp::user_info*)> user_callback;
+
+	/** Node-to-info mappings for easy access. */
+	std::map<const tree_view_node*, const mp::user_info*> info_map;
 
 public:
 	lobby_player_list_helper(decltype(user_callback) ucb)
 		: player_lists()
 		, tree(nullptr)
 		, user_callback(ucb)
+		, info_map()
 	{
 	}
+
+	const mp::user_info* get_selected_info() const;
 };
 } // namespace gui2

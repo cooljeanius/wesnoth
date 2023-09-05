@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012 - 2021
+	Copyright (C) 2012 - 2023
 	by Boldizsár Lipka <lipkab@zoho.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -18,6 +18,7 @@
 #include <algorithm>
 
 #include "serialization/string_utils.hpp"
+#include "game_initialization/component_availability.hpp"
 #include "gettext.hpp"
 #include "log.hpp"
 #include "utils/general.hpp"
@@ -66,12 +67,12 @@ manager::manager(const game_config_view& gamecfg, bool mp)
 	, prev_scenario_()
 	, prev_mods_()
 {
-	DBG_MP << "Initializing the dependency manager" << std::endl;
+	DBG_MP << "Initializing the dependency manager";
 
 	for(const config& cfg : gamecfg.child_range("modification")) {
-		component_availability type = cfg["type"].to_enum<component_availability>(component_availability::HYBRID);
+		component_availability::type type = component_availability::get_enum(cfg["type"].str()).value_or(component_availability::type::hybrid);
 
-		if((type != component_availability::MP || mp) && (type != component_availability::SP || !mp)) {
+		if((type != component_availability::type::mp || mp) && (type != component_availability::type::sp || !mp)) {
 			config info;
 			info["id"] = cfg["id"];
 			info["name"] = cfg["name"];
@@ -85,9 +86,9 @@ manager::manager(const game_config_view& gamecfg, bool mp)
 	}
 
 	for(const config& cfg : gamecfg.child_range("era")) {
-		component_availability type = cfg["type"].to_enum<component_availability>(component_availability::MP);
+		component_availability::type type = component_availability::get_enum(cfg["type"].str()).value_or(component_availability::type::mp);
 
-		if((type != component_availability::MP || mp) && (type != component_availability::SP || !mp)) {
+		if((type != component_availability::type::mp || mp) && (type != component_availability::type::sp || !mp)) {
 			config info;
 			info["id"] = cfg["id"];
 			info["name"] = cfg["name"];
@@ -127,7 +128,7 @@ manager::manager(const game_config_view& gamecfg, bool mp)
 
 void manager::save_state()
 {
-	DBG_MP << "Saving current state" << std::endl;
+	DBG_MP << "Saving current state";
 	prev_era_ = era_;
 	prev_scenario_ = scenario_;
 	prev_mods_ = mods_;
@@ -135,7 +136,7 @@ void manager::save_state()
 
 void manager::revert()
 {
-	DBG_MP << "Restoring previous state" << std::endl;
+	DBG_MP << "Restoring previous state";
 	era_ = prev_era_;
 	scenario_ = prev_scenario_;
 	mods_ = prev_mods_;
@@ -154,7 +155,7 @@ bool manager::exists(const elem& e) const
 
 std::string manager::find_name_for(const elem& e) const
 {
-	const config& cfg = depinfo_.find_child(e.type, "id", e.id);
+	auto cfg = depinfo_.find_mandatory_child(e.type, "id", e.id);
 	return cfg["name"];
 }
 
@@ -181,7 +182,7 @@ std::vector<std::string> manager::get_required(const elem& e) const
 		return result;
 	}
 
-	config data = depinfo_.find_child(e.type, "id", e.id);
+	config data = depinfo_.find_mandatory_child(e.type, "id", e.id);
 
 	if(data.has_attribute("force_modification")) {
 		result = utils::split(data["force_modification"].str(), ',');
@@ -229,8 +230,8 @@ bool manager::does_conflict(const elem& elem1, const elem& elem2, bool directonl
 		return false;
 	}
 
-	config data1 = depinfo_.find_child(elem1.type, "id", elem1.id);
-	config data2 = depinfo_.find_child(elem2.type, "id", elem2.id);
+	config data1 = depinfo_.find_mandatory_child(elem1.type, "id", elem1.id);
+	config data2 = depinfo_.find_mandatory_child(elem2.type, "id", elem2.id);
 
 	// Whether we should skip the check entirely
 	if(data1.has_attribute("ignore_incompatible_" + elem2.type)) {
@@ -322,7 +323,7 @@ bool manager::does_require(const elem& elem1, const elem& elem2) const
 		return false;
 	}
 
-	config data = depinfo_.find_child(elem1.type, "id", elem1.id);
+	config data = depinfo_.find_mandatory_child(elem1.type, "id", elem1.id);
 
 	if(data.has_attribute("force_modification")) {
 		std::vector<std::string> required = utils::split(data["force_modification"]);
@@ -368,7 +369,7 @@ void manager::try_modifications(const std::vector<std::string>& ids, bool force)
 
 void manager::try_modification_by_index(int index, bool activate, bool force)
 {
-	std::string id = depinfo_.child("modification", index)["id"];
+	std::string id = depinfo_.mandatory_child("modification", index)["id"];
 	std::vector<std::string> mods_copy = mods_;
 
 	if(activate) {
@@ -387,12 +388,12 @@ void manager::try_modification_by_index(int index, bool activate, bool force)
 
 void manager::try_era_by_index(int index, bool force)
 {
-	try_era(depinfo_.child("era", index)["id"], force);
+	try_era(depinfo_.mandatory_child("era", index)["id"], force);
 }
 
 void manager::try_scenario_by_index(int index, bool force)
 {
-	try_scenario(depinfo_.child("scenario", index)["id"], force);
+	try_scenario(depinfo_.mandatory_child("scenario", index)["id"], force);
 }
 
 int manager::get_era_index() const
@@ -426,7 +427,7 @@ int manager::get_scenario_index() const
 
 bool manager::is_modification_active(int index) const
 {
-	std::string id = depinfo_.child("modification", index)["id"];
+	std::string id = depinfo_.mandatory_child("modification", index)["id"];
 	return std::find(mods_.begin(), mods_.end(), id) != mods_.end();
 }
 
@@ -439,7 +440,7 @@ bool manager::enable_mods_dialog(const std::vector<std::string>& mods, const std
 {
 	std::vector<std::string> items;
 	for(const std::string& mod : mods) {
-		items.push_back(depinfo_.find_child("modification", "id", mod)["name"]);
+		items.push_back(depinfo_.find_mandatory_child("modification", "id", mod)["name"]);
 	}
 
 	return gui2::dialogs::depcheck_confirm_change::execute(true, items, requester);
@@ -449,7 +450,7 @@ bool manager::disable_mods_dialog(const std::vector<std::string>& mods, const st
 {
 	std::vector<std::string> items;
 	for(const std::string& mod : mods) {
-		items.push_back(depinfo_.find_child("modification", "id", mod)["name"]);
+		items.push_back(depinfo_.find_mandatory_child("modification", "id", mod)["name"]);
 	}
 
 	return gui2::dialogs::depcheck_confirm_change::execute(false, items, requester);
@@ -459,7 +460,7 @@ std::string manager::change_era_dialog(const std::vector<std::string>& eras)
 {
 	std::vector<std::string> items;
 	for(const std::string& era : eras) {
-		items.push_back(depinfo_.find_child("era", "id", era)["name"]);
+		items.push_back(depinfo_.find_mandatory_child("era", "id", era)["name"]);
 	}
 
 	gui2::dialogs::depcheck_select_new dialog(ERA, items);
@@ -475,7 +476,7 @@ std::string manager::change_scenario_dialog(const std::vector<std::string>& scen
 {
 	std::vector<std::string> items;
 	for(const std::string& scenario : scenarios) {
-		items.push_back(depinfo_.find_child("scenario", "id", scenario)["name"]);
+		items.push_back(depinfo_.find_mandatory_child("scenario", "id", scenario)["name"]);
 	}
 
 	gui2::dialogs::depcheck_select_new dialog(SCENARIO, items);

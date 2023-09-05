@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008 - 2021
+	Copyright (C) 2008 - 2023
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -22,6 +22,7 @@
 #include "game_display.hpp"
 #include "global.hpp"
 #include "log.hpp"
+#include "pathutils.hpp"
 
 #include <boost/math/constants/constants.hpp>
 #include <cctype>
@@ -270,7 +271,7 @@ DEFINE_WFL_FUNCTION(debug_print, 1, 2)
 	if(args().size() == 1) {
 		str1 = var1.to_debug_string(true);
 
-		LOG_SF << str1 << std::endl;
+		LOG_SF << str1;
 
 		if(game_config::debug && game_display::get_singleton()) {
 			game_display::get_singleton()->get_chat_manager().add_chat_message(
@@ -284,7 +285,7 @@ DEFINE_WFL_FUNCTION(debug_print, 1, 2)
 		const variant var2 = args()[1]->evaluate(variables, fdb);
 		str2 = var2.to_debug_string(true);
 
-		LOG_SF << str1 << ": " << str2 << std::endl;
+		LOG_SF << str1 << ": " << str2;
 
 		if(game_config::debug && game_display::get_singleton()) {
 			game_display::get_singleton()->get_chat_manager().add_chat_message(
@@ -317,7 +318,7 @@ DEFINE_WFL_FUNCTION(debug_profile, 1, 2)
 	std::ostringstream str;
 	str << "Evaluated in " << (run_time / 1000.0) << " ms on average";
 
-	LOG_SF << speaker << ": " << str.str() << std::endl;
+	LOG_SF << speaker << ": " << str.str();
 
 	if(game_config::debug && game_display::get_singleton()) {
 		game_display::get_singleton()->get_chat_manager().add_chat_message(
@@ -1268,6 +1269,35 @@ DEFINE_WFL_FUNCTION(adjacent_locs, 1, 1)
 	return variant(v);
 }
 
+DEFINE_WFL_FUNCTION(locations_in_radius, 2, 2)
+{
+	const map_location loc = args()[0]->evaluate(variables, fdb).convert_to<location_callable>()->loc();
+
+	int range = args()[1]->evaluate(variables, fdb).as_int();
+
+	if(range < 0) {
+		return variant();
+	}
+
+	if(!range) {
+		return variant(std::make_shared<location_callable>(loc));
+	}
+
+	std::vector<map_location> res;
+
+	get_tiles_in_radius(loc, range, res);
+
+	std::vector<variant> v;
+	v.reserve(res.size() + 1);
+	v.emplace_back(std::make_shared<location_callable>(loc));
+
+	for(std::size_t n = 0; n != res.size(); ++n) {
+		v.emplace_back(std::make_shared<location_callable>(res[n]));
+	}
+
+	return variant(v);
+}
+
 DEFINE_WFL_FUNCTION(are_adjacent, 2, 2)
 {
 	const map_location loc1 = args()[0]
@@ -1412,7 +1442,7 @@ variant formula_function_expression::execute(const formula_callable& variables, 
 	static std::string indent;
 	indent += "  ";
 
-	DBG_NG << indent << "executing '" << formula_->str() << "'\n";
+	DBG_NG << indent << "executing '" << formula_->str() << "'";
 
 	const int begin_time = SDL_GetTicks();
 	map_formula_callable callable;
@@ -1431,7 +1461,7 @@ variant formula_function_expression::execute(const formula_callable& variables, 
 			DBG_NG << "FAILED function precondition for function '" << formula_->str() << "' with arguments: ";
 
 			for(std::size_t n = 0; n != arg_names_.size(); ++n) {
-				DBG_NG << "  arg " << (n + 1) << ": " << args()[n]->evaluate(variables, fdb).to_debug_string() << "\n";
+				DBG_NG << "  arg " << (n + 1) << ": " << args()[n]->evaluate(variables, fdb).to_debug_string();
 			}
 		}
 	}
@@ -1439,7 +1469,7 @@ variant formula_function_expression::execute(const formula_callable& variables, 
 	variant res = formula_->evaluate(callable, fdb);
 
 	const int taken = SDL_GetTicks() - begin_time;
-	DBG_NG << indent << "returning: " << taken << "\n";
+	DBG_NG << indent << "returning: " << taken;
 
 	indent.resize(indent.size() - 2);
 
@@ -1540,6 +1570,7 @@ std::shared_ptr<function_symbol_table> function_symbol_table::get_builtins()
 		DECLARE_WFL_FUNCTION(loc);
 		DECLARE_WFL_FUNCTION(distance_between);
 		DECLARE_WFL_FUNCTION(adjacent_locs);
+		DECLARE_WFL_FUNCTION(locations_in_radius);
 		DECLARE_WFL_FUNCTION(are_adjacent);
 		DECLARE_WFL_FUNCTION(relative_dir);
 		DECLARE_WFL_FUNCTION(direction_from);

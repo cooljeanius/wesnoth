@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2011 - 2021
+	Copyright (C) 2011 - 2023
 	by Sytyi Nick <nsytyi@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -55,7 +55,7 @@ static void print_output(const std::string& message, bool flag_exception = false
 #endif
 }
 
-static void extra_tag_error(const std::string& file,
+static std::string extra_tag_error(const std::string& file,
 		int line,
 		const std::string& name,
 		int n,
@@ -66,17 +66,19 @@ static void extra_tag_error(const std::string& file,
 	ss << "Extra tag [" << name << "]; there may only be " << n << " [" << name << "] in [" << parent << "]\n"
 	   << at(file, line) << "\n";
 	print_output(ss.str(), flag_exception);
+	return ss.str();
 }
 
-static void wrong_tag_error(
+static std::string wrong_tag_error(
 		const std::string& file, int line, const std::string& name, const std::string& parent, bool flag_exception)
 {
 	std::ostringstream ss;
 	ss << "Tag [" << name << "] may not be used in [" << parent << "]\n" << at(file, line) << "\n";
 	print_output(ss.str(), flag_exception);
+	return ss.str();
 }
 
-static void missing_tag_error(const std::string& file,
+static std::string missing_tag_error(const std::string& file,
 		int line,
 		const std::string& name,
 		int n,
@@ -87,25 +89,40 @@ static void missing_tag_error(const std::string& file,
 	ss << "Missing tag [" << name << "]; there must be " << n << " [" << name << "]s in [" << parent << "]\n"
 	   << at(file, line) << "\n";
 	print_output(ss.str(), flag_exception);
+	return ss.str();
 }
 
-static void extra_key_error(
+static std::string extra_key_error(
 		const std::string& file, int line, const std::string& tag, const std::string& key, bool flag_exception)
 {
 	std::ostringstream ss;
-	ss << "Invalid key '" << key << "=' in tag [" << tag << "]\n" << at(file, line) << "\n";
+	ss << "Invalid key '" << key << "='";
+	if(!tag.empty()) {
+		ss << " in tag [" << tag << "]\n";
+	}
+	if(!file.empty()) {
+		ss << at(file, line) << "\n";
+	}
 	print_output(ss.str(), flag_exception);
+	return ss.str();
 }
 
-static void missing_key_error(
+static std::string missing_key_error(
 		const std::string& file, int line, const std::string& tag, const std::string& key, bool flag_exception)
 {
 	std::ostringstream ss;
-	ss << "Missing key '" << key << "=' in tag [" << tag << "]\n" << at(file, line) << "\n";
+	ss << "Missing key '" << key << "='";
+	if(!tag.empty()) {
+		ss << " in tag [" << tag << "]\n";
+	}
+	if(!file.empty()) {
+		ss << at(file, line) << "\n";
+	}
 	print_output(ss.str(), flag_exception);
+	return ss.str();
 }
 
-static void wrong_value_error(const std::string& file,
+static std::string wrong_value_error(const std::string& file,
 		int line,
 		const std::string& tag,
 		const std::string& key,
@@ -120,6 +137,7 @@ static void wrong_value_error(const std::string& file,
 	else ss << value;
 	ss << "' in key '" << key << "=' in tag [" << tag << "]\n" << " (expected value of type " << expected << ") " << at(file, line) << "\n";
 	print_output(ss.str(), flag_exception);
+	return ss.str();
 }
 
 static void wrong_path_error(const std::string& file,
@@ -158,6 +176,19 @@ static void duplicate_key_error(const std::string& file,
 	print_output(ss.str(), flag_exception);
 }
 
+static void inheritance_loop_error(const std::string& file,
+		int line,
+		const std::string& tag,
+		const std::string& key,
+		const std::string& value,
+		int index,
+		bool flag_exception)
+{
+	std::ostringstream ss;
+	ss << "Inheritance loop " << key << "=" << value << " found (at offset " << index << ") in tag [" << tag << "]\n" << at(file, line) << "\n";
+	print_output(ss.str(), flag_exception);
+}
+
 static void wrong_type_error(const std::string & file, int line,
 		const std::string & tag,
 		const std::string & key,
@@ -178,17 +209,18 @@ schema_validator::schema_validator(const std::string& config_file_name, bool val
 	, create_exceptions_(strict_validation_enabled)
 	, config_read_(false)
 	, validate_schema_(validate_schema)
+	, errors_()
 {
 	if(!read_config_file(config_file_name)) {
-		ERR_VL << "Schema file " << config_file_name << " was not read." << std::endl;
+		ERR_VL << "Schema file " << config_file_name << " was not read.";
 		throw abstract_validator::error("Schema file " + config_file_name + " was not read.\n");
 	} else {
 		stack_.push(&root_);
 		counter_.emplace();
 		cache_.emplace();
 		root_.expand_all(root_);
-		LOG_VL << "Schema file " << config_file_name << " was read.\n"
-			   << "Validator initialized\n";
+		LOG_VL << "Schema file " << config_file_name << " was read.";
+		LOG_VL << "Validator initialized";
 	}
 }
 
@@ -204,7 +236,7 @@ bool schema_validator::read_config_file(const std::string& filename)
 		filesystem::scoped_istream stream = preprocess_file(filename, &preproc);
 		read(cfg, *stream, validator.get());
 	} catch(const config::error& e) {
-		ERR_VL << "Failed to read file " << filename << ":\n" << e.what() << "\n";
+		ERR_VL << "Failed to read file " << filename << ":\n" << e.what();
 		return false;
 	}
 
@@ -245,7 +277,7 @@ void schema_validator::open_tag(const std::string& name, const config& parent, i
 			tag = active_tag().find_tag(name, root_, parent);
 
 			if(!tag) {
-				wrong_tag_error(file, start_line, name, stack_.top()->get_name(), create_exceptions_);
+				errors_.emplace_back(wrong_tag_error(file, start_line, name, stack_.top()->get_name(), create_exceptions_));
 			} else {
 				if(!addition) {
 					counter& cnt = counter_.top()[name];
@@ -269,12 +301,15 @@ void schema_validator::close_tag()
 {
 	stack_.pop();
 	counter_.pop();
-	// cache_ is cleared in another place.
+	// cache_ is normally cleared in another place.
+	// However, if we're closing the root tag, clear it now
+	if(stack_.empty()) {
+		print_cache();
+	}
 }
 
-void schema_validator::validate(const config& cfg, const std::string& name, int start_line, const std::string& file)
+void schema_validator::print_cache()
 {
-	// close previous errors and print them to output.
 	for(auto& m : cache_.top()) {
 		for(auto& list : m.second) {
 			print(list);
@@ -282,6 +317,12 @@ void schema_validator::validate(const config& cfg, const std::string& name, int 
 	}
 
 	cache_.pop();
+}
+
+void schema_validator::validate(const config& cfg, const std::string& name, int start_line, const std::string& file)
+{
+	// close previous errors and print them to output.
+	print_cache();
 
 	// clear cache
 	auto cache_it = cache_.top().find(&cfg);
@@ -386,22 +427,22 @@ void schema_validator::print(message_info& el)
 {
 	switch(el.type) {
 	case WRONG_TAG:
-		wrong_tag_error(el.file, el.line, el.tag, el.value, create_exceptions_);
+		errors_.emplace_back(wrong_tag_error(el.file, el.line, el.tag, el.value, create_exceptions_));
 		break;
 	case EXTRA_TAG:
-		extra_tag_error(el.file, el.line, el.tag, el.n, el.value, create_exceptions_);
+		errors_.emplace_back(extra_tag_error(el.file, el.line, el.tag, el.n, el.value, create_exceptions_));
 		break;
 	case MISSING_TAG:
-		missing_tag_error(el.file, el.line, el.tag, el.n, el.value, create_exceptions_);
+		errors_.emplace_back(missing_tag_error(el.file, el.line, el.tag, el.n, el.value, create_exceptions_));
 		break;
 	case EXTRA_KEY:
-		extra_key_error(el.file, el.line, el.tag, el.key, create_exceptions_);
+		errors_.emplace_back(extra_key_error(el.file, el.line, el.tag, el.key, create_exceptions_));
 		break;
 	case WRONG_VALUE:
-		wrong_value_error(el.file, el.line, el.tag, el.key, el.value, el.expected, create_exceptions_);
+		errors_.emplace_back(wrong_value_error(el.file, el.line, el.tag, el.key, el.value, el.expected, create_exceptions_));
 		break;
 	case MISSING_KEY:
-		missing_key_error(el.file, el.line, el.tag, el.key, create_exceptions_);
+		errors_.emplace_back(missing_key_error(el.file, el.line, el.tag, el.key, create_exceptions_));
 		break;
 	}
 }
@@ -411,7 +452,7 @@ schema_self_validator::schema_self_validator()
 	, type_nesting_()
 	, condition_nesting_()
 {
-       defined_types_.insert("t_string");
+	defined_types_.insert("t_string");
 }
 
 
@@ -464,11 +505,14 @@ bool schema_self_validator::tag_path_exists(const config& cfg, const reference& 
 			suffix = path.back();
 			//suffix = link->second + "/" + suffix;
 		} else {
-			auto supers = derivations_.equal_range(prefix);
+			const auto supers = derivations_.equal_range(prefix);
 			if(supers.first != supers.second) {
 				reference super_ref = ref;
-				for( ; supers.first != supers.second; ++supers.first) {
-					super_ref.value_ = supers.first->second + "/" + suffix;
+				for(auto cur = supers.first ; cur != supers.second; ++cur) {
+					super_ref.value_ = cur->second + "/" + suffix;
+					if(super_ref.value_.find(ref.value_) == 0) {
+						continue;
+					}
 					if(tag_path_exists(cfg, super_ref)) {
 						return true;
 					}
@@ -588,6 +632,13 @@ void schema_self_validator::validate_key(const config& cfg, const std::string& n
 		} else if(tag_name == "tag" && name == "super") {
 			for(auto super : utils::split(cfg["super"])) {
 				referenced_tag_paths_.emplace_back(super, file, start_line, tag_name);
+				if(condition_nesting_ > 0) {
+					continue;
+				}
+				if(current_path() == super) {
+					queue_message(cfg, SUPER_LOOP, file, start_line, cfg["super"].str().find(super), tag_name, "super", super);
+					continue;
+				}
 				derivations_.emplace(current_path(), super);
 			}
 		} else if(condition_nesting_ == 0 && tag_name == "tag" && name == "name") {
@@ -642,6 +693,9 @@ void schema_self_validator::print(message_info& el)
 		break;
 	case DUPLICATE_KEY:
 		duplicate_key_error(el.file, el.line, el.tag, el.key, el.value, create_exceptions_);
+		break;
+	case SUPER_LOOP:
+			inheritance_loop_error(el.file, el.line, el.tag, el.key, el.value, el.n, create_exceptions_);
 		break;
 	}
 }

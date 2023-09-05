@@ -18,7 +18,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH WESNOTH 6 2021 wesnoth "Battle for Wesnoth"
+.TH WESNOTH 6 2022 wesnoth "Battle for Wesnoth"
 .
 .SH NOME
 wesnoth \- Battle for Wesnoth, um jogo de fantasia e estratégia em turnos
@@ -73,19 +73,19 @@ Pula as [história] janelas e diálogos ate o fim pelo \fBstart\fP evento.
 Adiciona a opção para mostrar um relógio para testar o cronômetro.
 .TP 
 \fB\-\-config\-dir\fP\fI\ name\fP
-Deprecated, usa \fB\-\-userdata\-dir\fP.
+Depreciação, usa \fB\-\-userdata\-dir\fP.
 .TP 
 \fB\-\-config\-path\fP
-Deprecated, usa \fB\-\-userdata\-path\fP.
+Depreciação, usa \fB\-\-userdata\-path\fP.
 .TP 
 \fB\-\-core\fP\fI\ id_core\fP
 sobrescreve o core carregado com o id do core especificado.
 .TP 
 \fB\-\-data\-dir\fP\fI\ directory\fP
-sobrescreve o diretório de data com o que foi especificado
+sobrescreve o diretório de dados com o que foi especificado
 .TP 
 \fB\-\-data\-path\fP
-imprime o caminho do diretória de data e sai.
+imprime o caminho do diretória de dados e sai.
 .TP 
 \fB\-d, \-\-debug\fP
 habilita opções adicionais para o modo de comando dentro do jogo (veja a
@@ -96,21 +96,20 @@ o modo de comando).
 habilita alguns mecanismos de deb da Lua
 .TP 
 \fB\-\-strict\-lua\fP
-disallow deprecated Lua API calls
+proibi chamadas de depreciação de Lua API
 .TP 
 \fB\-D,\-\-diff\fP\fI\ left\-file\fP\fB\ \fP\fIright\-file\fP
-diffs the two WML files; does not preprocess them first (to do that, run
-them through \fB\-p\fP first). Outputs the diff as DiffWML on standard output or
-to the file indicated by \fI\-\-output\fP.
+diffs os dois arquivos WML; não pre\-processa eles primeiro (para fazer isso,
+primeiro use \fB\-p\fP). Diff sai como DiffWML na saída padrão ou para o arquivo
+indicado por \fI\-\-output\fP.
 .TP 
 \fB\-e[\fP\fIfile\fP\fB],\ \-\-editor[\fP\fI=file\fP\fB]\fP
 abre diretamente o editor de mapas do jogo. Se \fIfile\fP é especificado, fica
 equivalente a \fB\-l\fP \fB\-\-load\fP.
 .TP 
 \fB\-\-fps\fP
-displays the number of frames per second the game is currently running at in
-a corner of the screen as well as writes these values to a file in the
-userdata directory.
+exibe o número de frames por segundo do jogo em um canto da tela e também
+grava estes valores em um arquivo no diretório de dados do usuário.
 .TP 
 \fB\-f, \-\-fullscreen\fP
 executa o jogo em modo tela cheia.
@@ -155,6 +154,19 @@ quando usado juto de \fB\-u\fP.
 lista dos log domains definidos (apenas os que contêm \fIfilter\fP se usad0) e
 sai
 .TP 
+\fB\-\-no\-log\-to\-file\fP
+prevents redirecting logged output to a file. Log files are created in the
+logs directory under the userdata folder.
+.TP 
+\fB\-\-log\-to\-file\fP
+log output is written to a file in addition to standard
+output/error. Cancels the effect of \-\-no\-log\-to\-file whether implicit or
+explicit.
+.TP 
+\fB\-\-wnoconsole\fP
+For Windows, when used with \-\-no\-log\-to\-file, results in output being
+written to cerr/cout instead of CONOUT. Otherwise, does nothing.
+.TP 
 \fB\-\-max\-fps\fP\fI\ fps\fP
 o número de frames por segundo que o jogo pode mostrr, o valor deve estar
 entre \fB1\fP e \fB1000\fP, o valor padrão é igual a taxa de atualização do
@@ -188,7 +200,7 @@ roda o jogo sem a GUI. Só está disponível em combinação com \fB\-\-multipla
 ou \fB\-\-screenshot\fP ou \fB\-\-plugin\fP.
 .TP 
 \fB\-\-nobanner\fP
-suppress the startup banner.
+suprime o banner de início.
 .TP 
 \fB\-\-nomusic\fP
 roda o jogo sem música.
@@ -201,7 +213,7 @@ usado com \fB\-u\fP.
 roda o jogo sem sons e música.
 .TP 
 \fB\-\-output\fP\fI\ file\fP
-output to the specified file. Applicable to diffing operations.
+aloca para o arquivo especificado. Aplicável para diferentes operações.
 .TP 
 \fB\-\-password\fP\fI\ password\fP
 usa \fIpassword\fP quando conectar a um servidor, ignorando as outras
@@ -213,9 +225,9 @@ wesnoth. Identico ao \fB\-\-script\fP, mas arquivos Lua devem retornar uma funç
 que irá agir como uma co\-rotina e periodicamente despertar com atualizações.
 .TP 
 \fB\-P,\-\-patch\fP\fI\ base\-file\fP\fB\ \fP\fIpatch\-file\fP
-applies a DiffWML patch to a WML file; does not preprocess either of the
-files.  Outputs the patched WML to standard output or to the file indicated
-by \fI\-\-output\fP.
+aplica um patch DiffWML para um arquivo WML; não pré\-processa nenhum dos
+dois arquivos.  Aloca o WML patched para a saída padrão ou para o arquivo
+indicado por \fI\-\-output\fP.
 .TP 
 \fB\-p,\ \-\-preprocess\fP\fI\ source\-file/folder\fP\fB\ \fP\fItarget\-directory\fP
 pré\-processa um arquivo/pasta específico. Cada cada arquivo(s) um arquivo de
@@ -237,17 +249,18 @@ usado apenas pelo comando \fB\-\-preprocess\fP. Específica um arquivo que
 contenha \fB[preproc_define]\fP para ser incluido antes do processamento.
 .TP 
 \fB\-\-preprocess\-output\-macros[\fP\fI=target\-file\fP\fB]\fP
-usado apenas pelo comando \fB\-\-preprocess\fP. Will output all preprocessed
-macros no arquivo alvo. Se o arquivo não for especificado, o resultado será
-arquvio '_MACROS_.cfg' no diretório alvo do comando do pré\-processador. O
-arquivo resultante pode ser passado para \fB\-\-preprocess\-input\-macros\fP.  Esta
-opção deve ser digitada antes do comando \fB\-\-preprocess\fP.
+usado apenas pelo comando \fB\-\-preprocess\fP. Colocará todos os macros
+processados no arquivo alvo. Se o arquivo não for especificado, o resultado
+será arquvio '_MACROS_.cfg' no diretório alvo do comando do
+pré\-processador. O arquivo resultante pode ser passado para
+\fB\-\-preprocess\-input\-macros\fP.  Esta opção deve ser digitada antes do comando
+\fB\-\-preprocess\fP.
 .TP 
 \fB\-r\ \fP\fIX\fP\fBx\fP\fIY\fP\fB,\ \-\-resolution\ \fP\fIX\fP\fBx\fP\fIY\fP
 define a resolução da tela. Exemplo: \fB\-r\fP \fB800x600\fP.
 .TP 
 \fB\-\-render\-image\fP\fI\ image\fP\fB\ \fP\fIoutput\fP
-pega um 'caminho de string de imagem' válido de wesnoth com função de
+pega um "caminho de string de imagem" válido de wesnoth com função de
 caminho de imagem, e produz um arquivo .png. As funções do caminho de imagem
 são documentados na página https://wiki.wesnoth.org/ImagePathFunctionWML.
 .TP 
@@ -277,9 +290,9 @@ roda o jogo sem GUI, substituindo qualquer \fB\-\-nogui\fP implícito.
 erros de validação são tratados como erros fatais.
 .TP 
 \fB\-t[\fP\fIscenario_id\fP\fB],\ \-\-test[\fP\fI=scenario_id\fP\fB]\fP
-roda o jogo num pequeno cenário de teste. Este cenário deve ser definido com
-uma \fB[test]\fP WML tag. O padrão é \fBtest\fP.  Uma demonstração da
-\fB[micro_ai]\fP pode ser iniciada por \fBmicro_ai_test\fP.  Implica \fB\-\-nogui\fP.
+runs the game in a small test scenario. The scenario should be one defined
+with a \fB[test]\fP WML tag. The default is \fBtest\fP.  A demonstration of the
+\fB[micro_ai]\fP feature can be started with \fBmicro_ai_test\fP.
 .TP 
 \fB\-\-translations\-over\fP\fI\ percent\fP
 Define o padrão para considerar uma tradução como completa o suficiente para
@@ -319,7 +332,7 @@ Windows também é possível especificar um diretório relativo ao processode
 trabalho ao usar um caminho que comece com ".\e" ou "..\e".
 .TP 
 \fB\-\-userdata\-path\fP
-imprime o caminho da data do usuário e sai.
+imprime o caminho dos dados do usuário e sai.
 .TP 
 \fB\-\-username\fP\fI\ username\fP
 usa \fIusername\fP ao conectar num servidor, ignorando outras preferências.
@@ -328,7 +341,7 @@ usa \fIusername\fP ao conectar num servidor, ignorando outras preferências.
 valida um arquivo contra um WML schema.
 .TP 
 \fB\-\-validate\-addon\fP\fI\ addon_id\fP
-validates the WML of the given addon as you play.
+valida o WML do addon enquanto você joga.
 .TP 
 \fB\-\-validate\-core\fP
 valida o core WML enquanto você joga.
@@ -341,6 +354,9 @@ assume que o cache é válido. (perigoso)
 .TP 
 \fB\-v, \-\-version\fP
 mostra o número da versão e sai.
+.TP 
+\fB\-\-simple\-version\fP
+mostra o número da versão e nada mais, depois sai.
 .TP 
 \fB\-w, \-\-windowed\fP
 roda o jogo no modo de janela.
@@ -433,7 +449,7 @@ Visite a página oficial: http://www.wesnoth.org/
 .
 .SH COPYRIGHT
 .
-Copyright \(co 2003\-2021 David White <davidnwhite@verizon.net>
+Copyright \(co 2003\-2023 David White <davidnwhite@verizon.net>
 .br
 Este Software é Gratuito; este software é licenciado sob a versão GPL 2,
 conforme publicada pela Free Software Foundation. Não há NENHUMA garantia;

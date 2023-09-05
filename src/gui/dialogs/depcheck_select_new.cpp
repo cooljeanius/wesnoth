@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012 - 2021
+	Copyright (C) 2012 - 2023
 	by Boldizsár Lipka <lipkab@zoho.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -31,9 +31,10 @@ REGISTER_DIALOG(depcheck_select_new)
 depcheck_select_new::depcheck_select_new(
 		ng::depcheck::component_type name,
 		const std::vector<std::string>& items)
-	: items_(items), result_(-1)
+	: modal_dialog(window_id())
+	, items_(items)
+	, result_(-1)
 {
-
 	std::string message;
 
 	switch(name) {
@@ -63,7 +64,7 @@ void depcheck_select_new::pre_show(window& window)
 
 	for(const auto & item : items_)
 	{
-		std::map<std::string, string_map> data;
+		widget_data data;
 		data["option"]["label"] = item;
 
 		items.add_row(data);

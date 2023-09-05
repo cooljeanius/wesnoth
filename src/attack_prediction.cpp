@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2006 - 2021
+	Copyright (C) 2006 - 2023
 	by Rusty Russell <rusty@rustcorp.com.au>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -40,7 +40,6 @@
 #include <array>
 #include <cfloat>
 #include <cmath>
-#include <iostream>
 #include <memory>
 #include <numeric>
 #include <sstream>
@@ -74,7 +73,6 @@ void dump(const battle_context_unit_stats& stats)
 	   << "\n" << "drains:         " << stats.drains
 	   << "\n" << "petrifies:      " << stats.petrifies
 	   << "\n" << "poisons:        " << stats.poisons
-	   << "\n" << "backstab_pos:   " << stats.backstab_pos
 	   << "\n" << "swarm:          " << stats.swarm
 	   << "\n" << "firststrike:    " << stats.firststrike
 	   << std::noboolalpha
@@ -1503,8 +1501,10 @@ void monte_carlo_combat_matrix::simulate()
 		bool b_slowed = rng.get_random_bool(b_initially_slowed_chance_);
 		const std::vector<double>& a_initial = a_slowed ? a_initial_slowed_ : a_initial_;
 		const std::vector<double>& b_initial = b_slowed ? b_initial_slowed_ : b_initial_;
-		unsigned int a_hp = rng.get_random_element(a_initial.begin(), a_initial.end());
-		unsigned int b_hp = rng.get_random_element(b_initial.begin(), b_initial.end());
+		// In the a_initial vector, a_initial[x] is the chance of having exactly x hp.
+		// Thus the index returned by get_random_element corresponds directly to an amount of hp.
+		auto a_hp = static_cast<unsigned int>(rng.get_random_element(a_initial.begin(), a_initial.end()));
+		auto b_hp = static_cast<unsigned int>(rng.get_random_element(b_initial.begin(), b_initial.end()));
 		unsigned int a_strikes = calc_blows_a(a_hp);
 		unsigned int b_strikes = calc_blows_b(b_hp);
 
@@ -2115,7 +2115,7 @@ void complex_fight(attack_prediction_mode mode,
 					double first_hit = hit_chance * opp_hit_unknown;
 					opp_hit += first_hit;
 					opp_hit_unknown -= first_hit;
-					double both_were_alive = (1.0 - b_already_dead) * (1.0 - pm->dead_prob_a());
+					double both_were_alive = 1.0 - b_already_dead - pm->dead_prob_a();
 					double this_hit_killed_b = both_were_alive != 0.0 ? (pm->dead_prob_b() - b_already_dead) / both_were_alive : 1.0;
 					self_hit_unknown *= (1.0 - this_hit_killed_b);
 				}
@@ -2128,7 +2128,7 @@ void complex_fight(attack_prediction_mode mode,
 					double first_hit = opp_hit_chance * self_hit_unknown;
 					self_hit += first_hit;
 					self_hit_unknown -= first_hit;
-					double both_were_alive = (1.0 - a_already_dead) * (1.0 - pm->dead_prob_b());
+					double both_were_alive = 1.0 - a_already_dead - pm->dead_prob_b();
 					double this_hit_killed_a = both_were_alive != 0.0 ? (pm->dead_prob_a() - a_already_dead) / both_were_alive : 1.0;
 					opp_hit_unknown *= (1.0 - this_hit_killed_a);
 				}
@@ -2400,13 +2400,13 @@ void combatant::fight(combatant& opponent, bool levelup_considered)
 	assert(opponent.summary[0].size() == opp_res.size());
 	for(unsigned int i = 0; i < summary[0].size(); ++i) {
 		if(std::fabs(summary[0][i] - res[i]) > 0.000001) {
-			std::cerr << "Mismatch for " << i << " hp: " << summary[0][i] << " should have been " << res[i] << "\n";
+			PLAIN_LOG << "Mismatch for " << i << " hp: " << summary[0][i] << " should have been " << res[i];
 			assert(false);
 		}
 	}
 	for(unsigned int i = 0; i < opponent.summary[0].size(); ++i) {
 		if(std::fabs(opponent.summary[0][i] - opp_res[i]) > 0.000001) {
-			std::cerr << "Mismatch for " << i << " hp: " << opponent.summary[0][i] << " should have been " << opp_res[i] << "\n";
+			PLAIN_LOG << "Mismatch for " << i << " hp: " << opponent.summary[0][i] << " should have been " << opp_res[i];
 			assert(false);
 		}
 	}
@@ -2730,14 +2730,14 @@ static battle_context_unit_stats* parse_unit(char*** argv)
 		if(max) {
 			max_hp = atoi(max + strlen("maxhp="));
 			if(max_hp < hitpoints) {
-				std::cerr << "maxhp must be at least hitpoints." << std::endl;
+				PLAIN_LOG << "maxhp must be at least hitpoints.";
 				exit(1);
 			}
 		}
 
 		if(strstr((*argv)[5], "drain")) {
 			if(!max) {
-				std::cerr << "WARNING: drain specified without maxhp; assuming uninjured." << std::endl;
+				PLAIN_LOG << "WARNING: drain specified without maxhp; assuming uninjured.";
 			}
 
 			drains = true;
@@ -2761,7 +2761,7 @@ static battle_context_unit_stats* parse_unit(char*** argv)
 
 		if(strstr((*argv)[5], "swarm")) {
 			if(!max) {
-				std::cerr << "WARNING: swarm specified without maxhp; assuming uninjured." << std::endl;
+				PLAIN_LOG << "WARNING: swarm specified without maxhp; assuming uninjured.";
 			}
 
 			swarm = true;
@@ -2786,11 +2786,10 @@ int main(int argc, char* argv[])
 		run(argv[1] ? atoi(argv[1]) : 0);
 
 	if(argc < 9) {
-		std::cerr
+		PLAIN_LOG
 			<< "Usage: " << argv[0] << " [<battle>]\n\t" << argv[0] << " "
 			<< "<damage> <attacks> <hp> <hitprob> [drain,slows,slowed,swarm,firststrike,berserk,maxhp=<num>] "
-			<< "<damage> <attacks> <hp> <hitprob> [drain,slows,slowed,berserk,firststrike,swarm,maxhp=<num>] ..."
-			<< std::endl;
+			<< "<damage> <attacks> <hp> <hitprob> [drain,slows,slowed,berserk,firststrike,swarm,maxhp=<num>] ...";
 		exit(1);
 	}
 

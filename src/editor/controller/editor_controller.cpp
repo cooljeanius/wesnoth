@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008 - 2021
+	Copyright (C) 2008 - 2023
 	by Tomasz Sniatowski <kailoran@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -54,6 +54,7 @@
 #include "units/animation_component.hpp"
 #include "game_config_manager.hpp"
 #include "quit_confirmation.hpp"
+#include "sdl/input.hpp" // get_mouse_button_mask
 
 #include <functional>
 
@@ -63,15 +64,17 @@ static std::vector<std::string> saved_windows_;
 
 namespace editor {
 
-editor_controller::editor_controller()
+std::string editor_controller::current_addon_id_ = "";
+
+editor_controller::editor_controller(bool clear_id)
 	: controller_base()
 	, mouse_handler_base()
 	, quit_confirmation(std::bind(&editor_controller::quit_confirm, this))
 	, active_menu_(editor::MAP)
 	, reports_(new reports())
-	, gui_(new editor_display(*this, *reports_, controller_base::get_theme(game_config_, "editor")))
+	, gui_(new editor_display(*this, *reports_))
 	, tods_()
-	, context_manager_(new context_manager(*gui_.get(), game_config_))
+	, context_manager_(new context_manager(*gui_.get(), game_config_, clear_id ? "" : editor_controller::current_addon_id_))
 	, toolkit_(nullptr)
 	, tooltip_manager_()
 	, floating_label_manager_(nullptr)
@@ -80,6 +83,10 @@ editor_controller::editor_controller()
 	, quit_mode_(EXIT_ERROR)
 	, music_tracks_()
 {
+	if(clear_id) {
+		editor_controller::current_addon_id_ = "";
+	}
+
 	init_gui();
 	toolkit_.reset(new editor_toolkit(*gui_.get(), key_, game_config_, *context_manager_.get()));
 	help_manager_.reset(new help::help_manager(&game_config_));
@@ -90,19 +97,17 @@ editor_controller::editor_controller()
 	get_current_map_context().set_starting_position_labels(gui());
 	cursor::set(cursor::NORMAL);
 
-	gui().create_buttons();
-	gui().redraw_everything();
+	gui().queue_rerender();
 }
 
 void editor_controller::init_gui()
 {
 	gui_->change_display_context(&get_current_map_context());
-	preferences::set_preference_display_settings();
 	gui_->add_redraw_observer(std::bind(&editor_controller::display_redraw_callback, this, std::placeholders::_1));
 	floating_label_manager_.reset(new font::floating_label_context());
-	gui().set_draw_coordinates(preferences::editor::draw_hex_coordinates());
-	gui().set_draw_terrain_codes(preferences::editor::draw_terrain_codes());
-	gui().set_draw_num_of_bitmaps(preferences::editor::draw_num_of_bitmaps());
+	gui().set_debug_flag(display::DEBUG_COORDINATES, preferences::editor::draw_hex_coordinates());
+	gui().set_debug_flag(display::DEBUG_TERRAIN_CODES, preferences::editor::draw_terrain_codes());
+	gui().set_debug_flag(display::DEBUG_NUM_BITMAPS, preferences::editor::draw_num_of_bitmaps());
 //	halo_manager_.reset(new halo::manager(*gui_));
 //	resources::halo = halo_manager_.get();
 //	^ These lines no longer necessary, the gui owns its halo manager.
@@ -118,7 +123,7 @@ void editor_controller::init_tods(const game_config_view& game_config)
 		const std::string& schedule_id = schedule["id"];
 		const std::string& schedule_name = schedule["name"];
 		if (schedule_id.empty()) {
-			ERR_ED << "Missing ID attribute in a TOD Schedule." << std::endl;
+			ERR_ED << "Missing ID attribute in a TOD Schedule.";
 			continue;
 		}
 
@@ -129,7 +134,7 @@ void editor_controller::init_tods(const game_config_view& game_config)
 
 			times = new_times.first;
 		} else {
-			ERR_ED << "Duplicate TOD Schedule identifiers." << std::endl;
+			ERR_ED << "Duplicate TOD Schedule identifiers.";
 			continue;
 		}
 
@@ -140,7 +145,7 @@ void editor_controller::init_tods(const game_config_view& game_config)
 	}
 
 	if (tods_.empty()) {
-		ERR_ED << "No editor time-of-day defined" << std::endl;
+		ERR_ED << "No editor time-of-day defined";
 	}
 }
 
@@ -148,14 +153,14 @@ void editor_controller::init_music(const game_config_view& game_config)
 {
 	const std::string tag_name = "editor_music";
 	if (game_config.child_range(tag_name).size() == 0) {
-		ERR_ED << "No editor music defined" << std::endl;
+		ERR_ED << "No editor music defined";
 	}
 	else {
 		for (const config& editor_music : game_config.child_range(tag_name)) {
 			for (const config& music : editor_music.child_range("music")) {
 				sound::music_track track(music);
 				if (track.file_path().empty())
-					WRN_ED << "Music track " << track.id() << " not found." << std::endl;
+					WRN_ED << "Music track " << track.id() << " not found.";
 				else
 					music_tracks_.emplace_back(music);
 			}
@@ -194,7 +199,7 @@ void editor_controller::do_screenshot(const std::string& screenshot_filename /* 
 	try {
 		surface screenshot = gui().screenshot(true);
 		if(!screenshot || image::save_image(screenshot, screenshot_filename) != image::save_result::success) {
-			ERR_ED << "Screenshot creation failed!\n";
+			ERR_ED << "Screenshot creation failed!";
 		}
 	} catch (const wml_exception& e) {
 		e.show();
@@ -236,10 +241,11 @@ void editor_controller::custom_tods_dialog()
 	context_manager_->refresh_all();
 }
 
-bool editor_controller::can_execute_command(const hotkey::hotkey_command& cmd, int index) const
+bool editor_controller::can_execute_command(const hotkey::ui_command& cmd) const
 {
 	using namespace hotkey; //reduce hotkey:: clutter
-	switch (cmd.id) {
+	int index = cmd.index;
+	switch(cmd.hotkey_command) {
 		case HOTKEY_NULL:
 			if (index >= 0) {
 				unsigned i = static_cast<unsigned>(index);
@@ -253,6 +259,7 @@ bool editor_controller::can_execute_command(const hotkey::hotkey_command& cmd, i
 					case editor::LOAD_MRU:
 					case editor::PALETTE:
 					case editor::AREA:
+					case editor::ADDON:
 					case editor::SIDE:
 					case editor::TIME:
 					case editor::SCHEDULE:
@@ -331,6 +338,9 @@ bool editor_controller::can_execute_command(const hotkey::hotkey_command& cmd, i
 		case HOTKEY_EDITOR_SCENARIO_SAVE_AS:
 			return true;
 
+		case HOTKEY_EDITOR_PBL:
+		case HOTKEY_EDITOR_CHANGE_ADDON_ID:
+			return true;
 		case HOTKEY_EDITOR_AREA_ADD:
 		case HOTKEY_EDITOR_SIDE_NEW:
 			return !get_current_map_context().is_pure_map();
@@ -448,9 +458,11 @@ bool editor_controller::can_execute_command(const hotkey::hotkey_command& cmd, i
 	}
 }
 
-hotkey::ACTION_STATE editor_controller::get_action_state(hotkey::HOTKEY_COMMAND command, int index) const {
+hotkey::ACTION_STATE editor_controller::get_action_state(const hotkey::ui_command& cmd) const
+{
 	using namespace hotkey;
-	switch (command) {
+	int index = cmd.index;
+	switch (cmd.hotkey_command) {
 
 	case HOTKEY_EDITOR_UNIT_TOGGLE_LOYAL:
 	{
@@ -509,13 +521,13 @@ hotkey::ACTION_STATE editor_controller::get_action_state(hotkey::HOTKEY_COMMAND 
 	case HOTKEY_EDITOR_TOOL_UNIT:
 	case HOTKEY_EDITOR_TOOL_VILLAGE:
 	case HOTKEY_EDITOR_TOOL_ITEM:
-		return toolkit_->is_mouse_action_set(command) ? ACTION_ON : ACTION_OFF;
+		return toolkit_->is_mouse_action_set(cmd.hotkey_command) ? ACTION_ON : ACTION_OFF;
 	case HOTKEY_EDITOR_DRAW_COORDINATES:
-		return gui_->get_draw_coordinates() ? ACTION_ON : ACTION_OFF;
+		return gui_->debug_flag_set(display::DEBUG_COORDINATES) ? ACTION_ON : ACTION_OFF;
 	case HOTKEY_EDITOR_DRAW_TERRAIN_CODES:
-		return gui_->get_draw_terrain_codes() ? ACTION_ON : ACTION_OFF;
+		return gui_->debug_flag_set(display::DEBUG_TERRAIN_CODES) ? ACTION_ON : ACTION_OFF;
 	case HOTKEY_EDITOR_DRAW_NUM_OF_BITMAPS:
-		return gui_->get_draw_num_of_bitmaps() ? ACTION_ON : ACTION_OFF;
+		return gui_->debug_flag_set(display::DEBUG_NUM_BITMAPS) ? ACTION_ON : ACTION_OFF;
 
 	case HOTKEY_MINIMAP_DRAW_VILLAGES:
 		return (preferences::minimap_draw_villages()) ? hotkey::ACTION_ON : hotkey::ACTION_OFF;
@@ -542,6 +554,8 @@ hotkey::ACTION_STATE editor_controller::get_action_state(hotkey::HOTKEY_COMMAND 
 		case editor::AREA:
 			return index == get_current_map_context().get_active_area()
 					? ACTION_SELECTED : ACTION_DESELECTED;
+		case editor::ADDON:
+			return ACTION_STATELESS;
 		case editor::SIDE:
 			return static_cast<std::size_t>(index) == gui_->playing_team()
 					? ACTION_SELECTED : ACTION_DESELECTED;
@@ -581,19 +595,20 @@ hotkey::ACTION_STATE editor_controller::get_action_state(hotkey::HOTKEY_COMMAND 
 		}
 		return ACTION_ON;
 		default:
-			return command_executor::get_action_state(command, index);
+			return command_executor::get_action_state(cmd);
 	}
 }
 
-bool editor_controller::do_execute_command(const hotkey::hotkey_command& cmd, int index, bool press, bool release)
+bool editor_controller::do_execute_command(const hotkey::ui_command& cmd, bool press, bool release)
 {
-	hotkey::HOTKEY_COMMAND command = cmd.id;
+	hotkey::HOTKEY_COMMAND command = cmd.hotkey_command;
 	SCOPE_ED;
 	using namespace hotkey;
+	int index = cmd.index;
 
 	// nothing here handles release; fall through to base implementation
 	if (!press) {
-		return hotkey::command_executor::do_execute_command(cmd, index, press, release);
+		return hotkey::command_executor::do_execute_command(cmd, press, release);
 	}
 
 	switch (command) {
@@ -632,6 +647,8 @@ bool editor_controller::do_execute_command(const hotkey::hotkey_command& cmd, in
 					gui_->scroll_to_tiles(locs.begin(), locs.end());
 					return true;
 				}
+			case ADDON:
+				return true;
 			case TIME:
 				{
 					get_current_map_context().set_starting_time(index);
@@ -700,13 +717,11 @@ bool editor_controller::do_execute_command(const hotkey::hotkey_command& cmd, in
 
 			//Palette
 		case HOTKEY_EDITOR_PALETTE_GROUPS:
-		{
-			//TODO this code waits for the gui2 dialog to get ready
-//			std::vector< std::pair< std::string, std::string >> blah_items;
-//			toolkit_->get_palette_manager()->active_palette().expand_palette_groups_menu(blah_items);
-//			int selected = 1; //toolkit_->get_palette_manager()->active_palette().get_selected;
-//			gui2::teditor_select_palette_group::execute(selected, blah_items, gui_->video());
-		}
+ 			//TODO this code waits for the gui2 dialog to get ready
+ //			std::vector< std::pair< std::string, std::string >> blah_items;
+ //			toolkit_->get_palette_manager()->active_palette().expand_palette_groups_menu(blah_items);
+ //			int selected = 1; //toolkit_->get_palette_manager()->active_palette().get_selected;
+ //			gui2::teditor_select_palette_group::execute(selected, blah_items);
 			return true;
 		case HOTKEY_EDITOR_PALETTE_UPSCROLL:
 			toolkit_->get_palette_manager()->scroll_up();
@@ -754,6 +769,28 @@ bool editor_controller::do_execute_command(const hotkey::hotkey_command& cmd, in
 		case HOTKEY_EDITOR_TOOL_VILLAGE:
 		case HOTKEY_EDITOR_TOOL_ITEM:
 			toolkit_->hotkey_set_mouse_action(command);
+			return true;
+
+		case HOTKEY_EDITOR_PBL:
+			if(current_addon_id_ == "") {
+				current_addon_id_ = editor::initialize_addon();
+				context_manager_->set_addon_id(current_addon_id_);
+			}
+
+			if(current_addon_id_ != "") {
+				context_manager_->edit_pbl();
+			}
+			return true;
+
+		case HOTKEY_EDITOR_CHANGE_ADDON_ID:
+			if(current_addon_id_ == "") {
+				current_addon_id_ = editor::initialize_addon();
+				context_manager_->set_addon_id(current_addon_id_);
+			}
+
+			if(current_addon_id_ != "") {
+				context_manager_->change_addon_id();
+			}
 			return true;
 
 		case HOTKEY_EDITOR_AREA_ADD:
@@ -858,7 +895,7 @@ bool editor_controller::do_execute_command(const hotkey::hotkey_command& cmd, in
 			context_manager_->perform_refresh(editor_action_select_none());
 			return true;
 		case HOTKEY_EDITOR_SELECTION_FILL:
-            context_manager_->fill_selection();
+			context_manager_->fill_selection();
 			return true;
 		case HOTKEY_EDITOR_SELECTION_RANDOMIZE:
 			context_manager_->perform_refresh(editor_action_shuffle_area(
@@ -892,7 +929,14 @@ bool editor_controller::do_execute_command(const hotkey::hotkey_command& cmd, in
 			context_manager_->new_map_dialog();
 			return true;
 		case HOTKEY_EDITOR_SCENARIO_NEW:
-			context_manager_->new_scenario_dialog();
+			if(current_addon_id_ == "") {
+				current_addon_id_ = editor::initialize_addon();
+				context_manager_->set_addon_id(current_addon_id_);
+			}
+
+			if(current_addon_id_ != "") {
+				context_manager_->new_scenario_dialog();
+			}
 			return true;
 		case HOTKEY_EDITOR_MAP_SAVE:
 			save_map();
@@ -904,7 +948,14 @@ bool editor_controller::do_execute_command(const hotkey::hotkey_command& cmd, in
 			context_manager_->save_map_as_dialog();
 			return true;
 		case HOTKEY_EDITOR_SCENARIO_SAVE_AS:
-			context_manager_->save_scenario_as_dialog();
+			if(current_addon_id_ == "") {
+				current_addon_id_ = editor::initialize_addon();
+				context_manager_->set_addon_id(current_addon_id_);
+			}
+
+			if(current_addon_id_ != "") {
+				context_manager_->save_scenario_as_dialog();
+			}
 			return true;
 		case HOTKEY_EDITOR_MAP_GENERATE:
 			context_manager_->generate_map_dialog();
@@ -964,18 +1015,18 @@ bool editor_controller::do_execute_command(const hotkey::hotkey_command& cmd, in
 			return true;
 
 		case HOTKEY_EDITOR_DRAW_COORDINATES:
-			gui().set_draw_coordinates(!gui().get_draw_coordinates());
-			preferences::editor::set_draw_hex_coordinates(gui().get_draw_coordinates());
+			gui().toggle_debug_flag(display::DEBUG_COORDINATES);
+			preferences::editor::set_draw_hex_coordinates(gui().debug_flag_set(display::DEBUG_COORDINATES));
 			gui().invalidate_all();
 			return true;
 		case HOTKEY_EDITOR_DRAW_TERRAIN_CODES:
-			gui().set_draw_terrain_codes(!gui().get_draw_terrain_codes());
-			preferences::editor::set_draw_terrain_codes(gui().get_draw_terrain_codes());
+			gui().toggle_debug_flag(display::DEBUG_TERRAIN_CODES);
+			preferences::editor::set_draw_terrain_codes(gui().debug_flag_set(display::DEBUG_TERRAIN_CODES));
 			gui().invalidate_all();
 			return true;
 		case HOTKEY_EDITOR_DRAW_NUM_OF_BITMAPS:
-			gui().set_draw_num_of_bitmaps(!gui().get_draw_num_of_bitmaps());
-			preferences::editor::set_draw_num_of_bitmaps(gui().get_draw_num_of_bitmaps());
+			gui().toggle_debug_flag(display::DEBUG_NUM_BITMAPS);
+			preferences::editor::set_draw_num_of_bitmaps(gui().debug_flag_set(display::DEBUG_NUM_BITMAPS));
 			gui().invalidate_all();
 			return true;
 		case HOTKEY_EDITOR_REMOVE_LOCATION: {
@@ -989,7 +1040,7 @@ bool editor_controller::do_execute_command(const hotkey::hotkey_command& cmd, in
 			return true;
 		}
 		default:
-			return hotkey::command_executor::do_execute_command(cmd, index, press, release);
+			return hotkey::command_executor::do_execute_command(cmd, press, release);
 	}
 }
 
@@ -1009,10 +1060,11 @@ void editor_controller::show_menu(const std::vector<config>& items_arg, int xloc
 	std::vector<config> items;
 	for(const auto& c : items_arg) {
 		const std::string& id = c["id"];
-		const hotkey::hotkey_command& command = hotkey::get_hotkey_command(id);
 
-		if((can_execute_command(command) && (!context_menu || in_context_menu(command.id)))
-			|| command.id == hotkey::HOTKEY_NULL)
+		const hotkey::ui_command cmd = hotkey::ui_command(hotkey::get_hotkey_command(id));
+
+		if((can_execute_command(cmd) && (!context_menu || in_context_menu(cmd)))
+			|| cmd.hotkey_command == hotkey::HOTKEY_NULL)
 		{
 			items.emplace_back("id", id);
 		}
@@ -1049,6 +1101,10 @@ void editor_controller::show_menu(const std::vector<config>& items_arg, int xloc
 	if(first_id == "editor-switch-area") {
 		active_menu_ = editor::AREA;
 		context_manager_->expand_areas_menu(items, 0);
+	}
+
+	if(first_id == "editor-pbl") {
+		active_menu_ = editor::ADDON;
 	}
 
 	if(!items.empty() && items.front()["id"] == "editor-switch-time") {
@@ -1099,10 +1155,10 @@ void editor_controller::show_menu(const std::vector<config>& items_arg, int xloc
 
 void editor_controller::preferences()
 {
-	gui_->video().clear_all_help_strings();
+	gui_->clear_help_string();
 	gui2::dialogs::preferences_dialog::display();
 
-	gui_->redraw_everything();
+	gui_->queue_rerender();
 }
 
 void editor_controller::toggle_grid()
@@ -1232,7 +1288,6 @@ void editor_controller::display_redraw_callback(display&)
 {
 	set_button_state();
 	toolkit_->adjust_size();
-	toolkit_->get_palette_manager()->draw_contents();
 	get_current_map_context().get_labels().recalculate_labels();
 }
 
@@ -1259,10 +1314,10 @@ void editor_controller::mouse_motion(int x, int y, const bool /*browse*/,
 		// last_undo is a non-owning pointer. Although it could have other uses, it seems to be
 		// mainly (only?) used for printing debugging information.
 		auto last_undo = get_current_map_context().last_undo_action();
-		if (dragging_left_ && (SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(1)) != 0) {
+		if (dragging_left_ && (sdl::get_mouse_button_mask() & SDL_BUTTON(1)) != 0) {
 			if (!get_current_map_context().map().on_board_with_border(hex_clicked)) return;
 			a = get_mouse_action().drag_left(*gui_, x, y, partial, last_undo);
-		} else if (dragging_right_ && (SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(3)) != 0) {
+		} else if (dragging_right_ && (sdl::get_mouse_button_mask() & SDL_BUTTON(3)) != 0) {
 			if (!get_current_map_context().map().on_board_with_border(hex_clicked)) return;
 			a = get_mouse_action().drag_right(*gui_, x, y, partial, last_undo);
 		}
@@ -1304,12 +1359,12 @@ bool editor_controller::left_click(int x, int y, const bool browse)
 	if (mouse_handler_base::left_click(x, y, browse))
 		return true;
 
-	LOG_ED << "Left click, after generic handling\n";
+	LOG_ED << "Left click, after generic handling";
 	map_location hex_clicked = gui().hex_clicked_on(x, y);
 	if (!get_current_map_context().map().on_board_with_border(hex_clicked))
 		return true;
 
-	LOG_ED << "Left click action " << hex_clicked << "\n";
+	LOG_ED << "Left click action " << hex_clicked;
 	auto a = get_mouse_action().click_left(*gui_, x, y);
 	if(a) {
 		perform_refresh_delete(std::move(a), true);
@@ -1340,10 +1395,10 @@ bool editor_controller::right_click(int x, int y, const bool browse)
 {
 	toolkit_->clear_mouseover_overlay();
 	if (mouse_handler_base::right_click(x, y, browse)) return true;
-	LOG_ED << "Right click, after generic handling\n";
+	LOG_ED << "Right click, after generic handling";
 	map_location hex_clicked = gui().hex_clicked_on(x, y);
 	if (!get_current_map_context().map().on_board_with_border(hex_clicked)) return true;
-	LOG_ED << "Right click action " << hex_clicked << "\n";
+	LOG_ED << "Right click action " << hex_clicked;
 	auto a = get_mouse_action().click_right(*gui_, x, y);
 	if(a) {
 		perform_refresh_delete(std::move(a), true);

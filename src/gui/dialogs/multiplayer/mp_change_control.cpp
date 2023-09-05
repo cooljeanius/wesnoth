@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2011 - 2021
+	Copyright (C) 2011 - 2023
 	by Lukasz Dobrogowski <lukasz.dobrogowski@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -46,7 +46,8 @@ namespace gui2::dialogs
 REGISTER_DIALOG(mp_change_control)
 
 mp_change_control::mp_change_control(events::menu_handler& mh)
-	: menu_handler_(mh)
+	: modal_dialog(window_id())
+	, menu_handler_(mh)
 	, selected_side_(0)
 	, selected_nick_(0)
 	, sides_()
@@ -77,8 +78,8 @@ void mp_change_control::pre_show(window& window)
 
 		sides_.push_back(side);
 
-		std::map<std::string, string_map> data;
-		string_map item;
+		widget_data data;
+		widget_item item;
 
 		std::string side_str = VGETTEXT("Side $side", {{"side", std::to_string(side)}});
 		side_str = font::span_color(team::get_side_color(side)) + side_str + "</span>";
@@ -115,8 +116,8 @@ void mp_change_control::pre_show(window& window)
 	for(const std::string& nick : temp_nicks) {
 		nicks_.push_back(nick);
 
-		std::map<std::string, string_map> data;
-		string_map item;
+		widget_data data;
+		widget_item item;
 
 		item["id"] = nick;
 		item["label"] = nick;
@@ -169,7 +170,7 @@ void mp_change_control::post_show(window& window)
 	if(window.get_retval() == retval::OK) {
 		DBG_GUI << "Main: changing control of side "
 		        << sides_[selected_side_] << " to nick "
-		        << nicks_[selected_nick_] << std::endl;
+		        << nicks_[selected_nick_];
 
 		menu_handler_.request_control_change(
 			sides_[selected_side_],

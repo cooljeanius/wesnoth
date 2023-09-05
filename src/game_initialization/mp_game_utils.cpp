@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013 - 2021
+	Copyright (C) 2013 - 2023
 	by Andrius Silinskas <silinskas.andrius@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -65,7 +65,7 @@ config initial_level_config(saved_game& state)
 	}
 
 	config& scenario = state.get_starting_point();
-	if(state.mp_settings().saved_game == mp_game_settings::SAVED_GAME_MODE::NONE) {
+	if(state.mp_settings().saved_game == saved_game_mode::type::no) {
 		state.set_random_seed();
 	}
 
@@ -96,31 +96,31 @@ config initial_level_config(saved_game& state)
 	 */
 
 	const game_config_view& game_config = game_config_manager::get()->game_config();
-	const config& era_cfg = game_config.find_child("era", "id", era);
+	auto era_cfg = game_config.find_child("era", "id", era);
 
 	if(!era_cfg) {
-		if(params.saved_game == mp_game_settings::SAVED_GAME_MODE::NONE) {
+		if(params.saved_game == saved_game_mode::type::no) {
 			throw config::error(VGETTEXT("Cannot find era '$era'", {{"era", era}}));
 		}
 
 		// FIXME: @todo We should tell user about missing era but still load game...
-		WRN_CF << "Missing era in MP load game '" << era << "'" << std::endl;
+		WRN_CF << "Missing era in MP load game '" << era << "'";
 
 	} else {
-		level.add_child("era", era_cfg);
+		level.add_child("era", *era_cfg);
 
 		// Initialize the list of sides available for the current era.
 		// We also need this so not to get a segfault in mp_staging for ai configuration.
-		const config& custom_side = game_config.find_child("multiplayer_side", "id", "Custom");
-		level.child("era").add_child_at("multiplayer_side", custom_side, 0);
+		const config& custom_side = game_config.find_mandatory_child("multiplayer_side", "id", "Custom");
+		level.mandatory_child("era").add_child_at("multiplayer_side", custom_side, 0);
 	}
 
 	// Add modifications, needed for ai algorithms which are applied in mp_staging.
 	const std::vector<std::string>& mods = state.classification().active_mods;
 
 	for(unsigned i = 0; i < mods.size(); ++i) {
-		if(const config& mod_cfg = game_config.find_child("modification", "id", mods[i])) {
-			level.add_child("modification", mod_cfg);
+		if(auto mod_cfg = game_config.find_child("modification", "id", mods[i])) {
+			level.add_child("modification", *mod_cfg);
 		}
 	}
 
@@ -131,9 +131,9 @@ config initial_level_config(saved_game& state)
 
 void level_to_gamestate(const config& level, saved_game& state)
 {
-	game_classification::CAMPAIGN_TYPE type = state.classification().campaign_type;
+	campaign_type::type type = state.classification().type;
 	state = saved_game(level);
-	state.classification().campaign_type = type;
+	state.classification().type = type;
 }
 
 } // end namespace mp

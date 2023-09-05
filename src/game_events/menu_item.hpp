@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2021
+	Copyright (C) 2003 - 2023
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -21,10 +21,14 @@
 #pragma once
 
 #include "config.hpp"
+#include "hotkey/hotkey_command.hpp"
 #include "variable.hpp"
+
+#include <optional>
 
 class filter_context;
 class game_data;
+class game_lua_kernel;
 struct map_location;
 
 namespace game_events
@@ -56,7 +60,7 @@ public:
 	 * @param[in]  definition  The WML defining this menu item.
 	 * @param[in]  original    The previous version of the menu item with this id.
 	 */
-	wml_menu_item(const std::string& id, const vconfig& definition, const wml_menu_item& original);
+	wml_menu_item(const std::string& id, const vconfig& definition, wml_menu_item& original);
 
 	/** The id of this item. */
 	const std::string& id() const
@@ -103,19 +107,26 @@ public:
 	void fire_event(const map_location& event_hex, const game_data& data) const;
 
 	/** Removes the implicit event handler for an inlined [command]. */
-	void finish_handler() const;
+	void finish_handler();
 
 	/** Initializes the implicit event handler for an inlined [command]. */
-	void init_handler() const;
+	void init_handler(game_lua_kernel& lk);
 
 	/**
 	 * The text to put in a menu for this item.
-	 * This will be either translated text or a hotkey identifier.
 	 */
 	std::string menu_text() const
 	{
+		return description_.str();
+	}
+
+	/**
+	 * The UI action id to be used in theme wml, menu items and hotkeys .
+	 */
+	std::string hotkey_id() const
+	{
 		// The space is to prevent accidental hotkey binding.
-		return use_hotkey_ ? hotkey_id_ : description_.str() + ' ';
+		return hotkey_id_;
 	}
 
 	/**
@@ -149,6 +160,9 @@ private:
 
 	/** The id for this item's hotkey; based on the item's id. */
 	const std::string hotkey_id_;
+
+	/** Controls the lifetime of the associate hotkey's hotkey_command. */
+	std::optional<hotkey::wml_hotkey_record> hotkey_record_;
 
 	/** The image to display in the menu next to this item's description. */
 	std::string image_;

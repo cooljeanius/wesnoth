@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 - 2021
+	Copyright (C) 2016 - 2023
 	by Sergey Popov <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -53,7 +53,8 @@ typedef utils::variant<socket_ptr, tls_socket_ptr> any_socket_ptr;
 
 struct server_shutdown : public game::error
 {
-	server_shutdown(const std::string& msg) : game::error(msg) {}
+	boost::system::error_code ec;
+	server_shutdown(const std::string& msg, boost::system::error_code ec = {}) : game::error(msg), ec(ec) {}
 };
 
 /**
@@ -77,10 +78,12 @@ struct server_shutdown : public game::error
  */
 class server_base
 {
+	template<class SocketPtr> void send_doc_queued(SocketPtr socket, std::unique_ptr<simple_wml::document>& doc_ptr, boost::asio::yield_context yield);
+
 public:
 	server_base(unsigned short port, bool keep_alive);
 	virtual ~server_base() {}
-	void run();
+	int run();
 
 	/**
 	 * Send a WML document from within a coroutine
@@ -101,6 +104,7 @@ public:
 	 * Receive WML document from a coroutine
 	 * @param socket
 	 * @param yield The function will suspend on read operation using this yield context
+	 * @return unique_ptr with doc deceived. In case of error empty unique_ptr
 	 */
 	template<class SocketPtr> std::unique_ptr<simple_wml::document> coro_receive_doc(SocketPtr socket, boost::asio::yield_context yield);
 
@@ -176,8 +180,6 @@ protected:
 	boost::asio::signal_set sighup_;
 	virtual void handle_sighup(const boost::system::error_code& error, int signal_number) = 0;
 #endif
-	boost::asio::signal_set sigs_;
-	void handle_termination(const boost::system::error_code& error, int signal_number);
 };
 
 template<class SocketPtr> std::string client_address(SocketPtr socket);

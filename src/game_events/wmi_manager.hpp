@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2021
+	Copyright (C) 2003 - 2023
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -28,6 +28,7 @@
 class config;
 class filter_context;
 class game_data;
+class game_lua_kernel;
 struct map_location;
 class unit_map;
 class vconfig;
@@ -72,14 +73,13 @@ public:
 
 	/** Returns the menu items that can be shown for the given location. */
 	void get_items(const map_location& hex,
-			std::vector<std::shared_ptr<const wml_menu_item>>& items,
-			std::vector<config>& descriptions,
+			std::vector<config>& items,
 			filter_context& fc,
 			game_data& gamedata,
 			unit_map& units) const;
 
 	/** Initializes the implicit event handlers for inlined [command]s. */
-	void init_handlers() const;
+	void init_handlers(game_lua_kernel& lk) const;
 
 	void to_config(config& cfg) const;
 

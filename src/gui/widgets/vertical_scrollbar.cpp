@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008 - 2021
+	Copyright (C) 2008 - 2023
 	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -19,6 +19,7 @@
 #include "gui/core/register_widget.hpp"
 #include "gui/widgets/settings.hpp"
 #include "wml_exception.hpp"
+#include "gettext.hpp"
 
 #include <functional>
 
@@ -64,11 +65,12 @@ unsigned vertical_scrollbar::offset_after() const
 
 bool vertical_scrollbar::on_positioner(const point& coordinate) const
 {
-	SDL_Rect positioner_rect =
-		sdl::create_rect(0, get_positioner_offset(), get_width(), get_positioner_length());
+	rect positioner_rect(
+		0, get_positioner_offset(), get_width(), get_positioner_length()
+	);
 
 	// Note we assume the positioner is over the entire height of the widget.
-	return sdl::point_in_rect(coordinate, positioner_rect);
+	return positioner_rect.contains(coordinate);
 }
 
 int vertical_scrollbar::on_bar(const point& coordinate) const
@@ -101,7 +103,7 @@ vertical_scrollbar_definition::vertical_scrollbar_definition(
 		const config& cfg)
 	: styled_widget_definition(cfg)
 {
-	DBG_GUI_P << "Parsing vertical scrollbar " << id << '\n';
+	DBG_GUI_P << "Parsing vertical scrollbar " << id;
 
 	load_resolutions<resolution>(cfg);
 }
@@ -118,10 +120,10 @@ vertical_scrollbar_definition::resolution::resolution(const config& cfg)
 									   "minimum_positioner_length"));
 
 	// Note the order should be the same as the enum state_t in scrollbar.hpp.
-	state.emplace_back(cfg.child("state_enabled"));
-	state.emplace_back(cfg.child("state_disabled"));
-	state.emplace_back(cfg.child("state_pressed"));
-	state.emplace_back(cfg.child("state_focused"));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_enabled", _("Missing required state for vertical scrollbar")));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_disabled", _("Missing required state for vertical scrollbar")));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_pressed", _("Missing required state for vertical scrollbar")));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_focused", _("Missing required state for vertical scrollbar")));
 }
 
 // }---------- BUILDER -----------{
@@ -134,15 +136,15 @@ builder_vertical_scrollbar::builder_vertical_scrollbar(const config& cfg)
 {
 }
 
-widget* builder_vertical_scrollbar::build() const
+std::unique_ptr<widget> builder_vertical_scrollbar::build() const
 {
-	vertical_scrollbar* widget = new vertical_scrollbar(*this);
+	auto widget = std::make_unique<vertical_scrollbar>(*this);
 
 	widget->finalize_setup();
 
 	DBG_GUI_G << "Window builder:"
 			  << " placed vertical scrollbar '" << id << "' with definition '"
-			  << definition << "'.\n";
+			  << definition << "'.";
 
 	return widget;
 }

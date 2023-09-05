@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2010 - 2021
+	Copyright (C) 2010 - 2023
 	by Yurii Chernyi <terraninfo@terraninfo.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -73,7 +73,7 @@ std::vector<int> side_filter::get_teams() const
 
 static bool check_side_number(const team &t, const std::string &str)
 {
-		std::vector<std::pair<int,int>> ranges = utils::parse_ranges(str);
+		std::vector<std::pair<int,int>> ranges = utils::parse_ranges_unsigned(str);
 		int side_number = t.side();
 
 		std::vector<std::pair<int,int>>::const_iterator range, range_end = ranges.end();
@@ -218,13 +218,13 @@ bool side_filter::match_internal(const team &t) const
 	if (!cfg_controller.blank())
 	{
 		if (resources::controller->is_networked_mp() && synced_context::is_synced()) {
-			ERR_NG << "ignoring controller= in SSF due to danger of OOS errors" << std::endl;
+			ERR_NG << "ignoring controller= in SSF due to danger of OOS errors";
 		}
 		else {
 			bool found = false;
 			for(const std::string& controller : utils::split(cfg_controller))
 			{
-				if(t.controller().to_string() == controller) {
+				if(side_controller::get_string(t.controller()) == controller) {
 					found = true;
 				}
 			}

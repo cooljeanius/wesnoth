@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008 - 2021
+	Copyright (C) 2008 - 2023
 	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -21,7 +21,6 @@
 
 #include "gui/dialogs/modal_dialog.hpp"
 #include "gui/widgets/addon_list.hpp"
-#include "gui/widgets/pane.hpp"
 
 #include <boost/dynamic_bitset.hpp>
 
@@ -29,7 +28,6 @@ namespace gui2
 {
 class text_box_base;
 class text_box;
-class pane;
 class selectable_item;
 class button;
 class stacked_widget;
@@ -105,6 +103,7 @@ private:
 
 	static const std::vector<std::pair<ADDON_STATUS_FILTER, std::string>> status_filter_types_;
 	static const std::vector<std::pair<ADDON_TYPE, std::string>> type_filter_types_;
+	std::vector<std::pair<int, std::string>> language_filter_types_;
 	static const std::vector<addon_order> all_orders_;
 
 	bool need_wml_cache_refresh_;
@@ -152,13 +151,14 @@ private:
 
 	void apply_filters();
 	void order_addons();
-	void on_order_changed(unsigned int sort_column, preferences::SORT_ORDER order);
+	void on_order_changed(unsigned int sort_column, sort_order::type order);
 	void show_help();
 
 	boost::dynamic_bitset<> get_name_filter_visibility() const;
 	boost::dynamic_bitset<> get_status_filter_visibility() const;
 	boost::dynamic_bitset<> get_tag_filter_visibility() const;
 	boost::dynamic_bitset<> get_type_filter_visibility() const;
+	boost::dynamic_bitset<> get_lang_filter_visibility() const;
 
 	void on_selected_version_change();
 	bool exit_hook(window& window);

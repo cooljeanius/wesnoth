@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2021
+	Copyright (C) 2003 - 2023
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -26,7 +26,6 @@
 #include "gettext.hpp"                  // for _
 #include "gui/dialogs/simple_item_selector.hpp"
 #include "log.hpp"                      // for LOG_STREAM, logger, etc
-#include "utils/make_enum.hpp"                // for bad_enum_cast
 #include "map/label.hpp"
 #include "play_controller.hpp"          // for play_controller
 #include "playturn_network_adapter.hpp"  // for playturn_network_adapter
@@ -80,7 +79,7 @@ turn_info::PROCESS_DATA_RESULT turn_info::sync_network()
 
 void turn_info::send_data()
 {
-	const bool send_everything = synced_context::is_unsynced() ? !resources::undo_stack->can_undo() : synced_context::is_simultaneous();
+	const bool send_everything = synced_context::is_unsynced() ? !resources::undo_stack->can_undo() : synced_context::undo_blocked();
 	if ( !send_everything ) {
 		replay_sender_.sync_non_undoable();
 	} else {
@@ -133,7 +132,7 @@ turn_info::PROCESS_DATA_RESULT turn_info::process_network_data(const config& cfg
 	assert(cfg.attribute_range().empty());
 	if(!resources::recorder->at_end())
 	{
-		ERR_NW << "processing network data while still having data on the replay." << std::endl;
+		ERR_NW << "processing network data while still having data on the replay.";
 	}
 
 	if (const auto message = cfg.optional_child("message"))
@@ -142,37 +141,37 @@ turn_info::PROCESS_DATA_RESULT turn_info::process_network_data(const config& cfg
 				message.value()["message"], events::chat_handler::MESSAGE_PUBLIC,
 				preferences::message_bell());
 	}
-	else if (const config &whisper = cfg.child("whisper") /*&& is_observer()*/)
+	else if (auto whisper = cfg.optional_child("whisper") /*&& is_observer()*/)
 	{
 		game_display::get_singleton()->get_chat_manager().add_chat_message(std::time(nullptr), "whisper: " + whisper["sender"].str(), 0,
 				whisper["message"], events::chat_handler::MESSAGE_PRIVATE,
 				preferences::message_bell());
 	}
-	else if (const config &observer = cfg.child("observer") )
+	else if (auto observer = cfg.optional_child("observer") )
 	{
 		game_display::get_singleton()->get_chat_manager().add_observer(observer["name"]);
 	}
-	else if (const config &observer_quit = cfg.child("observer_quit"))
+	else if (auto observer_quit = cfg.optional_child("observer_quit"))
 	{
 		game_display::get_singleton()->get_chat_manager().remove_observer(observer_quit["name"]);
 	}
-	else if (cfg.child("leave_game")) {
-		const bool has_reason = cfg.child("leave_game").has_attribute("reason");
-		throw leavegame_wesnothd_error(has_reason ? cfg.child("leave_game")["reason"].str() : "");
+	else if (cfg.has_child("leave_game")) {
+		const bool has_reason = cfg.mandatory_child("leave_game").has_attribute("reason");
+		throw leavegame_wesnothd_error(has_reason ? cfg.mandatory_child("leave_game")["reason"].str() : "");
 	}
-	else if (const config &turn = cfg.child("turn"))
+	else if (auto turn = cfg.optional_child("turn"))
 	{
-		return handle_turn(turn, chat_only);
+		return handle_turn(*turn, chat_only);
 	}
 	else if (cfg.has_child("whiteboard"))
 	{
 		set_scontext_unsynced scontext;
 		resources::whiteboard->process_network_data(cfg);
 	}
-	else if (const config &change = cfg.child("change_controller"))
+	else if (auto change = cfg.optional_child("change_controller"))
 	{
-		if(change.empty()) {
-			ERR_NW << "Bad [change_controller] signal from server, [change_controller] tag was empty." << std::endl;
+		if(change->empty()) {
+			ERR_NW << "Bad [change_controller] signal from server, [change_controller] tag was empty.";
 			return PROCESS_CONTINUE;
 		}
 
@@ -182,7 +181,7 @@ turn_info::PROCESS_DATA_RESULT turn_info::process_network_data(const config& cfg
 		const std::string controller_type = change["controller"];
 		const std::size_t index = side - 1;
 		if(index >= resources::gameboard->teams().size()) {
-			ERR_NW << "Bad [change_controller] signal from server, side out of bounds: " << change.debug() << std::endl;
+			ERR_NW << "Bad [change_controller] signal from server, side out of bounds: " << change->debug();
 			return PROCESS_CONTINUE;
 		}
 
@@ -195,14 +194,13 @@ turn_info::PROCESS_DATA_RESULT turn_info::process_network_data(const config& cfg
 			resources::controller->on_not_observer();
 		}
 
+		// TODO: can we replace this with just a call to play_controller::update_viewing_player() ?
 		auto disp_set_team = [](int side_index) {
 			const bool side_changed = static_cast<int>(display::get_singleton()->viewing_team()) != side_index;
 			display::get_singleton()->set_team(side_index);
 
 			if(side_changed) {
-				display::get_singleton()->redraw_everything();
-				display::get_singleton()->recalculate_minimap();
-				video2::trigger_full_redraw();
+				display::get_singleton()->queue_rerender();
 			}
 		};
 
@@ -220,31 +218,32 @@ turn_info::PROCESS_DATA_RESULT turn_info::process_network_data(const config& cfg
 		return restart ? PROCESS_RESTART_TURN : PROCESS_CONTINUE;
 	}
 
-	else if (const config &side_drop_c = cfg.child("side_drop"))
+	else if (auto side_drop_c = cfg.optional_child("side_drop"))
 	{
+		// Only the host receives this message when a player leaves/disconnects.
 		const int  side_drop = side_drop_c["side_num"].to_int(0);
 		std::size_t index = side_drop -1;
 
 		bool restart = side_drop == game_display::get_singleton()->playing_side();
 
 		if (index >= resources::gameboard->teams().size()) {
-			ERR_NW << "unknown side " << side_drop << " is dropping game" << std::endl;
+			ERR_NW << "unknown side " << side_drop << " is dropping game";
 			throw ingame_wesnothd_error("");
 		}
 
-		team::CONTROLLER ctrl;
-		if(!ctrl.parse(side_drop_c["controller"])) {
-			ERR_NW << "unknown controller type issued from server on side drop: " << side_drop_c["controller"] << std::endl;
+		auto ctrl = side_controller::get_enum(side_drop_c["controller"].str());
+		if(!ctrl) {
+			ERR_NW << "unknown controller type issued from server on side drop: " << side_drop_c["controller"];
 			throw ingame_wesnothd_error("");
 		}
 
-		if (ctrl == team::CONTROLLER::AI) {
-			resources::gameboard->side_drop_to(side_drop, ctrl);
+		if (ctrl == side_controller::type::ai) {
+			resources::gameboard->side_drop_to(side_drop, *ctrl);
 			return restart ? PROCESS_RESTART_TURN:PROCESS_CONTINUE;
 		}
 		//null controlled side cannot be dropped because they aren't controlled by anyone.
-		else if (ctrl != team::CONTROLLER::HUMAN) {
-			ERR_NW << "unknown controller type issued from server on side drop: " << ctrl.to_cstring() << std::endl;
+		else if (ctrl != side_controller::type::human) {
+			ERR_NW << "unknown controller type issued from server on side drop: " << side_controller::get_string(*ctrl);
 			throw ingame_wesnothd_error("");
 		}
 
@@ -317,7 +316,7 @@ turn_info::PROCESS_DATA_RESULT turn_info::process_network_data(const config& cfg
 
 			{
 				// Server thinks this side is ours now so in case of error transferring side we have to make local state to same as what server thinks it is.
-				resources::gameboard->side_drop_to(side_drop, team::CONTROLLER::HUMAN, team::PROXY_CONTROLLER::PROXY_IDLE);
+				resources::gameboard->side_drop_to(side_drop, side_controller::type::human, side_proxy_controller::type::idle);
 			}
 
 			if (action < first_observer_option_idx) {
@@ -336,17 +335,17 @@ turn_info::PROCESS_DATA_RESULT turn_info::process_network_data(const config& cfg
 			switch(action) {
 				case 0:
 					resources::controller->on_not_observer();
-					resources::gameboard->side_drop_to(side_drop, team::CONTROLLER::HUMAN, team::PROXY_CONTROLLER::PROXY_AI);
+					resources::gameboard->side_drop_to(side_drop, side_controller::type::human, side_proxy_controller::type::ai);
 
 					return restart?PROCESS_RESTART_TURN:PROCESS_CONTINUE;
 
 				case 1:
 					resources::controller->on_not_observer();
-					resources::gameboard->side_drop_to(side_drop, team::CONTROLLER::HUMAN, team::PROXY_CONTROLLER::PROXY_HUMAN);
+					resources::gameboard->side_drop_to(side_drop, side_controller::type::human, side_proxy_controller::type::human);
 
 					return restart?PROCESS_RESTART_TURN:PROCESS_CONTINUE;
 				case 2:
-					resources::gameboard->side_drop_to(side_drop, team::CONTROLLER::HUMAN, team::PROXY_CONTROLLER::PROXY_IDLE);
+					resources::gameboard->side_drop_to(side_drop, side_controller::type::human, side_proxy_controller::type::idle);
 
 					return restart?PROCESS_RESTART_TURN:PROCESS_CONTINUE;
 
@@ -363,24 +362,20 @@ turn_info::PROCESS_DATA_RESULT turn_info::process_network_data(const config& cfg
 
 	// The host has ended linger mode in a campaign -> enable the "End scenario" button
 	// and tell we did get the notification.
-	else if (cfg.child("notify_next_scenario")) {
+	else if (cfg.has_child("notify_next_scenario")) {
 		if(chat_only) {
 			return PROCESS_CANNOT_HANDLE;
-		}
-		std::shared_ptr<gui::button> btn_end = display::get_singleton()->find_action_button("button-endturn");
-		if(btn_end) {
-			btn_end->enable(true);
 		}
 		return PROCESS_END_LINGER;
 	}
 
 	//If this client becomes the new host, notify the play_controller object about it
-	else if (cfg.child("host_transfer")){
+	else if (cfg.has_child("host_transfer")){
 		host_transfer_.notify_observers();
 	}
 	else
 	{
-		ERR_NW << "found unknown command:\n" << cfg.debug() << std::endl;
+		ERR_NW << "found unknown command:\n" << cfg.debug();
 	}
 
 	return PROCESS_CONTINUE;

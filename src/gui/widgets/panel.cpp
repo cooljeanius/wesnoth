@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008 - 2021
+	Copyright (C) 2008 - 2023
 	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -65,20 +65,16 @@ unsigned panel::get_state() const
 	return 0;
 }
 
-void panel::impl_draw_background(surface& frame_buffer, int x_offset, int y_offset)
+void panel::impl_draw_background()
 {
-	DBG_GUI_D << LOG_HEADER << " size " << get_rectangle() << ".\n";
-
-	get_canvas(0).blit(frame_buffer,
-				   calculate_blitting_rectangle(x_offset, y_offset));
+	DBG_GUI_D << LOG_HEADER << " size " << get_rectangle() << ".";
+	get_canvas(0).draw();
 }
 
-void panel::impl_draw_foreground(surface& frame_buffer, int x_offset, int y_offset)
+void panel::impl_draw_foreground()
 {
-	DBG_GUI_D << LOG_HEADER << " size " << get_rectangle() << ".\n";
-
-	get_canvas(1).blit(frame_buffer,
-				   calculate_blitting_rectangle(x_offset, y_offset));
+	DBG_GUI_D << LOG_HEADER << " size " << get_rectangle() << ".";
+	get_canvas(1).draw();
 }
 
 point panel::border_space() const
@@ -99,7 +95,7 @@ void panel::set_self_active(const bool /*active*/)
 panel_definition::panel_definition(const config& cfg)
 	: styled_widget_definition(cfg)
 {
-	DBG_GUI_P << "Parsing panel " << id << '\n';
+	DBG_GUI_P << "Parsing panel " << id;
 
 	load_resolutions<resolution>(cfg);
 }
@@ -112,8 +108,8 @@ panel_definition::resolution::resolution(const config& cfg)
 	, right_border(cfg["right_border"])
 {
 	// The panel needs to know the order.
-	state.emplace_back(cfg.child("background"));
-	state.emplace_back(cfg.child("foreground"));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "background", _("Missing required background for panel definition")));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "foreground", _("Missing required foreground for panel definition")));
 }
 
 // }---------- BUILDER -----------{
@@ -124,19 +120,19 @@ namespace implementation
 builder_panel::builder_panel(const config& cfg)
 	: builder_styled_widget(cfg), grid(nullptr)
 {
-	const config& c = cfg.child("grid");
+	auto c = cfg.optional_child("grid");
 
 	VALIDATE(c, _("No grid defined."));
 
-	grid = std::make_shared<builder_grid>(c);
+	grid = std::make_shared<builder_grid>(*c);
 }
 
-widget* builder_panel::build() const
+std::unique_ptr<widget> builder_panel::build() const
 {
-	panel* widget = new panel(*this);
+	auto widget = std::make_unique<panel>(*this);
 
 	DBG_GUI_G << "Window builder: placed panel '" << id << "' with definition '"
-			  << definition << "'.\n";
+			  << definition << "'.";
 
 	widget->init_grid(*grid);
 	return widget;

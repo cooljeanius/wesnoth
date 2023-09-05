@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2021
+	Copyright (C) 2003 - 2023
 	by Jörg Hinrichs, David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -44,8 +44,7 @@
 #include "serialization/binary_or_text.hpp"
 #include "serialization/parser.hpp"
 #include "serialization/utf8_exception.hpp"
-#include "statistics.hpp"
-#include "video.hpp"
+#include "video.hpp" // only for faked
 
 #include <algorithm>
 #include <iomanip>
@@ -69,12 +68,12 @@ bool save_game_exists(std::string name, compression::format compressed)
 void clean_saves(const std::string& label)
 {
 	const std::string prefix = label + "-" + _("Auto-Save");
-	LOG_SAVE << "Cleaning saves with prefix '" << prefix << "'\n";
+	LOG_SAVE << "Cleaning saves with prefix '" << prefix << "'";
 
 	auto manager = save_index_class::default_saves_dir();
 	for(const auto& save : manager->get_saves_list()) {
 		if(save.name().compare(0, prefix.length(), prefix) == 0) {
-			LOG_SAVE << "Deleting savegame '" << save.name() << "'\n";
+			LOG_SAVE << "Deleting savegame '" << save.name() << "'";
 			manager->delete_game(save.name());
 		}
 	}
@@ -121,7 +120,7 @@ bool loadgame::show_difficulty_dialog()
 // throws a "load_game_exception" to signal a resulting load game request.
 bool loadgame::load_game_ingame()
 {
-	if(CVideo::get_singleton().faked()) {
+	if(video::headless()) {
 		return false;
 	}
 
@@ -140,7 +139,7 @@ bool loadgame::load_game_ingame()
 	}
 
 	if(!load_data_.manager) {
-		ERR_SAVE << "Null pointer in save index" << std::endl;
+		ERR_SAVE << "Null pointer in save index";
 		return false;
 	}
 
@@ -186,7 +185,7 @@ bool loadgame::load_game()
 	}
 
 	if(!load_data_.manager) {
-		ERR_SAVE << "Null pointer in save index" << std::endl;
+		ERR_SAVE << "Null pointer in save index";
 		return false;
 	}
 
@@ -296,7 +295,7 @@ bool loadgame::load_multiplayer_game()
 	}
 
 	if(!load_data_.manager) {
-		ERR_SAVE << "Null pointer in save index" << std::endl;
+		ERR_SAVE << "Null pointer in save index";
 		return false;
 	}
 
@@ -323,7 +322,7 @@ bool loadgame::load_multiplayer_game()
 
 	// We want to verify the game classification before setting the data, so we don't check on
 	// gamestate_.classification() and instead construct a game_classification object manually.
-	if(game_classification(load_data_.load_config).campaign_type != game_classification::CAMPAIGN_TYPE::MULTIPLAYER) {
+	if(game_classification(load_data_.load_config).type != campaign_type::type::multiplayer) {
 		gui2::show_transient_error_message(_("This is not a multiplayer save."));
 		return false;
 	}
@@ -335,22 +334,22 @@ bool loadgame::load_multiplayer_game()
 
 void loadgame::copy_era(config& cfg)
 {
-	const config& replay_start = cfg.child("replay_start");
+	auto replay_start = cfg.optional_child("replay_start");
 	if(!replay_start) {
 		return;
 	}
 
-	const config& era = replay_start.child("era");
+	auto era = replay_start->optional_child("era");
 	if(!era) {
 		return;
 	}
 
-	config& snapshot = cfg.child("snapshot");
+	auto snapshot = cfg.optional_child("snapshot");
 	if(!snapshot) {
 		return;
 	}
 
-	snapshot.add_child("era", era);
+	snapshot->add_child("era", *era);
 }
 
 savegame::savegame(saved_game& gamestate, const compression::format compress_saves, const std::string& title)
@@ -484,7 +483,7 @@ bool savegame::save_game(const std::string& filename)
 		save_index_manager_->rebuild(filename_);
 
 		end = SDL_GetTicks();
-		LOG_SAVE << "Milliseconds to save " << filename_ << ": " << end - start << std::endl;
+		LOG_SAVE << "Milliseconds to save " << filename_ << ": " << end - start;
 
 		if(show_confirmation_) {
 			gui2::show_transient_message(_("Saved"), _("The game has been saved."));
@@ -492,7 +491,7 @@ bool savegame::save_game(const std::string& filename)
 
 		return true;
 	} catch(const game::save_game_failed& e) {
-		ERR_SAVE << error_message_ << e.message << std::endl;
+		ERR_SAVE << error_message_ << e.message;
 		gui2::show_error_message(error_message_ + e.message);
 
 		// do not bother retrying, since the user can just try to save the game again
@@ -503,7 +502,7 @@ bool savegame::save_game(const std::string& filename)
 
 void savegame::write_game_to_disk(const std::string& filename)
 {
-	LOG_SAVE << "savegame::save_game" << std::endl;
+	LOG_SAVE << "savegame::save_game";
 
 	filename_ = filename;
 	filename_ += compression::format_extension(compress_saves_);
@@ -530,9 +529,6 @@ void savegame::write_game(config_writer& out)
 	out.write_key_val("version", game_config::wesnoth_version.str());
 
 	gamestate_.write_general_info(out);
-	out.open_child("statistics");
-	statistics::write_stats(out);
-	out.close_child("statistics");
 }
 
 void savegame::finish_save_game(const config_writer& out)
@@ -687,9 +683,9 @@ static void convert_old_saves_1_11_0(config& cfg)
 		return;
 	}
 
-	const config& snapshot = cfg.child("snapshot");
-	const config& replay_start = cfg.child("replay_start");
-	const config& replay = cfg.child("replay");
+	const config& snapshot = cfg.mandatory_child("snapshot");
+	const config& replay_start = cfg.mandatory_child("replay_start");
+	const config& replay = cfg.mandatory_child("replay");
 
 	if(!cfg.has_child("carryover_sides") && !cfg.has_child("carryover_sides_start")) {
 		config carryover;
@@ -739,21 +735,21 @@ static void convert_old_saves_1_11_0(config& cfg)
 
 		// get variables according to old hierarchy and copy them to new carryover_sides
 		if(!snapshot.empty()) {
-			if(const config& variables_from_snapshot = snapshot.child("variables")) {
-				carryover.add_child("variables", variables_from_snapshot);
+			if(auto variables_from_snapshot = snapshot.optional_child("variables")) {
+				carryover.add_child("variables", *variables_from_snapshot);
 				carryover_start.add_child("variables", replay_start.child_or_empty("variables"));
-			} else if(const config& variables_from_cfg = cfg.child("variables")) {
-				carryover.add_child("variables", variables_from_cfg);
-				carryover_start.add_child("variables", variables_from_cfg);
+			} else if(auto variables_from_cfg = cfg.optional_child("variables")) {
+				carryover.add_child("variables", *variables_from_cfg);
+				carryover_start.add_child("variables", *variables_from_cfg);
 			}
 		} else if(!replay_start.empty()) {
-			if(const config& variables = replay_start.child("variables")) {
-				carryover.add_child("variables", variables);
-				carryover_start.add_child("variables", variables);
+			if(auto variables = replay_start.optional_child("variables")) {
+				carryover.add_child("variables", *variables);
+				carryover_start.add_child("variables", *variables);
 			}
 		} else {
-			carryover.add_child("variables", cfg.child("variables"));
-			carryover_start.add_child("variables", cfg.child("variables"));
+			carryover.add_child("variables", cfg.mandatory_child("variables"));
+			carryover_start.add_child("variables", cfg.mandatory_child("variables"));
 		}
 
 		cfg.add_child("carryover_sides", carryover);
@@ -762,26 +758,26 @@ static void convert_old_saves_1_11_0(config& cfg)
 
 	// if replay and snapshot are empty we've got a start of scenario save and don't want replay_start either
 	if(replay.empty() && snapshot.empty()) {
-		LOG_RG << "removing replay_start \n";
+		LOG_RG << "removing replay_start";
 		cfg.clear_children("replay_start");
 	}
 
 	// remove empty replay or snapshot so type of save can be detected more easily
 	if(replay.empty()) {
-		LOG_RG << "removing replay \n";
+		LOG_RG << "removing replay";
 		cfg.clear_children("replay");
 	}
 
 	if(snapshot.empty()) {
-		LOG_RG << "removing snapshot \n";
+		LOG_RG << "removing snapshot";
 		cfg.clear_children("snapshot");
 	}
 }
 // changes done during 1.13.0-dev
 static void convert_old_saves_1_13_0(config& cfg)
 {
-	if(config& carryover_sides_start = cfg.child("carryover_sides_start")) {
-		if(!carryover_sides_start.has_attribute("next_underlying_unit_id")) {
+	if(auto carryover_sides_start = cfg.optional_child("carryover_sides_start")) {
+		if(!carryover_sides_start->has_attribute("next_underlying_unit_id")) {
 			carryover_sides_start["next_underlying_unit_id"] = cfg["next_underlying_unit_id"];
 		}
 	}
@@ -794,11 +790,11 @@ static void convert_old_saves_1_13_0(config& cfg)
 		cfg.clear_children("replay_start");
 	}
 
-	if(config& snapshot = cfg.child("snapshot")) {
+	if(auto snapshot = cfg.optional_child("snapshot")) {
 		// make [end_level] -> [end_level_data] since its alo called [end_level_data] in the carryover.
-		if(config& end_level = cfg.child("end_level")) {
-			snapshot.add_child("end_level_data", end_level);
-			snapshot.clear_children("end_level");
+		if(auto end_level = cfg.optional_child("end_level")) {
+			snapshot->add_child("end_level_data", *end_level);
+			snapshot->clear_children("end_level");
 		}
 		// if we have a snapshot then we already applied carryover so there is no reason to keep this data.
 		if(cfg.has_child("carryover_sides_start")) {
@@ -825,21 +821,21 @@ static void convert_old_saves_1_13_0(config& cfg)
 // changes done during 1.13.0+dev
 static void convert_old_saves_1_13_1(config& cfg)
 {
-	if(config& multiplayer = cfg.child("multiplayer")) {
+	if(auto multiplayer = cfg.optional_child("multiplayer")) {
 		if(multiplayer["mp_era"] == "era_blank") {
 			multiplayer["mp_era"] = "era_default";
 		}
 	}
 
 	// This currently only fixes start-of-scenario saves.
-	if(config& carryover_sides_start = cfg.child("carryover_sides_start")) {
-		for(config& side : carryover_sides_start.child_range("side")) {
+	if(auto carryover_sides_start = cfg.optional_child("carryover_sides_start")) {
+		for(config& side : carryover_sides_start->child_range("side")) {
 			for(config& unit : side.child_range("unit")) {
-				if(config& modifications = unit.child("modifications")) {
-					for(config& advancement : modifications.child_range("advance")) {
-						modifications.add_child("advancement", advancement);
+				if(auto modifications = unit.optional_child("modifications")) {
+					for(config& advancement : modifications->child_range("advance")) {
+						modifications->add_child("advancement", advancement);
 					}
-					modifications.clear_children("advance");
+					modifications->clear_children("advance");
 				}
 			}
 		}
@@ -891,7 +887,7 @@ void convert_old_saves(config& cfg)
 		convert_old_saves_1_15_3(cfg);
 	}
 
-	LOG_RG << "cfg after conversion " << cfg << "\n";
+	LOG_RG << "cfg after conversion " << cfg;
 }
 
 } // namespace savegame

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2009 - 2021
+	Copyright (C) 2009 - 2023
 	by Yurii Chernyi <terraninfo@terraninfo.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -303,11 +303,8 @@ void engine_lua::push_ai_table()
 	}
 }
 
-void engine_lua::do_parse_candidate_action_from_config( rca_context &context, const config &cfg, std::back_insert_iterator<std::vector< candidate_action_ptr > > b ){
-	if (!cfg) {
-		return;
-	}
-
+void engine_lua::do_parse_candidate_action_from_config( rca_context &context, const config &cfg, std::back_insert_iterator<std::vector< candidate_action_ptr > > b )
+{
 	if (!lua_ai_context_) {
 		return;
 	}
@@ -333,16 +330,11 @@ void engine_lua::do_parse_candidate_action_from_config( rca_context &context, co
 
 void engine_lua::do_parse_stage_from_config( ai_context &context, const config &cfg, std::back_insert_iterator<std::vector< stage_ptr > > b )
 {
-	if (!cfg) {
-		return;
-	}
-
 	if (!lua_ai_context_) {
 		return;
 	}
 
-	stage_ptr st_ptr(new lua_stage_wrapper(context,cfg,*lua_ai_context_));
-	if (st_ptr) {
+	if(auto st_ptr = std::make_shared<lua_stage_wrapper>(context, cfg, *lua_ai_context_)) {
 		st_ptr->on_create();
 		*b = st_ptr;
 	}
@@ -354,14 +346,14 @@ void engine_lua::do_parse_aspect_from_config( const config &cfg, const std::stri
 	lua_aspect_factory::factory_map::iterator f = lua_aspect_factory::get_list().find(aspect_factory_key);
 
 	if (f == lua_aspect_factory::get_list().end()){
-		ERR_AI_LUA << "side "<<ai_.get_side()<< " : UNKNOWN aspect["<<aspect_factory_key<<"]" << std::endl;
-		DBG_AI_LUA << "config snippet contains: " << std::endl << cfg << std::endl;
+		ERR_AI_LUA << "side "<<ai_.get_side()<< " : UNKNOWN aspect["<<aspect_factory_key<<"]";
+		DBG_AI_LUA << "config snippet contains: " << std::endl << cfg;
 		return;
 	}
 	aspect_ptr new_aspect = f->second->get_new_instance(ai_,cfg,id,lua_ai_context_);
 	if (!new_aspect) {
-		ERR_AI_LUA << "side "<<ai_.get_side()<< " : UNABLE TO CREATE aspect, key=["<<aspect_factory_key<<"]"<< std::endl;
-		DBG_AI_LUA << "config snippet contains: " << std::endl << cfg << std::endl;
+		ERR_AI_LUA << "side "<<ai_.get_side()<< " : UNABLE TO CREATE aspect, key=["<<aspect_factory_key<<"]";
+		DBG_AI_LUA << "config snippet contains: " << std::endl << cfg;
 		return;
 	}
 	*b = new_aspect;
@@ -371,15 +363,15 @@ void engine_lua::do_parse_goal_from_config(const config &cfg, std::back_insert_i
 {
 	goal_factory::factory_map::iterator f = goal_factory::get_list().find(cfg["name"]);
 	if (f == goal_factory::get_list().end()){
-		ERR_AI_LUA << "side "<<ai_.get_side()<< " : UNKNOWN goal["<<cfg["name"]<<"]"<< std::endl;
-		DBG_AI_LUA << "config snippet contains: " << std::endl << cfg << std::endl;
+		ERR_AI_LUA << "side "<<ai_.get_side()<< " : UNKNOWN goal["<<cfg["name"]<<"]";
+		DBG_AI_LUA << "config snippet contains: " << std::endl << cfg;
 		return;
 	}
 	goal_ptr new_goal = f->second->get_new_instance(ai_,cfg);
 	new_goal->on_create(lua_ai_context_);
 	if (!new_goal || !new_goal->ok()) {
-		ERR_AI_LUA << "side "<<ai_.get_side()<< " : UNABLE TO CREATE goal["<<cfg["name"]<<"]"<< std::endl;
-		DBG_AI_LUA << "config snippet contains: " << std::endl << cfg << std::endl;
+		ERR_AI_LUA << "side "<<ai_.get_side()<< " : UNABLE TO CREATE goal["<<cfg["name"]<<"]";
+		DBG_AI_LUA << "config snippet contains: " << std::endl << cfg;
 		return;
 	}
 	*b = new_goal;

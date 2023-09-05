@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2015 - 2021
+	Copyright (C) 2015 - 2023
 	by Iris Morelle <shadowm2006@gmail.com>
 	Copyright (C) 2003 - 2018 by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
@@ -178,7 +178,7 @@ private:
 	void fire(const std::string& hook, const std::string& addon);
 
 	/** Retrieves an addon by id if found, or a null config otherwise. */
-	config& get_addon(const std::string& id);
+	optional_config get_addon(const std::string& id);
 
 	void delete_addon(const std::string& id);
 
@@ -207,10 +207,7 @@ private:
 									  std::string& error_data);
 
 	/** Retrieves the contents of the [server_info] WML node. */
-	const config& server_info() const { return cfg_.child("server_info"); }
-
-	/** Retrieves the contents of the [server_info] WML node. */
-	config& server_info() { return cfg_.child("server_info"); }
+	const config& server_info() const { return cfg_.child_or_empty("server_info"); }
 
 	/** Checks if the specified address should never bump download counts. */
 	bool ignore_address_stats(const std::string& addr) const;
@@ -269,6 +266,16 @@ private:
 	 * and message is recorded to the server log.
 	 */
 	void send_error(const std::string& msg, const std::string& extra_data, unsigned int status_code, const any_socket_ptr& sock);
+
+	/**
+	 * Check whether the provided passphrase matches the add-on and its author by checked against the forum database.
+	 *
+	 * @param addon The add-on uploaded, which contains the username to use.
+	 * @param passphrase The passphrase to use for authentication.
+	 * @param is_delete Whether the authentication is being requested for an add-on upload or an add-on deletion.
+	 * @return Whether the provided information matches what's in the forum database.
+	 */
+	bool authenticate_forum(const config& addon, const std::string& passphrase, bool is_delete);
 };
 
 } // end namespace campaignd

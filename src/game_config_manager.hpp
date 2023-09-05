@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013 - 2021
+	Copyright (C) 2013 - 2023
 	by Andrius Silinskas <silinskas.andrius@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -15,12 +15,14 @@
 
 #pragma once
 
+#include "achievements.hpp"
 #include "commandline_options.hpp"
 #include "config.hpp"
 #include "config_cache.hpp"
 #include "filesystem.hpp"
 #include "game_config_view.hpp"
 #include "terrain/type_data.hpp"
+
 #include <optional>
 
 class game_classification;
@@ -42,7 +44,8 @@ public:
 
 	const game_config_view& game_config() const { return game_config_view_; }
 	const preproc_map& old_defines_map() const { return old_defines_map_; }
-	const std::shared_ptr<terrain_type_data> & terrain_types() const { return tdata_; }
+	const std::shared_ptr<terrain_type_data>& terrain_types() const { return tdata_; }
+	std::vector<achievement_group>& get_achievements() { return achievements_.get_list(); }
 
 	bool init_game_config(FORCE_RELOAD_CONFIG force_reload);
 	void reload_changed_game_config();
@@ -60,10 +63,9 @@ private:
 	game_config_manager(const game_config_manager&);
 	void operator=(const game_config_manager&);
 
-	void load_game_config(bool reload_everything);
+	void load_game_config(bool reload_everything, const game_classification* classification, const std::string& scenario_id);
 
-	void load_game_config_with_loadscreen(FORCE_RELOAD_CONFIG force_reload,
-		game_classification const* classification = nullptr, std::optional<std::set<std::string>> active_addons = {});
+	void load_game_config_with_loadscreen(FORCE_RELOAD_CONFIG force_reload, const game_classification* classification, const std::string& scenario_id);
 
 	// load_game_config() helper functions.
 	void load_addons_cfg();
@@ -76,7 +78,7 @@ private:
 	game_config_view game_config_view_;
 
 	std::map<std::string, config> addon_cfgs_;
-	std::optional<std::set<std::string>> active_addons_;
+	std::set<std::string> active_addons_;
 
 	preproc_map old_defines_map_;
 
@@ -85,4 +87,6 @@ private:
 	game_config::config_cache& cache_;
 
 	std::shared_ptr<terrain_type_data> tdata_;
+
+	achievements achievements_;
 };

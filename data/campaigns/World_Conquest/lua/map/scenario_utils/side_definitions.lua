@@ -1,4 +1,3 @@
-
 ---------------------------------------------------------
 ---- Code to add the [side]s to the [scenario]       ----
 ---- And the wml events to initilize the enemy sides ----
@@ -8,12 +7,12 @@ _ = wesnoth.textdomain "wesnoth-wc"
 
 local function table_join(t1, t2)
 	local r = {}
-    for i=1,#t1 do
-        r[#r+1] = t1[i]
-    end
-    for i=1,#t2 do
-        r[#r+1] = t2[i]
-    end
+	for i=1,#t1 do
+		r[#r+1] = t1[i]
+	end
+	for i=1,#t2 do
+		r[#r+1] = t2[i]
+	end
 	return r
 end
 
@@ -60,7 +59,7 @@ local function add_player_side(scenario, scenario_num, gold)
 		user_team_name = _ "Allies",
 		fog = true,
 		village_gold = 2,
-		share_view = true,
+		share_vision = "all",
 		terrain_liked = "",
 	}
 	if scenario_num == 1 then

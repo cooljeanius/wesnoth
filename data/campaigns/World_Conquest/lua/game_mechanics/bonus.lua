@@ -6,12 +6,12 @@ bonus.sceneries = {}
 
 -- places a bonus point on the map.
 function wesnoth.wml_actions.wc2_place_bonus(cfg)
-	local x = cfg.x or helper.wml_error("[wc2_place_bonus] missing required 'x' attribute")
-	local y = cfg.y or helper.wml_error("[wc2_place_bonus] missing required 'y' attribute")
-	local scenery = cfg.scenery or helper.wml_error("[wc2_place_bonus] missing required 'scenery' attribute")
+	local x = cfg.x or wml.error("[wc2_place_bonus] missing required 'x' attribute")
+	local y = cfg.y or wml.error("[wc2_place_bonus] missing required 'y' attribute")
+	local scenery = cfg.scenery or wml.error("[wc2_place_bonus] missing required 'scenery' attribute")
 	local c_scenery = bonus.sceneries[scenery]
 	if not c_scenery then
-		helper.wml_error("[wc2_place_bonus] invalid 'scenery' attribute: ".. tostring(scenery))
+		wml.error("[wc2_place_bonus] invalid 'scenery' attribute: ".. tostring(scenery))
 		end
 	local image = c_scenery.image or scenery
 	bonus.place_item(x, y, image)
@@ -54,21 +54,21 @@ end
 function bonus.remove_current_item(ec)
 	wc2_dropping.remove_current_item()
 	--TODO: i don't think its worth to keep this code, to alos allow bonus points to use terrains instead of overlays.
-    wesnoth.wml_actions.terrain {
-        x = ec.x1,
+	wesnoth.wml_actions.terrain {
+		x = ec.x1,
 		y = ec.y1,
-        wml.tag["and"] {
-            terrain = "*^Ecf",
-        },
-        terrain = "Gs",
-        layer = "overlay",
-    }
-    wesnoth.wml_actions.item {
-        x = ec.x1,
+		wml.tag["and"] {
+			terrain = "*^Ecf",
+		},
+		terrain = "Gs",
+		layer = "overlay",
+	}
+	wesnoth.wml_actions.item {
+		x = ec.x1,
 		y = ec.y1,
-        image = "scenery/rubble.png",
+		image = "scenery/rubble.png",
 		z_order = -10,
-    }
+	}
 end
 
 -- check to be overwritten by other mods.

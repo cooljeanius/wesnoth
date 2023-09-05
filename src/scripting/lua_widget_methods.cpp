@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2020 - 2021
+	Copyright (C) 2020 - 2023
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -43,6 +43,7 @@
 #include "scripting/push_check.hpp"
 #include "serialization/string_utils.hpp"
 #include "tstring.hpp"
+#include "utils/scope_exit.hpp"
 #include <functional>
 
 #include <type_traits>
@@ -51,7 +52,6 @@
 #include <vector>
 
 #include "lua/lauxlib.h"
-#include "lua/lua.h"
 
 static lg::log_domain log_scripting_lua("scripting/lua");
 #define ERR_LUA LOG_STREAM(err, log_scripting_lua)
@@ -76,9 +76,13 @@ int intf_show_dialog(lua_State* L)
 		lua_call(L, 1, 0);
 	}
 
-	gui2::open_window_stack.push_back(wp.get());
-	int v = wp->show(true, 0);
-	gui2::remove_from_window_stack(wp.get());
+	int v = [&wp]() {
+		gui2::open_window_stack.push_back(wp.get());
+		ON_SCOPE_EXIT(&wp) {
+			gui2::remove_from_window_stack(wp.get());
+		};
+		return wp->show();
+	}();
 
 	if (!lua_isnoneornil(L, 3)) {
 		lua_pushvalue(L, 3);
@@ -107,7 +111,7 @@ static gui2::widget* find_widget_impl(lua_State* L, gui2::widget* w, int i, bool
 				if(readonly) {
 					throw std::invalid_argument("index out of range");
 				}
-				utils::string_map dummy;
+				gui2::widget_item dummy;
 				for(; n < v; ++n) {
 					list->add_row(dummy);
 				}
@@ -123,7 +127,7 @@ static gui2::widget* find_widget_impl(lua_State* L, gui2::widget* w, int i, bool
 				if(readonly) {
 					throw std::invalid_argument("index out of range");
 				}
-				utils::string_map dummy;
+				gui2::widget_item dummy;
 				for(; n < v; ++n) {
 					multi_page->add_page(dummy);
 				}
@@ -255,12 +259,12 @@ namespace { // helpers of intf_set_dialog_callback()
 	{
 		gui2::widget* w = wp.get_ptr();
 		if(!w) {
-			ERR_LUA << "widget was deleted\n";
+			ERR_LUA << "widget was deleted";
 			return;
 		}
 		gui2::window* wd = w->get_window();
 		if(!wd) {
-			ERR_LUA << "cannot find window in widget callback\n";
+			ERR_LUA << "cannot find window in widget callback";
 			return;
 		}
 		luaW_callwidgetcallback(L, w, wd, id);
@@ -331,7 +335,7 @@ static int intf_set_dialog_canvas(lua_State* L)
 
 	config cfg = luaW_checkconfig(L, 3);
 	cv[i - 1].set_cfg(cfg);
-	c->set_is_dirty(true);
+	c->queue_redraw();
 	return 0;
 }
 
@@ -364,7 +368,7 @@ static int intf_add_item_of_type(lua_State* L)
 	if(lua_isnumber(L, 3)) {
 		insert_pos = luaL_checkinteger(L, 3);
 	}
-	static const std::map<std::string, string_map> data;
+	static const gui2::widget_data data;
 
 	if(gui2::tree_view_node* twn = dynamic_cast<gui2::tree_view_node*>(w)) {
 		res = &twn->add_child(node_type, data, insert_pos);
@@ -391,7 +395,7 @@ static int intf_add_dialog_item(lua_State* L)
 
 	gui2::widget* w = &luaW_checkwidget(L, 1);
 	gui2::widget* res = nullptr;
-	static const std::map<std::string, string_map> data;
+	static const gui2::widget_data data;
 
 	if(gui2::listbox* lb = dynamic_cast<gui2::listbox*>(w)) {
 		res = &lb->add_row(data);

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2015 - 2021
+	Copyright (C) 2015 - 2023
 	by Iris Morelle <shadowm2006@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -14,8 +14,11 @@
 */
 
 #include <boost/test/unit_test.hpp>
+
+#include "config_cache.hpp"
 #include "filesystem.hpp"
 #include "game_config.hpp"
+#include "log.hpp"
 
 #if 0
 namespace {
@@ -24,7 +27,7 @@ template<typename T>
 void dump(const T& v)
 {
 	for(typename T::const_iterator k = v.begin(); k != v.end(); ++k) {
-		std::cerr << " * " << *k << '\n';
+		PLAIN_LOG << " * " << *k;
 	}
 }
 
@@ -141,13 +144,21 @@ BOOST_AUTO_TEST_CASE( test_fs_enum )
 
 BOOST_AUTO_TEST_CASE( test_fs_binary_path )
 {
-	BOOST_CHECK_EQUAL( get_binary_dir_location("images", "."), gamedata + "/images/." );
+	config main_config;
+	game_config_view game_config_view_ = game_config_view::wrap(main_config);
+	game_config::config_cache& cache = game_config::config_cache::instance();
 
-	// This test depends on get_binary_file_location() deterministically choosing
-	// which order to search the [binary_path] entries, as there are four "images"
-	// directories that could match.
-	BOOST_CHECK_EQUAL( get_binary_file_location("images", "././././././"),
-	                   gamedata + "/images/././././././" );
+	cache.clear_defines();
+	cache.add_define("EDITOR");
+	cache.add_define("MULTIPLAYER");
+	cache.get_config(game_config::path +"/data", main_config);
+
+	const filesystem::binary_paths_manager bin_paths_manager(game_config_view_);
+
+	//load_language_list();
+	game_config::load_config(main_config.mandatory_child("game_config"));
+
+	BOOST_CHECK_EQUAL( get_binary_dir_location("images", "."), gamedata + "/images/." );
 
 	BOOST_CHECK_EQUAL( get_binary_file_location("images", "wesnoth-icon.png"),
 	                   gamedata + "/data/core/images/wesnoth-icon.png" );

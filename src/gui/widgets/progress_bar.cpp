@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2010 - 2021
+	Copyright (C) 2010 - 2023
 	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -20,6 +20,8 @@
 #include "gui/core/log.hpp"
 #include "gui/core/register_widget.hpp"
 #include "gui/widgets/settings.hpp"
+#include "wml_exception.hpp"
+#include "gettext.hpp"
 
 #include <functional>
 
@@ -68,7 +70,7 @@ void progress_bar::set_percentage(unsigned percentage)
 			c.set_variable("percentage", wfl::variant(percentage));
 		}
 
-		set_is_dirty(true);
+		queue_redraw();
 	}
 }
 
@@ -82,7 +84,7 @@ bool progress_bar::disable_click_dismiss() const
 progress_bar_definition::progress_bar_definition(const config& cfg)
 	: styled_widget_definition(cfg)
 {
-	DBG_GUI_P << "Parsing progress bar " << id << '\n';
+	DBG_GUI_P << "Parsing progress bar " << id;
 
 	load_resolutions<resolution>(cfg);
 }
@@ -91,7 +93,7 @@ progress_bar_definition::resolution::resolution(const config& cfg)
 	: resolution_definition(cfg)
 {
 	// Note the order should be the same as the enum state_t in progress_bar.hpp.
-	state.emplace_back(cfg.child("state_enabled"));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_enabled", _("Missing required state for progress bar")));
 }
 
 // }---------- BUILDER -----------{
@@ -104,12 +106,12 @@ builder_progress_bar::builder_progress_bar(const config& cfg)
 {
 }
 
-widget* builder_progress_bar::build() const
+std::unique_ptr<widget> builder_progress_bar::build() const
 {
-	progress_bar* widget = new progress_bar(*this);
+	auto widget = std::make_unique<progress_bar>(*this);
 
 	DBG_GUI_G << "Window builder: placed progress bar '" << id
-			  << "' with definition '" << definition << "'.\n";
+			  << "' with definition '" << definition << "'.";
 
 	return widget;
 }

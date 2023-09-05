@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008 - 2021
+	Copyright (C) 2008 - 2023
 	by Iris Morelle <shadowm2006@gmail.com>
 	Copyright (C) 2003 - 2008 by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
@@ -24,7 +24,7 @@
 #include <array>
 #include <boost/algorithm/string.hpp>
 
-const unsigned short default_campaignd_port = 15016;
+const unsigned short default_campaignd_port = 15017;
 
 namespace
 {
@@ -173,8 +173,9 @@ bool check_names_legal(const config& dir, std::vector<std::string>* badlist)
 	return check_names_legal_internal(dir, "", badlist);
 }
 
-bool check_case_insensitive_duplicates(const config& dir, std::vector<std::string>* badlist){
-    return check_case_insensitive_duplicates_internal(dir, "", badlist);
+bool check_case_insensitive_duplicates(const config& dir, std::vector<std::string>* badlist)
+{
+	return check_case_insensitive_duplicates_internal(dir, "", badlist);
 }
 
 ADDON_TYPE get_addon_type(const std::string& str)
@@ -300,9 +301,9 @@ bool contains_hashlist(const config& from, const config& to)
 	}
 
 	for(const config& d : to.child_range("dir")) {
-		const config& origin_dir = from.find_child("dir", "name", d["name"]);
+		auto origin_dir = from.find_child("dir", "name", d["name"]);
 		if(origin_dir) {
-			if(!contains_hashlist(origin_dir, d)) {
+			if(!contains_hashlist(*origin_dir, d)) {
 				return false;
 			}
 		} else {
@@ -342,10 +343,10 @@ static bool write_difference(config& pack, const config& from, const config& to,
 	}
 
 	for(const config& d : to.child_range("dir")) {
-		const config& origin_dir = from.find_child("dir", "name", d["name"]);
+		auto origin_dir = from.find_child("dir", "name", d["name"]);
 		config dir;
 		if(origin_dir) {
-			if(write_difference(dir, origin_dir, d, with_content)) {
+			if(write_difference(dir, *origin_dir, d, with_content)) {
 				pack.add_child("dir", dir);
 				has_changes = true;
 			}
@@ -390,6 +391,10 @@ std::string addon_check_status_desc(unsigned int code)
 		{
 			ADDON_CHECK_STATUS::UNAUTHORIZED,
 			N_("Incorrect add-on passphrase.")
+		},
+		{
+			ADDON_CHECK_STATUS::USER_DOES_NOT_EXIST,
+			N_("Forum authentication was requested for a user that is not registered on the forums.")
 		},
 		{
 			ADDON_CHECK_STATUS::DENIED,
@@ -493,6 +498,10 @@ std::string addon_check_status_desc(unsigned int code)
 			ADDON_CHECK_STATUS::INVALID_UTF8_ATTRIBUTE,
 			N_("The add-on publish information contains an invalid UTF-8 sequence.")
 		},
+		{
+			ADDON_CHECK_STATUS::AUTH_TYPE_MISMATCH,
+			N_("The add-on's forum_auth attribute does not match what was previously uploaded.")
+		},
 
 		//
 		// Server errors
@@ -513,6 +522,10 @@ std::string addon_check_status_desc(unsigned int code)
 		{
 			ADDON_CHECK_STATUS::SERVER_DELTA_NO_VERSIONS,
 			N_("Empty add-on version list on the server.")
+		},
+		{
+			ADDON_CHECK_STATUS::SERVER_FORUM_AUTH_DISABLED,
+			N_("This server does not support using the forum_auth attribute in your pbl.")
 		}
 	};
 

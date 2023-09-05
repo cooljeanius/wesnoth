@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2005 - 2021
+	Copyright (C) 2005 - 2023
 	by Guillaume Melquiond <guillaume.melquiond@gmail.com>
 	Copyright (C) 2003 by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
@@ -21,7 +21,9 @@
 
 #include "serialization/string_utils.hpp"
 
+#include <cstddef>
 #include <ctime>
+#include <string_view>
 
 class variable_set;
 
@@ -49,7 +51,7 @@ inline bool might_contain_variables(const std::string &str)
  * 'str' with the equivalent symbols in the given symbol table. If 'symbols'
  * is nullptr, then game event variables will be used instead.
  */
-std::string interpolate_variables_into_string(const std::string &str, const string_map * const symbols);
+std::string interpolate_variables_into_string(const std::string &str, const std::map<std::string, t_string> * const symbols);
 std::string interpolate_variables_into_string(const std::string &str, const std::map<std::string,std::string> * const symbols);
 std::string interpolate_variables_into_string(const std::string &str, const variable_set& variables);
 
@@ -129,3 +131,15 @@ std::string vngettext_impl(const char* domain,
 
 #define VNGETTEXT(msgid, msgid_plural, count, ...) \
 	vngettext_impl(GETTEXT_DOMAIN, msgid, msgid_plural, count, __VA_ARGS__)
+
+/**
+ * @brief Calculate the approximate edit distance of two strings.
+ *
+ * @param str_1 First string to compare.
+ * @param str_2 Second string to compare.
+ *
+ * @returns A score indicating how different the two strings are--the lower the score, the more similar the strings are.
+ *
+ * @note To avoid dynamic allocation, this function limits the number of characters that participate in the comparison.
+ */
+[[nodiscard]] std::size_t edit_distance_approx(std::string_view str_1, std::string_view str_2) noexcept;

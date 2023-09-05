@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 - 2021
+	Copyright (C) 2016 - 2023
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -45,7 +45,8 @@ namespace gui2::dialogs
 REGISTER_DIALOG(unit_list)
 
 unit_list::unit_list(std::vector<unit_const_ptr>& unit_list, map_location& scroll_to)
-	: unit_list_(unit_list)
+	: modal_dialog(window_id())
+	, unit_list_(unit_list)
 	, scroll_to_(scroll_to)
 {
 }
@@ -98,8 +99,8 @@ void unit_list::pre_show(window& window)
 	window.keyboard_capture(&list);
 
 	for(const unit_const_ptr& unit : unit_list_) {
-		std::map<std::string, string_map> row_data;
-		string_map column;
+		widget_data row_data;
+		widget_item column;
 
 		column["use_markup"] = "true";
 

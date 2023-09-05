@@ -431,7 +431,6 @@
 		<Unit filename="../../src/global.hpp" />
 		<Unit filename="../../src/gui/auxiliary/field-fwd.hpp" />
 		<Unit filename="../../src/gui/auxiliary/field.hpp" />
-		<Unit filename="../../src/gui/auxiliary/filter.hpp" />
 		<Unit filename="../../src/gui/auxiliary/find_widget.hpp" />
 		<Unit filename="../../src/gui/auxiliary/iterator/exception.hpp" />
 		<Unit filename="../../src/gui/auxiliary/iterator/iterator.cpp" />
@@ -806,7 +805,6 @@
 		<Unit filename="../../src/language.cpp" />
 		<Unit filename="../../src/language.hpp" />
 		<Unit filename="../../src/lexical_cast.hpp" />
-		<Unit filename="../../src/libc_error.hpp" />
 		<Unit filename="../../src/log.cpp" />
 		<Unit filename="../../src/log.hpp" />
 		<Unit filename="../../src/log_windows.cpp" />
@@ -1140,6 +1138,9 @@
 		<Unit filename="../../src/units/udisplay.hpp" />
 		<Unit filename="../../src/units/unit.cpp" />
 		<Unit filename="../../src/units/unit.hpp" />
+		<Unit filename="../../src/utils/any.hpp" />
+		<Unit filename="../../src/utils/config_filters.cpp" />
+		<Unit filename="../../src/utils/config_filters.hpp" />
 		<Unit filename="../../src/utils/const_clone.hpp" />
 		<Unit filename="../../src/utils/context_free_grammar_generator.cpp" />
 		<Unit filename="../../src/utils/context_free_grammar_generator.hpp" />
@@ -1147,8 +1148,6 @@
 		<Unit filename="../../src/utils/irdya_datetime.cpp" />
 		<Unit filename="../../src/utils/irdya_datetime.hpp" />
 		<Unit filename="../../src/utils/iterable_pair.hpp" />
-		<Unit filename="../../src/utils/make_enum.cpp" />
-		<Unit filename="../../src/utils/make_enum.hpp" />
 		<Unit filename="../../src/utils/markov_generator.cpp" />
 		<Unit filename="../../src/utils/markov_generator.hpp" />
 		<Unit filename="../../src/utils/math.hpp" />

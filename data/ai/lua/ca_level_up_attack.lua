@@ -24,7 +24,7 @@ local function iter_possible_targets(moves, attacker)
     moves = LS.of_pairs(moves)
     -- The criteria are: a) unit is reachable b) unit's health is low
     local targets = wesnoth.units.find({
-        
+
     })
     return coroutine.wrap(function()
         local checked = LS.create()
@@ -38,7 +38,7 @@ local function iter_possible_targets(moves, attacker)
                     end
                 end
             end
-        end) 
+        end)
     end)
 end
 
@@ -49,6 +49,7 @@ function level_up_attack:evaluation(cfg, data, filter_own)
     local moves = LS.of_raw(ai.get_src_dst())
     local units = wesnoth.units.find(filter_own)
     for _,me in ipairs(units) do
+        wesnoth.interface.handle_user_interact()
         local save_x, save_y = me.x, me.y
         if not moves[me] or #moves[me] == 0 then
             goto continue

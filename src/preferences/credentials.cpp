@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2017 - 2021
+	Copyright (C) 2017 - 2023
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -26,7 +26,8 @@
 #include <memory>
 
 #ifndef __APPLE__
-#include <openssl/rc4.h>
+#include <openssl/evp.h>
+#include <openssl/err.h>
 #else
 #include <CommonCrypto/CommonCryptor.h>
 #endif
@@ -37,6 +38,7 @@
 #endif
 
 static lg::log_domain log_config("config");
+#define DBG_CFG LOG_STREAM(debug , log_config)
 #define ERR_CFG LOG_STREAM(err , log_config)
 
 class secure_buffer : public std::vector<unsigned char>
@@ -72,8 +74,8 @@ static std::vector<login_info> credentials;
 // Separate password entries with formfeed
 static const unsigned char CREDENTIAL_SEPARATOR = '\f';
 
-static secure_buffer encrypt(const secure_buffer& text, const secure_buffer& key);
-static secure_buffer decrypt(const secure_buffer& text, const secure_buffer& key);
+static secure_buffer aes_encrypt(const secure_buffer& text, const secure_buffer& key);
+static secure_buffer aes_decrypt(const secure_buffer& text, const secure_buffer& key);
 static secure_buffer build_key(const std::string& server, const std::string& login);
 static secure_buffer escape(const secure_buffer& text);
 static secure_buffer unescape(const secure_buffer& text);
@@ -120,7 +122,7 @@ namespace preferences
 		} else if(name.size() > 2 && name.front() == '@' && name.back() == '@') {
 			name = name.substr(1, name.size() - 2);
 		} else {
-			ERR_CFG << "malformed user credentials (did you manually edit the preferences file?)" << std::endl;
+			ERR_CFG << "malformed user credentials (did you manually edit the preferences file?)";
 		}
 		if(name.empty()) {
 			return "player";
@@ -154,12 +156,13 @@ namespace preferences
 
 	std::string password(const std::string& server, const std::string& login)
 	{
+		DBG_CFG << "Retrieving password for server: '" << server << "', login: '" << login << "'";
 		auto login_clean = login;
 		boost::trim(login_clean);
 
 		if(!remember_password()) {
 			if(!credentials.empty() && credentials[0].username == login_clean && credentials[0].server == server) {
-				auto temp = decrypt(credentials[0].key, build_key(server, login_clean));
+				auto temp = aes_decrypt(credentials[0].key, build_key(server, login_clean));
 				return std::string(temp.begin(), temp.end());
 			} else {
 				return "";
@@ -171,19 +174,20 @@ namespace preferences
 		if(cred == credentials.end()) {
 			return "";
 		}
-		auto temp = decrypt(cred->key, build_key(server, login_clean));
+		auto temp = aes_decrypt(cred->key, build_key(server, login_clean));
 		return std::string(temp.begin(), temp.end());
 	}
 
 	void set_password(const std::string& server, const std::string& login, const std::string& key)
 	{
+		DBG_CFG << "Setting password for server: '" << server << "', login: '" << login << "'";
 		auto login_clean = login;
 		boost::trim(login_clean);
 
 		secure_buffer temp(key.begin(), key.end());
 		if(!remember_password()) {
 			clear_credentials();
-			credentials.emplace_back(login_clean, server, encrypt(temp, build_key(server, login_clean)));
+			credentials.emplace_back(login_clean, server, aes_encrypt(temp, build_key(server, login_clean)));
 			return;
 		}
 		auto cred = std::find_if(credentials.begin(), credentials.end(), [&](const login_info& cred) {
@@ -193,7 +197,7 @@ namespace preferences
 			// This is equivalent to emplace_back, but also returns the iterator to the new element
 			cred = credentials.emplace(credentials.end(), login_clean, server);
 		}
-		cred->key = encrypt(temp, build_key(server, login_clean));
+		cred->key = aes_encrypt(temp, build_key(server, login_clean));
 	}
 
 	void load_credentials()
@@ -209,9 +213,9 @@ namespace preferences
 		filesystem::scoped_istream stream = filesystem::istream_file(cred_file, false);
 		// Credentials file is a binary blob, so use streambuf iterator
 		secure_buffer data((std::istreambuf_iterator<char>(*stream)), (std::istreambuf_iterator<char>()));
-		data = decrypt(data, build_key("global", get_system_username()));
+		data = aes_decrypt(data, build_key("global", get_system_username()));
 		if(data.empty() || data[0] != CREDENTIAL_SEPARATOR) {
-			ERR_CFG << "Invalid data in credentials file\n";
+			ERR_CFG << "Invalid data in credentials file";
 			return;
 		}
 		for(const std::string& elem : utils::split(std::string(data.begin(), data.end()), CREDENTIAL_SEPARATOR, utils::REMOVE_EMPTY)) {
@@ -230,33 +234,34 @@ namespace preferences
 			filesystem::delete_file(filesystem::get_credentials_file());
 			return;
 		}
-		secure_buffer credentials_data(1, CREDENTIAL_SEPARATOR);
-		std::size_t offset = 1;
+		secure_buffer credentials_data;
 		for(const auto& cred : credentials) {
-			credentials_data.resize(credentials_data.size() + cred.size(), CREDENTIAL_SEPARATOR);
-			std::copy(cred.username.begin(), cred.username.end(), credentials_data.begin() + offset);
-			offset += cred.username.size();
-			credentials_data[offset++] = '@';
-			std::copy(cred.server.begin(), cred.server.end(), credentials_data.begin() + offset);
-			offset += cred.server.size();
-			credentials_data[offset++] = '=';
+			credentials_data.push_back(CREDENTIAL_SEPARATOR);
+			credentials_data.insert(credentials_data.end(), cred.username.begin(), cred.username.end());
+			credentials_data.push_back('@');
+			credentials_data.insert(credentials_data.end(), cred.server.begin(), cred.server.end());
+			credentials_data.push_back('=');
 			secure_buffer key_escaped = escape(cred.key);
-			// Escaping may increase the length, so resize again if so
-			credentials_data.resize(credentials_data.size() + key_escaped.size() - cred.key.size());
-			std::copy(key_escaped.begin(), key_escaped.end(), credentials_data.begin() + offset);
-			offset += key_escaped.size() + 1;
+			credentials_data.insert(credentials_data.end(), key_escaped.begin(), key_escaped.end());
 		}
 		try {
 			filesystem::scoped_ostream credentials_file = filesystem::ostream_file(filesystem::get_credentials_file());
-			secure_buffer encrypted = encrypt(credentials_data, build_key("global", get_system_username()));
+			secure_buffer encrypted = aes_encrypt(credentials_data, build_key("global", get_system_username()));
 			credentials_file->write(reinterpret_cast<const char*>(encrypted.data()), encrypted.size());
 		} catch(const filesystem::io_exception&) {
-			ERR_CFG << "error writing to credentials file '" << filesystem::get_credentials_file() << "'" << std::endl;
+			ERR_CFG << "error writing to credentials file '" << filesystem::get_credentials_file() << "'";
 		}
 	}
 }
 
-// TODO: Key-stretching (bcrypt was recommended)
+/**
+ * Fills a secure_buffer with 32 bytes of deterministically generated bytes, then overwrites it with the system login name, server login name, and server name.
+ * If this is more than 32 bytes, then it's truncated. If it's less than 32 bytes, then the pre-generated bytes are used to pad it.
+ *
+ * @param server The server being logged into.
+ * @param login The username being used to login.
+ * @return secure_buffer The data to be used as the encryption key.
+ */
 secure_buffer build_key(const std::string& server, const std::string& login)
 {
 	std::string sysname = get_system_username();
@@ -269,54 +274,199 @@ secure_buffer build_key(const std::string& server, const std::string& login)
 	return result;
 }
 
-static secure_buffer rc4_crypt(const secure_buffer& text, const secure_buffer& key)
+/**
+ * Encrypts the value of @a plaintext using @a key and a hard coded IV using AES.
+ * Max size of @a plaintext must not be larger than 1008 bytes.
+ *
+ * NOTE: This is not meant to provide strong protections against a determined attacker.
+ * This is meant to hide the passwords from malware scanning files for passwords, family/friends poking around, etc.
+ *
+ * @param plaintext The original unencrypted data.
+ * @param key The value to use to encrypt the data. See build_key() for key generation.
+ * @return secure_buffer The encrypted data.
+ */
+static secure_buffer aes_encrypt(const secure_buffer& plaintext, const secure_buffer& key)
 {
-	secure_buffer result(text.size(), '\0');
 #ifndef __APPLE__
-	RC4_KEY cipher_key;
-	RC4_set_key(&cipher_key, key.size(), key.data());
-	const std::size_t block_size = key.size();
-	const std::size_t blocks = text.size() / block_size;
-	const std::size_t extra = text.size() % block_size;
-	for(std::size_t i = 0; i < blocks * block_size; i += block_size) {
-		RC4(&cipher_key, block_size, text.data() + i, result.data() + i);
+	int update_length;
+	int extra_length;
+	int total_length;
+	// AES IV is generally 128 bits
+	const unsigned char iv[] = {1,2,3,4,5,6,7,8,1,2,3,4,5,6,7,8};
+	unsigned char encrypted_buffer[1024];
+
+	if(plaintext.size() > 1008)
+	{
+		ERR_CFG << "Cannot encrypt data larger than 1008 bytes.";
+		return secure_buffer();
 	}
-	if(extra) {
-		std::size_t i = blocks * block_size;
-		RC4(&cipher_key, extra, text.data() + i, result.data() + i);
+	DBG_CFG << "Encrypting data with length: " << plaintext.size();
+
+	EVP_CIPHER_CTX *ctx = EVP_CIPHER_CTX_new();
+	if(!ctx)
+	{
+		ERR_CFG << "AES EVP_CIPHER_CTX_new failed with error:";
+		ERR_CFG << ERR_error_string(ERR_get_error(), NULL);
+		return secure_buffer();
 	}
+
+	// TODO: use EVP_EncryptInit_ex2 once openssl 3.0 is more widespread
+	if(EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key.data(), iv) != 1)
+	{
+		ERR_CFG << "AES EVP_EncryptInit_ex failed with error:";
+		ERR_CFG << ERR_error_string(ERR_get_error(), NULL);
+		EVP_CIPHER_CTX_free(ctx);
+		return secure_buffer();
+	}
+
+	if(EVP_EncryptUpdate(ctx, encrypted_buffer, &update_length, plaintext.data(), plaintext.size()) != 1)
+	{
+		ERR_CFG << "AES EVP_EncryptUpdate failed with error:";
+		ERR_CFG << ERR_error_string(ERR_get_error(), NULL);
+		EVP_CIPHER_CTX_free(ctx);
+		return secure_buffer();
+	}
+	DBG_CFG << "Update length: " << update_length;
+
+	if(EVP_EncryptFinal_ex(ctx, encrypted_buffer + update_length, &extra_length) != 1)
+	{
+		ERR_CFG << "AES EVP_EncryptFinal failed with error:";
+		ERR_CFG << ERR_error_string(ERR_get_error(), NULL);
+		EVP_CIPHER_CTX_free(ctx);
+		return secure_buffer();
+	}
+	DBG_CFG << "Extra length: " << extra_length;
+
+	EVP_CIPHER_CTX_free(ctx);
+
+	total_length = update_length+extra_length;
+	secure_buffer result;
+	for(int i = 0; i < total_length; i++)
+	{
+		result.push_back(encrypted_buffer[i]);
+	}
+
+	DBG_CFG << "Successfully encrypted plaintext value of '" << utils::join(plaintext, "") << "' having length " << plaintext.size();
+	DBG_CFG << "For a total encrypted length of: " << total_length;
+
+	return result;
 #else
 	size_t outWritten = 0;
+	secure_buffer result(plaintext.size(), '\0');
+
 	CCCryptorStatus ccStatus = CCCrypt(kCCDecrypt,
 		kCCAlgorithmRC4,
 		kCCOptionPKCS7Padding,
 		key.data(),
 		key.size(),
 		nullptr,
-		text.data(),
-		text.size(),
+		plaintext.data(),
+		plaintext.size(),
 		result.data(),
 		result.size(),
 		&outWritten);
 
 	assert(ccStatus == kCCSuccess);
-	assert(outWritten == text.size());
-#endif
+	assert(outWritten == plaintext.size());
+
 	return result;
+#endif
 }
 
-secure_buffer encrypt(const secure_buffer& text, const secure_buffer& key)
+/**
+ * Same as aes_encrypt(), except of course it takes encrypted data as an argument and returns decrypted data.
+ */
+static secure_buffer aes_decrypt(const secure_buffer& encrypted, const secure_buffer& key)
 {
-	return rc4_crypt(text, key);
-}
+#ifndef __APPLE__
+	int update_length;
+	int extra_length;
+	int total_length;
+	// AES IV is generally 128 bits
+	const unsigned char iv[] = {1,2,3,4,5,6,7,8,1,2,3,4,5,6,7,8};
+	unsigned char plaintext_buffer[1024];
 
-secure_buffer decrypt(const secure_buffer& text, const secure_buffer& key)
-{
-	auto buf = rc4_crypt(text, key);
-	while(!buf.empty() && buf.back() == 0) {
-		buf.pop_back();
+	if(encrypted.size() > 1024)
+	{
+		ERR_CFG << "Cannot decrypt data larger than 1024 bytes.";
+		return secure_buffer();
 	}
-	return buf;
+	DBG_CFG << "Decrypting data with length: " << encrypted.size();
+
+	EVP_CIPHER_CTX *ctx = EVP_CIPHER_CTX_new();
+	if(!ctx)
+	{
+		ERR_CFG << "AES EVP_CIPHER_CTX_new failed with error:";
+		ERR_CFG << ERR_error_string(ERR_get_error(), NULL);
+		return secure_buffer();
+	}
+
+	// TODO: use EVP_DecryptInit_ex2 once openssl 3.0 is more widespread
+	if(EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key.data(), iv) != 1)
+	{
+		ERR_CFG << "AES EVP_DecryptInit_ex failed with error:";
+		ERR_CFG << ERR_error_string(ERR_get_error(), NULL);
+		EVP_CIPHER_CTX_free(ctx);
+		return secure_buffer();
+	}
+
+	if(EVP_DecryptUpdate(ctx, plaintext_buffer, &update_length, encrypted.data(), encrypted.size()) != 1)
+	{
+		ERR_CFG << "AES EVP_DecryptUpdate failed with error:";
+		ERR_CFG << ERR_error_string(ERR_get_error(), NULL);
+		EVP_CIPHER_CTX_free(ctx);
+		return secure_buffer();
+	}
+	DBG_CFG << "Update length: " << update_length;
+
+	if(EVP_DecryptFinal_ex(ctx, plaintext_buffer + update_length, &extra_length) != 1)
+	{
+		ERR_CFG << "AES EVP_DecryptFinal failed with error:";
+		ERR_CFG << ERR_error_string(ERR_get_error(), NULL);
+		EVP_CIPHER_CTX_free(ctx);
+		return secure_buffer();
+	}
+	DBG_CFG << "Extra length: " << extra_length;
+
+	EVP_CIPHER_CTX_free(ctx);
+
+	total_length = update_length+extra_length;
+	secure_buffer result;
+	for(int i = 0; i < total_length; i++)
+	{
+		result.push_back(plaintext_buffer[i]);
+	}
+
+	DBG_CFG << "Successfully decrypted data to the value: " << utils::join(result, "");
+	DBG_CFG << "For a total decrypted length of: " << total_length;
+
+	return result;
+#else
+	size_t outWritten = 0;
+	secure_buffer result(encrypted.size(), '\0');
+
+	CCCryptorStatus ccStatus = CCCrypt(kCCDecrypt,
+		kCCAlgorithmRC4,
+		kCCOptionPKCS7Padding,
+		key.data(),
+		key.size(),
+		nullptr,
+		encrypted.data(),
+		encrypted.size(),
+		result.data(),
+		result.size(),
+		&outWritten);
+
+	assert(ccStatus == kCCSuccess);
+	assert(outWritten == encrypted.size());
+
+	// the decrypted result is likely shorter than the encrypted data, so the extra padding needs to be removed.
+	while(!result.empty() && result.back() == 0) {
+		result.pop_back();
+	}
+
+	return result;
+#endif
 }
 
 secure_buffer unescape(const secure_buffer& text)

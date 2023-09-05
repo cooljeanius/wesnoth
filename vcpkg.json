@@ -1,17 +1,16 @@
 {
-  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "wesnoth-dependencies",
   "version": "0.0.1",
+  "builtin-baseline": "dafef74af53669ef1cc9015f55e0ce809ead62aa",
   "dependencies": [
     "sdl2",
     {
       "name": "sdl2-image",
-      "features": [ "libjpeg-turbo" ]
+      "features": [ "libjpeg-turbo", "libwebp" ]
     },
-    {
-      "name": "sdl2-mixer",
-      "features": [ "libvorbis", "dynamic-load" ]
-    },
+    "libwebp",
+    "sdl2-mixer",
     "bzip2",
     "zlib",
     "pango",
@@ -19,6 +18,7 @@
     "fontconfig",
     "libvorbis",
     "libogg",
+    "openssl",
     "boost-filesystem",
     "boost-iostreams",
     {
@@ -31,18 +31,21 @@
       "features": [ "icu" ]
     },
     "boost-asio",
-    "boost-assign",
     "boost-program-options",
     "boost-system",
-    "boost-thread",
     "boost-bimap",
     "boost-math",
-    "boost-multi-array",
     "boost-logic",
     "boost-format",
     "boost-scope-exit",
     "boost-circular-buffer",
     "boost-ptr-container",
-    "boost-test"
+    "boost-spirit",
+    "boost-test",
+    "boost-process",
+    {
+      "name": "curl",
+      "features": [ "openssl" ]
+    }
   ]
 }

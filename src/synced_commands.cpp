@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2014 - 2021
+	Copyright (C) 2014 - 2023
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -127,7 +127,7 @@ SYNCED_COMMAND_HANDLER_FUNCTION(recruit, child, use_undo, show, error_handler)
 
 	LOG_REPLAY << "recruit: team=" << current_team_num << " '" << type_id << "' at (" << loc
 		<< ") cost=" << u_type->cost() << " from gold=" << beginning_gold << ' '
-		<< "-> " << current_team.gold() << "\n";
+		<< "-> " << current_team.gold();
 	return true;
 }
 
@@ -179,7 +179,7 @@ SYNCED_COMMAND_HANDLER_FUNCTION(attack, child, /*use_undo*/, show, error_handler
 	int def_weapon_num = child["defender_weapon"].to_int(-2);
 	if (def_weapon_num == -2) {
 		// Let's not gratuitously destroy backwards compatibility.
-		LOG_REPLAY << "Old data, having to guess weapon\n";
+		LOG_REPLAY << "Old data, having to guess weapon";
 		def_weapon_num = -1;
 	}
 
@@ -192,7 +192,7 @@ SYNCED_COMMAND_HANDLER_FUNCTION(attack, child, /*use_undo*/, show, error_handler
 	if (child.has_attribute("attacker_type")) {
 		const std::string &att_type_id = child["attacker_type"];
 		if (u->type_id() != att_type_id) {
-			WRN_REPLAY << "unexpected attacker type: " << att_type_id << "(game state gives: " << u->type_id() << ")" << std::endl;
+			WRN_REPLAY << "unexpected attacker type: " << att_type_id << "(game state gives: " << u->type_id() << ")";
 		}
 	}
 
@@ -213,7 +213,7 @@ SYNCED_COMMAND_HANDLER_FUNCTION(attack, child, /*use_undo*/, show, error_handler
 	if (child.has_attribute("defender_type")) {
 		const std::string &def_type_id = child["defender_type"];
 		if (tgt->type_id() != def_type_id) {
-			WRN_REPLAY << "unexpected defender type: " << def_type_id << "(game state gives: " << tgt->type_id() << ")" << std::endl;
+			WRN_REPLAY << "unexpected defender type: " << def_type_id << "(game state gives: " << tgt->type_id() << ")";
 		}
 	}
 
@@ -223,7 +223,7 @@ SYNCED_COMMAND_HANDLER_FUNCTION(attack, child, /*use_undo*/, show, error_handler
 		return false;
 	}
 
-	DBG_REPLAY << "Attacker XP (before attack): " << u->experience() << "\n";
+	DBG_REPLAY << "Attacker XP (before attack): " << u->experience();
 
 	resources::undo_stack->clear();
 	attack_unit_and_advance(src, dst, weapon_num, def_weapon_num, show);
@@ -241,7 +241,10 @@ SYNCED_COMMAND_HANDLER_FUNCTION(disband, child, /*use_undo*/, /*show*/, error_ha
 
 	// Find the unit in the recall list.
 	unit_ptr dismissed_unit = current_team.recall_list().find_if_matches_id(unit_id);
-	assert(dismissed_unit);
+	if (!dismissed_unit) {
+		error_handler("illegal disband\n");
+		return false;
+	}
 	//add dismissal to the undo stack
 	resources::undo_stack->add_dismissal(dismissed_unit);
 
@@ -264,13 +267,13 @@ SYNCED_COMMAND_HANDLER_FUNCTION(move, child,  use_undo, show, error_handler)
 	try {
 		read_locations(child,steps);
 	} catch (const std::invalid_argument&) {
-		WRN_REPLAY << "Warning: Path data contained something which could not be parsed to a sequence of locations:" << "\n config = " << child.debug() << std::endl;
+		WRN_REPLAY << "Warning: Path data contained something which could not be parsed to a sequence of locations:" << "\n config = " << child.debug();
 		return false;
 	}
 
 	if(steps.empty())
 	{
-		WRN_REPLAY << "Warning: Missing path data found in [move]" << std::endl;
+		WRN_REPLAY << "Warning: Missing path data found in [move]";
 		return false;
 	}
 
@@ -278,14 +281,14 @@ SYNCED_COMMAND_HANDLER_FUNCTION(move, child,  use_undo, show, error_handler)
 	const map_location& dst = steps.back();
 
 	if (src == dst) {
-		WRN_REPLAY << "Warning: Move with identical source and destination. Skipping..." << std::endl;
+		WRN_REPLAY << "Warning: Move with identical source and destination. Skipping...";
 		return false;
 	}
 
 	// The nominal destination should appear to be unoccupied.
 	unit_map::iterator u = resources::gameboard->find_visible_unit(dst, current_team);
 	if ( u.valid() ) {
-		WRN_REPLAY << "Warning: Move destination " << dst << " appears occupied." << std::endl;
+		WRN_REPLAY << "Warning: Move destination " << dst << " appears occupied.";
 		// We'll still proceed with this movement, though, since
 		// an event might intervene.
 		// 'event' doesn't mean wml event but rather it means 'hidden' units form the movers point of view.
@@ -338,7 +341,7 @@ SYNCED_COMMAND_HANDLER_FUNCTION(fire_event, child,  use_undo, /*show*/, /*error_
 
 	// Not clearing the undo stack here causes OOS because we added an entry to the replay but no entry to the undo stack.
 	if(use_undo) {
-		if(!undoable || !synced_context::can_undo()) {
+		if(!undoable || synced_context::undo_blocked()) {
 			resources::undo_stack->clear();
 		} else {
 			resources::undo_stack->add_dummy();
@@ -352,7 +355,7 @@ SYNCED_COMMAND_HANDLER_FUNCTION(custom_command, child,  use_undo, /*show*/, /*er
 	assert(resources::lua_kernel);
 	resources::lua_kernel->custom_command(child["name"], child.child_or_empty("data"));
 	if(use_undo) {
-		if(!synced_context::can_undo()) {
+		if(synced_context::undo_blocked()) {
 			resources::undo_stack->clear();
 		} else {
 			resources::undo_stack->add_dummy();
@@ -367,31 +370,32 @@ SYNCED_COMMAND_HANDLER_FUNCTION(auto_shroud, child,  use_undo, /*show*/, /*error
 	team &current_team = resources::controller->current_team();
 
 	bool active = child["active"].to_bool();
-	// We cannot update shroud here like 'if(active) resources::undo_stack->commit_vision();'.
-	// because the undo.cpp code assumes exactly 1 entry in the undo stack per entry in the replay.
-	// And doing so would create a second entry in the undo stack for this 'auto_shroud' entry.
+	if(active && !current_team.auto_shroud_updates()) {
+		resources::undo_stack->commit_vision();
+	}
 	current_team.set_auto_shroud_updates(active);
-	resources::undo_stack->add_auto_shroud(active);
+	if(resources::undo_stack->can_undo()) {
+		resources::undo_stack->add_auto_shroud(active);
+	}
 	return true;
 }
 
-/** from resources::undo_stack->commit_vision(bool is_replay):
- * Updates fog/shroud based on the undo stack, then updates stack as needed.
- * Call this when "updating shroud now".
- * This may fire events and change the game state.
- *
- * This means it is a synced command like any other.
- */
-
 SYNCED_COMMAND_HANDLER_FUNCTION(update_shroud, /*child*/,  use_undo, /*show*/, error_handler)
 {
+	// When "updating shroud now" is used.
+	// Updates fog/shroud based on the undo stack, then updates stack as needed.
+	// This may fire events and change the game state.
+
 	assert(use_undo);
 	team &current_team = resources::controller->current_team();
 	if(current_team.auto_shroud_updates()) {
 		error_handler("Team has DSU disabled but we found an explicit shroud update");
 	}
-	resources::undo_stack->commit_vision();
+	bool res = resources::undo_stack->commit_vision();
 	resources::undo_stack->add_update_shroud();
+	if(res) {
+		resources::undo_stack->clear();
+	}
 	return true;
 }
 
@@ -478,7 +482,13 @@ SYNCED_COMMAND_HANDLER_FUNCTION(debug_unit, child,  use_undo, /*show*/, /*error_
 		return false;
 	}
 	if (name == "advances" ) {
-		int int_value = std::stoi(value);
+		int int_value = 0;
+		try {
+			int_value = std::stoi(value);
+		} catch (const std::invalid_argument&) {
+			WRN_REPLAY << "Warning: Invalid unit advancement argument: " << value;
+			return false;
+		}
 		for (int levels=0; levels<int_value; levels++) {
 			i->set_experience(i->max_experience());
 
@@ -515,7 +525,7 @@ SYNCED_COMMAND_HANDLER_FUNCTION(debug_unit, child,  use_undo, /*show*/, /*error_
 			resources::whiteboard->on_kill_unit();
 			resources::gameboard->units().insert(new_u);
 		} catch(const unit_type::error& e) {
-			ERR_REPLAY << e.what() << std::endl; // TODO: more appropriate error message log
+			ERR_REPLAY << e.what(); // TODO: more appropriate error message log
 			return false;
 		}
 	}
@@ -650,7 +660,7 @@ SYNCED_COMMAND_HANDLER_FUNCTION(debug_turn_limit, child, use_undo, /*show*/, /*e
 	debug_cmd_notification("turn_limit");
 
 	resources::tod_manager->set_number_of_turns(child["turn_limit"].to_int(-1));
-	display::get_singleton()->redraw_everything();
+	display::get_singleton()->queue_rerender();
 	return true;
 }
 
@@ -665,7 +675,7 @@ SYNCED_COMMAND_HANDLER_FUNCTION(debug_turn, child, use_undo, /*show*/, /*error_h
 	resources::tod_manager->set_turn(child["turn"].to_int(1), resources::gamedata);
 
 	game_display::get_singleton()->new_turn();
-	display::get_singleton()->redraw_everything();
+	display::get_singleton()->queue_rerender();
 
 	return true;
 }
@@ -697,7 +707,7 @@ SYNCED_COMMAND_HANDLER_FUNCTION(debug_gold, child, use_undo, /*show*/, /*error_h
 	debug_cmd_notification("gold");
 
 	resources::controller->current_team().spend_gold(-child["gold"].to_int(0));
-	display::get_singleton()->redraw_everything();
+	display::get_singleton()->queue_rerender();
 	return true;
 }
 
@@ -711,7 +721,7 @@ SYNCED_COMMAND_HANDLER_FUNCTION(debug_event, child, use_undo, /*show*/, /*error_
 	debug_cmd_notification("throw");
 
 	resources::controller->pump().fire(child["eventname"]);
-	display::get_singleton()->redraw_everything();
+	display::get_singleton()->queue_rerender();
 
 	return true;
 }
@@ -730,7 +740,7 @@ SYNCED_COMMAND_HANDLER_FUNCTION(debug_fog, /*child*/, use_undo, /*show*/, /*erro
 	actions::recalculate_fog(current_team.side());
 
 	display::get_singleton()->recalculate_minimap();
-	display::get_singleton()->redraw_everything();
+	display::get_singleton()->queue_rerender();
 
 	return true;
 }
@@ -749,7 +759,7 @@ SYNCED_COMMAND_HANDLER_FUNCTION(debug_shroud, /*child*/, use_undo, /*show*/, /*e
 	actions::clear_shroud(current_team.side());
 
 	display::get_singleton()->recalculate_minimap();
-	display::get_singleton()->redraw_everything();
+	display::get_singleton()->queue_rerender();
 
 	return true;
 }

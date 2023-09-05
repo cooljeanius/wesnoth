@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2009 - 2021
+	Copyright (C) 2009 - 2023
 	by Yurii Chernyi <terraninfo@terraninfo.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -53,14 +53,14 @@ aspect_attacks::aspect_attacks(readonly_context& context, const config& cfg, con
 	, filter_own_()
 	, filter_enemy_()
 {
-	if(const config& filter_own = cfg.child("filter_own")) {
-		vconfig vcfg(filter_own);
+	if(auto filter_own = cfg.optional_child("filter_own")) {
+		vconfig vcfg(*filter_own);
 		vcfg.make_safe();
 		filter_own_.reset(new unit_filter(vcfg));
 	}
 
-	if(const config& filter_enemy = cfg.child("filter_enemy")) {
-		vconfig vcfg(filter_enemy);
+	if(auto filter_enemy = cfg.optional_child("filter_enemy")) {
+		vconfig vcfg(*filter_enemy);
 		vcfg.make_safe();
 		filter_enemy_.reset(new unit_filter(vcfg));
 	}
@@ -151,7 +151,7 @@ void aspect_attacks_base::do_attack_analysis(const map_location& loc,
 
 	const std::size_t max_positions = 1000;
 	if(result.size() > max_positions && !cur_analysis.movements.empty()) {
-		LOG_AI << "cut analysis short with number of positions\n";
+		LOG_AI << "cut analysis short with number of positions";
 		return;
 	}
 
@@ -252,7 +252,7 @@ void aspect_attacks_base::do_attack_analysis(const map_location& loc,
 			int best_leadership_bonus = under_leadership(*unit_itor, tiles[j]);
 			double leadership_bonus = static_cast<double>(best_leadership_bonus + 100) / 100.0;
 			if(leadership_bonus > 1.1) {
-				LOG_AI << unit_itor->name() << " is getting leadership " << leadership_bonus << "\n";
+				LOG_AI << unit_itor->name() << " is getting leadership " << leadership_bonus;
 			}
 
 			// Check to see whether this move would be a backstab.

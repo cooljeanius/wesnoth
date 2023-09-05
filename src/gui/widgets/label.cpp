@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008 - 2021
+	Copyright (C) 2008 - 2023
 	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -30,6 +30,7 @@
 #include "desktop/clipboard.hpp"
 #include "desktop/open.hpp"
 #include "gettext.hpp"
+#include "wml_exception.hpp"
 
 #include <functional>
 #include <string>
@@ -77,7 +78,7 @@ void label::set_text_alpha(unsigned short alpha)
 	if(alpha != text_alpha_) {
 		text_alpha_ = alpha;
 		update_canvas();
-		set_is_dirty(true);
+		queue_redraw();
 	}
 }
 
@@ -93,7 +94,7 @@ void label::set_link_aware(bool link_aware)
 	if(link_aware != link_aware_) {
 		link_aware_ = link_aware;
 		update_canvas();
-		set_is_dirty(true);
+		queue_redraw();
 	}
 }
 
@@ -102,7 +103,7 @@ void label::set_link_color(const color_t& color)
 	if(color != link_color_) {
 		link_color_ = color;
 		update_canvas();
-		set_is_dirty(true);
+		queue_redraw();
 	}
 }
 
@@ -110,13 +111,13 @@ void label::set_state(const state_t state)
 {
 	if(state != state_) {
 		state_ = state;
-		set_is_dirty(true);
+		queue_redraw();
 	}
 }
 
 void label::signal_handler_left_button_click(bool& handled)
 {
-	DBG_GUI_E << "label click" << std::endl;
+	DBG_GUI_E << "label click";
 
 	if (!get_link_aware()) {
 		return; // without marking event as "handled".
@@ -139,7 +140,7 @@ void label::signal_handler_left_button_click(bool& handled)
 		return ; // without marking event as "handled"
 	}
 
-	DBG_GUI_E << "Clicked Link:\"" << link << "\"\n";
+	DBG_GUI_E << "Clicked Link:\"" << link << "\"";
 
 	const int res = show_message(_("Open link?"), link, dialogs::message::yes_no_buttons);
 	if(res == gui2::retval::OK) {
@@ -151,7 +152,7 @@ void label::signal_handler_left_button_click(bool& handled)
 
 void label::signal_handler_right_button_click(bool& handled)
 {
-	DBG_GUI_E << "label right click" << std::endl;
+	DBG_GUI_E << "label right click";
 
 	if (!get_link_aware()) {
 		return ; // without marking event as "handled".
@@ -168,7 +169,7 @@ void label::signal_handler_right_button_click(bool& handled)
 		return ; // without marking event as "handled"
 	}
 
-	DBG_GUI_E << "Right Clicked Link:\"" << link << "\"\n";
+	DBG_GUI_E << "Right Clicked Link:\"" << link << "\"";
 
 	desktop::clipboard::copy_to_clipboard(link, false);
 
@@ -179,7 +180,7 @@ void label::signal_handler_right_button_click(bool& handled)
 
 void label::signal_handler_mouse_motion(bool& handled, const point& coordinate)
 {
-	DBG_GUI_E << "label mouse motion" << std::endl;
+	DBG_GUI_E << "label mouse motion";
 
 	if(!get_link_aware()) {
 		return; // without marking event as "handled"
@@ -197,7 +198,7 @@ void label::signal_handler_mouse_motion(bool& handled, const point& coordinate)
 
 void label::signal_handler_mouse_leave(bool& handled)
 {
-	DBG_GUI_E << "label mouse leave" << std::endl;
+	DBG_GUI_E << "label mouse leave";
 
 	if(!get_link_aware()) {
 		return; // without marking event as "handled"
@@ -227,7 +228,7 @@ void label::update_mouse_cursor(bool enable)
 label_definition::label_definition(const config& cfg)
 	: styled_widget_definition(cfg)
 {
-	DBG_GUI_P << "Parsing label " << id << '\n';
+	DBG_GUI_P << "Parsing label " << id;
 
 	load_resolutions<resolution>(cfg);
 }
@@ -237,8 +238,8 @@ label_definition::resolution::resolution(const config& cfg)
 	, link_color(cfg["link_color"].empty() ? color_t::from_hex_string("ffff00") : color_t::from_rgba_string(cfg["link_color"].str()))
 {
 	// Note the order should be the same as the enum state_t is label.hpp.
-	state.emplace_back(cfg.child("state_enabled"));
-	state.emplace_back(cfg.child("state_disabled"));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_enabled", _("Missing required state for text label control")));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_disabled", _("Missing required state for text label control")));
 }
 
 // }---------- BUILDER -----------{
@@ -256,9 +257,9 @@ builder_label::builder_label(const config& cfg)
 {
 }
 
-widget* builder_label::build() const
+std::unique_ptr<widget> builder_label::build() const
 {
-	label* lbl = new label(*this);
+	auto lbl = std::make_unique<label>(*this);
 
 	const auto conf = lbl->cast_config_to<label_definition>();
 	assert(conf);
@@ -267,7 +268,7 @@ widget* builder_label::build() const
 	lbl->set_link_color(conf->link_color);
 
 	DBG_GUI_G << "Window builder: placed label '" << id << "' with definition '"
-			  << definition << "'.\n";
+			  << definition << "'.";
 
 	return lbl;
 }

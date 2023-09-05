@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2009 - 2021
+	Copyright (C) 2009 - 2023
 	by Tomasz Sniatowski <kailoran@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -46,13 +46,13 @@ public:
 	void update_gamelist();
 
 protected:
-	void update_gamelist_header();
+	void update_visible_games();
 
 	void update_gamelist_diff();
 
 	void update_gamelist_filter();
 
-	std::map<std::string, string_map> make_game_row_data(const mp::game_info& game);
+	widget_data make_game_row_data(const mp::game_info& game);
 
 	void adjust_game_row_contents(const mp::game_info& game, grid* grid, bool add_callbacks = true);
 
@@ -113,19 +113,19 @@ private:
 
 	void show_server_info();
 
+	void open_profile_url();
+
+	void open_match_history();
+
+	void tab_switch_callback();
+
 	void refresh_lobby();
 
 	void game_filter_init();
 
-	void game_filter_change_callback();
-
 	void game_filter_keypress_callback(const SDL_Keycode key);
 
-	void gamelist_change_callback();
-
-	void player_filter_callback();
-
-	void user_dialog_callback(mp::user_info* info);
+	void user_dialog_callback(const mp::user_info* info);
 
 	void skip_replay_changed_callback();
 
@@ -134,8 +134,6 @@ private:
 	static bool logout_prompt();
 
 	virtual const std::string& window_id() const override;
-
-	virtual void post_build(window& window) override;
 
 	virtual void pre_show(window& window) override;
 
@@ -151,6 +149,7 @@ private:
 	field_bool* filter_ignored_;
 	field_bool* filter_slots_;
 	field_bool* filter_invert_;
+	bool filter_auto_hosted_;
 
 	text_box* filter_text_;
 

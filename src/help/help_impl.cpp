@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2021
+	Copyright (C) 2003 - 2023
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -28,7 +28,6 @@
 #include "hotkey/hotkey_command.hpp"    // for is_scope_active, etc
 #include "picture.hpp"                    // for get_image, locator
 #include "log.hpp"                      // for LOG_STREAM, logger, etc
-#include "utils/make_enum.hpp"          // for operator<<
 #include "map/map.hpp"                  // for gamemap
 #include "font/standard_colors.hpp"     // for NORMAL_COLOR
 #include "font/sdl_ttf_compat.hpp"
@@ -50,7 +49,6 @@
 
 #include <cassert>                     // for assert
 #include <algorithm>                    // for sort, find, transform, etc
-#include <iostream>                     // for operator<<, basic_ostream, etc
 #include <iterator>                     // for back_insert_iterator, etc
 #include <map>                          // for map, etc
 #include <set>
@@ -152,7 +150,7 @@ static bool is_cjk_char(const char32_t ch)
 
 bool section_is_referenced(const std::string &section_id, const config &cfg)
 {
-	if (const config &toplevel = cfg.child("toplevel"))
+	if (auto toplevel = cfg.optional_child("toplevel"))
 	{
 		const std::vector<std::string> toplevel_refs
 			= utils::quoted_split(toplevel["sections"]);
@@ -176,7 +174,7 @@ bool section_is_referenced(const std::string &section_id, const config &cfg)
 
 bool topic_is_referenced(const std::string &topic_id, const config &cfg)
 {
-	if (const config &toplevel = cfg.child("toplevel"))
+	if (auto toplevel = cfg.optional_child("toplevel"))
 	{
 		const std::vector<std::string> toplevel_refs
 			= utils::quoted_split(toplevel["topics"]);
@@ -202,8 +200,7 @@ void parse_config_internal(const config *help_cfg, const config *section_cfg,
 						   section &sec, int level)
 {
 	if (level > max_section_level) {
-		std::cerr << "Maximum section depth has been reached. Maybe circular dependency?"
-				  << std::endl;
+		PLAIN_LOG << "Maximum section depth has been reached. Maybe circular dependency?";
 	}
 	else if (section_cfg != nullptr) {
 		const std::vector<std::string> sections = utils::quoted_split((*section_cfg)["sections"]);
@@ -221,10 +218,10 @@ void parse_config_internal(const config *help_cfg, const config *section_cfg,
 		std::vector<std::string>::const_iterator it;
 		// Find all child sections.
 		for (it = sections.begin(); it != sections.end(); ++it) {
-			if (const config &child_cfg = help_cfg->find_child("section", "id", *it))
+			if (auto child_cfg = help_cfg->find_child("section", "id", *it))
 			{
 				section child_section;
-				parse_config_internal(help_cfg, &child_cfg, child_section, level + 1);
+				parse_config_internal(help_cfg, child_cfg.ptr(), child_section, level + 1);
 				sec.add_section(child_section);
 			}
 			else {
@@ -266,7 +263,7 @@ void parse_config_internal(const config *help_cfg, const config *section_cfg,
 
 		// Find all topics in this section.
 		for (it = topics_id.begin(); it != topics_id.end(); ++it) {
-			if (const config &topic_cfg = help_cfg->find_child("topic", "id", *it))
+			if (auto topic_cfg = help_cfg->find_child("topic", "id", *it))
 			{
 				std::string text = topic_cfg["text"];
 				text += generate_topic_text(topic_cfg["generator"], help_cfg, sec, generated_topics);
@@ -307,8 +304,8 @@ section parse_config(const config *cfg)
 {
 	section sec;
 	if (cfg != nullptr) {
-		const config& toplevel_cfg = cfg->child("toplevel");
-		parse_config_internal(cfg, toplevel_cfg ? &toplevel_cfg : nullptr, sec);
+		auto toplevel_cfg = cfg->optional_child("toplevel");
+		parse_config_internal(cfg, toplevel_cfg.ptr(), sec);
 	}
 	return sec;
 }
@@ -335,7 +332,7 @@ std::vector<topic> generate_topics(const bool sort_generated,const std::string &
 		} else if (parts[0] == "era" && parts.size()>1) {
 			res = generate_era_topics(sort_generated, parts[1]);
 		} else {
-			WRN_HP << "Found a topic generator that I didn't recognize: " << generator << "\n";
+			WRN_HP << "Found a topic generator that I didn't recognize: " << generator;
 		}
 	}
 
@@ -349,14 +346,14 @@ void generate_sections(const config *help_cfg, const std::string &generator, sec
 	} else if (generator == "terrains") {
 		generate_terrain_sections(sec, level);
 	} else if (generator == "eras") {
-		DBG_HP << "Generating eras...\n";
+		DBG_HP << "Generating eras...";
 		generate_era_sections(help_cfg, sec, level);
 	} else 	{
 		std::vector<std::string> parts = utils::split(generator, ':', utils::STRIP_SPACES);
 		if (parts.size() > 1 && parts[0] == "units") {
 			generate_unit_sections(help_cfg, sec, level, true, parts[1]);
 		} else if (generator.size() > 0) {
-			WRN_HP << "Found a section generator that I didn't recognize: " << generator << "\n";
+			WRN_HP << "Found a section generator that I didn't recognize: " << generator;
 		}
 	}
 }
@@ -422,10 +419,10 @@ std::vector<topic> generate_time_of_day_topics(const bool /*sort_generated*/)
 		const std::string image_liminal = "<img>src='icons/alignments/alignment_liminal_30.png'</img>";
 		std::stringstream text;
 
-		const int lawful_bonus = generic_combat_modifier(time.lawful_bonus, unit_type::ALIGNMENT::LAWFUL, false, resources::tod_manager->get_max_liminal_bonus());
-		const int neutral_bonus = generic_combat_modifier(time.lawful_bonus, unit_type::ALIGNMENT::NEUTRAL, false, resources::tod_manager->get_max_liminal_bonus());
-		const int chaotic_bonus = generic_combat_modifier(time.lawful_bonus, unit_type::ALIGNMENT::CHAOTIC, false, resources::tod_manager->get_max_liminal_bonus());
-		const int liminal_bonus = generic_combat_modifier(time.lawful_bonus, unit_type::ALIGNMENT::LIMINAL, false, resources::tod_manager->get_max_liminal_bonus());
+		const int lawful_bonus = generic_combat_modifier(time.lawful_bonus, unit_alignments::type::lawful, false, resources::tod_manager->get_max_liminal_bonus());
+		const int neutral_bonus = generic_combat_modifier(time.lawful_bonus, unit_alignments::type::neutral, false, resources::tod_manager->get_max_liminal_bonus());
+		const int chaotic_bonus = generic_combat_modifier(time.lawful_bonus, unit_alignments::type::chaotic, false, resources::tod_manager->get_max_liminal_bonus());
+		const int liminal_bonus = generic_combat_modifier(time.lawful_bonus, unit_alignments::type::liminal, false, resources::tod_manager->get_max_liminal_bonus());
 
 		toplevel << make_link(time.name.str(), id) << jump_to(160) << image << jump(30) <<
 			image_lawful << time_of_day_bonus_colored(lawful_bonus) << jump_to(390) <<
@@ -486,7 +483,7 @@ std::vector<topic> generate_weapon_special_topics(const bool sort_generated)
 		for(config adv : type.modification_advancements()) {
 			for(config effect : adv.child_range("effect")) {
 				if(effect["apply_to"] == "new_attack" && effect.has_child("specials")) {
-					for(config::any_child spec : effect.child("specials").all_children_range()) {
+					for(config::any_child spec : effect.mandatory_child("specials").all_children_range()) {
 						if(!spec.cfg["name"].empty()) {
 							special_description.emplace(spec.cfg["name"].t_str(), spec.cfg["description"].t_str());
 							if(!type.hide_help()) {
@@ -503,7 +500,7 @@ std::vector<topic> generate_weapon_special_topics(const bool sort_generated)
 						}
 					}
 				} else if(effect["apply_to"] == "attack" && effect.has_child("set_specials")) {
-					for(config::any_child spec : effect.child("set_specials").all_children_range()) {
+					for(config::any_child spec : effect.mandatory_child("set_specials").all_children_range()) {
 						if(!spec.cfg["name"].empty()) {
 							special_description.emplace(spec.cfg["name"].t_str(), spec.cfg["description"].t_str());
 							if(!type.hide_help()) {
@@ -614,9 +611,9 @@ std::vector<topic> generate_era_topics(const bool sort_generated, const std::str
 {
 	std::vector<topic> topics;
 
-	const config & era = game_cfg->find_child("era","id", era_id);
+	auto era = game_cfg->find_child("era","id", era_id);
 	if(era && !era["hide_help"].to_bool()) {
-		topics = generate_faction_topics(era, sort_generated);
+		topics = generate_faction_topics(*era, sort_generated);
 
 		std::vector<std::string> faction_links;
 		for (const topic & t : topics) {
@@ -723,38 +720,61 @@ std::vector<topic> generate_faction_topics(const config & era, const bool sort_g
 
 std::vector<topic> generate_trait_topics(const bool sort_generated)
 {
-	std::vector<topic> topics;
+	// All traits that could be assigned to at least one discovered or HIDDEN_BUT_SHOW_MACROS unit.
+	// This is collected from the [units][trait], [race][traits], and [unit_type][traits] tags. If
+	// there are duplicates with the same id, it takes the first one encountered.
 	std::map<t_string, const config> trait_list;
 
+	// The global traits that are direct children of a [units] tag
 	for (const config & trait : unit_types.traits()) {
-		const std::string trait_id = trait["id"];
-		trait_list.emplace(trait_id, trait);
+		trait_list.emplace(trait["id"], trait);
 	}
 
+	// Search for discovered unit types
+	std::set<std::string> races;
+	for(const auto& i : unit_types.types()) {
+		const unit_type& type = i.second;
+		UNIT_DESCRIPTION_TYPE desc_type = description_type(type);
 
-	for (const unit_type_data::unit_type_map::value_type &i : unit_types.types())
-	{
-		const unit_type &type = i.second;
-		const auto desc_type = description_type(type);
+		// Remember which races have been discovered.
+		//
+		// For unit types, unit_type::possible_traits() usually includes racial traits; however it's
+		// possible that all discovered units of a race have ignore_race_traits=yes, and so we still
+		// need to loop over the [race] tags looking for more traits.
+		if(desc_type == FULL_DESCRIPTION) {
+			races.insert(type.race_id());
+		}
+
+		// Handle [unit_type][trait]s.
+		//
+		// It would be better if we only looked at the traits that are specific to the unit_type,
+		// but that unmerged unit_type_data.traits() isn't available. We're forced to use
+		// possible_traits() instead which returns all of the traits, including the ones that units
+		// with ignore_race_traits=no have inherited from their [race] tag.
 		if (desc_type == FULL_DESCRIPTION || desc_type == HIDDEN_BUT_SHOW_MACROS) {
-			if (config::const_child_itors traits = type.possible_traits()) {
-				for (const config & trait : traits) {
-					const std::string trait_id = trait["id"];
-					trait_list.emplace(trait_id, trait);
-				}
-			}
-			if (const unit_race *r = unit_types.find_race(type.race_id())) {
-				for (const config & trait : r->additional_traits()) {
-					const std::string trait_id = trait["id"];
-					trait_list.emplace(trait_id, trait);
-				}
+			for (const config& trait : type.possible_traits()) {
+				trait_list.emplace(trait["id"], trait);
 			}
 		}
 	}
 
-	for (std::map<t_string, const config>::iterator a = trait_list.begin(); a != trait_list.end(); ++a) {
-		std::string id = "traits_" + a->first;
-		const config trait = a->second;
+	// Race traits, even those that duplicate a global trait (which will be dropped by emplace()).
+	//
+	// For traits, assume we don't discover additional races via the [race]help_taxonomy= links. The
+	// traits themselves don't propagate down those links, so if the trait is interesting w.r.t. the
+	// discovered units then their own race will already include it.
+	for(const auto& race_id : races) {
+		if(const unit_race *r = unit_types.find_race(race_id)) {
+			for(const config & trait : r->additional_traits()) {
+				trait_list.emplace(trait["id"], trait);
+			}
+		}
+	}
+
+	std::vector<topic> topics;
+	for(auto& a : trait_list) {
+		std::string id = "traits_" + a.first;
+		const config& trait = a.second;
 
 		std::string name = trait["male_name"].str();
 		if (name.empty()) name = trait["female_name"].str();
@@ -770,11 +790,7 @@ std::vector<topic> generate_trait_topics(const bool sort_generated)
 			text << _("No description available.");
 		}
 		text << "\n\n";
-		if (trait["availability"] == "musthave") {
-			text << _("Availability: ") << _("Must-have") << "\n";
-		} else if (trait["availability"] == "none") {
-			text << _("Availability: ") << _("Unavailable") << "\n";
-		}
+
 		topics.emplace_back(name, id, text.str());
 	}
 
@@ -790,7 +806,7 @@ std::string make_unit_link(const std::string& type_id)
 
 	const unit_type *type = unit_types.find(type_id, unit_type::HELP_INDEXED);
 	if (!type) {
-		std::cerr << "Unknown unit type : " << type_id << "\n";
+		PLAIN_LOG << "Unknown unit type : " << type_id;
 		// don't return an hyperlink (no page)
 		// instead show the id (as hint)
 		link = type_id;
@@ -825,43 +841,101 @@ std::vector<std::string> make_unit_links_list(const std::vector<std::string>& ty
 	return links_list;
 }
 
-void generate_races_sections(const config *help_cfg, section &sec, int level)
+void generate_races_sections(const config* help_cfg, section& sec, int level)
 {
 	std::set<std::string, string_less> races;
 	std::set<std::string, string_less> visible_races;
 
-	for (const unit_type_data::unit_type_map::value_type &i : unit_types.types())
-	{
-		const unit_type &type = i.second;
+	// Calculate which races have been discovered, from the list of discovered unit types.
+	for(const auto& i : unit_types.types()) {
+		const unit_type& type = i.second;
 		UNIT_DESCRIPTION_TYPE desc_type = description_type(type);
-		if (desc_type == FULL_DESCRIPTION) {
+		if(desc_type == FULL_DESCRIPTION) {
 			races.insert(type.race_id());
-			if (!type.hide_help())
+			if(!type.hide_help())
 				visible_races.insert(type.race_id());
 		}
 	}
 
-	for(std::set<std::string, string_less>::iterator it = races.begin(); it != races.end(); ++it) {
+	// Propagate visibility up the help_taxonomy tree.
+	std::set<std::string, string_less> last_sweep = visible_races;
+	while(!last_sweep.empty()) {
+		std::set<std::string, string_less> current_sweep;
+		for(const auto& race_id : last_sweep) {
+			if(const unit_race* r = unit_types.find_race(race_id)) {
+				const auto& help_taxonomy = r->help_taxonomy();
+				if(!help_taxonomy.empty() && !visible_races.count(help_taxonomy) && unit_types.find_race(help_taxonomy)) {
+					current_sweep.insert(help_taxonomy);
+					races.insert(help_taxonomy);
+					visible_races.insert(help_taxonomy);
+				}
+			}
+		}
+		last_sweep = std::move(current_sweep);
+	}
+
+	struct taxonomy_queue_type
+	{
+		std::string parent_id;
+		section content;
+	};
+	std::vector<taxonomy_queue_type> taxonomy_queue;
+
+	// Add all races without a [race]help_taxonomy= to the documentation section, and queue the others.
+	// This avoids a race condition dependency on the order that races are encountered in help_cfg.
+	for(const auto& race_id : races) {
 		section race_section;
 		config section_cfg;
 
-		bool hidden = (visible_races.count(*it) == 0);
+		bool hidden = (visible_races.count(race_id) == 0);
 
-		section_cfg["id"] = hidden_symbol(hidden) + race_prefix + *it;
+		section_cfg["id"] = hidden_symbol(hidden) + race_prefix + race_id;
 
 		std::string title;
-		if (const unit_race *r = unit_types.find_race(*it)) {
+		std::string help_taxonomy;
+		if(const unit_race* r = unit_types.find_race(race_id)) {
 			title = r->plural_name();
+			help_taxonomy = r->help_taxonomy();
 		} else {
-			title = _ ("race^Miscellaneous");
+			title = _("race^Miscellaneous");
+			// leave help_taxonomy empty
 		}
 		section_cfg["title"] = title;
 
-		section_cfg["sections_generator"] = "units:" + *it;
-		section_cfg["generator"] = "units:" + *it;
+		section_cfg["sections_generator"] = "units:" + race_id;
+		section_cfg["generator"] = "units:" + race_id;
 
-		parse_config_internal(help_cfg, &section_cfg, race_section, level+1);
-		sec.add_section(race_section);
+		parse_config_internal(help_cfg, &section_cfg, race_section, level + 1);
+
+		if(help_taxonomy.empty()) {
+			sec.add_section(race_section);
+		} else {
+			bool parent_hidden = (visible_races.count(help_taxonomy) == 0);
+			auto parent_id = hidden_symbol(parent_hidden) + race_prefix + help_taxonomy;
+			taxonomy_queue.push_back({std::move(parent_id), std::move(race_section)});
+		}
+	}
+
+	// Each run through this loop handles one level of nesting of [race]help_taxonomy=
+	bool process_queue_again = true;
+	while(process_queue_again && !taxonomy_queue.empty()) {
+		process_queue_again = false;
+		std::vector<taxonomy_queue_type> to_process = std::move(taxonomy_queue);
+
+		for(auto& x : to_process) {
+			auto parent = find_section(sec, x.parent_id);
+			if(parent) {
+				parent->add_section(std::move(x.content));
+				process_queue_again = true;
+			} else {
+				taxonomy_queue.push_back(std::move(x));
+			}
+		}
+	}
+
+	// Fallback to adding the new race at the top level, as if it had help_taxonomy.empty().
+	for(auto& x : taxonomy_queue) {
+		sec.add_section(std::move(x.content));
 	}
 }
 
@@ -872,7 +946,7 @@ void generate_era_sections(const config* help_cfg, section & sec, int level)
 			continue;
 		}
 
-		DBG_HP << "Adding help section: " << era["id"].str() << "\n";
+		DBG_HP << "Adding help section: " << era["id"].str();
 
 		section era_section;
 		config section_cfg;
@@ -881,7 +955,7 @@ void generate_era_sections(const config* help_cfg, section & sec, int level)
 
 		section_cfg["generator"] = "era:" + era["id"].str();
 
-		DBG_HP << section_cfg.debug() << "\n";
+		DBG_HP << section_cfg.debug();
 
 		parse_config_internal(help_cfg, &section_cfg, era_section, level+1);
 		sec.add_section(era_section);
@@ -893,7 +967,7 @@ void generate_terrain_sections(section& sec, int /*level*/)
 	std::shared_ptr<terrain_type_data> tdata = load_terrain_types_data();
 
 	if (!tdata) {
-		WRN_HP << "When building terrain help sections, couldn't acquire terrain types data, aborting.\n";
+		WRN_HP << "When building terrain help sections, couldn't acquire terrain types data, aborting.";
 		return;
 	}
 
@@ -1072,7 +1146,7 @@ std::vector<topic> generate_unit_topics(const bool sort_generated, const std::st
 		}
 		// TRANSLATORS: this is expected to say "[Dunefolk are] a group of units, all of whom are Humans",
 		// or "[Quenoth Elves are] a group of units, all of whom are Elves".
-		text << VGETTEXT("This is a group of units, all of whom are <ref>dst='$topic_id' text='$help_taxonomy'</ref>", symbols) << "\n\n";
+		text << VGETTEXT("This is a group of units, all of whom are <ref>dst='$topic_id' text='$help_taxonomy'</ref>.", symbols) << "\n\n";
 	}
 
 	if (!subgroups.empty()) {
@@ -1126,7 +1200,7 @@ UNIT_DESCRIPTION_TYPE description_type(const unit_type &type)
 
 std::string generate_contents_links(const std::string& section_name, config const *help_cfg)
 {
-	const config& section_cfg = help_cfg->find_child("section", "id", section_name);
+	auto section_cfg = help_cfg->find_child("section", "id", section_name);
 	if (!section_cfg) {
 		return std::string();
 	}
@@ -1142,7 +1216,7 @@ std::string generate_contents_links(const std::string& section_name, config cons
 		std::vector<std::string>::iterator t;
 		// Find all topics in this section.
 		for (t = topics.begin(); t != topics.end(); ++t) {
-			if (const config& topic_cfg = help_cfg->find_child("topic", "id", *t)) {
+			if (auto topic_cfg = help_cfg->find_child("topic", "id", *t)) {
 				std::string id = topic_cfg["id"];
 				if (is_visible_id(id))
 					topics_links.emplace_back(topic_cfg["title"], id);
@@ -1506,7 +1580,7 @@ void generate_contents()
 		catch (parse_error& e) {
 			std::stringstream msg;
 			msg << "Parse error when parsing help text: '" << e.message << "'";
-			std::cerr << msg.str() << std::endl;
+			PLAIN_LOG << msg.str();
 		}
 	}
 }
@@ -1549,7 +1623,7 @@ bool is_valid_id(const std::string &id) {
 unsigned image_width(const std::string &filename)
 {
 	image::locator loc(filename);
-	surface surf(image::get_image(loc));
+	surface surf(image::get_surface(loc));
 	if (surf != nullptr) {
 		return surf->w;
 	}

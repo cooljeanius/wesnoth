@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2017 - 2021
+	Copyright (C) 2017 - 2023
 	by Amir Hassan <amir@viel-zu.org>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -24,8 +24,8 @@ REGISTER_DIALOG(surrender_quit)
 
 
 surrender_quit::surrender_quit()
+	: modal_dialog(window_id())
 {
-	set_restore(true);
 }
 
 } // namespace dialogs

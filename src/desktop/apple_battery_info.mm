@@ -1,6 +1,6 @@
 /*
-	Copyright (C) 2018 - 2021
-    by Martin Hrubý <hrubymar10@gmail.com>
+	Copyright (C) 2018 - 2023
+	by Martin Hrubý <hrubymar10@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
