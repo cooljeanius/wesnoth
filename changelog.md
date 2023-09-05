@@ -2,6 +2,8 @@
  ### Add-ons client
  ### Add-ons server
  ### Campaigns
+   * Descent into Darkness
+     * Buff soul rend
    * Liberty
      * Make Harper a girl and revise some dialogue
  ### Editor
@@ -10,7 +12,9 @@
  ### Packaging
  ### Terrain
  ### Translations
+   * Updated translations: British English, French
  ### Units
+   * Updates to Troll sprites and animations (#7844)
  ### User interface
  ### WML Engine
  ### Miscellaneous and Bug Fixes
