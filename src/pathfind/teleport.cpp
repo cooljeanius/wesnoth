@@ -1,14 +1,16 @@
 /*
-   Copyright (C) 2010 - 2018 by Fabian Mueller <fabianmueller5@gmx.de>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2010 - 2023
+	by Fabian Mueller <fabianmueller5@gmx.de>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License version 2
-   or at your option any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #include "pathfind/teleport.hpp"
@@ -27,6 +29,9 @@
 
 static lg::log_domain log_engine("engine");
 #define ERR_PF LOG_STREAM(err, log_engine)
+
+static lg::log_domain log_wml("wml");
+#define ERR_WML LOG_STREAM(err, log_wml)
 
 namespace pathfind {
 
@@ -122,10 +127,10 @@ void teleport_group::get_teleport_pair(
 	vconfig target(cfg_.child_or_empty("target"), true);
 	const unit_filter ufilt(filter); //Note: Don't use the ignore units filter context here, only for the terrain filters. (That's how it worked before the filter contexts were introduced)
 	if (ufilt.matches(u)) {
-		terrain_filter source_filter(source, fc);
+		terrain_filter source_filter(source, fc, false);
 		source_filter.get_locations(reversed_ ? loc_pair.second : loc_pair.first, u);
 
-		terrain_filter target_filter(target, fc);
+		terrain_filter target_filter(target, fc, false);
 		target_filter.get_locations(reversed_ ? loc_pair.first : loc_pair.second, u);
 	}
 
@@ -226,36 +231,41 @@ teleport_map::teleport_map(
 	}
 }
 
-void teleport_map::get_adjacents(std::set<map_location>& adjacents, map_location loc) const {
-
-	if (teleport_map_.count(loc) == 0) {
-		return;
-	} else {
-		const std::set<std::string>& keyset = (teleport_map_.find(loc)->second);
-		for(std::set<std::string>::const_iterator it = keyset.begin(); it != keyset.end(); ++it) {
-
-			const std::set<map_location>& target = targets_.find(*it)->second;
-			adjacents.insert(target.begin(), target.end());
-		}
+std::set<map_location> teleport_map::get_adjacents(map_location loc) const
+{
+	const auto iter = teleport_map_.find(loc);
+	if(iter == teleport_map_.end()) {
+		return {};
 	}
+
+	std::set<map_location> res;
+	for(const std::string& key : iter->second) {
+		const auto& target = targets_.find(key)->second;
+		res.insert(target.begin(), target.end());
+	}
+
+	return res;
 }
 
-void teleport_map::get_sources(std::set<map_location>& sources) const {
-
-	std::map<std::string, std::set<map_location>>::const_iterator it;
-	for(it = sources_.begin(); it != sources_.end(); ++it) {
-		sources.insert(it->second.begin(), it->second.end());
+std::set<map_location> teleport_map::get_sources() const
+{
+	std::set<map_location> res;
+	for(const auto& src : sources_) {
+		res.insert(src.second.begin(), src.second.end());
 	}
+
+	return res;
 }
 
-void teleport_map::get_targets(std::set<map_location>& targets) const {
-
-	std::map<std::string, std::set<map_location>>::const_iterator it;
-	for(it = targets_.begin(); it != targets_.end(); ++it) {
-		targets.insert(it->second.begin(), it->second.end());
+std::set<map_location> teleport_map::get_targets() const
+{
+	std::set<map_location> res;
+	for(const auto& tgt : targets_) {
+		res.insert(tgt.second.begin(), tgt.second.end());
 	}
-}
 
+	return res;
+}
 
 const teleport_map get_teleport_locations(const unit &u,
 	const team &viewing_team,
@@ -266,7 +276,7 @@ const teleport_map get_teleport_locations(const unit &u,
 	for (const unit_ability & teleport : u.get_abilities("teleport")) {
 		const int tunnel_count = (teleport.ability_cfg)->child_count("tunnel");
 		for(int i = 0; i < tunnel_count; ++i) {
-			config teleport_group_cfg = (teleport.ability_cfg)->child("tunnel", i);
+			config teleport_group_cfg = (teleport.ability_cfg)->mandatory_child("tunnel", i);
 			groups.emplace_back(vconfig(teleport_group_cfg, true), false);
 		}
 	}
@@ -280,9 +290,10 @@ const teleport_map get_teleport_locations(const unit &u,
 manager::manager(const config &cfg) : tunnels_(), id_(cfg["next_teleport_group_id"].to_int(0)) {
 	const int tunnel_count = cfg.child_count("tunnel");
 	for(int i = 0; i < tunnel_count; ++i) {
-		const config& t = cfg.child("tunnel", i);
+		const config& t = cfg.mandatory_child("tunnel", i);
 		if(!t["saved"].to_bool()) {
-			lg::wml_error() << "Do not use [tunnel] directly in a [scenario]. Use it in an [event] or [abilities] tag.\n";
+			lg::log_to_chat() << "Do not use [tunnel] directly in a [scenario]. Use it in an [event] or [abilities] tag.\n";
+			ERR_WML << "Do not use [tunnel] directly in a [scenario]. Use it in an [event] or [abilities] tag.";
 			continue;
 		}
 		const teleport_group tunnel(t);

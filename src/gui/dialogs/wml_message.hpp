@@ -1,24 +1,23 @@
 /*
-   Copyright (C) 2008 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
 
 #include "gui/dialogs/modal_dialog.hpp"
 
-namespace gui2
-{
-namespace dialogs
+namespace gui2::dialogs
 {
 
 /**
@@ -46,11 +45,14 @@ private:
 class wml_message_base : public modal_dialog
 {
 public:
-	wml_message_base(const std::string& title,
-				  const std::string& message,
-				  const std::string& portrait,
-				  const bool mirror)
-		: title_(title)
+	wml_message_base(
+			const std::string& window_id,
+			const std::string& title,
+			const std::string& message,
+			const std::string& portrait,
+			const bool mirror)
+		: modal_dialog(window_id)
+		, title_(title)
 		, image_("")
 		, message_(message)
 		, portrait_(portrait)
@@ -124,11 +126,9 @@ private:
 	int* chosen_option_;
 
 protected:
-	/** Inherited from modal_dialog. */
 	virtual void pre_show(window& window) override;
 
 private:
-	/** Inherited from modal_dialog. */
 	virtual void post_show(window& window) override;
 };
 
@@ -140,12 +140,11 @@ public:
 					  const std::string& message,
 					  const std::string& portrait,
 					  const bool mirror)
-		: wml_message_base(title, message, portrait, mirror)
+		: wml_message_base(window_id(), title, message, portrait, mirror)
 	{
 	}
 
 private:
-	/** Inherited from modal_dialog, implemented by REGISTER_DIALOG. */
 	virtual const std::string& window_id() const override;
 };
 
@@ -157,12 +156,11 @@ public:
 					   const std::string& message,
 					   const std::string& portrait,
 					   const bool mirror)
-		: wml_message_base(title, message, portrait, mirror)
+		: wml_message_base(window_id(), title, message, portrait, mirror)
 	{
 	}
 
 private:
-	/** Inherited from modal_dialog, implemented by REGISTER_DIALOG. */
 	virtual const std::string& window_id() const override;
 };
 
@@ -183,10 +181,8 @@ public:
 	}
 
 private:
-	/** Inherited from modal_dialog, implemented by REGISTER_DIALOG. */
 	virtual const std::string& window_id() const override;
 
-	/** Inherited from modal_dialog. */
 	virtual void pre_show(window& window) override;
 
 	std::string second_portrait_;
@@ -199,10 +195,12 @@ private:
  */
 struct wml_message_options
 {
-	/// A list of options to select in the dialog.
+	/** A list of options to select in the dialog. */
 	std::vector<wml_message_option> option_list;
-	/// The initially chosen option.
-	/// Will be set to the chosen option when the dialog closes.
+	/**
+	 * The initially chosen option.
+	 * Will be set to the chosen option when the dialog closes.
+	 */
 	mutable int chosen_option;
 };
 
@@ -211,15 +209,19 @@ struct wml_message_options
  */
 struct wml_message_input
 {
-	/// The caption for the optional input text box.
-	/// If empty, there is no input box.
+	/**
+	 * The caption for the optional input text box.
+	 * If empty, there is no input box.
+	 */
 	std::string caption;
-	/// The initial text value.
-	/// Will be set to the result.
+	/**
+	 * The initial text value.
+	 * Will be set to the result.
+	 */
 	mutable std::string text;
-	/// The maximum length of the text.
+	/** The maximum length of the text. */
 	unsigned maximum_length;
-	/// True when [text_input] appeared in [message]
+	/** True when [text_input] appeared in [message] */
 	bool text_input_was_specified;
 };
 
@@ -228,9 +230,9 @@ struct wml_message_input
  */
 struct wml_message_portrait
 {
-	/// Filename of the portrait.
+	/** Filename of the portrait. */
 	std::string portrait;
-	/// Does the portrait need to be mirrored?
+	/** Does the portrait need to be mirrored? */
 	bool mirror;
 };
 
@@ -252,4 +254,3 @@ int show_wml_message(const std::string& title,
 					 const wml_message_input& input);
 
 } // namespace dialogs
-} // namespace gui2

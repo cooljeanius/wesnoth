@@ -1,27 +1,25 @@
 /*
-   Copyright (C) 2008 - 2018 by the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
 
 #include "game_initialization/connect_engine.hpp"
-#include "game_initialization/lobby_info.hpp"
-#include "game_initialization/multiplayer.hpp"
 #include "gui/dialogs/modal_dialog.hpp"
-#include "gui/dialogs/multiplayer/player_list_helper.hpp"
 #include "gui/dialogs/multiplayer/plugin_executor.hpp"
-#include "mp_game_settings.hpp"
 
 class config;
+class wesnothd_connection;
 
 namespace ai
 {
@@ -30,10 +28,10 @@ namespace ai
 
 namespace gui2
 {
-
 class menu_button;
 class slider;
 class tree_view_node;
+class player_list_helper;
 
 namespace dialogs
 {
@@ -41,23 +39,23 @@ namespace dialogs
 class mp_staging : public modal_dialog, private plugin_executor
 {
 public:
-	mp_staging(ng::connect_engine& connect_engine, mp::lobby_info& lobby_info, wesnothd_connection* connection = nullptr);
+	mp_staging(ng::connect_engine& connect_engine, wesnothd_connection* connection = nullptr);
 
 	~mp_staging();
 
 	DEFINE_SIMPLE_EXECUTE_WRAPPER(mp_staging)
 
 private:
-	/** Inherited from modal_dialog, implemented by REGISTER_DIALOG. */
 	virtual const std::string& window_id() const override;
 
-	/** Inherited from modal_dialog. */
 	virtual void pre_show(window& window) override;
 
-	/** Inherited from modal_dialog. */
 	virtual void post_show(window& window) override;
 
-	void add_side_node(window& window, ng::side_engine_ptr side);
+	template<typename... T>
+	tree_view_node& add_side_to_team_node(ng::side_engine_ptr side, T&&... params);
+
+	void add_side_node(ng::side_engine_ptr side);
 
 	/**
 	 * Find an appropriate position to insert a side node.
@@ -70,7 +68,7 @@ private:
 	void on_controller_select(ng::side_engine_ptr side, grid& row_grid);
 	void on_ai_select(ng::side_engine_ptr side, menu_button& ai_menu, const bool saved_game);
 	void on_color_select(ng::side_engine_ptr side, grid& row_grid);
-	void on_team_select(window& window, ng::side_engine_ptr side, menu_button& team_menu);
+	void on_team_select(ng::side_engine_ptr side, menu_button& team_menu);
 
 	template<void(ng::side_engine::*fptr)(int)>
 	void on_side_slider_change(ng::side_engine_ptr side, slider& slider);
@@ -78,9 +76,9 @@ private:
 	void select_leader_callback(ng::side_engine_ptr side, grid& row_grid);
 
 	void update_leader_display(ng::side_engine_ptr side, grid& row_grid);
-	void update_status_label_and_buttons(window& window);
+	void update_status_label_and_buttons();
 
-	void network_handler(window& window);
+	void network_handler();
 
 	void set_state_changed()
 	{
@@ -90,8 +88,6 @@ private:
 	ng::connect_engine& connect_engine_;
 
 	std::vector<ai::description*> ai_algorithms_;
-
-	mp::lobby_info& lobby_info_;
 
 	wesnothd_connection* network_connection_;
 

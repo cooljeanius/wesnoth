@@ -1,16 +1,17 @@
 /*
- Copyright (C) 2010 - 2018 by Gabriel Morin <gabrielmorin (at) gmail (dot) com>
- Part of the Battle for Wesnoth Project https://www.wesnoth.org
+	Copyright (C) 2010 - 2023
+	by Gabriel Morin <gabrielmorin (at) gmail (dot) com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
- See the COPYING file for more details.
- */
+	See the COPYING file for more details.
+*/
 
 /**
  * @file
@@ -33,16 +34,16 @@ public:
 	arrow(const arrow&) = delete;
 	arrow& operator=(const arrow&) = delete;
 
-	arrow(bool hidden = false);
+	explicit arrow(bool hidden = false);
 	virtual ~arrow();
 
-	///Sets the arrow's visibility
+	/** Sets the arrow's visibility */
 	void hide();
 	void show();
 
 	virtual void set_path(const arrow_path_t& path);
 
-	///invalidates and clears the present path, forgets the previous path, clears the symbols map
+	/** invalidates and clears the present path, forgets the previous path, clears the symbols map */
 	virtual void reset();
 
 	/**
@@ -62,7 +63,7 @@ public:
 	 */
 	std::string get_style() const {return style_;}
 	void set_style(const std::string& style);
-	///If you add more styles, you should look at move::update_arrow_style()
+	/** If you add more styles, you should look at move::update_arrow_style() */
 	static const std::string STYLE_STANDARD;
 	static const std::string STYLE_HIGHLIGHTED;
 	static const std::string STYLE_FOCUS;
@@ -75,9 +76,9 @@ public:
 
 	virtual void draw_hex(const map_location& hex);
 
-	/// Checks that the path is not of length 0 or 1
+	/** Checks that the path is not of length 0 or 1 */
 	static bool valid_path(const arrow_path_t& path);
-	/// Invalidates every hex along the given path
+	/** Invalidates every hex along the given path */
 	static void invalidate_arrow_path(const arrow_path_t& path);
 
 	virtual void notify_arrow_changed();
@@ -93,7 +94,7 @@ protected:
 	display::drawing_layer layer_;
 
 	std::string color_;
-	/// represents the subdirectory that holds images for this arrow style
+	/** represents the subdirectory that holds images for this arrow style */
 	std::string style_;
 
 	arrow_path_t path_;

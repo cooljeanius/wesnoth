@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2008 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #define GETTEXT_DOMAIN "wesnoth-lib"
@@ -17,26 +18,32 @@
 #include "gui/dialogs/modal_dialog.hpp"
 
 #include "cursor.hpp"
+#include "events.hpp"
 #include "gui/auxiliary/field.hpp"
+#include "gui/core/gui_definition.hpp" // get_window_builder
 #include "gui/widgets/integer_selector.hpp"
 #include "scripting/plugins/context.hpp"
 #include "scripting/plugins/manager.hpp"
 #include "video.hpp"
 
-namespace gui2
+static lg::log_domain log_display("display");
+#define DBG_DP LOG_STREAM(debug, log_display)
+#define WRN_DP LOG_STREAM(warn, log_display)
+
+namespace gui2::dialogs
 {
-namespace dialogs
-{
-modal_dialog::modal_dialog()
-	: window_(nullptr)
+
+modal_dialog::modal_dialog(const std::string& window_id)
+	: window(get_window_builder(window_id))
 	, retval_(retval::NONE)
 	, always_save_fields_(false)
 	, fields_()
 	, focus_()
-	, restore_(false)
 	, allow_plugin_skip_(true)
 	, show_even_without_video_(false)
 {
+	window::finish_build(get_window_builder(window_id));
+	widget::set_id(window_id);
 }
 
 modal_dialog::~modal_dialog()
@@ -45,19 +52,20 @@ modal_dialog::~modal_dialog()
 
 namespace {
 	struct window_stack_handler {
-		window_stack_handler(std::unique_ptr<window>& win) : local_window(win) {
-			open_window_stack.push_back(local_window.get());
+		window_stack_handler(window* win) : local_window(win) {
+			open_window_stack.push_back(local_window);
 		}
 		~window_stack_handler() {
-			remove_from_window_stack(local_window.get());
+			remove_from_window_stack(local_window);
 		}
-		std::unique_ptr<window>& local_window;
+		window* local_window;
 	};
 }
 
 bool modal_dialog::show(const unsigned auto_close_time)
 {
-	if(CVideo::get_singleton().faked() && !show_even_without_video_) {
+	if(video::headless() && !show_even_without_video_) {
+		DBG_DP << "modal_dialog::show denied";
 		if(!allow_plugin_skip_) {
 			return false;
 		}
@@ -74,21 +82,14 @@ bool modal_dialog::show(const unsigned auto_close_time)
 		return false;
 	}
 
-	window_.reset(build_window());
-	assert(window_.get());
+	init_fields();
 
-	post_build(*window_);
-
-	window_->set_owner(this);
-
-	init_fields(*window_);
-
-	pre_show(*window_);
+	pre_show(*this);
 
 	{ // Scope the window stack
 		cursor::setter cur{cursor::NORMAL};
-		window_stack_handler push_window_stack(window_);
-		retval_ = window_->show(restore_, auto_close_time);
+		window_stack_handler push_window_stack(this);
+		retval_ = window::show(auto_close_time);
 	}
 
 	/*
@@ -105,17 +106,24 @@ bool modal_dialog::show(const unsigned auto_close_time)
 	 */
 	SDL_FlushEvent(DOUBLE_CLICK_EVENT);
 
-	finalize_fields(*window_, (retval_ == retval::OK || always_save_fields_));
+	finalize_fields((retval_ == retval::OK || always_save_fields_));
 
-	post_show(*window_);
+	post_show(*this);
 
 	// post_show may have updated the window retval. Update it here.
-	retval_ = window_->get_retval();
-
-	// Reset window object.
-	window_.reset(nullptr);
+	retval_ = window::get_retval();
 
 	return retval_ == retval::OK;
+}
+
+template<typename T, typename... Args>
+T* modal_dialog::register_field(Args&&... args)
+{
+	static_assert(std::is_base_of_v<field_base, T>, "Type is not a field type");
+	auto field = std::make_unique<T>(std::forward<Args>(args)...);
+	T* res = field.get();
+	fields_.push_back(std::move(field));
+	return res;
 }
 
 field_bool* modal_dialog::register_bool(
@@ -218,16 +226,6 @@ field_label* modal_dialog::register_label(const std::string& id,
 	return field;
 }
 
-window* modal_dialog::build_window() const
-{
-	return build(window_id());
-}
-
-void modal_dialog::post_build(window& /*window*/)
-{
-	/* DO NOTHING */
-}
-
 void modal_dialog::pre_show(window& /*window*/)
 {
 	/* DO NOTHING */
@@ -238,51 +236,30 @@ void modal_dialog::post_show(window& /*window*/)
 	/* DO NOTHING */
 }
 
-void modal_dialog::init_fields(window& window)
+void modal_dialog::init_fields()
 {
 	for(auto& field : fields_)
 	{
-		field->attach_to_window(window);
-		field->widget_init(window);
+		field->attach_to_window(*this);
+		field->widget_init();
 	}
 
 	if(!focus_.empty()) {
-		if(widget* widget = window.find(focus_, false)) {
-			window.keyboard_capture(widget);
+		if(widget* widget = window::find(focus_, false)) {
+			window::keyboard_capture(widget);
 		}
 	}
 }
 
-void modal_dialog::finalize_fields(window& window, const bool save_fields)
+void modal_dialog::finalize_fields(const bool save_fields)
 {
 	for(auto& field : fields_)
 	{
 		if(save_fields) {
-			field->widget_finalize(window);
+			field->widget_finalize();
 		}
 		field->detach_from_window();
 	}
 }
 
 } // namespace dialogs
-} // namespace gui2
-
-
-/*WIKI
- * @page = GUIWindowDefinitionWML
- * @order = 1
- *
- * {{Autogenerated}}
- *
- * = Window definition =
- *
- * The window definition define how the windows shown in the dialog look.
- */
-
-/*WIKI
- * @page = GUIWindowDefinitionWML
- * @order = ZZZZZZ_footer
- *
- * [[Category: WML Reference]]
- * [[Category: GUI WML Reference]]
- */

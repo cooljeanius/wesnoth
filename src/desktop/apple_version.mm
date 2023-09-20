@@ -1,16 +1,17 @@
 /*
- Copyright (C) 2018 by Martin Hrubý <hrubymar10@gmail.com>
- Part of the Battle for Wesnoth Project https://www.wesnoth.org/
- 
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY.
- 
- See the COPYING file for more details.
- */
+	Copyright (C) 2018 - 2023
+	by Martin Hrubý <hrubymar10@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
+
+	See the COPYING file for more details.
+*/
 
 #ifdef __APPLE__
 
@@ -36,25 +37,18 @@ namespace apple {
 		// Standard Apple version
 		//
 
-		std::string version_string = "";
-
-		NSArray *version_array = [[[NSProcessInfo processInfo] operatingSystemVersionString] componentsSeparatedByString:@" "];
-
+		std::string version_string;
 #if defined(__IPHONEOS__)
-		std::string version_string = "iOS ";
+		version_string = "Apple iOS ";
 #else
-		const version_info version_info([[version_array objectAtIndex:1] UTF8String]);
-
-		if (version_info.major_version() == 10 && version_info.minor_version() < 12) {
-			version_string = "Apple OS X ";
-		} else {
+		if (@available(macOS 10.12, *)) {
 			version_string = "Apple macOS ";
+		} else {
+			version_string = "Apple OS X ";
 		}
 #endif
-
-		version_string += [[version_array objectAtIndex:1] UTF8String];
-		version_string += " (";
-		version_string += [[version_array objectAtIndex:3] UTF8String];
+		NSOperatingSystemVersion os_ver = [[NSProcessInfo processInfo] operatingSystemVersion];
+		version_string += version_info(os_ver.majorVersion, os_ver.minorVersion, os_ver.patchVersion);
 
 		return version_string;
 	}

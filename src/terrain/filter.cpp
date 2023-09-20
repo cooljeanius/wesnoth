@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2003 - 2018 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2003 - 2023
+	by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #define GETTEXT_DOMAIN "wesnoth-lib"
@@ -27,18 +28,21 @@
 #include "tod_manager.hpp"
 #include "units/unit.hpp"
 #include "units/filter.hpp"
-#include "units/alignment.hpp"
 #include "variable.hpp"
 #include "formula/callable_objects.hpp"
 #include "formula/formula.hpp"
 #include "formula/function_gamestate.hpp"
 #include "scripting/game_lua_kernel.hpp"
+#include "units/unit_alignments.hpp"
 
 #include <boost/range/adaptor/transformed.hpp>
 
 static lg::log_domain log_engine("engine");
 #define ERR_NG LOG_STREAM(err, log_engine)
 #define WRN_NG LOG_STREAM(warn, log_engine)
+
+static lg::log_domain log_wml("wml");
+#define ERR_WML LOG_STREAM(err, log_wml)
 
 terrain_filter::~terrain_filter()
 {
@@ -90,14 +94,6 @@ terrain_filter::terrain_filter_cache::terrain_filter_cache() :
 	ufilter_()
 {}
 
-namespace {
-	struct cfg_isor {
-		bool operator() (std::pair<const std::string,const vconfig> val) const {
-			return val.first == "or";
-		}
-	};
-} //end anonymous namespace
-
 bool terrain_filter::match_internal(const map_location& loc, const unit* ref_unit, const bool ignore_xy) const
 {
 	if (!this->fc_->get_disp_context().map().on_board_with_border(loc)) {
@@ -116,9 +112,13 @@ bool terrain_filter::match_internal(const map_location& loc, const unit* ref_uni
 		fc_->get_tod_man().get_area_by_id(cfg_["area"]).count(loc) == 0)
 		return false;
 
+	if(cfg_.has_attribute("gives_income") &&
+		cfg_["gives_income"].to_bool() != fc_->get_disp_context().map().is_village(loc))
+		return false;
+
 	if(cfg_.has_attribute("terrain")) {
 		if(cache_.parsed_terrain == nullptr) {
-			cache_.parsed_terrain.reset(new t_translation::ter_match(utils::string_view(cfg_["terrain"].str())));
+			cache_.parsed_terrain.reset(new t_translation::ter_match(std::string_view(cfg_["terrain"].str())));
 		}
 		if(!cache_.parsed_terrain->is_empty) {
 			const t_translation::terrain_code letter = fc_->get_disp_context().map().get_terrain_info(loc).number();
@@ -207,8 +207,7 @@ bool terrain_filter::match_internal(const map_location& loc, const unit* ref_uni
 
 	//Allow filtering on adjacent locations
 	if(cfg_.has_child("filter_adjacent_location")) {
-		adjacent_loc_array_t adjacent;
-		get_adjacent_tiles(loc, adjacent.data());
+		const auto adjacent = get_adjacent_tiles(loc);
 		const vconfig::child_list& adj_cfgs = cfg_.get_children("filter_adjacent_location");
 		vconfig::child_list::const_iterator i, i_end, i_begin = adj_cfgs.begin();
 		for (i = i_begin, i_end = adj_cfgs.end(); i != i_end; ++i) {
@@ -218,7 +217,7 @@ bool terrain_filter::match_internal(const map_location& loc, const unit* ref_uni
 				? map_location::parse_directions((*i)["adjacent"]) : map_location::default_dirs();
 			std::vector<map_location::DIRECTION>::const_iterator j, j_end = dirs.end();
 			for (j = dirs.begin(); j != j_end; ++j) {
-				map_location &adj = adjacent[*j];
+				const map_location &adj = adjacent[*j];
 				if (fc_->get_disp_context().map().on_board(adj)) {
 					if(cache_.adjacent_matches == nullptr) {
 						while(index >= std::distance(cache_.adjacent_match_cache.begin(), cache_.adjacent_match_cache.end())) {
@@ -250,9 +249,9 @@ bool terrain_filter::match_internal(const map_location& loc, const unit* ref_uni
 					}
 				}
 			}
-			static std::vector<std::pair<int,int>> default_counts = utils::parse_ranges("1-6");
+			static std::vector<std::pair<int,int>> default_counts = utils::parse_ranges_unsigned("1-6");
 			std::vector<std::pair<int,int>> counts = (*i).has_attribute("count")
-				? utils::parse_ranges((*i)["count"]) : default_counts;
+				? utils::parse_ranges_unsigned((*i)["count"]) : default_counts;
 			if(!in_ranges(match_count, counts)) {
 				return false;
 			}
@@ -276,15 +275,15 @@ bool terrain_filter::match_internal(const map_location& loc, const unit* ref_uni
 		if(!tod_type.empty()) {
 			const std::vector<std::string>& vals = utils::split(tod_type);
 			if(tod.lawful_bonus<0) {
-				if(std::find(vals.begin(),vals.end(),UNIT_ALIGNMENT::enum_to_string(UNIT_ALIGNMENT::CHAOTIC)) == vals.end()) {
+				if(std::find(vals.begin(),vals.end(), unit_alignments::chaotic) == vals.end()) {
 					return false;
 				}
 			} else if(tod.lawful_bonus>0) {
-				if(std::find(vals.begin(),vals.end(),UNIT_ALIGNMENT::enum_to_string(UNIT_ALIGNMENT::LAWFUL)) == vals.end()) {
+				if(std::find(vals.begin(),vals.end(), unit_alignments::lawful) == vals.end()) {
 					return false;
 				}
-			} else if(std::find(vals.begin(),vals.end(),UNIT_ALIGNMENT::enum_to_string(UNIT_ALIGNMENT::NEUTRAL)) == vals.end() &&
-				std::find(vals.begin(),vals.end(),UNIT_ALIGNMENT::enum_to_string(UNIT_ALIGNMENT::LIMINAL)) == vals.end()) {
+			} else if(std::find(vals.begin(),vals.end(), unit_alignments::neutral) == vals.end() &&
+				std::find(vals.begin(),vals.end(), unit_alignments::liminal) == vals.end()) {
 				return false;
 			}
 		}
@@ -310,7 +309,7 @@ bool terrain_filter::match_internal(const map_location& loc, const unit* ref_uni
 	const vconfig& filter_owner = cfg_.child("filter_owner");
 	if(!filter_owner.null()) {
 		if(!owner_side.empty()) {
-			WRN_NG << "duplicate side information in a SLF, ignoring inline owner_side=" << std::endl;
+			WRN_NG << "duplicate side information in a SLF, ignoring inline owner_side=";
 		}
 		if(!fc_->get_disp_context().map().is_village(loc))
 			return false;
@@ -351,7 +350,8 @@ bool terrain_filter::match_internal(const map_location& loc, const unit* ref_uni
 			}
 			return true;
 		} catch(const wfl::formula_error& e) {
-			lg::wml_error() << "Formula error in location filter: " << e.type << " at " << e.filename << ':' << e.line << ")\n";
+			lg::log_to_chat() << "Formula error in location filter: " << e.type << " at " << e.filename << ':' << e.line << ")\n";
+			ERR_WML << "Formula error in location filter: " << e.type << " at " << e.filename << ':' << e.line << ")";
 			// Formulae with syntax errors match nothing
 			return false;
 		}
@@ -391,7 +391,7 @@ bool terrain_filter::match_impl(const map_location& loc, const unit* ref_unit) c
 	std::size_t radius = cfg_["radius"].to_size_t(0);
 	if(radius > max_loop_) {
 		ERR_NG << "terrain_filter: radius greater than " << max_loop_
-		<< ", restricting\n";
+		<< ", restricting";
 		radius = max_loop_;
 	}
 	if ( radius == 0 )
@@ -412,31 +412,22 @@ bool terrain_filter::match_impl(const map_location& loc, const unit* ref_unit) c
 	for(i = hexes.begin(); i != hexes.end(); ++i) {
 		bool matches = match_internal(*i, ref_unit, false);
 
-		//handle [and], [or], and [not] with in-order precedence
-		vconfig::all_children_iterator cond = cfg_.ordered_begin();
-		vconfig::all_children_iterator cond_end = cfg_.ordered_end();
-		while(cond != cond_end)
-		{
-			const std::string& cond_name = cond.get_key();
-			const vconfig& cond_cfg = cond.get_child();
-
-			//handle [and]
-			if(cond_name == "and")
-			{
-				matches = matches && terrain_filter(cond_cfg, *this).match_impl(*i, ref_unit);
+		// Handle [and], [or], and [not] with in-order precedence
+		for(const auto& [key, filter] : cfg_.all_ordered()) {
+			// Handle [and]
+			if(key == "and") {
+				matches = matches && terrain_filter(filter, *this).match_impl(*i, ref_unit);
 			}
-			//handle [or]
-			else if(cond_name == "or")
-			{
-				matches = matches || terrain_filter(cond_cfg, *this).match_impl(*i, ref_unit);
+			// Handle [or]
+			else if(key == "or") {
+				matches = matches || terrain_filter(filter, *this).match_impl(*i, ref_unit);
 			}
-			//handle [not]
-			else if(cond_name == "not")
-			{
-				matches = matches && !terrain_filter(cond_cfg, *this).match_impl(*i, ref_unit);
+			// Handle [not]
+			else if(key == "not") {
+				matches = matches && !terrain_filter(filter, *this).match_impl(*i, ref_unit);
 			}
-			++cond;
 		}
+
 		if(matches) {
 			return true;
 		}
@@ -444,7 +435,7 @@ bool terrain_filter::match_impl(const map_location& loc, const unit* ref_unit) c
 			std::set<map_location>::const_iterator temp = i;
 			if(++temp != hexes.end()) {
 				ERR_NG << "terrain_filter: loop count greater than " << max_loop_
-				<< ", aborting\n";
+				<< ", aborting";
 				break;
 			}
 		}
@@ -465,7 +456,7 @@ public:
 	template<typename T, typename F1, typename F2, typename F3>
 	static void filter_final(T&& src, location_set& dest, const terrain_filter&, const F1& f1, const F2& f2, const F3& f3)
 	{
-		for (const map_location &loc : src) {
+		for (map_location loc : src) {
 			if (f1(loc) && f2(loc) && f3(loc)) {
 				dest.insert(loc);
 			}
@@ -566,6 +557,10 @@ void terrain_filter::get_locs_impl(std::set<map_location>& locs, const unit* ref
 			}
 		}
 	}
+	else if (cfg_["gives_income"].to_bool()) {
+		auto ar = fc_->get_disp_context().map().villages();
+		terrain_filterimpl::filter_xy(ar, match_set, *this, with_border);
+	}
 	else {
 		//consider all locations on the map
 		int bs = fc_->get_disp_context().map().border_size();
@@ -591,7 +586,7 @@ void terrain_filter::get_locs_impl(std::set<map_location>& locs, const unit* ref
 			cache_.adjacent_matches->push_back(adj_set);
 			if(i >= max_loop_ && i+1 < adj_cfgs.size()) {
 				ERR_NG << "terrain_filter: loop count greater than " << max_loop_
-				<< ", aborting\n";
+				<< ", aborting";
 				break;
 			}
 		}
@@ -605,24 +600,19 @@ void terrain_filter::get_locs_impl(std::set<map_location>& locs, const unit* ref
 		}
 	}
 
-	//handle [and], [or], and [not] with in-order precedence
-	vconfig::all_children_iterator cond = cfg_.ordered_begin();
-	vconfig::all_children_iterator cond_end = cfg_.ordered_end();
-	int ors_left = std::count_if(cond, cond_end, cfg_isor());
-	while(cond != cond_end)
-	{
+	int ors_left = std::count_if(cfg_.ordered_begin(), cfg_.ordered_end(), [](const auto& val) { return val.first == "or"; });
+
+	// Handle [and], [or], and [not] with in-order precedence
+	for(const auto& [key, filter] : cfg_.all_ordered()) {
 		//if there are no locations or [or] conditions left, go ahead and return empty
 		if(match_set.empty() && ors_left <= 0) {
 			return;
 		}
 
-		const std::string& cond_name = cond.get_key();
-		const vconfig& cond_cfg = cond.get_child();
-
-		//handle [and]
-		if(cond_name == "and") {
+		// Handle [and]
+		if(key == "and") {
 			std::set<map_location> intersect_hexes;
-			terrain_filter(cond_cfg, *this).get_locations(intersect_hexes, with_border);
+			terrain_filter(filter, *this).get_locations(intersect_hexes, with_border);
 			std::set<map_location>::iterator intersect_itor = match_set.begin();
 			while(intersect_itor != match_set.end()) {
 				if(intersect_hexes.find(*intersect_itor) == intersect_hexes.end()) {
@@ -632,10 +622,10 @@ void terrain_filter::get_locs_impl(std::set<map_location>& locs, const unit* ref
 				}
 			}
 		}
-		//handle [or]
-		else if(cond_name == "or") {
+		// Handle [or]
+		else if(key == "or") {
 			std::set<map_location> union_hexes;
-			terrain_filter(cond_cfg, *this).get_locations(union_hexes, with_border);
+			terrain_filter(filter, *this).get_locations(union_hexes, with_border);
 			//match_set.insert(union_hexes.begin(), union_hexes.end()); //doesn't compile on MSVC
 			std::set<map_location>::iterator insert_itor = union_hexes.begin();
 			while(insert_itor != union_hexes.end()) {
@@ -643,16 +633,15 @@ void terrain_filter::get_locs_impl(std::set<map_location>& locs, const unit* ref
 			}
 			--ors_left;
 		}
-		//handle [not]
-		else if(cond_name == "not") {
+		// Handle [not]
+		else if(key == "not") {
 			std::set<map_location> removal_hexes;
-			terrain_filter(cond_cfg, *this).get_locations(removal_hexes, with_border);
+			terrain_filter(filter, *this).get_locations(removal_hexes, with_border);
 			std::set<map_location>::iterator erase_itor = removal_hexes.begin();
 			while(erase_itor != removal_hexes.end()) {
 				match_set.erase(*erase_itor++);
 			}
 		}
-		++cond;
 	}
 	if(match_set.empty()) {
 		return;
@@ -662,7 +651,7 @@ void terrain_filter::get_locs_impl(std::set<map_location>& locs, const unit* ref
 	std::size_t radius = cfg_["radius"].to_size_t(0);
 	if(radius > max_loop_) {
 		ERR_NG << "terrain_filter: radius greater than " << max_loop_
-		<< ", restricting\n";
+		<< ", restricting";
 		radius = max_loop_;
 	}
 	if(radius > 0) {

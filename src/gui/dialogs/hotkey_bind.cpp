@@ -1,14 +1,15 @@
 /*
-   Copyright (C) 2016 - 2018 by the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2016 - 2023
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #define GETTEXT_DOMAIN "wesnoth-lib"
@@ -20,37 +21,34 @@
 
 #include <SDL2/SDL.h>
 
-namespace gui2
-{
-namespace dialogs
+namespace gui2::dialogs
 {
 
 REGISTER_DIALOG(hotkey_bind)
 
 hotkey_bind::hotkey_bind(const std::string& hotkey_id)
-	: hotkey_id_(hotkey_id)
+	: modal_dialog(window_id())
+	, hotkey_id_(hotkey_id)
 	, new_binding_()
 {
-	set_restore(true);
 }
 
 void hotkey_bind::pre_show(window& window)
 {
 	window.connect_signal<event::SDL_RAW_EVENT>(
-			std::bind(&hotkey_bind::sdl_event_callback, this, std::ref(window), _5),
+			std::bind(&hotkey_bind::sdl_event_callback, this, std::placeholders::_5),
 			event::dispatcher::front_child);
 }
 
-void hotkey_bind::sdl_event_callback(window& win, const SDL_Event &event)
+void hotkey_bind::sdl_event_callback(const SDL_Event &event)
 {
 	if (hotkey::is_hotkeyable_event(event)) {
 		new_binding_ = hotkey::create_hotkey(hotkey_id_, event);
 	}
 	if(new_binding_) {
-		win.set_retval(retval::OK);
+		set_retval(retval::OK);
 	}
 }
 
 
 } // namespace dialogs
-} // namespace gui2

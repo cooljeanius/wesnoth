@@ -1,14 +1,15 @@
 /*
-   Copyright (C) 2016 - 2018 by the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2016 - 2023
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -134,7 +135,7 @@ public:
 	void add_list_to_keyboard_chain();
 
 	/** Sets up a callback that will be called when the player changes the sorting order. */
-	void set_callback_order_change(std::function<void(unsigned, listbox::SORT_ORDER)> callback) {
+	void set_callback_order_change(std::function<void(unsigned, sort_order::type)> callback) {
 		get_listbox().set_callback_order_change(callback);
 	}
 
@@ -176,10 +177,10 @@ private:
 
 	void finalize_setup();
 
-	/** Needed because otherwise the add-on with the first ID would be initially selected. */
+public:
+	/** Choose the item at the top of the list (taking account of sort order). */
 	void select_first_addon();
 
-public:
 	/** Static type getter that does not rely on the widget being constructed. */
 	static const std::string& type();
 
@@ -187,7 +188,7 @@ private:
 	/** Inherited from styled_widget, implemented by REGISTER_WIDGET. */
 	virtual const std::string& get_control_type() const override;
 
-	/** See @ref container_::set_self_active. */
+	/** See @ref container_base::set_self_active */
 	void set_self_active(const bool) override
 	{
 		// DO NOTHING
@@ -216,7 +217,7 @@ public:
 
 	using builder_styled_widget::build;
 
-	widget* build() const;
+	virtual std::unique_ptr<widget> build() const override;
 
 private:
 	widget::visibility install_status_visibility_;

@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2009 - 2018 by Iris Morelle <shadowm2006@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2009 - 2023
+	by Iris Morelle <shadowm2006@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #include "storyscreen/parser.hpp"
@@ -29,11 +30,7 @@ namespace storyscreen
 void story_parser::resolve_wml(const vconfig& cfg)
 {
 	// Execution flow/branching/[image]
-	for(vconfig::all_children_iterator i = cfg.ordered_begin(); i != cfg.ordered_end(); ++i) {
-		// i->first and i->second are goddamn temporaries; do not make references
-		const std::string key = i->first;
-		const vconfig node = i->second;
-
+	for(const auto& [key, node] : cfg.all_ordered()) {
 		// Execute any special actions derived classes provide.
 		if(resolve_wml_helper(key, node)) {
 			continue;
@@ -78,27 +75,27 @@ void story_parser::resolve_wml(const vconfig& cfg)
 			const std::string var_actual_value = resources::gamedata->get_variable_const(var_name);
 			bool case_not_found = true;
 
-			for(vconfig::all_children_iterator j = node.ordered_begin(); j != node.ordered_end(); ++j) {
-				if(j->first != "case") {
+			for(const auto& [switch_key, switch_node] : node.all_ordered()) {
+				if(switch_key != "case") {
 					continue;
 				}
 
 				// Enter all matching cases.
-				const std::string var_expected_value = (j->second)["value"];
+				const std::string var_expected_value = switch_node["value"];
 				if(var_actual_value == var_expected_value) {
 					case_not_found = false;
-					resolve_wml(j->second);
+					resolve_wml(switch_node);
 				}
 			}
 
 			if(case_not_found) {
-				for(vconfig::all_children_iterator j = node.ordered_begin(); j != node.ordered_end(); ++j) {
-					if(j->first != "else") {
+				for(const auto& [else_key, else_node] : node.all_ordered()) {
+					if(else_key != "else") {
 						continue;
 					}
 
 					// Enter all elses.
-					resolve_wml(j->second);
+					resolve_wml(else_node);
 				}
 			}
 		}

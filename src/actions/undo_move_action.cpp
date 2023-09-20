@@ -1,14 +1,15 @@
 /*
-   Copyright (C) 2017-2018 the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2017 - 2023
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #include "actions/undo_move_action.hpp"
@@ -55,7 +56,7 @@ void move_action::write(config & cfg) const
 	shroud_clearing_action::write(cfg);
 	cfg["starting_direction"] = map_location::write_direction(starting_dir);
 	cfg["starting_moves"] = starting_moves;
-	config & child = cfg.child("unit");
+	config & child = cfg.mandatory_child("unit");
 	child["goto_x"] = goto_hex.wml_x();
 	child["goto_y"] = goto_hex.wml_y();
 }
@@ -79,7 +80,7 @@ bool move_action::undo(int)
 	const unit_map::iterator u_end = units.find(rev_route.back());
 	if ( u == units.end()  ||  u_end != units.end() ) {
 		//this can actually happen if the scenario designer has abused the [allow_undo] command
-		ERR_NG << "Illegal 'undo' found. Possible abuse of [allow_undo]?" << std::endl;
+		ERR_NG << "Illegal 'undo' found. Possible abuse of [allow_undo]?";
 		return false;
 	}
 	this->return_village();

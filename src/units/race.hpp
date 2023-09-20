@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2003 - 2018 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2003 - 2023
+	by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -62,11 +63,13 @@ public:
 	 */
 	std::string get_icon_path_stem() const;
 
-	/// Dummy race used when a race is not yet known.
+	const std::string& help_taxonomy() const { return help_taxonomy_; }
+
+	/** Dummy race used when a race is not yet known. */
 	static const unit_race null_race;
 
 private:
-	/// Only used to construct null_race.
+	/** Only used to construct null_race. */
 	unit_race();
 
 	const config cfg_;
@@ -83,9 +86,18 @@ private:
 	config::const_child_itors topics_;
 	bool global_traits_;
 	std::string undead_variation_;
+	std::string help_taxonomy_;
 };
 
 unit_race::GENDER string_gender(const std::string& str,unit_race::GENDER def=unit_race::MALE);
 const std::string& gender_string(unit_race::GENDER gender);
+
+/**
+ * Chooses a value from the given config based on gender. If the value for
+ * the specified gender is blank, then @a default_key is chosen instead.
+ */
+const config::attribute_value & gender_value(
+    const config & cfg, unit_race::GENDER gender, const std::string & male_key,
+    const std::string & female_key, const std::string & default_key);
 
 typedef std::map<std::string,unit_race> race_map;

@@ -1,6 +1,6 @@
 local MG = wesnoth.require "mapgen_helper"
 local LS = wesnoth.require "location_set"
-local random = wesnoth.random
+local random = mathx.random
 
 local callbacks = {}
 
@@ -122,6 +122,10 @@ function callbacks.generate_map(params)
 			local width = math.max(v.data.width or 1, 1)
 			local jagged = v.data.jagged or 0
 			local calc = function(x, y)
+				if x == 0 or x == params.map_width - 1 or y == 0 or y == params.map_height - 1 then
+					-- Map borders are impassable
+					return math.huge
+				end
 				local res = 1.0
 				if map:get_tile(x, y) == params.terrain_wall then
 					res = laziness
@@ -131,9 +135,9 @@ function callbacks.generate_map(params)
 				end
 				return res
 			end
-			local path = wesnoth.find_path(
+			local path = wesnoth.paths.find_path(
 				v.start_x, v.start_y, v.dest_x, v.dest_y, calc, params.map_width, params.map_height)
-			for i, loc in ipairs(path) do
+			for j, loc in ipairs(path) do
 				local locs_set = LS.create()
 				build_chamber(loc[1], loc[2], locs_set, width, jagged)
 				for x,y in locs_set:stable_iter() do

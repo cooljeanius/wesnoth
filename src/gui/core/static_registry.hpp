@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2008 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -59,7 +60,7 @@ using widget_parser_t = std::function<styled_widget_definition_ptr(const config&
  * @param f                   The function to parse the definition config.
  * @param key                 The tagname from which to read the widget's
  *                            definition in the game config. If nullptr the
- *                            default [<id>_definition] is used.
+ *                            default [\<id\>_definition] is used.
  */
 void register_widget(const std::string& type, widget_parser_t f, const char* key = nullptr);
 
@@ -103,21 +104,17 @@ std::set<std::string>& registered_window_types();
 
 struct registered_widget_parser
 {
-    /** The widget definition WML parser function. */
+	/** The widget definition WML parser function. */
 	widget_parser_t parser;
 
-    /** The tag containing the definition WML. */
+	/** The tag containing the definition WML. */
 	const char* key;
 };
 
-using registered_widget_map = std::map<std::string, registered_widget_parser>;
-
 /** Returns the list of registered widgets and their parsers. */
-registered_widget_map& registered_widget_types();
-
-using widget_builder_map = std::map<std::string, widget_builder_func_t>;
+std::map<std::string, registered_widget_parser>& registered_widget_types();
 
 /** Returns the list of registered widget builders. */
-widget_builder_map& widget_builder_lookup();
+std::map<std::string, widget_builder_func_t>& widget_builder_lookup();
 
 } // namespace gui2

@@ -1,16 +1,17 @@
 /*
- Copyright (C) 2010 - 2018 by Gabriel Morin <gabrielmorin (at) gmail (dot) com>
- Part of the Battle for Wesnoth Project https://www.wesnoth.org
+	Copyright (C) 2010 - 2023
+	by Gabriel Morin <gabrielmorin (at) gmail (dot) com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
- See the COPYING file for more details.
- */
+	See the COPYING file for more details.
+*/
 
 /**
  * @file
@@ -52,10 +53,10 @@ public:
 	action_ptr get_bump_target();
 	unit_ptr get_selection_target();
 
-	/// @return the action that currently receives the highlight focus
+	/** @return the action that currently receives the highlight focus */
 	weak_action_ptr get_main_highlight() { return main_highlight_; }
 	typedef std::deque<weak_action_ptr> secondary_highlights_t;
-	/// @return the collection of actions that are highlighted but don't have the focus
+	/** @return the collection of actions that are highlighted but don't have the focus */
 	secondary_highlights_t get_secondary_highlights() { return secondary_highlights_; }
 
 	void set_selection_candidate(unit_ptr candidate) { selection_candidate_ = candidate; }
@@ -96,7 +97,7 @@ public:
 	void visit(move_ptr);
 	void visit(attack_ptr);
 	void visit(recruit_ptr);
-	/// @todo: find some suitable effect for mouseover on planned recall.
+	/** @todo: find some suitable effect for mouseover on planned recall. */
 	void visit(recall_ptr){}
 	void visit(suppose_dead_ptr){}
 private:

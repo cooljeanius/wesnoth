@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2009 - 2018 by Iris Morelle <shadowm2006@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2009 - 2023
+	by Iris Morelle <shadowm2006@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -24,39 +25,14 @@
 
 namespace storyscreen
 {
-floating_image::floating_image(const floating_image& fi)
-	: file_()
-	, x_(0)
-	, y_(0)
-	, delay_(0)
-	, autoscaled_(false)
-	, centered_(false)
-{
-	this->assign(fi);
-}
-
 floating_image::floating_image(const config& cfg)
 	: file_(cfg["file"])
 	, x_(cfg["x"])
 	, y_(cfg["y"])
 	, delay_(cfg["delay"])
-	, autoscaled_(cfg["scaled"].to_bool())
+	, resize_with_background_(cfg["resize_with_background"].to_bool())
 	, centered_(cfg["centered"].to_bool())
 {
-}
-
-void floating_image::assign(const floating_image& fi)
-{
-	if(&fi == this) {
-		return;
-	}
-
-	file_ = fi.file_;
-	x_ = fi.x_;
-	y_ = fi.y_;
-	delay_ = fi.delay_;
-	autoscaled_ = fi.autoscaled_;
-	centered_ = fi.centered_;
 }
 
 background_layer::background_layer()

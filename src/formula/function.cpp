@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2008 - 2018 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #include "formula/function.hpp"
@@ -19,7 +20,9 @@
 #include "formula/debugger.hpp"
 #include "game_config.hpp"
 #include "game_display.hpp"
+#include "global.hpp"
 #include "log.hpp"
+#include "pathutils.hpp"
 
 #include <boost/math/constants/constants.hpp>
 #include <cctype>
@@ -36,7 +39,13 @@ static lg::log_domain log_scripting_formula("scripting/formula");
 
 namespace wfl
 {
-static std::deque<std::string> call_stack;
+/**
+ * For printing error messages when WFL parsing or evaluation fails, this contains the names of the WFL functions being evaluated.
+ *
+ * Two C++ threads might be evaluating WFL at the same; declaring this thread_local is a quick bugfix which should probably be replaced
+ * by having a context-object for each WFL evaluation.
+ */
+thread_local static std::deque<std::string> call_stack;
 
 call_stack_manager::call_stack_manager(const std::string& str)
 {
@@ -262,9 +271,9 @@ DEFINE_WFL_FUNCTION(debug_print, 1, 2)
 	if(args().size() == 1) {
 		str1 = var1.to_debug_string(true);
 
-		LOG_SF << str1 << std::endl;
+		LOG_SF << str1;
 
-		if(game_config::debug) {
+		if(game_config::debug && game_display::get_singleton()) {
 			game_display::get_singleton()->get_chat_manager().add_chat_message(
 				std::time(nullptr), "WFL", 0, str1, events::chat_handler::MESSAGE_PUBLIC, false);
 		}
@@ -276,7 +285,7 @@ DEFINE_WFL_FUNCTION(debug_print, 1, 2)
 		const variant var2 = args()[1]->evaluate(variables, fdb);
 		str2 = var2.to_debug_string(true);
 
-		LOG_SF << str1 << ": " << str2 << std::endl;
+		LOG_SF << str1 << ": " << str2;
 
 		if(game_config::debug && game_display::get_singleton()) {
 			game_display::get_singleton()->get_chat_manager().add_chat_message(
@@ -309,7 +318,7 @@ DEFINE_WFL_FUNCTION(debug_profile, 1, 2)
 	std::ostringstream str;
 	str << "Evaluated in " << (run_time / 1000.0) << " ms on average";
 
-	LOG_SF << speaker << ": " << str.str() << std::endl;
+	LOG_SF << speaker << ": " << str.str();
 
 	if(game_config::debug && game_display::get_singleton()) {
 		game_display::get_singleton()->get_chat_manager().add_chat_message(
@@ -535,11 +544,18 @@ DEFINE_WFL_FUNCTION(acos, 1, 1)
 	return variant(result, variant::DECIMAL_VARIANT);
 }
 
-DEFINE_WFL_FUNCTION(atan, 1, 1)
+DEFINE_WFL_FUNCTION(atan, 1, 2)
 {
-	const double num = args()[0]->evaluate(variables, fdb).as_decimal() / 1000.0;
-	const double result = std::atan(num) * 180.0 / pi<double>();
-	return variant(result, variant::DECIMAL_VARIANT);
+	if(args().size() == 1) {
+		const double num = args()[0]->evaluate(variables, fdb).as_decimal() / 1000.0;
+		const double result = std::atan(num) * 180.0 / pi<double>();
+		return variant(result, variant::DECIMAL_VARIANT);
+	} else {
+		const double y = args()[0]->evaluate(variables, fdb).as_decimal() / 1000.0;
+		const double x = args()[1]->evaluate(variables, fdb).as_decimal() / 1000.0;
+		const double result = std::atan2(y, x) * 180.0 / pi<double>();
+		return variant(result, variant::DECIMAL_VARIANT);
+	}
 }
 
 DEFINE_WFL_FUNCTION(sqrt, 1, 1)
@@ -678,6 +694,25 @@ DEFINE_WFL_FUNCTION(wave, 1, 1)
 	const int value = args()[0]->evaluate(variables, fdb).as_int() % 1000;
 	const double angle = 2.0 * pi<double>() * (static_cast<double>(value) / 1000.0);
 	return variant(static_cast<int>(std::sin(angle) * 1000.0));
+}
+
+DEFINE_WFL_FUNCTION(lerp, 3, 3)
+{
+	const double lo = args()[0]->evaluate(variables, add_debug_info(fdb, 0, "lerp:lo")).as_decimal() / 1000.0;
+	const double hi = args()[1]->evaluate(variables, add_debug_info(fdb, 1, "lerp:hi")).as_decimal() / 1000.0;;
+	const double alpha = args()[2]->evaluate(variables, add_debug_info(fdb, 2, "lerp:alpha")).as_decimal() / 1000.0;;
+	return variant(static_cast<int>((lo + alpha * (hi - lo)) * 1000.0), variant::DECIMAL_VARIANT);
+}
+
+DEFINE_WFL_FUNCTION(clamp, 3, 3)
+{
+	const variant val = args()[0]->evaluate(variables, add_debug_info(fdb, 0, "clamp:value"));
+	const variant lo = args()[1]->evaluate(variables, add_debug_info(fdb, 1, "clamp:lo"));
+	const variant hi = args()[2]->evaluate(variables, add_debug_info(fdb, 2, "clamp:hi"));
+	if(val.is_int() && lo.is_int() && hi.is_int()) {
+		return variant(std::clamp<int>(val.as_int(), lo.as_int(), hi.as_int()));
+	}
+	return variant(static_cast<int>(std::clamp<int>(val.as_decimal(), lo.as_decimal(), hi.as_decimal())), variant::DECIMAL_VARIANT);
 }
 
 namespace
@@ -1226,12 +1261,38 @@ DEFINE_WFL_FUNCTION(adjacent_locs, 1, 1)
 		.convert_to<location_callable>()
 		->loc();
 
-	adjacent_loc_array_t adj;
-	get_adjacent_tiles(loc, adj.data());
+	std::vector<variant> v;
+	for(const map_location& adj : get_adjacent_tiles(loc)) {
+		v.emplace_back(std::make_shared<location_callable>(adj));
+	}
+
+	return variant(v);
+}
+
+DEFINE_WFL_FUNCTION(locations_in_radius, 2, 2)
+{
+	const map_location loc = args()[0]->evaluate(variables, fdb).convert_to<location_callable>()->loc();
+
+	int range = args()[1]->evaluate(variables, fdb).as_int();
+
+	if(range < 0) {
+		return variant();
+	}
+
+	if(!range) {
+		return variant(std::make_shared<location_callable>(loc));
+	}
+
+	std::vector<map_location> res;
+
+	get_tiles_in_radius(loc, range, res);
 
 	std::vector<variant> v;
-	for(unsigned n = 0; n < adj.size(); ++n) {
-		v.emplace_back(std::make_shared<location_callable>(adj[n]));
+	v.reserve(res.size() + 1);
+	v.emplace_back(std::make_shared<location_callable>(loc));
+
+	for(std::size_t n = 0; n != res.size(); ++n) {
+		v.emplace_back(std::make_shared<location_callable>(res[n]));
 	}
 
 	return variant(v);
@@ -1381,7 +1442,7 @@ variant formula_function_expression::execute(const formula_callable& variables, 
 	static std::string indent;
 	indent += "  ";
 
-	DBG_NG << indent << "executing '" << formula_->str() << "'\n";
+	DBG_NG << indent << "executing '" << formula_->str() << "'";
 
 	const int begin_time = SDL_GetTicks();
 	map_formula_callable callable;
@@ -1400,7 +1461,7 @@ variant formula_function_expression::execute(const formula_callable& variables, 
 			DBG_NG << "FAILED function precondition for function '" << formula_->str() << "' with arguments: ";
 
 			for(std::size_t n = 0; n != arg_names_.size(); ++n) {
-				DBG_NG << "  arg " << (n + 1) << ": " << args()[n]->evaluate(variables, fdb).to_debug_string() << "\n";
+				DBG_NG << "  arg " << (n + 1) << ": " << args()[n]->evaluate(variables, fdb).to_debug_string();
 			}
 		}
 	}
@@ -1408,7 +1469,7 @@ variant formula_function_expression::execute(const formula_callable& variables, 
 	variant res = formula_->evaluate(callable, fdb);
 
 	const int taken = SDL_GetTicks() - begin_time;
-	DBG_NG << indent << "returning: " << taken << "\n";
+	DBG_NG << indent << "returning: " << taken;
 
 	indent.resize(indent.size() - 2);
 
@@ -1509,6 +1570,7 @@ std::shared_ptr<function_symbol_table> function_symbol_table::get_builtins()
 		DECLARE_WFL_FUNCTION(loc);
 		DECLARE_WFL_FUNCTION(distance_between);
 		DECLARE_WFL_FUNCTION(adjacent_locs);
+		DECLARE_WFL_FUNCTION(locations_in_radius);
 		DECLARE_WFL_FUNCTION(are_adjacent);
 		DECLARE_WFL_FUNCTION(relative_dir);
 		DECLARE_WFL_FUNCTION(direction_from);
@@ -1536,6 +1598,8 @@ std::shared_ptr<function_symbol_table> function_symbol_table::get_builtins()
 		DECLARE_WFL_FUNCTION(pi);
 		DECLARE_WFL_FUNCTION(hypot);
 		DECLARE_WFL_FUNCTION(type);
+		DECLARE_WFL_FUNCTION(lerp);
+		DECLARE_WFL_FUNCTION(clamp);
 	}
 
 	return std::shared_ptr<function_symbol_table>(&functions_table, [](function_symbol_table*) {});

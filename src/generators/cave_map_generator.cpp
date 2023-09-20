@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2003 - 2018 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2003 - 2023
+	by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -27,13 +28,16 @@
 static lg::log_domain log_engine("engine");
 #define LOG_NG LOG_STREAM(info, log_engine)
 
+static lg::log_domain log_wml("wml");
+#define ERR_WML LOG_STREAM(err, log_wml)
+
 cave_map_generator::cave_map_generator(const config &cfg) :
 	wall_(t_translation::CAVE_WALL),
 	clear_(t_translation::CAVE),
 	village_(t_translation::UNDERGROUND_VILLAGE),
 	castle_(t_translation::DWARVEN_CASTLE),
 	keep_(t_translation::DWARVEN_KEEP),
-	cfg_(cfg ? cfg : config()),
+	cfg_(cfg),
 	width_(50),
 	height_(50),
 	village_density_(0),
@@ -69,19 +73,19 @@ std::size_t cave_map_generator::cave_map_generator_job::translate_y(std::size_t 
 	return y;
 }
 
-std::string cave_map_generator::create_map(boost::optional<uint32_t> randomseed)
+std::string cave_map_generator::create_map(std::optional<uint32_t> randomseed)
 {
 	const config res = create_scenario(randomseed);
 	return res["map_data"];
 }
 
-config cave_map_generator::create_scenario(boost::optional<uint32_t> randomseed)
+config cave_map_generator::create_scenario(std::optional<uint32_t> randomseed)
 {
 	cave_map_generator_job job(*this, randomseed);
 	return job.res_;
 }
 
-cave_map_generator::cave_map_generator_job::cave_map_generator_job(const cave_map_generator& pparams, boost::optional<uint32_t> randomseed)
+cave_map_generator::cave_map_generator_job::cave_map_generator_job(const cave_map_generator& pparams, std::optional<uint32_t> randomseed)
 	: params(pparams)
 	, flipx_(false)
 	, flipy_(false)
@@ -101,26 +105,26 @@ cave_map_generator::cave_map_generator_job::cave_map_generator_job(const cave_ma
 			"message", "Use the Lua cave generator instead, with scenario_generation=lua and create_scenario= (see wiki for details).",
 		},
 	});
-	uint32_t seed = randomseed.get_ptr() ? *randomseed.get_ptr() : seed_rng::next_seed();
+	uint32_t seed = randomseed ? *randomseed : seed_rng::next_seed();
 	rng_.seed(seed);
-	LOG_NG << "creating random cave with seed: " << seed << '\n';
+	LOG_NG << "creating random cave with seed: " << seed;
 	flipx_ = static_cast<int>(rng_() % 100) < params.flipx_chance_;
 	flipy_ = static_cast<int>(rng_() % 100) < params.flipy_chance_;
 
-	LOG_NG << "creating scenario....\n";
+	LOG_NG << "creating scenario....";
 	generate_chambers();
 
-	LOG_NG << "placing chambers...\n";
+	LOG_NG << "placing chambers...";
 	for(std::vector<chamber>::const_iterator c = chambers_.begin(); c != chambers_.end(); ++c) {
 		place_chamber(*c);
 	}
 
-	LOG_NG << "placing passages...\n";
+	LOG_NG << "placing passages...";
 
 	for(std::vector<passage>::const_iterator p = passages_.begin(); p != passages_.end(); ++p) {
 		place_passage(*p);
 	}
-	LOG_NG << "outputting map....\n";
+	LOG_NG << "outputting map....";
 
 	res_["map_data"] = t_translation::write_game_map(map_, starting_positions_);
 }
@@ -132,11 +136,9 @@ void cave_map_generator::cave_map_generator_job::build_chamber(map_location loc,
 
 	locs.insert(loc);
 
-	adjacent_loc_array_t adj;
-	get_adjacent_tiles(loc,adj.data());
-	for(std::size_t n = 0; n < adj.size(); ++n) {
+	for(const map_location& adj : get_adjacent_tiles(loc)) {
 		if(static_cast<int>(rng_() % 100) < (100l - static_cast<long>(jagged))) {
-			build_chamber(adj[n],locs,size-1,jagged);
+			build_chamber(adj,locs,size-1,jagged);
 		}
 	}
 }
@@ -162,7 +164,8 @@ void cave_map_generator::cave_map_generator_job::generate_chambers()
 					min_xpos = std::stoi(items.front()) - 1;
 					max_xpos = std::stoi(items.back());
 				} catch(const std::invalid_argument&) {
-					lg::wml_error() << "Invalid min/max coordinates in cave_map_generator: " << items.front() << ", " << items.back() << "\n";
+					lg::log_to_chat() << "Invalid min/max coordinates in cave_map_generator: " << items.front() << ", " << items.back() << "\n";
+					ERR_WML << "Invalid min/max coordinates in cave_map_generator: " << items.front() << ", " << items.back();
 					continue;
 				}
 			}
@@ -175,7 +178,8 @@ void cave_map_generator::cave_map_generator_job::generate_chambers()
 					min_ypos = std::stoi(items.front()) - 1;
 					max_ypos = std::stoi(items.back());
 				} catch(const std::invalid_argument&) {
-					lg::wml_error() << "Invalid min/max coordinates in cave_map_generator: " << items.front() << ", " << items.back() << "\n";
+					lg::log_to_chat() << "Invalid min/max coordinates in cave_map_generator: " << items.front() << ", " << items.back() << "\n";
+					ERR_WML << "Invalid min/max coordinates in cave_map_generator: " << items.front() << ", " << items.back();
 				}
 			}
 		}
@@ -189,8 +193,8 @@ void cave_map_generator::cave_map_generator_job::generate_chambers()
 		new_chamber.center = map_location(x,y);
 		build_chamber(new_chamber.center,new_chamber.locs,chamber_size,jagged_edges);
 
-		const config &items = ch.child("items");
-		new_chamber.items = items ? &items : nullptr;
+		auto items = ch.optional_child("items");
+		new_chamber.items = items ? &*items : nullptr;
 
 		const std::string &id = ch["id"];
 		if (!id.empty()) {
@@ -224,14 +228,15 @@ void cave_map_generator::cave_map_generator_job::place_chamber(const chamber& c)
 	if (c.items == nullptr || c.locs.empty()) return;
 
 	std::size_t index = 0;
-	for (const config::any_child &it : c.items->all_children_range())
+	for (const config::any_child it : c.items->all_children_range())
 	{
 		config cfg = it.cfg;
-		config &filter = cfg.child("filter");
+		auto filter = cfg.optional_child("filter");
 		config* object_filter = nullptr;
-		if (config &object = cfg.child("object")) {
-			if (config &of = object.child("filter"))
-				object_filter = &of;
+		if (auto object = cfg.optional_child("object")) {
+			if (auto of = object->optional_child("filter")) {
+				object_filter = &*of;
+			}
 		}
 
 		if (!it.cfg["same_location_as_previous"].to_bool()) {
@@ -361,9 +366,7 @@ void cave_map_generator::cave_map_generator_job::place_castle(int starting_posit
 		starting_positions_.insert(t_translation::starting_positions::value_type(std::to_string(starting_position), coord));
 	}
 
-	adjacent_loc_array_t adj;
-	get_adjacent_tiles(loc,adj.data());
-	for(std::size_t n = 0; n < adj.size(); ++n) {
-		set_terrain(adj[n], params.castle_);
+	for(const map_location& adj : get_adjacent_tiles(loc)) {
+		set_terrain(adj, params.castle_);
 	}
 }

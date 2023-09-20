@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2009 - 2018 by Yurii Chernyi <terraninfo@terraninfo.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2009 - 2023
+	by Yurii Chernyi <terraninfo@terraninfo.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -20,13 +21,13 @@
 
 #include "ai/composite/engine.hpp"
 #include "ai/composite/stage.hpp"
-
-#include "ai/manager.hpp"
-#include "terrain/filter.hpp"
-#include "lexical_cast.hpp"
-#include "serialization/string_utils.hpp"
-#include "resources.hpp"
 #include "ai/lua/aspect_advancements.hpp"
+#include "ai/manager.hpp"
+#include "lexical_cast.hpp"
+#include "resources.hpp"
+#include "serialization/string_utils.hpp"
+#include "terrain/filter.hpp"
+#include "utils/variant.hpp"
 
 namespace ai {
 
@@ -57,7 +58,6 @@ public:
 	}
 };
 
-
 template<>
 class config_value_translator<std::string> {
 public:
@@ -86,7 +86,6 @@ public:
 
 };
 
-
 template<>
 class config_value_translator<bool> {
 public:
@@ -114,7 +113,11 @@ public:
 	}
 };
 
-class leader_aspects_visitor : public boost::static_visitor<std::string> {
+class leader_aspects_visitor
+#ifdef USING_BOOST_VARIANT
+	: public boost::static_visitor<std::string>
+#endif
+{
 public:
 	std::string operator()(const bool b) const {
 		if (b) {
@@ -127,10 +130,10 @@ public:
 };
 
 template<>
-class config_value_translator< boost::variant<bool, std::vector<std::string>> > {
+class config_value_translator<utils::variant<bool, std::vector<std::string>>> {
 public:
 
-	static boost::variant<bool, std::vector<std::string>> cfg_to_value(const config &cfg)
+	static utils::variant<bool, std::vector<std::string>> cfg_to_value(const config &cfg)
 	{
 		if (cfg["value"].to_bool(true) == cfg["value"].to_bool(false)) {
 			return cfg["value"].to_bool();
@@ -138,17 +141,17 @@ public:
 		return utils::split(cfg["value"]);
 	}
 
-	static void cfg_to_value(const config &cfg, boost::variant<bool, std::vector<std::string>> &value)
+	static void cfg_to_value(const config &cfg, utils::variant<bool, std::vector<std::string>> &value)
 	{
 		value = cfg_to_value(cfg);
 	}
 
-	static void value_to_cfg(const boost::variant<bool, std::vector<std::string>> &value, config &cfg)
+	static void value_to_cfg(const utils::variant<bool, std::vector<std::string>> &value, config &cfg)
 	{
-		cfg["value"] = boost::apply_visitor(leader_aspects_visitor(), value);
+		cfg["value"] = utils::visit(leader_aspects_visitor(), value);
 	}
 
-	static config value_to_cfg(const boost::variant<bool, std::vector<std::string>> &value)
+	static config value_to_cfg(const utils::variant<bool, std::vector<std::string>> &value)
 	{
 		config cfg;
 		value_to_cfg(value,cfg);
@@ -189,8 +192,8 @@ public:
 
 	static void cfg_to_value(const config &cfg, config &value)
 	{
-		if (const config &v = cfg.child("value")) {
-			value = v;
+		if (auto v = cfg.optional_child("value")) {
+			value = *v;
 		} else {
 			value.clear();
 		}
@@ -220,11 +223,11 @@ public:
 
 	static terrain_filter cfg_to_value(const config &cfg)
 	{
-		if (const config &v = cfg.child("value")) {
-			return terrain_filter(vconfig(v), resources::filter_con);
+		if (auto v = cfg.optional_child("value")) {
+			return terrain_filter(vconfig(*v), resources::filter_con, false);
 		}
 		static config c("not");
-		return terrain_filter(vconfig(c),resources::filter_con);
+		return terrain_filter(vconfig(c),resources::filter_con, false);
 	}
 
 	static void cfg_to_value(const config &cfg, terrain_filter &value)
@@ -272,8 +275,6 @@ public:
 		return cfg;
 	}
 };
-
-
 
 // variant value translator
 
@@ -335,7 +336,6 @@ public:
 	}
 };
 
-
 template<>
 class variant_value_translator<bool> {
 public:
@@ -364,8 +364,6 @@ public:
 		return value;
 	}
 };
-
-
 
 template<>
 class variant_value_translator<std::string> {
@@ -396,8 +394,6 @@ public:
 	}
 };
 
-
-
 template<>
 class variant_value_translator<attacks_vector> {
 public:
@@ -409,10 +405,10 @@ public:
 
 	static void value_to_variant(const attacks_vector &value, wfl::variant &var)
 	{
-                std::vector<wfl::variant> vars;
-                for(attacks_vector::const_iterator i = value.begin(); i != value.end(); ++i) {
-                        vars.emplace_back(std::make_shared<attack_analysis>(*i));
-                }
+		std::vector<wfl::variant> vars;
+		for(attacks_vector::const_iterator i = value.begin(); i != value.end(); ++i) {
+			vars.emplace_back(std::make_shared<attack_analysis>(*i));
+		}
 		var = wfl::variant(vars);
 	}
 
@@ -431,14 +427,13 @@ public:
 	}
 };
 
-
 template<>
 class variant_value_translator<terrain_filter> {
 public:
 
 	static void variant_to_value(const wfl::variant &/*var*/, terrain_filter &/*value*/)
 	{
-	        assert(false);//not implemented
+		assert(false);//not implemented
 	}
 
 	static void value_to_variant(const terrain_filter &/*value*/, wfl::variant &/*var*/)
@@ -456,7 +451,7 @@ public:
 	static terrain_filter variant_to_value(const wfl::variant &var)
 	{
 		static config c("not");
-		terrain_filter value(vconfig(c),resources::filter_con);
+		terrain_filter value(vconfig(c), resources::filter_con, false);
 		variant_to_value(var,value);
 		return value;
 	}

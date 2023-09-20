@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2003 - 2018 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2003 - 2023
+	by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -80,7 +81,7 @@ public:
 	 * Returns true if a terrain has no underlying types other than itself,
 	 * in respect of either union, movement or defense.
 	 *
-	 * If this returns false, then @underlying must be non-empty.
+	 * If this returns false, then @a underlying must be non-empty.
 	 *
 	 * This function is to encapsulate the logic of whether such a terrain
 	 * is represented by a empty list, or whether it's represented by a list
@@ -91,10 +92,10 @@ public:
 	 * Gg^Uf (flat with old mushrooms) is indivisible (it's only Tt), although
 	 * Gg^Tf (flat with new mushrooms) can be divided (in to Gt and Tt).
 	 *
-	 * \todo: should this document vision_type() too?
+	 * TODO: should this document vision_type() too?
 	 *
-	 * @a id the terrain
-	 * @a underlying the corresponding mvt_type(), def_type() or union_type()
+	 * @param id the terrain
+	 * @param underlying the corresponding mvt_type(), def_type() or union_type()
 	 */
 	static bool is_indivisible(t_translation::terrain_code id, const t_translation::ter_list& underlying) {
 		return (underlying.empty()
@@ -127,8 +128,7 @@ public:
 	 */
 	bool is_nonnull() const { return  (number_ != t_translation::NONE_TERRAIN) &&
 		(number_ != t_translation::VOID_TERRAIN ); }
-	/// Returns the light (lawful) bonus for this terrain when the time of day
-	/// gives a @a base bonus.
+	/** Returns the light (lawful) bonus for this terrain when the time of day gives a @a base bonus. */
 	int light_bonus(int base) const
 	{
 		return bounded_add(base, light_modification_, max_light_, min_light_);

@@ -1,14 +1,15 @@
 /*
-   Copyright (C) 2016 - 2018 by the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2016 - 2023
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #define GETTEXT_DOMAIN "wesnoth-lib"
@@ -33,20 +34,19 @@
 #include "units/ptr.hpp"
 #include "units/unit.hpp"
 
-#include "utils/functional.hpp"
+#include <functional>
 
 static lg::log_domain log_display("display");
 #define LOG_DP LOG_STREAM(info, log_display)
 
-namespace gui2
-{
-namespace dialogs
+namespace gui2::dialogs
 {
 
 REGISTER_DIALOG(unit_list)
 
-unit_list::unit_list(unit_ptr_vector& unit_list, map_location& scroll_to)
-	: unit_list_(unit_list)
+unit_list::unit_list(std::vector<unit_const_ptr>& unit_list, map_location& scroll_to)
+	: modal_dialog(window_id())
+	, unit_list_(unit_list)
 	, scroll_to_(scroll_to)
 {
 }
@@ -92,15 +92,15 @@ void unit_list::pre_show(window& window)
 {
 	listbox& list = find_widget<listbox>(&window, "units_list", false);
 
-	connect_signal_notify_modified(list, std::bind(&unit_list::list_item_clicked, this, std::ref(window)));
+	connect_signal_notify_modified(list, std::bind(&unit_list::list_item_clicked, this));
 
 	list.clear();
 
 	window.keyboard_capture(&list);
 
 	for(const unit_const_ptr& unit : unit_list_) {
-		std::map<std::string, string_map> row_data;
-		string_map column;
+		widget_data row_data;
+		widget_item column;
 
 		column["use_markup"] = "true";
 
@@ -165,25 +165,25 @@ void unit_list::pre_show(window& window)
 	list.register_sorting_option(3, [this](const int i) { return unit_list_[i]->hitpoints(); });
 	list.register_sorting_option(4, [this](const int i) {
 		const unit& u = *unit_list_[i];
-		return std::make_tuple(u.level(), -static_cast<int>(u.experience_to_advance()));
+		return std::tuple(u.level(), -static_cast<int>(u.experience_to_advance()));
 	});
 	list.register_sorting_option(5, [this](const int i) { return unit_list_[i]->experience(); });
 	list.register_translatable_sorting_option(6, [this](const int i) {
 		return !unit_list_[i]->trait_names().empty() ? unit_list_[i]->trait_names().front().str() : ""; });
 
-	list_item_clicked(window);
+	list_item_clicked();
 }
 
-void unit_list::list_item_clicked(window& window)
+void unit_list::list_item_clicked()
 {
 	const int selected_row
-		= find_widget<listbox>(&window, "units_list", false).get_selected_row();
+		= find_widget<listbox>(get_window(), "units_list", false).get_selected_row();
 
 	if(selected_row == -1) {
 		return;
 	}
 
-	find_widget<unit_preview_pane>(&window, "unit_details", false)
+	find_widget<unit_preview_pane>(get_window(), "unit_details", false)
 		.set_displayed_unit(*unit_list_[selected_row].get());
 }
 
@@ -198,7 +198,7 @@ void unit_list::post_show(window& window)
 
 void show_unit_list(display& gui)
 {
-	unit_ptr_vector unit_list;
+	std::vector<unit_const_ptr> unit_list;
 	map_location scroll_to;
 
 	const unit_map& units = gui.get_units();
@@ -217,4 +217,3 @@ void show_unit_list(display& gui)
 }
 
 } // namespace dialogs
-} // namespace gui2

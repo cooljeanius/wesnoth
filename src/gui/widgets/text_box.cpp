@@ -1,29 +1,31 @@
 /*
-   Copyright (C) 2008 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #define GETTEXT_DOMAIN "wesnoth-lib"
 
 #include "gui/widgets/text_box.hpp"
 
-#include "font/sdl_ttf.hpp"
 #include "gui/core/log.hpp"
 #include "gui/core/register_widget.hpp"
 #include "gui/widgets/settings.hpp"
 #include "gui/widgets/window.hpp"
 #include "preferences/game.hpp"
 #include "serialization/unicode.hpp"
-#include "utils/functional.hpp"
+#include <functional>
+#include "wml_exception.hpp"
+#include "gettext.hpp"
 
 #define LOG_SCOPE_HEADER get_control_type() + " [" + id() + "] " + __func__
 #define LOG_HEADER LOG_SCOPE_HEADER + ':'
@@ -107,13 +109,13 @@ text_box::text_box(const implementation::builder_styled_widget& builder)
 	set_wants_mouse_left_double_click();
 
 	connect_signal<event::MOUSE_MOTION>(std::bind(
-			&text_box::signal_handler_mouse_motion, this, _2, _3, _5));
+			&text_box::signal_handler_mouse_motion, this, std::placeholders::_2, std::placeholders::_3, std::placeholders::_5));
 	connect_signal<event::LEFT_BUTTON_DOWN>(std::bind(
-			&text_box::signal_handler_left_button_down, this, _2, _3));
+			&text_box::signal_handler_left_button_down, this, std::placeholders::_2, std::placeholders::_3));
 	connect_signal<event::LEFT_BUTTON_UP>(std::bind(
-			&text_box::signal_handler_left_button_up, this, _2, _3));
+			&text_box::signal_handler_left_button_up, this, std::placeholders::_2, std::placeholders::_3));
 	connect_signal<event::LEFT_BUTTON_DOUBLE_CLICK>(std::bind(
-			&text_box::signal_handler_left_button_double_click, this, _2, _3));
+			&text_box::signal_handler_left_button_double_click, this, std::placeholders::_2, std::placeholders::_3));
 
 	const auto conf = cast_config_to<text_box_definition>();
 	assert(conf);
@@ -267,18 +269,15 @@ void text_box::handle_mouse_selection(point mouse, const bool start_selection)
 
 	set_cursor(offset, !start_selection);
 	update_canvas();
-	set_is_dirty(true);
+	queue_redraw();
 	dragging_ |= start_selection;
 }
 
 void text_box::update_offsets()
 {
-	assert(config());
-
 	const auto conf = cast_config_to<text_box_definition>();
 	assert(conf);
 
-	// FIXME: This should use pango-cairo code path instead of sdl_ttf code path
 	text_height_ = font::get_max_height(get_text_font_size());
 
 	wfl::map_formula_callable variables;
@@ -348,7 +347,7 @@ void text_box::signal_handler_mouse_motion(const event::ui_event event,
 											bool& handled,
 											const point& coordinate)
 {
-	DBG_GUI_E << get_control_type() << "[" << id() << "]: " << event << ".\n";
+	DBG_GUI_E << get_control_type() << "[" << id() << "]: " << event << ".";
 
 	if(dragging_) {
 		handle_mouse_selection(coordinate, false);
@@ -360,7 +359,7 @@ void text_box::signal_handler_mouse_motion(const event::ui_event event,
 void text_box::signal_handler_left_button_down(const event::ui_event event,
 												bool& handled)
 {
-	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	/*
 	 * Copied from the base class see how we can do inheritance with the new
@@ -377,7 +376,7 @@ void text_box::signal_handler_left_button_down(const event::ui_event event,
 void text_box::signal_handler_left_button_up(const event::ui_event event,
 											  bool& handled)
 {
-	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	dragging_ = false;
 	handled = true;
@@ -387,7 +386,7 @@ void
 text_box::signal_handler_left_button_double_click(const event::ui_event event,
 												   bool& handled)
 {
-	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	select_all();
 	handled = true;
@@ -398,84 +397,24 @@ text_box::signal_handler_left_button_double_click(const event::ui_event event,
 text_box_definition::text_box_definition(const config& cfg)
 	: styled_widget_definition(cfg)
 {
-	DBG_GUI_P << "Parsing text_box " << id << '\n';
+	DBG_GUI_P << "Parsing text_box " << id;
 
 	load_resolutions<resolution>(cfg);
 }
 
-/*WIKI
- * @page = GUIWidgetDefinitionWML
- * @order = 1_text_box
- *
- * == Text box ==
- *
- * The definition of a text box.
- *
- * @begin{parent}{name="gui/"}
- * @begin{tag}{name="ext_box_definition"}{min=0}{max=-1}{super="generic/widget_definition"}
- * The resolution for a text box also contains the following keys:
- * @begin{tag}{name="resolution"}{min=0}{max=-1}{super=generic/widget_definition/resolution}
- * @begin{table}{config}
- *     text_x_offset & f_unsigned & "" & The x offset of the text in the text
- *                                     box. This is needed for the code to
- *                                     determine where in the text the mouse
- *                                     clicks, so it can set the cursor
- *                                     properly. $
- *     text_y_offset & f_unsigned & "" & The y offset of the text in the text
- *                                     box. $
- * @end{table}
- *
- * The following states exist:
- * * state_enabled, the text box is enabled.
- * * state_disabled, the text box is disabled.
- * * state_focused, the text box has the focus of the keyboard.
- * @begin{tag}{name="state_enabled"}{min=0}{max=1}{super="generic/state"}
- * @end{tag}{name="state_enabled"}
- * @begin{tag}{name="state_disabled"}{min=0}{max=1}{super="generic/state"}
- * @end{tag}{name="state_disabled"}
- * @begin{tag}{name="state_focused"}{min=0}{max=1}{super="generic/state"}
- * @end{tag}{name="state_focused"}
- * @begin{tag}{name="state_hovered"}{min=0}{max=1}{super="generic/state"}
- * @end{tag}{name="state_hovered"}
- * @end{tag}{name="resolution"}
- * @end{tag}{name="ext_box_definition"}
- * @end{parent}{name="gui/"}
- */
 text_box_definition::resolution::resolution(const config& cfg)
 	: resolution_definition(cfg)
 	, text_x_offset(cfg["text_x_offset"])
 	, text_y_offset(cfg["text_y_offset"])
 {
 	// Note the order should be the same as the enum state_t in text_box.hpp.
-	state.emplace_back(cfg.child("state_enabled"));
-	state.emplace_back(cfg.child("state_disabled"));
-	state.emplace_back(cfg.child("state_focused"));
-	state.emplace_back(cfg.child("state_hovered"));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_enabled", _("Missing required state for editable text box")));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_disabled", _("Missing required state for editable text box")));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_focused", _("Missing required state for editable text box")));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_hovered", _("Missing required state for editable text box")));
 }
 
 // }---------- BUILDER -----------{
-
-/*WIKI
- * @page = GUIWidgetInstanceWML
- * @order = 2_text_box
- *
- * == Text box ==
- * @begin{parent}{name="gui/window/resolution/grid/row/column/"}
- * @begin{tag}{name="text_box"}{min="0"}{max="-1"}{super="generic/widget_instance"}
- * @begin{table}{config}
- *     label & t_string & "" &          The initial text of the text box. $
- *     history & string & "" &         The name of the history for the text
- *                                     box.
- *                                     A history saves the data entered in a
- *                                     text box between the games. With the up
- *                                     and down arrow it can be accessed. To
- *                                     create a new history item just add a
- *                                     new unique name for this field and the
- *                                     engine will handle the rest. $
- * @end{table}
- * @end{tag}{name="text_box"}
- * @end{parent}{name="gui/window/resolution/grid/row/column/"}
- */
 
 namespace implementation
 {
@@ -489,9 +428,9 @@ builder_text_box::builder_text_box(const config& cfg)
 {
 }
 
-widget* builder_text_box::build() const
+std::unique_ptr<widget> builder_text_box::build() const
 {
-	text_box* widget = new text_box(*this);
+	auto widget = std::make_unique<text_box>(*this);
 
 	// A textbox doesn't have a label but a text
 	widget->set_value(label_string);
@@ -504,7 +443,7 @@ widget* builder_text_box::build() const
 	widget->set_hint_data(hint_text, hint_image);
 
 	DBG_GUI_G << "Window builder: placed text box '" << id
-			  << "' with definition '" << definition << "'.\n";
+			  << "' with definition '" << definition << "'.";
 
 	return widget;
 }

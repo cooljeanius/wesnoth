@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2010 - 2018 by Jody Northup
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2010 - 2023
+	by Jody Northup
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -124,7 +125,7 @@ protected:
 			if (force)
 				return get_node(cfg.child_or_add(next.root_), next, true);
 			else if (cfg.has_child(next.root_))
-				return get_node(cfg.child(next.root_), next);
+				return get_node(cfg.mandatory_child(next.root_), next);
 			else
 				return nullptr;
 		}
@@ -136,7 +137,7 @@ protected:
 		name_space next = ns.next();
 		if (next) {
 			if (cfg.has_child(next.root_))
-				return get_node(cfg.child(next.root_), next);
+				return get_node(cfg.mandatory_child(next.root_), next);
 			else
 				return nullptr;
 		}

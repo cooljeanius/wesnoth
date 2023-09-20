@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2007 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2007 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #define GETTEXT_DOMAIN "wesnoth-lib"
@@ -24,98 +25,9 @@
 namespace gui2
 {
 
-/*WIKI
- * @page = GUIToolkitWML
- * @order = 1_widget
- *
- * == State ==
- *
- * @begin{parent}{name="generic/"}
- * @begin{tag}{name="state"}{min=0}{max=1}
- * Definition of a state. A state contains the info what to do in a state.
- * Atm this is rather focused on the drawing part, might change later.
- * Keys:
- * @begin{table}{config}
- *     draw & section & &                 Section with drawing directions for a
- *canvas. $
- * @end{table}
- * @end{tag}{name="state"}
- * @end{parent}{name="generic/"}
- *
- */
 state_definition::state_definition(const config& cfg)
-	: canvas_cfg_(cfg ? cfg.child("draw") : cfg)
-{
-	VALIDATE(canvas_cfg_, _("No state or draw section defined."));
-}
-
-/*WIKI
- * @page = GUIToolkitWML
- * @order = 1_widget
- * @begin{parent}{name=generic/widget_definition/}
- * == Resolution ==
- * @begin{tag}{name="resolution"}{min="0"}{max="-1"}
- *
- * Depending on the resolution a widget can look different. Resolutions are
- * evaluated in order of appearance. The ''window_width'' and ''window_height''
- * are the upper limit this resolution is valid for. When one of the sizes
- * gets above the limit, the next resolution is selected. There's one special
- * case where both values are ''0''. This resolution always matches. (Resolution
- * definitions behind that one will never be picked.) This resolution can be
- * used as upper limit or if there's only one resolution.
- *
- * The default (and also minimum) size of a button is determined by two items,
- * the wanted default size and the size needed for the text. The size of the
- * text differs per used widget so needs to be determined per button.
- *
- * Container widgets like panels and windows have other rules for their sizes.
- * Their sizes are based on the size of their children (and the border they need
- * themselves). It's wise to set all sizes to 0 for these kind of widgets.
- *
- * @begin{table}{config}
- * window_width & unsigned & 0 &   Width of the application window. $
- * window_height & unsigned & 0 &  Height of the application window. $
- *
- *
- * min_width & unsigned & 0 &      The minimum width of the widget. $
- * min_height & unsigned & 0 &     The minimum height of the widget. $
- *
- *
- * default_width & unsigned & 0 &  The default width of the widget. $
- * default_height & unsigned & 0 & The default height of the widget. $
- *
- *
- * max_width & unsigned & 0 &      The maximum width of the widget. $
- * max_height & unsigned & 0 &     The maximum height of the widget. $
- *
- * text_extra_width & unsigned & 0 &
- *     The extra width needed to determine the minimal size for the text. $
- *
- * text_extra_height & unsigned & 0 &
- *     The extra height needed to determine the minimal size for the text. $
- *
- * text_font_family & font_family & "" &
- *     The font family, needed to determine the minimal size for the text. $
- *
- * text_font_size & formula for unsigned & 0 &
- *     The font size, which needs to be used to determine the minimal size for
- *     the text. Currently, the only variables supported in this formula are
- *     those available from the global GUI2 settings object, namely screen_width,
- *     screen_height, screen_pitch_microns, gamemap_width, gamemap_height, and
- *     gamemap_x_offset. $
- *
- * text_font_style & font_style & "" &
- *     The font style, which needs to be used to determine the minimal size for
- *     the text. $
- *
- *
- * state & section & &
- *     Every widget has one or more state sections. Note they aren't called
- *     state but state_xxx the exact names are listed per widget. $
- * @end{table}
- * @end{tag}{name="resolution"}
- * @end{parent}{name=generic/widget_definition/}
- */
+	: canvas_cfg_(VALIDATE_WML_CHILD(cfg, "draw", _("No draw section defined for state.")))
+{}
 
 resolution_definition::resolution_definition(const config& cfg)
 	: window_width(cfg["window_width"])
@@ -134,35 +46,11 @@ resolution_definition::resolution_definition(const config& cfg)
 	, text_font_style(decode_font_style(cfg["text_font_style"]))
 	, state()
 {
-	DBG_GUI_P << "Parsing resolution " << window_width << ", " << window_height
-			  << '\n';
+	DBG_GUI_P << "Parsing resolution " << window_width << ", " << window_height;
 
 	linked_groups = parse_linked_group_definitions(cfg);
 }
 
-/*WIKI
- * @page = GUIWidgetDefinitionWML
- * @order = 1
- *
- * {{Autogenerated}}
- *
- * = Widget definition =
- *
- * This page describes the definition of all widgets in the toolkit. Every
- * widget has some parts in common, first of all; every definition has the
- * following fields.
- * @begin{parent}{name="generic/"}
- * @begin{tag}{name=widget_definition}{min=0}{max=1}
- * @begin{table}{config}
- *     id & string & &               Unique id for this gui (theme). $
- *     description & t_string & &    Unique translatable name for this gui. $
- *
- *     resolution & section & &      The definitions of the widget in various
- *                                   resolutions. $
- * @end{table}
- * @end{tag}{name=widget_definition}
- * @end{parent}{name="generic/"}
- */
 styled_widget_definition::styled_widget_definition(const config& cfg)
 	: id(cfg["id"]), description(cfg["description"].t_str()), resolutions()
 {

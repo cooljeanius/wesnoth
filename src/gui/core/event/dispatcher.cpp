@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2009 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2009 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #define GETTEXT_DOMAIN "wesnoth-lib"
@@ -26,7 +27,7 @@ namespace event
 /***** dispatcher class. *****/
 
 dispatcher::dispatcher()
-	: mouse_behavior_(all)
+	: mouse_behavior_(mouse_behavior::all)
 	, want_keyboard_input_(true)
 	, signal_queue_()
 	, signal_mouse_queue_()
@@ -43,7 +44,7 @@ dispatcher::dispatcher()
 dispatcher::~dispatcher()
 {
 	if(connected_) {
-		disconnect_dispatcher(this);
+		disconnect();
 	}
 }
 
@@ -54,104 +55,49 @@ void dispatcher::connect()
 	connect_dispatcher(this);
 }
 
+void dispatcher::disconnect()
+{
+	assert(connected_);
+	connected_ = false;
+	disconnect_dispatcher(this);
+}
+
 bool dispatcher::has_event(const ui_event event, const event_queue_type event_type)
 {
 #if 0
-	// Debug code to test whether the event is in the right queue.
-	std::cerr << "Event '" << event
-			<< "' event "
-			<< find<set_event>(event, dispatcher_implementation
-				::has_handler(event_type, *this))
-			<< " mouse "
-			<< find<set_event_mouse>(event, dispatcher_implementation
-				::has_handler(event_type, *this))
-			<< " keyboard "
-			<< find<set_event_touch_motion>(event, dispatcher_implementation
-				::has_handler(event_type, *this))
-			<< " touch_motion "
-			<< find<set_event_touch_gesture>(event, dispatcher_implementation
-				::has_handler(event_type, *this))
-			<< " touch_gesture "
-			<< find<set_event_keyboard>(event, dispatcher_implementation
-				::has_handler(event_type, *this))
-			<< " notification "
-			<< find<set_event_notification>(event, dispatcher_implementation
-				::has_handler(event_type, *this))
-			<< " message "
-			<< find<set_event_message>(event, dispatcher_implementation
-				::has_handler(event_type, *this))
-			<< ".\n";
+	const bool res = dispatcher_implementation::has_handler(*this, event_type, event);
+	PLAIN_LOG << "Event '" << event << " '" << (res ? "found" : "not found") << "in queue";
+	return res;
+#else
+	return dispatcher_implementation::has_handler(*this, event_type, event);
 #endif
-
-	return find<set_event>(
-			event, dispatcher_implementation::has_handler(event_type, *this))
-	    || find<set_event_mouse>(
-			event, dispatcher_implementation::has_handler(event_type, *this))
-	    || find<set_event_keyboard>(
-			event, dispatcher_implementation::has_handler(event_type, *this))
-	    || find<set_event_text_input>(
-			event, dispatcher_implementation::has_handler(event_type, *this))
-		   || find<set_event_touch_motion>(
-			event, dispatcher_implementation::has_handler(event_type, *this))
-		   || find<set_event_touch_gesture>(
-			event, dispatcher_implementation::has_handler(event_type, *this))
-	    || find<set_event_notification>(
-			event, dispatcher_implementation::has_handler(event_type, *this))
-	    || find<set_event_message>(
-			event, dispatcher_implementation::has_handler(event_type, *this))
-	    || find<set_event_raw_event>(
-			event, dispatcher_implementation::has_handler(event_type, *this));
 }
-
-/**
- * Helper class to do a runtime test whether an event is in a set.
- *
- * The class is supposed to be used in combination with find function. This
- * function is used in the fire functions to make sure an event is send to the
- * proper handler. If not there will be a run-time assertion failure. This
- * makes developing and testing the code easier, a wrong handler terminates
- * Wesnoth instead of silently not working.
- */
-class event_in_set
-{
-public:
-	/**
-	 * If found we get executed to set the result.
-	 *
-	 * Since we need to return true if found we always return true.
-	 */
-	template <class T>
-	bool oper(ui_event)
-	{
-		return true;
-	}
-};
 
 bool dispatcher::fire(const ui_event event, widget& target)
 {
-	assert(find<set_event>(event, event_in_set()));
+	assert(is_in_category(event, event_category::general));
 	switch(event) {
-		case LEFT_BUTTON_DOUBLE_CLICK:
-			return fire_event_double_click<LEFT_BUTTON_CLICK, LEFT_BUTTON_DOUBLE_CLICK,
-					&event_executor::wants_mouse_left_double_click, signal_function>(this, &target);
+	case LEFT_BUTTON_DOUBLE_CLICK:
+		return fire_event_double_click<LEFT_BUTTON_CLICK, LEFT_BUTTON_DOUBLE_CLICK,
+			&event_executor::wants_mouse_left_double_click>(this, &target);
 
-		case MIDDLE_BUTTON_DOUBLE_CLICK:
-			return fire_event_double_click<MIDDLE_BUTTON_CLICK, MIDDLE_BUTTON_DOUBLE_CLICK,
-					&event_executor::wants_mouse_middle_double_click, signal_function>(this, &target);
+	case MIDDLE_BUTTON_DOUBLE_CLICK:
+		return fire_event_double_click<MIDDLE_BUTTON_CLICK, MIDDLE_BUTTON_DOUBLE_CLICK,
+			&event_executor::wants_mouse_middle_double_click>(this, &target);
 
-		case RIGHT_BUTTON_DOUBLE_CLICK:
-			return fire_event_double_click<RIGHT_BUTTON_CLICK, RIGHT_BUTTON_DOUBLE_CLICK,
-					&event_executor::wants_mouse_right_double_click, signal_function>(this, &target);
+	case RIGHT_BUTTON_DOUBLE_CLICK:
+		return fire_event_double_click<RIGHT_BUTTON_CLICK, RIGHT_BUTTON_DOUBLE_CLICK,
+			&event_executor::wants_mouse_right_double_click>(this, &target);
 
-		default:
-			return fire_event<signal_function>(event, this, &target);
+	default:
+		return fire_event<event_category::general>(event, this, &target);
 	}
 }
 
 bool dispatcher::fire(const ui_event event, widget& target, const point& coordinate)
 {
-	assert(find<set_event_mouse>(event, event_in_set()));
-	return fire_event<signal_mouse_function>(event, this, &target, coordinate);
+	assert(is_in_category(event, event_category::mouse));
+	return fire_event<event_category::mouse>(event, this, &target, coordinate);
 }
 
 bool dispatcher::fire(const ui_event event,
@@ -160,44 +106,44 @@ bool dispatcher::fire(const ui_event event,
 		const SDL_Keymod modifier,
 		const std::string& unicode)
 {
-	assert(find<set_event_keyboard>(event, event_in_set()));
-	return fire_event<signal_keyboard_function>(event, this, &target, key, modifier, unicode);
+	assert(is_in_category(event, event_category::keyboard));
+	return fire_event<event_category::keyboard>(event, this, &target, key, modifier, unicode);
 }
 
 bool dispatcher::fire(const ui_event event, widget& target, const point& pos, const point& distance)
 {
-	assert(find<set_event_touch_motion>(event, event_in_set()));
-	return fire_event<signal_touch_motion_function>(event, this, &target, pos, distance);
+	assert(is_in_category(event, event_category::touch_motion));
+	return fire_event<event_category::touch_motion>(event, this, &target, pos, distance);
 }
 
-bool dispatcher::fire(const ui_event event, widget& target, const point& center, float dTheta, float dDist, Uint8 numFingers)
+bool dispatcher::fire(const ui_event event, widget& target, const point& center, float dTheta, float dDist, uint8_t numFingers)
 {
-	assert(find<set_event_touch_gesture>(event, event_in_set()));
-	return fire_event<signal_touch_gesture_function>(event, this, &target, center, dTheta, dDist, numFingers);
+	assert(is_in_category(event, event_category::touch_gesture));
+	return fire_event<event_category::touch_gesture>(event, this, &target, center, dTheta, dDist, numFingers);
 }
 
 bool dispatcher::fire(const ui_event event, widget& target, const SDL_Event& sdlevent)
 {
-	assert(find<set_event_raw_event>(event, event_in_set()));
-	return fire_event<signal_raw_event_function>(event, this, &target, sdlevent);
+	assert(is_in_category(event, event_category::raw_event));
+	return fire_event<event_category::raw_event>(event, this, &target, sdlevent);
 }
 
 bool dispatcher::fire(const ui_event event, widget& target, const std::string& text, int32_t start, int32_t len)
 {
-	assert(find<set_event_text_input>(event, event_in_set()));
-	return fire_event<signal_text_input_function>(event, this, &target, text, start, len);
+	assert(is_in_category(event, event_category::text_input));
+	return fire_event<event_category::text_input>(event, this, &target, text, start, len);
 }
 
 bool dispatcher::fire(const ui_event event, widget& target, void*)
 {
-	assert(find<set_event_notification>(event, event_in_set()));
-	return fire_event<signal_notification_function>(event, this, &target, nullptr);
+	assert(is_in_category(event, event_category::notification));
+	return fire_event<event_category::notification>(event, this, &target, nullptr);
 }
 
 bool dispatcher::fire(const ui_event event, widget& target, const message& msg)
 {
-	assert(find<set_event_message>(event, event_in_set()));
-	return fire_event<signal_message_function>(event, this, &target, msg);
+	assert(is_in_category(event, event_category::message));
+	return fire_event<event_category::message>(event, this, &target, msg);
 }
 
 void dispatcher::register_hotkey(const hotkey::HOTKEY_COMMAND id, const hotkey_function& function)
@@ -225,32 +171,43 @@ bool dispatcher::execute_hotkey(const hotkey::HOTKEY_COMMAND id)
 	return true;
 }
 
-void connect_signal_pre_key_press(dispatcher& dispatcher, const signal_keyboard_function& signal)
+void connect_signal_pre_key_press(dispatcher& dispatcher, const signal_keyboard& signal)
 {
 	dispatcher.connect_signal<SDL_KEY_DOWN>(signal, dispatcher::front_child);
 }
 
-void connect_signal_mouse_left_click(dispatcher& dispatcher, const signal_function& signal)
+void connect_signal_mouse_left_click(dispatcher& dispatcher, const signal& signal)
 {
 	dispatcher.connect_signal<LEFT_BUTTON_CLICK>(signal);
 }
 
-void disconnect_signal_mouse_left_click(dispatcher& dispatcher, const signal_function& signal)
+void disconnect_signal_mouse_left_click(dispatcher& dispatcher, const signal& signal)
 {
 	dispatcher.disconnect_signal<LEFT_BUTTON_CLICK>(signal);
 }
 
-void connect_signal_mouse_left_double_click(dispatcher& dispatcher, const signal_function& signal)
+void connect_signal_mouse_left_release(dispatcher& dispatcher, const signal& signal)
+{
+	dispatcher.connect_signal<LEFT_BUTTON_UP>(signal);
+}
+
+void disconnect_signal_mouse_left_release(dispatcher& dispatcher, const signal& signal)
+{
+	dispatcher.disconnect_signal<LEFT_BUTTON_UP>(signal);
+}
+
+
+void connect_signal_mouse_left_double_click(dispatcher& dispatcher, const signal& signal)
 {
 	dispatcher.connect_signal<LEFT_BUTTON_DOUBLE_CLICK>(signal, dispatcher::back_post_child);
 }
 
-void connect_signal_notify_modified(dispatcher& dispatcher, const signal_notification_function& signal)
+void connect_signal_notify_modified(dispatcher& dispatcher, const signal_notification& signal)
 {
 	dispatcher.connect_signal<NOTIFY_MODIFIED>(signal);
 }
 
-void connect_signal_on_draw(dispatcher& dispatcher, const signal_function& signal)
+void connect_signal_on_draw(dispatcher& dispatcher, const signal& signal)
 {
 	// TODO: evaluate whether draw events need go in this queue position.
 	dispatcher.connect_signal<DRAW>(signal, dispatcher::front_child);
@@ -263,7 +220,7 @@ void connect_signal_on_draw(dispatcher& dispatcher, const signal_function& signa
 /**
  * @page event_dispatching Event dispatching.
  *
- * @section introduction Introduction
+ * @section introduction-event_dispatching Introduction
  *
  * This page describes how the new event handling system works, since the
  * system is still work in progress it might be out of date with the actual
@@ -323,7 +280,7 @@ void connect_signal_on_draw(dispatcher& dispatcher, const signal_function& signa
  * tries sees where the event sticks. This following sections describe how the
  * events are tried for this usage scenario.
  *
- * @subsubsection unhandled Unhandled event
+ * @subsubsection unhandled-all_queues Unhandled event
  *
  * - W pre child
  * - C pre child
@@ -335,13 +292,13 @@ void connect_signal_on_draw(dispatcher& dispatcher, const signal_function& signa
  * - C post child
  * - B post child
  *
- * @subsubsection mouse_down Mouse down
+ * @subsubsection mouse_down-all_queues Mouse down
  *
  * - W pre child
  * - C pre child -> set focus -> !handled
  * - B pre child -> set pressed state -> handled
  *
- * @subsubsection mouse_wheel Mouse wheel
+ * @subsubsection mouse_wheel-all_queues Mouse wheel
  *
  * - W pre child
  * - C pre child
@@ -358,7 +315,7 @@ void connect_signal_on_draw(dispatcher& dispatcher, const signal_function& signa
  * the last possible widget and to the child of the last widget. The pre queue
  * will be send from top to bottom, the post queue from bottom to top.
  *
- * @subsubsection unhandled Unhandled event
+ * @subsubsection unhandled-chain Unhandled event
  *
  * - W pre child
  * - C pre child
@@ -366,13 +323,13 @@ void connect_signal_on_draw(dispatcher& dispatcher, const signal_function& signa
  * - C post child
  * - W post child
  *
- * @subsubsection mouse_down Mouse down
+ * @subsubsection mouse_down-chain Mouse down
  *
  * - W pre child
  * - C pre child -> set focus -> !handled
  * - B child -> set pressed state -> handled
  *
- * @subsubsection mouse_wheel Mouse wheel
+ * @subsubsection mouse_wheel-chain Mouse wheel
  *
  * - W pre child
  * - C pre child

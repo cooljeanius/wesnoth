@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2003 - 2018 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2003 - 2023
+	by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -22,8 +23,7 @@
 #include "log.hpp" //LOG_STREAM
 #include "variable.hpp" //scoped_wml_variable
 #include "serialization/string_utils.hpp"
-
-#include <boost/range/adaptor/reversed.hpp>
+#include "utils/ranges.hpp"
 
 static lg::log_domain log_engine("engine");
 #define ERR_NG LOG_STREAM(err, log_engine)
@@ -39,6 +39,8 @@ game_data::game_data(const config& level)
 	, variables_(level.child_or_empty("variables"))
 	, phase_(INITIAL)
 	, can_end_turn_(level["can_end_turn"].to_bool(true))
+	, end_turn_forced_(level["end_turn"].to_bool())
+	, cannot_end_turn_reason_(level["cannot_end_turn_reason"].t_str())
 	, next_scenario_(level["next_scenario"])
 	, id_(level["id"])
 	, theme_(level["theme"])
@@ -55,8 +57,10 @@ game_data::game_data(const game_data& data)
 	, variables_(data.variables_)
 	, phase_(data.phase_)
 	, can_end_turn_(data.can_end_turn_)
+	, end_turn_forced_(data.end_turn_forced_)
 	, next_scenario_(data.next_scenario_)
 {
+	//TODO: is there a reason why this cctor is not "=default" ? (or whether it is used in the first place)
 }
 //throws
 config::attribute_value &game_data::get_variable(const std::string& key)
@@ -89,7 +93,7 @@ void game_data::set_variable(const std::string& key, const t_string& value)
 	}
 	catch(const invalid_variablename_exception&)
 	{
-		ERR_NG << "variable " << key << "cannot be set to " << value << std::endl;
+		ERR_NG << "variable " << key << "cannot be set to " << value;
 	}
 }
 //throws
@@ -125,6 +129,7 @@ void game_data::clear_variable(const std::string& varname)
 
 void game_data::write_snapshot(config& cfg) const
 {
+	write_phase(cfg, phase_);
 	cfg["next_scenario"] = next_scenario_;
 	cfg["id"] = id_;
 	cfg["theme"] = theme_;
@@ -132,6 +137,7 @@ void game_data::write_snapshot(config& cfg) const
 	cfg["victory_music"] = utils::join(victory_music_);
 
 	cfg["can_end_turn"] = can_end_turn_;
+	cfg["cannot_end_turn_reason"] = cannot_end_turn_reason_;
 
 	cfg["random_seed"] = rng_.get_random_seed_str();
 	cfg["random_calls"] = rng_.get_random_calls();
@@ -156,7 +162,7 @@ void game_data::activate_scope_variable(std::string var_name) const
 		var_name.erase(itor, var_name.end());
 	}
 
-	for (scoped_wml_variable* v : boost::adaptors::reverse(scoped_variables)) {
+	for (scoped_wml_variable* v : utils::reversed_view(scoped_variables)) {
 		if (v->name() == var_name) {
 			recursive_activation = true;
 			if (!v->activated()) {
@@ -166,4 +172,39 @@ void game_data::activate_scope_variable(std::string var_name) const
 			break;
 		}
 	}
+}
+
+game_data::PHASE game_data::read_phase(const config& cfg)
+{
+	if(cfg["playing_team"].empty()) {
+		return game_data::PRELOAD;
+	}
+	if(!cfg["init_side_done"]) {
+		return game_data::TURN_STARTING_WAITING;
+	}
+	if(cfg.has_child("end_level_data")) {
+		return game_data::GAME_ENDED;
+	}
+	return game_data::TURN_PLAYING;
+}
+
+
+bool game_data::has_current_player() const
+{
+	return phase() == TURN_STARTING || phase() == TURN_PLAYING || phase() == TURN_ENDED;
+}
+
+bool game_data::is_before_screen() const
+{
+	return phase() == INITIAL || phase() == PRELOAD || phase() == PRESTART;
+}
+
+bool game_data::is_after_start() const
+{
+	return !(phase() == INITIAL || phase() == PRELOAD || phase() == PRESTART || phase() == START);
+}
+
+void game_data::write_phase(config& cfg, game_data::PHASE phase)
+{
+	cfg["init_side_done"] = !(phase == INITIAL || phase == PRELOAD || phase == PRESTART || phase == TURN_STARTING_WAITING);
 }

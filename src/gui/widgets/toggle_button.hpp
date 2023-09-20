@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2008 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -27,10 +28,27 @@ namespace implementation
 // ------------ WIDGET -----------{
 
 /**
+ * @ingroup GUIWidgetWML
+ *
  * Class for a toggle button.
  *
- * A toggle button is a button with two states 'up' and 'down' or 'selected' and
- * 'deselected'. When the mouse is pressed on it the state changes.
+ * A toggle button is a button with two states 'up' and 'down' or 'selected' and 'deselected'.
+ * When the mouse is pressed on it the state changes.
+ *
+ * The following states exist:
+ * * state_enabled - the button is enabled and not selected.
+ * * state_disabled - the button is disabled and not selected.
+ * * state_focussed - the mouse is over the button and not selected.
+ * * state_enabled_selected - the button is enabled and selected.
+ * * state_disabled_selected - the button is disabled and selected.
+ * * state_focussed_selected - the mouse is over the button and selected.
+ *
+ * Variables:
+ * Key                 |Type                                    |Default  |Description
+ * --------------------|----------------------------------------|---------|-------------
+ * icon                | @ref guivartype_string "string"        |""       |The name of the icon file to show.
+ * return_value_id     | @ref guivartype_string "string"        |""       |The return value id.
+ * return_value        | @ref guivartype_int "int"              |0        |The return value.
  */
 class toggle_button : public styled_widget, public selectable_item
 {
@@ -40,7 +58,7 @@ public:
 	/***** ***** ***** ***** Inherited ***** ***** ***** *****/
 
 	/** See @ref styled_widget::set_members. */
-	void set_members(const string_map& data) override;
+	void set_members(const widget_item& data) override;
 
 	/** See @ref styled_widget::set_active. */
 	virtual void set_active(const bool active) override;
@@ -169,7 +187,7 @@ struct builder_toggle_button : public builder_styled_widget
 
 	using builder_styled_widget::build;
 
-	widget* build() const;
+	virtual std::unique_ptr<widget> build() const override;
 
 private:
 	std::string icon_name_;

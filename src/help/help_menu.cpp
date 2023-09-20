@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2003 - 2018 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2003 - 2023
+	by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #include "help/help_menu.hpp"
@@ -18,25 +19,22 @@
 #include "help/help_impl.hpp"                // for section, topic, topic_list, etc
 #include "sound.hpp"                    // for play_UI_sound
 #include "wml_separators.hpp"           // for IMG_TEXT_SEPARATOR, etc
+#include "sdl/input.hpp"                // for get_mouse_state
 
 #include <algorithm>                    // for find
-#include <iostream>                     // for basic_ostream, operator<<, etc
 #include <list>                         // for _List_const_iterator, etc
 #include <utility>                      // for pair
 #include <SDL2/SDL.h>
 
-class CVideo;  // lines 56-56
-
 namespace help {
 
-help_menu::help_menu(CVideo &video, const section& toplevel, int max_height) :
-	gui::menu(video, empty_string_vector, true, max_height, -1, nullptr, &gui::menu::bluebg_style),
+help_menu::help_menu(const section& toplevel, int max_height) :
+	gui::menu(empty_string_vector, true, max_height, -1, nullptr, &gui::menu::bluebg_style),
 	visible_items_(),
 	toplevel_(toplevel),
 	expanded_(),
-	restorer_(),
 	chosen_topic_(nullptr),
-	selected_item_(&toplevel, "")
+	selected_item_(&toplevel, "", 0)
 {
 	silent_ = true; //silence the default menu sounds
 	update_visible_items(toplevel_);
@@ -73,17 +71,16 @@ void help_menu::update_visible_items(const section &sec, unsigned level)
 	for (const auto &s : sec.sections) {
 		if (is_visible_id(s.id)) {
 			const std::string vis_string = get_string_to_show(s, level + 1);
-			visible_items_.emplace_back(&s, vis_string);
+			visible_items_.emplace_back(&s, vis_string, level + 1);
 			if (expanded(s)) {
 				update_visible_items(s, level + 1);
 			}
 		}
 	}
-	topic_list::const_iterator topic_it;
-	for (topic_it = sec.topics.begin(); topic_it != sec.topics.end(); ++topic_it) {
-		if (is_visible_id(topic_it->id)) {
-			const std::string vis_string = get_string_to_show(*topic_it, level + 1);
-			visible_items_.emplace_back(&(*topic_it), vis_string);
+	for (const auto &t : sec.topics) {
+		if (is_visible_id(t.id)) {
+			const std::string vis_string = get_string_to_show(t, level + 1);
+			visible_items_.emplace_back(&t, vis_string, level + 1);
 		}
 	}
 }
@@ -157,20 +154,24 @@ int help_menu::process()
 {
 	int res = menu::process();
 	int mousex, mousey;
-	SDL_GetMouseState(&mousex,&mousey);
+	sdl::get_mouse_state(&mousex, &mousey);
 
-	if (!visible_items_.empty() &&
-            static_cast<std::size_t>(res) < visible_items_.size()) {
-
+	if (!visible_items_.empty()
+		&& static_cast<std::size_t>(res) < visible_items_.size())
+	{
 		selected_item_ = visible_items_[res];
 		const section* sec = selected_item_.sec;
 		if (sec != nullptr) {
-			// Check how we click on the section
+			// Behavior of the UI, for section headings:
+			// * user single-clicks on the text part: show the ".." topic in the right-hand pane
+			// * user single-clicks on the icon (or to the left of it): expand or collapse the tree view
+			// * user double-clicks anywhere: expand or collapse the tree view
+			// * note: the first click of the double-click has the single-click effect too
 			int x = mousex - menu::location().x;
 
 			const std::string icon_img = expanded(*sec) ? open_section_img : closed_section_img;
-			// we remove the right thickness (ne present between icon and text)
-			int text_start = style_->item_size(indent_list(icon_img, sec->level)).w - style_->get_thickness();
+			// the "thickness" is the width of the left border
+			int text_start = style_->item_size(indent_list(icon_img, selected_item_.level)).w - style_->get_thickness();
 
 			// NOTE: if you want to forbid click to the left of the icon
 			// also check x >= text_start-image_width(icon_img)
@@ -185,7 +186,7 @@ int help_menu::process()
 				chosen_topic_ = find_topic(default_toplevel, ".."+sec->id );
 			}
 		} else if (selected_item_.t != nullptr) {
-			/// Choose a topic if it is clicked.
+			// Choose a topic if it is clicked.
 			chosen_topic_ = selected_item_.t;
 		}
 	}
@@ -212,11 +213,11 @@ void help_menu::display_visible_items()
 	set_items(menu_items, false, true);
 }
 
-help_menu::visible_item::visible_item(const section *_sec, const std::string &vis_string) :
-	t(nullptr), sec(_sec), visible_string(vis_string) {}
+help_menu::visible_item::visible_item(const section *_sec, const std::string &vis_string, int lev) :
+	t(nullptr), sec(_sec), visible_string(vis_string), level(lev) {}
 
-help_menu::visible_item::visible_item(const topic *_t, const std::string &vis_string) :
-	t(_t), sec(nullptr), visible_string(vis_string) {}
+help_menu::visible_item::visible_item(const topic *_t, const std::string &vis_string, int lev) :
+	t(_t), sec(nullptr), visible_string(vis_string), level(lev) {}
 
 bool help_menu::visible_item::operator==(const section &_sec) const
 {

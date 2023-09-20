@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2008 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #define GETTEXT_DOMAIN "wesnoth-lib"
@@ -25,17 +26,12 @@
 #include "gui/widgets/window.hpp"
 #include "sdl/rect.hpp"
 #include "sound.hpp"
-#include "utils/general.hpp"
 #include "gettext.hpp"
+#include "utils/math.hpp"
 #include "wml_exception.hpp"
 
-#include "utils/functional.hpp"
-
-#if BOOST_VERSION >= 106700
-#include <boost/integer/common_factor_rt.hpp>
-#else
-#include <boost/math/common_factor_rt.hpp>
-#endif
+#include <functional>
+#include <numeric>
 
 #define LOG_SCOPE_HEADER get_control_type() + " [" + id() + "] " + __func__
 #define LOG_HEADER LOG_SCOPE_HEADER + ':'
@@ -56,12 +52,12 @@ slider::slider(const implementation::builder_slider& builder)
 	, value_label_generator_()
 	, current_item_mouse_position_(0, 0)
 {
-	connect_signal<event::SDL_KEY_DOWN>(std::bind(&slider::signal_handler_sdl_key_down, this, _2, _3, _5));
+	connect_signal<event::SDL_KEY_DOWN>(std::bind(&slider::signal_handler_sdl_key_down, this, std::placeholders::_2, std::placeholders::_3, std::placeholders::_5));
 
 	// connect_signal<event::LEFT_BUTTON_DOWN>(
-	//		std::bind(&slider::signal_handler_left_button_down, this, _2, _3));
+	//		std::bind(&slider::signal_handler_left_button_down, this, std::placeholders::_2, std::placeholders::_3));
 
-	connect_signal<event::LEFT_BUTTON_UP>(std::bind(&slider::signal_handler_left_button_up, this, _2, _3));
+	connect_signal<event::LEFT_BUTTON_UP>(std::bind(&slider::signal_handler_left_button_up, this, std::placeholders::_2, std::placeholders::_3));
 }
 
 point slider::calculate_best_size() const
@@ -79,13 +75,13 @@ point slider::calculate_best_size() const
 		result.x = conf->left_offset + best_slider_length_ + conf->right_offset;
 	}
 
-	DBG_GUI_L << LOG_HEADER << " best_slider_length " << best_slider_length_ << " result " << result << ".\n";
+	DBG_GUI_L << LOG_HEADER << " best_slider_length " << best_slider_length_ << " result " << result << ".";
 	return result;
 }
 
 void slider::set_value(int value)
 {
-	value = utils::clamp(value, minimum_value_, get_maximum_value());
+	value = std::clamp(value, minimum_value_, get_maximum_value());
 	int old_value = get_value();
 
 	if(value == old_value) {
@@ -101,7 +97,7 @@ void slider::set_value(int value)
 			<< " desired_value=" << value
 			<< " minimum_value=" << minimum_value_
 			<< " maximum_value=" << get_maximum_value()
-			<< " step_size=" << step_size_ << "\n";
+			<< " step_size=" << step_size_;
 		assert(false);
 	}
 
@@ -149,11 +145,12 @@ unsigned slider::offset_after() const
 
 bool slider::on_positioner(const point& coordinate) const
 {
-	SDL_Rect positioner_rect =
-		sdl::create_rect(get_positioner_offset(), 0, get_positioner_length(), get_height());
+	rect positioner_rect(
+		get_positioner_offset(), 0, get_positioner_length(), get_height()
+	);
 
 	// Note we assume the positioner is over the entire height of the widget.
-	return sdl::point_in_rect(coordinate, positioner_rect);
+	return positioner_rect.contains(coordinate);
 }
 
 int slider::on_bar(const point& coordinate) const
@@ -188,7 +185,7 @@ void slider::update_canvas()
 
 void slider::handle_key_decrease(bool& handled)
 {
-	DBG_GUI_E << LOG_HEADER << '\n';
+	DBG_GUI_E << LOG_HEADER;
 
 	handled = true;
 
@@ -197,7 +194,7 @@ void slider::handle_key_decrease(bool& handled)
 
 void slider::handle_key_increase(bool& handled)
 {
-	DBG_GUI_E << LOG_HEADER << '\n';
+	DBG_GUI_E << LOG_HEADER;
 
 	handled = true;
 
@@ -206,7 +203,7 @@ void slider::handle_key_increase(bool& handled)
 
 void slider::signal_handler_sdl_key_down(const event::ui_event event, bool& handled, const SDL_Keycode key)
 {
-	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	if(key == SDLK_DOWN || key == SDLK_LEFT) {
 		handle_key_decrease(handled);
@@ -220,7 +217,7 @@ void slider::signal_handler_sdl_key_down(const event::ui_event event, bool& hand
 #if 0
 void slider::signal_handler_left_button_down(const event::ui_event event, bool& handled)
 {
-	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	update_current_item_mouse_position();
 
@@ -230,7 +227,7 @@ void slider::signal_handler_left_button_down(const event::ui_event event, bool& 
 
 void slider::signal_handler_left_button_up(const event::ui_event event, bool& handled)
 {
-	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	get_window()->keyboard_capture(this);
 
@@ -247,7 +244,7 @@ static t_string default_value_label_generator(const std::vector<t_string>& value
 void slider::set_value_labels(const std::vector<t_string>& value_labels)
 {
 	// Don't use std::ref because we want to store value_labels in the closure.
-	set_value_labels(std::bind(&default_value_label_generator, value_labels, _1, _2));
+	set_value_labels(std::bind(&default_value_label_generator, value_labels, std::placeholders::_1, std::placeholders::_2));
 }
 
 
@@ -266,12 +263,7 @@ void slider::set_value_range(int min_value, int max_value)
 	int diff = max_value - min_value;
 	int old_value = get_value();
 
-#if BOOST_VERSION >= 106700
-	step_size_ = boost::integer::gcd(diff, step_size_);
-#else
-	step_size_ = boost::math::gcd(diff, step_size_);
-#endif
-
+	step_size_ = std::gcd(diff, step_size_);
 	minimum_value_ = min_value;
 
 	slider_set_item_last(diff / step_size_);
@@ -290,11 +282,8 @@ void slider::set_step_size(int step_size)
 	const int range_diff = get_item_count() - 1;
 	const int old_value = get_value();
 
-#if BOOST_VERSION >= 106700
-	step_size_ = boost::integer::gcd(range_diff, step_size);
-#else
-	step_size_ = boost::math::gcd(range_diff, step_size);
-#endif
+	step_size_ = std::gcd(range_diff, step_size);
+
 	slider_set_item_last(range_diff / step_size_);
 	set_value(old_value);
 
@@ -307,58 +296,11 @@ void slider::set_step_size(int step_size)
 slider_definition::slider_definition(const config& cfg)
 	: styled_widget_definition(cfg)
 {
-	DBG_GUI_P << "Parsing slider " << id << '\n';
+	DBG_GUI_P << "Parsing slider " << id;
 
 	load_resolutions<resolution>(cfg);
 }
 
-/*WIKI
- * @page = GUIWidgetDefinitionWML
- * @order = 1_slider
- *
- * == Slider ==
- *
- * @macro = slider_description
- *
- * @begin{parent}{name="gui/"}
- * @begin{tag}{name="slider_definition"}{min=0}{max=-1}{super="generic/widget_definition"}
- * @begin{tag}{name="resolution"}{min=0}{max=-1}{super="generic/widget_definition/resolution"}
- * @begin{table}{config}
- *     minimum_positioner_length & unsigned & &
- *                                     The minimum size the positioner is
- *                                     allowed to be. The engine needs to know
- *                                     this in order to calculate the best size
- *                                     for the positioner. $
- *     maximum_positioner_length & unsigned & 0 &
- *                                     The maximum size the positioner is
- *                                     allowed to be. If minimum and maximum are
- *                                     the same value the positioner is fixed
- *                                     size. If the maximum is 0 (and the
- *                                     minimum not) there's no maximum. $
- *     left_offset & unsigned & 0 &    The number of pixels at the left side
- *                                     which can't be used by the positioner. $
- *     right_offset & unsigned & 0 &   The number of pixels at the right side
- *                                     which can't be used by the positioner. $
- * @end{table}
- *
- * The following states exist:
- * * state_enabled, the slider is enabled.
- * * state_disabled, the slider is disabled.
- * * state_pressed, the left mouse button is down on the positioner of the
- *   slider.
- * * state_focused, the mouse is over the positioner of the slider.
- * @begin{tag}{name="state_enabled"}{min=0}{max=1}{super="generic/state"}
- * @end{tag}{name="state_enabled"}
- * @begin{tag}{name="state_disabled"}{min=0}{max=1}{super="generic/state"}
- * @end{tag}{name="state_disabled"}
- * @begin{tag}{name="state_pressed"}{min=0}{max=1}{super="generic/state"}
- * @end{tag}{name="state_pressed"}
- * @begin{tag}{name="state_focused"}{min=0}{max=1}{super="generic/state"}
- * @end{tag}{name="state_focused"}
- * @end{tag}{name="resolution"}
- * @end{tag}{name="slider_definition"}
- * @end{parent}{name="gui/"}
- */
 slider_definition::resolution::resolution(const config& cfg)
 	: resolution_definition(cfg)
 	, positioner_length(cfg["minimum_positioner_length"])
@@ -368,64 +310,13 @@ slider_definition::resolution::resolution(const config& cfg)
 	VALIDATE(positioner_length, missing_mandatory_wml_key("resolution", "minimum_positioner_length"));
 
 	// Note the order should be the same as the enum state_t is slider.hpp.
-	state.emplace_back(cfg.child("state_enabled"));
-	state.emplace_back(cfg.child("state_disabled"));
-	state.emplace_back(cfg.child("state_pressed"));
-	state.emplace_back(cfg.child("state_focused"));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_enabled", _("Missing required state for slider")));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_disabled", _("Missing required state for slider")));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_pressed", _("Missing required state for slider")));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_focused", _("Missing required state for slider")));
 }
 
 // }---------- BUILDER -----------{
-
-/*WIKI_MACRO
- * @begin{macro}{slider_description}
- * A slider is a styled_widget that can select a value by moving a grip on a groove.
- * @end{macro}
- */
-
-/*WIKI
- * @page = GUIWidgetInstanceWML
- * @order = 3_slider
- * @begin{parent}{name="gui/window/resolution/grid/row/column/"}
- * @begin{tag}{name="slider"}{min="0"}{max="-1"}{super="generic/widget_instance"}
- * == Slider ==
- *
- * @macro = slider_description
- *
- * @begin{table}{config}
- *     best_slider_length & unsigned & 0 &
- *                                    The best length for the sliding part. $
- *     minimum_value & int & 0 &        The minimum value the slider can have. $
- *     maximum_value & int & 0 &        The maximum value the slider can have. $
- *
- *     step_size & unsigned & 0 &       The number of items the slider's value
- *                                    increases with one step. $
- *     value & int & 0 &                The value of the slider. $
- *
- *     minimum_value_label & t_string & "" &
- *                                    If the minimum value is chosen there
- *                                    might be the need for a special value
- *                                    (eg off). When this key has a value
- *                                    that value will be shown if the minimum
- *                                    is selected. $
- *     maximum_value_label & t_string & "" &
- *                                    If the maximum value is chosen there
- *                                    might be the need for a special value
- *                                    (eg unlimited)). When this key has a
- *                                    value that value will be shown if the
- *                                    maximum is selected. $
- *     value_labels & [] &              It might be the labels need to be shown
- *                                    are not a linear number sequence eg
- *                                    (0.5, 1, 2, 4) in that case for all
- *                                    items this section can be filled with
- *                                    the values, which should be the same
- *                                    number of items as the items in the
- *                                    slider. NOTE if this option is used,
- *                                    'minimum_value_label' and
- *                                    'maximum_value_label' are ignored. $
- * @end{table}
- * @end{tag}{name="slider"}
- * @end{parent}{name="gui/window/resolution/grid/row/column/"}
- */
 
 namespace implementation
 {
@@ -440,19 +331,19 @@ builder_slider::builder_slider(const config& cfg)
 	, maximum_value_label_(cfg["maximum_value_label"].t_str())
 	, value_labels_()
 {
-	const config& labels = cfg.child("value_labels");
+	auto labels = cfg.optional_child("value_labels");
 	if(!labels) {
 		return;
 	}
 
-	for(const auto& label : labels.child_range("value")) {
+	for(const auto& label : labels->child_range("value")) {
 		value_labels_.push_back(label["label"]);
 	}
 }
 
-widget* builder_slider::build() const
+std::unique_ptr<widget> builder_slider::build() const
 {
-	slider* widget = new slider(*this);
+	auto widget = std::make_unique<slider>(*this);
 
 	widget->set_best_slider_length(best_slider_length_);
 	widget->set_value_range(minimum_value_, maximum_value_);
@@ -472,7 +363,7 @@ widget* builder_slider::build() const
 		widget->set_maximum_value_label(maximum_value_label_);
 	}
 
-	DBG_GUI_G << "Window builder: placed slider '" << id << "' with definition '" << definition << "'.\n";
+	DBG_GUI_G << "Window builder: placed slider '" << id << "' with definition '" << definition << "'.";
 
 	return widget;
 }

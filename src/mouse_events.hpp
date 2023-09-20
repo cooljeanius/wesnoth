@@ -1,16 +1,17 @@
 /*
-   Copyright (C) 2006 - 2018 by Joerg Hinrichs <joerg.hinrichs@alice-dsl.de>
-   wesnoth playturn Copyright (C) 2003 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2006 - 2023
+	by Joerg Hinrichs <joerg.hinrichs@alice-dsl.de>
+	Copyright (C) 2003 by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -75,7 +76,7 @@ public:
 	// wrapper to catch bad_alloc so this should be called
 	void attack_enemy(const map_location& attacker_loc, const map_location& defender_loc, int choice);
 
-	/// Moves a unit across the board for a player.
+	/** Moves a unit across the board for a player. */
 	std::size_t move_unit_along_route(const std::vector<map_location> & steps, bool & interrupted);
 
 	void select_hex(const map_location& hex, const bool browse,
@@ -159,6 +160,15 @@ private:
 	const team& viewing_team() const;
 	team &current_team();
 
+	// Some common code from mouse_motion and touch_motion.
+	/**
+	 * Highlight the hexes that a unit can move to.
+	 *
+	 * Based on the currently selected hex, selected unit and what's being moused-over,
+	 * conditionally draw any planned moves for the unit passed as an argument.
+	 */
+	void show_reach_for_unit(const unit_ptr& un);
+
 	game_display* gui_;
 	play_controller & pc_;
 
@@ -169,6 +179,10 @@ private:
 	map_location selected_hex_;
 	map_location next_unit_;
 	pathfind::marked_route current_route_;
+	/**
+	 * If non-empty, current_paths_.destinations contains a cache of highlighted
+	 * hexes, likely the movement range or attack range of a unit.
+	 */
 	pathfind::paths current_paths_;
 	bool unselected_paths_;
 	bool unselected_reach_;

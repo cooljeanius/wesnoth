@@ -1,17 +1,18 @@
 /*
-   Copyright (C) 2003 by David White <dave@whitevine.net>
-   Copyright (C) 2005 by Guillaume Melquiond <guillaume.melquiond@gmail.com>
-   Copyright (C) 2005 - 2018 by Philippe Plantier <ayin@anathas.org>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2005 - 2023
+	by Philippe Plantier <ayin@anathas.org>
+	Copyright (C) 2005 by Guillaume Melquiond <guillaume.melquiond@gmail.com>
+	Copyright (C) 2003 by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -45,8 +46,6 @@
 #if defined(_MSC_VER)
 #pragma warning(pop)
 #endif
-
-#include <boost/variant/static_visitor.hpp>
 
 #include <stack>
 
@@ -152,7 +151,7 @@ void parser::operator()()
 				utils::string_map i18n_symbols;
 				std::stringstream ss;
 				ss << tok_.get_start_line() << " " << tok_.get_file();
-				ERR_CF << lineno_string(i18n_symbols, ss.str(), "Skipping over a utf8 BOM at $pos") << '\n';
+				ERR_CF << lineno_string(i18n_symbols, ss.str(), "Skipping over a utf8 BOM at $pos");
 			} else {
 				error(_("Unexpected characters at line start"));
 			}
@@ -228,8 +227,8 @@ void parser::parse_element()
 
 		// Find the last child of the current element whose name is element
 		parent = elements.top().cfg;
-		if(config& c = parent->child(elname, -1)) {
-			current_element = &c;
+		if(auto c = parent->optional_child(elname, -1)) {
+			current_element = c.ptr();
 
 			if(validator_) {
 				validator_->open_tag(elname, *parent, tok_.get_start_line(), tok_.get_file(), true);
@@ -332,7 +331,7 @@ void parser::parse_variable()
 
 	bool ignore_next_newlines = false, previous_string = false;
 
-	while(1) {
+	while(true) {
 		tok_.next_token();
 		assert(curvar != variables.end());
 
@@ -346,7 +345,7 @@ void parser::parse_variable()
 				}
 
 				if(validator_) {
-					validator_->validate_key(cfg, *curvar, buffer.value(), tok_.get_start_line(), tok_.get_file());
+					validator_->validate_key(cfg, *curvar, cfg[*curvar], tok_.get_start_line(), tok_.get_file());
 				}
 
 				buffer = t_string_base();
@@ -391,7 +390,7 @@ void parser::parse_variable()
 				buffer += " ";
 			}
 
-			FALLTHROUGH;
+			[[fallthrough]];
 
 		default:
 			buffer += tok_.current_token().value;
@@ -410,7 +409,7 @@ void parser::parse_variable()
 				continue;
 			}
 
-			FALLTHROUGH;
+			[[fallthrough]];
 
 		case token::END:
 			goto finish;
@@ -429,7 +428,7 @@ finish:
 	}
 
 	if(validator_) {
-		validator_->validate_key(cfg, *curvar, buffer.value(), tok_.get_start_line(), tok_.get_file());
+		validator_->validate_key(cfg, *curvar, cfg[*curvar], tok_.get_start_line(), tok_.get_file());
 	}
 
 	while(++curvar != variables.end()) {
@@ -524,7 +523,10 @@ inline std::string escaped_string(const std::string& value)
 	return escaped_string(value.begin(), value.end());
 }
 
-class write_key_val_visitor : public boost::static_visitor<void>
+class write_key_val_visitor
+#ifdef USING_BOOST_VARIANT
+	: public boost::static_visitor<void>
+#endif
 {
 public:
 	write_key_val_visitor(std::ostream& out, unsigned level, std::string& textdomain, const std::string& key)
@@ -547,7 +549,7 @@ public:
 	// Specialized visitors for things that go in quotes:
 	//
 
-	void operator()(const boost::blank&) const
+	void operator()(const utils::monostate&) const
 	{
 		// Treat blank values as nonexistent which fits better than treating them as empty strings.
 	}
@@ -716,16 +718,16 @@ static void write_internal(const config& cfg, std::ostream& out, std::string& te
 
 	for(const config::attribute& i : cfg.attribute_range()) {
 		if(!config::valid_attribute(i.first)) {
-			ERR_CF << "Config contains invalid attribute name '" << i.first << "', skipping...\n";
+			ERR_CF << "Config contains invalid attribute name '" << i.first << "', skipping...";
 			continue;
 		}
 
 		write_key_val(out, i.first, i.second, tab, textdomain);
 	}
 
-	for(const config::any_child& item : cfg.all_children_range()) {
+	for(const config::any_child item : cfg.all_children_range()) {
 		if(!config::valid_tag(item.key)) {
-			ERR_CF << "Config contains invalid tag name '" << item.key << "', skipping...\n";
+			ERR_CF << "Config contains invalid tag name '" << item.key << "', skipping...";
 			continue;
 		}
 
@@ -749,7 +751,7 @@ static void write_internal(const configr_of& cfg, std::ostream& out, std::string
 		assert(pair.first && pair.second);
 
 		if(!config::valid_tag(*pair.first)) {
-			ERR_CF << "Config contains invalid tag name '" << *pair.first << "', skipping...\n";
+			ERR_CF << "Config contains invalid tag name '" << *pair.first << "', skipping...";
 			continue;
 		}
 

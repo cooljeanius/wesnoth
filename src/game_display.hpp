@@ -1,18 +1,17 @@
 /*
-   Copyright (C) 2003 - 2018 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2003 - 2023
+	by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
-
-/** @file */
 
 #pragma once
 
@@ -37,9 +36,8 @@ public:
 	game_display(game_board& board,
 			std::weak_ptr<wb::manager> wb,
 			reports & reports_object,
-			const config& theme_cfg,
-			const config& level,
-			bool dummy=false);
+			const std::string& theme_id,
+			const config& level);
 
 	~game_display();
 	static game_display* get_singleton()
@@ -137,20 +135,34 @@ public:
 
 	virtual bool has_time_area() const override;
 
+	/**
+	 * TLD update() override. Replaces old pre_draw(). Be sure to call
+	 * the base class method as well.
+	 *
+	 * game_display does specific things related e.g. to unit rendering
+	 * and calls the whiteboard pre-draw method here.
+	 */
+	virtual void update() override;
+
+	/**
+	 * TLD layout() override. Replaces old refresh_reports(). Be sure to
+	 * call the base class method as well.
+	 *
+	 * This updates some reports, like clock, that need to be refreshed
+	 * every frame.
+	 */
+	virtual void layout() override;
+
+	/**
+	 * TLD render() override. Replaces old post_draw(). Be sure to call
+	 * the base class method as well.
+	 *
+	 * This calls the whiteboard's post-draw method after rendering.
+	 */
+	virtual void render() override;
+
 protected:
-	/**
-	 * game_display pre_draw does specific things related e.g. to unit rendering
-	 * and calls the whiteboard pre-draw method.
-	 */
-	virtual void pre_draw() override;
-	/**
-	 * Calls the whiteboard's post-draw method.
-	 */
-	virtual void post_draw() override;
-
 	virtual void draw_invalidated() override;
-
-	virtual void post_commit() override;
 
 	virtual void draw_hex(const map_location& loc) override;
 
@@ -185,10 +197,8 @@ public:
 	static int& debug_highlight(const map_location& loc);
 	static void clear_debug_highlights() { debugHighlights_.clear(); }
 
-
 	/** The playing team is the team whose turn it is. */
-	virtual int playing_side() const override { return activeTeam_ + 1; }
-
+	virtual int playing_side() const override { return static_cast<int>(activeTeam_) + 1; }
 
 	std::string current_team_name() const;
 
@@ -213,17 +223,15 @@ public:
 
 	void set_game_mode(const game_mode mode);
 
-	/// Sets whether the screen (map visuals) needs to be rebuilt. This is typically after the map has been changed by wml.
+	/** Sets whether the screen (map visuals) needs to be rebuilt. This is typically after the map has been changed by wml. */
 	void needs_rebuild(bool b);
 
-	/// Rebuilds the screen if needs_rebuild(true) was previously called, and resets the flag.
+	/** Rebuilds the screen if needs_rebuild(true) was previously called, and resets the flag. */
 	bool maybe_rebuild();
 
 private:
 	game_display(const game_display&);
 	void operator=(const game_display&);
-
-	virtual void draw_sidebar() override;
 
 	overlay_map overlay_map_;
 
@@ -236,8 +244,6 @@ private:
 	void invalidate_route();
 
 	map_location displayedUnitHex_;
-
-	double sidebarScaling_;
 
 	bool first_turn_, in_game_;
 

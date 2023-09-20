@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2015 - 2018 by Iris Morelle <shadowm2006@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2015 - 2023
+	by Iris Morelle <shadowm2006@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -23,8 +24,10 @@ namespace game_config
 enum LIBRARY_ID
 {
 	LIB_BOOST,
+	LIB_LUA,
 
 	LIB_CRYPTO,
+	LIB_CURL,
 
 	LIB_CAIRO,
 	LIB_PANGO,
@@ -32,8 +35,6 @@ enum LIBRARY_ID
 	LIB_SDL,
 	LIB_SDL_IMAGE,
 	LIB_SDL_MIXER,
-	LIB_SDL_TTF,
-	LIB_PNG,
 
 	LIB_COUNT
 };
@@ -47,9 +48,14 @@ struct optional_feature
 };
 
 /**
- * Return a localized features table.
+ * Obtain the processor architecture for this build.
  */
-std::vector<optional_feature> optional_features_table();
+std::string build_arch();
+
+/**
+ * Retrieve the features table.
+ */
+std::vector<optional_feature> optional_features_table(bool localize = true);
 
 /**
  * Produce a plain-text report of features suitable for stdout/stderr.

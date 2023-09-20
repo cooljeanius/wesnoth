@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2009 - 2018 by Iris Morelle <shadowm2006@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2009 - 2023
+	by Iris Morelle <shadowm2006@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #define GETTEXT_DOMAIN "wesnoth-lib"
@@ -34,55 +35,25 @@
 #include "play_controller.hpp"
 #include "units/types.hpp"
 
-#include "utils/functional.hpp"
+#include <functional>
 #include <boost/dynamic_bitset.hpp>
 
 static std::string last_chosen_type_id = "";
 static std::string last_variation = "";
 static unit_race::GENDER last_gender = unit_race::MALE;
 
-namespace gui2
+namespace gui2::dialogs
 {
-namespace dialogs
-{
-
-/*WIKI
- * @page = GUIWindowDefinitionWML
- * @order = 2_unit_create
- *
- * == Unit create ==
- *
- * This shows the debug-mode dialog to create new units on the map.
- *
- * @begin{table}{dialog_widgets}
- *
- * male_toggle & & toggle_button & m &
- *         Option button to select the "male" gender for created units. $
- *
- * female_toggle & & toggle_button & m &
- *         Option button to select the "female" gender for created units. $
- *
- * unit_type_list & & listbox & m &
- *         Listbox displaying existing unit types sorted by name and race. $
- *
- * -unit_type & & styled_widget & m &
- *         Widget which shows the unit type name label. $
- *
- * -race & & styled_widget & m &
- *         Widget which shows the unit race name label. $
- *
- * @end{table}
- */
 
 REGISTER_DIALOG(unit_create)
 
 unit_create::unit_create()
-	: gender_(last_gender)
+	: modal_dialog(window_id())
+	, gender_(last_gender)
 	, choice_(last_chosen_type_id)
 	, variation_(last_variation)
 	, last_words_()
 {
-	set_restore(true);
 }
 
 void unit_create::pre_show(window& window)
@@ -98,7 +69,7 @@ void unit_create::pre_show(window& window)
 	gender_toggle.set_member_states(last_gender);
 
 	gender_toggle.set_callback_on_value_change(
-		std::bind(&unit_create::gender_toggle_callback, this));
+		std::bind(&unit_create::gender_toggle_callback, this, std::placeholders::_2));
 
 	menu_button& var_box = find_widget<menu_button>(&window, "variation_box", false);
 
@@ -110,12 +81,12 @@ void unit_create::pre_show(window& window)
 			= find_widget<text_box>(&window, "filter_box", false, true);
 
 	filter->set_text_changed_callback(
-			std::bind(&unit_create::filter_text_changed, this, _1, _2));
+			std::bind(&unit_create::filter_text_changed, this, std::placeholders::_2));
 
 	window.keyboard_capture(filter);
 	window.add_to_keyboard_chain(&list);
 
-	connect_signal_notify_modified(list, std::bind(&unit_create::list_item_clicked, this, std::ref(window)));
+	connect_signal_notify_modified(list, std::bind(&unit_create::list_item_clicked, this));
 
 	list.clear();
 
@@ -126,8 +97,8 @@ void unit_create::pre_show(window& window)
 
 		units_.push_back(&i.second);
 
-		std::map<std::string, string_map> row_data;
-		string_map column;
+		widget_data row_data;
+		widget_item column;
 
 		column["label"] = units_.back()->race()->plural_name();
 		row_data.emplace("race", column);
@@ -155,9 +126,9 @@ void unit_create::pre_show(window& window)
 	list.register_translatable_sorting_option(1, [this](const int i) { return (*units_[i]).type_name().str(); });
 
 	// Select the first entry on sort if no previous selection was provided.
-	list.set_active_sorting_option({0, listbox::SORT_ASCENDING}, choice_.empty());
+	list.set_active_sorting_option({0, sort_order::type::ascending}, choice_.empty());
 
-	list_item_clicked(window);
+	list_item_clicked();
 }
 
 void unit_create::post_show(window& window)
@@ -176,7 +147,7 @@ void unit_create::post_show(window& window)
 	} else if(static_cast<std::size_t>(selected_row) >= units_.size()) {
 		// FIXME: maybe assert?
 		ERR_GUI_G << "unit create dialog has more list items than known unit "
-					 "types; not good\n";
+		             "types; not good";
 		return;
 	}
 
@@ -185,12 +156,10 @@ void unit_create::post_show(window& window)
 	last_variation = variation_;
 }
 
-void unit_create::update_displayed_type() const
+void unit_create::update_displayed_type()
 {
-	window* w = get_window();
-
 	const int selected_row
-		= find_widget<listbox>(w, "unit_type_list", false).get_selected_row();
+		= find_widget<listbox>(this, "unit_type_list", false).get_selected_row();
 
 	if(selected_row == -1) {
 		return;
@@ -204,13 +173,13 @@ void unit_create::update_displayed_type() const
 		ut = &ut->get_variation(variation_);
 	}
 
-	find_widget<unit_preview_pane>(w, "unit_details", false).set_displayed_type(*ut);
+	find_widget<unit_preview_pane>(this, "unit_details", false).set_displayed_type(*ut);
 }
 
-void unit_create::list_item_clicked(window& window)
+void unit_create::list_item_clicked()
 {
 	const int selected_row
-		= find_widget<listbox>(&window, "unit_type_list", false).get_selected_row();
+		= find_widget<listbox>(this, "unit_type_list", false).get_selected_row();
 
 	if(selected_row == -1) {
 		return;
@@ -222,7 +191,7 @@ void unit_create::list_item_clicked(window& window)
 		return units_[selected_row]->has_gender_variation(gender);
 	});
 
-	menu_button& var_box = find_widget<menu_button>(&window, "variation_box", false);
+	menu_button& var_box = find_widget<menu_button>(this, "variation_box", false);
 	std::vector<config> var_box_values;
 	var_box_values.emplace_back("label", _("unit_variation^Default Variation"), "variation_id", "");
 
@@ -264,11 +233,9 @@ void unit_create::list_item_clicked(window& window)
 	var_box.set_values(var_box_values, selection);
 }
 
-void unit_create::filter_text_changed(text_box_base* textbox, const std::string& text)
+void unit_create::filter_text_changed(const std::string& text)
 {
-	window& window = *textbox->get_window();
-
-	listbox& list = find_widget<listbox>(&window, "unit_type_list", false);
+	listbox& list = find_widget<listbox>(this, "unit_type_list", false);
 
 	const std::vector<std::string> words = utils::split(text, ' ');
 
@@ -312,21 +279,19 @@ void unit_create::filter_text_changed(text_box_base* textbox, const std::string&
 	list.set_row_shown(show_items);
 }
 
-void unit_create::gender_toggle_callback()
+void unit_create::gender_toggle_callback(const unit_race::GENDER val)
 {
-	gender_ = gender_toggle.get_active_member_value();
+	gender_ = val;
 
 	update_displayed_type();
 }
 
 void unit_create::variation_menu_callback()
 {
-	window& window = *this->get_window();
-	menu_button& var_box = find_widget<menu_button>(&window, "variation_box", false);
+	menu_button& var_box = find_widget<menu_button>(this, "variation_box", false);
 	variation_ = var_box.get_value_config()["variation_id"].str();
 
 	update_displayed_type();
 }
 
 } // namespace dialogs
-} // namespace gui2

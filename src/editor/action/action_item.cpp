@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2008 - 2018 by Fabian Mueller <fabianmueller5@gmx.de>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by Fabian Mueller <fabianmueller5@gmx.de>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -28,11 +29,11 @@ namespace editor
 {
 IMPLEMENT_ACTION(item)
 
-editor_action* editor_action_item::perform(map_context& mc) const
+std::unique_ptr<editor_action> editor_action_item::perform(map_context& mc) const
 {
-	editor_action_ptr undo(new editor_action_item_delete(loc_));
+	auto undo = std::make_unique<editor_action_item_delete>(loc_);
 	perform_without_undo(mc);
-	return undo.release();
+	return undo;
 }
 
 void editor_action_item::perform_without_undo(map_context& /*mc*/) const
@@ -45,7 +46,7 @@ void editor_action_item::perform_without_undo(map_context& /*mc*/) const
 
 IMPLEMENT_ACTION(item_delete)
 
-editor_action* editor_action_item_delete::perform(map_context& /*mc*/) const
+std::unique_ptr<editor_action> editor_action_item_delete::perform(map_context& /*mc*/) const
 {
 	//	item_map& items = mc.get_items();
 	//	item_map::const_item_iterator item_it = items.find(loc_);
@@ -63,7 +64,7 @@ void editor_action_item_delete::perform_without_undo(map_context& /*mc*/) const
 {
 	//	item_map& items = mc.get_items();
 	//	if (!items.erase(loc_)) {
-	//		ERR_ED << "Could not delete item on " << loc_.x << "/" << loc_.y << std::endl;
+	//		ERR_ED << "Could not delete item on " << loc_.x << "/" << loc_.y;
 	//	} else {
 	//		mc.add_changed_location(loc_);
 	//	}
@@ -71,12 +72,12 @@ void editor_action_item_delete::perform_without_undo(map_context& /*mc*/) const
 
 IMPLEMENT_ACTION(item_replace)
 
-editor_action* editor_action_item_replace::perform(map_context& mc) const
+std::unique_ptr<editor_action> editor_action_item_replace::perform(map_context& mc) const
 {
-	editor_action_ptr undo(new editor_action_item_replace(new_loc_, loc_));
+	auto undo = std::make_unique<editor_action_item_replace>(new_loc_, loc_);
 
 	perform_without_undo(mc);
-	return undo.release();
+	return undo;
 }
 
 void editor_action_item_replace::perform_without_undo(map_context& /*mc*/) const
@@ -98,18 +99,18 @@ void editor_action_item_replace::perform_without_undo(map_context& /*mc*/) const
 	//	}
 	//	*/
 	//
-	////TODO check if that is useful
-	////	game_display::get_singleton()->invalidate_item_after_move(loc_, new_loc_);
-	////	display::get_singleton()->draw();
+	// TODO: check if that is useful
+	//  	game_display::get_singleton()->invalidate_item_after_move(loc_, new_loc_);
+	//  	display::get_singleton()->draw();
 }
 
 IMPLEMENT_ACTION(item_facing)
 
-editor_action* editor_action_item_facing::perform(map_context& mc) const
+std::unique_ptr<editor_action> editor_action_item_facing::perform(map_context& mc) const
 {
-	editor_action_ptr undo(new editor_action_item_facing(loc_, old_direction_, new_direction_));
+	auto undo = std::make_unique<editor_action_item_facing>(loc_, old_direction_, new_direction_);
 	perform_without_undo(mc);
-	return undo.release();
+	return undo;
 }
 
 void editor_action_item_facing::perform_without_undo(map_context& /*mc*/) const

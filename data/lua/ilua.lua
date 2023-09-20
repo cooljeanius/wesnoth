@@ -50,7 +50,9 @@ function ilua.join(tbl,delim,limit,depth)
     end
     for key,v in pairs(tbl) do
         if type(key) == 'number' then
-            if key <= n then goto continue end
+            if n > 0 and key > 0 and key <= n and math.type(key) == 'integer' then
+                goto continue
+            end
             key = '['..tostring(key)..']'
         else
             key = tostring(key)
@@ -93,7 +95,7 @@ function ilua.val2str(val)
     elseif tp == 'string' then
         return "'"..val.."'"
     elseif tp == 'number' then
-	-- removed numeric precision features, but we might actually want these... might put them back
+        -- removed numeric precision features, but we might actually want these... might put them back
         return tostring(val)
     else
         return tostring(val)

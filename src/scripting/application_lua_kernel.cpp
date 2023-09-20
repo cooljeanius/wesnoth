@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2014 - 2018 by Chris Beck <render787@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2014 - 2023
+	by Chris Beck <render787@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -45,13 +46,11 @@
 #include <string>
 #include <utility>
 
-#include "utils/functional.hpp"
+#include <functional>
 #include <boost/range/adaptors.hpp>
 #include <SDL2/SDL.h>
 
 #include "lua/lauxlib.h"
-#include "lua/lua.h"
-#include "lua/luaconf.h"
 
 struct lua_State;
 
@@ -63,7 +62,7 @@ static lg::log_domain log_scripting_lua("scripting/lua");
 
 static int intf_describe_plugins(lua_State * L)
 {
-	std::cerr << "describe plugins (" << plugins_manager::get()->size() << "):\n";
+	PLAIN_LOG << "describe plugins (" << plugins_manager::get()->size() << "):";
 	lua_getglobal(L, "print");
 	for (std::size_t i = 0; i < plugins_manager::get()->size(); ++i) {
 		lua_pushvalue(L,-1); //duplicate the print
@@ -71,7 +70,7 @@ static int intf_describe_plugins(lua_State * L)
 		std::stringstream line;
 		line << i
 		     << ":\t"
-		     << plugins_manager::get()->get_status(i)
+		     << plugin_manager_status::get_string(plugins_manager::get()->get_status(i))
 		     << "\t\t"
 		     << plugins_manager::get()->get_name(i)
 		     << "\n";
@@ -168,8 +167,8 @@ application_lua_kernel::thread * application_lua_kernel::load_script_from_string
 	lua_State * T = get_new_thread(mState);
 	// now we are operating on T's stack, leaving a compiled C function on it.
 
-	DBG_LUA << "created thread: status = " << lua_status(T) << (lua_status(T) == LUA_OK ? " == OK" : " == ?") << "\n";
-	DBG_LUA << "loading script from string:\n<<\n" << prog << "\n>>\n";
+	DBG_LUA << "created thread: status = " << lua_status(T) << (lua_status(T) == LUA_OK ? " == OK" : " == ?");
+	DBG_LUA << "loading script from string:\n<<\n" << prog << "\n>>";
 
 	// note: this is unsafe for umc as it allows loading lua baytecode, but umc cannot add application lua kernel scipts.
 	int errcode = luaL_loadstring(T, prog.c_str());
@@ -183,15 +182,13 @@ application_lua_kernel::thread * application_lua_kernel::load_script_from_string
 			context += " a syntax error";
 		} else if(errcode == LUA_ERRMEM){
 			context += " a memory error";
-		} else if(errcode == LUA_ERRGCMM) {
-			context += " an error in garbage collection metamethod";
 		} else {
 			context += " an unknown error";
 		}
 
 		throw game::lua_error(msg, context);
 	}
-	if (!lua_kernel_base::protected_call(T, 0, 1, std::bind(&lua_kernel_base::log_error, this, _1, _2))) {
+	if (!lua_kernel_base::protected_call(T, 0, 1, std::bind(&lua_kernel_base::log_error, this, std::placeholders::_1, std::placeholders::_2))) {
 		throw game::lua_error("Error when executing a script to make a lua thread.");
 	}
 	if (!lua_isfunction(T, -1)) {
@@ -208,7 +205,7 @@ application_lua_kernel::thread * application_lua_kernel::load_script_from_file(c
 
 	lua_pushstring(T, file.c_str());
 	lua_fileops::load_file(T);
-	if (!lua_kernel_base::protected_call(T, 0, 1, std::bind(&lua_kernel_base::log_error, this, _1, _2))) {
+	if (!lua_kernel_base::protected_call(T, 0, 1, std::bind(&lua_kernel_base::log_error, this, std::placeholders::_1, std::placeholders::_2))) {
 		throw game::lua_error("Error when executing a file to make a lua thread.");
 	}
 	if (!lua_isfunction(T, -1)) {
@@ -279,11 +276,11 @@ application_lua_kernel::request_list application_lua_kernel::thread::run_script(
 	}
 
 	// Now we have to create the context object. It is arranged as a table of boost functions.
-	std::shared_ptr<lua_context_backend> this_context_backend = std::make_shared<lua_context_backend> (lua_context_backend());
+	auto this_context_backend = std::make_shared<lua_context_backend>();
 	lua_newtable(T_); // this will be the context table
 	for (const std::string & key : ctxt.callbacks_ | boost::adaptors::map_keys ) {
 		lua_pushstring(T_, key.c_str());
-		lua_cpp::push_function(T_, std::bind(&impl_context_backend, _1, this_context_backend, key));
+		lua_cpp::push_function(T_, std::bind(&impl_context_backend, std::placeholders::_1, this_context_backend, key));
 		lua_settable(T_, -3);
 	}
 
@@ -296,19 +293,20 @@ application_lua_kernel::request_list application_lua_kernel::thread::run_script(
 		const std::string & key = v.first;
 		const plugins_context::accessor_function & func = v.second;
 		lua_pushstring(T_, key.c_str());
-		lua_cpp::push_function(T_, std::bind(&impl_context_accessor, _1, this_context_backend, func));
+		lua_cpp::push_function(T_, std::bind(&impl_context_accessor, std::placeholders::_1, this_context_backend, func));
 		lua_settable(T_, -3);
 	}
 
 	// Now we resume the function, calling the coroutine with the three arguments (events, context, info).
-	lua_resume(T_, nullptr, 3);
+	int numres = 0;
+	lua_resume(T_, nullptr, 3, &numres);
 
 	started_ = true;
 
 	this_context_backend->valid = false; //invalidate the context object for lua
 
 	if (lua_status(T_) != LUA_YIELD) {
-		LOG_LUA << "Thread status = '" << lua_status(T_) << "'\n";
+		LOG_LUA << "Thread status = '" << lua_status(T_) << "'";
 		if (lua_status(T_) != LUA_OK) {
 			std::stringstream ss;
 			ss << "encountered a";
@@ -327,7 +325,7 @@ application_lua_kernel::request_list application_lua_kernel::thread::run_script(
 					break;
 			}
 			ss << "error:\n" << lua_tostring(T_, -1) << "\n";
-			ERR_LUA << ss.str() << std::endl;
+			ERR_LUA << ss.str();
 		}
 	}
 

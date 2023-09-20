@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2013 - 2018 by Andrius Silinskas <silinskas.andrius@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2013 - 2023
+	by Andrius Silinskas <silinskas.andrius@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #include "game_initialization/flg_manager.hpp"
@@ -61,8 +62,8 @@ flg_manager::flg_manager(const std::vector<const config*>& era_factions,
 	const std::string& leader_id = side["id"];
 	if(!leader_id.empty()) {
 		// Check if leader was carried over and now is in [unit] tag.
-		default_leader_cfg_ = &side.find_child("unit", "id", leader_id);
-		if(*default_leader_cfg_) {
+		default_leader_cfg_ = side.find_child("unit", "id", leader_id).ptr();
+		if(default_leader_cfg_) {
 			default_leader_type_ = (*default_leader_cfg_)["type"].str();
 			default_leader_gender_ = (*default_leader_cfg_)["gender"].str();
 		} else {
@@ -545,8 +546,8 @@ void flg_manager::set_current_gender(const std::string& gender)
 
 const config& flg_manager::get_default_faction(const config& cfg)
 {
-	if(const config& df = cfg.child("default_faction")) {
-		return df;
+	if(auto df = cfg.optional_child("default_faction")) {
+		return *df;
 	} else {
 		return cfg;
 	}

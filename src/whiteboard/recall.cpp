@@ -1,16 +1,17 @@
 /*
- Copyright (C) 2010 - 2018 by Gabriel Morin <gabrielmorin (at) gmail (dot) com>
- Part of the Battle for Wesnoth Project https://www.wesnoth.org
+	Copyright (C) 2010 - 2023
+	by Gabriel Morin <gabrielmorin (at) gmail (dot) com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
- See the COPYING file for more details.
- */
+	See the COPYING file for more details.
+*/
 
 /**
  * @file
@@ -28,6 +29,7 @@
 #include "fake_unit_manager.hpp"
 #include "fake_unit_ptr.hpp"
 #include "game_board.hpp"
+#include "play_controller.hpp"
 #include "recall_list_manager.hpp"
 #include "resources.hpp"
 #include "replay_helper.hpp"
@@ -73,7 +75,7 @@ recall::recall(std::size_t team_index, bool hidden, const unit& u, const map_loc
 recall::recall(const config& cfg, bool hidden)
 	: action(cfg,hidden)
 	, temp_unit_()
-	, recall_hex_(cfg.child("recall_hex_")["x"],cfg.child("recall_hex_")["y"], wml_loc())
+	, recall_hex_(cfg.mandatory_child("recall_hex_")["x"],cfg.mandatory_child("recall_hex_")["y"], wml_loc())
 	, fake_unit_()
 	, original_mp_(0)
 	, original_ap_(0)
@@ -147,7 +149,7 @@ void recall::apply_temp_modifier(unit_map& unit_map)
 
 
 	DBG_WB << "Inserting future recall " << temp_unit_->name() << " [" << temp_unit_->id()
-			<< "] at position " << temp_unit_->get_location() << ".\n";
+			<< "] at position " << temp_unit_->get_location() << ".";
 
 	//temporarily remove unit from recall list
 	unit_ptr it = resources::gameboard->teams().at(team_index()).recall_list().extract_if_matches_id(temp_unit_->id(), &original_recall_pos_);
@@ -200,7 +202,7 @@ void recall::draw_hex(const map_location& hex)
 		//position 0,0 in the hex is the upper left corner
 		std::stringstream number_text;
 		unit &it = *get_unit();
-		int cost = statistics::un_recall_unit_cost(it);
+		int cost = it.recall_cost();
 		if (cost < 0) {
 			number_text << font::unicode_minus << resources::gameboard->teams().at(team_index()).recall_cost();
 		}
@@ -246,7 +248,7 @@ action::error recall::check_validity() const
 	return OK;
 }
 
-///@todo Find a better way to serialize unit_ because underlying_id isn't cutting it
+/** @todo Find a better way to serialize unit_ because underlying_id isn't cutting it */
 config recall::to_config() const
 {
 	config final_cfg = action::to_config();

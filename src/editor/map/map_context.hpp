@@ -1,30 +1,33 @@
 /*
-   Copyright (C) 2008 - 2018 by Tomasz Sniatowski <kailoran@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by Tomasz Sniatowski <kailoran@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
 
+#include "display_context.hpp"
 #include "editor/map/editor_map.hpp"
 #include "game_classification.hpp"
 #include "map/label.hpp"
 #include "mp_game_settings.hpp"
+#include "overlay.hpp"
+#include "side_controller.hpp"
 #include "sound_music_track.hpp"
 #include "team.hpp"
 #include "tod_manager.hpp"
 #include "units/map.hpp"
-#include "overlay.hpp"
-#include "display_context.hpp"
 
+#include <optional>
 #include <vector>
 class game_config_view;
 
@@ -36,14 +39,15 @@ struct editor_team_info {
 	int side;
 	std::string id;
 	std::string name;
+	std::string recruit_list;
 	int gold;
 	int income;
 	int village_income;
 	int village_support;
 	bool fog;
 	bool shroud;
-	team::SHARE_VISION share_vision;
-	team::CONTROLLER controller;
+	team_shared_vision::type share_vision;
+	side_controller::type controller;
 	bool no_leader;
 	bool hidden;
 };
@@ -66,7 +70,7 @@ public:
 	 * empty, indicating a new map.
 	 * Marked "explicit" to avoid automatic conversions.
 	 */
-	explicit map_context(const editor_map& map, bool pure_map, const config& schedule);
+	explicit map_context(const editor_map& map, bool pure_map, const config& schedule, const std::string& addon_id);
 
 	/**
 	 * Create map_context from a map file. If the map cannot be loaded, an
@@ -76,7 +80,7 @@ public:
 	 * inside scenarios do not change the filename, but set the "embedded" flag
 	 * instead.
 	 */
-	map_context(const game_config_view& game_config, const std::string& filename);
+	map_context(const game_config_view& game_config, const std::string& filename, const std::string& addon_id);
 
 	/**
 	 * Map context destructor
@@ -172,14 +176,8 @@ public:
 	 */
 	void replace_local_schedule(const std::vector<time_of_day>& schedule);
 
-	/**
-	 * TODO
-	 */
 	void set_starting_time(int time);
 
-	/**
-	 * TODO
-	 */
 	void set_local_starting_time(int time) {
 		tod_manager_->set_current_time(time, active_area_);
 		++actions_since_save_;
@@ -201,7 +199,6 @@ public:
 	}
 
 	/**
-	 *
 	 * @return the index of the currently active area.
 	 */
 	int get_active_area() const {
@@ -264,15 +261,9 @@ public:
 	 */
 	void set_needs_terrain_rebuild(bool value=true) { needs_terrain_rebuild_ = value; }
 
-	/**
-	 * TODO
-	 */
 	void set_scenario_setup(const std::string& id, const std::string& name, const std::string& description,
 			int turns, int xp_mod, bool victory_defeated, bool random_time);
 
-	/**
-	 * TODO
-	 */
 	void set_side_setup(editor_team_info& info);
 
 	/**
@@ -304,18 +295,16 @@ public:
 
 	void set_filename(const std::string& fn) { filename_ = fn; }
 
-	const std::string& get_map_data_key() const { return map_data_key_; }
-
 	const std::string& get_id() const { return scenario_id_; }
 	const std::string& get_description() const { return scenario_description_; }
 	const std::string& get_name() const { return scenario_name_; }
 
 	const t_string get_default_context_name() const;
 
-	int get_xp_mod() const { return xp_mod_; }
+	std::optional<int> get_xp_mod() const { return xp_mod_; }
 
 	bool random_start_time() const { return random_time_; }
-	bool victory_defeated() const { return victory_defeated_; }
+	bool victory_defeated() const { return !victory_defeated_ || *victory_defeated_; }
 
 	bool is_embedded() const { return embedded_; }
 
@@ -335,8 +324,14 @@ public:
 	 */
 	bool save_scenario();
 
-
-	void load_scenario(const game_config_view& game_config);
+	/**
+	 * Convert an old-style editor scenario config to a config with a top level [multiplayer] tag.
+	 *
+	 * @param old_scenario the original scenario config
+	 * @return the converted scenario config
+	 */
+	config convert_scenario(const config& old_scenario);
+	void load_scenario();
 
 	config to_config();
 
@@ -401,6 +396,11 @@ public:
 	 * Clear the undo and redo stacks
 	 */
 	void clear_undo_redo();
+
+	void set_addon_id(const std::string& addon_id)
+	{
+		addon_id_ = addon_id;
+	}
 
 protected:
 	/**
@@ -491,11 +491,13 @@ protected:
 	bool everything_changed_;
 
 private:
-
+	std::string addon_id_;
+	std::optional<config> previous_cfg_;
 	std::string scenario_id_, scenario_name_, scenario_description_;
 
-	int xp_mod_;
-	bool victory_defeated_, random_time_;
+	std::optional<int> xp_mod_;
+	std::optional<bool> victory_defeated_;
+	bool random_time_;
 
 	int active_area_;
 

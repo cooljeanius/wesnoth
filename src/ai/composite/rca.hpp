@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2009 - 2018 by Yurii Chernyi <terraninfo@terraninfo.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2009 - 2023
+	by Yurii Chernyi <terraninfo@terraninfo.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -40,7 +41,6 @@ public:
 	 * Destructor
 	 */
 	virtual ~candidate_action();
-
 
 	/**
 	 * Evaluate the candidate action, resetting the internal state of the action
@@ -75,18 +75,15 @@ public:
 	 */
 	double get_score() const;
 
-
 	/**
 	 * Get the upper bound of the score of the candidate action without re-evaluation
 	 */
 	double get_max_score() const;
 
-
 	/**
 	 * Get the unit filter for allowed units for this candidate action
 	 */
 	std::shared_ptr<unit_filter> get_filter_own() const;
-
 
 	/**
 	 * Flag indicating whether unit may be used by this candidate action
@@ -112,7 +109,6 @@ public:
 
 	int get_recursion_count() const;
 
-
 	/**
 	 * serialize
 	 */
@@ -128,27 +124,19 @@ private:
 
 	bool enabled_;
 
-
 	std::string engine_;
-
 
 	double score_;
 
-
 	double max_score_;
-
 
 	std::shared_ptr<unit_filter> filter_own_;
 
-
 	std::string id_;
-
 
 	std::string name_;
 
-
 	std::string type_;
-
 
 	bool to_be_removed_;
 
@@ -186,7 +174,6 @@ public:
 
 	virtual ~candidate_action_factory() {}
 };
-
 
 template<class CANDIDATE_ACTION>
 class register_candidate_action_factory : public candidate_action_factory {

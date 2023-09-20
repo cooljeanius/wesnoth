@@ -1,16 +1,17 @@
 /*
- Copyright (C) 2010 - 2018 by Gabriel Morin <gabrielmorin (at) gmail (dot) com>
- Part of the Battle for Wesnoth Project https://www.wesnoth.org
+	Copyright (C) 2010 - 2023
+	by Gabriel Morin <gabrielmorin (at) gmail (dot) com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
- See the COPYING file for more details.
- */
+	See the COPYING file for more details.
+*/
 
 /**
  * @file
@@ -20,7 +21,6 @@
 
 #include "side_actions.hpp"
 
-#include <boost/ptr_container/ptr_vector.hpp>
 #include <list>
 
 #include "utility.hpp"
@@ -66,13 +66,14 @@ private:
 	action_queue applied_actions_this_turn_;
 
 	//Used by pre_build()
-	boost::ptr_vector<unit_movement_resetter> resetters_;
-	boost::ptr_vector<temporary_unit_remover> removers_;
+	std::vector<std::unique_ptr<unit_movement_resetter>> resetters_;
+	std::vector<std::unique_ptr<temporary_unit_remover>> removers_;
 
 	//Used by process()
 	std::set<unit const*> acted_this_turn_;
 	std::set<unit const*> has_invalid_actions_;
-	std::list<side_actions::iterator> invalid_actions_; ///< Conserved invalid actions.
+	/** Conserved invalid actions. */
+	std::list<side_actions::iterator> invalid_actions_;
 };
 
 }

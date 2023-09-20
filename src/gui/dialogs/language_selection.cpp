@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2008 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #define GETTEXT_DOMAIN "wesnoth-lib"
@@ -23,31 +24,8 @@
 #include "language.hpp"
 #include "preferences/general.hpp"
 
-namespace gui2
+namespace gui2::dialogs
 {
-namespace dialogs
-{
-
-/*WIKI
- * @page = GUIWindowDefinitionWML
- * @order = 2_language_selection
- *
- * == Language selection ==
- *
- * This shows the dialog to select the language to use. When the dialog is
- * closed with the OK button it also updates the selected language in the
- * preferences.
- *
- * @begin{table}{dialog_widgets}
- *
- * language_list & & listbox & m &
- *         This listbox contains the list with available languages. $
- *
- * - & & styled_widget & o &
- *         Show the name of the language in the current row. $
- *
- * @end{table}
- */
 
 /**
  * @todo show we also reset the translations and is the tips of day call
@@ -65,7 +43,7 @@ void language_selection::pre_show(window& window)
 	const language_def& current_language = get_language();
 	for(const auto & lang : languages)
 	{
-		std::map<std::string, string_map> data;
+		widget_data data;
 
 		data["language"]["label"] = lang.language;
 
@@ -91,4 +69,3 @@ void language_selection::post_show(window& window)
 }
 
 } // namespace dialogs
-} // namespace gui2

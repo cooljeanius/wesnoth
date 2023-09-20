@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2014 - 2018 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2014 - 2023
+	by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -24,7 +25,6 @@
 #include "log.hpp"
 #include "map/map.hpp"
 #include "terrain/translation.hpp"
-#include "terrain/type_data.hpp"
 #include "units/types.hpp" // for attack_type
 
 static lg::log_domain log_config("config");
@@ -37,13 +37,13 @@ static lg::log_domain log_config("config");
 
 namespace { // Some functions for use with parameters::eval.
 
-	/// Converts config defense values to a "max" value.
+	/** Converts config defense values to a "max" value. */
 	int config_to_max(int value)
 	{
 		return value < 0 ? -value : value;
 	}
 
-	/// Converts config defense values to a "min" value.
+	/** Converts config defense values to a "min" value. */
 	int config_to_min(int value)
 	{
 		return value < 0 ? -value : 0;
@@ -51,17 +51,23 @@ namespace { // Some functions for use with parameters::eval.
 }
 
 
-/// The parameters used when calculating a terrain-based value.
+/** The parameters used when calculating a terrain-based value. */
 struct movetype::terrain_info::parameters
 {
-	int min_value;     /// The smallest allowable value.
-	int max_value;     /// The largest allowable value.
-	int default_value; /// The default value (if no data is available).
+	/** The smallest allowable value. */
+	int min_value;
+	/** The largest allowable value. */
+	int max_value;
+	/** The default value (if no data is available). */
+	int default_value;
 
-	int (*eval)(int);  /// Converter for values taken from a config. May be nullptr.
+	/** Converter for values taken from a config. May be nullptr. */
+	int (*eval)(int);
 
-	bool use_move;     /// Whether to look at underlying movement or defense terrains.
-	bool high_is_good; /// Whether we are looking for highest or lowest (unless inverted by the underlying terrain).
+	/** Whether to look at underlying movement or defense terrains. */
+	bool use_move;
+	/** Whether we are looking for highest or lowest (unless inverted by the underlying terrain). */
+	bool high_is_good;
 
 	parameters(int min, int max, int (*eval_fun)(int)=nullptr, bool move=true, bool high=false) :
 		min_value(min), max_value(max), default_value(high ? min : max),
@@ -70,7 +76,7 @@ struct movetype::terrain_info::parameters
 };
 
 
-/// Limits for movement, vision and jamming
+/** Limits for movement, vision and jamming */
 const movetype::terrain_info::parameters
 	movetype::mvj_params_{1, movetype::UNREACHABLE};
 
@@ -86,13 +92,17 @@ const movetype::terrain_info::parameters
 class movetype::terrain_info::data
 {
 public:
-	/// Constructor.
-	/// @a params must be long-lived (typically a static variable).
+	/**
+	 * Constructor.
+	 * @a params must be long-lived (typically a static variable).
+	 */
 	explicit data(const parameters & params) :
 		cfg_(), cache_(), params_(params)
 	{}
-	/// Constructor.
-	/// @a params must be long-lived (typically a static variable).
+	/**
+	 * Constructor.
+	 * @a params must be long-lived (typically a static variable).
+	 */
 	data(const config & cfg, const parameters & params) :
 		cfg_(cfg), cache_(), params_(params)
 	{}
@@ -103,42 +113,42 @@ public:
 		cfg_(that.cfg_), cache_(), params_(that.params_)
 	{}
 
-	/// Clears the cached data (presumably our fallback has changed).
+	/** Clears the cached data (presumably our fallback has changed). */
 	void clear_cache() const;
-	/// Tests if merging @a new_values would result in changes.
+	/** Tests if merging @a new_values would result in changes. */
 	bool config_has_changes(const config & new_values, bool overwrite) const;
-	/// Tests for no data in this object.
+	/** Tests for no data in this object. */
 	bool empty() const { return cfg_.empty(); }
-	/// Merges the given config over the existing costs.
+	/** Merges the given config over the existing costs. */
 	void merge(const config & new_values, bool overwrite);
-	/// Read-only access to our parameters.
+	/** Read-only access to our parameters. */
 	const parameters & params() const { return params_; }
-	/// Returns the value associated with the given terrain.
+	/** Returns the value associated with the given terrain. */
 	int value(const t_translation::terrain_code & terrain,
 	          const terrain_info * fallback) const
 	{ return value(terrain, fallback, 0); }
-	/// If there is data, writes it to the config.
+	/** If there is data, writes it to the config. */
 	void write(config & out_cfg, const std::string & child_name) const;
-	/// If there is (merged) data, writes it to the config.
+	/** If there is (merged) data, writes it to the config. */
 	void write(config & out_cfg, const std::string & child_name,
 	           const terrain_info * fallback) const;
 
 private:
-	/// Calculates the value associated with the given terrain.
+	/** Calculates the value associated with the given terrain. */
 	int calc_value(const t_translation::terrain_code & terrain,
 	               const terrain_info * fallback, unsigned recurse_count) const;
-	/// Returns the value associated with the given terrain (possibly cached).
+	/** Returns the value associated with the given terrain (possibly cached). */
 	int value(const t_translation::terrain_code & terrain,
 	          const terrain_info * fallback, unsigned recurse_count) const;
 
 private:
 	typedef std::map<t_translation::terrain_code, int> cache_t;
 
-	/// Config describing the terrain values.
+	/** Config describing the terrain values. */
 	config cfg_;
-	/// Cache of values based on the config.
+	/** Cache of values based on the config. */
 	mutable cache_t cache_;
-	/// Various parameters used when calculating values.
+	/** Various parameters used when calculating values. */
 	const parameters & params_;
 };
 
@@ -273,11 +283,11 @@ int movetype::terrain_info::data::calc_value(
 		ERR_CF << "infinite terrain_info recursion on "
 		       << (params_.use_move ? "movement" : "defense") << ": "
 			   << t_translation::write_terrain_code(terrain)
-			   << " depth " << recurse_count << '\n';
+			   << " depth " << recurse_count;
 		return params_.default_value;
 	}
 
-	ter_data_cache tdata;
+	std::shared_ptr<terrain_type_data> tdata;
 	if (game_config_manager::get()){
 		tdata = game_config_manager::get()->terrain_types(); //This permits to get terrain info in unit help pages from the help in title screen, even if there is no residual gamemap object
 	}
@@ -310,14 +320,14 @@ int movetype::terrain_info::data::calc_value(
 			WRN_CF << "Terrain '" << terrain << "' has evaluated to " << result
 				   << " (" << (params_.use_move ? "cost" : "defense")
 			       << "), which is less than " << params_.min_value
-			       << "; resetting to " << params_.min_value << ".\n";
+			       << "; resetting to " << params_.min_value << ".";
 			result = params_.min_value;
 		}
 		if ( result > params_.max_value ) {
 			WRN_CF << "Terrain '" << terrain << "' has evaluated to " << result
 				   << " (" << (params_.use_move ? "cost" : "defense")
 				   << "), which is more than " << params_.max_value
-			       << "; resetting to " << params_.max_value << ".\n";
+			       << "; resetting to " << params_.max_value << ".";
 			result = params_.max_value;
 		}
 
@@ -509,6 +519,7 @@ void swap(movetype & a, movetype & b)
 	swap(a.defense_, b.defense_);
 	std::swap(a.resist_, b.resist_);
 	std::swap(a.flying_, b.flying_);
+	std::swap(a.special_notes_, b.special_notes_);
 }
 
 movetype & movetype::operator=(const movetype & that)
@@ -699,8 +710,10 @@ movetype::terrain_defense & movetype::terrain_defense::operator=(terrain_defense
 	max_.swap_data(that.max_);
 	return *this;
 }
-/// Merges the given config over the existing costs.
-/// (Not overwriting implies adding.)
+/**
+ * Merges the given config over the existing costs.
+ * (Not overwriting implies adding.)
+ */
 void movetype::terrain_defense::merge(const config & new_data, bool overwrite)
 {
 	min_.merge(new_data, overwrite, {});
@@ -713,9 +726,9 @@ void movetype::terrain_defense::merge(const config & new_data, bool overwrite)
 /**
  * Returns a map from attack types to resistances.
  */
-utils::string_map movetype::resistances::damage_table() const
+utils::string_map_res movetype::resistances::damage_table() const
 {
-	utils::string_map result;
+	utils::string_map_res result;
 
 	for (const config::attribute & attrb : cfg_.attribute_range()) {
 		result[attrb.first] = attrb.second;
@@ -790,7 +803,8 @@ movetype::movetype() :
 	jamming_(mvj_params_, &vision_),
 	defense_(),
 	resist_(),
-	flying_(false)
+	flying_(false),
+	special_notes_()
 {
 }
 
@@ -808,6 +822,10 @@ movetype::movetype(const config & cfg) :
 {
 	// 1.15 will support both "flying" and "flies", with "flies" being deprecated
 	flying_ = cfg["flying"].to_bool(flying_);
+
+	for(const config& sn : cfg.child_range("special_note")) {
+		special_notes_.push_back(sn["note"]);
+	}
 }
 
 
@@ -820,7 +838,8 @@ movetype::movetype(const movetype & that) :
 	jamming_(that.jamming_, &vision_),
 	defense_(that.defense_),
 	resist_(that.resist_),
-	flying_(that.flying_)
+	flying_(that.flying_),
+	special_notes_(that.special_notes_)
 {
 }
 
@@ -833,7 +852,8 @@ movetype::movetype(movetype && that) :
 	jamming_(std::move(that.jamming_), &vision_),
 	defense_(std::move(that.defense_)),
 	resist_(std::move(that.resist_)),
-	flying_(std::move(that.flying_))
+	flying_(std::move(that.flying_)),
+	special_notes_(std::move(that.special_notes_))
 {
 }
 
@@ -848,10 +868,6 @@ bool movetype::has_terrain_defense_caps(const std::set<t_translation::terrain_co
 	return false;
 }
 
-/**
- * Merges the given config over the existing data.
- * If @a overwrite is false, the new values will be added to the old.
- */
 void movetype::merge(const config & new_cfg, bool overwrite)
 {
 	for (const auto & applies_to : movetype::effects) {
@@ -885,6 +901,9 @@ void movetype::merge(const config & new_cfg, const std::string & applies_to, boo
 	else if(applies_to == "resistance") {
 		resist_.merge(new_cfg, overwrite);
 	}
+	else {
+		ERR_CF << "movetype::merge with unknown applies_to: " << applies_to;
+	}
 }
 
 /**
@@ -893,10 +912,7 @@ void movetype::merge(const config & new_cfg, const std::string & applies_to, boo
 const std::set<std::string> movetype::effects {"movement_costs",
 	"vision_costs", "jamming_costs", "defense", "resistance"};
 
-/**
- * Writes the movement type data to the provided config.
- */
-void movetype::write(config & cfg) const
+void movetype::write(config& cfg, bool include_notes) const
 {
 	movement_.write(cfg, "movement_costs", false);
 	vision_.write(cfg, "vision_costs", false);
@@ -904,6 +920,12 @@ void movetype::write(config & cfg) const
 	defense_.write(cfg, "defense");
 	resist_.write(cfg, "resistance");
 
-	if ( flying_ )
+	if(flying_)
 		cfg["flying"] = true;
+
+	if(include_notes) {
+		for(const auto& note : special_notes_) {
+			cfg.add_child("special_note", config{"note", note});
+		}
+	}
 }

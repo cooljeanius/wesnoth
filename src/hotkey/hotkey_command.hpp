@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2003 - 2018 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2003 - 2023
+	by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -18,6 +19,7 @@
 #include "tstring.hpp"
 
 #include <bitset>
+#include <functional>
 #include <list>
 #include <map>
 #include <vector>
@@ -36,6 +38,13 @@ enum scope {
 	SCOPE_EDITOR,
 	SCOPE_COUNT,
 };
+
+// For some reason std::bitset::operator| is not constexpr, so we'll construct the bitset with these values
+// FIXME: unify these with the enum above. Right now these are the proper bitmasks to initialize a bitset,
+// while the values above are used as indices to access the bits of the bitset.
+constexpr uint32_t scope_game   = 1 << SCOPE_GAME;
+constexpr uint32_t scope_editor = 1 << SCOPE_EDITOR;
+constexpr uint32_t scope_main   = 1 << SCOPE_MAIN_MENU;
 
 enum HOTKEY_COMMAND {
 	HOTKEY_CYCLE_UNITS, HOTKEY_CYCLE_BACK_UNITS,
@@ -87,6 +96,7 @@ enum HOTKEY_COMMAND {
 	HOTKEY_AI_FORMULA,
 	HOTKEY_CLEAR_MSG,
 	HOTKEY_LABEL_SETTINGS,
+	HOTKEY_ACHIEVEMENTS,
 
 	// Minimap
 	HOTKEY_MINIMAP_CODING_TERRAIN, HOTKEY_MINIMAP_CODING_UNIT,
@@ -96,7 +106,6 @@ enum HOTKEY_COMMAND {
 	TITLE_SCREEN__RELOAD_WML,
 	TITLE_SCREEN__NEXT_TIP,
 	TITLE_SCREEN__PREVIOUS_TIP,
-	TITLE_SCREEN__TUTORIAL,
 	TITLE_SCREEN__CAMPAIGN,
 	TITLE_SCREEN__MULTIPLAYER,
 	TITLE_SCREEN__ADDONS,
@@ -126,7 +135,6 @@ enum HOTKEY_COMMAND {
 	// Unit
 	HOTKEY_EDITOR_UNIT_TOGGLE_CANRECRUIT, HOTKEY_EDITOR_UNIT_TOGGLE_RENAMEABLE,
 	HOTKEY_EDITOR_UNIT_CHANGE_ID, HOTKEY_EDITOR_UNIT_TOGGLE_LOYAL,
-	HOTKEY_EDITOR_UNIT_RECRUIT_ASSIGN,
 
 	// Brushes
 	HOTKEY_EDITOR_BRUSH_NEXT, HOTKEY_EDITOR_BRUSH_DEFAULT,
@@ -136,7 +144,7 @@ enum HOTKEY_COMMAND {
 	HOTKEY_EDITOR_TOOL_NEXT,
 	HOTKEY_EDITOR_TOOL_PAINT, HOTKEY_EDITOR_TOOL_FILL,
 	HOTKEY_EDITOR_TOOL_SELECT, HOTKEY_EDITOR_TOOL_STARTING_POSITION, HOTKEY_EDITOR_TOOL_LABEL,
-	HOTKEY_EDITOR_TOOL_UNIT, HOTKEY_EDITOR_TOOL_VILLAGE, HOTKEY_EDITOR_TOOL_ITEM, HOTKEY_EDITOR_TOOL_SOUNDSOURCE,
+	HOTKEY_EDITOR_TOOL_UNIT, HOTKEY_EDITOR_TOOL_VILLAGE, HOTKEY_EDITOR_TOOL_ITEM,
 
 	// Select
 	HOTKEY_EDITOR_SELECT_ALL, HOTKEY_EDITOR_SELECT_INVERSE,	HOTKEY_EDITOR_SELECT_NONE,
@@ -149,7 +157,7 @@ enum HOTKEY_COMMAND {
 	HOTKEY_EDITOR_SELECTION_ROTATE, HOTKEY_EDITOR_SELECTION_FLIP,
 	HOTKEY_EDITOR_SELECTION_FILL,
 	HOTKEY_EDITOR_SELECTION_EXPORT,
-	HOTKEY_EDITOR_SELECTION_GENERATE, HOTKEY_EDITOR_SELECTION_RANDOMIZE,
+	HOTKEY_EDITOR_SELECTION_RANDOMIZE,
 
 	// Map
 	HOTKEY_EDITOR_MAP_NEW, HOTKEY_EDITOR_MAP_LOAD, HOTKEY_EDITOR_MAP_SAVE,
@@ -157,7 +165,7 @@ enum HOTKEY_COMMAND {
 	HOTKEY_EDITOR_MAP_REVERT, HOTKEY_EDITOR_MAP_INFO,
 	HOTKEY_EDITOR_MAP_CLOSE,
 	HOTKEY_EDITOR_MAP_SWITCH,
-	HOTKEY_EDITOR_MAP_RESIZE, HOTKEY_EDITOR_MAP_ROTATE,
+	HOTKEY_EDITOR_MAP_RESIZE,
 	HOTKEY_EDITOR_MAP_GENERATE, HOTKEY_EDITOR_MAP_APPLY_MASK,
 	HOTKEY_EDITOR_MAP_CREATE_MASK_TO,
 
@@ -182,6 +190,10 @@ enum HOTKEY_COMMAND {
 	HOTKEY_EDITOR_AREA_ADD,
 	HOTKEY_EDITOR_AREA_SAVE,
 	HOTKEY_EDITOR_AREA_RENAME,
+
+	// Addons
+	HOTKEY_EDITOR_PBL,
+	HOTKEY_EDITOR_CHANGE_ADDON_ID,
 
 	// Scenario
 	HOTKEY_EDITOR_SCENARIO_EDIT,
@@ -209,135 +221,123 @@ enum HOTKEY_CATEGORY {
 	HKCAT_PLACEHOLDER // Keep this one last
 };
 
-using category_name_map_t = std::map<HOTKEY_CATEGORY, std::string>;
-
-/**
- * Returns the map of hotkey categories and their display names.
- *
- * These aren't translated and need be converted to a t_string before
- * being displayed to the player.
- */
-const category_name_map_t& get_category_names();
-
-/** Returns a list of all the hotkeys belonging to the given category. */
-std::list<HOTKEY_COMMAND> get_hotkeys_by_category(HOTKEY_CATEGORY category);
+/** Gets the display name for a given hotkey category. */
+t_string get_translatable_category_name(HOTKEY_CATEGORY category);
 
 typedef std::bitset<SCOPE_COUNT> hk_scopes;
 
-/// Do not use this outside hotkeys.cpp.
-/// hotkey_command uses t_string which might cause bugs when used at program startup,
-/// so use this for the master hotkey list (and only there).
-struct hotkey_command_temp
-{
-	HOTKEY_COMMAND id;
+/**
+ * hotkey_command uses t_string which might cause bugs when used at program startup,
+ * so use this for the master hotkey list (and only there).
+ */
+struct hotkey_command_temp;
 
-	std::string command;
-
-	/// description, tooltip are untranslated
-	std::string description;
-
-	bool hidden;
-
-	hk_scopes scope;
-	HOTKEY_CATEGORY category;
-
-	std::string tooltip;
-};
-
-/// Stores all information related to functions that can be bound to hotkeys.
-/// this is currently a semi struct: it haves a constructor, but only const-public members.
+/**
+ * Stores all information related to functions that can be bound to hotkeys.
+ * this is currently a semi struct: it haves a constructor, but only const-public members.
+ */
 struct hotkey_command
 {
 	hotkey_command() = delete;
 
-	/** Constuct a new command from a temporary static hotkey object. */
+	/** Constructs a new command from a temporary static hotkey object. */
 	hotkey_command(const hotkey_command_temp& temp_command);
 
+	/** @todo: see if we can remove this with c++20. Aggregate initialization with try_emplace?*/
 	hotkey_command(HOTKEY_COMMAND cmd, const std::string& id, const t_string& desc, bool hidden, bool toggle, hk_scopes scope, HOTKEY_CATEGORY category, const t_string& tooltip);
 
 	hotkey_command(const hotkey_command&) = default;
 	hotkey_command& operator=(const hotkey_command&) = default;
 
-	/// the names are strange: the "hotkey::HOTKEY_COMMAND" is named id, and the string to identify the object is called "command"
-	/// there is some inconstancy with that names in this file.
-	/// This binds the command to a function. Does not need to be unique.
-	HOTKEY_COMMAND id;
+	/** The command associated with this hotkey. Does not need to be unique. */
+	HOTKEY_COMMAND command;
 
-	/// The command is unique.
-	std::string command;
+	/** The unique ID. */
+	std::string id;
 
 	// since the wml_menu hotkey_command s can have different textdomains we need t_string now.
 	t_string description;
 
-	/// If hidden then don't show the command in the hotkey preferences.
+	/** If hidden then don't show the command in the hotkey preferences. */
 	bool hidden;
 
-	/// Toggle hotkeys have some restrictions on what can be bound to them.
-	/// They require a binding that has two states, "pressed" and "released".
+	/**
+	 * Toggle hotkeys have some restrictions on what can be bound to them.
+	 * They require a binding that has two states, "pressed" and "released"
+	 */
 	bool toggle;
 
-	/// The visibility scope of the command.
+	/** The visibility scope of the command. */
 	hk_scopes scope;
 
-	/// The category of the command.
+	/** The category of the command. */
 	HOTKEY_CATEGORY category;
 
 	t_string tooltip;
 
-	/// checks weather this is the null hotkey_command
+	/** checks weather this is the null hotkey_command */
 	bool null() const;
 
-	/// returns the command that is treated as null
+	/** returns the command that is treated as null */
 	static const hotkey_command& null_command();
 
-	/// the execute_command argument was changed from HOTKEY_COMMAND to hotkey_command,
-	/// to be able to call it with HOTKEY_COMMAND, this function was created
+	/**
+	 * the execute_command argument was changed from HOTKEY_COMMAND to hotkey_command,
+	 * to be able to call it with HOTKEY_COMMAND, this function was created
+	 */
 	static const hotkey_command& get_command_by_command(HOTKEY_COMMAND command);
 };
 
-class scope_changer {
+class scope_changer
+{
 public:
 	scope_changer();
+	explicit scope_changer(hk_scopes new_scopes, bool restore = true);
 	~scope_changer();
 private:
 	hk_scopes prev_scope_active_;
+	const bool restore_;
 };
 
-/// returns a container that contains all currently active hotkey_commands.
-/// everything that wants a hotkey, must be in this container.
-const std::vector<hotkey_command>& get_hotkey_commands();
+/**
+ * returns a container that contains all currently active hotkey_commands.
+ * everything that wants a hotkey, must be in this container
+ */
+const std::map<std::string_view, hotkey::hotkey_command>& get_hotkey_commands();
 
-/// returns the hotkey_command with the given name
+/** returns the hotkey_command with the given name */
 const hotkey_command& get_hotkey_command(const std::string& command);
 
-/// returns the hotkey_command that is treated as null.
-const hotkey_command& get_hotkey_null();
-
-void deactivate_all_scopes();
-void set_scope_active(scope s, bool set = true);
-void set_active_scopes(hk_scopes s);
 bool is_scope_active(scope s);
 bool is_scope_active(hk_scopes s);
 
-///
 bool has_hotkey_command(const std::string& id);
 
-/// adds a new wml hotkey to the list, but only if there is no hotkey with that id yet on the list.
-/// the object that is created here will be deleted in "delete_all_wml_hotkeys()"
-void add_wml_hotkey(const std::string& id, const t_string& description, const config& default_hotkey);
+/**
+ * RAII helper class to control the lifetime of a WML hotkey_command.
+ */
+class wml_hotkey_record
+{
+public:
+	wml_hotkey_record() = default;
 
-/// deletes all wml hotkeys, should be called after a game has ended
-void delete_all_wml_hotkeys();
-///removes a wml hotkey with the given id, returns true if the deletion was successful
-bool remove_wml_hotkey(const std::string& id);
+	/** Don't allow copying so objects don't get erased early. */
+	wml_hotkey_record(const wml_hotkey_record&) = delete;
+	const wml_hotkey_record& operator=(const wml_hotkey_record&) = delete;
 
-const std::string& get_description(const std::string& command);
-const std::string& get_tooltip(const std::string& command);
+	/** But we *do* want move semantics. */
+	wml_hotkey_record(wml_hotkey_record&&) = default;
+	wml_hotkey_record& operator=(wml_hotkey_record&&) = default;
+
+	/** Registers a hotkey_command for a WML hotkey with the given ID if one does not already exist. */
+	wml_hotkey_record(const std::string& id, const t_string& description, const config& default_hotkey);
+
+	~wml_hotkey_record();
+
+private:
+	/** Handles removing the associated hotkey_command on this object's destruction. */
+	std::function<void()> cleanup_{};
+};
 
 void init_hotkey_commands();
-
-void clear_hotkey_commands();
-
-/// returns get_hotkey_command(command).id
-HOTKEY_COMMAND get_id(const std::string& command);
 }

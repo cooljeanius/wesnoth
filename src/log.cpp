@@ -1,16 +1,17 @@
 /*
-   Copyright (C) 2003 by David White <dave@whitevine.net>
-                 2004 - 2015 by Guillaume Melquiond <guillaume.melquiond@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2004 - 2023
+	by Guillaume Melquiond <guillaume.melquiond@gmail.com>
+	Copyright (C) 2003 by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -21,13 +22,25 @@
 
 #include "log.hpp"
 
-#include <boost/date_time.hpp>
+#include "filesystem.hpp"
+#include "mt_rng.hpp"
+
+#include <boost/algorithm/string.hpp>
+#include <boost/iostreams/stream.hpp>
+#include <boost/iostreams/tee.hpp>
 
 #include <map>
 #include <sstream>
 #include <ctime>
+#include <mutex>
+#include <iostream>
+#include <iomanip>
 
-#include "global.hpp"
+static lg::log_domain log_setup("logsetup");
+#define ERR_LS LOG_STREAM(err,   log_setup)
+#define WRN_LS LOG_STREAM(warn,  log_setup)
+#define LOG_LS LOG_STREAM(info,  log_setup)
+#define DBG_LS LOG_STREAM(debug, log_setup)
 
 namespace {
 
@@ -44,29 +57,164 @@ static std::ostream null_ostream(new null_streambuf);
 static int indent = 0;
 static bool timestamp = true;
 static bool precise_timestamp = false;
+static std::mutex log_mutex;
 
-static boost::posix_time::time_facet facet("%Y%m%d %H:%M:%S%F ");
-static std::ostream *output_stream = nullptr;
+static std::optional<bool> is_log_dir_writable_ = std::nullopt;
+static std::ostream *output_stream_ = nullptr;
 
 static std::ostream& output()
 {
-	if(output_stream) {
-		return *output_stream;
+	if(output_stream_) {
+		return *output_stream_;
 	}
 	return std::cerr;
 }
 
+// custom deleter needed to reset cerr and cout
+// otherwise wesnoth segfaults on closing (such as clicking the Quit button on the main menu)
+// seems to be that there's a final flush done outside of wesnoth's code just before exiting
+// but at that point the output_file_ has already been cleaned up
+static std::unique_ptr<std::ostream, void(*)(std::ostream*)> output_file_(nullptr, [](std::ostream*){
+	std::cerr.rdbuf(nullptr);
+	std::cout.rdbuf(nullptr);
+});
+static std::string output_file_path_ = "";
+
 namespace lg {
 
-redirect_output_setter::redirect_output_setter(std::ostream& stream)
-	: old_stream_(output_stream)
+/** Helper function for rotate_logs. */
+bool is_not_log_file(const std::string& fn)
 {
-	output_stream = &stream;
+	return !(boost::algorithm::istarts_with(fn, lg::log_file_prefix) &&
+			 boost::algorithm::iends_with(fn, lg::log_file_suffix));
+}
+
+/**
+ * Deletes old log files from the log directory.
+ */
+void rotate_logs(const std::string& log_dir)
+{
+	// if logging to file is disabled, don't rotate the logs
+	if(output_file_path_.empty()) {
+		return;
+	}
+
+	std::vector<std::string> files;
+	filesystem::get_files_in_dir(log_dir, &files);
+
+	files.erase(std::remove_if(files.begin(), files.end(), is_not_log_file), files.end());
+
+	if(files.size() <= lg::max_logs) {
+		return;
+	}
+
+	// Sorting the file list and deleting all but the last max_logs items
+	// should hopefully be faster than stat'ing every single file for its
+	// time attributes (which aren't very reliable to begin with).
+
+	std::sort(files.begin(), files.end());
+
+	for(std::size_t j = 0; j < files.size() - lg::max_logs; ++j) {
+		const std::string path = log_dir + '/' + files[j];
+		LOG_LS << "rotate_logs(): delete " << path;
+		if(!filesystem::delete_file(path)) {
+			ERR_LS << "rotate_logs(): failed to delete " << path << "!";
+		}
+	}
+}
+
+/**
+ * Generates a unique log file name.
+ */
+std::string unique_log_filename()
+{
+	std::ostringstream o;
+	const std::time_t cur = std::time(nullptr);
+	randomness::mt_rng rng;
+
+	o << lg::log_file_prefix
+	  << std::put_time(std::localtime(&cur), "%Y%m%d-%H%M%S-")
+	  << rng.get_next_random()
+	  << lg::log_file_suffix;
+
+	return o.str();
+}
+
+void check_log_dir_writable()
+{
+	std::string dummy_log = filesystem::get_logs_dir()+"/dummy.log";
+
+	// log directory doesn't exist and can't be created
+	if(!filesystem::file_exists(filesystem::get_logs_dir()) && !filesystem::make_directory(filesystem::get_logs_dir())) {
+		is_log_dir_writable_ = false;
+		return;
+	}
+
+	// can't create and write new log files
+	try {
+		filesystem::write_file(dummy_log, " ");
+	} catch(const filesystem::io_exception&) {
+		is_log_dir_writable_ = false;
+		return;
+	}
+
+	// confirm that file exists and was written to
+	if(filesystem::file_size(dummy_log) != 1) {
+		is_log_dir_writable_ = false;
+	}
+
+	// can't delete files - prevents log rotation
+	if(filesystem::file_exists(dummy_log) && !filesystem::delete_file(dummy_log)) {
+		is_log_dir_writable_ = false;
+		return;
+	}
+
+	is_log_dir_writable_ = true;
+}
+
+void set_log_to_file()
+{
+	check_log_dir_writable();
+	// if the log directory is not writable, then don't try to do anything.
+	// if the log directory is writable, then setup logging and rotate the logs.
+	// if the optional isn't set, then logging to file has been disabled, so don't try to do anything
+	if(is_log_dir_writable_.value_or(false)) {
+		// get the log file stream and assign cerr+cout to it
+		output_file_path_ = filesystem::get_logs_dir()+"/"+unique_log_filename();
+		static std::unique_ptr<std::ostream> logfile { filesystem::ostream_file(output_file_path_) };
+		static std::ostream cerr_stream{std::cerr.rdbuf()};
+		//static std::ostream cout_stream{std::cout.rdbuf()};
+		auto cerr_tee { boost::iostreams::tee(*logfile, cerr_stream) };
+		output_file_.reset(new boost::iostreams::stream<decltype(cerr_tee)>{cerr_tee, 4096, 0});
+		std::cerr.rdbuf(output_file_.get()->rdbuf());
+		std::cout.rdbuf(output_file_.get()->rdbuf());
+		rotate_logs(filesystem::get_logs_dir());
+	}
+}
+
+std::optional<bool> log_dir_writable()
+{
+	return is_log_dir_writable_;
+}
+
+std::string& get_log_file_path()
+{
+	return output_file_path_;
+}
+void set_log_file_path(const std::string& path)
+{
+	output_file_path_ = path;
+}
+
+redirect_output_setter::redirect_output_setter(std::ostream& stream)
+	: old_stream_(output_stream_)
+{
+	output_stream_ = &stream;
 }
 
 redirect_output_setter::~redirect_output_setter()
 {
-	output_stream = old_stream_;
+	output_stream_ = old_stream_;
 }
 
 typedef std::map<std::string, int> domain_map;
@@ -196,55 +344,111 @@ std::string get_timespan(const std::time_t& t) {
 	return sout.str();
 }
 
-static void print_precise_timestamp(std::ostream & out) noexcept
+static void print_precise_timestamp(std::ostream& out) noexcept
 {
 	try {
-		facet.put(
-			std::ostreambuf_iterator<char>(out),
-			out,
-			' ',
-			boost::posix_time::microsec_clock::local_time());
+		int64_t micros = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
+		std::time_t seconds = micros/1'000'000;
+		int fractional = micros-(seconds*1'000'000);
+		char c = out.fill('0');
+		out << std::put_time(std::localtime(&seconds), "%Y%m%d %H:%M:%S") << "." << std::setw(6) << fractional << ' ';
+		out.fill(c);
 	} catch(...) {}
 }
 
-std::ostream &logger::operator()(const log_domain& domain, bool show_names, bool do_indent) const
+std::string sanitize_log(const std::string& logstr)
+{
+	std::string str = logstr;
+
+#ifdef _WIN32
+	const char* user_name = getenv("USERNAME");
+#else
+	const char* user_name = getenv("USER");
+#endif
+
+	if(user_name != nullptr) {
+		boost::replace_all(str, std::string("/") + user_name + "/", "/USER/");
+		boost::replace_all(str, std::string("\\") + user_name + "\\", "\\USER\\");
+	}
+
+	return str;
+}
+
+log_in_progress logger::operator() (
+	const log_domain& domain,
+	bool show_names,
+	bool do_indent,
+	bool show_timestamps,
+	bool break_strict,
+	bool auto_newline) const
 {
 	if (severity_ > domain.domain_->second) {
 		return null_ostream;
 	} else {
-		if (!strict_threw_ && (severity_ <= strict_level_)) {
-			std::stringstream ss;
-			ss << "Error (strict mode, strict_level = " << strict_level_ << "): wesnoth reported on channel " << name_ << " " << domain.domain_->first;
-			std::cerr << ss.str() << std::endl;
-			strict_threw_ = true;
-		}
-		std::ostream& stream = output();
+		log_in_progress stream = output();
 		if(do_indent) {
-			for(int i = 0; i != indent; ++i)
-				stream << "  ";
-			}
-		if (timestamp) {
-			if(precise_timestamp) {
-				print_precise_timestamp(stream);
-			} else {
-				stream << get_timestamp(std::time(nullptr));
-			}
+			stream.set_indent(indent);
+		}
+		if (timestamp && show_timestamps) {
+			stream.enable_timestamp();
 		}
 		if (show_names) {
-			stream << name_ << ' ' << domain.domain_->first << ": ";
+			stream.set_prefix(formatter() << name_ << ' ' << domain.domain_->first << ": ");
 		}
+		if (!strict_threw_ && severity_ <= strict_level_ && break_strict) {
+			stream | formatter() << "Error (strict mode, strict_level = " << strict_level_ << "): wesnoth reported on channel " << name_ << " " << domain.domain_->first << std::endl;
+			strict_threw_ = true;
+		}
+		stream.set_auto_newline(auto_newline);
 		return stream;
 	}
 }
 
-void scope_logger::do_log_entry(const log_domain& domain, const std::string& str) noexcept
+log_in_progress::log_in_progress(std::ostream& stream)
+	: stream_(stream)
+{}
+
+void log_in_progress::operator|(formatter&& message)
 {
-	output_ = &debug()(domain, false, true);
+	std::scoped_lock lock(log_mutex);
+	for(int i = 0; i < indent; ++i)
+		stream_ << "  ";
+	if(timestamp_) {
+		if(precise_timestamp) {
+			print_precise_timestamp(stream_);
+		} else {
+			stream_ << get_timestamp(std::time(nullptr));
+		}
+	}
+	stream_ << prefix_ << sanitize_log(message.str());
+	if(auto_newline_) {
+		stream_ << std::endl;
+	}
+}
+
+void log_in_progress::set_indent(int level) {
+	indent_ = level;
+}
+
+void log_in_progress::enable_timestamp() {
+	timestamp_ = true;
+}
+
+void log_in_progress::set_prefix(const std::string& prefix) {
+	prefix_ = prefix;
+}
+
+void log_in_progress::set_auto_newline(bool auto_newline) {
+	auto_newline_ = auto_newline;
+}
+
+void scope_logger::do_log_entry(const std::string& str) noexcept
+{
 	str_ = str;
 	try {
-		ticks_ = boost::posix_time::microsec_clock::local_time();
+		ticks_ = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
 	} catch(...) {}
-	(*output_) << "{ BEGIN: " << str_ << "\n";
+	debug()(domain_, false, true) | formatter() << "{ BEGIN: " << str_;
 	++indent;
 }
 
@@ -252,25 +456,19 @@ void scope_logger::do_log_exit() noexcept
 {
 	long ticks = 0;
 	try {
-		ticks = (boost::posix_time::microsec_clock::local_time() - ticks_).total_milliseconds();
+		ticks = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count() - ticks_;
 	} catch(...) {}
 	--indent;
-	do_indent();
-	if (timestamp) (*output_) << get_timestamp(std::time(nullptr));
-	(*output_) << "} END: " << str_ << " (took " << ticks << "ms)\n";
+	auto output = debug()(domain_, false, true);
+	output.set_indent(indent);
+	if(timestamp) output.enable_timestamp();
+	output | formatter() << "} END: " << str_ << " (took " << ticks << "us)";
 }
 
-void scope_logger::do_indent() const
-{
-	for(int i = 0; i != indent; ++i)
-		(*output_) << "  ";
-}
-
-std::stringstream& wml_error()
+std::stringstream& log_to_chat()
 {
 	static std::stringstream lg;
 	return lg;
 }
 
 } // end namespace lg
-

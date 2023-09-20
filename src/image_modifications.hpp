@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2009 - 2018 by Iris Morelle <shadowm2006@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2009 - 2023
+	by Iris Morelle <shadowm2006@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -22,15 +23,16 @@
 #include <functional>
 #include <map>
 #include <memory>
-#include <queue>
 
 namespace image {
 
 class modification;
 
-/// A modified priority queue used to order image modifications.
-/// The priorities for this queue are to order modifications by priority(),
-/// then by the order they are added to the queue.
+/**
+ * A modified priority queue used to order image modifications.
+ * The priorities for this queue are to order modifications by priority(),
+ * then by the order they are added to the queue.
+ */
 class modification_queue
 {
 	// Invariant for this class:
@@ -49,13 +51,13 @@ public:
 	modification * top() const;
 
 private:
-	/// Map from a mod's priority() to the mods having that priority.
+	/** Map from a mod's priority() to the mods having that priority. */
 	typedef std::map<int, std::vector<std::shared_ptr<modification>>, std::greater<int>> map_type;
-	/// Map from a mod's priority() to the mods having that priority.
+	/** Map from a mod's priority() to the mods having that priority. */
 	map_type priorities_;
 };
 
-/// Base abstract class for an image-path modification
+/** Base abstract class for an image-path modification */
 class modification
 {
 public:
@@ -94,15 +96,15 @@ public:
 		IMPLEMENT_LUA_JAILBREAK_EXCEPTION(imod_exception)
 	};
 
-	/// Decodes modifications from a modification string
+	/** Decodes modifications from a modification string */
 	static modification_queue decode(const std::string&);
 
 	virtual ~modification() {}
 
-	///Applies the image-path modification on the specified surface
+	/** Applies the image-path modification on the specified surface */
 	virtual surface operator()(const surface& src) const = 0;
 
-	/// Specifies the priority of the modification
+	/** Specifies the priority of the modification */
 	virtual int priority() const { return 0; }
 };
 
@@ -187,7 +189,7 @@ public:
 	 * Constructor.
 	 *
 	 * @pre zoom >= offset   Otherwise the result will have empty pixels.
-     * @pre offset > 0       Otherwise the procedure will not return.
+	 * @pre offset > 0       Otherwise the procedure will not return.
 	 *
 	 * @param degrees Amount of rotation (in degrees).
 	 *                Positive values are clockwise; negative are counter-clockwise.

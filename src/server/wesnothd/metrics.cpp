@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2003 - 2018 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2003 - 2023
+	by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -20,7 +21,7 @@
 #include "server/wesnothd/metrics.hpp"
 
 #include <algorithm>
-#include <iostream>
+#include <ostream>
 
 struct compare_samples_to_stringspan {
 	bool operator()(const simple_wml::string_span& a, const simple_wml::string_span& b) const
@@ -35,25 +36,23 @@ struct compare_samples_by_time {
 	}
 };
 
-
-metrics::metrics() :
-	samples_(),
-	most_consecutive_requests_(0),
-	current_requests_(0),
-	nrequests_(0),
-	nrequests_waited_(0),
-	started_at_(std::time(nullptr)),
-	terminations_()
-{}
+metrics::metrics()
+	: samples_()
+	, most_consecutive_requests_(0)
+	, current_requests_(0)
+	, nrequests_(0)
+	, nrequests_waited_(0)
+	, started_at_(std::time(nullptr))
+	, terminations_()
+{
+}
 
 metrics::~metrics()
 {
-
-	for(std::vector<sample>::iterator itor = samples_.begin();
-			itor != samples_.end(); ++itor)
-	{
-		delete[] itor->name.begin();
+	for(auto& s : samples_) {
+		delete[] s.name.begin();
 	}
+
 	samples_.clear();
 }
 
@@ -75,12 +74,10 @@ void metrics::no_requests()
 	current_requests_ = 0;
 }
 
-void metrics::record_sample(const simple_wml::string_span& name,
-                            clock_t parsing_time, clock_t processing_time)
+void metrics::record_sample(const simple_wml::string_span& name, clock_t parsing_time, clock_t processing_time)
 {
-	std::vector<sample>::iterator isample = std::lower_bound(samples_.begin(), samples_.end(), name,compare_samples_to_stringspan());
-	if(isample == samples_.end()
-		|| isample->name != name) {
+	auto isample = std::lower_bound(samples_.begin(), samples_.end(), name,compare_samples_to_stringspan());
+	if(isample == samples_.end() || isample->name != name) {
 		//protect against DoS with memory exhaustion
 		if(samples_.size() > 30) {
 			return;
@@ -112,9 +109,9 @@ std::ostream& metrics::games(std::ostream& out) const
 
 	std::size_t n = 0;
 	out << "Games have been terminated in the following ways:\n";
-	for(std::map<std::string,int>::const_iterator i = terminations_.begin(); i != terminations_.end(); ++i) {
-		out << i->first << ": " << i->second << "\n";
-		n += i->second;
+	for(const auto& t : terminations_) {
+		out << t.first << ": " << t.second << "\n";
+		n += t.second;
 	}
 	out << "Total number of games = " << n;
 
@@ -133,13 +130,13 @@ std::ostream& metrics::requests(std::ostream& out) const
 	std::size_t n = 0;
 	std::size_t pa = 0;
 	std::size_t pr = 0;
-	for(std::vector<metrics::sample>::const_iterator s = ordered_samples.begin(); s != ordered_samples.end(); ++s) {
-		out << "'" << s->name << "' called " << s->nsamples << " times "
-			<< s->parsing_time << "("<< s->max_parsing_time <<") parsing time, "
-			<< s->processing_time << "("<<s->max_processing_time<<") processing time\n";
-		n += s->nsamples;
-		pa += s->parsing_time;
-		pr += s->processing_time;
+	for(const auto& s : ordered_samples) {
+		out << "'" << s.name << "' called " << s.nsamples << " times "
+			<< s.parsing_time << "("<< s.max_parsing_time <<") parsing time, "
+			<< s.processing_time << "("<<s.max_processing_time<<") processing time\n";
+		n += s.nsamples;
+		pa += s.parsing_time;
+		pr += s.processing_time;
 	}
 	out << "Total number of request samples = " << n << "\n"
 		<< "Total parsing time = " << pa << "\n"

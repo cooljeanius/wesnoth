@@ -1,17 +1,17 @@
 /*
-   Copyright (C) 2003 by David White <dave@whitevine.net>
-   Copyright (C) 2005 - 2018 by Philippe Plantier <ayin@anathas.org>
+	Copyright (C) 2005 - 2023
+	by Philippe Plantier <ayin@anathas.org>
+	Copyright (C) 2003 by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
-
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -30,8 +30,6 @@
 #include "units/map.hpp"
 #include "team.hpp"
 
-#include <boost/variant/static_visitor.hpp>
-
 static lg::log_domain log_engine("engine");
 #define LOG_NG LOG_STREAM(info, log_engine)
 #define WRN_NG LOG_STREAM(warn, log_engine)
@@ -49,8 +47,9 @@ namespace
 
 		return as_nonempty_range_default.child_range("_");
 	}
-	
-	struct : public variable_set
+
+	// doxygen didn't like this as an anonymous struct
+	struct anon : public variable_set
 	{
 		config::attribute_value get_variable_const(const std::string&) const override
 		{
@@ -68,7 +67,7 @@ config::attribute_value config_variable_set::get_variable_const(const std::strin
 		variable_access_const variable = get_variable_access_read(id);
 		return variable.as_scalar();
 	} catch(const invalid_variablename_exception&) {
-		ERR_NG << "invalid variablename " << id << "\n";
+		ERR_NG << "invalid variablename " << id;
 		return config::attribute_value();
 	}
 }
@@ -105,6 +104,7 @@ vconfig::vconfig(const config & cfg, const std::shared_ptr<const config> & cache
  *                          If false, no copy is made, so @a cfg must be
  *                          guaranteed to persist as long as the vconfig will.
  *                          If in doubt, set to true; it is less efficient, but safe.
+ * @param[in] vars
  * See also make_safe().
  */
 vconfig::vconfig(const config &cfg, bool manage_memory, const variable_set* vars)
@@ -184,7 +184,7 @@ config vconfig::get_parsed_config() const
 		res[i.first] = expand(i.first);
 	}
 
-	for (const config::any_child &child : cfg_->all_children_range())
+	for (const config::any_child child : cfg_->all_children_range())
 	{
 		if (child.key == "insert_tag") {
 			vconfig insert_cfg(child.cfg, *variables_);
@@ -207,7 +207,7 @@ config vconfig::get_parsed_config() const
 			}
 			catch(const recursion_error &err) {
 				vconfig_recursion.erase(vname);
-				WRN_NG << err.message << std::endl;
+				WRN_NG << err.message;
 				if(vconfig_recursion.empty()) {
 					res.add_child("insert_tag", insert_cfg.get_config());
 				} else {
@@ -227,7 +227,7 @@ vconfig::child_list vconfig::get_children(const std::string& key) const
 {
 	vconfig::child_list res;
 
-	for (const config::any_child &child : cfg_->all_children_range())
+	for (const config::any_child child : cfg_->all_children_range())
 	{
 		if (child.key == key) {
 			res.push_back(vconfig(child.cfg, cache_, *variables_));
@@ -257,7 +257,7 @@ std::size_t vconfig::count_children(const std::string& key) const
 {
 	std::size_t n = 0;
 
-	for (const config::any_child &child : cfg_->all_children_range())
+	for (const config::any_child child : cfg_->all_children_range())
 	{
 		if (child.key == key) {
 			n++;
@@ -287,8 +287,8 @@ std::size_t vconfig::count_children(const std::string& key) const
  */
 vconfig vconfig::child(const std::string& key) const
 {
-	if (const config &natural = cfg_->child(key)) {
-		return vconfig(natural, cache_, *variables_);
+	if (auto natural = cfg_->optional_child(key)) {
+		return vconfig(*natural, cache_, *variables_);
 	}
 	for (const config &ins : cfg_->child_range("insert_tag"))
 	{
@@ -314,7 +314,7 @@ vconfig vconfig::child(const std::string& key) const
  */
 bool vconfig::has_child(const std::string& key) const
 {
-	if (cfg_->child(key)) {
+	if (cfg_->has_child(key)) {
 		return true;
 	}
 	for (const config &ins : cfg_->child_range("insert_tag"))
@@ -328,7 +328,10 @@ bool vconfig::has_child(const std::string& key) const
 }
 
 namespace {
-	struct vconfig_expand_visitor : boost::static_visitor<void>
+	struct vconfig_expand_visitor
+#ifdef USING_BOOST_VARIANT
+		: boost::static_visitor<void>
+#endif
 	{
 		config::attribute_value &result;
 		const variable_set& vars;
@@ -502,7 +505,7 @@ config &scoped_wml_variable::store(const config &var_value)
 		}
 		resources::gamedata->clear_variable_cfg(var_name_);
 		config &res = resources::gamedata->add_variable_cfg(var_name_, var_value);
-		LOG_NG << "scoped_wml_variable: var_name \"" << var_name_ << "\" has been auto-stored.\n";
+		LOG_NG << "scoped_wml_variable: var_name \"" << var_name_ << "\" has been auto-stored.";
 		activated_ = true;
 		return res;
 	}
@@ -532,7 +535,7 @@ scoped_wml_variable::~scoped_wml_variable()
 			{
 			}
 		}
-		LOG_NG << "scoped_wml_variable: var_name \"" << var_name_ << "\" has been reverted.\n";
+		LOG_NG << "scoped_wml_variable: var_name \"" << var_name_ << "\" has been reverted.";
 	}
 
 	assert(resources::gamedata->scoped_variables.back() == this);
@@ -547,16 +550,16 @@ void scoped_xy_unit::activate()
 		itor->write(tmp_cfg);
 		tmp_cfg["x"] = loc_.wml_x();
 		tmp_cfg["y"] = loc_.wml_y();
-		LOG_NG << "auto-storing $" << name() << " at (" << loc_ << ")\n";
+		LOG_NG << "auto-storing $" << name() << " at (" << loc_ << ")";
 	} else {
-		ERR_NG << "failed to auto-store $" << name() << " at (" << loc_ << ")" << std::endl;
+		ERR_NG << "failed to auto-store $" << name() << " at (" << loc_ << ")";
 	}
 }
 
 void scoped_weapon_info::activate()
 {
 	if (data_) {
-		store(data_);
+		store(*data_);
 	}
 }
 
@@ -575,12 +578,12 @@ void scoped_recall_unit::activate()
 			tmp_cfg["x"] = "recall";
 			tmp_cfg["y"] = "recall";
 			LOG_NG << "auto-storing $" << name() << " for player: " << player_
-				<< " at recall index: " << recall_index_ << '\n';
+				<< " at recall index: " << recall_index_;
 		} else {
 			ERR_NG << "failed to auto-store $" << name() << " for player: " << player_
-				<< " at recall index: " << recall_index_ << '\n';
+				<< " at recall index: " << recall_index_;
 		}
 	} else {
-		ERR_NG << "failed to auto-store $" << name() << " for player: " << player_ << '\n';
+		ERR_NG << "failed to auto-store $" << name() << " for player: " << player_;
 	}
 }

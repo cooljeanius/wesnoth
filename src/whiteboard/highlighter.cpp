@@ -1,16 +1,17 @@
 /*
- Copyright (C) 2010 - 2018 by Gabriel Morin <gabrielmorin (at) gmail (dot) com>
- Part of the Battle for Wesnoth Project https://www.wesnoth.org
+	Copyright (C) 2010 - 2023
+	by Gabriel Morin <gabrielmorin (at) gmail (dot) com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
- See the COPYING file for more details.
- */
+	See the COPYING file for more details.
+*/
 
 /**
  * @file
@@ -18,9 +19,7 @@
 
 #include <algorithm>
 #include <iterator>
-#include <boost/range/adaptor/reversed.hpp>
-
-#include "utils/functional.hpp"
+#include <functional>
 
 #include "whiteboard/highlighter.hpp"
 
@@ -45,6 +44,7 @@
 #include "units/unit.hpp"
 #include "units/animation_component.hpp"
 #include "units/map.hpp"
+#include "utils/ranges.hpp"
 
 namespace wb
 {
@@ -109,7 +109,7 @@ void highlighter::set_mouseover_hex(const map_location& hex)
 	if(side_actions_->empty()) {
 		return;
 	}
-	for(action_ptr act : boost::adaptors::reverse(*side_actions_)) {
+	for(action_ptr act : utils::reversed_view(*side_actions_)) {
 		/**@todo "is_numbering_hex" is not the "correct" criterion by which to
 		 * select the highlighted/selected action. It's just convenient for me
 		 * to use at the moment since it happens to coincide with the "correct"
@@ -275,7 +275,7 @@ void highlighter::highlight_main_visitor::visit(move_ptr move)
 		move->set_arrow_brightness(move::ARROW_BRIGHTNESS_FOCUS);
 	}
 	if(move->get_fake_unit()) {
-		///@todo find some highlight animation
+		// TODO: find some highlight animation
 		move->get_fake_unit()->anim_comp().set_ghosted(true);
 		//Make sure the fake unit is the only one displayed in its hex
 		display::get_singleton()->add_exclusive_draw(move->get_fake_unit()->get_location(), *move->get_fake_unit());
@@ -287,14 +287,14 @@ void highlighter::highlight_main_visitor::visit(move_ptr move)
 
 void highlighter::highlight_main_visitor::visit(attack_ptr attack)
 {
-	///@todo: highlight the attack indicator
+	// TODO: highlight the attack indicator
 	visit(std::static_pointer_cast<move>(attack));
 }
 
 void highlighter::highlight_main_visitor::visit(recruit_ptr recruit)
 {
 	if(recruit->get_fake_unit()) {
-		///@todo: find some suitable effect for mouseover on planned recruit.
+		// TODO: find some suitable effect for mouseover on planned recruit.
 
 		//Make sure the fake unit is the only one displayed in its hex
 		display::get_singleton()->add_exclusive_draw(recruit->get_fake_unit()->get_location(), *recruit->get_fake_unit());

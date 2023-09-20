@@ -11,8 +11,8 @@
 #endif
 
 #include <boost/spirit/include/qi.hpp>
-#include <boost/spirit/include/phoenix_core.hpp>
-#include <boost/spirit/include/phoenix_operator.hpp>
+#include <boost/phoenix/core.hpp>
+#include <boost/phoenix/operator.hpp>
 #include <boost/fusion/include/std_pair.hpp>
 #include <boost/fusion/include/define_struct.hpp>
 
@@ -59,9 +59,9 @@ struct po_grammar : qi::grammar<Iterator, po_message()> {
   qi::rule<Iterator> preamble_comment_line;
   qi::rule<Iterator> preamble_comment_block;
 
-  /// consume any number of blocks, consisting of any number of comments followed by a white line
+  /** consume any number of blocks, consisting of any number of comments followed by a white line */
   qi::rule<Iterator> ignored_comments;
-  /// consume any number of non-white comment line (using #). bool result represents if we saw #, fuzzy comment
+  /** consume any number of non-white comment line (using #). bool result represents if we saw #, fuzzy comment */
   qi::rule<Iterator, bool()> message_preamble;
 
   po_grammar() : po_grammar::base_type(message) {
@@ -104,12 +104,14 @@ struct po_grammar : qi::grammar<Iterator, po_message()> {
      * keep track of if we saw a fuzzy marker, and to consume the entire file if only whitespace lines remain, whether or
      * not it ends in new-line.
      *
-     * First, parse "ignored_comments", 
+     * First, parse "ignored_comments",
      * message_preamble is the main rule of this section
      */
 
-    /// Fuzzy: Expect comment of the form #, with literal `, fuzzy` in the list somewhere.
-    /// We use a qi local to keep track of if we saw it, this avoids excessive backtracking
+    /**
+     * Fuzzy: Expect comment of the form #, with literal `, fuzzy` in the list somewhere.
+     * We use a qi local to keep track of if we saw it, this avoids excessive backtracking
+     */
     fuzzy = lit('#') >> (&lit(','))[qi::_a = false] >> *(lit(',') >> -(lit(" fuzzy")[qi::_a = true]) >> *(char_ - '\n' - ',')) >> lit('\n') >> qi::eps(qi::_a);
     preamble_comment_line = comment_line >> lit('\n');
 

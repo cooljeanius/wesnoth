@@ -1,20 +1,23 @@
 /*
-   Copyright (C) 2011, 2018 by Iris Morelle <shadowm2006@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2011 - 2023
+	by Iris Morelle <shadowm2006@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
 
 #include "gui/dialogs/modal_dialog.hpp"
+
+#include "desktop/paths.hpp"
 
 /**
  * Generic file dialog.
@@ -185,6 +188,12 @@ public:
 		return *this;
 	}
 
+	file_dialog& add_extra_path(desktop::GAME_PATH_TYPES path)
+	{
+		extra_paths_.emplace(path);
+		return *this;
+	}
+
 private:
 	std::string title_;
 	std::string msg_;
@@ -203,27 +212,26 @@ private:
 	std::vector<std::string> bookmark_paths_;
 	int current_bookmark_;
 	int user_bookmarks_begin_;
+	std::set<desktop::GAME_PATH_TYPES> extra_paths_;
 
-	/** Inherited from modal_dialog, implemented by REGISTER_DIALOG. */
 	virtual const std::string& window_id() const override;
 
-	/** Inherited from modal_dialog. */
 	virtual void pre_show(window& window) override;
 
 	/** Handles dialog exit events and decides whether to proceed or not. */
 	bool on_exit(window& window);
 	/** Handles file/directory selection on single-click. */
-	void on_row_selected(window& window);
+	void on_row_selected();
 	/** Handles selection or deselection of bookmarks. */
-	void on_bookmark_selected(window& window);
+	void on_bookmark_selected();
 	/** Handles Add Bookmark button press events. */
-	void on_bookmark_add_cmd(window& window);
+	void on_bookmark_add_cmd();
 	/** Handles Remove Bookmark button press events. */
-	void on_bookmark_del_cmd(window& window);
+	void on_bookmark_del_cmd();
 	/** Handles New Folder button press events. */
-	void on_dir_create_cmd(window& window);
+	void on_dir_create_cmd();
 	/** Handles Delete button press events. */
-	void on_file_delete_cmd(window& window);
+	void on_file_delete_cmd();
 
 	/**
 	 * Processes file view selection in reaction to row double-click events.
@@ -234,7 +242,7 @@ private:
 	 * @returns Whether to exit the dialog successfully (@a true) or continue
 	 *          (@a false).
 	 */
-	bool process_fileview_submit(window& window);
+	bool process_fileview_submit();
 
 	/**
 	 * Processes textbox input in reaction to OK button/Enter key events.
@@ -245,14 +253,14 @@ private:
 	 * @returns Whether to exit the dialog successfully (@a true) or continue
 	 *          (@a false).
 	 */
-	bool process_textbox_submit(window& window);
+	bool process_textbox_submit();
 
-	bool process_submit_common(window& window, const std::string& name);
+	bool process_submit_common(const std::string& name);
 
 	/**
 	 * Updates the bookmarks bar state to reflect the internal state.
 	 */
-	void sync_bookmarks_bar(window& window);
+	void sync_bookmarks_bar();
 
 	std::string get_filelist_selection(class listbox& filelist);
 
@@ -280,7 +288,7 @@ private:
 	 * @returns @a true if the selection does not refer to an existing file or the
 	 *          user accepted the overwrite prompt; @a false otherwise.
 	 */
-	bool confirm_overwrite(window& window, SELECTION_TYPE stype);
+	bool confirm_overwrite(SELECTION_TYPE stype);
 
 	/**
 	 * Updates the internal state and returns the type of the selection.
@@ -296,7 +304,7 @@ private:
 	/**
 	 * Updates the dialog contents to match the internal state.
 	 */
-	void refresh_fileview(window& window);
+	void refresh_fileview();
 
 	/**
 	 * Row building helper for refresh_fileview().

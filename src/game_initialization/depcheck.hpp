@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2012 - 2018 by Boldizsár Lipka <lipkab@zoho.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2012 - 2023
+	by Boldizsár Lipka <lipkab@zoho.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -18,7 +19,6 @@
 #include <vector>
 #include "config.hpp"
 #include "gettext.hpp"
-#include "utils/make_enum.hpp"
 
 class game_config_view;
 
@@ -35,11 +35,6 @@ enum component_type
 	MODIFICATION
 };
 
-MAKE_ENUM(component_availability,
-	(SP, "sp")
-	(MP, "mp")
-	(HYBRID, "hybrid")
-)
 /**
  * Note to all triers:
  * It's not guaranteed that the specified component will be selected
@@ -248,7 +243,7 @@ private:
 	 *
 	 * @return 					true if e1 and e2 conflict, false if not
 	 */
-	bool conflicts(const elem& elem1, const elem& elem2, bool directonly=false) const;
+	bool does_conflict(const elem& elem1, const elem& elem2, bool directonly=false) const;
 
 	/**
 	 * Decides whether e1 requires e2
@@ -260,7 +255,7 @@ private:
 	 *
 	 * @return 			true if e2 is required by e1, false if not
 	 */
-	bool requires(const elem& elem1, const elem& elem2) const;
+	bool does_require(const elem& elem1, const elem& elem2) const;
 
 	/**
 	 * Get the list of modifications required by a certain component

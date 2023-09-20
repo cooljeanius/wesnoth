@@ -1,17 +1,16 @@
 /*
-   Copyright (C) 2009 - 2018 by Thomas Baumhauer
-   <thomas.baumhauer@NOSPAMgmail.com>
-   Copyright (C) 2009 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2009 - 2023
+	by Thomas Baumhauer <thomas.baumhauer@NOSPAMgmail.com>, Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #define GETTEXT_DOMAIN "wesnoth-lib"
@@ -24,7 +23,7 @@
 #include "serialization/unicode.hpp"
 
 #include "desktop/clipboard.hpp"
-#include "utils/functional.hpp"
+#include <functional>
 
 #define LOG_SCOPE_HEADER get_control_type() + " [" + id() + "] " + __func__
 #define LOG_HEADER LOG_SCOPE_HEADER + ':'
@@ -101,7 +100,7 @@ void password_box::paste_selection(const bool mouse)
 	insert_char(text);
 }
 
-const std::string& password_box::type()                                                                                      \
+const std::string& password_box::type()
 {
 	static const std::string type = "password_box";
 	return type;
@@ -117,36 +116,21 @@ const std::string& password_box::get_control_type() const
 namespace implementation
 {
 
-/*WIKI
- * @page = GUIWidgetInstanceWML
- * @order = 2_password_box
- *
- * == Password box ==
- *
- * @begin{parent}{name="gui/window/resolution/grid/row/column/"}
- * @begin{tag}{name="password_box"}{min=0}{max=-1}{super="generic/widget_instance"}
- * @begin{table}{config}
- *     label & t_string & "" &         The initial text of the password box. $
- * @end{table}
- * @end{tag}{name="password_box"}
- * @end{parent}{name="gui/window/resolution/grid/row/column/"}
- */
-
 builder_password_box::builder_password_box(const config& cfg)
 	: builder_styled_widget(cfg), history_(cfg["history"])
 {
 }
 
-widget* builder_password_box::build() const
+std::unique_ptr<widget> builder_password_box::build() const
 {
-	password_box* widget = new password_box(*this);
+	auto widget = std::make_unique<password_box>(*this);
 
 	// A password box doesn't have a label but a text.
 	// It also has no history.
 	widget->set_value(label_string);
 
 	DBG_GUI_G << "Window builder: placed password box '" << id
-			  << "' with definition '" << definition << "'.\n";
+			  << "' with definition '" << definition << "'.";
 
 	return widget;
 }

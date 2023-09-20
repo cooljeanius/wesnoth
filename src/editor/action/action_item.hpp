@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2008 - 2018 by Fabian Mueller <fabianmueller5@gmx.de>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by Fabian Mueller <fabianmueller5@gmx.de>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -35,6 +36,10 @@ namespace editor
 {
 /**
  * place a new item on the map
+ *
+ * \todo remove commented-out code (no separate ticket, but editor cleanup is on the roadmap for 1.15.11)
+ * action_item.cpp is full of commented-out code, it seems to be deadweight
+ * with the real implementation to be found in mouse_action_item.cpp.
  */
 class editor_action_item : public editor_action_location
 {
@@ -45,15 +50,10 @@ public:
 	{
 	}
 
-	/** Inherited from editor_action, implemented by IMPLEMENT_ACTION. */
-	editor_action_item* clone() const;
-
-	editor_action* perform(map_context& mc) const;
-
-	void perform_without_undo(map_context& mc) const;
-
-	/** Inherited from editor_action, implemented by IMPLEMENT_ACTION. */
-	const std::string& get_name() const;
+	std::unique_ptr<editor_action> clone() const override;
+	std::unique_ptr<editor_action> perform(map_context& mc) const override;
+	void perform_without_undo(map_context& mc) const override;
+	const std::string& get_name() const override;
 
 protected:
 	overlay item_;
@@ -70,15 +70,10 @@ public:
 	{
 	}
 
-	/** Inherited from editor_action, implemented by IMPLEMENT_ACTION. */
-	editor_action_item_delete* clone() const;
-
-	editor_action* perform(map_context& mc) const;
-
-	void perform_without_undo(map_context& mc) const;
-
-	/** Inherited from editor_action, implemented by IMPLEMENT_ACTION. */
-	const std::string& get_name() const;
+	std::unique_ptr<editor_action> clone() const override;
+	std::unique_ptr<editor_action> perform(map_context& mc) const override;
+	void perform_without_undo(map_context& mc) const override;
+	const std::string& get_name() const override;
 };
 
 class editor_action_item_replace : public editor_action_location
@@ -90,15 +85,10 @@ public:
 	{
 	}
 
-	/** Inherited from editor_action, implemented by IMPLEMENT_ACTION. */
-	editor_action_item_replace* clone() const;
-
-	editor_action* perform(map_context& mc) const;
-
-	void perform_without_undo(map_context& mc) const;
-
-	/** Inherited from editor_action, implemented by IMPLEMENT_ACTION. */
-	const std::string& get_name() const;
+	std::unique_ptr<editor_action> clone() const override;
+	std::unique_ptr<editor_action> perform(map_context& mc) const override;
+	void perform_without_undo(map_context& mc) const override;
+	const std::string& get_name() const override;
 
 protected:
 	map_location new_loc_;
@@ -115,15 +105,10 @@ public:
 	{
 	}
 
-	/** Inherited from editor_action, implemented by IMPLEMENT_ACTION. */
-	editor_action_item_facing* clone() const;
-
-	editor_action* perform(map_context& mc) const;
-
-	void perform_without_undo(map_context& mc) const;
-
-	/** Inherited from editor_action, implemented by IMPLEMENT_ACTION. */
-	const std::string& get_name() const;
+	std::unique_ptr<editor_action> clone() const override;
+	std::unique_ptr<editor_action> perform(map_context& mc) const override;
+	void perform_without_undo(map_context& mc) const override;
+	const std::string& get_name() const override;
 
 protected:
 	map_location::DIRECTION new_direction_;

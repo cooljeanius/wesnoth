@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2008 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -20,7 +21,8 @@
 #include "gui/core/window_builder.hpp"
 
 class config;
-class game_config_view;
+class gamemap;
+
 namespace gui2
 {
 namespace implementation
@@ -31,10 +33,14 @@ struct builder_minimap;
 // ------------ WIDGET -----------{
 
 /**
- * The basic minimap class.
+ * @ingroup GUIWidgetWML
  *
- * This minimap can only show a minimap, but it can't be interacted with. For
- * that the tminimap_interactive class will be created.
+ * The basic minimap class.
+ * This minimap can only show a minimap, but it can't be interacted with.
+ *
+ * The following states exist:
+ * * state_enabled - the minimap is enabled.
+ * A minimap has no extra fields.
  */
 class minimap : public styled_widget
 {
@@ -57,13 +63,7 @@ public:
 
 	/***** ***** ***** setters / getters for members ***** ****** *****/
 
-	void set_map_data(const std::string& map_data)
-	{
-		if(map_data != map_data_) {
-			map_data_ = map_data;
-			set_is_dirty(true);
-		}
-	}
+	void set_map_data(const std::string& map_data);
 
 	std::string get_map_data() const
 	{
@@ -75,36 +75,15 @@ public:
 		return map_data_;
 	}
 
-	void set_config(const ::game_config_view* terrain)
-	{
-		terrain_ = terrain;
-	}
-
 private:
 	/** The map data to be used to generate the map. */
 	std::string map_data_;
 
-	/**
-	 * The config object with the terrain data.
-	 *
-	 * This config must be set before the object can be drawn.
-	 */
-	const ::game_config_view* terrain_;
-
-	/**
-	 * Gets the image for the minimap.
-	 *
-	 * @param w                   The wanted width of the image.
-	 * @param h                   The wanted height of the image.
-	 *
-	 * @returns                   The image, nullptr upon error.
-	 */
-	const surface get_image(const int w, const int h) const;
+	/** Game map generated from the provided data. */
+	std::unique_ptr<gamemap> map_;
 
 	/** See @ref widget::impl_draw_background. */
-	virtual void impl_draw_background(surface& frame_buffer,
-									  int x_offset,
-									  int y_offset) override;
+	virtual void impl_draw_background() override;
 
 public:
 	/** Static type getter that does not rely on the widget being constructed. */
@@ -138,7 +117,7 @@ struct builder_minimap : public builder_styled_widget
 
 	using builder_styled_widget::build;
 
-	widget* build() const;
+	virtual std::unique_ptr<widget> build() const override;
 };
 
 } // namespace implementation

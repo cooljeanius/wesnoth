@@ -1,26 +1,30 @@
 /*
-   Copyright (C) 2016 - 2018 by the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2016 - 2023
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
 
+#include "gui/core/top_level_drawable.hpp"
 #include "gui/dialogs/modal_dialog.hpp"
 
 #include "events.hpp"
 #include "tstring.hpp"
 
 #include <atomic>
+#include <chrono>
 #include <future>
 #include <map>
+#include <optional>
 #include <vector>
 
 namespace cursor
@@ -63,6 +67,7 @@ enum class loading_stage
 
 namespace gui2
 {
+class drawing;
 class label;
 class window;
 
@@ -78,46 +83,71 @@ public:
 	static void display(std::function<void()> f);
 	static bool displaying() { return singleton_ != nullptr; }
 
+	/**
+	 * Report what is being loaded to the loading screen.
+	 *
+	 * Also processes any pending events and draw calls.
+	 *
+	 * This should be called before commencing each loading stage.
+	 *
+	 * @param stage     Which loading stage the caller is about to perform.
+	 */
 	static void progress(loading_stage stage = loading_stage::none);
 
+	/**
+	 * Indicate to the player that loading is progressing.
+	 *
+	 * Calling this function is necessary to allow loading screen animations
+	 * to run, and input events to be processed. It should be placed
+	 * inside any loading loops that may take significant time.
+	 *
+	 * There is an internal guard against acting too frequently, so there
+	 * should be little need to limit calls to this function.
+	 *
+	 * If a loading screen is not currently being shown, this function does
+	 * nothing.
+	 */
+	static void spin();
+
+	/**
+	 * Raise the loading screen to the top of the draw stack.
+	 *
+	 * This can be called if another TLD has been created during loading,
+	 * such as happens with the game display.
+	 */
+	static void raise();
+
 private:
-	/** Inherited from modal_dialog, implemented by REGISTER_DIALOG. */
 	virtual const std::string& window_id() const override;
 
-	/** Inherited from modal_dialog. */
 	virtual void pre_show(window& window) override;
 
-	/** Inherited from modal_dialog. */
 	virtual void post_show(window& window) override;
 
 	/** Inherited from events::pump_monitor. */
 	virtual void process(events::pump_info&) override;
 
-	/** Checks whether the worker thread has returned and loading is complete. */
-	bool loading_complete() const;
-
-	/** Callback to handle drawing the progress animation. */
-	void draw_callback();
+	/** Called by draw_manager to assign concrete layout. */
+	virtual void layout() override;
 
 	static loading_screen* singleton_;
 
-	int animation_counter_;
-	std::function<void()> load_func_;
+	std::vector<std::function<void()>> load_funcs_;
 	std::future<void> worker_result_;
 	std::unique_ptr<cursor::setter> cursor_setter_;
 
-	std::exception_ptr exception_;
-
 	label* progress_stage_label_;
-	label* animation_label_;
+	drawing* animation_;
+
+	std::optional<decltype(std::chrono::steady_clock::now())> animation_start_;
 
 	std::atomic<loading_stage> current_stage_;
 
 	using stage_map = std::map<loading_stage, t_string>;
 	stage_map visible_stages_;
-
-	std::vector<t_string> animation_stages_;
 	stage_map::const_iterator current_visible_stage_;
+
+	bool running_;
 };
 
 } // namespace dialogs

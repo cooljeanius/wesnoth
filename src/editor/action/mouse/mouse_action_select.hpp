@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2008 - 2018 by Fabian Mueller <fabianmueller5@gmx.de>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by Fabian Mueller <fabianmueller5@gmx.de>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -40,23 +41,23 @@ public:
 	/**
 	 * Force a fake "move" event to update brush overlay on key event
 	 */
-	editor_action* key_event(editor_display& disp, const SDL_Event& e) override;
+	std::unique_ptr<editor_action> key_event(editor_display& disp, const SDL_Event& e) override;
 
 	/**
 	 * Left click/drag selects
 	 */
-	editor_action* click_perform_left(editor_display& disp, const std::set<map_location>& hexes) override;
+	std::unique_ptr<editor_action> click_perform_left(editor_display& disp, const std::set<map_location>& hexes) override;
 
 	/**
 	 * Right click does nothing for now
 	 */
-	editor_action* click_right(editor_display& disp, int x, int y) override;
+	std::unique_ptr<editor_action> click_right(editor_display& disp, int x, int y) override;
 
 
 	/**
 	 * Right click/drag
 	 */
-	editor_action* click_perform_right(editor_display& disp, const std::set<map_location>& hexes) override;
+	std::unique_ptr<editor_action> click_perform_right(editor_display& disp, const std::set<map_location>& hexes) override;
 
 	virtual void set_mouse_overlay(editor_display& disp) override;
 

@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2007 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2007 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -20,7 +21,6 @@
 
 #pragma once
 
-#include "config.hpp"
 #include "lua_jailbreak_exception.hpp"
 
 #include <string>
@@ -42,7 +42,13 @@
 		if(!(cond)) {                                                     \
 			throw_wml_exception(#cond, __FILE__, __LINE__, __func__, message);  \
 		}                                                                 \
-	} while(0)
+	} while(false)
+
+#define VALIDATE_WML_CHILD(cfg, key, message)                                             \
+    ([](auto c, auto k) {                                                             \
+        if(auto child = c.optional_child(k)) { return *child; }                       \
+        throw_wml_exception( "Missing [" key "]", __FILE__, __LINE__, __func__, message); \
+    })(cfg, key)                                                                          \
 
 #define VALIDATE_WITH_DEV_MESSAGE(cond, message, dev_message)             \
 	do {                                                                  \
@@ -54,12 +60,12 @@
 					, message                                             \
 					, dev_message);                                       \
 		}                                                                 \
-	} while(0)
+	} while(false)
 
 #define FAIL(message)                                                     \
 	do {                                                                  \
 		throw_wml_exception(nullptr, __FILE__, __LINE__, __func__, message);       \
-	} while(0)
+	} while(false)
 
 #define FAIL_WITH_DEV_MESSAGE(message, dev_message)                       \
 	do {                                                                  \
@@ -69,7 +75,7 @@
 				, __func__                                                \
 				, message                                                 \
 				, dev_message);                                           \
-	} while(0)
+	} while(false)
 
 /**
  *  Helper function, don't call this directly.
@@ -79,6 +85,7 @@
  *  @param line         The line at which the test failed.
  *  @param function     The function in which the test failed.
  *  @param message      The translated message to show the user.
+ *  @param dev_message  Any additional information that might be useful to a developer.
  */
 [[noreturn]] void throw_wml_exception(
 		  const char* cond
@@ -141,57 +148,3 @@ std::string missing_mandatory_wml_key(
 		, const std::string& key
 		, const std::string& primary_key = ""
 		, const std::string& primary_value = "");
-
-// TODO: In 1.15 we could rework these two to provide standard detail messages
-// for the deprecated_message() function.
-
-/**
- * Returns a standard warning message for using a deprecated wml key.
- *
- * @param key                     The deprecated key.
- * @param removal_version         The version in which the key will be removed.
- *
- * @returns                       The warning message.
- */
-std::string deprecate_wml_key_warning(
-		  const std::string& key
-		, const std::string& removal_version);
-
-/**
- * Returns a standard warning message for using a deprecated renamed wml key.
- *
- * @param deprecated_key          The deprecated key.
- * @param key                     The new key to be used.
- * @param removal_version         The version in which the key will be removed.
- *
- * @returns                       The warning message.
- */
-std::string deprecated_renamed_wml_key_warning(
-		  const std::string& deprecated_key
-		, const std::string& key
-		, const std::string& removal_version);
-
-/**
- * Returns a config attribute, using either the old name or the new one.
- *
- * The function first tries the find the attribute using @p key and if that
- * doesn't find the attribute it tries @p deprecated_key. If that test finds
- * an attribute it will issue a warning and return the result. Else returns
- * an empty attribute.
- *
- * @note This function is not a member of @ref config, since that would add
- * additional dependencies to the core library.
- *
- * @param cfg                     The config to get the attribute from.
- * @param deprecated_key          The deprecated key.
- * @param key                     The new key to be used.
- * @param removal_version         The version in which the key will be
- *                                removed key.
- *
- * @returns                       The attribute found as described above.
- */
-const config::attribute_value& get_renamed_config_attribute(
-		  const config& cfg
-		, const std::string& deprecated_key
-		, const std::string& key
-		, const std::string& removal_version);

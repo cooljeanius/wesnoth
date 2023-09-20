@@ -1,26 +1,27 @@
 /*
-   Copyright (C) 2017-2018 by the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2017 - 2023
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #include "scripting/lua_formula_bridge.hpp"
-
-#include "boost/variant/static_visitor.hpp"
 
 #include "game_board.hpp"
 #include "scripting/game_lua_kernel.hpp"
 #include "scripting/lua_unit.hpp"
 #include "scripting/lua_common.hpp"
+#include "scripting/lua_team.hpp"
+#include "scripting/lua_unit_attacks.hpp"
+#include "scripting/lua_unit_type.hpp"
 #include "lua/lauxlib.h"
-#include "lua/lua.h"
 #include "formula/callable_objects.hpp"
 #include "formula/formula.hpp"
 #include "variable.hpp"
@@ -152,6 +153,15 @@ void luaW_pushfaivariant(lua_State* L, variant val) {
 			} else {
 				luaW_pushunit(L, u.side(), u.underlying_id());
 			}
+		} else if(auto ut_ref = val.try_convert<unit_type_callable>()) {
+			const unit_type& ut = ut_ref->get_unit_type();
+			luaW_pushunittype(L, ut);
+		} else if(auto atk_ref = val.try_convert<attack_type_callable>()) {
+			const auto& atk = atk_ref->get_attack_type();
+			luaW_pushweapon(L, atk.shared_from_this());
+		} else if(auto team_ref = val.try_convert<team_callable>()) {
+			auto t = team_ref->get_team();
+			luaW_pushteam(L, t);
 		} else if(auto loc_ref = val.try_convert<location_callable>()) {
 			luaW_pushlocation(L, loc_ref->loc());
 		} else {
@@ -161,7 +171,7 @@ void luaW_pushfaivariant(lua_State* L, variant val) {
 			obj->get_inputs(inputs);
 			lua_newtable(L);
 			for(const formula_input& attr : inputs) {
-				if(attr.access == FORMULA_WRITE_ONLY) {
+				if(attr.access == formula_access::write_only) {
 					continue;
 				}
 				lua_pushstring(L, attr.name.c_str());
@@ -194,6 +204,12 @@ variant luaW_tofaivariant(lua_State* L, int i) {
 				return variant(std::make_shared<config_callable>(vcfg.get_parsed_config()));
 			} else if(unit* u = luaW_tounit(L, i)) {
 				return variant(std::make_shared<unit_callable>(*u));
+			} else if(const unit_type* ut = luaW_tounittype(L, i)) {
+				return variant(std::make_shared<unit_type_callable>(*ut));
+			} else if(const_attack_ptr atk = luaW_toweapon(L, i)) {
+				return variant(std::make_shared<attack_type_callable>(*atk));
+			} else if(team* t = luaW_toteam(L, i)) {
+				return variant(std::make_shared<team_callable>(*t));
 			} else if(luaW_tolocation(L, i, loc)) {
 				return variant(std::make_shared<location_callable>(loc));
 			}
@@ -221,6 +237,12 @@ int lua_formula_bridge::intf_eval_formula(lua_State *L)
 	std::shared_ptr<formula_callable> context, fallback;
 	if(unit* u = luaW_tounit(L, 2)) {
 		context.reset(new unit_callable(*u));
+	} else if(const unit_type* ut = luaW_tounittype(L, 2)) {
+		context.reset(new unit_type_callable(*ut));
+	} else if(const_attack_ptr atk = luaW_toweapon(L, 2)) {
+		context.reset(new attack_type_callable(*atk));
+	} else if(team* t = luaW_toteam(L, 2)) {
+		context.reset(new team_callable(*t));
 	} else if(lua_istable(L, 2)) {
 		context.reset(new lua_callable(L, 2));
 	} else {

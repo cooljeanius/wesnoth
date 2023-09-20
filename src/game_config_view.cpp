@@ -1,16 +1,18 @@
 /*
-   Copyright (C) 2013 - 2018 by Andrius Silinskas <silinskas.andrius@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2013 - 2023
+	by Andrius Silinskas <silinskas.andrius@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
+
 #include "game_config_view.hpp"
 #include "config.hpp"
 #include "log.hpp"
@@ -47,35 +49,52 @@ config_array_view game_config_view::child_range(config_key_type key) const
 	return res;
 }
 
-const config& game_config_view::find_child(config_key_type key, const std::string &name, const std::string &value) const
+optional_const_config game_config_view::find_child(config_key_type key, const std::string &name, const std::string &value) const
 {
 	for(const config& cfg : cfgs_) {
-		if(const config& res = cfg.find_child(key, name, value)) {
+		if(optional_const_config res = cfg.find_child(key, name, value)) {
 			return res;
 		}
 	}
-	LOG_CONFIG << "gcv : cannot find [" << key <<  "] with " << name  << "=" << value << ", count = " << cfgs_.size() <<"\n";
-	const config cfg;
-	return cfg.child("invalid");
+	LOG_CONFIG << "gcv : cannot find [" << key <<  "] with " << name  << "=" << value << ", count = " << cfgs_.size();
+	return optional_const_config();
 }
 
-const config& game_config_view::child(config_key_type key) const
+const config& game_config_view::find_mandatory_child(config_key_type key, const std::string &name, const std::string &value) const
+{
+	auto res = find_child(key, name, value);
+	if(res) {
+		return *res;
+	}
+	throw config::error("Cannot find child [" + std::string(key) + "] with " + name + "=" + value);
+}
+
+const config& game_config_view::mandatory_child(config_key_type key) const
 {
 	for(const config& cfg : cfgs_) {
-		if(const config& res = cfg.child(key)) {
-			return res;
+		if(const auto res = cfg.optional_child(key)) {
+			return res.value();
 		}
 	}
-	const config cfg;
-	return cfg.child("invalid");
+	throw config::error("missing WML tag [" + std::string(key) + "]");
+}
+
+optional_const_config game_config_view::optional_child(config_key_type key) const
+{
+	for(const config& cfg : cfgs_) {
+		if(const auto res = cfg.optional_child(key)) {
+			return res.value();
+		}
+	}
+	return optional_const_config();
 }
 
 
 const config& game_config_view::child_or_empty(config_key_type key) const
 {
 	for(const config& cfg : cfgs_) {
-		if(const config& res = cfg.child(key)) {
-			return res;
+		if(const auto res = cfg.optional_child(key)) {
+			return res.value();
 		}
 	}
 	static const config cfg;

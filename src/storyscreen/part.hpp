@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2009 - 2018 by Iris Morelle <shadowm2006@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2009 - 2023
+	by Iris Morelle <shadowm2006@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -44,10 +45,8 @@ public:
 	 */
 	floating_image(const config& cfg);
 
-	/**
-	 * Copy constructor.
-	 */
-	floating_image(const floating_image& fi);
+	floating_image(const floating_image& fi) = default;
+	floating_image(floating_image&& fi) = default;
 
 	floating_image& operator=(const floating_image& fi)
 	{
@@ -79,12 +78,13 @@ public:
 	}
 
 	/**
-	 * Whether the image should be automatically scaled as much as
-	 * the storyscreen background is.
+	 * If true, the size of the image is changed in the same way that the ref_x
+	 * and ref_y are mapped to use the base layer's pixels as the coordinate
+	 * system.
 	 */
-	bool autoscale() const
+	bool resize_with_background() const
 	{
-		return autoscaled_;
+		return resize_with_background_;
 	}
 
 	/**
@@ -96,7 +96,10 @@ public:
 		return centered_;
 	}
 
-	/** Delay before displaying, in milliseconds. */
+	/**
+	 * Delay after displaying this image and before displaying the next image,
+	 * in milliseconds.
+	 */
 	int display_delay() const
 	{
 		return delay_;
@@ -106,7 +109,7 @@ private:
 	std::string file_;
 	int x_, y_; // referential (non corrected) x,y
 	int delay_;
-	bool autoscaled_;
+	bool resize_with_background_;
 	bool centered_;
 
 	/** Copy constructor and operator=() implementation details. */

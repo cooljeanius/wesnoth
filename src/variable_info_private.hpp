@@ -1,17 +1,17 @@
 /*
-   Copyright (C) 2003 by David White <dave@whitevine.net>
-   Copyright (C) 2005 - 2018 by Philippe Plantier <ayin@anathas.org>
+	Copyright (C) 2005 - 2023
+	by Philippe Plantier <ayin@anathas.org>
+	Copyright (C) 2003 by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
-
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -117,7 +117,7 @@ using info_visitor = info_visitor_base<TResult, variable_info_state<V>>;
 template<typename V, typename TResult>
 using info_visitor_const = info_visitor_base<TResult, const variable_info_state<V>>;
 
-/** Adds a '.<key>' to the current variable. */
+/** Adds a '.\<key\>' to the current variable. */
 template<typename V>
 class get_variable_key_visitor : public info_visitor<V, void>
 {
@@ -403,7 +403,7 @@ public:
 		if(endindex > 0) {
 			// NOTE: currently this is only called from as_range_visitor_base<vi_policy_create>
 			// Based on that assumption we use vi_policy_create::get_child_at here instead of making this
-            // a class template.
+			// a class template.
 			vi_policy_create::get_child_at(child, key, endindex - 1);
 		}
 
@@ -421,7 +421,7 @@ public:
 		}
 
 		for(; index < datasource_.size(); ++index) {
-			child.child(key, startindex + index).swap(datasource_[index]);
+			child.mandatory_child(key, startindex + index).swap(datasource_[index]);
 		}
 
 		return get_child_range(child, key, startindex, datasource_.size());

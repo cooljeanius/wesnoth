@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2008 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -30,7 +31,25 @@ namespace implementation
 struct builder_styled_widget;
 } // namespace implementation
 
-/** Base class for all visible items. */
+/**
+ * @ingroup GUIWidgetWML
+ *
+ * Base class for all visible items.
+ *
+ * All widgets placed in a cell of a grid have some values in common:
+ * Key                          |Type                                |Default  |Description
+ * -----------------------------|------------------------------------|---------|-----------
+ * id                           | @ref guivartype_string "string"    |""       |This value is used for the engine to identify 'special' items. This means that for example a text_box can get the proper initial value. This value should be unique or empty. Those special values are documented at the window definition that uses them. NOTE: items starting with an underscore are used for composed widgets and these should be unique per composed widget.
+ * definition                   | @ref guivartype_string "string"    |"default"|The id of the widget definition to use. This way it's possible to select a specific version of the widget e.g. a title label when the label is used as title.
+ * linked_group                 | @ref guivartype_string "string"    |""       |The linked group the control belongs to.
+ * label                        | @ref guivartype_t_string "t_string"|""       |Most widgets have some text associated with them, this field contain the value of that text. Some widgets use this value for other purposes, this is documented at the widget. E.g. an image uses the filename in this field.
+ * tooltip                      | @ref guivartype_t_string "t_string"|""       |If you hover over a widget a while (the time it takes can differ per widget) a short help can show up.This defines the text of that message. This field may not be empty when 'help' is set.
+ * help                         | @ref guivartype_t_string "t_string"|""       |If you hover over a widget and press F10 (or the key the user defined for the help tip) a help message can show up. This help message might be the same as the tooltip but in general (if used) this message should show more help. This defines the text of that message.
+ * use_tooltip_on_label_overflow| @ref guivartype_bool "bool"        |true     |If the text on the label is truncated and the tooltip is empty the label can be used for the tooltip. If this variable is set to true this will happen.
+ * debug_border_mode            | @ref guivartype_unsigned "unsigned"|0        |The mode for showing the debug border. This border shows the area reserved for a widget. This function is only meant for debugging and might not be available in all Wesnoth binaries. Available modes:<ul><li>0 - no border</li><li>1 - 1 pixel border</li><li>2 - floodfill the widget area</li></ul>
+ * debug_border_color           | @ref guivartype_color "color"      |""       |The color of the debug border.
+ * size_text                    | @ref guivartype_t_string "t_string"|""       |Sets the minimum width of the widget depending on the text in it. (Note: not implemented yet.)
+ */
 class styled_widget : public widget
 {
 	friend class debug_layout_graph;
@@ -39,8 +58,8 @@ public:
 	/**
 	 * Constructor.
 	 *
-	 * @param builder             The builder object with the settings for the
-	 *                            object.
+	 * @param builder             The builder object with the settings for the object.
+	 * @param control_type        The type of control to be built.
 	 */
 	styled_widget(const implementation::builder_styled_widget& builder,
 			 const std::string& control_type);
@@ -59,7 +78,7 @@ public:
 	 * @param data                Map with the key value pairs to set the
 	 *                            members.
 	 */
-	virtual void set_members(const string_map& data);
+	virtual void set_members(const widget_item& data);
 
 	/***** ***** ***** ***** State handling ***** ***** ***** *****/
 
@@ -94,7 +113,7 @@ public:
 	bool disable_click_dismiss() const override;
 
 	/** See @ref widget::create_walker. */
-	virtual iteration::walker_base* create_walker() override;
+	virtual iteration::walker_ptr create_walker() override;
 
 	/***** ***** ***** ***** layout functions ***** ***** ***** *****/
 
@@ -128,7 +147,7 @@ public:
 	/**
 	 * Returns the number of characters per line.
 	 *
-	 * This value is used to call @ref pango_text::set_characters_per_line
+	 * This value is used to call pango_text::set_characters_per_line
 	 * (indirectly).
 	 *
 	 * @returns                   The characters per line. This implementation
@@ -140,7 +159,7 @@ public:
 	 * Returns whether the label should be link_aware, in
 	 * in rendering and in searching for links with get_link.
 	 *
-	 * This value is used to call @ref pango_text::set_link_aware
+	 * This value is used to call pango_text::set_link_aware
 	 * (indirectly).
 	 *
 	 * @returns		      The link aware status. This impl always
@@ -151,7 +170,7 @@ public:
 	/**
 	 * Returns the color string to be used with links.
 	 *
-	 * This value is used to call @ref pango_text::set_link_color
+	 * This value is used to call pango_text::set_link_color
 	 * (indirectly).
 	 *
 	 * @returns		      The link color string. This impl returns "#ffff00".
@@ -278,12 +297,12 @@ public:
 	}
 
 protected:
-	resolution_definition_ptr config()
+	resolution_definition_ptr get_config()
 	{
 		return config_;
 	}
 
-	resolution_definition_const_ptr config() const
+	resolution_definition_const_ptr get_config() const
 	{
 		return config_;
 	}
@@ -300,11 +319,11 @@ protected:
 	template<typename T>
 	std::shared_ptr<const typename T::resolution> cast_config_to() const
 	{
-		static_assert(std::is_base_of<resolution_definition, typename T::resolution>::value,
+		static_assert(std::is_base_of_v<resolution_definition, typename T::resolution>,
 			"Given type's resolution object does not derive from resolution_definition."
 		);
 
-		return std::static_pointer_cast<const typename T::resolution>(config());
+		return std::static_pointer_cast<const typename T::resolution>(get_config());
 	}
 
 	void set_config(resolution_definition_ptr config)
@@ -434,20 +453,16 @@ public:
 	 *
 	 * 2) Having a static type getter allows the type string to be fetched without
 	 *    constructing an instance of the widget. A good example of this usecase is
-	 *    in @ref build_single_widget_and_cast_to.
+	 *    in build_single_widget_instance.
 	 */
 	virtual const std::string& get_control_type() const = 0;
 
 protected:
 	/** See @ref widget::impl_draw_background. */
-	virtual void impl_draw_background(surface& frame_buffer,
-									  int x_offset,
-									  int y_offset) override;
+	virtual void impl_draw_background() override;
 
 	/** See @ref widget::impl_draw_foreground. */
-	virtual void impl_draw_foreground(surface& frame_buffer,
-									  int x_offset,
-									  int y_offset) override;
+	virtual void impl_draw_foreground() override;
 
 	/** Exposes font::pango_text::get_token, for the text label of this styled_widget */
 	std::string get_label_token(const point & position, const char * delimiters = " \n\r\t") const;
@@ -530,7 +545,7 @@ public:
 
 	using builder_widget::build;
 
-	virtual widget* build(const replacements_map& replacements) const override;
+	virtual std::unique_ptr<widget> build(const replacements_map& replacements) const override;
 
 	/** Parameters for the styled_widget. */
 	std::string definition;

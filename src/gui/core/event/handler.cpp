@@ -1,21 +1,24 @@
 /*
-   Copyright (C) 2009 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2009 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #define GETTEXT_DOMAIN "wesnoth-lib"
 
 #include "gui/core/event/handler.hpp"
 
+#include "draw_manager.hpp"
+#include "events.hpp"
 #include "gui/core/event/dispatcher.hpp"
 #include "gui/core/timer.hpp"
 #include "gui/core/log.hpp"
@@ -26,10 +29,9 @@
 #include "video.hpp"
 #include "serialization/unicode_cast.hpp"
 #include "sdl/userevent.hpp"
+#include "utils/ranges.hpp"
 
 #include <cassert>
-
-#include <boost/range/adaptor/reversed.hpp>
 
 /**
  * @todo The items below are not implemented yet.
@@ -77,7 +79,7 @@ static unsigned event_poll_interval = 0;
  */
 static uint32_t timer_sdl_draw_event(uint32_t, void*)
 {
-	// DBG_GUI_E << "Pushing draw event in queue.\n";
+	// DBG_GUI_E << "Pushing draw event in queue.";
 
 	SDL_Event event;
 	sdl::UserEvent data(DRAW_EVENT);
@@ -102,7 +104,7 @@ static uint32_t timer_sdl_poll_events(uint32_t, void*)
 	{
 		events::pump();
 	}
-	catch(CVideo::quit&)
+	catch(video::quit&)
 	{
 		return 0;
 	}
@@ -127,10 +129,10 @@ public:
 	~sdl_event_handler();
 
 	/** Inherited from events::sdl_handler. */
-	void handle_event(const SDL_Event& event);
+	void handle_event(const SDL_Event& event) override;
 
 	/** Inherited from events::sdl_handler. */
-	void handle_window_event(const SDL_Event& event);
+	void handle_window_event(const SDL_Event& event) override;
 
 	/**
 	 * Connects a dispatcher.
@@ -167,11 +169,6 @@ private:
 
 	/** Fires a raw SDL event. */
 	void raw_event(const SDL_Event &event);
-
-	/** Fires a draw event. */
-	using events::sdl_handler::draw;
-	void draw();
-	void draw_everything();
 
 	/**
 	 * Fires a video resize event.
@@ -252,7 +249,7 @@ private:
 	 * @param dDist					the amount that the fingers pinched during this motion
 	 * @param numFingers			the number of fingers used in the gesture
 	 */
-	void touch_multi_gesture(const point& center, float dTheta, float dDist, Uint8 numFingers);
+	void touch_multi_gesture(const point& center, float dTheta, float dDist, uint8_t numFingers);
 
 	/**
 	 * Handles a hat motion event.
@@ -344,7 +341,7 @@ private:
 	 * NOTE the keyboard events aren't really wired in yet so doesn't do much.
 	 */
 	dispatcher* keyboard_focus_;
-	friend void capture_keyboard(dispatcher*);
+	friend void capture_keyboard(dispatcher* dispatcher);
 };
 
 sdl_event_handler::sdl_event_handler()
@@ -379,8 +376,7 @@ void sdl_event_handler::handle_event(const SDL_Event& event)
 		return;
 	}
 
-	Uint8 button = event.button.button;
-	CVideo& video = dynamic_cast<window&>(*dispatchers_.back()).video();
+	uint8_t button = event.button.button;
 
 	switch(event.type) {
 		case SDL_MOUSEMOTION:
@@ -417,14 +413,6 @@ void sdl_event_handler::handle_event(const SDL_Event& event)
 			// remove_popup();
 			break;
 
-		case DRAW_EVENT:
-			draw();
-			break;
-
-		case DRAW_ALL_EVENT:
-			draw_everything();
-			break;
-
 		case TIMER_EVENT:
 			execute_timer(reinterpret_cast<std::size_t>(event.user.data1));
 			break;
@@ -453,12 +441,11 @@ void sdl_event_handler::handle_event(const SDL_Event& event)
 
 		case SDL_WINDOWEVENT:
 			switch(event.window.event) {
-				case SDL_WINDOWEVENT_EXPOSED:
-					draw();
-					break;
-
-				case SDL_WINDOWEVENT_RESIZED:
-					video_resize({event.window.data1, event.window.data2});
+				// Always precedes SDL_WINDOWEVENT_RESIZED, but the latter does not always
+				// happen; in particular when we change the game resolution via
+				// SDL_SetWindowSize() <https://github.com/wesnoth/wesnoth/issues/7436>
+				case SDL_WINDOWEVENT_SIZE_CHANGED:
+					video_resize(video::game_canvas_size());
 					break;
 
 				case SDL_WINDOWEVENT_ENTER:
@@ -479,31 +466,36 @@ void sdl_event_handler::handle_event(const SDL_Event& event)
 
 		case SDL_FINGERMOTION:
 			{
-				SDL_Rect r = video.screen_area();
-				touch_motion(point(event.tfinger.x * r.w, event.tfinger.y * r.h),
-							 point(event.tfinger.dx * r.w, event.tfinger.dy * r.h));
+				point c = video::game_canvas_size();
+				touch_motion(
+					point(event.tfinger.x * c.x, event.tfinger.y * c.y),
+					point(event.tfinger.dx * c.x, event.tfinger.dy * c.y)
+				);
 			}
 			break;
 
 		case SDL_FINGERUP:
 			{
-				SDL_Rect r = video.screen_area();
-				touch_up(point(event.tfinger.x * r.w, event.tfinger.y * r.h));
+				point c = video::game_canvas_size();
+				touch_up(point(event.tfinger.x * c.x, event.tfinger.y * c.y));
 			}
 			break;
 
 		case SDL_FINGERDOWN:
 			{
-				SDL_Rect r = video.screen_area();
-				touch_down(point(event.tfinger.x * r.w, event.tfinger.y * r.h));
+				point c = video::game_canvas_size();
+				touch_down(point(event.tfinger.x * c.x, event.tfinger.y * c.y));
 			}
 			break;
 
 		case SDL_MULTIGESTURE:
 			{
-				SDL_Rect r = video.screen_area();
-				touch_multi_gesture(point(event.mgesture.x * r.w, event.mgesture.y * r.h),
-									event.mgesture.dTheta, event.mgesture.dDist, event.mgesture.numFingers);
+				point c = video::game_canvas_size();
+				touch_multi_gesture(
+					point(event.mgesture.x * c.x, event.mgesture.y * c.y),
+					event.mgesture.dTheta, event.mgesture.dDist,
+					event.mgesture.numFingers
+				);
 			}
 			break;
 
@@ -521,7 +513,7 @@ void sdl_event_handler::handle_event(const SDL_Event& event)
 		default:
 #ifdef GUI2_SHOW_UNHANDLED_EVENT_WARNINGS
 			WRN_GUI_E << "Unhandled event " << static_cast<uint32_t>(event.type)
-			          << ".\n";
+			          << ".";
 #endif
 			break;
 	}
@@ -539,7 +531,10 @@ void sdl_event_handler::connect(dispatcher* dispatcher)
 	assert(std::find(dispatchers_.begin(), dispatchers_.end(), dispatcher)
 		   == dispatchers_.end());
 
+	DBG_GUI_E << "adding dispatcher " << static_cast<void*>(dispatcher);
+
 	if(dispatchers_.empty()) {
+		LOG_GUI_E << "creating new dispatcher event context";
 		event_context = new events::event_context();
 		join();
 	}
@@ -553,6 +548,8 @@ void sdl_event_handler::disconnect(dispatcher* disp)
 	auto itor = std::find(dispatchers_.begin(), dispatchers_.end(), disp);
 	assert(itor != dispatchers_.end());
 
+	DBG_GUI_E << "removing dispatcher " << static_cast<void*>(disp);
+
 	/***** Remove dispatcher. *****/
 	dispatchers_.erase(itor);
 
@@ -563,19 +560,15 @@ void sdl_event_handler::disconnect(dispatcher* disp)
 		keyboard_focus_ = nullptr;
 	}
 
-	/***** Set proper state for the other dispatchers. *****/
-	for(auto d : dispatchers_)
-	{
-		dynamic_cast<widget&>(*d).set_is_dirty(true);
-	}
-
-	activate();
+	// TODO: draw_manager - Why TF was this "activate"ing on "disconnect"? Seriously WTF?
+	//activate();
 
 	/***** Validate post conditions. *****/
 	assert(std::find(dispatchers_.begin(), dispatchers_.end(), disp)
 		   == dispatchers_.end());
 
 	if(dispatchers_.empty()) {
+		LOG_GUI_E << "deleting unused dispatcher event context";
 		leave();
 		delete event_context;
 		event_context = nullptr;
@@ -590,32 +583,9 @@ void sdl_event_handler::activate()
 	}
 }
 
-void sdl_event_handler::draw()
-{
-	for(auto dispatcher : dispatchers_)
-	{
-		dispatcher->fire(DRAW, dynamic_cast<widget&>(*dispatcher));
-	}
-
-	if(!dispatchers_.empty()) {
-		CVideo& video = dynamic_cast<window&>(*dispatchers_.back()).video();
-
-		video.flip();
-	}
-}
-
-void sdl_event_handler::draw_everything()
-{
-	for(auto dispatcher : dispatchers_) {
-		dynamic_cast<widget&>(*dispatcher).set_is_dirty(true);
-	}
-
-	draw();
-}
-
 void sdl_event_handler::video_resize(const point& new_size)
 {
-	DBG_GUI_E << "Firing: " << SDL_VIDEO_RESIZE << ".\n";
+	DBG_GUI_E << "Firing: " << SDL_VIDEO_RESIZE << ".";
 
 	for(auto dispatcher : dispatchers_)
 	{
@@ -624,7 +594,7 @@ void sdl_event_handler::video_resize(const point& new_size)
 }
 
 void sdl_event_handler::raw_event(const SDL_Event& event) {
-	DBG_GUI_E << "Firing raw event\n";
+	DBG_GUI_E << "Firing raw event";
 
 	for(auto dispatcher : dispatchers_)
 	{
@@ -634,20 +604,20 @@ void sdl_event_handler::raw_event(const SDL_Event& event) {
 
 void sdl_event_handler::mouse(const ui_event event, const point& position)
 {
-	DBG_GUI_E << "Firing: " << event << ".\n";
+	DBG_GUI_E << "Firing: " << event << ".";
 
 	if(mouse_focus) {
 		mouse_focus->fire(event, dynamic_cast<widget&>(*mouse_focus), position);
 		return;
 	}
 
-	for(auto& dispatcher : boost::adaptors::reverse(dispatchers_)) {
-		if(dispatcher->get_mouse_behavior() == dispatcher::all) {
+	for(auto& dispatcher : utils::reversed_view(dispatchers_)) {
+		if(dispatcher->get_mouse_behavior() == dispatcher::mouse_behavior::all) {
 			dispatcher->fire(event, dynamic_cast<widget&>(*dispatcher), position);
 			break;
 		}
 
-		if(dispatcher->get_mouse_behavior() == dispatcher::none) {
+		if(dispatcher->get_mouse_behavior() == dispatcher::mouse_behavior::none) {
 			continue;
 		}
 
@@ -673,7 +643,7 @@ void sdl_event_handler::mouse_button_up(const point& position, const uint8_t but
 		default:
 #ifdef GUI2_SHOW_UNHANDLED_EVENT_WARNINGS
 			WRN_GUI_E << "Unhandled 'mouse button up' event for button "
-					  << static_cast<uint32_t>(button) << ".\n";
+					  << static_cast<uint32_t>(button) << ".";
 #endif
 			break;
 	}
@@ -694,7 +664,7 @@ void sdl_event_handler::mouse_button_down(const point& position, const uint8_t b
 		default:
 #ifdef GUI2_SHOW_UNHANDLED_EVENT_WARNINGS
 			WRN_GUI_E << "Unhandled 'mouse button down' event for button "
-					  << static_cast<uint32_t>(button) << ".\n";
+					  << static_cast<uint32_t>(button) << ".";
 #endif
 			break;
 	}
@@ -721,7 +691,7 @@ dispatcher* sdl_event_handler::keyboard_dispatcher()
 		return keyboard_focus_;
 	}
 
-	for(auto& dispatcher : boost::adaptors::reverse(dispatchers_)) {
+	for(auto& dispatcher : utils::reversed_view(dispatchers_)) {
 		if(dispatcher->get_want_keyboard_input()) {
 			return dispatcher;
 		}
@@ -732,28 +702,28 @@ dispatcher* sdl_event_handler::keyboard_dispatcher()
 
 void sdl_event_handler::touch_motion(const point& position, const point& distance)
 {
-	for(auto& dispatcher : boost::adaptors::reverse(dispatchers_)) {
+	for(auto& dispatcher : utils::reversed_view(dispatchers_)) {
 		dispatcher->fire(SDL_TOUCH_MOTION , dynamic_cast<widget&>(*dispatcher), position, distance);
 	}
 }
 
 void sdl_event_handler::touch_up(const point& position)
 {
-	for(auto& dispatcher : boost::adaptors::reverse(dispatchers_)) {
+	for(auto& dispatcher : utils::reversed_view(dispatchers_)) {
 		dispatcher->fire(SDL_TOUCH_UP, dynamic_cast<widget&>(*dispatcher), position);
 	}
 }
 
 void sdl_event_handler::touch_down(const point& position)
 {
-	for(auto& dispatcher : boost::adaptors::reverse(dispatchers_)) {
+	for(auto& dispatcher : utils::reversed_view(dispatchers_)) {
 		dispatcher->fire(SDL_TOUCH_DOWN, dynamic_cast<widget&>(*dispatcher), position);
 	}
 }
 
-void sdl_event_handler::touch_multi_gesture(const point& center, float dTheta, float dDist, Uint8 numFingers)
+void sdl_event_handler::touch_multi_gesture(const point& center, float dTheta, float dDist, uint8_t numFingers)
 {
-	for(auto& dispatcher : boost::adaptors::reverse(dispatchers_)) {
+	for(auto& dispatcher : utils::reversed_view(dispatchers_)) {
 		dispatcher->fire(SDL_TOUCH_MULTI_GESTURE, dynamic_cast<widget&>(*dispatcher), center, dTheta, dDist, numFingers);
 	}
 }
@@ -823,7 +793,7 @@ void sdl_event_handler::text_editing(const std::string& unicode, int32_t start, 
 bool sdl_event_handler::hotkey_pressed(const hotkey::hotkey_ptr key)
 {
 	if(dispatcher* dispatcher = keyboard_dispatcher()) {
-		return dispatcher->execute_hotkey(hotkey::get_id(key->get_command()));
+		return dispatcher->execute_hotkey(hotkey::get_hotkey_command(key->get_command()).command);
 	}
 
 	return false;
@@ -833,7 +803,7 @@ void sdl_event_handler::key_down(const SDL_Keycode key,
 						const SDL_Keymod modifier,
 						const std::string& unicode)
 {
-	DBG_GUI_E << "Firing: " << SDL_KEY_DOWN << ".\n";
+	DBG_GUI_E << "Firing: " << SDL_KEY_DOWN << ".";
 
 	if(dispatcher* dispatcher = keyboard_dispatcher()) {
 		dispatcher->fire(SDL_KEY_DOWN,
@@ -846,7 +816,7 @@ void sdl_event_handler::key_down(const SDL_Keycode key,
 
 void sdl_event_handler::keyboard(const ui_event event)
 {
-	DBG_GUI_E << "Firing: " << event << ".\n";
+	DBG_GUI_E << "Firing: " << event << ".";
 
 	if(dispatcher* dispatcher = keyboard_dispatcher()) {
 		dispatcher->fire(event, dynamic_cast<widget&>(*dispatcher));
@@ -855,7 +825,7 @@ void sdl_event_handler::keyboard(const ui_event event)
 
 void sdl_event_handler::close_window(const unsigned window_id)
 {
-	DBG_GUI_E << "Firing " << CLOSE_WINDOW << ".\n";
+	DBG_GUI_E << "Firing " << CLOSE_WINDOW << ".";
 
 	window* window = window::window_instance(window_id);
 	if(window) {

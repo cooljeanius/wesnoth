@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2008 - 2018 by Pauli Nieminen <paniemin@cc.hut.fi>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by Pauli Nieminen <paniemin@cc.hut.fi>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #include <boost/test/unit_test.hpp>
@@ -21,11 +22,12 @@
 #include "config.hpp"
 #include "game_config.hpp"
 #include "language.hpp"
+#include "log.hpp"
 #include "game_version.hpp"
 
 #include "tests/utils/game_config_manager_tests.hpp"
 
-#include "utils/functional.hpp"
+#include <functional>
 
 
 static preproc_map setup_test_preproc_map()
@@ -164,7 +166,7 @@ BOOST_AUTO_TEST_CASE( test_load_config )
 	cache.get_config(test_data_path, cached_config);
 	BOOST_CHECK_EQUAL(test_config, cached_config);
 
-	BOOST_CHECK_EQUAL(test_config.child("test_key2")["define"].str(), cached_config.child("test_key2")["define"].str());
+	BOOST_CHECK_EQUAL(test_config.mandatory_child("test_key2")["define"].str(), cached_config.mandatory_child("test_key2")["define"].str());
 }
 
 BOOST_AUTO_TEST_CASE( test_non_clean_config_loading )

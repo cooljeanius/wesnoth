@@ -1,14 +1,15 @@
 /*
-   Copyright (C) 2016 - 2018 by the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2016 - 2023
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #define GETTEXT_DOMAIN "wesnoth-lib"
@@ -40,7 +41,7 @@
 #include "units/types.hpp"
 #include "units/unit.hpp"
 #include "units/ptr.hpp"
-#include "utils/functional.hpp"
+#include <functional>
 #include "whiteboard/manager.hpp"
 
 #include <boost/dynamic_bitset.hpp>
@@ -48,19 +49,18 @@
 static lg::log_domain log_display("display");
 #define LOG_DP LOG_STREAM(info, log_display)
 
-namespace gui2
-{
-namespace dialogs
+namespace gui2::dialogs
 {
 
 // Index 2 is by-level
-static listbox::order_pair sort_last    {-1, listbox::SORT_NONE};
-static listbox::order_pair sort_default { 2, listbox::SORT_DESCENDING};
+static listbox::order_pair sort_last    {-1, sort_order::type::none};
+static listbox::order_pair sort_default { 2, sort_order::type::descending};
 
 REGISTER_DIALOG(unit_recall)
 
-unit_recall::unit_recall(recalls_ptr_vector& recall_list, team& team)
-	: recall_list_(recall_list)
+unit_recall::unit_recall(std::vector<unit_const_ptr>& recall_list, team& team)
+	: modal_dialog(window_id())
+	, recall_list_(recall_list)
 	, team_(team)
 	, selected_index_()
 	, filter_options_()
@@ -73,11 +73,11 @@ static void dump_recall_list_to_console(const T& units)
 {
 	log_scope2(log_display, "dump_recall_list_to_console()")
 
-	LOG_DP << "size: " << units.size() << "\n";
+	LOG_DP << "size: " << units.size();
 
 	std::size_t idx = 0;
-	for(const unit_const_ptr& u_ptr : units) {
-		LOG_DP << "\tunit[" << (idx++) << "]: " << u_ptr->id() << " name = '" << u_ptr->name() << "'\n";
+	for(const auto& u_ptr : units) {
+		LOG_DP << "\tunit[" << (idx++) << "]: " << u_ptr->id() << " name = '" << u_ptr->name() << "'";
 	}
 }
 
@@ -167,11 +167,11 @@ void unit_recall::pre_show(window& window)
 			= find_widget<text_box>(&window, "filter_box", false, true);
 
 	filter->set_text_changed_callback(
-			std::bind(&unit_recall::filter_text_changed, this, _1, _2));
+			std::bind(&unit_recall::filter_text_changed, this, std::placeholders::_2));
 
 	listbox& list = find_widget<listbox>(&window, "recall_list", false);
 
-	connect_signal_notify_modified(list, std::bind(&unit_recall::list_item_clicked, this, std::ref(window)));
+	connect_signal_notify_modified(list, std::bind(&unit_recall::list_item_clicked, this));
 
 	list.clear();
 
@@ -180,19 +180,19 @@ void unit_recall::pre_show(window& window)
 
 	connect_signal_mouse_left_click(
 		find_widget<button>(&window, "rename", false),
-		std::bind(&unit_recall::rename_unit, this, std::ref(window)));
+		std::bind(&unit_recall::rename_unit, this));
 
 	connect_signal_mouse_left_click(
 		find_widget<button>(&window, "dismiss", false),
-		std::bind(&unit_recall::dismiss_unit, this, std::ref(window)));
+		std::bind(&unit_recall::dismiss_unit, this));
 
 	connect_signal_mouse_left_click(
 		find_widget<button>(&window, "show_help", false),
 		std::bind(&unit_recall::show_help, this));
 
 	for(const unit_const_ptr& unit : recall_list_) {
-		std::map<std::string, string_map> row_data;
-		string_map column;
+		widget_data row_data;
+		widget_item column;
 
 		std::string mods = unit->image_mods();
 
@@ -296,7 +296,7 @@ void unit_recall::pre_show(window& window)
 	list.register_translatable_sorting_option(1, [this](const int i) { return recall_list_[i]->name().str(); });
 	list.register_sorting_option(2, [this](const int i) {
 		const unit& u = *recall_list_[i];
-		return std::make_tuple(u.level(), -static_cast<int>(u.experience_to_advance()));
+		return std::tuple(u.level(), -static_cast<int>(u.experience_to_advance()));
 	});
 	list.register_sorting_option(3, [this](const int i) { return recall_list_[i]->experience(); });
 	list.register_translatable_sorting_option(4, [this](const int i) {
@@ -305,14 +305,18 @@ void unit_recall::pre_show(window& window)
 
 	list.set_active_sorting_option(sort_last.first >= 0 ? sort_last	: sort_default, true);
 
-	list_item_clicked(window);
+	list_item_clicked();
 }
 
-void unit_recall::rename_unit(window& window)
+void unit_recall::rename_unit()
 {
-	listbox& list = find_widget<listbox>(&window, "recall_list", false);
+	listbox& list = find_widget<listbox>(get_window(), "recall_list", false);
 
 	const int index = list.get_selected_row();
+	if (index == -1) {
+		return;
+	}
+
 	unit& selected_unit = const_cast<unit&>(*recall_list_[index].get());
 
 	std::string name = selected_unit.name();
@@ -332,17 +336,20 @@ void unit_recall::rename_unit(window& window)
 		}
 		filter_options_.insert(filter_options_.begin() + index, filter_text.str());
 
-		list_item_clicked(window);
-		window.invalidate_layout();
+		list_item_clicked();
+		get_window()->invalidate_layout();
 	}
 }
 
-void unit_recall::dismiss_unit(window& window)
+void unit_recall::dismiss_unit()
 {
-	LOG_DP << "Recall list units:\n"; dump_recall_list_to_console(recall_list_);
+	LOG_DP << "Recall list units:"; dump_recall_list_to_console(recall_list_);
 
-	listbox& list = find_widget<listbox>(&window, "recall_list", false);
+	listbox& list = find_widget<listbox>(get_window(), "recall_list", false);
 	const int index = list.get_selected_row();
+	if (index == -1) {
+		return;
+	}
 
 	const unit& u = *recall_list_[index].get();
 
@@ -376,14 +383,14 @@ void unit_recall::dismiss_unit(window& window)
 
 	// Remove the entry from the dialog list
 	list.remove_row(index);
-	list_item_clicked(window);
+	list_item_clicked();
 
 	// Remove the entry from the filter list
 	filter_options_.erase(filter_options_.begin() + index);
 	assert(filter_options_.size() == list.get_item_count());
 
-	LOG_DP << "Dismissing a unit, side = " << u.side() << ", id = '" << u.id() << "'\n";
-	LOG_DP << "That side's recall list:\n";
+	LOG_DP << "Dismissing a unit, side = " << u.side() << ", id = '" << u.id() << "'";
+	LOG_DP << "That side's recall list:";
 	dump_recall_list_to_console(team_.recall_list());
 
 	// Find the unit in the recall list.
@@ -395,7 +402,7 @@ void unit_recall::dismiss_unit(window& window)
 
 	// Close the dialog if all units are dismissed
 	if(list.get_item_count() == 0) {
-		window.set_retval(retval::CANCEL);
+		set_retval(retval::CANCEL);
 	}
 }
 
@@ -404,10 +411,10 @@ void unit_recall::show_help()
 	help::show_help("recruit_and_recall");
 }
 
-void unit_recall::list_item_clicked(window& window)
+void unit_recall::list_item_clicked()
 {
 	const int selected_row
-		= find_widget<listbox>(&window, "recall_list", false).get_selected_row();
+		= find_widget<listbox>(get_window(), "recall_list", false).get_selected_row();
 
 	if(selected_row == -1) {
 		return;
@@ -415,10 +422,10 @@ void unit_recall::list_item_clicked(window& window)
 
 	const unit& selected_unit = *recall_list_[selected_row].get();
 
-	find_widget<unit_preview_pane>(&window, "unit_details", false)
+	find_widget<unit_preview_pane>(get_window(), "unit_details", false)
 		.set_displayed_unit(selected_unit);
 
-	find_widget<button>(&window, "rename", false).set_active(!selected_unit.unrenamable());
+	find_widget<button>(get_window(), "rename", false).set_active(!selected_unit.unrenamable());
 }
 
 void unit_recall::post_show(window& window)
@@ -431,11 +438,9 @@ void unit_recall::post_show(window& window)
 	}
 }
 
-void unit_recall::filter_text_changed(text_box_base* textbox, const std::string& text)
+void unit_recall::filter_text_changed(const std::string& text)
 {
-	window& window = *textbox->get_window();
-
-	listbox& list = find_widget<listbox>(&window, "recall_list", false);
+	listbox& list = find_widget<listbox>(get_window(), "recall_list", false);
 
 	const std::vector<std::string> words = utils::split(text, ' ');
 
@@ -464,7 +469,11 @@ void unit_recall::filter_text_changed(text_box_base* textbox, const std::string&
 	}
 
 	list.set_row_shown(show_items);
+
+	// Disable rename and dismiss buttons if no units are shown
+	const bool any_shown = list.any_rows_shown();
+	find_widget<button>(get_window(), "rename", false).set_active(any_shown);
+	find_widget<button>(get_window(), "dismiss", false).set_active(any_shown);
 }
 
 } // namespace dialogs
-} // namespace gui2

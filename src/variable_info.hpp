@@ -1,17 +1,17 @@
 /*
-   Copyright (C) 2003 by David White <dave@whitevine.net>
-   Copyright (C) 2005 - 2018 by Philippe Plantier <ayin@anathas.org>
+	Copyright (C) 2005 - 2023
+	by Philippe Plantier <ayin@anathas.org>
+	Copyright (C) 2003 by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
-
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -98,8 +98,8 @@ public:
 	variable_info_mutable(const std::string& name, config& game_vars)
 		: variable_info<V>(name, game_vars)
 	{
-		static_assert(!std::is_same<
-			variable_info_implementation::vi_policy_const, std::remove_const_t<V>>::value,
+		static_assert(!std::is_same_v<
+			variable_info_implementation::vi_policy_const, std::remove_const_t<V>>,
 			"variable_info_mutable cannot be specialized with 'vi_policy_const'"
 		);
 	}

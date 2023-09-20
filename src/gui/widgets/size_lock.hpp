@@ -1,25 +1,26 @@
 /*
-   Copyright (C) 2016 - 2018 Jyrki Vesterinen <sandgtx@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2016 - 2023
+	by Jyrki Vesterinen <sandgtx@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
 
-#include <gui/widgets/container_base.hpp>
+#include "gui/widgets/container_base.hpp"
 
-#include <gui/auxiliary/typed_formula.hpp>
-#include <gui/core/widget_definition.hpp>
-#include <gui/core/window_builder.hpp>
-#include <gui/widgets/generator.hpp>
+#include "gui/auxiliary/typed_formula.hpp"
+#include "gui/core/widget_definition.hpp"
+#include "gui/core/window_builder.hpp"
+#include "gui/widgets/generator.hpp"
 
 namespace gui2
 {
@@ -29,8 +30,22 @@ namespace implementation
 struct builder_size_lock;
 }
 
-/* A fixed-size widget that wraps an arbitrary widget and forces it to the given size. */
-
+/**
+ * @ingroup GUIWidgetWML
+ *
+ * A fixed-size widget that wraps an arbitrary widget and forces it to the given size.
+ *
+ * A size lock contains one child widget and forces it to have the specified size.
+ * This can be used, for example, when there are two list boxes in different rows of the same grid
+ * and it's desired that only one list box changes size when its contents change.
+ *
+ * A size lock has no states.
+ * Key          |Type                                    |Default  |Description
+ * -------------|----------------------------------------|---------|-----------
+ * widget       | @ref guivartype_section "section"      |mandatory|The widget.
+ * width        | @ref guivartype_f_unsigned "f_unsigned"|mandatory|The width of the widget.
+ * height       | @ref guivartype_f_unsigned "f_unsigned"|mandatory|The height of the widget.
+ */
 class size_lock : public container_base
 {
 	friend struct implementation::builder_size_lock;
@@ -38,13 +53,11 @@ class size_lock : public container_base
 public:
 	explicit size_lock(const implementation::builder_size_lock& builder);
 
-	/** See @ref control::get_active. */
 	bool get_active() const override
 	{
 		return true;
 	}
 
-	/** See @ref control::get_state. */
 	unsigned get_state() const override
 	{
 		return 0;
@@ -76,7 +89,7 @@ private:
 	 * @param widget_builder      The builder to build the contents of the
 	 *                            widget.
 	 */
-	void finalize(builder_widget_const_ptr widget_builder);
+	void finalize(const builder_widget& widget_builder);
 
 public:
 	/** Static type getter that does not rely on the widget being constructed. */
@@ -86,7 +99,7 @@ private:
 	/** Inherited from styled_widget, implemented by REGISTER_WIDGET. */
 	virtual const std::string& get_control_type() const override;
 
-	/** See @ref container_::set_self_active. */
+	/** See @ref container_base::set_self_active */
 	void set_self_active(const bool) override
 	{
 		// DO NOTHING
@@ -114,7 +127,7 @@ struct builder_size_lock : public builder_styled_widget
 
 	using builder_styled_widget::build;
 
-	widget* build() const;
+	virtual std::unique_ptr<widget> build() const override;
 
 	typed_formula<unsigned> width_;
 	typed_formula<unsigned> height_;

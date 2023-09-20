@@ -1,7 +1,7 @@
 {
     "app-id": "org.wesnoth.Wesnoth",
     "runtime": "org.freedesktop.Platform",
-    "runtime-version": "19.08",
+    "runtime-version": "22.08",
     "sdk": "org.freedesktop.Sdk",
     "finish-args": [
         "--device=dri",
@@ -34,12 +34,12 @@
             "sources": [
                 {
                     "type": "archive",
-                    "url": "https://dl.bintray.com/boostorg/release/1.66.0/source/boost_1_66_0.tar.bz2",
-                    "sha256": "5721818253e6a0989583192f96782c4a98eb6204965316df9f5ad75819225ca9"
+                    "url": "https://boostorg.jfrog.io/artifactory/main/release/1.67.0/source/boost_1_67_0.tar.bz2",
+                    "sha256": "2684c972994ee57fc5632e03bf044746f6eb45d4920c343937a465fd67a5adba"
                 }
             ],
             "build-commands": [
-                "./bootstrap.sh --prefix=/app --with-libraries=filesystem,locale,iostreams,program_options,regex,random,thread",
+                "./bootstrap.sh --prefix=/app --with-libraries=filesystem,locale,iostreams,program_options,regex,random,thread,coroutine,context",
                 "./b2 -j$FLATPAK_BUILDER_N_JOBS install cxxflags='-fPIE -fstack-protector-strong' define=_FORTIFY_SOURCE=2 link=static variant=release address-model=64 --layout=system"
 ]
         },
@@ -50,7 +50,7 @@
             "sources": [
                 {
                     "type": "archive",
-                    "url": "http://download.sourceforge.net/scons/scons-3.0.2.tar.gz",
+                    "url": "https://download.sourceforge.net/scons/scons-3.0.2.tar.gz",
                     "sha256": "d0afcf8f4c2ea5fa7af3c9321c0cb3ea1c83d137196be10c4cb2c79cc5dade01"
                 }
             ],
@@ -65,7 +65,7 @@
                 "/share/applications/wesnoth_editor.desktop"
             ],
             "build-commands": [
-                "python3 /app/bin/scons -j $FLATPAK_BUILDER_N_JOBS prefix=/app ccache=true --debug=time install wesnoth wesnothd"
+                "python3 /app/bin/scons -j $FLATPAK_BUILDER_N_JOBS prefix=/app enable_lto=true ccache=true --debug=time install wesnoth wesnothd"
 	    ],
             "sources": [
                 {

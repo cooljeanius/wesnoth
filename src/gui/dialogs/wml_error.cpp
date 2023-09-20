@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2014 - 2018 by Iris Morelle <shadowm2006@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2014 - 2023
+	by Iris Morelle <shadowm2006@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #define GETTEXT_DOMAIN "wesnoth-lib"
@@ -30,7 +31,7 @@
 
 #include "gettext.hpp"
 
-#include "utils/functional.hpp"
+#include <functional>
 
 namespace
 {
@@ -107,12 +108,10 @@ std::string format_file_list(const std::vector<std::string>& files_original)
 		if(have_addon_install_info(base)) {
 			// _info.cfg may have the add-on's title starting with 1.11.7,
 			// if the add-on was downloaded using the revised _info.cfg writer.
-			config cfg;
-			get_addon_install_info(base, cfg);
+			config info_cfg;
+			get_addon_install_info(base, info_cfg);
 
-			const config& info_cfg = cfg.child("info");
-
-			if(info_cfg && !info_cfg["title"].empty()) {
+			if(!info_cfg.empty() && !info_cfg["title"].empty()) {
 				file = info_cfg["title"].str();
 				continue;
 			}
@@ -131,43 +130,8 @@ std::string format_file_list(const std::vector<std::string>& files_original)
 }
 }
 
-namespace gui2
+namespace gui2::dialogs
 {
-namespace dialogs
-{
-
-/*WIKI
- * @page = GUIWindowDefinitionWML
- * @order = 2_wml_error
- *
- * == WML error ==
- *
- * Dialog used to report WML parser or preprocessor errors.
- *
- * @begin{table}{dialog_widgets}
- *
- * summary & & styled_widget & m &
- *         Label used for displaying a brief summary of the error(s). $
- *
- * files & & styled_widget & m &
- *         Label used to display the list of affected add-ons or files, if
- *         applicable. It is hidden otherwise. It is recommended to place it
- *         after the summary label. $
- *
- * post_summary & & styled_widget & m &
- *         Label used for displaying instructions for reporting the error.
- *         It is recommended to place it after the file list label. It may be
- *         hidden if empty. $
- *
- * details & & styled_widget & m &
- *         Full report of the parser or preprocessor error(s) found. $
- *
- * copy & & button & m &
- *         Button that the user can click on to copy the error report to the
- *         system clipboard. $
- *
- * @end{table}
- */
 
 REGISTER_DIALOG(wml_error)
 
@@ -175,12 +139,11 @@ wml_error::wml_error(const std::string& summary,
 					   const std::string& post_summary,
 					   const std::vector<std::string>& files,
 					   const std::string& details)
-	: have_files_(!files.empty())
+	: modal_dialog(window_id())
+	, have_files_(!files.empty())
 	, have_post_summary_(!post_summary.empty())
 	, report_()
 {
-	set_restore(true);
-
 	const std::string& file_list_text = format_file_list(files);
 
 	report_ = summary;
@@ -236,4 +199,3 @@ void wml_error::copy_report_callback()
 }
 
 } // end namespace dialogs
-} // end namespace gui2

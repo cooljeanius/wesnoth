@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2003 - 2018 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2003 - 2023
+	by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -19,16 +20,26 @@
 
 #pragma once
 
-#include <algorithm>
 #include <ctime>
-#include <functional>
+#include <fstream>
 #include <iosfwd>
 #include <memory>
 #include <string>
 #include <vector>
 
 #include "exceptions.hpp"
-#include "serialization/string_utils.hpp"
+#include "game_version.hpp"
+
+namespace game_config {
+extern std::string path;
+extern std::string default_preferences_path;
+extern bool check_migration;
+
+/** observer team name used for observer team chat */
+extern const std::string observer_team_name;
+
+extern int cache_compression_level;
+}
 
 class config;
 class game_config_view;
@@ -39,7 +50,12 @@ namespace filesystem {
 using scoped_istream = std::unique_ptr<std::istream>;
 using scoped_ostream = std::unique_ptr<std::ostream>;
 
-typedef std::unique_ptr<SDL_RWops, void(*)(SDL_RWops*)> rwops_ptr;
+struct sdl_rwops_deleter
+{
+	void operator()(SDL_RWops*) const noexcept;
+};
+
+using rwops_ptr = std::unique_ptr<SDL_RWops, sdl_rwops_deleter>;
 
 rwops_ptr make_read_RWops(const std::string &path);
 rwops_ptr make_write_RWops(const std::string &path);
@@ -52,9 +68,9 @@ struct io_exception : public game::error {
 
 struct file_tree_checksum;
 
-enum file_name_option { ENTIRE_FILE_PATH, FILE_NAME_ONLY };
-enum file_filter_option { NO_FILTER, SKIP_MEDIA_DIR, SKIP_PBL_FILES };
-enum file_reorder_option { DONT_REORDER, DO_REORDER };
+enum class name_mode { ENTIRE_FILE_PATH, FILE_NAME_ONLY };
+enum class filter_mode { NO_FILTER, SKIP_MEDIA_DIR, SKIP_PBL_FILES };
+enum class reorder_mode { DONT_REORDER, DO_REORDER };
 
 // A list of file and directory blacklist patterns
 class blacklist_pattern_list
@@ -67,17 +83,9 @@ public:
 		: file_patterns_(file_patterns), directory_patterns_(directory_patterns)
 	{}
 
-	bool match_file(const std::string& name) const
-	{
-		return std::any_of(file_patterns_.begin(), file_patterns_.end(),
-			std::bind(&utils::wildcard_string_match, std::ref(name), std::placeholders::_1));
-	}
+	bool match_file(const std::string& name) const;
 
-	bool match_dir(const std::string& name) const
-	{
-		return std::any_of(directory_patterns_.begin(), directory_patterns_.end(),
-			std::bind(&utils::wildcard_string_match, std::ref(name), std::placeholders::_1));
-	}
+	bool match_dir(const std::string& name) const;
 
 	void add_file_pattern(const std::string& pattern)
 	{
@@ -96,56 +104,25 @@ private:
 	std::vector<std::string> directory_patterns_;
 };
 
-static const blacklist_pattern_list default_blacklist{
-	{
-		/* Blacklist dot-files/dirs, which are hidden files in UNIX platforms */
-		".+",
-		"#*#",
-		"*~",
-		"*-bak",
-		"*.swp",
-		"*.pbl",
-		"*.ign",
-		"_info.cfg",
-		"*.exe",
-		"*.bat",
-		"*.cmd",
-		"*.com",
-		"*.scr",
-		"*.sh",
-		"*.js",
-		"*.vbs",
-		"*.o",
-		"*.ini",
-		/* Remove junk created by certain file manager ;) */
-		"Thumbs.db",
-		/* Eclipse plugin */
-		"*.wesnoth",
-		"*.project",
-	},
-	{
-		".+",
-		/* macOS metadata-like cruft (http://floatingsun.net/2007/02/07/whats-with-__macosx-in-zip-files/) */
-		"__MACOSX",
-	}
-};
+extern const blacklist_pattern_list default_blacklist;
 
 /**
- * Populates 'files' with all the files and
- * 'dirs' with all the directories in dir.
- * If files or dirs are nullptr they will not be used.
+ * Get a list of all files and/or directories in a given directory.
  *
- * mode: determines whether the entire path or just the filename is retrieved.
- * filter: determines if we skip images and sounds directories
- * reorder: triggers the special handling of _main.cfg and _final.cfg
- * checksum: can be used to store checksum info
+ * @param dir The directory to examine.
+ * @param[out] files The files in @a dir. Won't be used if nullptr.
+ * @param[out] dirs The directories in @a dir. Won't be used if nullptr.
+ * @param mode Determines whether the entire path or just the filename is retrieved.
+ * @param filter Determines if we skip images and sounds directories.
+ * @param reorder Triggers the special handling of _main.cfg and _final.cfg.
+ * @param[out] checksum Can be used to store checksum info.
  */
 void get_files_in_dir(const std::string &dir,
                       std::vector<std::string>* files,
                       std::vector<std::string>* dirs=nullptr,
-                      file_name_option mode = FILE_NAME_ONLY,
-                      file_filter_option filter = NO_FILTER,
-                      file_reorder_option reorder = DONT_REORDER,
+                      name_mode mode = name_mode::FILE_NAME_ONLY,
+                      filter_mode filter = filter_mode::NO_FILTER,
+                      reorder_mode reorder = reorder_mode::DONT_REORDER,
                       file_tree_checksum* checksum = nullptr);
 
 std::string get_dir(const std::string &dir);
@@ -156,9 +133,14 @@ std::string get_credentials_file();
 std::string get_default_prefs_file();
 std::string get_save_index_file();
 std::string get_saves_dir();
+std::string get_wml_persist_dir();
 std::string get_intl_dir();
 std::string get_screenshot_dir();
+std::string get_addons_data_dir();
 std::string get_addons_dir();
+std::string get_current_editor_dir(const std::string& addon_id);
+const std::string get_version_path_suffix(const version_info& version);
+const std::string& get_version_path_suffix();
 
 /**
  * Get the next free filename using "name + number (3 digits) + extension"
@@ -167,10 +149,16 @@ std::string get_addons_dir();
 std::string get_next_filename(const std::string& name, const std::string& extension);
 void set_user_config_dir(const std::string& path);
 void set_user_data_dir(std::string path);
+void set_cache_dir(const std::string& path);
 
 std::string get_user_config_dir();
 std::string get_user_data_dir();
+std::string get_logs_dir();
 std::string get_cache_dir();
+std::string get_legacy_editor_dir();
+std::string get_core_images_dir();
+
+bool rename_dir(const std::string& old_dir, const std::string& new_dir);
 
 struct other_version_dir
 {
@@ -200,6 +188,8 @@ struct other_version_dir
 std::vector<other_version_dir> find_other_version_saves_dirs();
 
 std::string get_cwd();
+bool set_cwd(const std::string& dir);
+
 std::string get_exe_dir();
 
 bool make_directory(const std::string& dirname);
@@ -212,12 +202,23 @@ bool looks_like_pbl(const std::string& file);
 
 /** Basic disk I/O - read file. */
 std::string read_file(const std::string& fname);
+std::vector<uint8_t> read_file_binary(const std::string& fname);
+std::string read_file_as_data_uri(const std::string& fname);
+
 filesystem::scoped_istream istream_file(const std::string& fname, bool treat_failure_as_error = true);
-filesystem::scoped_ostream ostream_file(const std::string& fname, bool create_directory = true);
+filesystem::scoped_ostream ostream_file(const std::string& fname, std::ios_base::openmode mode = std::ios_base::binary, bool create_directory = true);
 /** Throws io_exception if an error occurs. */
-void write_file(const std::string& fname, const std::string& data);
+void write_file(const std::string& fname, const std::string& data, std::ios_base::openmode mode = std::ios_base::binary);
+/**
+ * Read a file and then writes it back out.
+ *
+ * @param src The source file.
+ * @param dest The destination of the copied file.
+ */
+void copy_file(const std::string& src, const std::string& dest);
 
 std::string read_map(const std::string& name);
+std::string read_scenario(const std::string& name);
 
 /**
  * Creates a directory if it does not exist already.
@@ -254,6 +255,18 @@ bool is_bzip2_file(const std::string& filename);
 inline bool is_compressed_file(const std::string& filename) {
 	return is_gzip_file(filename) || is_bzip2_file(filename);
 }
+
+/**
+ * Returns whether the given filename is a legal name for a user-created file.
+ *
+ * This is meant to be used for any files created by Wesnoth where user input
+ * is required, including save files and add-on files for uploading to the
+ * add-ons server.
+ *
+ * @param name                 File name to verify.
+ * @param allow_whitespace     Whether whitespace should be allowed.
+ */
+bool is_legal_user_file_name(const std::string& name, bool allow_whitespace = true);
 
 struct file_tree_checksum
 {
@@ -431,13 +444,13 @@ std::string get_wml_location(const std::string &filename,
 std::string get_short_wml_path(const std::string &filename);
 
 /**
- * Returns an image path to @a filename for binary path-independent use in saved games.
+ * Returns an asset path to @a filename for binary path-independent use in saved games.
  *
  * Example:
- *   units/konrad-fighter.png ->
+ *   images, units/konrad-fighter.png ->
  *   data/campaigns/Heir_To_The_Throne/images/units/konrad-fighter.png
  */
-std::string get_independent_image_path(const std::string &filename);
+std::string get_independent_binary_file_path(const std::string& type, const std::string &filename);
 
 /**
  * Returns the appropriate invocation for a Wesnoth-related binary, assuming

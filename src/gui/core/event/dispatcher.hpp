@@ -1,28 +1,28 @@
 /*
-   Copyright (C) 2009 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2009 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
 
 #include "gui/core/event/handler.hpp"
 #include "hotkey/hotkey_command.hpp"
-
-#include "utils/functional.hpp"
+#include "utils/general.hpp"
 
 #include <SDL2/SDL_events.h>
 
-#include <boost/mpl/int.hpp>
-
+#include <cassert>
+#include <functional>
 #include <list>
 #include <map>
 #include <type_traits>
@@ -35,124 +35,103 @@ class widget;
 
 namespace event
 {
-
-template<typename K, ui_event E>
-using has_key = boost::mpl::has_key<K, boost::mpl::int_<E>>;
-
 struct message;
 
 /**
- * Callback function signature.
+ * Callback function signature alias template.
  *
- * There are several kinds of callback signature, this only has the parameters
- * shared by all callbacks.
+ * All callbacks take these four arguments in addition to any arguments
+ * specified by the parameter pack.
  *
- * This function is used for the callbacks in set_event.
+ * Parameters:
+ * 1. The widget handling this event.
+ * 2. The event type.
+ * 3. Reference to the flag controlling whether this event has been handled.
+ * 4. Reference to the flag controlling whether to halt execution of this event.
  */
-typedef std::function<void(widget& dispatcher,
-							const ui_event event,
-							bool& handled, bool& halt)> signal_function;
+template<typename... T>
+using dispatcher_callback = std::function<void(widget&, const ui_event, bool&, bool&, T...)>;
 
 /**
- * Callback function signature.
- *
- * This function is used for the callbacks in set_event_mouse.
+ * Used for events in event_category::general.
  */
-typedef std::function<void(widget& dispatcher,
-							 const ui_event event,
-							 bool& handled,
-							 bool& halt,
-							 const point& coordinate)> signal_mouse_function;
+using signal = dispatcher_callback<>;
 
 /**
- * Callback function signature.
+ * Used for events in event_category::mouse.
  *
- * This function is used for the callbacks in set_event_keyboard.
+ * Extra parameters:
+ * 5. The x,y coordinate of the mouse when this event is fired.
  */
-typedef std::function<void(widget& dispatcher,
-							 const ui_event event,
-							 bool& handled,
-							 bool& halt,
-							 const SDL_Keycode key,
-							 const SDL_Keymod modifier,
-							 const std::string& unicode)> signal_keyboard_function;
+using signal_mouse = dispatcher_callback<const point&>;
 
 /**
- * Callback function signature.
+ * Used for events in event_category::keyboard.
  *
- * This function is used for the callbacks in set_event_touch_motion.
+ * Extra parameters:
+ * 5. The keycode of the key that triggered this event.
+ * 6. Any applicable active modifer key.
+ * 7. Any applicable text associated with the key.
  */
-typedef std::function<void(widget& dispatcher,
-							 const ui_event event,
-							 bool& handled,
-							 bool& halt,
-							 const point& pos,
-							 const point& distance)> signal_touch_motion_function;
+using signal_keyboard = dispatcher_callback<const SDL_Keycode, const SDL_Keymod, const std::string&>;
 
 /**
- * Callback function signature.
+ * Used for events in event_category::touch_motion.
  *
- * This function is used for the callbacks in set_event_touch_gesture.
+ * Extra parameters:
+ * 5. Origin of the touch event, in x,y format.
+ * 6. Number of pixels dragged, in x,y format.
  */
-typedef std::function<void(dispatcher& dispatcher,
-							 const ui_event event,
-							 bool& handled,
-							 bool& halt,
-						     const point& center,
-						     float dTheta,
-						     float dDist,
-						     Uint8 numFingers)> signal_touch_gesture_function;
+using signal_touch_motion = dispatcher_callback<const point&, const point&>;
 
 /**
- * Callback function signature.
+ * Used for events in event_category::touch_gesture.
  *
- * This function is used for the callbacks in set_event_notification.
- * Added the dummy void* parameter which will be nullptr to get a different
- * signature as signal_function's callback.
+ * Extra parameters: (TODO: document what these actually are)
+ * 5. center
+ * 6. dTheta
+ * 7. dDist
+ * 8. numFingers
  */
-typedef std::function<void(widget& dispatcher,
-							 const ui_event event,
-							 bool& handled,
-							 bool& halt,
-							 void*)> signal_notification_function;
+using signal_touch_gesture = dispatcher_callback<const point&, float, float, uint8_t>;
 
 /**
- * Callback function signature.
+ * Used for events in event_category::notification.
  *
- * This function is used for the callbacks in set_event_message.
+ * Extra parameters:
+ * 5. A dummy void* parameter which will always be nullptr, used to differentiate
+ *    this function from signal.
  */
-typedef std::function<void(widget& dispatcher,
-							 const ui_event event,
-							 bool& handled,
-							 bool& halt,
-							 const message& message)> signal_message_function;
+using signal_notification = dispatcher_callback<void*>;
 
 /**
- * Callback function signature.
+ * Used for events in event_category::message.
  *
- * This function is used for the callbacks in set_event_raw_event.
+ * Extra parameters:
+ * 5. The applicable data this event requires.
  */
-typedef std::function<void(widget& dispatcher,
-						   const ui_event event,
-						   bool& handled,
-						   bool& halt,
-						   const SDL_Event& sdlevent)> signal_raw_event_function;
+using signal_message = dispatcher_callback<const message&>;
 
 /**
- * Callback function signature.
+ * Used for events in event_category::raw_event.
  *
- * This function is used for the callbacks in set_event_text_input.
+ * Extra parameters:
+ * 5. The raw SDL_Event.
  */
-typedef std::function<void(widget& dispatcher,
-						   const ui_event event,
-						   bool& handled,
-						   bool& halt,
-						   const std::string& text,
-						   int32_t current_pos,
-						   int32_t select_len)> signal_text_input_function;
+using signal_raw_event = dispatcher_callback<const SDL_Event&>;
+
+/**
+ * Used for eventsin event_category::text_input.
+ *
+ * Extra parameters:
+ * 5. The text entered.
+ * 6. The current input position.
+ * 7. The current text selection length.
+ */
+using signal_text_input = dispatcher_callback<const std::string&, int32_t, int32_t>;
 
 /** Hotkey function handler signature. */
-typedef std::function<void(widget& dispatcher, hotkey::HOTKEY_COMMAND id)> hotkey_function;
+using hotkey_function = std::function<void(widget& dispatcher, hotkey::HOTKEY_COMMAND id)>;
 
 /**
  * Base class for event handling.
@@ -190,6 +169,17 @@ public:
 	void connect();
 
 	/**
+	 * Disconnects the dispatcher from the event handler.
+	 */
+	void disconnect();
+
+	/** Return whether the dispatcher is currently connected. */
+	bool is_connected() const
+	{
+		return connected_;
+	}
+
+	/**
 	 * Determines whether the location is inside an active widget.
 	 *
 	 * This is used to see whether a mouse event is inside the widget.
@@ -220,9 +210,7 @@ public:
 	 * @param target                 The widget that should receive the event.
 	 * @param coordinate             The mouse position for the event.
 	 */
-	bool fire(const ui_event event,
-			  widget& target,
-			  const point& coordinate);
+	bool fire(const ui_event event, widget& target, const point& coordinate);
 
 	/**
 	 * Fires an event which takes keyboard parameters.
@@ -234,10 +222,10 @@ public:
 	 * @param unicode                The unicode value for the key pressed.
 	 */
 	bool fire(const ui_event event,
-			  widget& target,
-			  const SDL_Keycode key,
-			  const SDL_Keymod modifier,
-			  const std::string& unicode);
+		widget& target,
+		const SDL_Keycode key,
+		const SDL_Keymod modifier,
+		const std::string& unicode);
 
 	/**
 	 * Fires an event which takes touch-motion parameters.
@@ -247,11 +235,7 @@ public:
 	 * @param pos                    The location touched.
 	 * @param distance               The distance moved.
 	 */
-	bool fire(const ui_event event,
-			  widget& target,
-			  const point& pos,
-			  const point& distance);
-
+	bool fire(const ui_event event, widget& target, const point& pos, const point& distance);
 
 	/**
 	 * Fires an event which takes touch-gesture parameters.
@@ -263,13 +247,7 @@ public:
 	 * @param dDist                  The distance moved.
 	 * @param numFingers             Probably the number of fingers touching the screen.
 	 */
-	bool fire(const ui_event event,
-			  widget& target,
-			  const point& center,
-			  float dTheta,
-			  float dDist,
-			  Uint8 numFingers);
-
+	bool fire(const ui_event event, widget& target, const point& center, float dTheta, float dDist, uint8_t numFingers);
 
 	/**
 	 * Fires an event which takes notification parameters.
@@ -279,9 +257,7 @@ public:
 	 * @param event                  The event to fire.
 	 * @param target                 The widget that should receive the event.
 	 */
-	bool fire(const ui_event event,
-			  widget& target,
-			  void*);
+	bool fire(const ui_event event, widget& target, void*);
 
 	/**
 	 * Fires an event which takes message parameters.
@@ -294,9 +270,7 @@ public:
 	 *                               (or another widget in the chain) to handle
 	 *                               the message.
 	 */
-	bool fire(const ui_event event,
-			  widget& target,
-			  const message& msg);
+	bool fire(const ui_event event, widget& target, const message& msg);
 
 	/**
 	 * Fires an event that's a raw SDL event
@@ -306,9 +280,7 @@ public:
 	 *                              widget.
 	 * @param sdlevent 				The raw SDL event
 	 */
-	bool fire(const ui_event event,
-			  widget& target,
-			  const SDL_Event& sdlevent);
+	bool fire(const ui_event event, widget& target, const SDL_Event& sdlevent);
 
 	/**
 	 * Fires an event which takes text input parameters
@@ -320,11 +292,7 @@ public:
 	 * @param start                 The start point for IME editing
 	 * @param len                   The selection length for IME editing
 	 */
-	bool fire(const ui_event event,
-			  widget& target,
-			  const std::string& text,
-			  int32_t start,
-			  int32_t len);
+	bool fire(const ui_event event, widget& target, const std::string& text, int32_t start, int32_t len);
 
 	/**
 	 * The position where to add a new callback in the signal handler.
@@ -372,326 +340,38 @@ public:
 	};
 
 	/**
-	 * Connect a signal for callback in set_event.
-	 *
-	 * The function uses some enable_if magic to avoid registering the wrong
-	 * function, but the common way to use this function is:
-	 * widget->connect_signal<EVENT_ID>(
-	 * std::bind(&tmy_dialog::my_member, this));
-	 * This allows simply adding a member of a dialog to be used as a callback
-	 * for widget without a lot of magic. Note most widgets probably will get a
-	 * callback like
-	 * connect_signal_mouse_left_click(const signal_function& callback)
-	 * which hides this function for the average use.
+	 * Adds a callback to the appropriate queue based on event type.
 	 *
 	 * @tparam E                     The event the callback needs to react to.
-	 * @param signal                 The callback function.
+	 * @tparam F                     The event signature. This must match the
+	 *                               appropriate queue's callback signature.
+	 *
+	 * @param func                   The callback function.
 	 * @param position               The position to place the callback.
 	 */
-	template <ui_event E>
-	std::enable_if_t<has_key<set_event, E>::value>
-	connect_signal(const signal_function& signal,
-				   const queue_position position = back_child)
+	template<ui_event E, typename F>
+	void connect_signal(const F& func, const queue_position position = back_child)
 	{
-		signal_queue_.connect_signal(E, position, signal);
+		get_signal_queue<get_event_category(E)>().connect_signal(E, position, func);
 	}
 
 	/**
-	 * Disconnect a signal for callback in set_event.
+	 * Removes a callback from the appropriate queue based on event type.
 	 *
-	 * @tparam E                     The event the callback was used for.
-	 * @param signal                 The callback function.
+	 * @tparam E                     The event the callback needs to react to.
+	 * @tparam F                     The event signature. This must match the
+	 *                               appropriate queue's callback signature.
+	 *
+	 * @param func                   The callback function.
 	 * @param position               The place where the function was added.
 	 *                               Needed remove the event from the right
 	 *                               place. (The function doesn't care whether
 	 *                               was added in front or back.)
 	 */
-	template <ui_event E>
-	std::enable_if_t<has_key<set_event, E>::value>
-	disconnect_signal(const signal_function& signal,
-					  const queue_position position = back_child)
+	template<ui_event E, typename F>
+	void disconnect_signal(const F& func, const queue_position position = back_child)
 	{
-		signal_queue_.disconnect_signal(E, position, signal);
-	}
-
-	/**
-	 * Connect a signal for callback in set_event_mouse.
-	 *
-	 * @tparam E                     The event the callback needs to react to.
-	 * @param signal                 The callback function.
-	 * @param position               The position to place the callback.
-	 */
-	template <ui_event E>
-	std::enable_if_t<has_key<set_event_mouse, E>::value>
-	connect_signal(const signal_mouse_function& signal,
-				   const queue_position position = back_child)
-	{
-		signal_mouse_queue_.connect_signal(E, position, signal);
-	}
-
-	/**
-	 * Disconnect a signal for callback in set_event_mouse.
-	 *
-	 * @tparam E                     The event the callback was used for.
-	 * @param signal                 The callback function.
-	 * @param position               The place where the function was added.
-	 *                               Needed remove the event from the right
-	 *                               place. (The function doesn't care whether
-	 *                               was added in front or back.)
-	 */
-	template <ui_event E>
-	std::enable_if_t<has_key<set_event_mouse, E>::value>
-	disconnect_signal(const signal_mouse_function& signal,
-					  const queue_position position = back_child)
-	{
-		signal_mouse_queue_.disconnect_signal(E, position, signal);
-	}
-
-	/**
-	 * Connect a signal for callback in set_event_keyboard.
-	 *
-	 * @tparam E                     The event the callback needs to react to.
-	 * @param signal                 The callback function.
-	 * @param position               The position to place the callback.
-	 */
-	template <ui_event E>
-	std::enable_if_t<has_key<set_event_keyboard, E>::value>
-	connect_signal(const signal_keyboard_function& signal,
-				   const queue_position position = back_child)
-	{
-		signal_keyboard_queue_.connect_signal(E, position, signal);
-	}
-
-	/**
-	 * Disconnect a signal for callback in set_event_keyboard.
-	 *
-	 * @tparam E                     The event the callback was used for.
-	 * @param signal                 The callback function.
-	 * @param position               The place where the function was added.
-	 *                               Needed remove the event from the right
-	 *                               place. (The function doesn't care whether
-	 *                               was added in front or back.)
-	 */
-	template <ui_event E>
-	std::enable_if_t<has_key<set_event_keyboard, E>::value>
-	disconnect_signal(const signal_keyboard_function& signal,
-					  const queue_position position = back_child)
-	{
-		signal_keyboard_queue_.disconnect_signal(E, position, signal);
-	}
-
-	/**
-	 * Connect a signal for callback in set_event_touch_motion.
-	 *
-	 * @tparam E                     The event the callback needs to react to.
-	 * @param signal                 The callback function.
-	 * @param position               The position to place the callback.
-	 */
-	template <ui_event E>
-	std::enable_if_t<has_key<set_event_touch_motion, E>::value>
-	connect_signal(const signal_touch_motion_function& signal,
-				   const queue_position position = back_child)
-	{
-		signal_touch_motion_queue_.connect_signal(E, position, signal);
-	}
-
-	/**
-	 * Disconnect a signal for callback in set_event_touch.
-	 *
-	 * @tparam E                     The event the callback was used for.
-	 * @param signal                 The callback function.
-	 * @param position               The place where the function was added.
-	 *                               Needed remove the event from the right
-	 *                               place. (The function doesn't care whether
-	 *                               was added in front or back.)
-	 */
-	template <ui_event E>
-	std::enable_if_t<has_key<set_event_touch_motion, E>::value>
-	disconnect_signal(const signal_touch_motion_function& signal,
-					  const queue_position position = back_child)
-	{
-		signal_touch_motion_queue_.disconnect_signal(E, position, signal);
-	}
-
-	/**
-	 * Connect a signal for callback in set_event_touch_gesture.
-	 *
-	 * @tparam E                     The event the callback needs to react to.
-	 * @param signal                 The callback function.
-	 * @param position               The position to place the callback.
-	 */
-	template <ui_event E>
-	std::enable_if_t<has_key<set_event_touch_gesture, E>::value>
-	connect_signal(const signal_touch_gesture_function& signal,
-				   const queue_position position = back_child)
-	{
-		signal_touch_gesture_queue_.connect_signal(E, position, signal);
-	}
-
-	/**
-	 * Disconnect a signal for callback in set_event_touch.
-	 *
-	 * @tparam E                     The event the callback was used for.
-	 * @param signal                 The callback function.
-	 * @param position               The place where the function was added.
-	 *                               Needed remove the event from the right
-	 *                               place. (The function doesn't care whether
-	 *                               was added in front or back.)
-	 */
-	template <ui_event E>
-	std::enable_if_t<has_key<set_event_touch_gesture, E>::value>
-	disconnect_signal(const signal_touch_gesture_function& signal,
-					  const queue_position position = back_child)
-	{
-		signal_touch_gesture_queue_.disconnect_signal(E, position, signal);
-	}
-
-	/**
-	 * Connect a signal for callback in set_event_notification.
-	 *
-	 * @tparam E                     The event the callback needs to react to.
-	 * @param signal                 The callback function.
-	 * @param position               The position to place the callback. Since
-	 *                               the message is send to a widget directly
-	 *                               the pre and post positions make no sense
-	 *                               and shouldn't be used.
-	 */
-	template <ui_event E>
-	std::enable_if_t<has_key<set_event_notification, E>::value>
-	connect_signal(const signal_notification_function& signal,
-				   const queue_position position = back_child)
-	{
-		signal_notification_queue_.connect_signal(E, position, signal);
-	}
-
-	/**
-	 * Disconnect a signal for callback in set_event_notification.
-	 *
-	 * @tparam E                     The event the callback was used for.
-	 * @param signal                 The callback function.
-	 * @param position               The place where the function was added.
-	 *                               Needed remove the event from the right
-	 *                               place. (The function doesn't care whether
-	 *                               was added in front or back, but it needs
-	 *                               to know the proper queue so it's save to
-	 *                               add with front_child and remove with
-	 *                               back_child. But it's not save to add with
-	 *                               front_child and remove with
-	 *                               front_pre_child)
-	 */
-	template <ui_event E>
-	std::enable_if_t<has_key<set_event_notification, E>::value>
-	disconnect_signal(const signal_notification_function& signal,
-					  const queue_position position = back_child)
-	{
-		signal_notification_queue_.disconnect_signal(E, position, signal);
-	}
-
-	/**
-	 * Connect a signal for callback in set_event_message.
-	 *
-	 * @tparam E                     The event the callback needs to react to.
-	 * @param signal                 The callback function.
-	 * @param position               The position to place the callback. Since
-	 *                               the message is send to a widget directly
-	 *                               the pre and post positions make no sense
-	 *                               and shouldn't be used.
-	 */
-	template <ui_event E>
-	std::enable_if_t<has_key<set_event_message, E>::value>
-	connect_signal(const signal_message_function& signal,
-				   const queue_position position = back_child)
-	{
-		signal_message_queue_.connect_signal(E, position, signal);
-	}
-
-	/**
-	 * Disconnect a signal for callback in set_event_message.
-	 *
-	 * @tparam E                     The event the callback was used for.
-	 * @param signal                 The callback function.
-	 * @param position               The place where the function was added.
-	 *                               Needed remove the event from the right
-	 *                               place. (The function doesn't care whether
-	 *                               was added in front or back, but it needs
-	 *                               to know the proper queue so it's save to
-	 *                               add with front_child and remove with
-	 *                               back_child. But it's not save to add with
-	 *                               front_child and remove with
-	 *                               front_pre_child)
-	 */
-	template <ui_event E>
-	std::enable_if_t<has_key<set_event_message, E>::value>
-	disconnect_signal(const signal_message_function& signal,
-					  const queue_position position = back_child)
-	{
-		signal_message_queue_.disconnect_signal(E, position, signal);
-	}
-
-	/**
-	 * Connect a signal for callback in set_raw_event.
-	 *
-	 * @tparam E                     The event the callback needs to react to.
-	 * @param signal                 The callback function.
-	 * @param position               The position to place the callback.
-	 */
-	template <ui_event E>
-	std::enable_if_t<has_key<set_event_raw_event, E>::value>
-	connect_signal(const signal_raw_event_function& signal,
-				   const queue_position position = back_child)
-	{
-		signal_raw_event_queue_.connect_signal(E, position, signal);
-	}
-
-	/**
-	 * Disconnect a signal for callback in set_raw_event.
-	 *
-	 * @tparam E                     The event the callback was used for.
-	 * @param signal                 The callback function.
-	 * @param position               The place where the function was added.
-	 *                               Needed remove the event from the right
-	 *                               place. (The function doesn't care whether
-	 *                               was added in front or back.)
-	 */
-	template <ui_event E>
-	std::enable_if_t<has_key<set_event_raw_event, E>::value>
-	disconnect_signal(const signal_raw_event_function& signal,
-					  const queue_position position = back_child)
-	{
-		signal_raw_event_queue_.disconnect_signal(E, position, signal);
-	}
-
-	/**
-	 * Connect a signal for callback in set_text_input.
-	 *
-	 * @tparam E                     The event the callback needs to react to.
-	 * @param signal                 The callback function.
-	 * @param position               The position to place the callback.
-	 */
-	template <ui_event E>
-	std::enable_if_t<has_key<set_event_text_input, E>::value>
-	connect_signal(const signal_text_input_function& signal,
-				   const queue_position position = back_child)
-	{
-		signal_text_input_queue_.connect_signal(E, position, signal);
-	}
-
-	/**
-	 * Disconnect a signal for callback in set_text_input.
-	 *
-	 * @tparam E                     The event the callback was used for.
-	 * @param signal                 The callback function.
-	 * @param position               The place where the function was added.
-	 *                               Needed remove the event from the right
-	 *                               place. (The function doesn't care whether
-	 *                               was added in front or back.)
-	 */
-	template <ui_event E>
-	std::enable_if_t<has_key<set_event_text_input, E>::value>
-	disconnect_signal(const signal_text_input_function& signal,
-					  const queue_position position = back_child)
-	{
-		signal_text_input_queue_.disconnect_signal(E, position, signal);
+		get_signal_queue<get_event_category(E)>().disconnect_signal(E, position, func);
 	}
 
 	/**
@@ -711,7 +391,7 @@ public:
 	 *
 	 * If after these tests no dispatcher is found the event is ignored.
 	 */
-	enum mouse_behavior {
+	enum class mouse_behavior {
 		all,
 		hit,
 		none
@@ -751,95 +431,6 @@ public:
 		return want_keyboard_input_;
 	}
 
-	/** Helper struct to generate the various signal types. */
-	template <class T>
-	struct signal_type
-	{
-		signal_type() : pre_child(), child(), post_child()
-		{
-		}
-
-		std::list<T> pre_child;
-		std::list<T> child;
-		std::list<T> post_child;
-	};
-
-	/** Helper struct to generate the various event queues. */
-	template <class T>
-	struct signal_queue
-	{
-		signal_queue() : queue()
-		{
-		}
-
-		std::map<ui_event, signal_type<T>> queue;
-
-		void connect_signal(const ui_event event,
-							const queue_position position,
-							const T& signal)
-		{
-			switch(position) {
-				case front_pre_child:
-					queue[event].pre_child.push_front(signal);
-					break;
-				case back_pre_child:
-					queue[event].pre_child.push_back(signal);
-					break;
-
-				case front_child:
-					queue[event].child.push_front(signal);
-					break;
-				case back_child:
-					queue[event].child.push_back(signal);
-					break;
-
-				case front_post_child:
-					queue[event].post_child.push_front(signal);
-					break;
-				case back_post_child:
-					queue[event].post_child.push_back(signal);
-					break;
-			}
-		}
-
-		void disconnect_signal(const ui_event event,
-							   const queue_position position,
-							   const T& signal)
-		{
-			signal_type<T>& signal_queue = queue[event];
-
-			/* The function doesn't differentiate between front and back position so fall
-			 * down from front to back.
-			 *
-			 * NOTE: This used to only remove the first signal of matching target type.
-			 *       That behavior could be restored in the future if needed.
-			 * - vultraz, 2017-05-02
-			 */
-			switch(position) {
-				case front_pre_child:
-				case back_pre_child: {
-					signal_queue.pre_child.remove_if(
-						[&signal](T& element) { return signal.target_type() == element.target_type(); }
-					);
-				} break;
-
-				case front_child:
-				case back_child: {
-					signal_queue.child.remove_if(
-						[&signal](T& element) { return signal.target_type() == element.target_type(); }
-					);
-				} break;
-
-				case front_post_child:
-				case back_post_child: {
-					signal_queue.post_child.remove_if(
-						[&signal](T& element) { return signal.target_type() == element.target_type(); }
-					);
-				} break;
-			}
-		}
-	};
-
 	/**
 	 * Registers a hotkey.
 	 *
@@ -851,8 +442,7 @@ public:
 	 * @param id                  The hotkey to register.
 	 * @param function            The callback function to call.
 	 */
-	void register_hotkey(const hotkey::HOTKEY_COMMAND id,
-						 const hotkey_function& function);
+	void register_hotkey(const hotkey::HOTKEY_COMMAND id, const hotkey_function& function);
 
 	/**
 	 * Executes a hotkey.
@@ -865,6 +455,115 @@ public:
 	bool execute_hotkey(const hotkey::HOTKEY_COMMAND id);
 
 private:
+	/** Helper struct to generate the various signal types. */
+	template<class T>
+	struct signal_type
+	{
+		signal_type() = default;
+
+		std::list<T> pre_child;
+		std::list<T> child;
+		std::list<T> post_child;
+
+		/**
+		 * Checks whether the queue of a given type is empty.
+		 *
+		 * @param queue_type    The queue to check. This may be one or more types
+		 *                      OR'd together (event_queue_type is bit-unique).
+		 *
+		 * @returns             True if ALL the matching queues are empty, or false
+		 *                      if any of the matching queues is NOT empty.
+		 */
+		bool empty(const dispatcher::event_queue_type queue_type) const
+		{
+			if((queue_type & dispatcher::pre) && !pre_child.empty()) {
+				return false;
+			}
+
+			if((queue_type & dispatcher::child) && !child.empty()) {
+				return false;
+			}
+
+			if((queue_type & dispatcher::post) && !post_child.empty()) {
+				return false;
+			}
+
+			return true;
+		}
+	};
+
+	/** Helper struct to generate the various event queues. */
+	template<class T>
+	struct signal_queue
+	{
+		signal_queue() = default;
+
+		signal_queue(const signal_queue&) = delete;
+		signal_queue& operator=(const signal_queue&) = delete;
+
+		using callback = T;
+		std::map<ui_event, signal_type<T>> queue;
+
+		void connect_signal(const ui_event event, const queue_position position, const T& signal)
+		{
+			switch(position) {
+			case front_pre_child:
+				queue[event].pre_child.push_front(signal);
+				break;
+			case back_pre_child:
+				queue[event].pre_child.push_back(signal);
+				break;
+
+			case front_child:
+				queue[event].child.push_front(signal);
+				break;
+			case back_child:
+				queue[event].child.push_back(signal);
+				break;
+
+			case front_post_child:
+				queue[event].post_child.push_front(signal);
+				break;
+			case back_post_child:
+				queue[event].post_child.push_back(signal);
+				break;
+			}
+		}
+
+		void disconnect_signal(const ui_event event, const queue_position position, const T& signal)
+		{
+			// This is std::function<T>::target_type()
+			const auto predicate = [&signal](const T& element) { return signal.target_type() == element.target_type(); };
+
+			/* The function doesn't differentiate between front and back position so fall
+			 * down from front to back.
+			 *
+			 * NOTE: This used to only remove the first signal of matching target type.
+			 *       That behavior could be restored in the future if needed.
+			 * - vultraz, 2017-05-02
+			 */
+			switch(position) {
+			case front_pre_child:
+				[[fallthrough]];
+			case back_pre_child:
+				queue[event].pre_child.remove_if(predicate);
+				break;
+
+			case front_child:
+				[[fallthrough]];
+			case back_child:
+				queue[event].child.remove_if(predicate);
+				break;
+
+			case front_post_child:
+				[[fallthrough]];
+			case back_post_child:
+				queue[event].post_child.remove_if(predicate);
+				break;
+			}
+		}
+	};
+
 	/** The mouse behavior for the dispatcher. */
 	mouse_behavior mouse_behavior_;
 
@@ -880,38 +579,64 @@ private:
 	 */
 	bool want_keyboard_input_;
 
-	/** Signal queue for callbacks in set_event. */
-	signal_queue<signal_function> signal_queue_;
+	/** Signal queue for callbacks in event_category::general. */
+	signal_queue<signal> signal_queue_;
 
-	/** Signal queue for callbacks in set_event_mouse. */
-	signal_queue<signal_mouse_function> signal_mouse_queue_;
+	/** Signal queue for callbacks in event_category::mouse. */
+	signal_queue<signal_mouse> signal_mouse_queue_;
 
-	/** Signal queue for callbacks in set_event_keyboard. */
-	signal_queue<signal_keyboard_function> signal_keyboard_queue_;
+	/** Signal queue for callbacks in event_category::keyboard. */
+	signal_queue<signal_keyboard> signal_keyboard_queue_;
 
-	/** Signal queue for callbacks in set_event_touch. */
-	signal_queue<signal_touch_motion_function> signal_touch_motion_queue_;
+	/** Signal queue for callbacks in event_category::touch_motion. */
+	signal_queue<signal_touch_motion> signal_touch_motion_queue_;
 
-	/** Signal queue for callbacks in set_event_touch. */
-	signal_queue<signal_touch_gesture_function> signal_touch_gesture_queue_;
+	/** Signal queue for callbacks in event_category::touch_gesture. */
+	signal_queue<signal_touch_gesture> signal_touch_gesture_queue_;
 
-	/** Signal queue for callbacks in set_event_notification. */
-	signal_queue<signal_notification_function> signal_notification_queue_;
+	/** Signal queue for callbacks in event_category::notification. */
+	signal_queue<signal_notification> signal_notification_queue_;
 
-	/** Signal queue for callbacks in set_event_message. */
-	signal_queue<signal_message_function> signal_message_queue_;
+	/** Signal queue for callbacks in event_category::message. */
+	signal_queue<signal_message> signal_message_queue_;
 
-	/** Signal queue for callbacks in set_raw_event. */
-	signal_queue<signal_raw_event_function> signal_raw_event_queue_;
+	/** Signal queue for callbacks in event_category::raw_event. */
+	signal_queue<signal_raw_event> signal_raw_event_queue_;
 
-	/** Signal queue for callbacks in set_event_text_input. */
-	signal_queue<signal_text_input_function> signal_text_input_queue_;
+	/** Signal queue for callbacks in event_category::text_input. */
+	signal_queue<signal_text_input> signal_text_input_queue_;
 
 	/** Are we connected to the event handler. */
 	bool connected_;
 
 	/** The registered hotkeys for this dispatcher. */
 	std::map<hotkey::HOTKEY_COMMAND, hotkey_function> hotkeys_;
+
+	template<event_category cat>
+	auto& get_signal_queue()
+	{
+		if constexpr(cat == event_category::general) {
+			return signal_queue_;
+		} else if constexpr(cat == event_category::mouse) { // Tee hee
+			return signal_mouse_queue_;
+		} else if constexpr(cat == event_category::keyboard) {
+			return signal_keyboard_queue_;
+		} else if constexpr(cat == event_category::touch_motion) {
+			return signal_touch_motion_queue_;
+		} else if constexpr(cat == event_category::touch_gesture) {
+			return signal_touch_gesture_queue_;
+		} else if constexpr(cat == event_category::notification) {
+			return signal_notification_queue_;
+		} else if constexpr(cat == event_category::message) {
+			return signal_message_queue_;
+		} else if constexpr(cat == event_category::raw_event) {
+			return signal_raw_event_queue_;
+		} else if constexpr(cat == event_category::text_input) {
+			return signal_text_input_queue_;
+		} else {
+			static_assert(utils::dependent_false_v<decltype(cat)>, "No matching signal queue for category");
+		}
+	}
 };
 
 /***** ***** ***** ***** ***** Common helpers  ***** ***** ***** ***** *****/
@@ -927,13 +652,19 @@ private:
  * This callback is called before the widget itself allowing you to either
  * snoop on the input or filter it.
  */
-void connect_signal_pre_key_press(dispatcher& dispatcher, const signal_keyboard_function& signal);
+void connect_signal_pre_key_press(dispatcher& dispatcher, const signal_keyboard& signal);
 
 /** Connects a signal handler for a left mouse button click. */
-void connect_signal_mouse_left_click(dispatcher& dispatcher, const signal_function& signal);
+void connect_signal_mouse_left_click(dispatcher& dispatcher, const signal& signal);
 
 /** Disconnects a signal handler for a left mouse button click. */
-void disconnect_signal_mouse_left_click(dispatcher& dispatcher, const signal_function& signal);
+void disconnect_signal_mouse_left_click(dispatcher& dispatcher, const signal& signal);
+
+/** Connects a signal handler for a left mouse button release. */
+void connect_signal_mouse_left_release(dispatcher& dispatcher, const signal& signal);
+
+/** Disconnects a signal handler for a left mouse button release. */
+void disconnect_signal_mouse_left_release(dispatcher& dispatcher, const signal& signal);
 
 /**
  * Connects a signal handler for a left mouse button double click.
@@ -944,13 +675,13 @@ void disconnect_signal_mouse_left_click(dispatcher& dispatcher, const signal_fun
  *
  * - vultraz, 2017-08-23
  */
-void connect_signal_mouse_left_double_click(dispatcher& dispatcher, const signal_function& signal);
+void connect_signal_mouse_left_double_click(dispatcher& dispatcher, const signal& signal);
 
 /** Connects a signal handler for getting a notification upon modification. */
-void connect_signal_notify_modified(dispatcher& dispatcher, const signal_notification_function& signal);
+void connect_signal_notify_modified(dispatcher& dispatcher, const signal_notification& signal);
 
 /** Connects a signal handler for a callback when the widget is drawn. */
-void connect_signal_on_draw(dispatcher& dispatcher, const signal_function& signal);
+void connect_signal_on_draw(dispatcher& dispatcher, const signal& signal);
 
 } // namespace event
 

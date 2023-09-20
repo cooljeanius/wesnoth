@@ -1,14 +1,15 @@
 /*
-   Copyright (C) 2017-2018 the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2017 - 2023
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #include "actions/undo_recruit_action.hpp"
@@ -16,6 +17,7 @@
 
 #include "gui/dialogs/transient_message.hpp"
 #include "game_board.hpp"
+#include "play_controller.hpp"
 #include "resources.hpp"
 #include "team.hpp"
 #include "replay.hpp"
@@ -59,7 +61,7 @@ void recruit_action::write(config & cfg) const
 	shroud_clearing_action::write(cfg);
 
 	recruit_from.write(cfg.add_child("leader"));
-	config & child = cfg.child("unit");
+	config & child = cfg.mandatory_child("unit");
 	child["type"] = u_type.parent_id();
 }
 
@@ -80,7 +82,7 @@ bool recruit_action::undo(int side)
 	}
 
 	const unit &un = *un_it;
-	statistics::un_recruit_unit(un);
+	resources::controller->statistics().un_recruit_unit(un);
 	current_team.spend_gold(-un.type().cost());
 
 	//MP_COUNTDOWN take away recruit bonus

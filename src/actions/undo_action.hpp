@@ -1,14 +1,16 @@
 /*
-   Copyright (C) 2017-2018 the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2017 - 2023
+	by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -32,22 +34,26 @@ namespace actions {
 		undo_event(const config& first, const config& second, const config& weapons, const config& cmds);
 	};
 
-	/// Records information to be able to undo an action.
-	/// Each type of action gets its own derived type.
-	/// Base class for all entries in the undo stack, also contains non undoable actions like update_shroud or auto_shroud.
+	/**
+	 * Records information to be able to undo an action.
+	 * Each type of action gets its own derived type.
+	 * Base class for all entries in the undo stack, also contains non undoable actions like update_shroud or auto_shroud.
+	 */
 	struct undo_action_base
 	{
 		undo_action_base(const undo_action_base&) = delete;
 		undo_action_base& operator=(const undo_action_base&) = delete;
 
-		/// Default constructor.
-		/// This is the only way to get nullptr view_info.
+		/**
+		 * Default constructor.
+		 * This is the only way to get nullptr view_info.
+		 */
 		undo_action_base()
 		{ }
 		// Virtual destructor to support derived classes.
 		virtual ~undo_action_base() {}
 
-		/// Writes this into the provided config.
+		/** Writes this into the provided config. */
 		virtual void write(config & cfg) const
 		{
 			cfg["type"] = this->get_type();
@@ -56,27 +62,33 @@ namespace actions {
 		virtual const char* get_type() const = 0;
 	};
 
-	/// actions that are undoable (this does not include update_shroud and auto_shroud)
+	/** actions that are undoable (this does not include update_shroud and auto_shroud) */
 	struct undo_action : undo_action_base
 	{
-		/// Default constructor.
-		/// It is assumed that undo actions are constructed after the action is performed
-		/// so that the unit id diff does not change after this constructor.
+		/**
+		 * Default constructor.
+		 * It is assumed that undo actions are constructed after the action is performed
+		 * so that the unit id diff does not change after this constructor
+		 */
 		undo_action();
 		undo_action(const config& cfg);
 		// Virtual destructor to support derived classes.
 		virtual ~undo_action() {}
 
-		/// Writes this into the provided config.
+		/** Writes this into the provided config. */
 		virtual void write(config & cfg) const;
 
-		/// Undoes this action.
-		/// @return true on success; false on an error.
+		/**
+		 * Undoes this action.
+		 * @return true on success; false on an error.
+		 */
 		virtual bool undo(int side) = 0;
-		/// the difference in the unit ids
-		/// TODO: does it really make sense to allow undoing if the unit id counter has changed?
+		/**
+		 * the difference in the unit ids
+		 * TODO: does it really make sense to allow undoing if the unit id counter has changed?
+		 */
 		int unit_id_diff;
-		/// actions wml (specified by wml) that should be executed when undoing this command.
+		/** actions wml (specified by wml) that should be executed when undoing this command. */
 		typedef std::vector<undo_event> event_vector;
 		event_vector umc_commands_undo;
 		void execute_undo_umc_wml();
@@ -85,7 +97,7 @@ namespace actions {
 		static void write_event_vector(const event_vector& vec, config& cfg, const std::string& tag);
 	};
 
-	/// entry for player actions that do not need any special code to be performed when undoing such as right-click menu items.
+	/** entry for player actions that do not need any special code to be performed when undoing such as right-click menu items. */
 	struct undo_dummy_action : undo_action
 	{
 		undo_dummy_action ()
@@ -98,7 +110,7 @@ namespace actions {
 		}
 		virtual const char* get_type() const { return "dummy"; }
 		virtual ~undo_dummy_action () {}
-		/// Undoes this action.
+		/** Undoes this action. */
 		virtual bool undo(int)
 		{
 			execute_undo_umc_wml();

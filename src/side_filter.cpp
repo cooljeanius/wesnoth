@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2010 - 2018 by Yurii Chernyi <terraninfo@terraninfo.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2010 - 2023
+	by Yurii Chernyi <terraninfo@terraninfo.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #define GETTEXT_DOMAIN "wesnoth-lib"
@@ -38,6 +39,9 @@
 
 static lg::log_domain log_engine_sf("engine/side_filter");
 #define ERR_NG LOG_STREAM(err, log_engine_sf)
+
+static lg::log_domain log_wml("wml");
+#define ERR_WML LOG_STREAM(err, log_wml)
 
 side_filter::~side_filter() {}
 
@@ -69,7 +73,7 @@ std::vector<int> side_filter::get_teams() const
 
 static bool check_side_number(const team &t, const std::string &str)
 {
-		std::vector<std::pair<int,int>> ranges = utils::parse_ranges(str);
+		std::vector<std::pair<int,int>> ranges = utils::parse_ranges_unsigned(str);
 		int side_number = t.side();
 
 		std::vector<std::pair<int,int>>::const_iterator range, range_end = ranges.end();
@@ -214,13 +218,13 @@ bool side_filter::match_internal(const team &t) const
 	if (!cfg_controller.blank())
 	{
 		if (resources::controller->is_networked_mp() && synced_context::is_synced()) {
-			ERR_NG << "ignoring controller= in SSF due to danger of OOS errors" << std::endl;
+			ERR_NG << "ignoring controller= in SSF due to danger of OOS errors";
 		}
 		else {
 			bool found = false;
 			for(const std::string& controller : utils::split(cfg_controller))
 			{
-				if(t.controller().to_string() == controller) {
+				if(side_controller::get_string(t.controller()) == controller) {
 					found = true;
 				}
 			}
@@ -239,7 +243,8 @@ bool side_filter::match_internal(const team &t) const
 			}
 			return true;
 		} catch(const wfl::formula_error& e) {
-			lg::wml_error() << "Formula error in side filter: " << e.type << " at " << e.filename << ':' << e.line << ")\n";
+			lg::log_to_chat() << "Formula error in side filter: " << e.type << " at " << e.filename << ':' << e.line << ")\n";
+			ERR_WML << "Formula error in side filter: " << e.type << " at " << e.filename << ':' << e.line << ")";
 			// Formulae with syntax errors match nothing
 			return false;
 		}
@@ -253,7 +258,7 @@ bool side_filter::match_internal(const team &t) const
 			}
 		}
 	}
-	
+
 
 	return true;
 }
@@ -268,29 +273,21 @@ bool side_filter::match(const team& t) const
 {
 	bool matches = match_internal(t);
 
-	//handle [and], [or], and [not] with in-order precedence
-	vconfig::all_children_iterator cond = cfg_.ordered_begin();
-	vconfig::all_children_iterator cond_end = cfg_.ordered_end();
-	while (cond != cond_end) {
-		const std::string& cond_name = cond.get_key();
-		const vconfig& cond_cfg = cond.get_child();
-
-		//handle [and]
-		if(cond_name == "and")
-		{
-			matches = matches && side_filter(cond_cfg, fc_, flat_).match(t);
+	// Handle [and], [or], and [not] with in-order precedence
+	for(const auto& [key, filter] : cfg_.all_ordered()) {
+		// Handle [and]
+		if(key == "and") {
+			matches = matches && side_filter(filter, fc_, flat_).match(t);
 		}
-		//handle [or]
-		else if(cond_name == "or")
-		{
-			matches = matches || side_filter(cond_cfg, fc_, flat_).match(t);
+		// Handle [or]
+		else if(key == "or") {
+			matches = matches || side_filter(filter, fc_, flat_).match(t);
 		}
-		//handle [not]
-		else if(cond_name == "not")
-		{
-			matches = matches && !side_filter(cond_cfg, fc_, flat_).match(t);
+		// Handle [not]
+		else if(key == "not") {
+			matches = matches && !side_filter(filter, fc_, flat_).match(t);
 		}
-			++cond;
 	}
+
 	return matches;
 }

@@ -1,16 +1,17 @@
 /*
-   Copyright (C) 2003 by David White <dave@whitevine.net>
-   Copyright (C) 2005 - 2018 by Guillaume Melquiond <guillaume.melquiond@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2005 - 2023
+	by Guillaume Melquiond <guillaume.melquiond@gmail.com>
+	Copyright (C) 2003 by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #define GETTEXT_DOMAIN "wesnoth-lib"
@@ -21,6 +22,10 @@
 #include "config.hpp"
 #include "log.hpp"
 #include "gettext.hpp"
+
+#include <algorithm>
+#include <array>
+#include <utility>
 
 static lg::log_domain log_engine("engine");
 #define ERR_NG LOG_STREAM(err, log_engine)
@@ -123,14 +128,14 @@ static std::string do_interpolation(const std::string &str, const variable_set& 
 				}
 			} while(++var_end != res.end() && paren_nesting_level > 0);
 			if(utils::detail::evaluate_formula == nullptr) {
-				WRN_NG << "Formula substitution ignored (and removed) because WFL engine is not present in the server.\n";
+				WRN_NG << "Formula substitution ignored (and removed) because WFL engine is not present in the server.";
 				res.replace(var_begin, var_end, "");
 				continue;
 			}
 			if(paren_nesting_level > 0) {
 				ERR_NG << "Formula in WML string cannot be evaluated due to "
 					<< "a missing closing parenthesis:\n\t--> \""
-					<< std::string(var_begin, var_end) << "\"\n";
+					<< std::string(var_begin, var_end) << "\"";
 				res.replace(var_begin, var_end, "");
 				continue;
 			}
@@ -158,7 +163,7 @@ static std::string do_interpolation(const std::string &str, const variable_set& 
 		// Two dots in a row cannot be part of a valid variable name.
 		// That matters for random=, e.g. $x..$y
 		var_end = std::adjacent_find(var_name_begin, var_end, two_dots);
-		/// the default value is specified after ''?'
+		// the default value is specified after ''?'
 		const std::string::iterator default_start = var_end < res.end() && *var_end == '?' ? var_end + 1 : res.end();
 
 		// If the last character is '.', then it can't be a sub-variable.
@@ -288,7 +293,7 @@ std::string format_disjunct_list(const t_string& empty, const std::vector<t_stri
 	return VGETTEXT("disjunct end^$prefix, or $last", {{"prefix", prefix}, {"last", elems.back()}});
 }
 
-std::string format_timespan(std::time_t time)
+std::string format_timespan(std::time_t time, bool detailed)
 {
 	if(time <= 0) {
 		return _("timespan^expired");
@@ -297,26 +302,37 @@ std::string format_timespan(std::time_t time)
 	typedef std::tuple<std::time_t, const char*, const char*> time_factor;
 
 	static const std::vector<time_factor> TIME_FACTORS{
-		time_factor{ 31104000, N_("timespan^$num year"),   N_("timespan^$num years")   }, // 12 months
-		time_factor{ 2592000,  N_("timespan^$num month"),  N_("timespan^$num months")  }, // 30 days
-		time_factor{ 604800,   N_("timespan^$num week"),   N_("timespan^$num weeks")   },
-		time_factor{ 86400,    N_("timespan^$num day"),    N_("timespan^$num days")    },
-		time_factor{ 3600,     N_("timespan^$num hour"),   N_("timespan^$num hours")   },
-		time_factor{ 60,       N_("timespan^$num minute"), N_("timespan^$num minutes") },
-		time_factor{ 1,        N_("timespan^$num second"), N_("timespan^$num seconds") },
+		// TRANSLATORS: The "timespan^$num xxxxx" strings originating from the same file
+		// as the string with this comment MUST be translated following the usual rules
+		// for WML variable interpolation -- that is, without including or translating
+		// the caret^ prefix, and leaving the $num variable specification intact, since
+		// it is technically code. The only translatable natural word to be found here
+		// is the time unit (year, month, etc.) For example, for French you would
+		// translate "timespan^$num years" as "$num ans", thus allowing the game UI to
+		// generate output such as "39 ans" after variable interpolation.
+		time_factor{ 31104000, N_n("timespan^$num year",   "timespan^$num years")   }, // 12 months
+		time_factor{ 2592000,  N_n("timespan^$num month",  "timespan^$num months")  }, // 30 days
+		time_factor{ 604800,   N_n("timespan^$num week",   "timespan^$num weeks")   },
+		time_factor{ 86400,    N_n("timespan^$num day",    "timespan^$num days")    },
+		time_factor{ 3600,     N_n("timespan^$num hour",   "timespan^$num hours")   },
+		time_factor{ 60,       N_n("timespan^$num minute", "timespan^$num minutes") },
+		time_factor{ 1,        N_n("timespan^$num second", "timespan^$num seconds") },
 	};
 
 	std::vector<t_string> display_text;
 	string_map i18n;
 
 	for(const auto& factor : TIME_FACTORS) {
-		const int amount = time / std::get<0>(factor);
+		const auto [ secs, fmt_singular, fmt_plural ] = factor;
+		const int amount = time / secs;
 
 		if(amount) {
-			time -= std::get<0>(factor) * amount;
+			time -= secs * amount;
 			i18n["num"] = std::to_string(amount);
-			const auto fmt = amount == 1 ? std::get<1>(factor) : std::get<2>(factor);
-			display_text.emplace_back(VGETTEXT(fmt, i18n));
+			display_text.emplace_back(VNGETTEXT(fmt_singular, fmt_plural, amount, i18n));
+			if(!detailed) {
+				break;
+			}
 		}
 	}
 
@@ -343,4 +359,71 @@ std::string vngettext_impl(const char* domain,
 	const std::string orig(translation::dsngettext(domain, singular, plural, count));
 	const std::string msg = utils::interpolate_variables_into_string(orig, &symbols);
 	return msg;
+}
+
+[[nodiscard]] std::size_t edit_distance_approx(std::string_view str_1, std::string_view str_2) noexcept
+{
+	// First, trim prefixes
+	auto s1_first = str_1.begin();
+	auto s2_first = str_2.begin();
+
+	while(s1_first != str_1.end() && s2_first != str_2.end() && *s1_first == *s2_first) {
+		++s1_first;
+		++s2_first;
+	}
+
+	// Then, trim suffixes
+	auto s1_size = static_cast<std::size_t>(str_1.end() - s1_first);
+	auto s2_size = static_cast<std::size_t>(str_2.end() - s2_first);
+
+	while(s1_size != 0 && s2_size != 0 && s1_first[s1_size - 1] == s2_first[s2_size - 1]) {
+		--s1_size;
+		--s2_size;
+	}
+
+	if(s1_size == 0) {
+		return s2_size;
+	}
+
+	if(s2_size == 0) {
+		return s1_size;
+	}
+
+	// Limit the relevant characters to no more than 15
+	s1_size = std::min(s1_size, std::size_t{15});
+	s2_size = std::min(s2_size, std::size_t{15});
+
+	if(s1_size < s2_size) {
+		std::swap(s1_first, s2_first);
+		std::swap(s1_size, s2_size);
+	}
+
+	// This is an 'optimal string alignment distance' algorithm
+	// (https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance#Optimal_string_alignment_distance)
+	// with some optimizations. Two variables are used to track the previous row instead of using another array.
+	// `up` handles deletion, `row[j]` handles insertion, and `upper_left` handles substitution.
+
+	// This is a single row of the matrix
+	std::array<std::size_t, 16> row{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
+
+	for(std::size_t i = 0; i != s1_size; ++i) {
+		auto upper_left = i;
+		row[0] = i + 1;
+
+		for(std::size_t j = 0; j != s2_size; ++j) {
+			const auto up = row[j + 1];
+			const bool transposed = i > 0 && j > 0 && s1_first[i] == s2_first[j - 1] && s1_first[i - 1] == s2_first[j];
+
+			if(s1_first[i] != s2_first[j] && !transposed) {
+				row[j + 1] = std::min({up, row[j], upper_left}) + 1;
+			} else {
+				row[j + 1] = upper_left;
+			}
+
+			// When moving to the next element of a row, the previous `up` element is now the `upper_left`
+			upper_left = up;
+		}
+	}
+
+	return row[s2_size];
 }

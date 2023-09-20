@@ -1,14 +1,15 @@
 /*
-   Copyright (C) 2017-2018 by the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2017 - 2023
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #define GETTEXT_DOMAIN "wesnoth-lib"
@@ -26,15 +27,14 @@
 
 #include "log.hpp"
 
-namespace gui2
-{
-namespace dialogs
+namespace gui2::dialogs
 {
 
 REGISTER_DIALOG(log_settings)
 
 log_settings::log_settings()
-	: last_words_()
+	: modal_dialog(window_id())
+	, last_words_()
 {
 	//list of names must match those in logging.cfg
 	widget_id_.push_back("none");
@@ -58,14 +58,12 @@ log_settings::log_settings()
 
 void log_settings::pre_show(window& window)
 {
-	set_restore(true); //why is this done manually?
-
 	listbox& logger_box = find_widget<listbox>(&window, "logger_listbox", false);
 
 	for(unsigned int i = 0; i < domain_list_.size(); i++){
 		std::string this_domain = domain_list_[i];
-		std::map<std::string, string_map> data;
-		string_map item;
+		widget_data data;
+		widget_item item;
 
 		item["label"] = this_domain;
 		data["label"] = item;
@@ -90,16 +88,15 @@ void log_settings::pre_show(window& window)
 	}
 
 	text_box* filter = find_widget<text_box>(&window, "filter_box", false, true);
-	filter->set_text_changed_callback(std::bind(&log_settings::filter_text_changed, this, _1, _2));
+	filter->set_text_changed_callback(std::bind(&log_settings::filter_text_changed, this, std::placeholders::_2));
 
 	window.keyboard_capture(filter);
 	window.add_to_keyboard_chain(&logger_box);
 }
 
-void log_settings::filter_text_changed(text_box_base* textbox, const std::string& text)
+void log_settings::filter_text_changed(const std::string& text)
 {
-	window& window = *textbox->get_window();
-	listbox& list = find_widget<listbox>(&window, "logger_listbox", false);
+	listbox& list = find_widget<listbox>(get_window(), "logger_listbox", false);
 
 	const std::vector<std::string> words = utils::split(text, ' ');
 
@@ -158,4 +155,3 @@ void log_settings::set_logger(const std::string log_domain)
 }
 
 } // namespace dialogs
-} // namespace gui2

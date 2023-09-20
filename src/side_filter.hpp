@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2010 - 2018 by Yurii Chernyi <terraninfo@terraninfo.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2010 - 2023
+	by Yurii Chernyi <terraninfo@terraninfo.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -39,6 +40,7 @@ public:
 	bool match(const team& t) const;
 	bool match(const int side) const;
 	std::vector<int> get_teams() const;
+	const config& get_config() const {return cfg_.get_config();}
 
 private:
 	side_filter(const side_filter &other);
@@ -51,7 +53,8 @@ private:
 	bool flat_;
 	std::string side_string_;
 
-	const filter_context * fc_; //!< The filter context for this filter. It should be a pointer because otherwise the default ctor doesn't work
+	/** The filter context for this filter. It should be a pointer because otherwise the default ctor doesn't work */
+	const filter_context * fc_;
 
 	mutable std::unique_ptr<unit_filter> ufilter_;
 	mutable std::unique_ptr<side_filter> allied_filter_;

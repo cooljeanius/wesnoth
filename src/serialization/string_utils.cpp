@@ -1,17 +1,18 @@
 /*
-   Copyright (C) 2003 by David White <dave@whitevine.net>
-   Copyright (C) 2005 by Guillaume Melquiond <guillaume.melquiond@gmail.com>
-   Copyright (C) 2005 - 2018 by Philippe Plantier <ayin@anathas.org>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2005 - 2023
+	by Philippe Plantier <ayin@anathas.org>
+	Copyright (C) 2005 by Guillaume Melquiond <guillaume.melquiond@gmail.com>
+	Copyright (C) 2003 by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -27,6 +28,7 @@
 #include <cassert>
 #include <array>
 #include <limits>
+#include <optional>
 #include <stdexcept>
 
 #include <boost/algorithm/string.hpp>
@@ -59,7 +61,7 @@ bool notspace(const char c)
 	return !portable_isspace(c);
 }
 
-void trim(string_view& s)
+void trim(std::string_view& s)
 {
 	s.remove_prefix(std::min(s.find_first_not_of(" \t\r\n"), s.size()));
 	if(s.empty()) {
@@ -72,26 +74,26 @@ void trim(string_view& s)
 
 /**
  * Splits a (comma-)separated string into a vector of pieces.
- * @param[in]  val    A (comma-)separated string.
- * @param[in]  c      The separator character (usually a comma).
+ * @param[in]  s      A (comma-)separated string.
+ * @param[in]  sep    The separator character (usually a comma).
  * @param[in]  flags  Flags controlling how the split is done.
  *                    This is a bit field with two settings (both on by default):
  *                    REMOVE_EMPTY causes empty pieces to be skipped/removed.
  *                    STRIP_SPACES causes the leading and trailing spaces of each piece to be ignored/stripped.
  */
-std::vector<std::string> split(string_view s, const char sep, const int flags)
+std::vector<std::string> split(std::string_view s, const char sep, const int flags)
 {
 	std::vector<std::string> res;
-	split_foreach(s, sep, flags, [&](string_view item) {
+	split_foreach(s, sep, flags, [&](std::string_view item) {
 		res.emplace_back(item);
 	});
 	return res;
 }
 
-std::set<std::string> split_set(string_view s, char sep, const int flags)
+std::set<std::string> split_set(std::string_view s, char sep, const int flags)
 {
 	std::set<std::string> res;
-	split_foreach(s, sep, flags, [&](string_view item) {
+	split_foreach(s, sep, flags, [&](std::string_view item) {
 		res.emplace(item);
 	});
 	return res;
@@ -124,12 +126,12 @@ std::vector<std::string> square_parenthetical_split(const std::string& val,
 	if (i1 == val.end()) return res;
 
 	if (!separator) {
-		ERR_GENERAL << "Separator must be specified for square bracket split function." << std::endl;
+		ERR_GENERAL << "Separator must be specified for square bracket split function.";
 		return res;
 	}
 
 	if(left.size()!=right.size()){
-		ERR_GENERAL << "Left and Right Parenthesis lists not same length" << std::endl;
+		ERR_GENERAL << "Left and Right Parenthesis lists not same length";
 		return res;
 	}
 
@@ -174,7 +176,7 @@ std::vector<std::string> square_parenthetical_split(const std::string& val,
 						}
 						if (padding*padding_end > 0 && s_begin.size() != s_end.size()) {
 							ERR_GENERAL << "Square bracket padding sizes not matching: "
-										<< s_begin << " and " << s_end <<".\n";
+										<< s_begin << " and " << s_end <<".";
 						}
 						if (padding_end > padding) padding = padding_end;
 
@@ -190,7 +192,7 @@ std::vector<std::string> square_parenthetical_split(const std::string& val,
 				}
 				if (i*square_expansion.size() != (i+1)*size_square_exp ) {
 					std::string tmp2(i1, i2);
-					ERR_GENERAL << "Square bracket lengths do not match up: " << tmp2 << std::endl;
+					ERR_GENERAL << "Square bracket lengths do not match up: " << tmp2;
 					return res;
 				}
 				size_square_exp = square_expansion.size();
@@ -260,7 +262,7 @@ std::vector<std::string> square_parenthetical_split(const std::string& val,
 	}
 
 	if(!part.empty()){
-			ERR_GENERAL << "Mismatched parenthesis:\n"<<val<< std::endl;
+			ERR_GENERAL << "Mismatched parenthesis:\n"<<val;
 	}
 
 	return res;
@@ -317,7 +319,7 @@ std::vector<std::string> parenthetical_split(const std::string& val,
 	i2=i1;
 
 	if(left.size()!=right.size()){
-		ERR_GENERAL << "Left and Right Parenthesis lists not same length" << std::endl;
+		ERR_GENERAL << "Left and Right Parenthesis lists not same length";
 		return res;
 	}
 
@@ -383,7 +385,7 @@ std::vector<std::string> parenthetical_split(const std::string& val,
 		res.push_back(std::move(new_val));
 
 	if(!part.empty()){
-			ERR_GENERAL << "Mismatched parenthesis:\n"<<val<< std::endl;
+			ERR_GENERAL << "Mismatched parenthesis:\n"<<val;
 	}
 
 	return res;
@@ -601,7 +603,7 @@ static bool is_username_char(char c) {
 }
 
 static bool is_wildcard_char(char c) {
-    return ((c == '?') || (c == '*'));
+	return ((c == '?') || (c == '*'));
 }
 
 bool isvalid_username(const std::string& username) {
@@ -617,13 +619,13 @@ bool isvalid_username(const std::string& username) {
 }
 
 bool isvalid_wildcard(const std::string& username) {
-    const std::size_t alnum = std::count_if(username.begin(), username.end(), isalnum);
+	const std::size_t alnum = std::count_if(username.begin(), username.end(), isalnum);
 	const std::size_t valid_char =
-			std::count_if(username.begin(), username.end(), is_username_char);
-    const std::size_t wild_char =
-            std::count_if(username.begin(), username.end(), is_wildcard_char);
+		std::count_if(username.begin(), username.end(), is_username_char);
+	const std::size_t wild_char =
+		std::count_if(username.begin(), username.end(), is_wildcard_char);
 	if ((alnum + valid_char + wild_char != username.size())
-			|| valid_char == username.size() || username.empty() )
+		|| valid_char == username.size() || username.empty() )
 	{
 		return false;
 	}
@@ -656,7 +658,7 @@ bool word_completion(std::string& text, std::vector<std::string>& wordlist) {
 	{
 		if (word->size() < semiword.size()
 		|| !std::equal(semiword.begin(), semiword.end(), word->begin(),
-				chars_equal_insensitive))
+				utils::chars_equal_insensitive))
 		{
 			continue;
 		}
@@ -735,6 +737,20 @@ bool wildcard_string_match(const std::string& str, const std::string& match) {
 	return matches;
 }
 
+void to_sql_wildcards(std::string& str, bool underscores)
+{
+	std::replace(str.begin(), str.end(), '*', '%');
+	if(underscores)
+	{
+		std::size_t n = 0;
+		while((n = str.find("_", n)) != std::string::npos)
+		{
+			str.replace(n, 1, "\\_");
+			n += 2;
+		}
+	}
+}
+
 std::string indent(const std::string& string, std::size_t indent_size)
 {
 	if(indent_size == 0) {
@@ -807,30 +823,118 @@ std::vector<std::string> quoted_split(const std::string& val, char c, int flags,
 	return res;
 }
 
+namespace
+{
+/**
+ * Internal common code for parse_range and parse_range_real.
+ *
+ * If str contains two elements and a separator such as "a-b", returns a and b.
+ * Otherwise, returns the original string and std::nullopt.
+ */
+std::pair<std::string, std::optional<std::string>> parse_range_internal_separator(const std::string& str)
+{
+	// If turning this into a list with additional options, ensure that "-" (if present) is last. Otherwise a
+	// range such as "-2..-1" might be incorrectly split as "-2..", "1".
+	static const auto separator = std::string{"-"};
+
+	// Starting from the second character means that it won't interpret the minus
+	// sign on a negative number as the separator.
+	// No need to check the string length first, as str.find() already does that.
+	auto pos = str.find(separator, 1);
+	auto length = separator.size();
+
+	if(pos != std::string::npos && pos + length < str.size()) {
+		return {str.substr(0, pos), str.substr(pos + length)};
+	}
+
+	return {str, std::nullopt};
+}
+} // namespace
+
 std::pair<int, int> parse_range(const std::string& str)
 {
-	const std::string::const_iterator dash = std::find(str.begin(), str.end(), '-');
-	const std::string a(str.begin(), dash);
-	const std::string b = dash != str.end() ? std::string(dash + 1, str.end()) : a;
-	std::pair<int,int> res {0,0};
+	auto [a, b] = parse_range_internal_separator(str);
+	std::pair<int, int> res{0, 0};
 	try {
-		if (b == "infinity") {
-			res = std::make_pair(std::stoi(a), std::numeric_limits<int>::max());
+		if(a == "-infinity" && b) {
+			// The "&& b" is so that we treat parse_range("-infinity") the same as parse_range("infinity"),
+			// both of those will report an invalid range.
+			res.first = std::numeric_limits<int>::min();
 		} else {
-			res = std::make_pair(std::stoi(a), std::stoi(b));
+			res.first = std::stoi(a);
 		}
 
-		if (res.second < res.first) {
+		if(!b) {
 			res.second = res.first;
+		} else if(*b == "infinity") {
+			res.second = std::numeric_limits<int>::max();
+		} else {
+			res.second = std::stoi(*b);
+			if(res.second < res.first) {
+				res.second = res.first;
+			}
 		}
 	} catch(const std::invalid_argument&) {
-	    ERR_GENERAL << "Invalid range: "<< str << std::endl;
+		ERR_GENERAL << "Invalid range: " << str;
 	}
 
 	return res;
 }
 
-std::vector<std::pair<int, int>> parse_ranges(const std::string& str)
+std::pair<double, double> parse_range_real(const std::string& str)
+{
+	auto [a, b] = parse_range_internal_separator(str);
+	std::pair<double, double> res{0, 0};
+	try {
+		if(a == "-infinity" && b) {
+			// There's already a static-assert for is_iec559 in random.cpp, so this isn't limiting the architectures
+			// that Wesnoth can run on.
+			static_assert(std::numeric_limits<double>::is_iec559,
+				"Don't know how negative infinity is treated on this architecture");
+			res.first = -std::numeric_limits<double>::infinity();
+		} else {
+			res.first = std::stod(a);
+		}
+
+		if(!b) {
+			res.second = res.first;
+		} else if(*b == "infinity") {
+			res.second = std::numeric_limits<double>::infinity();
+		} else {
+			res.second = std::stod(*b);
+			if(res.second < res.first) {
+				res.second = res.first;
+			}
+		}
+	} catch(const std::invalid_argument&) {
+		ERR_GENERAL << "Invalid range: " << str;
+	}
+
+	return res;
+}
+
+std::vector<std::pair<int, int>> parse_ranges_unsigned(const std::string& str)
+{
+	auto to_return = parse_ranges_int(str);
+	if(std::any_of(to_return.begin(), to_return.end(), [](const std::pair<int, int>& r) { return r.first < 0; })) {
+		ERR_GENERAL << "Invalid range (expected values to be zero or positive): " << str;
+		return {};
+	}
+
+	return to_return;
+}
+
+std::vector<std::pair<double, double>> parse_ranges_real(const std::string& str)
+{
+	std::vector<std::pair<double, double>> to_return;
+	for(const std::string& r : utils::split(str)) {
+		to_return.push_back(parse_range_real(r));
+	}
+
+	return to_return;
+}
+
+std::vector<std::pair<int, int>> parse_ranges_int(const std::string& str)
 {
 	std::vector<std::pair<int, int>> to_return;
 	for(const std::string& r : utils::split(str)) {

@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2008 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #define GETTEXT_DOMAIN "wesnoth-lib"
@@ -19,7 +20,7 @@
 #include "gui/core/register_widget.hpp"
 #include "gui/widgets/settings.hpp"
 
-#include "utils/functional.hpp"
+#include <functional>
 
 namespace gui2
 {
@@ -96,11 +97,7 @@ bool spacer::disable_click_dismiss() const
 	return false;
 }
 
-void spacer::impl_draw_background(surface& /*frame_buffer*/
-								   ,
-								   int /*x_offset*/
-								   ,
-								   int /*y_offset*/)
+void spacer::impl_draw_background()
 {
 	/* DO NOTHING */
 }
@@ -110,64 +107,17 @@ void spacer::impl_draw_background(surface& /*frame_buffer*/
 spacer_definition::spacer_definition(const config& cfg)
 	: styled_widget_definition(cfg)
 {
-	DBG_GUI_P << "Parsing spacer " << id << '\n';
+	DBG_GUI_P << "Parsing spacer " << id;
 
 	load_resolutions<resolution>(cfg);
 }
 
-/*WIKI
- * @page = GUIWidgetDefinitionWML
- * @order = 1_spacer
- *
- * == Spacer ==
- *
- * @macro = spacer_description
- *
- * A spacer has no states so nothing to load.
- * @begin{parent}{name="gui/"}
- * @begin{tag}{name="spacer_definition"}{min=0}{max=-1}{super="generic/widget_definition"}
- * @end{tag}{name="spacer_definition"}
- * @end{parent}{name="gui/"}
- */
 spacer_definition::resolution::resolution(const config& cfg)
 	: resolution_definition(cfg)
 {
 }
 
 // }---------- BUILDER -----------{
-
-/*WIKI_MACRO
- * @begin{macro}{spacer_description}
- *
- *        A spacer is a dummy item to either fill in a widget since no empty
- *        items are allowed or to reserve a fixed space.
- * @end{macro}
- */
-
-
-/*WIKI
- * @page = GUIWidgetInstanceWML
- * @order = 2_spacer
- * @begin{parent}{name="gui/window/resolution/grid/row/column/"}
- * @begin{tag}{name="spacer"}{min=0}{max=-1}{super="generic/widget_instance"}
- * == Spacer ==
- *
- * @macro = spacer_description
- *
- * If either the width or the height is non-zero the spacer functions as a
- * fixed size spacer.
- *
- * @begin{table}{config}
- *     width & f_unsigned & 0 &          The width of the spacer. $
- *     height & f_unsigned & 0 &         The height of the spacer. $
- * @end{table}
- *
- * The variable available are the same as for the window resolution see
- * https://www.wesnoth.org/wiki/GUIToolkitWML#Resolution_2 for the list of
- * items.
- * @end{tag}{name="spacer"}
- * @end{parent}{name="gui/window/resolution/grid/row/column/"}
- */
 
 namespace implementation
 {
@@ -177,12 +127,12 @@ builder_spacer::builder_spacer(const config& cfg)
 {
 }
 
-widget* builder_spacer::build() const
+std::unique_ptr<widget> builder_spacer::build() const
 {
-	spacer* widget = new spacer(*this, width_, height_);
+	auto widget = std::make_unique<spacer>(*this, width_, height_);
 
 	DBG_GUI_G << "Window builder: placed spacer '" << id
-			  << "' with definition '" << definition << "'.\n";
+			  << "' with definition '" << definition << "'.";
 
 	return widget;
 }

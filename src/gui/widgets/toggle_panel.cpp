@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2008 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #define GETTEXT_DOMAIN "wesnoth-lib"
@@ -25,7 +26,7 @@
 #include "sound.hpp"
 #include "wml_exception.hpp"
 
-#include "utils/functional.hpp"
+#include <functional>
 
 #define LOG_SCOPE_HEADER get_control_type() + " [" + id() + "] " + __func__
 #define LOG_HEADER LOG_SCOPE_HEADER + ':'
@@ -46,47 +47,46 @@ toggle_panel::toggle_panel(const implementation::builder_toggle_panel& builder)
 	set_wants_mouse_left_double_click();
 
 	connect_signal<event::MOUSE_ENTER>(std::bind(
-			&toggle_panel::signal_handler_mouse_enter, this, _2, _3));
+			&toggle_panel::signal_handler_mouse_enter, this, std::placeholders::_2, std::placeholders::_3));
 	connect_signal<event::MOUSE_LEAVE>(std::bind(
-			&toggle_panel::signal_handler_mouse_leave, this, _2, _3));
+			&toggle_panel::signal_handler_mouse_leave, this, std::placeholders::_2, std::placeholders::_3));
 #if 0
 	connect_signal<event::LEFT_BUTTON_CLICK>(
 			std::bind(&toggle_panel::signal_handler_pre_left_button_click,
 						this,
-						_2),
+						std::placeholders::_2),
 			event::dispatcher::back_pre_child);
 #endif
 	connect_signal<event::LEFT_BUTTON_CLICK>(std::bind(
-			&toggle_panel::signal_handler_left_button_click, this, _2, _3));
+			&toggle_panel::signal_handler_left_button_click, this, std::placeholders::_2, std::placeholders::_3));
 	connect_signal<event::LEFT_BUTTON_CLICK>(
 			std::bind(&toggle_panel::signal_handler_left_button_click,
 						this,
-						_2,
-						_3),
+						std::placeholders::_2,
+						std::placeholders::_3),
 			event::dispatcher::back_post_child);
 	connect_signal<event::LEFT_BUTTON_DOUBLE_CLICK>(
 			std::bind(&toggle_panel::signal_handler_left_button_double_click,
 						this,
-						_2,
-						_3));
+						std::placeholders::_2,
+						std::placeholders::_3));
 	connect_signal<event::LEFT_BUTTON_DOUBLE_CLICK>(
 			std::bind(&toggle_panel::signal_handler_left_button_double_click,
 						this,
-						_2,
-						_3),
+						std::placeholders::_2,
+						std::placeholders::_3),
 			event::dispatcher::back_post_child);
 }
 
 unsigned toggle_panel::num_states() const
 {
-	std::div_t res = std::div(this->config()->state.size(), COUNT);
+	std::div_t res = std::div(this->get_config()->state.size(), COUNT);
 	assert(res.rem == 0);
 	assert(res.quot > 0);
 	return res.quot;
 }
 
-void toggle_panel::set_child_members(
-		const std::map<std::string /* widget id */, string_map>& data)
+void toggle_panel::set_child_members(const widget_data& data)
 {
 	for(const auto & item : data)
 	{
@@ -166,7 +166,7 @@ void toggle_panel::set_value(unsigned selected, bool fire_event)
 		return;
 	}
 	state_num_ = selected;
-	set_is_dirty(true);
+	queue_redraw();
 
 	// Check for get_window() is here to prevent the callback from
 	// being called when the initial value is set.
@@ -187,34 +187,30 @@ void toggle_panel::set_state(const state_t state)
 	}
 
 	state_ = state;
-	set_is_dirty(true);
+	queue_redraw();
 
 	const auto conf = cast_config_to<toggle_panel_definition>();
 	assert(conf);
 }
 
-void toggle_panel::impl_draw_background(surface& frame_buffer,
-										 int x_offset,
-										 int y_offset)
+void toggle_panel::impl_draw_background()
 {
 	// We don't have a fore and background and need to draw depending on
 	// our state, like a styled_widget. So we use the styled_widget's drawing method.
-	styled_widget::impl_draw_background(frame_buffer, x_offset, y_offset);
+	styled_widget::impl_draw_background();
 }
 
-void toggle_panel::impl_draw_foreground(surface& frame_buffer,
-										 int x_offset,
-										 int y_offset)
+void toggle_panel::impl_draw_foreground()
 {
 	// We don't have a fore and background and need to draw depending on
 	// our state, like a styled_widget. So we use the styled_widget's drawing method.
-	styled_widget::impl_draw_foreground(frame_buffer, x_offset, y_offset);
+	styled_widget::impl_draw_foreground();
 }
 
 void toggle_panel::signal_handler_mouse_enter(const event::ui_event event,
 											   bool& handled)
 {
-	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	set_state(FOCUSED);
 	handled = true;
@@ -223,7 +219,7 @@ void toggle_panel::signal_handler_mouse_enter(const event::ui_event event,
 void toggle_panel::signal_handler_mouse_leave(const event::ui_event event,
 											   bool& handled)
 {
-	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	set_state(ENABLED);
 	handled = true;
@@ -232,7 +228,7 @@ void toggle_panel::signal_handler_mouse_leave(const event::ui_event event,
 void
 toggle_panel::signal_handler_pre_left_button_click(const event::ui_event event)
 {
-	DBG_GUI_E << get_control_type() << "[" << id() << "]: " << event << ".\n";
+	DBG_GUI_E << get_control_type() << "[" << id() << "]: " << event << ".";
 
 	set_value(1, true);
 
@@ -259,7 +255,7 @@ toggle_panel::signal_handler_pre_left_button_click(const event::ui_event event)
 void toggle_panel::signal_handler_left_button_click(const event::ui_event event,
 													 bool& handled)
 {
-	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	sound::play_UI_sound(settings::sound_toggle_panel_click);
 
@@ -271,7 +267,7 @@ void toggle_panel::signal_handler_left_button_click(const event::ui_event event,
 void toggle_panel::signal_handler_left_button_double_click(
 		const event::ui_event event, bool& handled)
 {
-	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	if(retval_) {
 		window* window = get_window();
@@ -288,60 +284,11 @@ void toggle_panel::signal_handler_left_button_double_click(
 toggle_panel_definition::toggle_panel_definition(const config& cfg)
 	: styled_widget_definition(cfg)
 {
-	DBG_GUI_P << "Parsing toggle panel " << id << '\n';
+	DBG_GUI_P << "Parsing toggle panel " << id;
 
 	load_resolutions<resolution>(cfg);
 }
 
-/*WIKI
- * @page = GUIWidgetDefinitionWML
- * @order = 1_toggle_panel
- *
- * == Toggle panel ==
- *
- * @begin{parent}{name="gui/"}
- * @begin{tag}{name="oggle_panel_definition"}{min=0}{max=-1}{super="generic/widget_definition"}
- * The definition of a toggle panel. A toggle panel is like a toggle button, but
- * instead of being a button it's a panel. This means it can hold multiple child
- * items.
- *
- * @begin{tag}{name="resolution"}{min=0}{max=-1}{super=generic/widget_definition/resolution}
- * The resolution for a toggle panel also contains the following keys:
- * @begin{table}{config}
- *     top_border & unsigned & 0 &     The size which isn't used for the client
- *                                   area. $
- *     bottom_border & unsigned & 0 &  The size which isn't used for the client
- *                                   area. $
- *     left_border & unsigned & 0 &    The size which isn't used for the client
- *                                   area. $
- *     right_border & unsigned & 0 &   The size which isn't used for the client
- *                                   area. $
- * @end{table}
- *
- * The following states exist:
- * * state_enabled, the panel is enabled and not selected.
- * * state_disabled, the panel is disabled and not selected.
- * * state_focused, the mouse is over the panel and not selected.
- *
- * * state_enabled_selected, the panel is enabled and selected.
- * * state_disabled_selected, the panel is disabled and selected.
- * * state_focused_selected, the mouse is over the panel and selected.
- * @begin{tag}{name="state_enabled"}{min=0}{max=1}{super="generic/state"}
- * @end{tag}{name="state_enabled"}
- * @begin{tag}{name="state_disabled"}{min=0}{max=1}{super="generic/state"}
- * @end{tag}{name="state_disabled"}
- * @begin{tag}{name="state_focused"}{min=0}{max=1}{super="generic/state"}
- * @end{tag}{name="state_focused"}
- * @begin{tag}{name="state_enabled_selected"}{min=0}{max=1}{super="generic/state"}
- * @end{tag}{name="state_enabled_selected"}
- * @begin{tag}{name="state_disabled_selected"}{min=0}{max=1}{super="generic/state"}
- * @end{tag}{name="state_disabled_selected"}
- * @begin{tag}{name="state_focused_selected"}{min=0}{max=1}{super="generic/state"}
- * @end{tag}{name="state_focused_selected"}
- * @end{tag}{name="resolution"}
- * @end{tag}{name="oggle_panel_definition"}
- * @end{parent}{name="gui/"}
- */
 toggle_panel_definition::resolution::resolution(const config& cfg)
 	: resolution_definition(cfg)
 	, top_border(cfg["top_border"])
@@ -352,41 +299,13 @@ toggle_panel_definition::resolution::resolution(const config& cfg)
 	// Note the order should be the same as the enum state_t in toggle_panel.hpp.
 	for(const auto& c : cfg.child_range("state"))
 	{
-		state.emplace_back(c.child("enabled"));
-		state.emplace_back(c.child("disabled"));
-		state.emplace_back(c.child("focused"));
+		state.emplace_back(VALIDATE_WML_CHILD(c, "enabled", _("Missing required state for toggle panel")));
+		state.emplace_back(VALIDATE_WML_CHILD(c, "disabled", _("Missing required state for toggle panel")));
+		state.emplace_back(VALIDATE_WML_CHILD(c, "focused", _("Missing required state for toggle panel")));
 	}
 }
 
 // }---------- BUILDER -----------{
-
-/*WIKI
- * @page = GUIWidgetInstanceWML
- * @order = 2_toggle_panel
- * @begin{parent}{name="gui/window/resolution/grid/row/column/"}
- * @begin{tag}{name="toggle_panel"}{min=0}{max=-1}{super="generic/widget_instance"}
- * == Toggle panel ==
- *
- * A toggle panel is an item which can hold other items. The difference between
- * a grid and a panel is that it's possible to define how a panel looks. A grid
- * in an invisible container to just hold the items. The toggle panel is a
- * combination of the panel and a toggle button, it allows a toggle button with
- * its own grid.
- *
- * @begin{table}{config}
- *     grid & grid & &                 Defines the grid with the widgets to
- *                                     place on the panel. $
- *     return_value_id & string & "" & The return value id, see
- *                                     [[GUIToolkitWML#Button]] for more
- *                                     information. $
- *     return_value & int & 0 &        The return value, see
- *                                     [[GUIToolkitWML#Button]] for more
- *                                     information. $
- * @end{table}
- * @allow{link}{name="gui/window/resolution/grid"}
- * @end{tag}{name="toggle_panel"}
- * @end{parent}{name="gui/window/resolution/grid/row/column/"}
- */
 
 namespace implementation
 {
@@ -397,23 +316,23 @@ builder_toggle_panel::builder_toggle_panel(const config& cfg)
 	, retval_id_(cfg["return_value_id"])
 	, retval_(cfg["return_value"])
 {
-	const config& c = cfg.child("grid");
+	auto c = cfg.optional_child("grid");
 
 	VALIDATE(c, _("No grid defined."));
 
-	grid = std::make_shared<builder_grid>(c);
+	grid = std::make_shared<builder_grid>(*c);
 }
 
-widget* builder_toggle_panel::build() const
+std::unique_ptr<widget> builder_toggle_panel::build() const
 {
-	toggle_panel* widget = new toggle_panel(*this);
+	auto widget = std::make_unique<toggle_panel>(*this);
 
 	widget->set_retval(get_retval(retval_id_, retval_, id));
 
 	DBG_GUI_G << "Window builder: placed toggle panel '" << id
-			  << "' with definition '" << definition << "'.\n";
+			  << "' with definition '" << definition << "'.";
 
-	widget->init_grid(grid);
+	widget->init_grid(*grid);
 	return widget;
 }
 

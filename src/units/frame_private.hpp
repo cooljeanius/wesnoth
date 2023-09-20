@@ -1,22 +1,22 @@
 /*
-   Copyright (C) 2006 - 2018 by Jeremy Rosen <jeremy.rosen@enst-bretagne.fr>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2006 - 2023
+	by Jeremy Rosen <jeremy.rosen@enst-bretagne.fr>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
 
 #include "lexical_cast.hpp"
 #include "serialization/string_utils.hpp"
-#include "utils/general.hpp"
 
 #include <vector>
 
@@ -93,7 +93,7 @@ public:
 			try {
 				time = (colon_split.size() > 1) ? std::stoi(colon_split[1]) : time_chunk;
 			} catch(const std::invalid_argument&) {
-				//ERR_NG << "Invalid time in unit animation: " << colon_split[1] << "\n";
+				//ERR_NG << "Invalid time in unit animation: " << colon_split[1];
 			}
 
 			try {
@@ -117,7 +117,7 @@ public:
 
 		int time = 0;
 		unsigned int i = 0;
-		const int searched_time = utils::clamp(current_time, 0, base_duration);
+		const int searched_time = std::clamp(current_time, 0, base_duration);
 
 		while(time < searched_time && i < base_data.size()) {
 			time += base_data[i].second;
@@ -170,7 +170,7 @@ public:
 					try {
 						total_specified_time += std::stoi(second_pass[1]);
 					} catch(const std::invalid_argument&) {
-						//ERR_NG << "Invalid time in unit animation: " << second_pass[1] << "\n";
+						//ERR_NG << "Invalid time in unit animation: " << second_pass[1];
 					}
 				}
 			}
@@ -184,7 +184,7 @@ public:
 				try {
 					base_data.push_back({std::move(second_pass[0]), std::stoi(second_pass[1])});
 				} catch(const std::invalid_argument&) {
-					//ERR_NG << "Invalid time in unit animation: " << second_pass[1] << "\n";
+					//ERR_NG << "Invalid time in unit animation: " << second_pass[1];
 				}
 			} else {
 				base_data.push_back({std::move(second_pass[0]) ,time_chunk});

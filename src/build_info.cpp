@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2015 - 2018 by Iris Morelle <shadowm2006@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2015 - 2023
+	by Iris Morelle <shadowm2006@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #define GETTEXT_DOMAIN "wesnoth-lib"
@@ -21,28 +22,34 @@
 #include "filesystem.hpp"
 #include "formatter.hpp"
 #include "gettext.hpp"
+#include "serialization/string_utils.hpp"
 #include "serialization/unicode.hpp"
 #include "game_version.hpp"
 #include "sound.hpp"
 #include "video.hpp"
 #include "addon/manager.hpp"
+#include "sdl/point.hpp"
 
 #include <algorithm>
 #include <fstream>
 #include <iomanip>
 
+#include "lua/lua.h"
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_mixer.h>
-#include <SDL2/SDL_ttf.h>
 
 #include <boost/algorithm/string.hpp>
+#include <boost/predef.h>
 #include <boost/version.hpp>
 
 #ifndef __APPLE__
 #include <openssl/crypto.h>
 #include <openssl/opensslv.h>
 #endif
+
+#include <curl/curl.h>
 
 #include <pango/pangocairo.h>
 
@@ -67,12 +74,10 @@ struct version_table_manager
 
 const version_table_manager versions;
 
-#if 0
 std::string format_version(unsigned a, unsigned b, unsigned c)
 {
 	return formatter() << a << '.' << b << '.' << c;
 }
-#endif
 
 std::string format_version(const SDL_version& v)
 {
@@ -166,7 +171,6 @@ std::string format_openssl_version(long v)
 	}
 
 	return fmt.str();
-
 }
 
 #endif
@@ -178,7 +182,6 @@ version_table_manager::version_table_manager()
 	, features()
 {
 	SDL_version sdl_version;
-
 
 	//
 	// SDL
@@ -221,26 +224,19 @@ version_table_manager::version_table_manager()
 	names[LIB_SDL_MIXER] = "SDL_mixer";
 
 	//
-	// SDL_ttf
-	//
-
-	SDL_TTF_VERSION(&sdl_version);
-	compiled[LIB_SDL_TTF] = format_version(sdl_version);
-
-	sdl_rt_version = TTF_Linked_Version();
-	if(sdl_rt_version) {
-		linked[LIB_SDL_TTF] = format_version(*sdl_rt_version);
-	}
-
-	names[LIB_SDL_TTF] = "SDL_ttf";
-
-	//
 	// Boost
 	//
 
 	compiled[LIB_BOOST] = BOOST_LIB_VERSION;
 	std::replace(compiled[LIB_BOOST].begin(), compiled[LIB_BOOST].end(), '_', '.');
 	names[LIB_BOOST] = "Boost";
+
+	//
+	// Lua
+	//
+
+	compiled[LIB_LUA] = LUA_VERSION_MAJOR "." LUA_VERSION_MINOR "." LUA_VERSION_RELEASE;
+	names[LIB_LUA] = "Lua";
 
 	//
 	// OpenSSL/libcrypto
@@ -251,6 +247,22 @@ version_table_manager::version_table_manager()
 	linked[LIB_CRYPTO] = format_openssl_version(SSLeay());
 	names[LIB_CRYPTO] = "OpenSSL/libcrypto";
 #endif
+
+	//
+	// libcurl
+	//
+
+	compiled[LIB_CURL] = format_version(
+		(LIBCURL_VERSION_NUM & 0xFF0000) >> 16,
+		(LIBCURL_VERSION_NUM & 0x00FF00) >> 8,
+		LIBCURL_VERSION_NUM & 0x0000FF);
+	curl_version_info_data *curl_ver = curl_version_info(CURLVERSION_NOW);
+	if(curl_ver && curl_ver->version) {
+		linked[LIB_CURL] = curl_ver->version;
+	}
+	// This is likely to upset somebody out there, but the cURL authors
+	// consistently call it 'libcurl' (all lowercase) in all documentation.
+	names[LIB_CURL] = "libcurl";
 
 	//
 	// Cairo
@@ -272,20 +284,8 @@ version_table_manager::version_table_manager()
 	// Features table.
 	//
 
-	features.emplace_back(N_("feature^JPEG screenshots"));
-#ifdef SDL_IMAGE_VERSION_ATLEAST
-#if SDL_IMAGE_VERSION_ATLEAST(2, 0, 2)
-	features.back().enabled = true;
-#endif
-#endif
-
 	features.emplace_back(N_("feature^Lua console completion"));
 #ifdef HAVE_HISTORY
-	features.back().enabled = true;
-#endif
-
-	features.emplace_back(N_("feature^Legacy bidirectional rendering"));
-#ifdef HAVE_FRIBIDI
 	features.back().enabled = true;
 #endif
 
@@ -305,7 +305,7 @@ version_table_manager::version_table_manager()
 #endif
 
 #ifdef __APPLE__
-    // Always compiled in.
+	// Always compiled in.
 	features.emplace_back(N_("feature^Cocoa notifications back end"));
 	features.back().enabled = true;
 #endif /* __APPLE__ */
@@ -315,12 +315,54 @@ const std::string empty_version = "";
 
 } // end anonymous namespace 1
 
-std::vector<optional_feature> optional_features_table()
+std::string build_arch()
+{
+#if BOOST_ARCH_X86_64
+	return "x86_64";
+#elif BOOST_ARCH_X86_32
+	return "x86";
+#elif BOOST_ARCH_ARM && (defined(__arm64) || defined(_M_ARM64))
+	return "arm64";
+#elif BOOST_ARCH_ARM
+	return "arm";
+#elif BOOST_ARCH_IA64
+	return "ia64";
+#elif BOOST_ARCH_PPC
+	return "ppc";
+#elif BOOST_ARCH_ALPHA
+	return "alpha";
+#elif BOOST_ARCH_MIPS
+	return "mips";
+#elif BOOST_ARCH_SPARC
+	return "sparc";
+#else
+	// Congratulations, you're running Wesnoth on an exotic platform -- either that or you live in
+	// the foretold future where x86 and ARM stopped being the dominant CPU architectures for the
+	// general-purpose consumer market. If you want to add label support for your platform, check
+	// out the Boost.Predef library's documentation and alter the code above accordingly.
+	//
+	// On the other hand, if you got here looking for Wesnoth's biggest secret let me just say
+	// right here and now that Irdya is round. There, I said the thing that nobody has dared say
+	// in mainline content before.
+	return _("cpu_architecture^<unknown>");
+#endif
+}
+
+std::vector<optional_feature> optional_features_table(bool localize)
 {
 	std::vector<optional_feature> res = versions.features;
 
 	for(std::size_t k = 0; k < res.size(); ++k) {
-		res[k].name = _(res[k].name.c_str());
+		if(localize) {
+			res[k].name = _(res[k].name.c_str());
+		} else {
+			// Strip annotation carets ("blah blah^actual text here") from translatable
+			// strings.
+			const auto caret_pos = res[k].name.find('^');
+			if(caret_pos != std::string::npos) {
+				res[k].name.erase(0, caret_pos + 1);
+			}
+		}
 	}
 	return res;
 }
@@ -479,9 +521,7 @@ list_formatter optional_features_report_internal(const std::string& heading = ""
 {
 	list_formatter fmt{heading};
 
-	// Yes, it's for stdout/stderr but we still want the localized version so
-	// that the context prefixes are stripped.
-	const std::vector<optional_feature>& features = optional_features_table();
+	const std::vector<optional_feature>& features = optional_features_table(false);
 
 	for(const auto& feature : features) {
 		fmt.insert(feature.name, feature.enabled ? "yes" : "no");
@@ -490,10 +530,16 @@ list_formatter optional_features_report_internal(const std::string& heading = ""
 	return fmt;
 }
 
-template<typename T>
-inline std::string geometry_to_string(T horizontal, T vertical)
+inline std::string geometry_to_string(point p)
 {
-	return std::to_string(horizontal) + 'x' + std::to_string(vertical);
+	return std::to_string(p.x) + 'x' + std::to_string(p.y);
+}
+
+template<typename coordinateType>
+inline std::string geometry_to_string(coordinateType horizontal, coordinateType vertical)
+{
+	// Use a stream in order to control significant digits in non-integers
+	return formatter() << std::fixed << std::setprecision(2) << horizontal << 'x' << vertical;
 }
 
 std::string format_sdl_driver_list(std::vector<std::string> drivers, const std::string& current_driver)
@@ -519,19 +565,14 @@ list_formatter video_settings_report_internal(const std::string& heading = "")
 {
 	list_formatter fmt{heading};
 
-	if(!CVideo::setup_completed()) {
-		fmt.set_placeholder("Graphics not initialized.");
-		return fmt;
-	}
-
-	CVideo& video = CVideo::get_singleton();
-
 	std::string placeholder;
 
-	if(video.non_interactive()) {
+	if(video::headless()) {
 		placeholder = "Running in non-interactive mode.";
-	} else if(!video.has_window()) {
-		placeholder = "Running without a game window.";
+	}
+
+	if(!video::has_window()) {
+		placeholder = "Video not initialized yet.";
 	}
 
 	if(!placeholder.empty()) {
@@ -539,25 +580,28 @@ list_formatter video_settings_report_internal(const std::string& heading = "")
 		return fmt;
 	}
 
-	const auto& current_driver = CVideo::current_driver();
-	auto drivers = CVideo::enumerate_drivers();
+	const auto& current_driver = video::current_driver();
+	auto drivers = video::enumerate_drivers();
 
-	const auto& dpi = video.get_dpi();
-	const auto& scale = video.get_dpi_scale_factor();
-	std::string dpi_report, scale_report;
+	const auto& dpi = video::get_dpi();
+	std::string dpi_report;
 
-	if(dpi.first == 0.0f || dpi.second == 0.0f) {
-		scale_report = dpi_report = "<unknown>";
-	} else {
-		dpi_report = geometry_to_string(dpi.first, dpi.second);
-		scale_report = geometry_to_string(scale.first, scale.second);
-	}
+	dpi_report = dpi.first == 0.0f || dpi.second == 0.0f ?
+				 "<unknown>" :
+				 geometry_to_string(dpi.first, dpi.second);
 
 	fmt.insert("SDL video drivers", format_sdl_driver_list(drivers, current_driver));
-	fmt.insert("Window size", geometry_to_string(video.get_width(), video.get_height()));
-	fmt.insert("Screen refresh rate", std::to_string(video.current_refresh_rate()));
-	fmt.insert("Screen dots per inch", dpi_report);
-	fmt.insert("Screen dpi scale factor", scale_report);
+	fmt.insert("Window size", geometry_to_string(video::current_resolution()));
+	fmt.insert("Game canvas size", geometry_to_string(video::game_canvas_size()));
+	fmt.insert("Final render target size", geometry_to_string(video::output_size()));
+	fmt.insert("Screen refresh rate", std::to_string(video::current_refresh_rate()));
+	fmt.insert("Screen dpi", dpi_report);
+
+	const auto& renderer_report = video::renderer_report();
+
+	for(const auto& info : renderer_report) {
+		fmt.insert(info.first, info.second);
+	}
 
 	return fmt;
 }
@@ -628,6 +672,7 @@ std::string full_build_report()
 		{"Saves dir",       filesystem::get_saves_dir()},
 		{"Add-ons dir",     filesystem::get_addons_dir()},
 		{"Cache dir",       filesystem::get_cache_dir()},
+		{"Logs dir",        filesystem::get_logs_dir()},
 	};
 
 	// Obfuscate usernames in paths
@@ -643,7 +688,7 @@ std::string full_build_report()
 
 	std::ostringstream o;
 
-	o << "The Battle for Wesnoth version " << game_config::revision << '\n'
+	o << "The Battle for Wesnoth version " << game_config::revision << " " << build_arch() << '\n'
 	  << "Running on " << desktop::os_version() << '\n'
 	  << "Distribution channel: " << dist_channel_id() << '\n'
 	  << '\n'

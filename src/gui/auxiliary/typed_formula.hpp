@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2008 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -25,6 +26,7 @@
 #include "tstring.hpp"
 
 #include <cassert>
+#include <optional>
 
 namespace gui2
 {
@@ -93,7 +95,7 @@ public:
 	/** Determine whether the class contains a formula. */
 	bool has_formula() const
 	{
-		return !formula_.empty();
+		return formula_.has_value();
 	}
 
 private:
@@ -123,9 +125,9 @@ private:
 	/**
 	 * Contains the formula for the variable.
 	 *
-	 * If the string is empty, there's no formula.
+	 * If without value, there's no formula.
 	 */
-	std::string formula_;
+	std::optional<std::string> formula_;
 
 	/** If there's no formula it contains the value. */
 	T value_;
@@ -154,10 +156,10 @@ operator()(const wfl::map_formula_callable& variables, wfl::function_symbol_tabl
 		return value_;
 	}
 
-	wfl::variant v = wfl::formula(formula_, functions).evaluate(variables);
+	wfl::variant v = wfl::formula(*formula_, functions).evaluate(variables);
 	const T& result = execute(v);
 
-	LOG_GUI_D << "Formula: execute '" << formula_ << "' result '" << result << "'.\n";
+	DBG_GUI_D << "Formula: execute '" << *formula_ << "' result '" << result << "'.";
 
 	return result;
 }

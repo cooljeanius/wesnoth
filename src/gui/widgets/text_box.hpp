@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2008 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -117,7 +118,26 @@ private:
 	bool enabled_;
 };
 
-/** Class for a single line text area. */
+/**
+ * @ingroup GUIWidgetWML
+ *
+ * Class for a single line text area.
+ *
+ * The resolution for a text box also contains the following keys:
+ * Key          |Type                                    |Default  |Description
+ * -------------|----------------------------------------|---------|-----------
+ * text_x_offset| @ref guivartype_f_unsigned "f_unsigned"|""       |The x offset of the text in the text box. This is needed for the code to determine where in the text the mouse clicks, so it can set the cursor properly.
+ * text_y_offset| @ref guivartype_f_unsigned "f_unsigned"|""       |The y offset of the text in the text box.
+ * The following states exist:
+ * * state_enabled - the text box is enabled.
+ * * state_disabled - the text box is disabled.
+ * * state_focussed - the text box has the focus of the keyboard.
+ * The following variables exist:
+ * Key          |Type                                |Default  |Description
+ * -------------|------------------------------------|---------|-----------
+ * label        | @ref guivartype_t_string "t_string"|""       |The initial text of the text box.
+ * history      | @ref guivartype_string "string"    |""       |The name of the history for the text box. A history saves the data entered in a text box between the games. With the up and down arrow it can be accessed. To create a new history item just add a new unique name for this field and the engine will handle the rest.
+ */
 class text_box : public text_box_base
 {
 	friend struct implementation::builder_text_box;
@@ -323,7 +343,7 @@ public:
 
 	using builder_styled_widget::build;
 
-	widget* build() const;
+	virtual std::unique_ptr<widget> build() const override;
 
 	std::string history;
 

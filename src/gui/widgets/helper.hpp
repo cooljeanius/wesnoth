@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2008 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -21,6 +22,7 @@
 
 #include <cstdint>
 #include <string>
+#include <string_view>
 
 struct SDL_Rect;
 struct point;
@@ -34,21 +36,9 @@ class map_formula_callable;
 namespace gui2
 {
 /**
- * Creates a rectangle.
- *
- * @param origin                  The top left corner.
- * @param size                    The width (x) and height (y).
- *
- * @returns                       SDL_Rect with the proper rectangle.
- */
-SDL_Rect create_rect(const point& origin, const point& size);
-
-/**
  * Converts a color string to a color.
  *
- * @param color                   A color string see
- *                                https://www.wesnoth.org/wiki/GUIVariable for
- *                                more info.
+ * @param color                   A color string see @ref GUIWidgetWML for more info.
  *
  * @returns                       The color.
  */
@@ -57,9 +47,7 @@ color_t decode_color(const std::string& color);
 /**
  * Converts a text alignment string to a text alignment.
  *
- * @param alignment               An alignment string see
- *                                https://www.wesnoth.org/wiki/GUIVariable for
- *                                more info.
+ * @param alignment               An alignment string see @ref GUIWidgetWML for more info.
  *
  * @returns                       The text alignment.
  */
@@ -70,18 +58,14 @@ PangoAlignment decode_text_alignment(const std::string& alignment);
  *
  * @param alignment               An alignment.
  *
- * @returns                       An alignment string see
- *                                https://www.wesnoth.org/wiki/GUIVariable for
- *                                more info.
+ * @returns                       An alignment string see @ref GUIWidgetWML for more info.
  */
 std::string encode_text_alignment(const PangoAlignment alignment);
 
 /**
  * Converts a font style string to a font style.
  *
- * @param style                   A font style string see
- *                                https://www.wesnoth.org/wiki/GUIVariable for
- *                                more info.
+ * @param style                   A font style string see @ref GUIWidgetWML for more info.
  *
  * @returns                       The font style.
  */
@@ -129,6 +113,6 @@ point get_mouse_position();
  *
  * @returns                       The truncated text.
  */
-std::string debug_truncate(const std::string& text);
+std::string_view debug_truncate(std::string_view text);
 
 } // namespace gui2

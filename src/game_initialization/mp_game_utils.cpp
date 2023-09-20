@@ -1,16 +1,18 @@
 /*
-   Copyright (C) 2013 - 2018 by Andrius Silinskas <silinskas.andrius@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2013 - 2023
+	by Andrius Silinskas <silinskas.andrius@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
+
 #include "game_initialization/mp_game_utils.hpp"
 
 #include "config.hpp"
@@ -19,8 +21,6 @@
 #include "gettext.hpp"
 #include "log.hpp"
 #include "saved_game.hpp"
-#include "game_version.hpp"
-#include "wesnothd_connection_error.hpp"
 
 static lg::log_domain log_engine("engine");
 #define LOG_NG LOG_STREAM(info, log_engine)
@@ -47,7 +47,6 @@ static void add_multiplayer_classification(config& multiplayer, saved_game& stat
 	multiplayer["mp_campaign_name"] = state.classification().campaign_name;
 	multiplayer["mp_era"] = state.classification().era_id;
 	multiplayer["active_mods"] = utils::join(state.classification().active_mods, ",");
-	
 }
 
 config initial_level_config(saved_game& state)
@@ -66,7 +65,7 @@ config initial_level_config(saved_game& state)
 	}
 
 	config& scenario = state.get_starting_point();
-	if(state.mp_settings().saved_game == mp_game_settings::SAVED_GAME_MODE::NONE) {
+	if(state.mp_settings().saved_game == saved_game_mode::type::no) {
 		state.set_random_seed();
 	}
 
@@ -97,31 +96,31 @@ config initial_level_config(saved_game& state)
 	 */
 
 	const game_config_view& game_config = game_config_manager::get()->game_config();
-	const config& era_cfg = game_config.find_child("era", "id", era);
+	auto era_cfg = game_config.find_child("era", "id", era);
 
 	if(!era_cfg) {
-		if(params.saved_game == mp_game_settings::SAVED_GAME_MODE::NONE) {
-			throw config::error(VGETTEXT("Cannot find era $era", {{"era", era}}));
+		if(params.saved_game == saved_game_mode::type::no) {
+			throw config::error(VGETTEXT("Cannot find era '$era'", {{"era", era}}));
 		}
 
 		// FIXME: @todo We should tell user about missing era but still load game...
-		WRN_CF << "Missing era in MP load game " << era << std::endl;
+		WRN_CF << "Missing era in MP load game '" << era << "'";
 
 	} else {
-		level.add_child("era", era_cfg);
+		level.add_child("era", *era_cfg);
 
 		// Initialize the list of sides available for the current era.
 		// We also need this so not to get a segfault in mp_staging for ai configuration.
-		const config& custom_side = game_config.find_child("multiplayer_side", "id", "Custom");
-		level.child("era").add_child_at("multiplayer_side", custom_side, 0);
+		const config& custom_side = game_config.find_mandatory_child("multiplayer_side", "id", "Custom");
+		level.mandatory_child("era").add_child_at("multiplayer_side", custom_side, 0);
 	}
 
 	// Add modifications, needed for ai algorithms which are applied in mp_staging.
 	const std::vector<std::string>& mods = state.classification().active_mods;
 
 	for(unsigned i = 0; i < mods.size(); ++i) {
-		if(const config& mod_cfg = game_config.find_child("modification", "id", mods[i])) {
-			level.add_child("modification", mod_cfg);
+		if(auto mod_cfg = game_config.find_child("modification", "id", mods[i])) {
+			level.add_child("modification", *mod_cfg);
 		}
 	}
 
@@ -132,20 +131,9 @@ config initial_level_config(saved_game& state)
 
 void level_to_gamestate(const config& level, saved_game& state)
 {
-	game_classification::CAMPAIGN_TYPE type = state.classification().campaign_type;
+	campaign_type::type type = state.classification().type;
 	state = saved_game(level);
-	state.classification().campaign_type = type;
-}
-
-void check_response(bool res, const config& data)
-{
-	if(!res) {
-		throw wesnothd_error(_("Connection timed out"));
-	}
-
-	if(const config& err = data.child("error")) {
-		throw wesnothd_error(err["message"]);
-	}
+	state.classification().type = type;
 }
 
 } // end namespace mp

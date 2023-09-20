@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2012 - 2018 by Iris Morelle <shadowm2006@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2012 - 2023
+	by Iris Morelle <shadowm2006@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #include "addon/info.hpp"
@@ -18,7 +19,6 @@
 #include "config.hpp"
 #include "font/pango/escape.hpp"
 #include "gettext.hpp"
-#include "language.hpp"
 #include "picture.hpp"
 #include "log.hpp"
 #include "serialization/string_utils.hpp"
@@ -32,7 +32,7 @@ namespace {
 	{
 		addons_list::const_iterator it = addons.find(base_id);
 		if(it == addons.end()) {
-			LOG_AC << "resolve_deps_recursive(): " << base_id << " not in add-ons list\n";
+			LOG_AC << "resolve_deps_recursive(): " << base_id << " not in add-ons list";
 			return;
 		}
 
@@ -44,10 +44,10 @@ namespace {
 
 		for(const std::string& dep : base_deps) {
 			if(base_id == dep) {
-				LOG_AC << dep << " depends upon itself; breaking circular dependency\n";
+				LOG_AC << dep << " depends upon itself; breaking circular dependency";
 				continue;
 			} else if(dest.find(dep) != dest.end()) {
-				LOG_AC << dep << " already in dependency tree; breaking circular dependency\n";
+				LOG_AC << dep << " already in dependency tree; breaking circular dependency";
 				continue;
 			}
 
@@ -60,94 +60,104 @@ namespace {
 
 void addon_info_translation::read(const config& cfg)
 {
-	this->supported = cfg["supported"].to_bool(true);
-	this->title = cfg["title"].str();
-	this->description = cfg["description"].str();
+	supported = cfg["supported"].to_bool(true);
+	title = cfg["title"].str();
+	description = cfg["description"].str();
 }
 
 void addon_info_translation::write(config& cfg) const
 {
-	cfg["supported"] = this->supported;
-	cfg["title"] = this->title;
-	cfg["description"] = this->description;
+	cfg["supported"] = supported;
+	cfg["title"] = title;
+	cfg["description"] = description;
 }
 
 void addon_info::read(const config& cfg)
 {
-	this->id = cfg["name"].str();
-	this->title = cfg["title"].str();
-	this->description = cfg["description"].str();
-	this->icon = cfg["icon"].str();
-	this->version = cfg["version"].str();
-	this->author = cfg["author"].str();
-	this->size = cfg["size"];
-	this->downloads = cfg["downloads"];
-	this->uploads = cfg["uploads"];
-	this->type = get_addon_type(cfg["type"].str());
+	id = cfg["name"].str();
+	title = cfg["title"].str();
+	description = cfg["description"].str();
+	icon = cfg["icon"].str();
+	current_version = cfg["version"].str();
+	versions.emplace(cfg["version"].str());
+	author = cfg["author"].str();
+	size = cfg["size"];
+	downloads = cfg["downloads"];
+	uploads = cfg["uploads"];
+	type = get_addon_type(cfg["type"].str());
+
+	for(const config& version : cfg.child_range("version")) {
+		versions.emplace(version["version"].str());
+	}
 
 	const config::const_child_itors& locales_as_configs = cfg.child_range("translation");
 
 	for(const config& locale : locales_as_configs) {
 		if(locale["supported"].to_bool(true))
-			this->locales.emplace_back(locale["language"].str());
-		this->info_translations.emplace(locale["language"].str(), addon_info_translation(locale));
+			locales.emplace_back(locale["language"].str());
+		info_translations.emplace(locale["language"].str(), addon_info_translation(locale));
 	}
 
-	this->core = cfg["core"].str();
-	this->depends = utils::split(cfg["dependencies"].str());
-	this->tags = utils::split(cfg["tags"].str());
-	this->feedback_url = cfg["feedback_url"].str();
+	core = cfg["core"].str();
+	depends = utils::split(cfg["dependencies"].str());
+	tags = utils::split(cfg["tags"].str());
+	feedback_url = cfg["feedback_url"].str();
 
-	this->updated = cfg["timestamp"].to_time_t();
-	this->created = cfg["original_timestamp"].to_time_t();
+	updated = cfg["timestamp"].to_time_t();
+	created = cfg["original_timestamp"].to_time_t();
 
-	this->local_only = cfg["local_only"].to_bool();
+	local_only = cfg["local_only"].to_bool();
 }
 
 void addon_info::write(config& cfg) const
 {
-	cfg["id"] = this->id;
-	cfg["title"] = this->title;
-	cfg["description"] = this->description;
-	cfg["icon"] = this->icon;
-	cfg["version"] = this->version.str();
-	cfg["author"] = this->author;
-	cfg["size"] = this->size;
-	cfg["downloads"] = this->downloads;
-	cfg["uploads"] = this->uploads;
-	cfg["type"] = get_addon_type_string(this->type);
+	cfg["id"] = id;
+	cfg["title"] = title;
+	cfg["description"] = description;
+	cfg["icon"] = icon;
+	cfg["version"] = current_version.str();
+	cfg["author"] = author;
+	cfg["size"] = size;
+	cfg["downloads"] = downloads;
+	cfg["uploads"] = uploads;
+	cfg["type"] = get_addon_type_string(type);
 
-	for(const auto& element : this->info_translations) {
+	for(const version_info& version : versions) {
+		config& version_cfg = cfg.add_child("version");
+		version_cfg["version"] = version.str();
+	}
+
+	for(const auto& element : info_translations) {
 		config& locale = cfg.add_child("translation");
 		locale["language"] = element.first;
 		element.second.write(locale);
 	}
 
-	cfg["core"] = this->core;
-	cfg["dependencies"] = utils::join(this->depends);
-	cfg["tags"] = utils::join(this->tags);
-	cfg["feedback_url"] = this->feedback_url;
+	cfg["core"] = core;
+	cfg["dependencies"] = utils::join(depends);
+	cfg["tags"] = utils::join(tags);
+	cfg["feedback_url"] = feedback_url;
 
-	cfg["timestamp"] = this->updated;
-	cfg["original_timestamp"] = this->created;
+	cfg["timestamp"] = updated;
+	cfg["original_timestamp"] = created;
 }
 
 void addon_info::write_minimal(config& cfg) const
 {
-	cfg["version"] = this->version.str();
-	cfg["uploads"] = this->uploads;
-	cfg["type"] = get_addon_type_string(this->type);
-	cfg["title"] = this->title;
-	cfg["dependencies"] = utils::join(this->depends);
-	cfg["core"] = this->core;
+	cfg["version"] = current_version.str();
+	cfg["uploads"] = uploads;
+	cfg["type"] = get_addon_type_string(type);
+	cfg["title"] = title;
+	cfg["dependencies"] = utils::join(depends);
+	cfg["core"] = core;
 }
 
 std::string addon_info::display_title() const
 {
-	if(this->title.empty()) {
-		return font::escape_text(make_addon_title(this->id));
+	if(title.empty()) {
+		return font::escape_text(make_addon_title(id));
 	} else {
-		return font::escape_text(this->title);
+		return font::escape_text(title);
 	}
 }
 
@@ -155,18 +165,29 @@ addon_info_translation addon_info_translation::invalid = {false, "", ""};
 
 addon_info_translation addon_info::translated_info() const
 {
-	std::string locale = get_language().localename;
+	const boost::locale::info& locale_info = translation::get_effective_locale_info();
 
-	if(locale != "en_US") {
-		auto info = info_translations.find(locale);
-		if(info != info_translations.end()) {
-			return info->second;
-		}
+	std::string lang_name_short = locale_info.language();
+	std::string lang_name_long = lang_name_short;
+	if(!locale_info.country().empty()) {
+		lang_name_long += '_';
+		lang_name_long += locale_info.country();
+	}
+	if(!locale_info.variant().empty()) {
+		lang_name_long += '@';
+		lang_name_long += locale_info.variant();
+		lang_name_short += '@';
+		lang_name_short += locale_info.variant();
+	}
 
-		info = info_translations.find(locale.substr(0, 2));
-		if(info != info_translations.end()) {
-			return info->second;
-		}
+	auto info = info_translations.find(lang_name_long);
+	if(info != info_translations.end()) {
+		return info->second;
+	}
+
+	info = info_translations.find(lang_name_short);
+	if(info != info_translations.end()) {
+		return info->second;
 	}
 
 	return addon_info_translation::invalid;
@@ -174,7 +195,7 @@ addon_info_translation addon_info::translated_info() const
 
 std::string addon_info::display_title_translated() const
 {
-	addon_info_translation info = this->translated_info();
+	addon_info_translation info = translated_info();
 
 	if(info.valid()) {
 		return info.title;
@@ -191,13 +212,13 @@ std::string addon_info::display_title_translated_or_original() const
 
 std::string addon_info::description_translated() const
 {
-	addon_info_translation info = this->translated_info();
+	addon_info_translation info = translated_info();
 
 	if(info.valid() && !info.description.empty()) {
 		return info.description;
 	}
 
-	return this->description;
+	return description;
 }
 
 std::string addon_info::display_title_full() const
@@ -213,12 +234,12 @@ std::string addon_info::display_icon() const
 	std::string ret = icon;
 
 	if(ret.empty()) {
-		ERR_AC << "add-on '" << id << "' doesn't have an icon path set" << std::endl;
-	} else if(!image::exists(ret)) {
-		ERR_AC << "add-on '" << id << "' has an icon which cannot be found: '" << ret << "'" << std::endl;
+		ERR_AC << "add-on '" << id << "' doesn't have an icon path set";
+	} else if(!image::exists(image::locator{ret})) {
+		ERR_AC << "add-on '" << id << "' has an icon which cannot be found: '" << ret << "'";
 	} else if(ret.find("units/") != std::string::npos && ret.find_first_of('~') == std::string::npos) {
 		// HACK: prevent magenta icons, because they look awful
-		LOG_AC << "add-on '" << id << "' uses a unit baseframe as icon without TC/RC specifications\n";
+		LOG_AC << "add-on '" << id << "' uses a unit baseframe as icon without TC/RC specifications";
 		ret += "~RC(magenta>red)";
 	}
 
@@ -260,11 +281,11 @@ std::string addon_info::display_type() const
 std::set<std::string> addon_info::resolve_dependencies(const addons_list& addons) const
 {
 	std::set<std::string> deps;
-	resolve_deps_recursive(addons, this->id, deps);
+	resolve_deps_recursive(addons, id, deps);
 
-	if(deps.find(this->id) != deps.end()) {
-		LOG_AC << this->id << " depends upon itself; breaking circular dependency\n";
-		deps.erase(this->id);
+	if(deps.find(id) != deps.end()) {
+		LOG_AC << id << " depends upon itself; breaking circular dependency";
+		deps.erase(id);
 	}
 
 	return deps;
@@ -280,7 +301,7 @@ void read_addons_list(const config& cfg, addons_list& dest)
 	for(const config& addon_cfg : addon_cfgs) {
 		const std::string& id = addon_cfg["name"].str();
 		if(dest.find(id) != dest.end()) {
-			ERR_AC << "add-ons list has multiple entries for '" << id << "', not good; ignoring them" << std::endl;
+			ERR_AC << "add-ons list has multiple entries for '" << id << "', not good; ignoring them";
 			continue;
 		}
 		dest[id].read(addon_cfg);

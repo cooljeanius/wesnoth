@@ -1,4 +1,3 @@
-local helper = wesnoth.require "helper"
 
 function wesnoth.wml_actions.set_variable(cfg, variables)
 	local name = cfg.name or wml.error "trying to set a variable with an empty name"
@@ -52,6 +51,16 @@ function wesnoth.wml_actions.set_variable(cfg, variables)
 		variables[name] = math.abs(tonumber(variables[name]) or 0)
 	end
 
+	if cfg.reverse then
+		if type(variables[name]) == 'string' then
+			variables[name] = string.reverse(variables[name])
+		elseif type(variables[name]) == 'number' or getmetatable(variables[name]) == 'translatable string' then
+			variables[name] = string.reverse(tostring(variables[name]))
+		else
+			wml.error(string.format('Cannot reverse value %s', tostring(variables[name])))
+		end
+	end
+
 	if cfg.root then
 		local root = tonumber(cfg.root)
 		local root_fcn
@@ -96,7 +105,7 @@ function wesnoth.wml_actions.set_variable(cfg, variables)
 		else
 			local decimals = math.modf(tonumber(round_val) or 0)
 			local value = var * (10 ^ decimals)
-			value = helper.round(value)
+			value = mathx.round(value)
 			value = value * (10 ^ -decimals)
 			variables[name] = value
 		end
@@ -115,18 +124,36 @@ function wesnoth.wml_actions.set_variable(cfg, variables)
 		variables[name] = fvalue
 	end
 
+	-- similarly, min and max operate on the list assigned to the variable
+	-- and do not consider value already contained in the variable
+	if cfg.min then
+		local values = cfg.min:split()
+		for i = 1, #values do
+			values[i] = tonumber(values[i])
+		end
+		variables[name] = math.min(table.unpack(values))
+	end
+
+	if cfg.max then
+		local values = cfg.max:split()
+		for i = 1, #values do
+			values[i] = tonumber(values[i])
+		end
+		variables[name] = math.max(table.unpack(values))
+	end
+
 	if cfg.string_length ~= nil then
 		variables[name] = string.len(tostring(cfg.string_length))
 	end
 
 	if cfg.time then
 		if cfg.time == "stamp" then
-			variables[name] = wesnoth.get_time_stamp()
+			variables[name] = wesnoth.ms_since_init()
 		end
 	end
 
 	if cfg.rand then
-		variables[name] = helper.rand(tostring(cfg.rand))
+		variables[name] = mathx.random_choice(tostring(cfg.rand))
 	end
 
 	if cfg.formula then
@@ -148,7 +175,16 @@ function wesnoth.wml_actions.set_variable(cfg, variables)
 				if #string_to_join > 0 then
 					string_to_join = string_to_join .. separator
 				end
-				string_to_join = string_to_join .. element[key_name]
+				local elem = element[key_name]
+				if type(elem) == 'boolean' then
+					-- Use yes/no instead of true/false for booleans
+					elem = elem and 'yes' or 'no'
+				elseif getmetatable(elem) ~= 'translatable string' then
+					-- Not entirely sure if this branch is necessary, since it probably only triggers for numbers
+					-- It certainly can't hurt, though.
+					elem = tostring(elem)
+				end
+				string_to_join = string_to_join .. elem
 			end
 		end
 

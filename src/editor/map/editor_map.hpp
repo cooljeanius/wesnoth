@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2008 - 2018 by Tomasz Sniatowski <kailoran@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by Tomasz Sniatowski <kailoran@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -69,27 +70,26 @@ editor_map_load_exception wrap_exc(const char* type, const std::string& e_msg, c
 class editor_map : public gamemap
 {
 public:
-
 	/**
 	 * Empty map constructor
 	 */
-	explicit editor_map(const game_config_view& terrain_cfg);
+	editor_map();
 
 	/**
 	 * Create an editor map from a map data string
 	 */
-	editor_map(const game_config_view& terrain_cfg, const std::string& data);
+	editor_map(const std::string& data);
 
 	/**
 	 * Wrapper around editor_map(cfg, data) that catches possible exceptions
 	 * and wraps them in a editor_map_load_exception
 	 */
-	static editor_map from_string(const game_config_view& terrain_cfg, const std::string& data);
+	static editor_map from_string(const std::string& data);
 
 	/**
 	 * Create an editor map with the given dimensions and filler terrain
 	 */
-	editor_map(const game_config_view& terrain_cfg, std::size_t width, std::size_t height, const t_translation::terrain_code & filler);
+	editor_map(std::size_t width, std::size_t height, const t_translation::terrain_code & filler);
 
 	/**
 	 * Create an editor_map by upgrading an existing gamemap. The map data is

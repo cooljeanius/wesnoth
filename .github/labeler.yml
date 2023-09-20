@@ -1,8 +1,24 @@
+Achievements:
+  - src/achievements.hpp
+  - src/achievements.cpp
+  - src/gui/dialogs/achievements_dialog.hpp
+  - src/gui/dialogs/achievements_dialog.cpp
+  - data/achievements.cfg
+  - data/campaigns/*/achievements.cfg
+
+Add-ons:
+  - src/server/campaignd/**
+  - src/server/common/**
+  - src/addon/**
+  - src/gui/dialogs/addon/**
+
 AI:
   - data/ai/**/*
+  - data/campaigns/*/ai/**
   - src/ai/**/*
 
 Audio:
+  - data/campaigns/*/sounds/**
   - data/core/music/*
   - data/core/sounds/**/*
   - sounds/*
@@ -40,6 +56,7 @@ Editor:
 
 Graphics:
   - images/**/*
+  - data/campaigns/*/images/**
   - data/core/images/**/*
 
 Help:
@@ -61,6 +78,8 @@ macOS:
 
 MP:
   - data/multiplayer/**/*
+  - src/server/wesnothd/**
+  - src/server/common/**
 
 Packaging:
   - packaging/**/*
@@ -77,16 +96,17 @@ SCons:
   - src/SConstruct
 
 Services:
-  - src/campaign_server/*
-  - src/server/*
-  - utils/mp-server/*
+  - utils/mp-server/**
 
 Terrain:
   - src/terrain/**/*
+  - data/campaigns/*/images/terrain/**
+  - data/campaigns/**/terrain.cfg
+  - data/campaigns/**/terrain_graphics.cfg
+  - data/core/images/terrain/**
   - data/core/terrain.cfg
   - data/core/terrain-graphics.cfg
-  - data/core/terrain_graphics/*
-  - data/images/terrain/**/*
+  - data/core/terrain-graphics/**
 
 Translations:
   - po/**/*
@@ -106,8 +126,13 @@ Unit Tests:
 
 Units:
   - src/units/**/*
+  - data/campaigns/*/units/**
   - data/core/units/**/*
   - data/core/images/units/**/*
 
 WML Tools:
   - data/tools/**/*
+
+WFL:
+  - src/formula/**
+  - src/ai/formula/**

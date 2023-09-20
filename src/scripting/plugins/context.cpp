@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2014 - 2018 by Chris Beck <render787@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2014 - 2023
+	by Chris Beck <render787@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #include "scripting/plugins/context.hpp"
@@ -18,7 +19,7 @@
 
 #include <cassert>
 #include <utility>
-#include "utils/functional.hpp"
+#include <functional>
 
 plugins_context::plugins_context(const std::string & name)
 	: callbacks_()
@@ -26,7 +27,7 @@ plugins_context::plugins_context(const std::string & name)
 	, name_(name)
 {}
 
-plugins_context::plugins_context(const std::string& name, const std::vector<Reg>& l, const std::vector<aReg>& r)
+plugins_context::plugins_context(const std::string& name, const reg_vec& l, const areg_vec& r)
 	: callbacks_()
 	, accessors_()
 	, name_(name)
@@ -34,7 +35,7 @@ plugins_context::plugins_context(const std::string& name, const std::vector<Reg>
 	initialize(l, r);
 }
 
-void plugins_context::initialize(const std::vector<Reg>& callbacks, const std::vector<aReg>& accessors)
+void plugins_context::initialize(const reg_vec& callbacks, const areg_vec& accessors)
 {
 	for (const Reg& l : callbacks) {  /* fill the table with given functions */
 		if (l.name != nullptr) {

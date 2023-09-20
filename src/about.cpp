@@ -1,23 +1,25 @@
 /*
-   Copyright (C) 2003 - 2018 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2003 - 2023
+	by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #include "about.hpp"
 
 #include "config.hpp"
+#include "font/pango/escape.hpp"
+#include "game_config_view.hpp"
 #include "gettext.hpp"
 #include "serialization/string_utils.hpp"
-#include "game_config_view.hpp"
 
 #include <map>
 
@@ -29,6 +31,7 @@ namespace about
 {
 namespace
 {
+
 credits_data parsed_credits_data;
 std::map<std::string, std::vector<std::string>> images_campaigns;
 std::vector<std::string> images_general;
@@ -36,12 +39,10 @@ std::vector<std::string> images_general;
 void gather_images(const config& from, std::vector<std::string>& to)
 {
 	const auto& im = utils::parenthetical_split(from["images"], ',');
-	if(!im.empty()) {
-		to.insert(to.end(), im.begin(), im.end());
-	}
+	to.insert(to.end(), im.begin(), im.end());
 }
 
-} // end anon namespace
+} // namespace
 
 credits_group::credits_group(const config& cfg, bool is_campaign_credits)
 	: sections()
@@ -81,7 +82,7 @@ credits_group::about_group::about_group(const config& cfg)
 	names.reserve(cfg.child_count("entry"));
 
 	for(const config& entry : cfg.child_range("entry")) {
-		names.push_back(entry["name"].str());
+		names.emplace_back(font::escape_text(entry["name"].str()), font::escape_text(entry["comment"].str()));
 	}
 }
 
@@ -95,10 +96,21 @@ const credits_data& get_credits_data()
 	return parsed_credits_data;
 }
 
+std::optional<credits_data::const_iterator> get_campaign_credits(const std::string& campaign)
+{
+	const auto res = std::find_if(parsed_credits_data.begin(), parsed_credits_data.end(),
+		[&campaign](const credits_group& group) { return group.id == campaign; });
+	return res != parsed_credits_data.end() ? std::make_optional(res) : std::nullopt;
+}
+
 std::vector<std::string> get_background_images(const std::string& campaign)
 {
-	if(!campaign.empty() && !images_campaigns[campaign].empty()){
-		return images_campaigns[campaign];
+	if(campaign.empty()) {
+		return images_general;
+	}
+
+	if(const auto it = images_campaigns.find(campaign); it != images_campaigns.cend()) {
+		return it->second;
 	}
 
 	return images_general;

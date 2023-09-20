@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2012 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2012 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -18,7 +19,7 @@
 #include "gui/core/window_builder.hpp"
 #include "gui/core/placer.hpp"
 
-#include "utils/functional.hpp"
+#include <functional>
 
 #include <list>
 
@@ -34,6 +35,11 @@ struct builder_pane;
 
 class grid;
 
+/**
+ * @ingroup GUIWidgetWML
+ *
+ * A pane is a container where new members can be added and removed during run-time.
+ */
 class pane : public widget
 {
 	friend struct pane_implementation;
@@ -41,30 +47,25 @@ class pane : public widget
 public:
 	struct item
 	{
+		item(item&&) = default;
 
 		unsigned id;
 		std::map<std::string, std::string> tags;
 
-		grid* item_grid;
+		std::unique_ptr<grid> item_grid;
 	};
 
 	typedef std::function<bool(const item&, const item&)> compare_functor_t;
 
 	typedef std::function<bool(const item&)> filter_functor_t;
 
-	/** @deprecated Use the second overload. */
-	explicit pane(const builder_grid_ptr item_builder);
-
-private:
-	explicit pane(const implementation::builder_pane& builder);
-
 public:
-	static pane* build(const implementation::builder_pane& builder);
+	explicit pane(const implementation::builder_pane& builder);
 
 	/**
 	 * Creates a new item.
 	 */
-	unsigned create_item(const std::map<std::string, string_map>& item_data,
+	unsigned create_item(const widget_data& item_data,
 						 const std::map<std::string, std::string>& tags);
 
 	/** See @ref widget::place. */
@@ -74,14 +75,7 @@ public:
 	virtual void layout_initialize(const bool full_initialization) override;
 
 	/** See @ref widget::impl_draw_children. */
-	virtual void impl_draw_children(surface& frame_buffer,
-									int x_offset,
-									int y_offset) override;
-
-	/** See @ref widget::child_populate_dirty_list. */
-	virtual void
-	child_populate_dirty_list(window& caller,
-							  const std::vector<widget*>& call_stack) override;
+	virtual void impl_draw_children() override;
 
 	/** See @ref widget::request_reduce_width. */
 	virtual void request_reduce_width(const unsigned maximum_width) override;
@@ -121,7 +115,7 @@ public:
 	bool disable_click_dismiss() const override;
 
 	/** See @ref widget::create_walker. */
-	virtual iteration::walker_base* create_walker() override;
+	virtual iteration::walker_ptr create_walker() override;
 
 	/**
 	 * Returns a grid in the pane.
@@ -202,11 +196,11 @@ struct builder_pane : public builder_widget
 {
 	explicit builder_pane(const config& cfg);
 
-	widget* build() const;
+	virtual std::unique_ptr<widget> build() const override;
 
-	widget* build(const replacements_map& replacements) const;
+	virtual std::unique_ptr<widget> build(const replacements_map& replacements) const override;
 
-	placer_base::grow_direction grow_direction;
+	grow_direction::type grow_dir;
 
 	unsigned parallel_items;
 

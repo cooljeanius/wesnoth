@@ -1,22 +1,22 @@
 /*
-   Copyright (C) 2003 - 2018 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2003 - 2023
+	by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #include "server/wesnothd/player.hpp"
-#include "lexical_cast.hpp"
 
-wesnothd::player::player(const std::string& n, simple_wml::node& cfg,
-                         bool registered, const std::string& version, const std::string& source, const std::size_t max_messages,
+wesnothd::player::player(const std::string& n, simple_wml::node& cfg, long id,
+                         bool registered, const std::string& version, const std::string& source, unsigned long long login_id, const std::size_t max_messages,
                          const std::size_t time_period,
                          const bool moderator)
   : name_(n)
@@ -30,12 +30,14 @@ wesnothd::player::player(const std::string& n, simple_wml::node& cfg,
   , TimePeriod(time_period)
   , status_(LOBBY)
   , moderator_(moderator)
+  , login_id_(login_id)
 {
 	cfg_.set_attr_dup("name", n.c_str());
 	cfg_.set_attr("registered", registered ? "yes" : "no");
+	cfg_.set_attr("moderator", moderator ? "yes" : "no");
+	cfg_.set_attr_int("forum_id", id);
 	mark_available();
 }
-
 
 void wesnothd::player::set_status(wesnothd::player::STATUS status)
 {
@@ -66,14 +68,14 @@ void wesnothd::player::mark_available(const int game_id,
 	} else {
 		cfg_.set_attr("available", "no");
 	}
-	cfg_.set_attr_dup("game_id", lexical_cast<std::string>(game_id).c_str());
+	cfg_.set_attr_dup("game_id", std::to_string(game_id).c_str());
 	cfg_.set_attr_dup("location", location.c_str());
 }
 
 void wesnothd::player::mark_registered(bool registered)
 {
-    cfg_.set_attr("registered", registered ? "yes" : "no");
-    registered_ = registered;
+	cfg_.set_attr("registered", registered ? "yes" : "no");
+	registered_ = registered;
 }
 
 bool wesnothd::player::is_message_flooding()

@@ -1,22 +1,23 @@
 /*
-   Copyright (C) 2003 by David White <dave@whitevine.net>
-   Copyright (C) 2005 - 2018 by Guillaume Melquiond <guillaume.melquiond@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2005 - 2023
+	by Philippe Plantier <ayin@anathas.org>
+	Copyright (C) 2005 by Guillaume Melquiond <guillaume.melquiond@gmail.com>
+	Copyright (C) 2003 by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
 
 #include "font/constants.hpp"
-#include "serialization/string_view.hpp"
 
 #include <algorithm>
 #include <map>
@@ -24,6 +25,7 @@
 #include <set>
 #include <sstream>
 #include <string>
+#include <string_view>
 #include <utility>
 #include <vector>
 
@@ -32,6 +34,23 @@ class t_string;
 namespace utils {
 
 using string_map = std::map<std::string, t_string>;
+
+const std::vector<std::string> res_order = {"blade", "pierce", "impact", "fire", "cold", "arcane"};
+
+struct res_compare {
+	/** Returns whether a < b, considering res_order. */
+	bool operator()(const std::string& a, const std::string& b) const {
+		for(const std::string& r : res_order) {
+			if (b == r)	// this means b <= a, so a < b is false
+				return false;
+			if (a == r)
+				return true;
+		}
+		return a < b;	// fallback only reached when neither a nor b occur in res_order
+	}
+};
+
+using string_map_res = std::map<std::string, t_string, res_compare>;
 
 bool isnewline(const char c);
 bool portable_isspace(const char c);
@@ -42,18 +61,18 @@ enum {
 	STRIP_SPACES = 0x02  /** STRIP_SPACES: strips leading and trailing blank spaces. */
 };
 
-void trim(string_view& s);
+void trim(std::string_view& s);
 
 template<typename F>
-void split_foreach_impl(string_view s, char sep, const F& f)
+void split_foreach_impl(std::string_view s, char sep, const F& f)
 {
 	if(s.empty()) {
 		return;
 	}
 	while(true)
 	{
-		int partend = s.find(sep);
-		if(partend == int(string_view::npos)) {
+		std::size_t partend = s.find(sep);
+		if(partend == std::string_view::npos) {
 			break;
 		}
 		f(s.substr(0, partend));
@@ -63,9 +82,9 @@ void split_foreach_impl(string_view s, char sep, const F& f)
 }
 
 template<typename F>
-void split_foreach(string_view s, char sep, const int flags, const F& f)
+void split_foreach(std::string_view s, char sep, const int flags, const F& f)
 {
-	split_foreach_impl(s, sep, [&](string_view item) {
+	split_foreach_impl(s, sep, [&](std::string_view item) {
 		if(flags & STRIP_SPACES) {
 			trim(item);
 		}
@@ -78,8 +97,8 @@ void split_foreach(string_view s, char sep, const int flags, const F& f)
 
 
 /** Splits a (comma-)separated string into a vector of pieces. */
-std::vector<std::string> split(string_view val, const char c = ',', const int flags = REMOVE_EMPTY | STRIP_SPACES);
-std::set<std::string> split_set(string_view val, const char c = ',', const int flags = REMOVE_EMPTY | STRIP_SPACES);
+std::vector<std::string> split(std::string_view val, const char c = ',', const int flags = REMOVE_EMPTY | STRIP_SPACES);
+std::set<std::string> split_set(std::string_view val, const char c = ',', const int flags = REMOVE_EMPTY | STRIP_SPACES);
 
 /**
  * This function is identical to split(), except it does not split when it otherwise would if the
@@ -158,17 +177,20 @@ std::vector< std::string > parenthetical_split(
  *
  * Examples:
  *
- * INPUT:   ("a[1-3](1,[5,6,7]),b[8,9]", ",")
+ * INPUT:   ("a[1~3](1,[5,6,7]),b[8,9]", ",")
  * RETURNS: {"a1(1,5)", "a2(1,6)", "a3(1,7)", "b8", "b9"}
  *
- * INPUT:   ("abc[07-10]")
+ * INPUT:   ("abc[07~10]")
  * RETURNS: {"abc07", "abc08", "abc09", "abc10"}
  *
- * INPUT:   ("a[1,2]b[3-4]:c[5,6]")
+ * INPUT:   ("a[1,2]b[3~4]:c[5,6]")
  * RETURNS: {"a1b3:c5", "a2b4:c6"}
  *
- * INPUT:   ("abc[3,1].png")
+ * INPUT:   ("abc[3~1].png")
  * RETURNS: {"abc3.png", "abc2.png", "abc1.png"}
+ *
+ * INPUT:   ("abc[3,1].png")
+ * RETURNS: {"abc3.png", "abc1.png"}
  *
  * INPUT:   ("abc[de,xyz]")
  * RETURNS: {"abcde", "abcxyz"}
@@ -260,9 +282,44 @@ std::string bullet_list(const T& v, std::size_t indent = 4, const std::string& b
  */
 std::string indent(const std::string& string, std::size_t indent_size = 4);
 
+/**
+ * Recognises the following patterns, and returns a {min, max} pair.
+ *
+ * * "1" returns {1, 1}
+ * * "1-3" returns {1, 3}
+ * * "1-infinity" returns {1, maximum int}
+ * * "-1" returns {-1, -1}
+ * * "-3--1" returns {-3, -1}
+ *
+ * Note that:
+ *
+ * * "3-1" returns {3, 3} and does not log an error
+ * * "-1--3" returns {-1, -1} and does not log an error
+ * * Although "-infinity--1", "2-infinity" and "-infinity-infinity" are all supported,
+ * * ranges that can't match a reasonable number, e.g. "-infinity" or "infinity..infinity", may be treated as errors.
+ */
 std::pair<int, int> parse_range(const std::string& str);
 
-std::vector<std::pair<int, int>> parse_ranges(const std::string& str);
+/**
+ * Handles a comma-separated list of inputs to parse_range, in a context that does not expect
+ * negative values. Will return an empty list if any of the ranges have a minimum that's below
+ * zero.
+ */
+std::vector<std::pair<int, int>> parse_ranges_unsigned(const std::string& str);
+
+/**
+ * Handles a comma-separated list of inputs to parse_range.
+ */
+std::vector<std::pair<int, int>> parse_ranges_int(const std::string& str);
+
+/**
+ * Recognises similar patterns to parse_range, and returns a {min, max} pair.
+ *
+ * For this function, "infinity" results in std::numeric_limits<double>::infinity.
+ */
+std::pair<double, double> parse_range_real(const std::string& str);
+
+std::vector<std::pair<double, double>> parse_ranges_real(const std::string& str);
 
 int apply_modifier(const int number, const std::string &amount, const int minimum = 0);
 
@@ -348,6 +405,14 @@ bool word_match(const std::string& message, const std::string& word);
  * '+' as one or more characters, and '?' as any one character.
  */
 bool wildcard_string_match(const std::string& str, const std::string& match);
+
+/**
+ * Converts '*' to '%' and optionally escapes '_'.
+ *
+ * @param str The original string.
+ * @param underscores Whether to escape underscore characters as well.
+ */
+void to_sql_wildcards(std::string& str, bool underscores = true);
 
 /**
  * Check if the username contains only valid characters.

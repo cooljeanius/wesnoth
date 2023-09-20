@@ -1,22 +1,23 @@
 /*
-   Copyright (C) 2017-2018 by Charles Dang <exodia339@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2017 - 2023
+	by Charles Dang <exodia339@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #define GETTEXT_DOMAIN "wesnoth-lib"
 
 #include "gui/dialogs/story_viewer.hpp"
 
-#include "formula/callable_objects.hpp"
+#include "display.hpp"
 #include "formula/variant.hpp"
 #include "gui/auxiliary/find_widget.hpp"
 #include "sdl/point.hpp"
@@ -30,9 +31,7 @@
 #include "sound.hpp"
 #include "variable.hpp"
 
-namespace gui2
-{
-namespace dialogs
+namespace gui2::dialogs
 {
 
 // Helper function to get the canvas shape data for the shading under the title area until
@@ -56,7 +55,8 @@ static const unsigned int LAYER_TEXT = 2;
 REGISTER_DIALOG(story_viewer)
 
 story_viewer::story_viewer(const std::string& scenario_name, const config& cfg_parsed)
-	: controller_(vconfig(cfg_parsed, true), scenario_name)
+	: modal_dialog(window_id())
+	, controller_(vconfig(cfg_parsed, true), scenario_name)
 	, part_index_(0)
 	, current_part_(nullptr)
 	, timer_id_(0)
@@ -85,18 +85,25 @@ void story_viewer::pre_show(window& window)
 	window.set_enter_disabled(true);
 
 	// Special callback handle key presses
-	connect_signal_pre_key_press(window, std::bind(&story_viewer::key_press_callback, this, std::ref(window), _5));
+	connect_signal_pre_key_press(window, std::bind(&story_viewer::key_press_callback, this, std::placeholders::_5));
 
 	connect_signal_mouse_left_click(find_widget<button>(&window, "next", false),
-		std::bind(&story_viewer::nav_button_callback, this, std::ref(window), DIR_FORWARD));
+		std::bind(&story_viewer::nav_button_callback, this, DIR_FORWARD));
 
 	connect_signal_mouse_left_click(find_widget<button>(&window, "back", false),
-		std::bind(&story_viewer::nav_button_callback, this, std::ref(window), DIR_BACKWARDS));
+		std::bind(&story_viewer::nav_button_callback, this, DIR_BACKWARDS));
 
-	connect_signal_on_draw(window,
-		std::bind(&story_viewer::draw_callback, this, std::ref(window)));
+	// Tell the game display not to draw
+	game_was_already_hidden_ = display::get_singleton()->get_prevent_draw();
+	display::get_singleton()->set_prevent_draw(true);
 
-	display_part(window);
+	display_part();
+}
+
+void story_viewer::post_show(window& /*window*/)
+{
+	// Bring the game display back again, if appropriate
+	display::get_singleton()->set_prevent_draw(game_was_already_hidden_);
 }
 
 void story_viewer::update_current_part_ptr()
@@ -104,11 +111,11 @@ void story_viewer::update_current_part_ptr()
 	current_part_ = controller_.get_part(part_index_);
 }
 
-void story_viewer::display_part(window& window)
+void story_viewer::display_part()
 {
 	static const int VOICE_SOUND_SOURCE_ID = 255;
 	// Update Back button state. Doing this here so it gets called in pre_show too.
-	find_widget<button>(&window, "back", false).set_active(part_index_ != 0);
+	find_widget<button>(get_window(), "back", false).set_active(part_index_ != 0);
 
 	//
 	// Music and sound
@@ -194,7 +201,7 @@ void story_viewer::display_part(window& window)
 		}
 	}
 
-	canvas& window_canvas = window.get_canvas(0);
+	canvas& window_canvas = get_window()->get_canvas(0);
 
 	/* In order to avoid manually loading the image and calculating the scaling factor, we instead
 	 * delegate the task of setting the necessary variables to the canvas once the calculations
@@ -209,13 +216,15 @@ void story_viewer::display_part(window& window)
 			[
 				set_var('base_scale_x', as_decimal(image_width)  / as_decimal(image_original_width)),
 				set_var('base_scale_y', as_decimal(image_height) / as_decimal(image_original_height)),
-				set_var('base_origin', loc(clip_x, clip_y))
+				set_var('base_origin_x', clip_x),
+				set_var('base_origin_y', clip_y)
 			]
 		))";
 	} else {
 		window_canvas.set_variable("base_scale_x", wfl::variant(1));
 		window_canvas.set_variable("base_scale_y", wfl::variant(1));
-		window_canvas.set_variable("base_origin",  wfl::variant(std::make_shared<wfl::location_callable>(map_location::ZERO())));
+		window_canvas.set_variable("base_origin_x", wfl::variant(0));
+		window_canvas.set_variable("base_origin_y", wfl::variant(0));
 	}
 
 	cfg.add_child("image", get_title_area_decor_config());
@@ -223,13 +232,13 @@ void story_viewer::display_part(window& window)
 	window_canvas.set_cfg(cfg);
 
 	// Needed to make the background redraw correctly.
-	window_canvas.set_is_dirty(true);
-	window.set_is_dirty(true);
+	window_canvas.update_size_variables();
+	get_window()->queue_redraw();
 
 	//
 	// Title
 	//
-	label& title_label = find_widget<label>(&window, "title", false);
+	label& title_label = find_widget<label>(get_window(), "title", false);
 
 	std::string title_text = current_part_->title();
 	bool showing_title;
@@ -251,7 +260,7 @@ void story_viewer::display_part(window& window)
 	//
 	// Story text
 	//
-	stacked_widget& text_stack = find_widget<stacked_widget>(&window, "text_and_control_stack", false);
+	stacked_widget& text_stack = find_widget<stacked_widget>(get_window(), "text_and_control_stack", false);
 
 	std::string new_panel_mode;
 
@@ -292,7 +301,7 @@ void story_viewer::display_part(window& window)
 	// Convert the story part text alignment types into the Pango equivalents
 	PangoAlignment story_text_alignment = decode_text_alignment(current_part_->story_text_alignment());
 
-	scroll_label& text_label = find_widget<scroll_label>(&window, "part_text", false);
+	scroll_label& text_label = find_widget<scroll_label>(get_window(), "part_text", false);
 
 	text_label.set_text_alignment(story_text_alignment);
 	text_label.set_text_alpha(0);
@@ -312,73 +321,68 @@ void story_viewer::display_part(window& window)
 	// TODO: in the old GUI1 dialog, floating images delayed the appearance of the story panel until
 	//       drawing was finished. Might be worth looking into restoring that.
 	if(!floating_images.empty()) {
-		draw_floating_image(window, floating_images.begin(), part_index_);
+		draw_floating_image(floating_images.begin(), part_index_);
 	}
 }
 
-void story_viewer::draw_floating_image(window& window, floating_image_list::const_iterator image_iter, int this_part_index)
+void story_viewer::draw_floating_image(floating_image_list::const_iterator image_iter, int this_part_index)
 {
 	const auto& images = current_part_->get_floating_images();
+	canvas& window_canvas = get_window()->get_canvas(0);
 
 	// If the current part has changed or we're out of images to draw, exit the draw loop.
-	if((this_part_index != part_index_) || (image_iter == images.end())) {
-		timer_id_ = 0;
-		return;
+	while((this_part_index == part_index_) && (image_iter != images.end())) {
+		const auto& floating_image = *image_iter;
+		++image_iter;
+
+		std::ostringstream x_ss;
+		std::ostringstream y_ss;
+
+		// Floating images' locations are scaled by the same factor as the background.
+		x_ss << "(trunc(" << floating_image.ref_x() << " * base_scale_x) + base_origin_x";
+		y_ss << "(trunc(" << floating_image.ref_y() << " * base_scale_y) + base_origin_y";
+
+		if(floating_image.centered()) {
+			x_ss << " - (image_width  / 2)";
+			y_ss << " - (image_height / 2)";
+		}
+
+		x_ss << ")";
+		y_ss << ")";
+
+		config image;
+		image["x"] = x_ss.str();
+		image["y"] = y_ss.str();
+
+		// Width and height don't need to be set unless the image needs to be scaled.
+		if(floating_image.resize_with_background()) {
+			image["w"] = "(image_original_width * base_scale_x)";
+			image["h"] = "(image_original_height * base_scale_y)";
+		}
+
+		image["name"] = floating_image.file();
+		config cfg{"image", std::move(image)};
+
+		cfg.add_child("image", std::move(image));
+		window_canvas.append_cfg(std::move(cfg));
+
+		// Needed to make the background redraw correctly.
+		window_canvas.update_size_variables();
+		get_window()->queue_redraw();
+
+		// If a delay is specified, schedule the next image draw and break out of the loop.
+		const unsigned int draw_delay = floating_image.display_delay();
+		if(draw_delay != 0) {
+			// This must be a non-repeating timer
+			timer_id_ = add_timer(draw_delay, std::bind(&story_viewer::draw_floating_image, this, image_iter, this_part_index), false);
+			return;
+		}
 	}
 
-	const auto& floating_image = *image_iter;
-
-	std::ostringstream x_ss;
-	std::ostringstream y_ss;
-
-	// Floating images are scaled by the same factor as the background.
-	x_ss << "(trunc(fi_ref_x * base_scale_x) + base_origin.x";
-	y_ss << "(trunc(fi_ref_y * base_scale_y) + base_origin.y";
-
-	if(floating_image.centered()) {
-		x_ss << " - (image_original_width  / 2)";
-		y_ss << " - (image_original_height / 2)";
-	}
-
-	x_ss << " where fi_ref_x = " << floating_image.ref_x() << ")";
-	y_ss << " where fi_ref_y = " << floating_image.ref_y() << ")";
-
-	config cfg, image;
-
-	image["x"] = x_ss.str();
-	image["y"] = y_ss.str();
-	image["w"] = floating_image.autoscale() ? "(width)"  : "(image_width)";
-	image["h"] = floating_image.autoscale() ? "(height)" : "(image_height)";
-	image["name"] = floating_image.file();
-
-	// TODO: implement handling of the tiling options.
-	//image["resize_mode"] = "tile_centered"
-
-	cfg.add_child("image", std::move(image));
-
-	canvas& window_canvas = window.get_canvas(0);
-
-	// Needed to make the background redraw correctly.
-	window_canvas.append_cfg(cfg);
-	window_canvas.set_is_dirty(true);
-
-	window.set_is_dirty(true);
-
-	++image_iter;
-
-	// If a delay is specified, schedule the next image draw. This *must* be a non-repeating timer!
-	// Else draw the next image immediately.
-	const unsigned int draw_delay = floating_image.display_delay();
-
-	if(draw_delay != 0) {
-		timer_id_ = add_timer(draw_delay,
-			std::bind(&story_viewer::draw_floating_image, this, std::ref(window), image_iter, this_part_index), false);
-	} else {
-		draw_floating_image(window, image_iter, this_part_index);
-	}
+	timer_id_ = 0;
 }
 
-void story_viewer::nav_button_callback(window& window, NAV_DIRECTION direction)
+void story_viewer::nav_button_callback(NAV_DIRECTION direction)
 {
 	// If a button is pressed while fading in, abort and set alpha to full opaque.
 	if(fade_state_ == FADING_IN) {
@@ -386,15 +390,15 @@ void story_viewer::nav_button_callback(window& window, NAV_DIRECTION direction)
 
 		// Only set full alpha if Forward was pressed.
 		if(direction == DIR_FORWARD) {
-			find_widget<scroll_label>(&window, "part_text", false).set_text_alpha(ALPHA_OPAQUE);
-			flag_stack_as_dirty(window);
+			find_widget<scroll_label>(get_window(), "part_text", false).set_text_alpha(ALPHA_OPAQUE);
+			flag_stack_as_dirty();
 			return;
 		}
 	}
 
 	// If a button is pressed while fading out, skip and show next part.
 	if(fade_state_ == FADING_OUT) {
-		display_part(window);
+		display_part();
 		return;
 	}
 
@@ -404,7 +408,7 @@ void story_viewer::nav_button_callback(window& window, NAV_DIRECTION direction)
 
 	// If we've viewed all the parts, close the dialog.
 	if(part_index_ >= controller_.max_parts()) {
-		window.close();
+		get_window()->close();
 		return;
 	}
 
@@ -417,7 +421,7 @@ void story_viewer::nav_button_callback(window& window, NAV_DIRECTION direction)
 	begin_fade_draw(false);
 }
 
-void story_viewer::key_press_callback(window& window, const SDL_Keycode key)
+void story_viewer::key_press_callback(const SDL_Keycode key)
 {
 	const bool next_keydown =
 		   key == SDLK_SPACE
@@ -430,9 +434,9 @@ void story_viewer::key_press_callback(window& window, const SDL_Keycode key)
 		|| key == SDLK_LEFT;
 
 	if(next_keydown) {
-		nav_button_callback(window, DIR_FORWARD);
+		nav_button_callback(DIR_FORWARD);
 	} else if(back_keydown) {
-		nav_button_callback(window, DIR_BACKWARDS);
+		nav_button_callback(DIR_BACKWARDS);
 	}
 }
 
@@ -456,8 +460,10 @@ void story_viewer::halt_fade_draw()
 	fade_state_ = NOT_FADING;
 }
 
-void story_viewer::draw_callback(window& window)
+void story_viewer::update()
 {
+	modal_dialog::update();
+
 	if(next_draw_ && SDL_GetTicks() < next_draw_) {
 		return;
 	}
@@ -476,15 +482,15 @@ void story_viewer::draw_callback(window& window)
 	if(fade_state_ == FADING_OUT && fade_step_ < 0) {
 		halt_fade_draw();
 
-		display_part(window);
+		display_part();
 		return;
 	}
 
-	unsigned short new_alpha = utils::clamp<short>(fade_step_ * 25.5, 0, ALPHA_OPAQUE);
-	find_widget<scroll_label>(&window, "part_text", false).set_text_alpha(new_alpha);
+	unsigned short new_alpha = std::clamp<short>(fade_step_ * 25.5, 0, ALPHA_OPAQUE);
+	find_widget<scroll_label>(get_window(), "part_text", false).set_text_alpha(new_alpha);
 
 	// The text stack also needs to be marked dirty so the background panel redraws correctly.
-	flag_stack_as_dirty(window);
+	flag_stack_as_dirty();
 
 	if(fade_state_ == FADING_IN) {
 		fade_step_ ++;
@@ -495,10 +501,9 @@ void story_viewer::draw_callback(window& window)
 	set_next_draw();
 }
 
-void story_viewer::flag_stack_as_dirty(window& window)
+void story_viewer::flag_stack_as_dirty()
 {
-	find_widget<stacked_widget>(&window, "text_and_control_stack", false).set_is_dirty(true);
+	find_widget<stacked_widget>(get_window(), "text_and_control_stack", false).queue_redraw();
 }
 
 } // namespace dialogs
-} // namespace gui2

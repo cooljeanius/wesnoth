@@ -1,14 +1,15 @@
 /*
-   Copyright (C) 2017-2018 by the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2017 - 2023
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -18,7 +19,6 @@ class config;
 #include <vector>
 #include <string>
 #include <set>
-#include <boost/ptr_container/ptr_vector.hpp>
 
 #include "config.hpp"
 #include "mt_rng.hpp"
@@ -36,7 +36,6 @@ public:
 	{}
 	// Turns config from a loaded savegame into carryover_info
 	explicit carryover(const config& side);
-	carryover(const team& t, const int gold, const bool add);
 	~carryover(){}
 
 	const std::string& get_save_id() const{ return save_id_; }
@@ -71,8 +70,11 @@ public:
 		, next_scenario_()
 		, next_underlying_unit_id_()
 	{}
-	/// Turns config from a loaded savegame into carryover_info
-	/// @param from_snapshot true if cfg is a [snapshot], false if cfg is [carryover_sides(_start)]
+	/**
+	 * Turns config from a loaded savegame into carryover_info
+	 * @param cfg the config to use
+	 * @param from_snapshot true if cfg is a [snapshot], false if cfg is [carryover_sides(_start)]
+	 */
 	explicit carryover_info(const config& cfg, bool from_snapshot = false);
 
 	carryover* get_side(const std::string& save_id);
@@ -100,7 +102,7 @@ private:
 	std::vector<carryover> carryover_sides_;
 	config variables_;
 	randomness::mt_rng rng_;
-	boost::ptr_vector<config> wml_menu_items_;
+	std::vector<config> wml_menu_items_;
 	std::string next_scenario_;    /**< the scenario coming next (for campaigns) */
 	int next_underlying_unit_id_;
 };

@@ -1,14 +1,15 @@
 /*
-   Copyright (C) 2015 - 2018 by the Battle for Wesnoth Project
+	Copyright (C) 2015 - 2023
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -18,8 +19,6 @@
 #include "mouse_handler_base.hpp" //events::command_disabler
 
 #include <vector>
-
-class video;
 
 class replay_controller : public events::observer
 {
@@ -42,12 +41,14 @@ public:
 	void replay_next_turn();
 	void replay_next_side();
 	void replay_next_move();
-	REPLAY_RETURN play_side_impl();
+	void play_side_impl();
 
 	bool recorder_at_end() const;
 	bool should_stop() const { return stop_condition_->should_stop(); }
-	bool can_execute_command(const hotkey::hotkey_command& cmd, int index) const;
-	bool is_controlling_view() const { return vision_.is_initialized(); }
+	bool can_execute_command(const hotkey::ui_command& cmd) const;
+	bool is_controlling_view() const {
+		return vision_.has_value();
+	}
 	bool allow_reset_replay() const { return reset_state_.get() != nullptr; }
 	const std::shared_ptr<config>& get_reset_state() const { return reset_state_; }
 	void return_to_play_side(bool r = true) { return_to_play_side_ = r; }
@@ -84,8 +85,12 @@ private:
 		CURRENT_TEAM,
 		SHOW_ALL,
 	};
-	boost::optional<REPLAY_VISION> vision_;
+	std::optional<REPLAY_VISION> vision_;
+	/// When the "Reset" button is pressed reset the gamestate to this
+	/// serialized gamestaten, the initial gamestate.
 	std::shared_ptr<config> reset_state_;
+	/// Called when there are no more moves in the [replay] to process
 	std::function<void()> on_end_replay_;
+	/// Used by unit tests.
 	bool return_to_play_side_;
 };

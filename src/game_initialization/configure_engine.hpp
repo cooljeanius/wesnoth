@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2014 - 2018 by Nathan Walker <nathan.b.walker@vanderbilt.edu>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2014 - 2023
+	by Nathan Walker <nathan.b.walker@vanderbilt.edu>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -116,19 +117,14 @@ public:
 		return parameters_.allow_observers;
 	}
 
-	bool registered_users_only() const
-	{
-		return parameters_.registered_users_only;
-	}
-
 	bool shuffle_sides() const
 	{
 		return parameters_.shuffle_sides;
 	}
 
-	mp_game_settings::RANDOM_FACTION_MODE random_faction_mode() const
+	random_faction_mode::type mode() const
 	{
-		return parameters_.random_faction_mode;
+		return parameters_.mode;
 	}
 
 	const config& options() const
@@ -220,11 +216,6 @@ public:
 		parameters_.allow_observers = val;
 	}
 
-	void set_registered_users_only(bool val)
-	{
-		parameters_.registered_users_only = val;
-	}
-
 	void set_private_replay(bool val)
 	{
 		parameters_.private_replay = val;
@@ -240,9 +231,9 @@ public:
 		parameters_.shuffle_sides = val;
 	}
 
-	void set_random_faction_mode(mp_game_settings::RANDOM_FACTION_MODE val)
+	void set_random_faction_mode(random_faction_mode::type val)
 	{
-		parameters_.random_faction_mode = val;
+		parameters_.mode = val;
 	}
 
 	void set_options(const config& cfg);
@@ -266,9 +257,8 @@ public:
 	bool fog_game_default() const;
 	bool shroud_game_default() const;
 	bool allow_observers_default() const;
-	bool registered_users_only_default() const;
 	bool shuffle_sides_default() const;
-	mp_game_settings::RANDOM_FACTION_MODE random_faction_mode_default() const;
+	random_faction_mode::type random_faction_mode_default() const;
 	const config& options_default() const;
 
 	const mp_game_settings& get_parameters() const
@@ -288,7 +278,7 @@ private:
 
 	mp_game_settings& parameters_;
 
-	/// Never nullptr.
+	/** Never nullptr. */
 	const config* initial_;
 
 	/**

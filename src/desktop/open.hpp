@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2013 - 2018 by Iris Morelle <shadowm2006@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2013 - 2023
+	by Iris Morelle <shadowm2006@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -50,6 +51,13 @@ namespace desktop {
 bool open_object(const std::string& path_or_url);
 
 /** Returns whether open_object() is supported/implemented for the current platform. */
-bool open_object_is_supported();
+constexpr bool open_object_is_supported()
+{
+#if defined(_X11) || defined(__APPLE__) || defined(_WIN32)
+	return true;
+#else
+	return false;
+#endif
+}
 
 }

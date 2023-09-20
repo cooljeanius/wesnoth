@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2003 - 2018 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2003 - 2023
+	by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -49,17 +50,19 @@ namespace game_events
 		typedef void (*handler)(const queued_event &, const vconfig &);
 		typedef std::map<std::string, handler> map;
 
-		/// Using this constructor for a static object outside action_wml.cpp
-		/// will likely lead to a static initialization fiasco.
+		/**
+		 * Using this constructor for a static object outside action_wml.cpp
+		 * will likely lead to a static initialization fiasco.
+		 */
 		wml_action(const std::string & tag, handler function);
 
-		/// The first registered action.
+		/** The first registered action. */
 		static map::const_iterator begin()  { return registry_.begin(); }
-		/// One past the last registered action.
+		/** One past the last registered action. */
 		static map::const_iterator end()    { return registry_.end(); }
 		static const map& registry() { return registry_; }
 	private:
-		/// Tracks the known action handlers.
+		/** Tracks the known action handlers. */
 		static map registry_;
 	};
 }

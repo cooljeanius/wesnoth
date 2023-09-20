@@ -1,13 +1,13 @@
 --creates the objectives of the wc2 scenarios.
 
 local _ = wesnoth.textdomain 'wesnoth-wc'
+local _lib = wesnoth.textdomain 'wesnoth-lib'
 local strings = {
 	wct_victory_condition = _"Defeat all enemy leaders and commanders",
 	turns = _"Turns run out",
 	wct_defeat_condition = _ "Lose your leader and all your commanders",
-	difficulty = "Difficulty: ",
-	version = "Version",
-	help_available = _ "An in-game help is available: rightclick on any empty hex.",
+	difficulty = _lib("Difficulty: "),
+	help_available = _ "An in-game help is available: right-click on any empty hex.",
 }
 
 function wesnoth.wml_actions.wc2_objectives(cfg)
@@ -26,9 +26,6 @@ function wesnoth.wml_actions.wc2_objectives(cfg)
 		},
 		wml.tag.note {
 			description = strings.difficulty .. wml.variables["wc2_difficulty.name"],
-		},
-		wml.tag.note {
-			description = strings.version .. wml.variables["wc2_host_version"],
 		},
 		note = wc2_color.help_text(strings.help_available)
 	}

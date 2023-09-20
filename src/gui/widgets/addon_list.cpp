@@ -1,14 +1,15 @@
 /*
-   Copyright (C) 2016 - 2018 by the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2016 - 2023
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #define GETTEXT_DOMAIN "wesnoth-lib"
@@ -167,8 +168,8 @@ void addon_list::set_addons(const addons_list& addons)
 
 		addon_vector_.push_back(&addon);
 
-		std::map<std::string, string_map> data;
-		string_map item;
+		widget_data data;
+		widget_item item;
 
 		if(!tracking_info.can_publish) {
 			item["label"] = addon.display_icon();
@@ -203,7 +204,7 @@ void addon_list::set_addons(const addons_list& addons)
 			ss << tracking_info.installed_version.str() << "\n";
 		}
 
-		ss << addon.version.str();
+		ss << (*addon.versions.begin()).str();
 
 		if(special_version_display) {
 			ss.str(colorize_addon_state_string(ss.str(), tracking_info.state, false));
@@ -259,7 +260,7 @@ void addon_list::set_addons(const addons_list& addons)
 
 			if(publish_function_ != nullptr) {
 				connect_signal_mouse_left_click(publish_button,
-					std::bind(&addon_list::addon_action_wrapper, this, publish_function_, std::ref(addon), _3, _4));
+					std::bind(&addon_list::addon_action_wrapper, this, publish_function_, std::ref(addon), std::placeholders::_3, std::placeholders::_4));
 
 				install_button.set_tooltip(_("Publish add-on"));
 			}
@@ -270,7 +271,7 @@ void addon_list::set_addons(const addons_list& addons)
 
 			if(update_function_ != nullptr) {
 				connect_signal_mouse_left_click(update_button,
-					std::bind(&addon_list::addon_action_wrapper, this, update_function_, std::ref(addon), _3, _4));
+					std::bind(&addon_list::addon_action_wrapper, this, update_function_, std::ref(addon), std::placeholders::_3, std::placeholders::_4));
 			}
 		} else {
 			install_update_stack.select_layer(CONTROL_STACK_LAYER_INSTALL);
@@ -279,7 +280,7 @@ void addon_list::set_addons(const addons_list& addons)
 
 			if(install_function_ != nullptr) {
 				connect_signal_mouse_left_click(install_button,
-					std::bind(&addon_list::addon_action_wrapper, this, install_function_, std::ref(addon), _3, _4));
+					std::bind(&addon_list::addon_action_wrapper, this, install_function_, std::ref(addon), std::placeholders::_3, std::placeholders::_4));
 			}
 		}
 
@@ -290,7 +291,7 @@ void addon_list::set_addons(const addons_list& addons)
 
 			if(!is_local && delete_function_ != nullptr) {
 				connect_signal_mouse_left_click(uninstall_button,
-					std::bind(&addon_list::addon_action_wrapper, this, delete_function_, std::ref(addon), _3, _4));
+					std::bind(&addon_list::addon_action_wrapper, this, delete_function_, std::ref(addon), std::placeholders::_3, std::placeholders::_4));
 
 				uninstall_button.set_tooltip(_("Delete add-on from server"));
 			}
@@ -300,7 +301,7 @@ void addon_list::set_addons(const addons_list& addons)
 
 			if(is_installed && uninstall_function_ != nullptr) {
 				connect_signal_mouse_left_click(uninstall_button,
-					std::bind(&addon_list::addon_action_wrapper, this, uninstall_function_, std::ref(addon), _3, _4));
+					std::bind(&addon_list::addon_action_wrapper, this, uninstall_function_, std::ref(addon), std::placeholders::_3, std::placeholders::_4));
 			}
 		}
 
@@ -385,7 +386,7 @@ void addon_list::finalize_setup()
 	list.register_sorting_option(3, [this](const int i) { return addon_vector_[i]->downloads; });
 	list.register_translatable_sorting_option(4, [this](const int i) { return addon_vector_[i]->display_type(); });
 
-	auto order = std::make_pair(0, gui2::listbox::SORT_ASCENDING);
+	auto order = std::pair(0, sort_order::type::ascending);
 	list.set_active_sorting_option(order);
 }
 
@@ -408,22 +409,13 @@ void addon_list::select_first_addon()
 		// Happens in the dialog unit test.
 		return;
 	}
-
-	const addon_info* first_addon = addon_vector_[0];
-
-	for(const addon_info* a : addon_vector_) {
-		if(translation::icompare(a->display_title_full(), first_addon->display_title_full()) < 0) {
-			first_addon = a;
-		}
-	}
-
-	select_addon(first_addon->id);
+	get_listbox().select_row_at(0);
 }
 
 addon_list_definition::addon_list_definition(const config& cfg)
 	: styled_widget_definition(cfg)
 {
-	DBG_GUI_P << "Parsing add-on list " << id << "\n";
+	DBG_GUI_P << "Parsing add-on list " << id;
 
 	load_resolutions<resolution>(cfg);
 }
@@ -435,10 +427,10 @@ addon_list_definition::resolution::resolution(const config& cfg)
 	static config dummy("draw");
 	state.emplace_back(dummy);
 
-	const config& child = cfg.child("grid");
+	auto child = cfg.optional_child("grid");
 	VALIDATE(child, _("No grid defined."));
 
-	grid = std::make_shared<builder_grid>(child);
+	grid = std::make_shared<builder_grid>(*child);
 }
 
 namespace implementation
@@ -471,17 +463,17 @@ builder_addon_list::builder_addon_list(const config& cfg)
 	}
 }
 
-widget* builder_addon_list::build() const
+std::unique_ptr<widget> builder_addon_list::build() const
 {
-	addon_list* widget = new addon_list(*this);
+	auto widget = std::make_unique<addon_list>(*this);
 
 	DBG_GUI_G << "Window builder: placed add-on list '" << id <<
-		"' with definition '" << definition << "'.\n";
+		"' with definition '" << definition << "'.";
 
 	const auto conf = widget->cast_config_to<addon_list_definition>();
 	assert(conf != nullptr);
 
-	widget->init_grid(conf->grid);
+	widget->init_grid(*conf->grid);
 
 	widget->set_install_status_visibility(install_status_visibility_);
 	widget->set_install_buttons_visibility(install_buttons_visibility_);

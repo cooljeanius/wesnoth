@@ -1,16 +1,17 @@
 /*
-   Copyright (C) 2006 - 2018 by Joerg Hinrichs <joerg.hinrichs@alice-dsl.de>
-   wesnoth playlevel Copyright (C) 2003 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2003 - 2023
+	by Joerg Hinrichs <joerg.hinrichs@alice-dsl.de>
+	Copyright (C) 2003 by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -39,7 +40,6 @@
 #include "hotkey/hotkey_command.hpp"
 #include "key.hpp"
 #include "quit_confirmation.hpp"
-#include "video.hpp"
 
 class game_config_view;
 class display;
@@ -53,6 +53,7 @@ class mouse_handler_base;
 namespace hotkey
 {
 class command_executor;
+struct ui_command;
 }
 
 namespace soundsource
@@ -60,15 +61,13 @@ namespace soundsource
 class manager;
 }
 
-class controller_base : public video2::draw_layering, public events::pump_monitor
+class controller_base : public events::sdl_handler, public events::pump_monitor
 {
 public:
 	controller_base();
 	virtual ~controller_base();
 
 	virtual void play_slice(bool is_delay_enabled = true);
-
-	static const config& get_theme(const game_config_view& game_config, std::string theme_name);
 
 	void apply_keyboard_scroll(int x, int y);
 
@@ -149,11 +148,6 @@ protected:
 	 */
 	void handle_event(const SDL_Event& event) override;
 
-	void handle_window_event(const SDL_Event& /*event*/) override
-	{
-		// No action by default
-	}
-
 	/** Process keydown (only when the general map display does not have focus). */
 	virtual void process_focus_keydown_event(const SDL_Event& /*event*/)
 	{
@@ -177,7 +171,7 @@ protected:
 	virtual void show_menu(const std::vector<config>& items_arg, int xloc, int yloc, bool context_menu, display& disp);
 	virtual void execute_action(const std::vector<std::string>& items_arg, int xloc, int yloc, bool context_menu);
 
-	virtual bool in_context_menu(hotkey::HOTKEY_COMMAND command) const;
+	virtual bool in_context_menu(const hotkey::ui_command& cmd) const;
 
 	void long_touch_callback(int x, int y);
 
@@ -190,6 +184,12 @@ protected:
 	bool scroll_down_;
 	bool scroll_left_;
 	bool scroll_right_;
+	/* When the last scroll tick was processed */
+	uint32_t last_scroll_tick_;
+	/* Sub-pixel movement left over from a previous scroll tick.
+	 * This is added to the next scroll tick, if scrolling continues. */
+	double scroll_carry_x_;
+	double scroll_carry_y_;
 
 private:
 	/* A separate class for listening key-up events.
@@ -206,7 +206,6 @@ private:
 		}
 
 		void handle_event(const SDL_Event& event) override;
-		void handle_window_event(const SDL_Event&) override {}
 
 	private:
 		controller_base& controller_;

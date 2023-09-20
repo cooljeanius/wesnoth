@@ -1,14 +1,15 @@
 /*
-   Copyright (C) 2017-2018 the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2017 - 2023
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -19,7 +20,7 @@
 
 namespace actions
 {
-/// base class for classes that clear srhoud (move/recruit/recall)
+/** base class for classes that clear srhoud (move/recruit/recall) */
 struct shroud_clearing_action
 {
 
@@ -52,20 +53,24 @@ struct shroud_clearing_action
 
 	}
 
-	/// The hexes occupied by the affected unit during this action.
-	/// For recruits and recalls this only contains one hex.
+	/**
+	 * The hexes occupied by the affected unit during this action.
+	 * For recruits and recalls this only contains one hex.
+	 */
 	route_t route;
-	/// A record of the affected unit's ability to see.
+	/** A record of the affected unit's ability to see. */
 	clearer_info view_info;
-	/// The number of the side that preivously owned the village that the unit stepped on
-	/// Note, that recruit/recall actions can also take a village if the unit was recruits/recalled onto a village.
+	/**
+	 * The number of the side that preivously owned the village that the unit stepped on
+	 * Note, that recruit/recall actions can also take a village if the unit was recruits/recalled onto a village
+	 */
 	int original_village_owner;
-	/// Whether this actions got a timebonus because it took a village.
+	/** Whether this actions got a timebonus because it took a village. */
 	bool take_village_timebonus;
 
-	/// Change village owner on undo.
+	/** Change village owner on undo. */
 	void return_village();
-	/// Change village owner on redo.
+	/** Change village owner on redo. */
 	void take_village();
 
 	void write(config & cfg) const
