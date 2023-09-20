@@ -1,4 +1,4 @@
-Language:        Cpp
+Language: Cpp
 AccessModifierOffset: -4
 AlignEscapedNewlinesLeft: false
 AlignTrailingComments: true
@@ -9,6 +9,7 @@ AllowShortLoopsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: false
 AlwaysBreakTemplateDeclarations: true
 AlwaysBreakBeforeMultilineStrings: false
+AlignOperands: false
 BreakBeforeBinaryOperators: true
 
 # Same as 'Linux', but includes structs
@@ -31,7 +32,7 @@ BinPackParameters: false
 ColumnLimit: 120
 ConstructorInitializerAllOnOneLineOrOnePerLine: false
 ConstructorInitializerIndentWidth: 4
-ContinuationIndentWidth: 8
+ContinuationIndentWidth: 4
 Cpp11BracedListStyle: true
 DerivePointerBinding: false
 ExperimentalAutoDetectBinPacking: false

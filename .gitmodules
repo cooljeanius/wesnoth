@@ -1,0 +1,7 @@
+[submodule "src/modules/mariadbpp"]
+	path = src/modules/mariadbpp
+	url = https://github.com/viaduck/mariadbpp.git
+	ignore = untracked
+[submodule "src/modules/lua"]
+	path = src/modules/lua
+	url = https://github.com/lua/lua.git

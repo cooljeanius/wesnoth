@@ -1,16 +1,17 @@
 /*
-   Copyright (C) 2003 by David White <dave@whitevine.net>
-   Copyright (C) 2005 - 2018 by Guillaume Melquiond <guillaume.melquiond@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2005 - 2023
+	by Guillaume Melquiond <guillaume.melquiond@gmail.com>
+	Copyright (C) 2003 by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -20,7 +21,9 @@
 
 #include "serialization/string_utils.hpp"
 
+#include <cstddef>
 #include <ctime>
+#include <string_view>
 
 class variable_set;
 
@@ -48,7 +51,7 @@ inline bool might_contain_variables(const std::string &str)
  * 'str' with the equivalent symbols in the given symbol table. If 'symbols'
  * is nullptr, then game event variables will be used instead.
  */
-std::string interpolate_variables_into_string(const std::string &str, const string_map * const symbols);
+std::string interpolate_variables_into_string(const std::string &str, const std::map<std::string, t_string> * const symbols);
 std::string interpolate_variables_into_string(const std::string &str, const std::map<std::string,std::string> * const symbols);
 std::string interpolate_variables_into_string(const std::string &str, const variable_set& variables);
 
@@ -77,12 +80,26 @@ std::string format_conjunct_list(const t_string& empty, const std::vector<t_stri
 std::string format_disjunct_list(const t_string& empty, const std::vector<t_string>& elems);
 
 /**
- * Formats a timespan into human-readable text.
- * @param time The timespan in seconds.
- * @return A string such as "6 days, 12 hours, 4 minutes, 13 seconds". Years,
- *         months and weeks are also considered.
+ * Formats a timespan into human-readable text for player authentication functions.
+ *
+ * This is intentionally not a very thorough representation of time intervals.
+ * See <https://github.com/wesnoth/wesnoth/issues/6036> for more information.
+ *
+ * @param time     The timespan in seconds.
+ * @param detailed Whether to display more specific values such as "3 months, 2 days,
+ *                 30 minutes, and 1 second". If not specified or set to @a false, the
+ *                 return value will ONLY include most significant time unit (e.g. "3
+ *                 months").
+ * @return         A human-readable timespan description.
+ *
+ * @note The implementation is not very precise because not all months in the Gregorian
+ *       calendar have 30 days. Furthermore, it doesn't take into account leap years or
+ *       leap seconds. If you need to account for those, you are better off importing
+ *       a new library and providing it with more specific information about the start and
+ *       end times of the interval; otherwise your next best option is to hire a fortune
+ *       teller to manually service your requests every time instead of this function.
  */
-std::string format_timespan(std::time_t time);
+std::string format_timespan(std::time_t time, bool detailed = false);
 }
 
 /**
@@ -114,3 +131,15 @@ std::string vngettext_impl(const char* domain,
 
 #define VNGETTEXT(msgid, msgid_plural, count, ...) \
 	vngettext_impl(GETTEXT_DOMAIN, msgid, msgid_plural, count, __VA_ARGS__)
+
+/**
+ * @brief Calculate the approximate edit distance of two strings.
+ *
+ * @param str_1 First string to compare.
+ * @param str_2 Second string to compare.
+ *
+ * @returns A score indicating how different the two strings are--the lower the score, the more similar the strings are.
+ *
+ * @note To avoid dynamic allocation, this function limits the number of characters that participate in the comparison.
+ */
+[[nodiscard]] std::size_t edit_distance_approx(std::string_view str_1, std::string_view str_2) noexcept;

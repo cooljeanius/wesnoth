@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2003 - 2018 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2003 - 2023
+	by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -45,11 +46,8 @@ static lg::log_domain log_engine("engine");
 static const std::string sighted_str("sighted");
 
 
-/**
- * Sets @a jamming to the (newly calculated) "jamming" map for @a view_team.
- */
-static void create_jamming_map(std::map<map_location, int> & jamming,
-                               const team & view_team)
+void actions::create_jamming_map(std::map<map_location, int> & jamming,
+                                 const team & view_team)
 {
 	// Reset the map.
 	jamming.clear();
@@ -82,7 +80,7 @@ static bool can_see(const unit & viewer, const map_location & loc,
 	// Make sure we have a "jamming" map.
 	std::map<map_location, int> local_jamming;
 	if ( jamming == nullptr ) {
-		create_jamming_map(local_jamming, resources::gameboard->get_team(viewer.side()));
+		actions::create_jamming_map(local_jamming, resources::gameboard->get_team(viewer.side()));
 		jamming = &local_jamming;
 	}
 
@@ -178,7 +176,7 @@ shroud_clearer::shroud_clearer() : jamming_(), sightings_(), view_team_(nullptr)
 shroud_clearer::~shroud_clearer()
 {
 	if ( !sightings_.empty() ) {
-		ERR_NG << sightings_.size() << " sighted events were ignored." << std::endl;
+		ERR_NG << sightings_.size() << " sighted events were ignored.";
 	}
 }
 
@@ -240,11 +238,11 @@ bool shroud_clearer::clear_loc(team &tm, const map_location &loc,
 	// Clear the border as well as the board, so that the half-hexes
 	// at the edge can also be cleared of fog/shroud.
 	if ( map.on_board_with_border(loc) ) {
-		// Both functions should be executed so don't use || which
-		// uses short-cut evaluation.
-		// (This is different than the return value because shared vision does
-		// not apply here.)
-		if ( tm.clear_shroud(loc) | tm.clear_fog(loc) ) {
+		// Both functions should be executed so don't use || which uses short-cut evaluation.
+		// (This is different than the return value because shared vision does not apply here.)
+		bool clear_shroud = tm.clear_shroud(loc);
+		bool clear_fog = tm.clear_fog(loc);
+		if ( clear_shroud || clear_fog ) {
 			// If we are near a corner, the corner might also need to be cleared.
 			// This happens at the lower-left corner and at either the upper- or
 			// lower- right corner (depending on the width).
@@ -273,12 +271,10 @@ bool shroud_clearer::clear_loc(team &tm, const map_location &loc,
 	// Possible screen invalidation.
 	if ( was_fogged ) {
 		display::get_singleton()->invalidate(loc);
-		// Need to also invalidate adjacent hexes to get rid of the
-		// "fog edge" graphics.
-		adjacent_loc_array_t adjacent;
-		get_adjacent_tiles(loc, adjacent.data());
-		for (unsigned i = 0; i < adjacent.size(); ++i )
-			display::get_singleton()->invalidate(adjacent[i]);
+		// Need to also invalidate adjacent hexes to get rid of the "fog edge" graphics.
+		for(const map_location& adj : get_adjacent_tiles(loc)) {
+			display::get_singleton()->invalidate(adj);
+		}
 	}
 
 	// Check for units?
@@ -316,6 +312,12 @@ bool shroud_clearer::clear_loc(team &tm, const map_location &loc,
  * This should only be called if delayed shroud updates is off.
  * It is wasteful to call this if view_team uses neither fog nor shroud.
  *
+ * @param view_loc         The location to clear fog from.
+ * @param view_team        The team who will have the fog cleared from their map.
+ * @param viewer_id        The underlying ID of the unit doing the sighting (for events).
+ * @param sight_range
+ * @param slowed           Whether the unit is slowed.
+ * @param costs            The terrain costs for the unit.
  * @param real_loc         The actual location of the viewing unit.
  *                         (This is used to avoid having a unit sight itself.)
  * @param known_units      These locations are not checked for uncovered units.
@@ -333,12 +335,8 @@ bool shroud_clearer::clear_unit(const map_location &view_loc, team &view_team,
                                 const map_location & real_loc,
                                 const std::set<map_location>* known_units,
                                 std::size_t * enemy_count, std::size_t * friend_count,
-                                move_unit_spectator * spectator, bool instant)
+                                move_unit_spectator * spectator, bool /*instant*/)
 {
-	// Give animations a chance to progress; see bug #20324.
-	if ( !instant  && display::get_singleton() )
-		display::get_singleton()->draw(true);
-
 	bool cleared_something = false;
 	// Dummy variables to make some logic simpler.
 	std::size_t enemies=0, friends=0;
@@ -350,16 +348,10 @@ bool shroud_clearer::clear_unit(const map_location &view_loc, team &view_team,
 	// Make sure the jamming map is up-to-date.
 	if ( view_team_ != &view_team ) {
 		calculate_jamming(&view_team);
-		// Give animations a chance to progress; see bug #20324.
-		if ( !instant  && display::get_singleton() )
-			display::get_singleton()->draw(true);
 	}
 
 	// Determine the hexes to clear.
 	pathfind::vision_path sight(costs, slowed, sight_range, view_loc, jamming_);
-	// Give animations a chance to progress; see bug #20324.
-	if ( !instant  && display::get_singleton() )
-		display::get_singleton()->draw(true);
 
 	// Clear the fog.
 	for (const pathfind::paths::step &dest : sight.destinations) {
@@ -389,6 +381,9 @@ bool shroud_clearer::clear_unit(const map_location &view_loc, team &view_team,
  * This should only be called if delayed shroud updates is off.
  * It is wasteful to call this if view_team uses neither fog nor shroud.
  *
+ * @param view_loc         The location to clear fog from.
+ * @param viewer           The unit whose vision range will be used to clear the fog.
+ * @param view_team        The team who will have the fog cleared from their map.
  * @param known_units      These locations are not checked for uncovered units.
  * @param enemy_count      Incremented for each enemy uncovered (excluding known_units).
  * @param friend_count     Incremented for each friend uncovered (excluding known_units).
@@ -422,6 +417,9 @@ bool shroud_clearer::clear_unit(const map_location &view_loc,
  * This should only be called if delayed shroud updates is off.
  * It is wasteful to call this if view_team uses neither fog nor shroud.
  *
+ * @param view_loc         The location to clear fog from.
+ * @param viewer           The unit whose vision range will be used to clear the fog.
+ * @param view_team        The team who will have the fog cleared from their map.
  * @param instant          If false, then drawing delays (used to make movement look better) are allowed.
  *
  * @return whether or not information was uncovered (i.e. returns true if any
@@ -511,12 +509,11 @@ bool shroud_clearer::clear_dest(const map_location &dest, const unit &viewer)
 
 	// Clear the adjacent hexes (will be seen even if vision is 0, and the
 	// graphics do not work so well for an isolated cleared hex).
-	adjacent_loc_array_t adjacent;
-	get_adjacent_tiles(dest, adjacent.data());
-	for (unsigned i = 0; i < adjacent.size(); ++i )
-		if ( clear_loc(viewing_team, adjacent[i], dest, real_loc, viewer_id,
-		               true, enemies, friends) )
+	for(const map_location& adj : get_adjacent_tiles(dest)) {
+		if(clear_loc(viewing_team, adj, dest, real_loc, viewer_id, true, enemies, friends)) {
 			cleared_something = true;
+		}
+	}
 
 	if ( cleared_something )
 		invalidate_after_clear();
@@ -533,7 +530,7 @@ bool shroud_clearer::clear_dest(const map_location &dest, const unit &viewer)
 void shroud_clearer::drop_events()
 {
 	if ( !sightings_.empty() ) {
-		DBG_NG << sightings_.size() << " sighted events were dropped.\n";
+		DBG_NG << sightings_.size() << " sighted events were dropped.";
 	}
 	sightings_.clear();
 }

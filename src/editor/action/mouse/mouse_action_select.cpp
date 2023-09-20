@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2008 - 2018 by Fabian Mueller <fabianmueller5@gmx.de>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by Fabian Mueller <fabianmueller5@gmx.de>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #include "editor/action/mouse/mouse_action_select.hpp"
@@ -29,50 +30,45 @@ std::set<map_location> mouse_action_select::affected_hexes(
 	}
 }
 
-editor_action* mouse_action_select::key_event(
+std::unique_ptr<editor_action> mouse_action_select::key_event(
 		editor_display& disp, const SDL_Event& event)
 {
-	editor_action* ret = mouse_action::key_event(disp, event);
+	auto ret = mouse_action::key_event(disp, event);
 	update_brush_highlights(disp, previous_move_hex_);
 	return ret;
 }
 
-editor_action* mouse_action_select::click_perform_left(
+std::unique_ptr<editor_action> mouse_action_select::click_perform_left(
 		editor_display& /*disp*/, const std::set<map_location>& hexes)
 {
+	auto chain = std::make_unique<editor_action_chain>();
 	if (has_ctrl_modifier())
-		return new editor_action_chain(new editor_action_deselect(hexes));
+		chain->append_action(std::make_unique<editor_action_deselect>(hexes));
 	else
-		return new editor_action_chain(new editor_action_select(hexes));
+		chain->append_action(std::make_unique<editor_action_select>(hexes));
+	return chain;
 }
 
-editor_action* mouse_action_select::click_perform_right(
+std::unique_ptr<editor_action> mouse_action_select::click_perform_right(
 		editor_display& /*disp*/, const std::set<map_location>& /*hexes*/)
 {
 	return nullptr;
 }
 
-editor_action* mouse_action_select::click_right(editor_display& /*disp*/, int /*x*/, int /*y*/)
+std::unique_ptr<editor_action> mouse_action_select::click_right(editor_display& /*disp*/, int /*x*/, int /*y*/)
 {
 	return nullptr;
 }
 
 void mouse_action_select::set_mouse_overlay(editor_display& disp)
 {
-	surface image;
+	texture tex;
 	if (has_shift_modifier()) {
-		image = image::get_image("editor/tool-overlay-select-wand.png");
+		tex = image::get_texture(image::locator{"editor/tool-overlay-select-wand.png"});
 	} else {
-		image = image::get_image("editor/tool-overlay-select-brush.png");
+		tex = image::get_texture(image::locator{"editor/tool-overlay-select-brush.png"});
 	}
-	uint8_t alpha = 196;
-	int size = image->w;
-	int zoom = static_cast<int>(size * disp.get_zoom_factor());
-
-	// Add the alpha factor and scale the image
-	adjust_surface_alpha(image, alpha);
-	image = scale_surface(image, zoom, zoom);
-	disp.set_mouseover_hex_overlay(image);
+	disp.set_mouseover_hex_overlay(tex);
 }
 
 

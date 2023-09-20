@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2007 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2007 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -50,10 +51,9 @@ namespace settings {
 	 *  Gets the village gold.
 	 *  If no valid value supplied, it will return a default.
 	 *  The default is 1 for singleplayer, and 2 for multiplayer.
-	 *  The value is also range checked.
-	 *  When out of bounds, it will be set to the nearest bound.
 	 *
 	 *  @param value        string containing the village gold
+	 *  @param classification
 	 *
 	 *  @returns            the village gold
 	 */
@@ -62,8 +62,6 @@ namespace settings {
 	/**
 	 *  Gets the village unit level support.
 	 *  If no valid value supplied, it will return a default.
-	 *  The value is also range checked.
-	 *  When out of bounds, it will be set to the nearest bound.
 	 *
 	 *  @param value        string containing the village support
 	 *
@@ -74,8 +72,6 @@ namespace settings {
 	/**
 	 *  Gets the xp modifier.
 	 *  If no valid value supplied, it will return a default.
-	 *  The value is also range checked.
-	 *  When out of bounds, it will be set to the nearest bound.
 	 *
 	 *  @param value        string containing the xp modifier
 	 *

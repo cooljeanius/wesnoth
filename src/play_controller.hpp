@@ -1,16 +1,17 @@
 /*
-   Copyright (C) 2006 - 2018 by Joerg Hinrichs <joerg.hinrichs@alice-dsl.de>
-   wesnoth playlevel Copyright (C) 2003 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2006 - 2023
+	by Joerg Hinrichs <joerg.hinrichs@alice-dsl.de>
+	Copyright (C) 2003 by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -22,9 +23,9 @@
 #include "menu_events.hpp"
 #include "mouse_events.hpp"
 #include "persist_manager.hpp"
-#include "terrain/type_data.hpp"
 #include "tod_manager.hpp"
 #include "game_state.hpp"
+#include <optional>
 
 #include <set>
 
@@ -57,16 +58,14 @@ namespace soundsource {
 	class manager;
 } // namespace soundsource
 
-namespace statistics {
-	struct scenario_context;
-} // namespace statistics
+class statistics_t;
 
 namespace pathfind {
 	class manager;
 }
 
 namespace tooltips {
-	struct manager;
+	class manager;
 } // namespace tooltips
 
 namespace wb {
@@ -79,8 +78,10 @@ class game_state;
 class play_controller : public controller_base, public events::observer, public quit_confirmation
 {
 public:
-	play_controller(const config& level, saved_game& state_of_game,
-		const ter_data_cache& tdata, bool skip_replay);
+	play_controller(const config& level,
+			saved_game& state_of_game,
+			bool skip_replay,
+			bool start_faded = false);
 	virtual ~play_controller();
 
 	//event handler, overridden from observer
@@ -128,49 +129,80 @@ public:
 	 */
 	virtual void process_oos(const std::string& msg) const;
 
-	void set_end_level_data(const end_level_data& data) {
+	void set_end_level_data(const end_level_data& data)
+	{
 		gamestate().end_level_data_ = data;
 	}
-	void reset_end_level_data() {
-		gamestate().end_level_data_ = boost::none;
-	}
-	bool is_regular_game_end() const {
-		return gamestate().end_level_data_.get_ptr() != nullptr;
-	}
-	const end_level_data& get_end_level_data_const() const {
-		return *gamestate().end_level_data_;
-	}
-	const std::vector<team>& get_teams_const() const {
-		return gamestate().board_.teams_;
+
+	void reset_end_level_data()
+	{
+		gamestate().end_level_data_.reset();
 	}
 
-	const unit_map& get_units_const() const {
+	bool is_regular_game_end() const
+	{
+		return gamestate().end_level_data_.has_value();
+	}
+
+	bool check_regular_game_end();
+
+	const end_level_data& get_end_level_data() const
+	{
+		return *gamestate().end_level_data_;
+	}
+
+	std::vector<team>& get_teams()
+	{
+		return gamestate().board_.teams();
+	}
+
+	const std::vector<team>& get_teams() const
+	{
+		return gamestate().board_.teams();
+	}
+
+	const unit_map& get_units() const
+	{
 		return gamestate().board_.units();
 	}
 
-	const gamemap& get_map_const() const{
+	unit_map& get_units()
+	{
+		return gamestate().board_.units();
+	}
+
+	const gamemap& get_map() const
+	{
 		return gamestate().board_.map();
 	}
-	const tod_manager& get_tod_manager_const() const{
-			return gamestate().tod_manager_;
-		}
 
-	bool is_observer() const {
+	const tod_manager& get_tod_manager() const
+	{
+		return gamestate().tod_manager_;
+	}
+
+	bool is_observer() const
+	{
 		return gamestate().board_.is_observer();
 	}
 
-	bool do_healing() const {
+	bool do_healing() const
+	{
 		return gamestate().do_healing_;
 	}
 
-	void set_do_healing(bool do_healing) {
+	void set_do_healing(bool do_healing)
+	{
 		gamestate().do_healing_ = do_healing;
 	}
 
-	game_state& gamestate() {
+	game_state& gamestate()
+	{
 		return *gamestate_;
 	}
-	const game_state& gamestate() const {
+
+	const game_state& gamestate() const
+	{
 		return *gamestate_;
 	}
 
@@ -197,7 +229,6 @@ public:
 
 	bool is_skipping_replay() const { return skip_replay_; }
 	void toggle_skipping_replay();
-	bool is_linger_mode() const { return linger_; }
 	void do_autosave();
 
 	bool is_skipping_story() const { return skip_story_; }
@@ -224,7 +255,6 @@ public:
 	actions::undo_list& get_undo_stack() { return undo_stack(); }
 
 	bool is_browsing() const override;
-	bool is_lingering() const { return linger_; }
 
 	class hotkey_handler;
 
@@ -256,12 +286,7 @@ public:
 		return is_regular_game_end();
 	}
 
-	void maybe_throw_return_to_play_side() const
-	{
-		if(should_return_to_play_side() && !linger_ ) {
-			throw return_to_play_side_exception();
-		}
-	}
+	void maybe_throw_return_to_play_side() const;
 
 	virtual void play_side_impl() {}
 
@@ -284,7 +309,7 @@ public:
 	virtual bool is_networked_mp() const { return false; }
 	virtual void send_to_wesnothd(const config&, const std::string& = "unknown") const { }
 	virtual bool receive_from_wesnothd(config&) const { return false; }
-	/// Reevaluate [show_if] conditions and build a new objectives string.
+	/** Reevaluate [show_if] conditions and build a new objectives string. */
 	void refresh_objectives() const;
 	void show_objectives() const;
 
@@ -297,6 +322,10 @@ public:
 
 	saved_game& get_saved_game() { return saved_game_; }
 
+	statistics_t& statistics() { return *statistics_context_; }
+	bool is_during_turn() const;
+	bool is_linger_mode() const;
+
 protected:
 	friend struct scoped_savegame_snapshot;
 	void play_slice_catch();
@@ -306,36 +335,37 @@ protected:
 	void process_keyup_event(const SDL_Event& event) override;
 
 	void init_managers();
-	///preload events cannot be synced
+	/** preload events cannot be synced */
 	void fire_preload();
 	void fire_prestart();
 	void fire_start();
 	void start_game();
 	virtual void init_gui();
-	void finish_side_turn();
+	void finish_side_turn_events();
 	void finish_turn(); //this should not throw an end turn or end level exception
 	bool enemies_visible() const;
 
 	void enter_textbox();
+	void textbox_move_vertically(bool up);
 	void tab();
 
 
 	bool is_team_visible(int team_num, bool observer) const;
-	/// returns 0 if no such team was found.
-	int find_last_visible_team() const;
+public:
+	/** returns 0 if no such team was found. */
+	int find_viewing_side() const;
 
 private:
 	const int ticks_;
 
 protected:
 	//gamestate
-	const ter_data_cache& tdata_;
 	std::unique_ptr<game_state> gamestate_;
 	config level_;
 	saved_game& saved_game_;
 
 	//managers
-	std::unique_ptr<tooltips::manager> tooltips_manager_;
+	tooltips::manager tooltips_manager_;
 
 	//whiteboard manager
 	std::shared_ptr<wb::manager> whiteboard_manager_;
@@ -355,21 +385,24 @@ protected:
 	//other objects
 	std::unique_ptr<game_display> gui_;
 	const std::unique_ptr<unit_experience_accelerator> xp_mod_;
-	const std::unique_ptr<const statistics::scenario_context> statistics_context_;
+	const std::unique_ptr<statistics_t> statistics_context_;
 	actions::undo_list& undo_stack() { return *gamestate().undo_stack_; }
 	const actions::undo_list& undo_stack() const { return *gamestate().undo_stack_; }
 	std::unique_ptr<replay> replay_;
 
 	bool skip_replay_;
 	bool skip_story_;
-	bool linger_;
 	/**
 	 * Whether we did init sides in this session
 	 * (false = we did init sides before we reloaded the game).
 	 */
-	bool init_side_done_now_;
+	bool did_autosave_this_turn_;
+	bool did_tod_sound_this_turn_;
 	//the displayed location when we load a game.
 	map_location map_start_;
+	// Whether to start with the display faded to black
+	bool start_faded_;
+
 	const std::string& select_music(bool victory) const;
 
 	void reset_gamestate(const config& level, int replay_pos);
@@ -378,18 +411,28 @@ private:
 
 	void init(const config& level);
 
+	/**
+	 * This shows a warning dialog if either [scenario]next_scenario or any [endlevel]next_scenario would lead to an "Unknown Scenario" dialog.
+	 */
+	void check_next_scenario_is_known();
+
 	bool victory_when_enemies_defeated_;
 	bool remove_from_carryover_on_defeat_;
 	std::vector<std::string> victory_music_;
 	std::vector<std::string> defeat_music_;
 
-	hotkey::scope_changer scope_;
+	const hotkey::scope_changer scope_;
 
 protected:
 	mutable bool ignore_replay_errors_;
+	/// true when the controller of the currently playing side has changed.
+	/// this can mean for example:
+	/// - The currently active side was reassigned from/to another player in a mp game
+	/// - The replay controller was disabled ('continue play' button)
+	/// - The currently active side was droided / undroided.
+	/// - A side was set to idle.
 	bool player_type_changed_;
 	virtual void sync_end_turn() {}
 	virtual void check_time_over();
 	virtual void update_viewing_player() = 0;
-	void play_turn();
 };

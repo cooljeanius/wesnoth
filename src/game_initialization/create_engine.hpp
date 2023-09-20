@@ -1,24 +1,25 @@
 /*
-   Copyright (C) 2013 - 2018 by Andrius Silinskas <silinskas.andrius@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2013 - 2023
+	by Andrius Silinskas <silinskas.andrius@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
 
 #include "config.hpp"
 #include "game_initialization/depcheck.hpp"
+#include "game_initialization/level_type.hpp"
 #include "generators/map_generator.hpp"
 #include "mp_game_settings.hpp"
-#include "utils/make_enum.hpp"
 #include "utils/irdya_datetime.hpp"
 
 #include <numeric>
@@ -61,15 +62,6 @@ class level
 public:
 	level(const config& data);
 	virtual ~level() = default;
-
-	MAKE_ENUM(TYPE,
-		(SCENARIO,      "scenario")
-		(USER_MAP,      "user_map")
-		(USER_SCENARIO, "user_scenario")
-		(RANDOM_MAP,    "random_map")
-		(CAMPAIGN,      "campaign")
-		(SP_CAMPAIGN,   "sp_campaign")
-	)
 
 	virtual void set_metadata() = 0;
 
@@ -121,7 +113,7 @@ protected:
 
 private:
 	level(const level&) = delete;
-	void operator=(const level&) = delete;
+	level& operator=(const level&) = delete;
 };
 
 class scenario : public level
@@ -153,8 +145,8 @@ protected:
 	std::string map_hash_;
 
 private:
-	scenario(const scenario&);
-	void operator=(const scenario&);
+	scenario(const scenario&) = delete;
+	scenario& operator=(const scenario&) = delete;
 
 	int num_players_;
 };
@@ -181,7 +173,7 @@ public:
 
 private:
 	user_map(const user_map&) = delete;
-	void operator=(const user_map&) = delete;
+	user_map& operator=(const user_map&) = delete;
 
 	std::string name_;
 };
@@ -197,7 +189,7 @@ public:
 	}
 
 	std::string generator_name() const
-		{
+	{
 		return generator_name_;
 	}
 
@@ -210,7 +202,7 @@ public:
 
 private:
 	random_map(const random_map&) = delete;
-	void operator=(const random_map&) = delete;
+	random_map& operator=(const random_map&) = delete;
 
 	config generator_data_;
 
@@ -254,21 +246,21 @@ public:
 		return min_players_ <= player_count && max_players_ >= player_count;
 	}
 
-	std::pair<irdya_date, irdya_date> dates() const
+	std::pair<utils::irdya_date, utils::irdya_date> dates() const
 	{
 		return dates_;
 	}
 
 private:
 	campaign(const campaign&) = delete;
-	void operator=(const campaign&) = delete;
+	campaign& operator=(const campaign&) = delete;
 
 	std::string id_;
 	bool allow_era_choice_;
 	std::string image_label_;
 	int min_players_;
 	int max_players_;
-	std::pair<irdya_date, irdya_date> dates_;
+	std::pair<utils::irdya_date, utils::irdya_date> dates_;
 };
 
 class create_engine
@@ -337,20 +329,20 @@ public:
 		return player_count_filter_;
 	}
 
-	std::vector<level_ptr> get_levels_by_type_unfiltered(level::TYPE type) const;
-	std::vector<level_ptr> get_levels_by_type(level::TYPE type) const;
+	std::vector<level_ptr> get_levels_by_type_unfiltered(level_type::type type) const;
+	std::vector<level_ptr> get_levels_by_type(level_type::type type) const;
 
-	std::vector<std::size_t> get_filtered_level_indices(level::TYPE type) const;
+	std::vector<std::size_t> get_filtered_level_indices(level_type::type type) const;
 
 	level& current_level() const;
 	const extras_metadata& current_era() const;
 
-	void set_current_level_type(const level::TYPE type)
+	void set_current_level_type(const level_type::type type)
 	{
 		current_level_type_ = type;
 	}
 
-	level::TYPE current_level_type() const
+	level_type::type current_level_type() const
 	{
 		return current_level_type_;
 	}
@@ -358,7 +350,7 @@ public:
 	/** Wrapper to simplify the is-type-campaign-or-sp-campaign check. */
 	bool is_campaign() const
 	{
-		return current_level_type_ == level::TYPE::CAMPAIGN || current_level_type_ == level::TYPE::SP_CAMPAIGN;
+		return current_level_type_ == level_type::type::campaign || current_level_type_ == level_type::type::sp_campaign;
 	}
 
 	void set_current_level(const std::size_t index);
@@ -381,7 +373,7 @@ public:
 	bool generator_has_settings() const;
 	void generator_user_config();
 
-	std::pair<level::TYPE, int> find_level_by_id(const std::string& id) const;
+	std::pair<level_type::type, int> find_level_by_id(const std::string& id) const;
 	int find_extra_by_id(const MP_EXTRA extra_type, const std::string& id) const;
 
 	const depcheck::manager& dependency_manager() const
@@ -403,7 +395,7 @@ public:
 
 private:
 	create_engine(const create_engine&) = delete;
-	void operator=(const create_engine&) = delete;
+	create_engine& operator=(const create_engine&) = delete;
 
 	void init_all_levels();
 	void init_extras(const MP_EXTRA extra_type);
@@ -411,7 +403,7 @@ private:
 
 	std::size_t map_level_index(std::size_t index) const;
 
-	level::TYPE current_level_type_;
+	level_type::type current_level_type_;
 	std::size_t current_level_index_;
 
 	std::size_t current_era_index_;
@@ -446,7 +438,7 @@ private:
 		}
 	};
 
-	std::map<level::TYPE, type_list> type_map_;
+	std::map<level_type::type, type_list> type_map_;
 
 	std::vector<std::string> user_map_names_;
 	std::vector<std::string> user_scenario_names_;

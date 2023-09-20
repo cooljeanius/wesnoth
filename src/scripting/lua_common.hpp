@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2014 - 2018 by Chris Beck <render787@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2014 - 2023
+	by Chris Beck <render787@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -26,10 +27,10 @@ class vconfig;
 #include "config.hpp"
 #include "variable_info.hpp"
 #include "map/location.hpp"
-#include "serialization/string_view.hpp"
 
-#include <vector>
 #include <string>
+#include <string_view>
+#include <vector>
 
 namespace lua_common {
 	int intf_textdomain(lua_State *L);
@@ -41,8 +42,8 @@ namespace lua_common {
 
 }
 
-void* operator new(std::size_t sz, lua_State *L);
-void operator delete(void* p, lua_State *L);
+void* operator new(std::size_t sz, lua_State *L, int nuv = 0);
+void operator delete(void* p, lua_State *L, int nuv);
 
 /**
  * Like luaL_getmetafield, but returns false if key is an empty string
@@ -94,13 +95,22 @@ bool luaW_iststring(lua_State* L, int index);
 void luaW_filltable(lua_State *L, const config& cfg);
 
 /**
+ * Push an empty "named tuple" onto the stack.
+ * A named tuple is an array where each index can also be accessed by name.
+ * Once it's pushed, you can set the elements, eg with lua_rawseti.
+ */
+void luaW_push_namedtuple(lua_State* L, const std::vector<std::string>& names);
+
+/**
  * Converts a map location object to a Lua table pushed at the top of the stack.
  */
 void luaW_pushlocation(lua_State *L, const map_location& loc);
 
 /**
  * Converts an optional table or pair of integers to a map location object.
+ * @param L the pointer to the lua interpreter.
  * @param index stack position of the table or first integer.
+ * @param loc the location to write to.
  * @return false if a map location couldn't be matched.
  */
 bool luaW_tolocation(lua_State *L, int index, map_location &loc);
@@ -113,13 +123,25 @@ bool luaW_tolocation(lua_State *L, int index, map_location &loc);
 map_location luaW_checklocation(lua_State *L, int index);
 
 /**
+ * Converts a set of map locations to a Lua table pushed at the top of the stack.
+ */
+int luaW_push_locationset(lua_State* L, const std::set<map_location>& locs);
+
+/**
+ * Converts a table of integer pairs to a set of map location objects.
+ */
+std::set<map_location> luaW_check_locationset(lua_State* L, int idx);
+
+/**
  * Converts a config object to a Lua table pushed at the top of the stack.
  */
 void luaW_pushconfig(lua_State *L, const config& cfg);
 
 /**
  * Converts an optional table or vconfig to a config object.
+ * @param L the pointer to the lua interpreter.
  * @param index stack position of the table.
+ * @param cfg the config to write the data to.
  * @return false if some attributes had not the proper type.
  * @note If the table has holes in the integer keys or floating-point keys,
  *       some keys will be ignored and the error will go undetected.
@@ -139,6 +161,8 @@ bool luaW_tovconfig(lua_State *L, int index, vconfig &vcfg);
 
 /**
  * Gets an optional vconfig from either a table or a userdata.
+ * @param L the pointer to the lua interpreter.
+ * @param index the location in the current lua execution stack to look at.
  * @param allow_missing true if missing values are allowed; the function
  *        then returns an unconstructed vconfig.
  */
@@ -176,8 +200,8 @@ bool luaW_checkvariable(lua_State *L, variable_access_create& v, int n);
 
 bool luaW_tableget(lua_State *L, int index, const char* key);
 
-utils::string_view luaW_tostring(lua_State *L, int index);
-utils::string_view luaW_tostring_or_default(lua_State *L, int index, utils::string_view def = utils::string_view());
+std::string_view luaW_tostring(lua_State *L, int index);
+std::string_view luaW_tostring_or_default(lua_State *L, int index, std::string_view def = std::string_view());
 
 /**
  * Displays a message in the chat window.
@@ -186,7 +210,10 @@ void chat_message(const std::string& caption, const std::string& msg);
 
 /**
  * Calls a Lua function stored below its @a nArgs arguments at the top of the stack.
+ * @param L the pointer to the lua interpreter.
+ * @param nArgs
  * @param nRets LUA_MULTRET for unbounded return values.
+ * @param allow_wml_error controls where any stack traces are output.
  * @return true if the call was successful and @a nRets return values are available.
  */
 bool luaW_pcall(lua_State *L, int nArgs, int nRets, bool allow_wml_error = false);
@@ -198,6 +225,14 @@ int luaW_pcall_internal(lua_State *L, int nArgs, int nRets);
 int luaW_type_error(lua_State *L, int narg, const char *tname);
 int luaW_type_error(lua_State *L, int narg, const char* kpath, const char *tname);
 
+#define deprecate_attrib(name, prefix, level, version, msg) deprecated_message(prefix "." name, DEP_LEVEL::level, version, msg)
+
+#define return_deprecated_attrib(type_macro, name, accessor, prefix, level, version, msg) \
+	type_macro(name, ( \
+		deprecate_attrib(name, prefix, level, version, msg), \
+		accessor \
+	))
+
 #define return_tstring_attrib(name, accessor) \
 do { \
 	if (strcmp(m, (name)) == 0) { \
@@ -205,6 +240,8 @@ do { \
 		return 1; \
 	} \
 } while(false)
+#define return_tstring_attrib_deprecated(name, prefix, level, version, msg, accessor) \
+	return_deprecated_attrib(return_tstring_attrib, name, accessor, prefix, level, version, msg)
 
 #define return_cstring_attrib(name, accessor) \
 do { \
@@ -213,6 +250,8 @@ do { \
 		return 1; \
 	} \
 } while(false)
+#define return_cstring_attrib_deprecated(name, prefix, level, version, msg, accessor) \
+	return_deprecated_attrib(return_cstring_attrib, name, accessor, prefix, level, version, msg)
 
 #define return_string_attrib(name, accessor) \
 do { \
@@ -222,6 +261,8 @@ do { \
 		return 1; \
 	} \
 } while(false)
+#define return_string_attrib_deprecated(name, prefix, level, version, msg, accessor) \
+	return_deprecated_attrib(return_string_attrib, name, accessor, prefix, level, version, msg)
 
 #define return_int_attrib(name, accessor) \
 do { \
@@ -230,6 +271,8 @@ do { \
 		return 1; \
 	} \
 } while(false)
+#define return_int_attrib_deprecated(name, prefix, level, version, msg, accessor) \
+	return_deprecated_attrib(return_int_attrib, name, accessor, prefix, level, version, msg)
 
 #define return_float_attrib(name, accessor) \
 do { \
@@ -238,6 +281,8 @@ do { \
 		return 1; \
 	} \
 } while(false)
+#define return_float_attrib_deprecated(name, prefix, level, version, msg, accessor) \
+	return_deprecated_attrib(return_float_attrib, name, accessor, prefix, level, version, msg)
 
 #define return_bool_attrib(name, accessor) \
 do { \
@@ -246,6 +291,8 @@ do { \
 		return 1; \
 	} \
 } while(false)
+#define return_bool_attrib_deprecated(name, prefix, level, version, msg, accessor) \
+	return_deprecated_attrib(return_bool_attrib, name, accessor, prefix, level, version, msg)
 
 #define return_cfg_attrib(name, accessor) \
 do { \
@@ -256,6 +303,8 @@ do { \
 		return 1; \
 	} \
 } while(false)
+#define return_cfg_attrib_deprecated(name, prefix, level, version, msg, accessor) \
+	return_cfg_attrib(name, deprecate_attrib(name, prefix, level, version, msg); accessor)
 
 #define return_cfgref_attrib(name, accessor) \
 do { \
@@ -264,6 +313,8 @@ do { \
 		return 1; \
 	} \
 } while(false)
+#define return_cfgref_attrib_deprecated(name, prefix, level, version, msg, accessor) \
+	return_deprecated_attrib(return_cfgref_attrib, name, accessor, prefix, level, version, msg)
 
 #define return_vector_string_attrib(name, accessor) \
 do { \
@@ -279,6 +330,8 @@ do { \
 		return 1; \
 	} \
 } while(false)
+#define return_vector_string_attrib_deprecated(name, prefix, level, version, msg, accessor) \
+	return_deprecated_attrib(return_vector_string_attrib, name, accessor, prefix, level, version, msg)
 
 #define modify_tstring_attrib(name, accessor) \
 do { \
@@ -288,6 +341,8 @@ do { \
 		return 0; \
 	} \
 } while(false)
+#define modify_tstring_attrib_deprecated(name, prefix, level, version, msg, accessor) \
+	modify_tstring_attrib(name, deprecate_attrib(name, prefix, level, version, msg); accessor)
 
 #define modify_string_attrib(name, accessor) \
 do { \
@@ -297,6 +352,8 @@ do { \
 		return 0; \
 	} \
 } while(false)
+#define modify_string_attrib_deprecated(name, prefix, level, version, msg, accessor) \
+	modify_string_attrib(name, deprecate_attrib(name, prefix, level, version, msg); accessor)
 
 #define modify_int_attrib(name, accessor) \
 do { \
@@ -306,6 +363,8 @@ do { \
 		return 0; \
 	} \
 } while(false)
+#define modify_int_attrib_deprecated(name, prefix, level, version, msg, accessor) \
+	modify_int_attrib(name, deprecate_attrib(name, prefix, level, version, msg); accessor)
 
 #define modify_int_attrib_check_range(name, accessor, allowed_min, allowed_max) \
 do { \
@@ -316,6 +375,8 @@ do { \
 		return 0; \
 	} \
 } while(false)
+#define modify_int_attrib_check_range_deprecated(name, prefix, level, version, msg, accessor, allowed_min, allowed_max) \
+	modify_int_attrib_check_range(name, deprecate_attrib(name, prefix, level, version, msg); accessor, allowed_min, allowed_max)
 
 #define modify_float_attrib(name, accessor) \
 do { \
@@ -325,6 +386,8 @@ do { \
 		return 0; \
 	} \
 } while(false)
+#define modify_float_attrib_deprecated(name, prefix, level, version, msg, accessor) \
+	modify_float_attrib(name, deprecate_attrib(name, prefix, level, version, msg); accessor)
 
 #define modify_float_attrib_check_range(name, accessor, allowed_min, allowed_max) \
 do { \
@@ -335,6 +398,8 @@ do { \
 		return 0; \
 	} \
 } while(false)
+#define modify_float_attrib_check_range_deprecated(name, prefix, level, version, msg, accessor, allowed_min, allowed_max) \
+	modify_float_attrib_check_range(name, deprecate_attrib(name, prefix, level, version, msg); accessor, allowed_min, allowed_max)
 
 #define modify_bool_attrib(name, accessor) \
 do { \
@@ -344,6 +409,8 @@ do { \
 		return 0; \
 	} \
 } while(false)
+#define modify_bool_attrib_deprecated(name, prefix, level, version, msg, accessor) \
+	modify_bool_attrib(name, deprecate_attrib(name, prefix, level, version, msg); accessor)
 
 #define modify_cfg_attrib(name, accessor) \
 do { \
@@ -353,6 +420,8 @@ do { \
 		return 0; \
 	} \
 } while(false)
+#define modify_cfg_attrib_deprecated(name, prefix, level, version, msg, accessor) \
+	modify_cfg_attrib(name, deprecate_attrib(name, prefix, level, version, msg); accessor)
 
 #define modify_vector_string_attrib(name, accessor) \
 do { \
@@ -372,3 +441,5 @@ do { \
 		return 0; \
 	} \
 } while(false)
+#define modify_vector_string_attrib_deprecated(name, prefix, level, version, msg, accessor) \
+	modify_vector_string_attrib(name, deprecate_attrib(name, prefix, level, version, msg); accessor)

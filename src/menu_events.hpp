@@ -1,16 +1,17 @@
 /*
-   Copyright (C) 2006 - 2018 by Joerg Hinrichs <joerg.hinrichs@alice-dsl.de>
-   wesnoth playturn Copyright (C) 2003 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2006 - 2023
+	by Joerg Hinrichs <joerg.hinrichs@alice-dsl.de>
+	Copyright (C) 2003 by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -95,7 +96,7 @@ public:
 	void user_command();
 	void custom_command();
 	void ai_formula();
-	void clear_messages();
+	virtual void clear_messages() override;
 	std::vector<std::string> get_commands_list();
 
 	unit_map::iterator current_unit();
@@ -110,9 +111,9 @@ public:
 			int side_num,
 			mouse_handler& mousehandler);
 
-	///@return If the recruit is possible, an empty string and set @a recruited_from; otherwise, return an error message string.
+	/** @return If the recruit is possible, an empty string and set @a recruited_from; otherwise, return an error message string. */
 	t_string can_recruit(const std::string& name, int side_num, map_location& target_hex, map_location& recruited_from);
-	///@return Whether or not the recruit was successful
+	/** @return Whether or not the recruit was successful */
 	bool do_recruit(const std::string& name, int side_num, map_location& target_hex);
 	void do_speak();
 	void do_search(const std::string& new_search);
@@ -123,9 +124,6 @@ public:
 	game_state& gamestate() const;
 	game_data& gamedata();
 	game_board& board() const;
-	unit_map& units();
-	std::vector<team>& teams() const;
-	const gamemap& map() const;
 
 protected:
 	void add_chat_message(const std::time_t& time,
@@ -141,7 +139,6 @@ private:
 	friend class console_handler;
 
 	// void do_speak(const std::string& message, bool allies_only);
-	// std::vector<std::string> create_unit_table(const statistics::stats::str_int_map& m,unsigned int team);
 	bool has_friends() const;
 
 	game_display* gui_;

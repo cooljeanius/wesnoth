@@ -1,18 +1,17 @@
 /*
-   Copyright (C) 2006 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2006 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
-
-/** @file */
 
 #pragma once
 
@@ -22,19 +21,19 @@
 #include <boost/bimap.hpp>
 #include <boost/bimap/set_of.hpp>
 #include <boost/bimap/multiset_of.hpp>
-#include <boost/multi_array.hpp>
 
 #include "exceptions.hpp"
 #include "map/location.hpp"
-#include "serialization/string_view.hpp"
+
+#include <string_view>
 
 namespace t_translation {
 
-    /**
-     * Return the maximum allowed map size (in either dimension),
-     * the maximum map area is, therefore, this value squared.
-     */
-    int max_map_size();
+	/**
+	 * Return the maximum allowed map size (in either dimension),
+	 * the maximum map area is, therefore, this value squared.
+	 */
+	int max_map_size();
 
 	typedef uint32_t ter_layer;
 	const ter_layer WILDCARD = 0x2A000000;
@@ -104,7 +103,7 @@ namespace t_translation {
 	 */
 	struct ter_match{
 		ter_match();
-		ter_match(utils::string_view str, const ter_layer filler = NO_LAYER);
+		ter_match(std::string_view str, const ter_layer filler = NO_LAYER);
 		ter_match(const terrain_code& tcode);
 
 		ter_list terrain;
@@ -117,7 +116,7 @@ namespace t_translation {
 	/**  Contains an x and y coordinate used for starting positions in maps. */
 	using coordinate = map_location;
 
-    // Exception thrown if there's an error with the terrain.
+	// Exception thrown if there's an error with the terrain.
 	// Note: atm most thrown result in a crash, but I like
 	// an uncatched exception better than an assert.
 	struct error : public game::error {
@@ -155,7 +154,7 @@ namespace t_translation {
 	extern const terrain_code STAR;	// *
 	extern const terrain_code BASE;	// references the base terrain in movement/defense aliases
 
-    extern const ter_match ALL_OFF_MAP;
+	extern const ter_match ALL_OFF_MAP;
 	extern const ter_match ALL_FORESTS;
 	extern const ter_match ALL_HILLS;
 	extern const ter_match ALL_MOUNTAINS; //excluding impassable mountains
@@ -164,25 +163,24 @@ namespace t_translation {
 	/**
 	 * Reads a single terrain from a string.
 	 *
-	 * @param str		The string which should contain 1 terrain code;
-                                        the new format of a terrain code
-	 *				is 2 to 4 characters in the set
+	 * @param str       The string which should contain 1 terrain code;
+	 *                  the format of a terrain code
+	 *                  is 2 to 4 characters in the set
 	 *@verbatim
-	 *				[a-Z][A-Z]/|\_
+	 *                  [a-zA-Z/|\_]
 	 *@endverbatim
-	 *				The underscore is intended for internal use.
-	 *				Other letters and characters are not validated but
-	 *				users of these letters can get nasty surprises.
-	 *				The * is used as wildcard in some cases.
-	 *				The terrain code can be two groups separated by a caret,
-	 *				the first group is the base terrain,
-	 *				the second the overlay terrain.
+	 *                  The underscore is intended for internal use.
+	 *                  Other characters are reserved for future use.
+	 *                  The * is used as wildcard in some cases.
+	 *                  The terrain code can be two groups separated by a caret,
+	 *                  the first group is the base terrain,
+	 *                  the second the overlay terrain.
 	 *
-	 * @param filler	if there's no layer this value will be used as the second layer
+	 * @param filler    if there's no layer this value will be used as the second layer
 	 *
-	 * @return			A single terrain code
+	 * @return          A single terrain code
 	 */
-	terrain_code read_terrain_code(utils::string_view str, const ter_layer filler = NO_LAYER);
+	terrain_code read_terrain_code(std::string_view str, const ter_layer filler = NO_LAYER);
 
 	/**
 	 * Writes a single terrain code to a string.
@@ -204,7 +202,7 @@ namespace t_translation {
 	 *
 	 * @returns		A vector which contains the terrain codes found in the string
 	 */
-	 ter_list read_list(utils::string_view str, const ter_layer filler = NO_LAYER);
+	 ter_list read_list(std::string_view str, const ter_layer filler = NO_LAYER);
 
 	/**
 	 * Writes a list of terrains to a string, only writes the new format.
@@ -245,17 +243,19 @@ namespace t_translation {
 	 *					the last is stored. The returned value is a map:
 	 *					* first		the starting locations
 	 *					* second	a coordinate structure where the location was found
+	 * @param border_offset
 	 *
 	 * @returns			A 2D vector with the terrains found the vector data is stored
 	 *					like result[x][y] where x the column number is and y the row number.
 	 */
-	ter_map read_game_map(utils::string_view str, starting_positions& positions, coordinate border_offset = coordinate{ 0, 0 });
+	ter_map read_game_map(std::string_view str, starting_positions& positions, coordinate border_offset = coordinate{ 0, 0 });
 
 	/**
 	 * Write a gamemap in to a vector string.
 	 *
 	 * @param map				 A terrain vector, as returned from read_game_map
 	 * @param positions A starting positions map, as returned from read_game_map
+	 * @param border_offset
 	 *
 	 * @returns			A terrain string which can be read with read_game_map.
 	 *					For readability the map is padded to groups of 12 chars,

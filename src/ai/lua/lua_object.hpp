@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2011 - 2018 by Dmitry Kovalenko <nephro.wes@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2011 - 2023
+	by Dmitry Kovalenko <nephro.wes@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -17,11 +18,10 @@
  * Lua object(value) wrapper implementation
  */
 
-
-#ifndef LUA_OBJECT_HPP_INCLUDED
-#define LUA_OBJECT_HPP_INCLUDED
+#pragma once
 
 #include "config.hpp"
+#include "log.hpp"
 #include "lua/lua.h"
 #include "map/location.hpp"
 #include "resources.hpp"
@@ -31,14 +31,14 @@
 #include "ai/default/contexts.hpp"
 #include "ai/lua/aspect_advancements.hpp"
 
-#include <boost/variant/get.hpp>
 #include <iterator>
 #include <string>
 #include <vector>
 
+static lg::log_domain log_scripting_lua("scripting/lua");
+#define ERR_OBJ_LUA LOG_STREAM(err, log_scripting_lua)
 
 namespace ai {
-
 
 class lua_object_base {
 
@@ -60,7 +60,7 @@ public:
 	{
 		// empty
 	}
-	
+
 	lua_object(const T& init)
 		: value_(std::make_shared<T>(init))
 	{
@@ -76,7 +76,7 @@ public:
 	{
 		this->value_ = to_type(L, lua_absindex(L, n));
 	}
-	
+
 	void push(lua_State* L)
 	{
 		from_type(L, this->value_);
@@ -89,7 +89,7 @@ protected:
 	{
 		return std::shared_ptr<T>();
 	}
-	
+
 	// A group of functions that deal with the translations of values back to Lua
 	void from_type(lua_State* L, std::shared_ptr<T>)
 	{
@@ -120,29 +120,33 @@ inline std::shared_ptr<std::string> lua_object<std::string>::to_type(lua_State *
 }
 
 template <>
-inline void lua_object<boost::variant<bool, std::vector<std::string>>>::from_type(lua_State *L, std::shared_ptr<boost::variant<bool, std::vector<std::string>>> value)
+inline void lua_object<utils::variant<bool, std::vector<std::string>>>::from_type(lua_State *L, std::shared_ptr<utils::variant<bool, std::vector<std::string>>> value)
 {
 	if(value) {
-		if (value->which() == 0) {
-			lua_pushboolean(L, boost::get<bool>(*value));
-		} else {
-			std::vector<std::string> strlist = boost::get<std::vector<std::string>>(*value);
-			lua_createtable(L, strlist.size(), 0);
-			for(const std::string& str : strlist) {
-				lua_pushlstring(L, str.c_str(), str.size());
-				lua_rawseti(L, -2, lua_rawlen(L, -2) + 1);
-			}
-		}
+		// TODO: this is is duplicated as a helper function in ai/lua/core.cpp
+		utils::visit(
+			[L](const auto& v) {
+				if constexpr(utils::decayed_is_same<bool, decltype(v)>) {
+					lua_pushboolean(L, v);
+				} else {
+					lua_createtable(L, v.size(), 0);
+					for(const std::string& str : v) {
+						lua_pushlstring(L, str.c_str(), str.size());
+						lua_rawseti(L, -2, lua_rawlen(L, -2) + 1);
+					}
+				}
+			},
+			*value);
 	} else lua_pushnil(L);
 }
 
 template <>
-inline std::shared_ptr< boost::variant<bool, std::vector<std::string>> > lua_object< boost::variant<bool, std::vector<std::string>> >::to_type(lua_State *L, int n)
+inline std::shared_ptr< utils::variant<bool, std::vector<std::string>> > lua_object< utils::variant<bool, std::vector<std::string>> >::to_type(lua_State *L, int n)
 {
 	if (lua_isboolean(L, n)) {
-		return std::make_shared<boost::variant<bool, std::vector<std::string>>>(luaW_toboolean(L, n));
+		return std::make_shared<utils::variant<bool, std::vector<std::string>>>(luaW_toboolean(L, n));
 	} else {
-		std::shared_ptr<std::vector<std::string>> v(new std::vector<std::string>());
+		auto v = std::make_shared<std::vector<std::string>>();
 		int l = lua_rawlen(L, n);
 		for (int i = 1; i < l + 1; ++i)
 		{
@@ -153,7 +157,7 @@ inline std::shared_ptr< boost::variant<bool, std::vector<std::string>> > lua_obj
 			v->push_back(s);
 		}
 
-		return std::make_shared<boost::variant<bool, std::vector<std::string>>>(*v);
+		return std::make_shared<utils::variant<bool, std::vector<std::string>>>(*v);
 	}
 }
 
@@ -193,7 +197,7 @@ inline void lua_object<int>::from_type(lua_State *L, std::shared_ptr<int> value)
 template <>
 inline std::shared_ptr< std::vector<std::string> > lua_object< std::vector<std::string> >::to_type(lua_State *L, int n)
 {
-	std::shared_ptr<std::vector<std::string>> v(new std::vector<std::string>());
+	auto v = std::make_shared<std::vector<std::string>>();
 	int l = lua_rawlen(L, n);
 	for (int i = 1; i < l + 1; ++i)
 	{
@@ -222,7 +226,7 @@ inline void lua_object< std::vector<std::string> >::from_type(lua_State *L, std:
 template <>
 inline std::shared_ptr<config> lua_object<config>::to_type(lua_State *L, int n)
 {
-	std::shared_ptr<config> cfg(new config());
+	auto cfg = std::make_shared<config>();
 	luaW_toconfig(L, n, *cfg);
 	return cfg;
 }
@@ -237,14 +241,13 @@ inline void lua_object<config>::from_type(lua_State *L, std::shared_ptr<config> 
 template <>
 inline std::shared_ptr<terrain_filter> lua_object<terrain_filter>::to_type(lua_State *L, int n)
 {
-	std::shared_ptr<config> cfg(new config());
-	std::shared_ptr<vconfig> vcfg(new vconfig(*cfg));
+	auto cfg = std::make_shared<config>();
+	auto vcfg = std::make_shared<vconfig>(*cfg);
 	if (!luaW_tovconfig(L, n, *vcfg)) {
 		cfg->add_child("not");
 	}
 	vcfg->make_safe();
-	std::shared_ptr<terrain_filter> tf(new terrain_filter(*vcfg, resources::filter_con));
-	return tf;
+	return std::make_shared<terrain_filter>(*vcfg, resources::filter_con, false);
 }
 
 template <>
@@ -264,8 +267,7 @@ inline void lua_object<terrain_filter>::from_type(lua_State *L, std::shared_ptr<
 template <>
 inline std::shared_ptr<std::vector<target> > lua_object< std::vector<target> >::to_type(lua_State *L, int n)
 {
-	std::shared_ptr<std::vector<target>> targets(new std::vector<target>());
-	std::back_insert_iterator< std::vector<target> > tg(*targets);
+	auto targets = std::make_shared<std::vector<target>>();
 	int l = lua_rawlen(L, n);
 
 	for (int i = 1; i <= l; ++i)
@@ -288,14 +290,23 @@ inline std::shared_ptr<std::vector<target> > lua_object< std::vector<target> >::
 
 		lua_pushstring(L, "type"); // st n + 2
 		lua_rawget(L, -2);  // st n + 2
-		target::TYPE type = target::TYPE::EXPLICIT;
+		std::optional<ai_target::type> type = ai_target::type::xplicit;
 		if(lua_isnumber(L, -1)) {
-			type = target::TYPE::from_int(static_cast<int>(lua_tointeger(L, -1)));  // st n + 2
+			int target = static_cast<int>(lua_tointeger(L, -1));
+			type = ai_target::get_enum(target);  // st n + 2
+			if(!type) {
+				ERR_OBJ_LUA << "Failed to convert ai target type of " << target << ", skipping.";
+				continue;
+			}
 		} else if(lua_isstring(L, -1)) {
-			type = target::TYPE::string_to_enum(lua_tostring(L, -1));  // st n + 2
+			std::string target = lua_tostring(L, -1);
+			type = ai_target::get_enum(target);  // st n + 2
+			if(!type) {
+				ERR_OBJ_LUA << "Failed to convert ai target type of " << target << ", skipping.";
+				continue;
+			}
 		}
 		lua_pop(L, 1); // st n + 1
-
 
 		lua_pushstring(L, "value");
 		lua_rawget(L, -2);
@@ -303,7 +314,7 @@ inline std::shared_ptr<std::vector<target> > lua_object< std::vector<target> >::
 
 		map_location ml(x, y, wml_loc());
 
-		*tg = target(ml, value, type);
+		targets->emplace_back(ml, value, *type);
 	}
 
 	lua_settop(L, n);
@@ -321,6 +332,3 @@ struct aspect_attacks_lua_filter;
 template <>
 std::shared_ptr<aspect_attacks_lua_filter> lua_object<aspect_attacks_lua_filter>::to_type(lua_State *L, int n);
 } // end of namespace ai
-
-
-#endif

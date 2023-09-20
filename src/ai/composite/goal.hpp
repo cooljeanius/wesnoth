@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2009 - 2018 by Yurii Chernyi <terraninfo@terraninfo.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2009 - 2023
+	by Yurii Chernyi <terraninfo@terraninfo.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -36,26 +37,20 @@ namespace ai { class lua_ai_action_handler; }
 namespace ai { class lua_ai_context; }
 namespace ai { struct target; }
 
-
 namespace ai {
 
 class goal : public readonly_context_proxy, public component {
 public:
 	goal(readonly_context &context, const config &cfg);
 
-
 	virtual ~goal();
-
 
 	virtual void add_targets(std::back_insert_iterator< std::vector< target >> target_list);
 
-
 	virtual config to_config() const;
-
 
 	virtual void on_create();
 	virtual void on_create(std::shared_ptr<ai::lua_ai_context>);
-
 
 	bool active() const;
 	bool ok() const;
@@ -66,7 +61,6 @@ public:
 
 	bool redeploy(const config &cfg);
 
-
 protected:
 	void unrecognized();
 	config cfg_;
@@ -74,14 +68,11 @@ protected:
 
 };
 
-
 class target_unit_goal : public goal {
 public:
 	target_unit_goal(readonly_context &context, const config &cfg);
 
-
 	virtual void add_targets(std::back_insert_iterator< std::vector< target >> target_list);
-
 
 	virtual void on_create();
 
@@ -93,14 +84,11 @@ private:
 	double value_;
 };
 
-
 class target_location_goal : public goal {
 public:
 	target_location_goal(readonly_context &context, const config &cfg);
 
-
 	virtual void add_targets(std::back_insert_iterator< std::vector< target >> target_list);
-
 
 	virtual void on_create();
 
@@ -113,14 +101,11 @@ private:
 	double value_;
 };
 
-
 class protect_goal : public goal {
 public:
 	protect_goal(readonly_context &context, const config &cfg, bool protect_unit);
 
-
 	virtual void add_targets(std::back_insert_iterator< std::vector< target >> target_list);
-
 
 	virtual void on_create();
 
@@ -137,7 +122,6 @@ private:
 	double value_;
 };
 
-
 class protect_location_goal : public protect_goal {
 public:
 	protect_location_goal(readonly_context &context, const config &cfg)
@@ -145,7 +129,6 @@ public:
 	{
 	}
 };
-
 
 class protect_unit_goal : public protect_goal {
 public:
@@ -165,7 +148,6 @@ private:
 	std::string code_;
 	std::shared_ptr<lua_ai_action_handler> handler_;
 };
-
 
 class goal_factory{
 	bool is_duplicate(const std::string &name);
@@ -196,7 +178,6 @@ public:
 	virtual ~goal_factory() {}
 };
 
-
 template<class GOAL>
 class register_goal_factory : public goal_factory {
 public:
@@ -211,6 +192,5 @@ public:
 		return a;
 	}
 };
-
 
 } //end of namespace ai

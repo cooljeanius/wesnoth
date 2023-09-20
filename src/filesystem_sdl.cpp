@@ -1,14 +1,15 @@
 /*
-   Copyright (C) 2017-2018 by the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2017 - 2023
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #include <SDL2/SDL.h>
@@ -18,6 +19,7 @@
 #include "log.hpp"
 
 #include <algorithm>
+#include <cassert>
 
 static lg::log_domain log_filesystem("filesystem");
 #define ERR_FS LOG_STREAM(err, log_filesystem)
@@ -39,8 +41,13 @@ static std::size_t SDLCALL ofs_write(struct SDL_RWops *context, const void *ptr,
 static int SDLCALL ifs_close(struct SDL_RWops *context);
 static int SDLCALL ofs_close(struct SDL_RWops *context);
 
+void sdl_rwops_deleter::operator()(SDL_RWops* p) const noexcept
+{
+	SDL_FreeRW(p);
+}
+
 rwops_ptr make_read_RWops(const std::string &path) {
-	rwops_ptr rw(SDL_AllocRW(), &SDL_FreeRW);
+	rwops_ptr rw(SDL_AllocRW());
 
 	rw->size = &ifs_size;
 	rw->seek = &ifs_seek;
@@ -52,7 +59,7 @@ rwops_ptr make_read_RWops(const std::string &path) {
 
 	scoped_istream ifs = istream_file(path);
 	if(!ifs) {
-		ERR_FS << "make_read_RWops: istream_file returned NULL on " << path << '\n';
+		ERR_FS << "make_read_RWops: istream_file returned NULL on " << path;
 		rw.reset();
 		return rw;
 	}
@@ -63,7 +70,7 @@ rwops_ptr make_read_RWops(const std::string &path) {
 }
 
 rwops_ptr make_write_RWops(const std::string &path) {
-	rwops_ptr rw(SDL_AllocRW(), &SDL_FreeRW);
+	rwops_ptr rw(SDL_AllocRW());
 
 	rw->size = &ofs_size;
 	rw->seek = &ofs_seek;
@@ -75,7 +82,7 @@ rwops_ptr make_write_RWops(const std::string &path) {
 
 	scoped_ostream ofs = ostream_file(path);
 	if(!ofs) {
-		ERR_FS << "make_write_RWops: ostream_file returned NULL on " << path << '\n';
+		ERR_FS << "make_write_RWops: ostream_file returned NULL on " << path;
 		rw.reset();
 		return rw;
 	}
@@ -115,11 +122,11 @@ typedef std::pair<int64_t, std::ios_base::seekdir> offset_dir;
 static offset_dir translate_seekdir(int64_t offset, int whence) {
 	switch(whence){
 	case RW_SEEK_SET:
-		return std::make_pair(std::max<int64_t>(0, offset), std::ios_base::beg);
+		return std::pair(std::max<int64_t>(0, offset), std::ios_base::beg);
 	case RW_SEEK_CUR:
-		return std::make_pair(offset, std::ios_base::cur);
+		return std::pair(offset, std::ios_base::cur);
 	case RW_SEEK_END:
-		return std::make_pair(std::min<int64_t>(0, offset), std::ios_base::end);
+		return std::pair(std::min<int64_t>(0, offset), std::ios_base::end);
 	default:
 		assert(false);
 		throw "assertion ignored";

@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2009 - 2018 by Yurii Chernyi <terraninfo@terraninfo.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2009 - 2023
+	by Yurii Chernyi <terraninfo@terraninfo.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -41,7 +42,6 @@ static lg::log_domain log_ai_component("ai/component");
 #define LOG_AI_COMPONENT LOG_STREAM(info, log_ai_component)
 #define ERR_AI_COMPONENT LOG_STREAM(err, log_ai_component)
 
-
 /*
 [modify_ai]
     path = "stage[fallback]
@@ -67,7 +67,6 @@ static lg::log_domain log_ai_component("ai/component");
 [/modify_ai]
 */
 
-
 component* component::get_child(const path_element &child)
 {
 	std::map<std::string, property_handler_ptr>::iterator i = property_handlers_.find(child.property);
@@ -76,7 +75,6 @@ component* component::get_child(const path_element &child)
 	}
 	return nullptr;
 }
-
 
 bool component::add_child(const path_element &child, const config &cfg)
 {
@@ -87,7 +85,6 @@ bool component::add_child(const path_element &child, const config &cfg)
 	return false;
 }
 
-
 bool component::change_child(const path_element &child, const config &cfg)
 {
 	std::map<std::string, property_handler_ptr>::iterator i = property_handlers_.find(child.property);
@@ -97,7 +94,6 @@ bool component::change_child(const path_element &child, const config &cfg)
 	return false;
 }
 
-
 bool component::delete_child(const path_element &child)
 {
 	std::map<std::string, property_handler_ptr>::iterator i = property_handlers_.find(child.property);
@@ -106,7 +102,6 @@ bool component::delete_child(const path_element &child)
 	}
 	return false;
 }
-
 
 std::vector<component*> component::get_children(const std::string &type)
 {
@@ -118,7 +113,6 @@ std::vector<component*> component::get_children(const std::string &type)
 	return std::vector<component*>();
 }
 
-
 std::vector<std::string> component::get_children_types()
 {
 	std::vector<std::string> types;
@@ -127,7 +121,6 @@ std::vector<std::string> component::get_children_types()
 	}
 	return types;
 }
-
 
 property_handler_map& component::property_handlers()
 {
@@ -164,7 +157,7 @@ static component *find_component(component *root, const std::string &path, path_
 				pe.position = -2;
 			}
 		}
-		//DBG_AI_COMPONENT << "adding path element: "<< pe << std::endl;
+		//DBG_AI_COMPONENT << "adding path element: "<< pe;
 		elements.push_back(pe);
 	}
 	if (elements.size()<1) {
@@ -185,7 +178,6 @@ static component *find_component(component *root, const std::string &path, path_
 
 }
 
-
 bool component_manager::add_component(component *root, const std::string &path, const config &cfg)
 {
 	path_element tail;
@@ -193,11 +185,11 @@ bool component_manager::add_component(component *root, const std::string &path, 
 	if (c==nullptr) {
 		return false;
 	}
-	const config &ch = cfg.child(tail.property);
+	auto ch = cfg.optional_child(tail.property);
 	if (!ch) {
 		return false;
 	}
-	return c->add_child(tail, ch);
+	return c->add_child(tail, *ch);
 
 }
 
@@ -208,11 +200,11 @@ bool component_manager::change_component(component *root, const std::string &pat
 	if (c==nullptr) {
 		return false;
 	}
-	const config &ch = cfg.child(tail.property);
+	auto ch = cfg.optional_child(tail.property);
 	if (!ch) {
 		return false;
 	}
-	return c->change_child(tail,ch);
+	return c->change_child(tail, *ch);
 }
 
 bool component_manager::delete_component(component *root, const std::string &path)
@@ -224,7 +216,6 @@ bool component_manager::delete_component(component *root, const std::string &pat
 	}
 	return c->delete_child(tail);
 }
-
 
 static void print_component(component *root, const std::string &type, std::stringstream &s, int offset)
 {
@@ -253,7 +244,7 @@ std::string component_manager::print_component_tree(component *root, const std::
 	if (!path.empty()) {
 		c = find_component(root,path,tail);
 		if (c==nullptr) {
-			ERR_AI_COMPONENT << "unable to find component" <<std::endl;
+			ERR_AI_COMPONENT << "unable to find component";
 			return "";
 		}
 	} else {
@@ -274,7 +265,6 @@ component* component_manager::get_component(component *root, const std::string &
 }
 
 } //end of namespace ai
-
 
 std::ostream &operator<<(std::ostream &o, const ai::path_element &e)
 {

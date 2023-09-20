@@ -18,7 +18,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH WESNOTH 6 2018 wesnoth "Battle for Wesnoth"
+.TH WESNOTH 6 2022 wesnoth "Battle for Wesnoth"
 .
 .SH NAME
 wesnoth \- Battle for Wesnoth, a turn\-based fantasy strategy game
@@ -96,18 +96,22 @@ mode).
 \fB\-\-debug\-lua\fP
 enables some Lua debugging mechanisms
 .TP 
+\fB\-\-strict\-lua\fP
+disallow deprecated Lua API calls
+.TP 
 \fB\-D,\-\-diff\fP\fI\ left\-file\fP\fB\ \fP\fIright\-file\fP
-diffs the two WML files; does not preprocess them first (to do that, run
-them through \fB\-p\fP first). Outputs the diff as DiffWML on standard output or
-to the file indicated by \fI\-\-output\fP.
+compares the two WML files; does not pre\-process them first (to do that, run
+them through \fB\-p\fP first). Outputs the difference as DiffWML on standard
+output or to the file indicated by \fI\-\-output\fP.
 .TP 
 \fB\-e[\fP\fIfile\fP\fB],\ \-\-editor[\fP\fI=file\fP\fB]\fP
 start the in\-game map editor directly. If \fIfile\fP is specified, equivalent
 to \fB\-l\fP \fB\-\-load\fP.
 .TP 
 \fB\-\-fps\fP
-displays the number of frames per second the game is currently running at,
-in a corner of the screen.
+displays the number of frames per second the game is currently running at in
+a corner of the screen as well as writes these values to a file in the
+user\-data directory.
 .TP 
 \fB\-f, \-\-fullscreen\fP
 runs the game in full screen mode.
@@ -127,7 +131,7 @@ displays a summary of command line options to standard output, and exits.
 loads the savegame \fIfile\fP from the standard save game directory. If the
 \fB\-e\fP or \fB\-\-editor\fP option is used as well, starts the editor with the map
 from \fIfile\fP open. If it is a directory, the editor will start with a load
-map dialog opened there.
+map dialogue opened there.
 .TP 
 \fB\-L,\ \-\-language\fP\fI\ lang\fP
 uses language \fIlang\fP (symbol) this session.  Example: \fB\-\-language
@@ -140,7 +144,7 @@ log domain. Available levels: \fBerror\fP,\ \fBwarning\fP,\ \fBinfo\fP,\ \fBdebu
 option.
 .TP 
 \fB\-\-log\-precise\fP
-shows the timestamps in the logfile with more precision.
+shows the time\-stamps in log output with more precision.
 .TP 
 \fB\-\-log\-strict\fP
 sets the strict level of the logger. Any messages sent to log domains of
@@ -150,6 +154,19 @@ victory result. Only relevant when used with \fB\-u\fP.
 \fB\-\-logdomains[\fP\fI=filter\fP\fB]\fP
 lists defined log domains (only the ones containing \fIfilter\fP if used) and
 exits
+.TP 
+\fB\-\-no\-log\-to\-file\fP
+prevents redirecting logged output to a file. Log files are created in the
+logs directory under the user\-data folder.
+.TP 
+\fB\-\-log\-to\-file\fP
+log output is written to a file in addition to standard
+output/error. Cancels the effect of \-\-no\-log\-to\-file whether implicit or
+explicit.
+.TP 
+\fB\-\-wnoconsole\fP
+For Windows, when used with \-\-no\-log\-to\-file, results in output being
+written to cerr/cout instead of CONOUT. Otherwise, does nothing.
 .TP 
 \fB\-\-max\-fps\fP\fI\ fps\fP
 the number of frames per second the game can show, the value should be
@@ -181,6 +198,9 @@ disables caching of game data.
 runs the game without the GUI. Only available in combination with
 \fB\-\-multiplayer\fP or \fB\-\-screenshot\fP or \fB\-\-plugin\fP.
 .TP 
+\fB\-\-nobanner\fP
+suppress the start\-up banner.
+.TP 
 \fB\-\-nomusic\fP
 runs the game without music.
 .TP 
@@ -192,7 +212,7 @@ don't try to validate replay of unit test. Only relevant when used with
 runs the game without sounds and music.
 .TP 
 \fB\-\-output\fP\fI\ file\fP
-output to the specified file. Applicable to diffing operations.
+output to the specified file. Applicable to diff operations.
 .TP 
 \fB\-\-password\fP\fI\ password\fP
 uses \fIpassword\fP when connecting to a server, ignoring other
@@ -204,8 +224,8 @@ preferences. Unsafe.
 co\-routine and periodically woken up with updates.
 .TP 
 \fB\-P,\-\-patch\fP\fI\ base\-file\fP\fB\ \fP\fIpatch\-file\fP
-applies a DiffWML patch to a WML file; does not preprocess either of the
-files.  Outputs the patched WML to standard output or to the file indicated
+applies a DiffWML patch to a WML file; does not pre\-process either of the
+files. Outputs the patched WML to standard output or to the file indicated
 by \fI\-\-output\fP.
 .TP 
 \fB\-p,\ \-\-preprocess\fP\fI\ source\-file/folder\fP\fB\ \fP\fItarget\-directory\fP
@@ -233,21 +253,6 @@ macros in the target file. If the file is not specified the output will be
 file '_MACROS_.cfg' in the target directory of preprocess's command. The
 output file can be passed to \fB\-\-preprocess\-input\-macros\fP.  This switch
 should be typed before the \fB\-\-preprocess\fP command.
-.TP 
-\fB\-\-proxy\fP
-enables usage of proxy for network connections.
-.TP 
-\fB\-\-proxy\-address\fP\fI\ address\fP
-specifies \fIaddress\fP of the proxy.
-.TP 
-\fB\-\-proxy\-port\fP\fI\ port\fP
-specifies \fIport\fP of the proxy.
-.TP 
-\fB\-\-proxy\-user\fP\fI\ username\fP
-specifies \fIusername\fP to log in to the proxy.
-.TP 
-\fB\-\-proxy\-password\fP\fI\ password\fP
-specifies \fIpassword\fP to log in to the proxy.
 .TP 
 \fB\-r\ \fP\fIX\fP\fBx\fP\fIY\fP\fB,\ \-\-resolution\ \fP\fIX\fP\fBx\fP\fIY\fP
 sets the screen resolution. Example: \fB\-r\fP \fB800x600\fP.
@@ -283,9 +288,8 @@ validation errors are treated as fatal errors.
 .TP 
 \fB\-t[\fP\fIscenario_id\fP\fB],\ \-\-test[\fP\fI=scenario_id\fP\fB]\fP
 runs the game in a small test scenario. The scenario should be one defined
-with a \fB[test]\fP WML tag. The default is \fBtest\fP.  A demonstration of the
-\fB[micro_ai]\fP feature can be started with \fBmicro_ai_test\fP.  Implies
-\fB\-\-nogui\fP.
+with a \fB[test]\fP WML tag. The default is \fBtest\fP. A demonstration of the
+\fB[micro_ai]\fP feature can be started with \fBmicro_ai_test\fP.
 .TP 
 \fB\-\-translations\-over\fP\fI\ percent\fP
 Set the standard for deeming a translation is complete enough to show in the
@@ -344,6 +348,9 @@ assumes that the cache is valid. (dangerous)
 .TP 
 \fB\-v, \-\-version\fP
 shows the version number and exits.
+.TP 
+\fB\-\-simple\-version\fP
+shows the version number and nothing else, then exits.
 .TP 
 \fB\-w, \-\-windowed\fP
 runs the game in windowed mode.
@@ -413,12 +420,12 @@ Normal exit status is 0.  An exit status of 1 indicates an (SDL, video,
 fonts, etc) initialization error. An exit status of 2 indicates an error
 with the command line options.
 .br
-When running unit tests (with\fB\ \-u\fP), the exit status is different. An exit
-status of 0 indicates that the test passed, and 1 indicates that the test
-failed. An exit status of 3 indicates that the test passed, but produced an
-invalid replay file. An exit status of 4 indicates that the test passed, but
-the replay produced errors. These latter two are only returned if
-\fB\-\-noreplaycheck\fP is not passed.
+When running unit tests (with \fB\ \-u\fP), the exit status is different. An
+exit status of 0 indicates that the test passed, and 1 indicates that the
+test failed. An exit status of 3 indicates that the test passed, but
+produced an invalid replay file. An exit status of 4 indicates that the test
+passed, but the replay produced errors. These latter two are only returned
+if \fB\-\-noreplaycheck\fP is not passed.
 .
 .SH AUTHOR
 .
@@ -434,7 +441,7 @@ Visit the official homepage: https://www.wesnoth.org/
 .
 .SH COPYRIGHT
 .
-Copyright \(co 2003\-2018 David White <davidnwhite@verizon.net>
+Copyright \(co 2003\-2023 David White <davidnwhite@verizon.net>
 .br
 This is Free Software; this software is licensed under the GPL version 2, as
 published by the Free Software Foundation.  There is NO warranty; not even

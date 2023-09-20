@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2014 - 2018 by Chris Beck <render787@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2014 - 2023
+	by Chris Beck <render787@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -20,10 +21,10 @@ class display;
 class unit;
 class fake_unit_ptr;
 
-///Manages a list of fake units for the display object.
+/** Manages a list of fake units for the display object. */
 class fake_unit_manager {
 public:
-	///Construct a fake unit manager from a display which owns it.
+	/** Construct a fake unit manager from a display which owns it. */
 	fake_unit_manager(display & disp) : fake_units_(), my_display_(disp) {}
 
 	//Anticipate making place_temporary_unit and remove_temporary_unit private to force exception safety
@@ -51,7 +52,8 @@ private:
 	 */
 	int remove_temporary_unit(internal_ptr_type);
 
-	/// collection of units destined to be drawn but not put into the unit map
+	/** collection of units destined to be drawn but not put into the unit map */
 	std::deque<internal_ptr_type> fake_units_;
-	display & my_display_; //!< Reference to my display
+	/** Reference to my display */
+	display & my_display_;
 };

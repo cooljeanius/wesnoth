@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2013 - 2018 by Iris Morelle <shadowm2006@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2013 - 2023
+	by Iris Morelle <shadowm2006@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -29,6 +30,19 @@ class listbox;
 namespace dialogs
 {
 
+/**
+ * @ingroup GUIWindowDefinitionWML
+ *
+ * Dialog displaying the various paths used by the game to locate resource and configuration files.
+ *
+ * There are several item types used to build widget ids in this dialog.
+ * All references to TYPE below refer to the following suffixes: datadir, config, userdata, saves, addons, cache.
+ * Key               |Type          |Mandatory|Description
+ * ------------------|--------------|---------|-----------
+ * path_TYPE         | text_box     |yes      |Textbox containing the filesystem path for the given item.
+ * copy_TYPE         | @ref button  |yes      |Copies the given item's path to clipboard.
+ * browse_TYPE       | @ref button  |yes      |Launches the default file browser on the given item's path.
+ */
 class game_version : public modal_dialog
 {
 public:
@@ -51,9 +65,8 @@ private:
 
 	std::map<std::string, std::string> path_map_;
 
-#ifdef _WIN32
+	/** path to current log file */
 	const std::string log_path_;
-#endif
 
 	typedef std::array<std::string, 4> deplist_entry;
 	std::vector<deplist_entry> deps_;
@@ -64,10 +77,8 @@ private:
 
 	void generate_plain_text_report();
 
-	/** Inherited from modal_dialog, implemented by REGISTER_DIALOG. */
 	virtual const std::string& window_id() const override;
 
-	/** Inherited from modal_dialog. */
 	virtual void pre_show(window& window) override;
 
 	//
@@ -77,7 +88,7 @@ private:
 	/**
 	 * Callback function called when switching tabs.
 	 */
-	void tab_switch_callback(window& window);
+	void tab_switch_callback();
 
 	/**
 	 * Callback function for the dialog-wide copy-to-clipboard button.

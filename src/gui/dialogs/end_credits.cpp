@@ -1,14 +1,15 @@
 /*
-   Copyright (C) 2016 - 2018 by the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2016 - 2023
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #define GETTEXT_DOMAIN "wesnoth-lib"
@@ -27,19 +28,18 @@
 #include "gui/widgets/window.hpp"
 #include "gettext.hpp"
 
-#include "utils/functional.hpp"
+#include <functional>
 
 #include <sstream>
 
-namespace gui2
-{
-namespace dialogs
+namespace gui2::dialogs
 {
 
 REGISTER_DIALOG(end_credits)
 
 end_credits::end_credits(const std::string& campaign)
-	: focus_on_(campaign)
+	: modal_dialog(window_id())
+	, focus_on_(campaign)
 	, backgrounds_()
 	, text_widget_(nullptr)
 	, scroll_speed_(100)
@@ -49,15 +49,10 @@ end_credits::end_credits(const std::string& campaign)
 
 void end_credits::pre_show(window& window)
 {
-	window.set_callback_next_draw([this]()
-	{
-		// Delay a little before beginning the scrolling
-		last_scroll_ = SDL_GetTicks() + 3000;
-	});
+	// Delay a little before beginning the scrolling
+	last_scroll_ = SDL_GetTicks() + 3000;
 
-	connect_signal_on_draw(window, std::bind(&end_credits::timer_callback, this));
-
-	connect_signal_pre_key_press(window, std::bind(&end_credits::key_press_callback, this, _5));
+	connect_signal_pre_key_press(window, std::bind(&end_credits::key_press_callback, this, std::placeholders::_5));
 
 	std::stringstream ss;
 	std::stringstream focus_ss;
@@ -73,8 +68,8 @@ void end_credits::pre_show(window& window)
 		for(const about::credits_group::about_group& about : group.sections) {
 			group_stream << "\n" << "<span size='x-large'>" << about.title << "</span>" << "\n";
 
-			for(const std::string& entry : about.names) {
-				group_stream << entry << "\n";
+			for(const auto& entry : about.names) {
+				group_stream << entry.first << "\n";
 			}
 		}
 	}
@@ -112,7 +107,7 @@ void end_credits::pre_show(window& window)
 	}
 }
 
-void end_credits::timer_callback()
+void end_credits::update()
 {
 	uint32_t now = SDL_GetTicks();
 	if(last_scroll_ > now) {
@@ -144,4 +139,3 @@ void end_credits::key_press_callback(const SDL_Keycode key)
 }
 
 } // namespace dialogs
-} // namespace gui2

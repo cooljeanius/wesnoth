@@ -1,16 +1,18 @@
 /*
-   Copyright (C) 2008 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
+
 #define GETTEXT_DOMAIN "wesnoth-editor"
 
 #include "gui/dialogs/editor/resize_map.hpp"
@@ -20,72 +22,10 @@
 #include "gui/widgets/settings.hpp"
 #include "gui/widgets/slider.hpp"
 
-#include "utils/functional.hpp"
+#include <functional>
 
-namespace gui2
+namespace gui2::dialogs
 {
-namespace dialogs
-{
-
-/*WIKI
- * @page = GUIWindowDefinitionWML
- * @order = 2_editor_resize_map
- *
- * == Editor resize map ==
- *
- * This shows the dialog to resize the current map.
- *
- * @begin{table}{dialog_widgets}
- *
- * old_width & & label & o &
- *         Shows the old width of the map. $
- *
- * old_height & & label & o &
- *         Shows the old height of the map. $
- *
- * width & & slider & m &
- *         Determines the new width of the map. $
- *
- * height & & slider & m &
- *         Determines the new height of the map. $
- *
- * copy_edge_terrain & & boolean_selector & m &
- *         Determines whether the border terrains should be used to expand or
- *         not. $
- *
- * expand0 & & toggle_button & m &
- *         Determines in which direction to expand, shows the north east
- *         marker. $
- *
- * expand1 & & toggle_button & m &
- *         Determines in which direction to expand, shows the north marker. $
- *
- * expand2 & & toggle_button & m &
- *         Determines in which direction to expand, shows the north west
- *         marker. $
- *
- * expand3 & & toggle_button & m &
- *         Determines in which direction to expand, shows the east marker. $
- *
- * expand4 & & toggle_button & m &
- *         Determines in which direction to expand, shows the center marker. $
- *
- * expand5 & & toggle_button & m &
- *         Determines in which direction to expand, shows the west marker. $
- *
- * expand6 & & toggle_button & m &
- *         Determines in which direction to expand, shows the south east
- *         marker. $
- *
- * expand7 & & toggle_button & m &
- *         Determines in which direction to expand, shows the south marker. $
- *
- * expand8 & & toggle_button & m &
- *         Determines in which direction to expand, shows the south west
- *         marker. $
- *
- * @end{table}
- */
 
 REGISTER_DIALOG(editor_resize_map)
 
@@ -93,7 +33,8 @@ editor_resize_map::editor_resize_map(int& width,
 									   int& height,
 									   EXPAND_DIRECTION& expand_direction,
 									   bool& copy_edge_terrain)
-	: width_(register_integer("width", true, width))
+	: modal_dialog(window_id())
+	, width_(register_integer("width", true, width))
 	, height_(register_integer("height", true, height))
 	, old_width_(width)
 	, old_height_(height)
@@ -111,16 +52,12 @@ void editor_resize_map::pre_show(window& window)
 	slider& height = find_widget<slider>(&window, "height", false);
 	connect_signal_notify_modified(
 			height,
-			std::bind(&editor_resize_map::update_expand_direction,
-						this,
-						std::ref(window)));
+			std::bind(&editor_resize_map::update_expand_direction, this));
 
 	slider& width = find_widget<slider>(&window, "width", false);
 	connect_signal_notify_modified(
 			width,
-			std::bind(&editor_resize_map::update_expand_direction,
-						this,
-						std::ref(window)));
+			std::bind(&editor_resize_map::update_expand_direction, this));
 
 	std::string name_prefix = "expand";
 	for(int i = 0; i < 9; ++i) {
@@ -129,10 +66,10 @@ void editor_resize_map::pre_show(window& window)
 				= find_widget<toggle_button>(&window, name, false, true);
 
 		connect_signal_notify_modified(*direction_buttons_[i],
-			std::bind(&editor_resize_map::update_expand_direction, this, std::ref(window)));
+			std::bind(&editor_resize_map::update_expand_direction, this));
 	}
 	direction_buttons_[0]->set_value(true);
-	update_expand_direction(window);
+	update_expand_direction();
 }
 
 /**
@@ -156,7 +93,7 @@ void editor_resize_map::set_direction_icon(int index, std::string icon)
 	}
 }
 
-void editor_resize_map::update_expand_direction(window& window)
+void editor_resize_map::update_expand_direction()
 {
 	for(int i = 0; i < 9; ++i) {
 		if(direction_buttons_[i]->get_value()
@@ -176,8 +113,8 @@ void editor_resize_map::update_expand_direction(window& window)
 		set_direction_icon(i, "none");
 	}
 
-	int xdiff = width_->get_widget_value(window) - old_width_;
-	int ydiff = height_->get_widget_value(window) - old_height_;
+	int xdiff = width_->get_widget_value() - old_width_;
+	int ydiff = height_->get_widget_value() - old_height_;
 	int x = static_cast<int>(expand_direction_) % 3;
 	int y = static_cast<int>(expand_direction_) / 3;
 	set_direction_icon(expand_direction_, "center");
@@ -214,4 +151,3 @@ void editor_resize_map::update_expand_direction(window& window)
 }
 
 } // namespace dialogs
-} // namespace gui2

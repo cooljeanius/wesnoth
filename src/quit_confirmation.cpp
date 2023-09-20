@@ -1,37 +1,33 @@
 /*
-   Copyright (C) 2015 - 2018 by the Battle for Wesnoth Project
-   <https://www.wesnoth.org/>
+	Copyright (C) 2015 - 2023
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #include "quit_confirmation.hpp"
 #include "game_end_exceptions.hpp"
 #include "gettext.hpp"
-#include "video.hpp"
+#include "video.hpp" // only for video::quit
 #include "resources.hpp"
 #include "playmp_controller.hpp"
 #include "gui/dialogs/surrender_quit.hpp"
 #include "gui/dialogs/message.hpp"
 #include "gui/widgets/retval.hpp"
-
-#include <boost/range/adaptor/reversed.hpp>
-
-std::vector<quit_confirmation*> quit_confirmation::blockers_ = std::vector<quit_confirmation*>();
-bool quit_confirmation::open_ = false;
+#include "utils/ranges.hpp"
 
 bool quit_confirmation::quit()
 {
 	if(!open_) {
 		open_ = true;
-		for(quit_confirmation* blocker : boost::adaptors::reverse(blockers_))
+		for(quit_confirmation* blocker : utils::reversed_view(blockers_))
 		{
 			if(!blocker->prompt_()) {
 				open_ = false;
@@ -51,7 +47,7 @@ void quit_confirmation::quit_to_title()
 
 void quit_confirmation::quit_to_desktop()
 {
-	if(quit()) { throw CVideo::quit(); }
+	if(quit()) { throw video::quit(); }
 }
 
 bool quit_confirmation::show_prompt(const std::string& message)
@@ -66,7 +62,7 @@ bool quit_confirmation::default_prompt()
 	std::size_t humans_notme_cnt = 0;
 
 	if(pmc != nullptr) {
-		for(const auto& t : pmc->get_teams_const()) {
+		for(const auto& t : pmc->get_teams()) {
 			if(t.is_network_human()) {
 				++humans_notme_cnt;
 			}

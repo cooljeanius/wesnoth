@@ -1,18 +1,17 @@
 /*
-   Copyright (C) 2003 - 2018 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2003 - 2023
+	by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
-
-/** @file */
 
 #pragma once
 
@@ -20,13 +19,10 @@ class config;
 class variable_set;
 
 #include <array>
-#include <cmath>
-#include <cstdlib>
 #include <set>
 #include <string>
 #include <tuple>
 #include <vector>
-#include <algorithm>
 #include <utility>
 
 struct wml_loc {};
@@ -105,7 +101,7 @@ struct map_location {
 	bool operator==(const map_location& a) const { return x == a.x && y == a.y; }
 	bool operator!=(const map_location& a) const { return !operator==(a); }
 
-        /** three-way comparator */
+	/** three-way comparator */
 	int do_compare(const map_location& a) const {return x == a.x ? y - a.y : x - a.x; }
 
 	// Location arithmetic operations treating the locations as vectors in
@@ -167,8 +163,6 @@ struct map_location {
 	int x, y;
 };
 
-using adjacent_loc_array_t = std::array<map_location, 6>;
-
 /** Function which tells if two locations are adjacent. */
 bool tiles_adjacent(const map_location& a, const map_location& b);
 
@@ -177,6 +171,9 @@ bool tiles_adjacent(const map_location& a, const map_location& b);
  * res must point to an array of 6 location objects.
  */
 void get_adjacent_tiles(const map_location& a, map_location* res);
+
+/** Returns an array of the six hexes adjacent to @p center. */
+std::array<map_location, 6> get_adjacent_tiles(const map_location& center);
 
 /**
  * Function which gives the number of hexes between two tiles

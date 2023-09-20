@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2013 - 2018 by Iris Morelle <shadowm2006@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2013 - 2023
+	by Iris Morelle <shadowm2006@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #define GETTEXT_DOMAIN "wesnoth-lib"
@@ -21,8 +22,8 @@
 #include "desktop/open.hpp"
 #include "desktop/version.hpp"
 #include "filesystem.hpp"
+#include "formula/string_utils.hpp"
 #include "game_config.hpp"
-#include "gettext.hpp"
 #include "gui/auxiliary/find_widget.hpp"
 #include "gui/widgets/button.hpp"
 #include "gui/widgets/styled_widget.hpp"
@@ -32,14 +33,8 @@
 #include "gui/widgets/stacked_widget.hpp"
 #include "gui/widgets/text_box_base.hpp"
 #include "gui/widgets/window.hpp"
-#ifdef _WIN32
-#include "log_windows.hpp"
-#endif
-#include "formula/string_utils.hpp"
 
-#include "gettext.hpp"
-
-#include "utils/functional.hpp"
+#include <functional>
 
 namespace
 {
@@ -49,48 +44,18 @@ const std::string text_feature_off = "<span color='#f00'>&#9679;</span>";
 
 } // end anonymous namespace
 
-namespace gui2
+namespace gui2::dialogs
 {
-namespace dialogs
-{
-
-/*WIKI
- * @page = GUIWindowDefinitionWML
- * @order = 2_game_version
- *
- * == Game paths ==
- *
- * Dialog displaying the various paths used by the game to locate
- * resource and configuration files.
- *
- * There are several item types used to build widget ids in this dialog.
- * All references to TYPE below refer to the following suffixes:
- * datadir, config, userdata, saves, addons, cache.
- *
- * @begin{table}{dialog_widgets}
- *
- * path_TYPE & & text_box & m &
- *        Textbox containing the filesystem path for the given item. $
- *
- * copy_TYPE & & button & m &
- *        Copies the given item's path to clipboard. $
- *
- * browse_TYPE & & button & m &
- *        Launches the default file browser on the given item's path. $
- *
- * @end{table}
- */
 
 REGISTER_DIALOG(game_version)
 
 game_version::game_version()
-	: path_wid_stem_("path_")
+	: modal_dialog(window_id())
+	, path_wid_stem_("path_")
 	, copy_wid_stem_("copy_")
 	, browse_wid_stem_("browse_")
 	, path_map_()
-#ifdef _WIN32
-	, log_path_(lg::log_file_path())
-#endif
+	, log_path_(lg::get_log_file_path())
 	, deps_()
 	, opts_(game_config::optional_features_table())
 	, report_()
@@ -103,6 +68,9 @@ game_version::game_version()
 	path_map_["saves"] = filesystem::get_saves_dir();
 	path_map_["addons"] = filesystem::get_addons_dir();
 	path_map_["cache"] = filesystem::get_cache_dir();
+	// path to logs directory
+	path_map_["logs"] = filesystem::get_logs_dir();
+	path_map_["screenshots"] = filesystem::get_screenshot_dir();
 
 	for(unsigned k = 0; k < game_config::LIB_COUNT; ++k) {
 		const game_config::LIBRARY_ID lib = game_config::LIBRARY_ID(k);
@@ -122,14 +90,14 @@ game_version::game_version()
 
 void game_version::pre_show(window& window)
 {
-	string_map i18n_syms;
+	utils::string_map i18n_syms;
 
 	//
 	// General information.
 	//
 
 	styled_widget& version_label = find_widget<styled_widget>(&window, "version", false);
-	i18n_syms["version"] = game_config::revision;
+	i18n_syms["version"] = game_config::revision + " " + game_config::build_arch();
 	version_label.set_label(VGETTEXT("Version $version", i18n_syms));
 
 	styled_widget& os_label = find_widget<styled_widget>(&window, "os", false);
@@ -137,9 +105,7 @@ void game_version::pre_show(window& window)
 	os_label.set_label(VGETTEXT("Running on $os", i18n_syms));
 
 	button& copy_all = find_widget<button>(&window, "copy_all", false);
-	connect_signal_mouse_left_click(
-			copy_all,
-			std::bind(&game_version::report_copy_callback, this));
+	connect_signal_mouse_left_click(copy_all, std::bind(&game_version::report_copy_callback, this));
 
 	//
 	// Game paths tab.
@@ -150,26 +116,19 @@ void game_version::pre_show(window& window)
 		const std::string& path_id = path_ent.first;
 		const std::string& path_path = filesystem::normalize_path(path_ent.second, true);
 
-		text_box_base& path_w
-				= find_widget<text_box_base>(&window, path_wid_stem_ + path_id, false);
-		button& copy_w = find_widget<button>(
-				&window, copy_wid_stem_ + path_id, false);
-		button& browse_w = find_widget<button>(
-				&window, browse_wid_stem_ + path_id, false);
+		text_box_base& path_w = find_widget<text_box_base>(&window, path_wid_stem_ + path_id, false);
+		button& copy_w = find_widget<button>(&window, copy_wid_stem_ + path_id, false);
+		button& browse_w = find_widget<button>(&window, browse_wid_stem_ + path_id, false);
 
 		path_w.set_value(path_path);
 		path_w.set_active(false);
 
 		connect_signal_mouse_left_click(
 				copy_w,
-				std::bind(&game_version::copy_to_clipboard_callback,
-							this,
-							path_path));
+				std::bind(&game_version::copy_to_clipboard_callback, this, path_path));
 		connect_signal_mouse_left_click(
 				browse_w,
-				std::bind(&game_version::browse_directory_callback,
-							this,
-							path_path));
+				std::bind(&game_version::browse_directory_callback, this, path_path));
 
 		if(!desktop::open_object_is_supported()) {
 			// No point in displaying these on platforms that can't do
@@ -183,26 +142,15 @@ void game_version::pre_show(window& window)
 		}
 	}
 
-#ifndef _WIN32
-	grid& w32_options_grid
-			= find_widget<grid>(&window, "win32_paths", false);
-	w32_options_grid.set_visible(widget::visibility::invisible);
-#else
-	button& stderr_button
-			= find_widget<button>(&window, "open_stderr", false);
-	connect_signal_mouse_left_click(
-			stderr_button,
-			std::bind(&game_version::browse_directory_callback,
-						this,
-						log_path_));
+	button& stderr_button = find_widget<button>(&window, "open_stderr", false);
+	connect_signal_mouse_left_click(stderr_button, std::bind(&game_version::browse_directory_callback, this, log_path_));
 	stderr_button.set_active(!log_path_.empty());
-#endif
 
 	//
 	// Build info tab.
 	//
 
-	std::map<std::string, string_map> list_data;
+	widget_data list_data;
 
 	listbox& deps_listbox
 			= find_widget<listbox>(&window, "deps_listbox", false);
@@ -219,7 +167,7 @@ void game_version::pre_show(window& window)
 		if(!dep[2].empty()) {
 			list_data["dep_rt_version"]["label"] = dep[2];
 		} else {
-			list_data["dep_rt_version"]["label"] = _("version^N/A");
+			list_data["dep_rt_version"]["label"] = font::unicode_em_dash;
 		}
 
 		deps_listbox.add_row(list_data);
@@ -269,15 +217,15 @@ void game_version::pre_show(window& window)
 	VALIDATE(tab_count == pager.get_layer_count(), "Tab bar and container size mismatch");
 
 	connect_signal_notify_modified(tab_bar,
-		std::bind(&game_version::tab_switch_callback, this, std::ref(window)));
+		std::bind(&game_version::tab_switch_callback, this));
 }
 
-void game_version::tab_switch_callback(window& window)
+void game_version::tab_switch_callback()
 {
 	stacked_widget& pager
-			= find_widget<stacked_widget>(&window, "tabs_container", false);
+			= find_widget<stacked_widget>(get_window(), "tabs_container", false);
 	listbox& tab_bar
-			= find_widget<listbox>(&window, "tab_bar", false);
+			= find_widget<listbox>(get_window(), "tab_bar", false);
 
 	pager.select_layer(std::max<int>(0, tab_bar.get_selected_row()));
 }
@@ -303,4 +251,3 @@ void game_version::generate_plain_text_report()
 }
 
 } // namespace dialogs
-} // namespace gui2

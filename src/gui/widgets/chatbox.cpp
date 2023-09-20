@@ -1,14 +1,15 @@
 /*
-   Copyright (C) 2016 - 2018 The Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2016 - 2023
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #define GETTEXT_DOMAIN "wesnoth-lib"
@@ -16,7 +17,6 @@
 #include "gui/widgets/chatbox.hpp"
 
 #include "gui/auxiliary/find_widget.hpp"
-
 #include "gui/core/register_widget.hpp"
 #include "gui/widgets/button.hpp"
 #include "gui/widgets/image.hpp"
@@ -31,13 +31,14 @@
 #include "font/pango/escape.hpp"
 #include "formatter.hpp"
 #include "formula/string_utils.hpp"
+#include "game_initialization/multiplayer.hpp"
 #include "gettext.hpp"
 #include "log.hpp"
 #include "preferences/credentials.hpp"
 #include "preferences/game.hpp"
 #include "preferences/lobby.hpp"
 #include "scripting/plugins/manager.hpp"
-#include "wesnothd_connection.hpp"
+#include "wml_exception.hpp"
 
 static lg::log_domain log_lobby("lobby");
 #define DBG_LB LOG_STREAM(debug, log_lobby)
@@ -61,8 +62,6 @@ chatbox::chatbox(const implementation::builder_chatbox& builder)
 	, chat_input_(nullptr)
 	, active_window_(0)
 	, active_window_changed_callback_()
-	, lobby_info_(nullptr)
-	, wesnothd_connection_(nullptr)
 	, log_(nullptr)
 {
 	// We only implement a RECEIVE_KEYBOARD_FOCUS handler; LOSE_KEYBOARD_FOCUS
@@ -72,7 +71,7 @@ chatbox::chatbox(const implementation::builder_chatbox& builder)
 	// loss itself when applicable. Nothing else happens in the interim while
 	// keyboard_focus_ equals `this` to warrent cleanup.
 	connect_signal<event::RECEIVE_KEYBOARD_FOCUS>(
-		std::bind(&chatbox::signal_handler_receive_keyboard_focus, this, _2));
+		std::bind(&chatbox::signal_handler_receive_keyboard_focus, this, std::placeholders::_2));
 }
 
 void chatbox::finalize_setup()
@@ -89,7 +88,7 @@ void chatbox::finalize_setup()
 	chat_input_ = find_widget<text_box>(this, "chat_input", false, true);
 
 	connect_signal_pre_key_press(*chat_input_,
-		std::bind(&chatbox::chat_input_keypress_callback, this, _5));
+		std::bind(&chatbox::chat_input_keypress_callback, this, std::placeholders::_5));
 }
 
 void chatbox::load_log(std::map<std::string, chatroom_log>& log, bool show_lobby)
@@ -148,6 +147,8 @@ void chatbox::chat_input_keypress_callback(const SDL_Keycode key)
 		return;
 	}
 
+	lobby_chat_window& t = open_windows_[active_window_];
+
 	switch(key) {
 	case SDLK_RETURN:
 	case SDLK_KP_ENTER: {
@@ -157,8 +158,6 @@ void chatbox::chat_input_keypress_callback(const SDL_Keycode key)
 			//       the other party without having to specify it's nick.
 			chat_handler::do_speak(input);
 		} else {
-			lobby_chat_window& t = open_windows_[active_window_];
-
 			if(t.whisper) {
 				send_whisper(t.name, input);
 				add_whisper_sent(t.name, input);
@@ -175,9 +174,14 @@ void chatbox::chat_input_keypress_callback(const SDL_Keycode key)
 	}
 
 	case SDLK_TAB: {
+		auto* li = mp::get_lobby_info();
+		if(!li) {
+			break;
+		}
+
 		// TODO: very inefficient! Very! D:
 		std::vector<std::string> matches;
-		for(const auto& ui : lobby_info_->users()) {
+		for(const auto& ui : li->users()) {
 			if(ui.name != preferences::login()) {
 				matches.push_back(ui.name);
 			}
@@ -219,8 +223,9 @@ void chatbox::append_to_chatbox(const std::string& text, std::size_t id, const b
 	const bool chatbox_at_end = log.vertical_scrollbar_at_end();
 	const unsigned chatbox_position = log.get_vertical_scrollbar_item_position();
 
+	const std::string before_message = log.get_label().empty() ? "" : "\n";
 	const std::string new_text = formatter()
-		<< log.get_label() << "\n" << "<span color='#bcb088'>" << preferences::get_chat_timestamp(std::time(0)) << text << "</span>";
+		<< log.get_label() << before_message << "<span color='#bcb088'>" << preferences::get_chat_timestamp(std::time(0)) << text << "</span>";
 
 	log.set_use_markup(true);
 	log.set_label(new_text);
@@ -246,6 +251,14 @@ void chatbox::send_chat_message(const std::string& message, bool /*allies_only*/
 
 	::config c {"message", ::config {"message", message, "sender", preferences::login()}};
 	send_to_server(c);
+}
+
+void chatbox::clear_messages()
+{
+	const auto id = active_window_;
+	grid& grid = chat_log_container_->page_grid(id);
+	scroll_label& log = find_widget<scroll_label>(&grid, "log_text", false);
+	log.set_label("");
 }
 
 void chatbox::user_relation_changed(const std::string& /*name*/)
@@ -285,8 +298,6 @@ void chatbox::add_whisper_sent(const std::string& receiver, const std::string& m
 	} else {
 		add_active_window_whisper(VGETTEXT("whisper to $receiver", {{"receiver", receiver}}), message, true);
 	}
-
-	lobby_info_->get_whisper_log(receiver).add_message(preferences::login(), message);
 }
 
 void chatbox::add_whisper_received(const std::string& sender, const std::string& message)
@@ -294,24 +305,22 @@ void chatbox::add_whisper_received(const std::string& sender, const std::string&
 	bool can_go_to_active = !preferences::whisper_friends_only() || preferences::is_friend(sender);
 	bool can_open_new = preferences::auto_open_whisper_windows() && can_go_to_active;
 
-	lobby_info_->get_whisper_log(sender).add_message(sender, message);
-
 	if(whisper_window_open(sender, can_open_new)) {
 		if(whisper_window_active(sender)) {
 			add_active_window_message(sender, message);
 
-			do_notify(mp::NOTIFY_WHISPER, sender, message);
+			do_notify(mp::notify_mode::whisper, sender, message);
 		} else {
 			add_whisper_window_whisper(sender, message);
 			increment_waiting_whispers(sender);
 
-			do_notify(mp::NOTIFY_WHISPER_OTHER_WINDOW, sender, message);
+			do_notify(mp::notify_mode::whisper_other_window, sender, message);
 		}
 	} else if(can_go_to_active) {
 		add_active_window_whisper(sender, message);
-		do_notify(mp::NOTIFY_WHISPER, sender, message);
+		do_notify(mp::notify_mode::whisper, sender, message);
 	} else {
-		LOG_LB << "Ignoring whisper from " << sender << "\n";
+		LOG_LB << "Ignoring whisper from " << sender;
 	}
 }
 
@@ -319,19 +328,14 @@ void chatbox::add_chat_room_message_sent(const std::string& room, const std::str
 {
 	lobby_chat_window* t = room_window_open(room, false);
 	if(!t) {
-		LOG_LB << "Cannot add sent message to ui for room " << room << ", player not in the room\n";
+		LOG_LB << "Cannot add sent message to ui for room " << room << ", player not in the room";
 		return;
 	}
-
-	// Do not open room window here. The player should be in the room before sending messages
-	mp::room_info* ri = lobby_info_->get_room(room);
-	assert(ri);
 
 	if(!room_window_active(room)) {
 		switch_to_window(t);
 	}
 
-	ri->log().add_message(preferences::login(), message);
 	add_active_window_message(preferences::login(), message, true);
 }
 
@@ -339,30 +343,23 @@ void chatbox::add_chat_room_message_received(const std::string& room,
 	const std::string& speaker,
 	const std::string& message)
 {
-	mp::room_info* ri = lobby_info_->get_room(room);
-	if(!ri) {
-		LOG_LB << "Discarding message to room " << room << " from " << speaker << " (room not open)\n";
-		return;
-	}
-
-	mp::notify_mode notify_mode = mp::NOTIFY_NONE;
-	ri->log().add_message(speaker, message);
+	mp::notify_mode notify_mode = mp::notify_mode::none;
 
 	if(room_window_active(room)) {
 		add_active_window_message(speaker, message);
-		notify_mode = mp::NOTIFY_MESSAGE;
+		notify_mode = mp::notify_mode::message;
 	} else {
 		add_room_window_message(room, speaker, message);
 		increment_waiting_messages(room);
-		notify_mode = mp::NOTIFY_MESSAGE_OTHER_WINDOW;
+		notify_mode = mp::notify_mode::message_other_window;
 	}
 
 	if(speaker == "server") {
-		notify_mode = mp::NOTIFY_SERVER_MESSAGE;
+		notify_mode = mp::notify_mode::server_message;
 	} else if (utils::word_match(message, preferences::login())) {
-		notify_mode = mp::NOTIFY_OWN_NICK;
+		notify_mode = mp::notify_mode::own_nick;
 	} else if (preferences::is_friend(speaker)) {
-		notify_mode = mp::NOTIFY_FRIEND_MESSAGE;
+		notify_mode = mp::notify_mode::friend_message;
 	}
 
 	do_notify(notify_mode, speaker, message);
@@ -383,14 +380,14 @@ bool chatbox::room_window_active(const std::string& room)
 lobby_chat_window* chatbox::room_window_open(const std::string& room, const bool open_new, const bool allow_close)
 {
 	return find_or_create_window(room, false, open_new, allow_close,
-		VGETTEXT("Room <i>“$name”</i> joined", { { "name", translation::dsgettext("wesnoth-lib", room.c_str()) } }));
+		VGETTEXT("Joined <i>$name</i>", { { "name", translation::dsgettext("wesnoth-lib", room.c_str()) } }));
 }
 
 lobby_chat_window* chatbox::whisper_window_open(const std::string& name, bool open_new)
 {
 	return find_or_create_window(name, true, open_new, true,
-		VGETTEXT("Whisper session with <i>“$name”</i> started. "
-		"If you do not want to receive messages from this user, type <i>/ignore $name</i>", { { "name", name } }));
+		VGETTEXT("Started private message with <i>$name</i>. "
+		"If you do not want to receive messages from this player, type <i>/ignore $name</i>", { { "name", name } }));
 }
 
 lobby_chat_window* chatbox::find_or_create_window(const std::string& name,
@@ -414,14 +411,10 @@ lobby_chat_window* chatbox::find_or_create_window(const std::string& name,
 	//
 	// Add a new chat log page.
 	//
-	string_map item;
+	widget_item item;
 	item["use_markup"] = "true";
 	item["label"] = initial_text;
-	std::map<std::string, string_map> data{{"log_text", item}};
-
-	if(!whisper) {
-		lobby_info_->open_room(name);
-	}
+	widget_data data{{"log_text", item}};
 
 	if(log_ != nullptr) {
 		log_->emplace(name, chatroom_log{item["label"], whisper});
@@ -454,7 +447,7 @@ lobby_chat_window* chatbox::find_or_create_window(const std::string& name,
 		close_button.set_visible(widget::visibility::hidden);
 	} else {
 		connect_signal_mouse_left_click(close_button,
-			std::bind(&chatbox::close_window_button_callback, this, open_windows_.back().name, _3, _4));
+			std::bind(&chatbox::close_window_button_callback, this, open_windows_.back().name, std::placeholders::_3, std::placeholders::_4));
 	}
 
 	return &open_windows_.back();
@@ -473,9 +466,7 @@ void chatbox::close_window_button_callback(std::string room_name, bool& handled,
 
 void chatbox::send_to_server(const ::config& cfg)
 {
-	if(wesnothd_connection_) {
-		wesnothd_connection_->send_data(cfg);
-	}
+	mp::send_to_server(cfg);
 }
 
 void chatbox::increment_waiting_whispers(const std::string& name)
@@ -484,7 +475,7 @@ void chatbox::increment_waiting_whispers(const std::string& name)
 		++t->pending_messages;
 
 		if(t->pending_messages == 1) {
-			DBG_LB << "do whisper pending mark row " << (t - &open_windows_[0]) << " with " << t->name << "\n";
+			DBG_LB << "do whisper pending mark row " << (t - &open_windows_[0]) << " with " << t->name;
 
 			grid* grid = roomlistbox_->get_row_grid(t - &open_windows_[0]);
 			find_widget<image>(grid, "pending_messages", false).set_visible(widget::visibility::visible);
@@ -500,7 +491,7 @@ void chatbox::increment_waiting_messages(const std::string& room)
 		if(t->pending_messages == 1) {
 			int idx = t - &open_windows_[0];
 
-			DBG_LB << "do room pending mark row " << idx << " with " << t->name << "\n";
+			DBG_LB << "do room pending mark row " << idx << " with " << t->name;
 
 			grid* grid = roomlistbox_->get_row_grid(idx);
 			find_widget<image>(grid, "pending_messages", false).set_visible(widget::visibility::visible);
@@ -512,7 +503,7 @@ void chatbox::add_whisper_window_whisper(const std::string& sender, const std::s
 {
 	lobby_chat_window* t = whisper_window_open(sender, false);
 	if(!t) {
-		ERR_LB << "Whisper window not open in add_whisper_window_whisper for " << sender << "\n";
+		ERR_LB << "Whisper window not open in add_whisper_window_whisper for " << sender;
 		return;
 	}
 
@@ -532,21 +523,11 @@ void chatbox::close_window(std::size_t idx)
 {
 	const lobby_chat_window& t = open_windows_[idx];
 
-	DBG_LB << "Close window " << idx << " - " << t.name << "\n";
+	DBG_LB << "Close window " << idx << " - " << t.name;
 
 	// Can't close the lobby!
 	if((t.name == "lobby" && t.whisper == false) || open_windows_.size() == 1) {
 		return;
-	}
-
-	if(t.whisper == false) {
-		// closing a room window -- send a part to the server
-		::config data, msg;
-		msg["room"] = t.name;
-		msg["player"] = preferences::login();
-		data.add_child("room_part", std::move(msg));
-
-		send_to_server(data);
 	}
 
 	// Check if we're closing the currently-active window.
@@ -554,12 +535,6 @@ void chatbox::close_window(std::size_t idx)
 
 	if(active_window_ == open_windows_.size() - 1) {
 		--active_window_;
-	}
-
-	if(t.whisper) {
-		lobby_info_->get_whisper_log(t.name).clear();
-	} else {
-		lobby_info_->close_room(t.name);
 	}
 
 	if(log_ != nullptr) {
@@ -585,7 +560,7 @@ void chatbox::add_room_window_message(const std::string& room,
 {
 	lobby_chat_window* t = room_window_open(room, false);
 	if(!t) {
-		ERR_LB << "Room window not open in add_room_window_message for " << room << "\n";
+		ERR_LB << "Room window not open in add_room_window_message for " << room;
 		return;
 	}
 
@@ -601,157 +576,45 @@ void chatbox::add_active_window_message(const std::string& sender,
 	append_to_chatbox(text, force_scroll);
 }
 
-mp::room_info* chatbox::active_window_room()
-{
-	const lobby_chat_window& t = open_windows_[active_window_];
-	if(t.whisper) {
-		return nullptr;
-	}
-
-	return lobby_info_->get_room(t.name);
-}
-
-void chatbox::process_room_join(const ::config& data)
-{
-	const std::string& room = data["room"];
-	const std::string& player = data["player"];
-
-	DBG_LB << "room join: " << room << " " << player << "\n";
-
-	mp::room_info* r = lobby_info_->get_room(room);
-	if(r) {
-		if(player == preferences::login()) {
-			if(const auto& members = data.child("members")) {
-				r->process_room_members(members);
-			}
-		} else {
-			r->add_member(player);
-
-			/* TODO: add/use preference */
-			add_room_window_message(room, "server", VGETTEXT("$player has entered the room", {{"player", player}}));
-		}
-
-		if(r == active_window_room()) {
-			active_window_changed_callback_();
-		}
-	} else {
-		if(player == preferences::login()) {
-			lobby_chat_window* t = room_window_open(room, true);
-
-			lobby_info_->open_room(room);
-			r = lobby_info_->get_room(room);
-			assert(r);
-
-			if(const auto& members = data.child("members")) {
-				r->process_room_members(members);
-			}
-
-			switch_to_window(t);
-
-			const std::string& topic = data["topic"];
-			if(!topic.empty()) {
-				add_chat_room_message_received("room", "server", room + ": " + topic);
-			}
-		} else {
-			LOG_LB << "Discarding join info for a room the player is not in\n";
-		}
-	}
-}
-
-void chatbox::process_room_part(const ::config& data)
-{
-	// TODO: close room window when the part message is sent
-	const std::string& room = data["room"];
-	const std::string& player = data["player"];
-
-	DBG_LB << "Room part: " << room << " " << player << "\n";
-
-	if(mp::room_info* r = lobby_info_->get_room(room)) {
-		r->remove_member(player);
-
-		/* TODO: add/use preference */
-		add_room_window_message(room, "server", VGETTEXT("$player has left the room", {{"player", player}}));
-		if(active_window_room() == r) {
-			active_window_changed_callback_();
-		}
-	} else {
-		LOG_LB << "Discarding part info for a room the player is not in\n";
-	}
-}
-
-void chatbox::process_room_query_response(const ::config& data)
-{
-	const std::string& room = data["room"];
-	const std::string& message = data["message"];
-
-	DBG_LB << "room query response: " << room << " " << message << "\n";
-
-	if(room.empty()) {
-		if(!message.empty()) {
-			add_active_window_message("server", message);
-		}
-
-		if(const ::config& rooms = data.child("rooms")) {
-			// TODO: this should really open a nice join room dialog instead
-			std::stringstream ss;
-			ss << "Rooms:";
-
-			for(const auto & r : rooms.child_range("room")) {
-				ss << " " << r["name"];
-			}
-
-			add_active_window_message("server", ss.str());
-		}
-	} else {
-		if(room_window_open(room, false)) {
-			if(!message.empty()) {
-				add_chat_room_message_received(room, "server", message);
-			}
-
-			if(const ::config& members = data.child("members")) {
-				mp::room_info* r = lobby_info_->get_room(room);
-				assert(r);
-				r->process_room_members(members);
-				if(r == active_window_room()) {
-					active_window_changed_callback_();
-				}
-			}
-		} else {
-			if(!message.empty()) {
-				add_active_window_message("server", room + ": " + message);
-			}
-		}
-	}
-}
-
 void chatbox::process_message(const ::config& data, bool whisper /*= false*/)
 {
 	std::string sender = data["sender"];
 	DBG_LB << "process message from " << sender << " " << (whisper ? "(w)" : "")
-		<< ", len " << data["message"].str().size() << '\n';
+		<< ", len " << data["message"].str().size();
 
 	if(preferences::is_ignored(sender)) {
 		return;
 	}
 
 	const std::string& message = data["message"];
-	preferences::parse_admin_authentication(sender, message);
+	//preferences::parse_admin_authentication(sender, message); TODO: replace
 
 	if(whisper) {
 		add_whisper_received(sender, message);
 	} else {
+		if (!preferences::parse_should_show_lobby_join(sender, message)) return;
+
 		std::string room = data["room"];
 
 		// Attempt to send to the currently active room first.
 		if(room.empty()) {
-			LOG_LB << "Message without a room from " << sender << ", falling back to active window\n";
+			LOG_LB << "Message without a room from " << sender << ", falling back to active window";
 			room = open_windows_[active_window_].name;
 		}
 
 		// If we still don't have a name, fall back to lobby.
 		if(room.empty()) {
-			LOG_LB << "Message without a room from " << sender << ", assuming lobby\n";
+			LOG_LB << "Message without a room from " << sender << ", assuming lobby";
 			room = "lobby";
+		}
+
+		if(log_ != nullptr && data["type"].str() == "motd") {
+			if(log_->at("lobby").received_motd == message) {
+				LOG_LB << "Ignoring repeated motd";
+				return;
+			} else {
+				log_->at("lobby").received_motd = message;
+			}
 		}
 
 		add_chat_room_message_received(room, sender, message);
@@ -765,22 +628,16 @@ void chatbox::process_message(const ::config& data, bool whisper /*= false*/)
 
 void chatbox::process_network_data(const ::config& data)
 {
-	if(const ::config& message = data.child("message")) {
-		process_message(message);
-	} else if(const ::config& whisper = data.child("whisper")) {
-		process_message(whisper, true);
-	} else if(const ::config& room_join = data.child("room_join")) {
-		process_room_join(room_join);
-	} else if(const ::config& room_part = data.child("room_part")) {
-		process_room_part(room_part);
-	} else if(const ::config& room_query_response = data.child("room_query_response")) {
-		process_room_query_response(room_query_response);
+	if(const auto message = data.optional_child("message")) {
+		process_message(*message);
+	} else if(const auto whisper = data.optional_child("whisper")) {
+		process_message(*whisper, true);
 	}
 }
 
 void chatbox::signal_handler_receive_keyboard_focus(const event::ui_event event)
 {
-	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	// Forward focus to the input textbox.
 	get_window()->keyboard_capture(chat_input_);
@@ -797,12 +654,10 @@ chatbox_definition::chatbox_definition(const config& cfg)
 chatbox_definition::resolution::resolution(const config& cfg)
 	: resolution_definition(cfg), grid()
 {
-	state.emplace_back(cfg.child("background"));
-	state.emplace_back(cfg.child("foreground"));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "background", _("Missing required background for chatbox")));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "foreground", _("Missing required foreground for chatbox")));
 
-	const config& child = cfg.child("grid");
-	VALIDATE(child, _("No grid defined."));
-
+	auto child = VALIDATE_WML_CHILD(cfg, "grid", _("Missing required grid for chatbox"));
 	grid = std::make_shared<builder_grid>(child);
 }
 // }---------- BUILDER -----------{
@@ -815,17 +670,17 @@ builder_chatbox::builder_chatbox(const config& cfg)
 {
 }
 
-widget* builder_chatbox::build() const
+std::unique_ptr<widget> builder_chatbox::build() const
 {
-	chatbox* widget = new chatbox(*this);
+	auto widget = std::make_unique<chatbox>(*this);
 
 	DBG_GUI_G << "Window builder: placed unit preview pane '" << id
-			  << "' with definition '" << definition << "'.\n";
+			  << "' with definition '" << definition << "'.";
 
 	const auto conf = widget->cast_config_to<chatbox_definition>();
 	assert(conf);
 
-	widget->init_grid(conf->grid);
+	widget->init_grid(*conf->grid);
 	widget->finalize_setup();
 
 	return widget;

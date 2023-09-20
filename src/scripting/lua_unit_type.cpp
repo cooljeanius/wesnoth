@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2014 - 2018 by Chris Beck <render787@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2014 - 2023
+	by Chris Beck <render787@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #include "scripting/lua_unit_type.hpp"
@@ -22,7 +23,6 @@
 #include <string>
 #include <cstring>
 
-#include "lua/lua.h"
 #include "lua/lauxlib.h"
 
 /**
@@ -47,7 +47,7 @@ static int impl_unit_type_get(lua_State *L)
 	// Find the corresponding attribute.
 	return_tstring_attrib("name", ut.type_name());
 	return_string_attrib("id", ut.id());
-	return_string_attrib("alignment", ut.alignment().to_string());
+	return_string_attrib("alignment", unit_alignments::get_string(ut.alignment()));
 	return_string_attrib("race", ut.race_id());
 	return_string_attrib("image", ut.image());
 	return_string_attrib("icon", ut.icon());
@@ -242,7 +242,7 @@ namespace lua_unit_type {
 
 void luaW_pushunittype(lua_State *L, const unit_type& ut)
 {
-	*static_cast<const unit_type**>(lua_newuserdata(L, sizeof(unit_type*))) = &ut;
+	*static_cast<const unit_type**>(lua_newuserdatauv(L, sizeof(unit_type*), 0)) = &ut;
 	luaL_setmetatable(L, UnitType);
 }
 

@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2010 - 2018 by Jody Northup
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2010 - 2023
+	by Jody Northup
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #include "filesystem.hpp"
@@ -40,7 +41,7 @@ void persist_file_context::load()
 			try {
 				read(cfg_,*file_stream);
 			} catch (const config::error &err) {
-				LOG_PERSIST << err.message << std::endl;
+				LOG_PERSIST << err.message;
 			}
 		}
 	}
@@ -69,7 +70,7 @@ bool persist_file_context::clear_var(const std::string &global, bool immediate)
 
 	bool ret = active->has_child("variables");
 	if (ret) {
-		config &cfg = active->child("variables");
+		config &cfg = active->mandatory_child("variables");
 		bool exists = cfg.has_attribute(global);
 		if (!exists) {
 			if (cfg.has_child(global)) {
@@ -99,7 +100,7 @@ bool persist_file_context::clear_var(const std::string &global, bool immediate)
 					name_space prev = working.prev();
 					active = get_node(cfg_, prev);
 					active->clear_children(working.node_);
-					if (active->has_child("variables") && active->child("variables").empty()) {
+					if (active->has_child("variables") && active->mandatory_child("variables").empty()) {
 						active->clear_children("variables");
 						active->remove_attribute("variables");
 					}
@@ -148,7 +149,7 @@ bool persist_file_context::clear_var(const std::string &global, bool immediate)
 			break;
 		}
 		active->clear_children(namespace_.node_);
-		if (active->has_child("variables") && active->child("variables").empty()) {
+		if (active->has_child("variables") && active->mandatory_child("variables").empty()) {
 			active->clear_children("variables");
 			active->remove_attribute("variables");
 		}
@@ -162,11 +163,11 @@ config persist_file_context::get_var(const std::string &global) const
 	config ret;
 	const config *active = get_node(cfg_, namespace_);
 	if (active && (active->has_child("variables"))) {
-		const config &cfg = active->child("variables");
+		const config &cfg = active->mandatory_child("variables");
 		std::size_t arrsize = cfg.child_count(global);
 		if (arrsize > 0) {
 			for (std::size_t i = 0; i < arrsize; i++)
-				ret.add_child(global,cfg.child(global,i));
+				ret.add_child(global, cfg.mandatory_child(global,i));
 		} else {
 			ret = pack_scalar(global,cfg[global]);
 		}
@@ -191,7 +192,7 @@ bool persist_file_context::save_context() {
 					writer.write(cfg_);
 					success = true;
 				} catch(config::error &err) {
-					LOG_PERSIST << err.message << std::endl;
+					LOG_PERSIST << err.message;
 					success = false;
 				}
 			}

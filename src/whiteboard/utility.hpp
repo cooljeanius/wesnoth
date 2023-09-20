@@ -1,16 +1,17 @@
 /*
- Copyright (C) 2010 - 2018 by Gabriel Morin <gabrielmorin (at) gmail (dot) com>
- Part of the Battle for Wesnoth Project https://www.wesnoth.org
+	Copyright (C) 2010 - 2023
+	by Gabriel Morin <gabrielmorin (at) gmail (dot) com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
- See the COPYING file for more details.
- */
+	See the COPYING file for more details.
+*/
 
 /**
  * @file
@@ -21,7 +22,7 @@
 #include <vector>
 #include <deque>
 
-#include "utils/functional.hpp"
+#include <functional>
 
 #include "typedefs.hpp"
 
@@ -30,16 +31,16 @@ class team;
 
 namespace wb {
 
-/// @return The current viewing team's index
+/** @return The current viewing team's index */
 std::size_t viewer_team();
 
-/// @return The current viewing side's number (i.e. team index + 1)
+/** @return The current viewing side's number (i.e. team index + 1) */
 int viewer_side();
 
-/// @return The side_actions instance belonging to the current viewing team
+/** @return The side_actions instance belonging to the current viewing team */
 side_actions_ptr viewer_actions();
 
-/// @return The side_actions instance belonging to the current playing team
+/** @return The side_actions instance belonging to the current playing team */
 side_actions_ptr current_side_actions();
 
 /**
@@ -59,16 +60,22 @@ unit* find_recruiter(std::size_t team_index, const map_location&);
  */
 bool any_recruiter(int side_num, const map_location& loc, std::function<bool(unit&)> func);
 
-/// Applies the future unit map and @return a pointer to the unit at hex
-/// @retval nullptr if none is visible to the specified viewer side
+/**
+ * Applies the future unit map and @return a pointer to the unit at hex
+ * @retval nullptr if none is visible to the specified viewer side
+ */
 unit* future_visible_unit(map_location hex, int viewer_side = wb::viewer_side());
 
-/// Applies the future unit map and @return a pointer to the unit at hex
-/// @retval nullptr if none is visible to the specified viewer side
-/// @param on_side Only search for units of this side.
+/**
+ * Applies the future unit map and @return a pointer to the unit at hex
+ * @retval nullptr if none is visible to the specified viewer side
+ * @param on_side Only search for units of this side.
+ * @param hex
+ * @param viewer_side
+ */
 unit* future_visible_unit(int on_side, map_location hex, int viewer_side = wb::viewer_side());
 
-/// Computes the MP cost for u to travel path
+/** Computes the MP cost for u to travel path */
 int path_cost(const std::vector<map_location>& path, const unit& u);
 
 struct temporary_unit_hider {

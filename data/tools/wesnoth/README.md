@@ -1,10 +1,12 @@
-# @file README
+# README
 
 The programs in this directory data/tools/wesnoth
-are for checking, analysing and maintenance of WML-files,
-written in python.
+are for checking, analysing and maintenance of WML-files.
 
-###
+The modules intended to be imported by other programs are
+documented in the parent directory's README.md. These are
+version.py, wmltools3.py, wmldata.py, wmlparser.py, wmlparser3.py and
+wmliterator3.py.
 
 `__init__.py`
   Cause Python to execute any code in this directory on "import wesnoth".
@@ -12,25 +14,17 @@ written in python.
 `campaignserver_client.py`
   textmode-client for uploading + downloding campaigns to the server.
 
+`version.py`
+  This module reports the current version of Wesnoth to any script which
+  might need it.
+
 `wescamp.py`
   This utility provides two tools
   * sync a campaign with the version on wescamp (using the packed campaign 
     as base)
   * update the translations in a campaign (in the packed campaign)
 
-`wmldata.py`
-  This module represents the internal appearance of WML.
-
-`wmliterator.py`
-  Python routines for navigating a Battle For Wesnoth WML tree
-
-`wmlparser.py`
-  Module implementing a WML parser.
-
-`wmltools.py`
-  Python routines for working with a Battle For Wesnoth WML tree
-
-###
+--------------------------------------------------
 
 From IRC #wesnoth-dev - 2007-11-27 
 
@@ -55,7 +49,3 @@ From IRC #wesnoth-dev - 2007-11-27
     <hajo> it just says "reading x.cfg" and "y lines read"
     <Sapient> right, no errors
     <Sapient> it iterated successfully
-
-
-# vim: tabstop=4: shiftwidth=4: expandtab: softtabstop=4: autoindent:
-

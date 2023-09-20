@@ -1,20 +1,20 @@
 /*
-   Copyright (C) 2003 - 2018 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2003 - 2023
+	by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #include "serialization/base64.hpp"
 
-#include <vector>
 #include <string>
 
 namespace {
@@ -49,11 +49,14 @@ char itoa(unsigned value, const std::string& map)
 	return map[value & 0x3f];
 }
 
-std::vector<uint8_t> generic_decode_be(utils::string_view in, const std::vector<int>& atoi_map)
+std::vector<uint8_t> generic_decode_be(std::string_view in, const std::vector<int>& atoi_map)
 {
-	const int last_char = in.find_last_not_of("=");
-	const int num_chars = last_char + 1;
-	const int length = num_chars * 6 / 8;
+	const std::size_t last_char = in.find_last_not_of("=");
+	if(last_char == std::string::npos) {
+		return {};
+	}
+	const std::size_t num_chars = last_char + 1;
+	const std::size_t length = num_chars * 6 / 8;
 
 	std::vector<uint8_t> out;
 	out.reserve(length);
@@ -76,22 +79,25 @@ std::vector<uint8_t> generic_decode_be(utils::string_view in, const std::vector<
 			val &= 0xFFFF; // Prevent shifting bits off the left end, which is UB
 		}
 	}
-	if(static_cast<int>(out.size()) != length) {
+	if(out.size() != length) {
 		return {};
 	}
 
 	return out;
 }
 
-std::vector<uint8_t> generic_decode_le(utils::string_view in, const std::vector<int>& atoi_map)
+std::vector<uint8_t> generic_decode_le(std::string_view in, const std::vector<int>& atoi_map)
 {
-	const int last_char = in.find_last_not_of("=");
-	const int length = last_char * 6 / 8;
+	const std::size_t last_char = in.find_last_not_of("=");
+	if(last_char == std::string::npos) {
+		return {};
+	}
+	const std::size_t length = last_char * 6 / 8;
 
 	std::vector<uint8_t> out;
 	out.reserve(length);
 
-	for(int i = 0; i <= last_char; i += 4) {
+	for(std::size_t i = 0; i <= last_char; i += 4) {
 		//add first char (always)
 		unsigned value = atoi_map[in[i]];
 
@@ -212,7 +218,7 @@ std::string generic_encode_le(utils::byte_string_view in, const std::string& ito
 }
 
 namespace base64 {
-std::vector<uint8_t> decode(utils::string_view in)
+std::vector<uint8_t> decode(std::string_view in)
 {
 	return generic_decode_be(in, base64_atoi_map());
 }
@@ -222,7 +228,7 @@ std::string encode(utils::byte_string_view bytes)
 }
 }
 namespace crypt64{
-std::vector<uint8_t> decode(utils::string_view in)
+std::vector<uint8_t> decode(std::string_view in)
 {
 	return generic_decode_le(in, crypt64_atoi_map());
 }

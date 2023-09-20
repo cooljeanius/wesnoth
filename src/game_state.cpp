@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2014 - 2018 by Chris Beck <render787@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2014 - 2023
+	by Chris Beck <render787@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #include "game_state.hpp"
@@ -32,8 +33,9 @@
 #include "units/unit.hpp"
 #include "whiteboard/manager.hpp"
 #include "gui/dialogs/loading_screen.hpp"
+#include "side_controller.hpp"
 
-#include "utils/functional.hpp"
+#include <functional>
 #include <SDL2/SDL_timer.h>
 
 #include <algorithm>
@@ -44,63 +46,29 @@ static lg::log_domain log_engine("engine");
 #define DBG_NG LOG_STREAM(debug, log_engine)
 #define ERR_NG LOG_STREAM(err, log_engine)
 
-game_state::game_state(const config & level, play_controller & pc, const ter_data_cache & tdata) :
-	gamedata_(level),
-	board_(tdata, level),
-	tod_manager_(level),
-	pathfind_manager_(new pathfind::manager(level)),
-	reports_(new reports()),
-	lua_kernel_(new game_lua_kernel(*this, pc, *reports_)),
-	ai_manager_(),
-	events_manager_(new game_events::manager()),
-	//TODO: this construct units (in dimiss undo action) but resrouces:: are not available yet,
-	//      so we might want to move the innitialisation of undo_stack_ to game_state::init
-	undo_stack_(new actions::undo_list(level.child("undo_stack"))),
-	player_number_(level["playing_team"].to_int() + 1),
-	next_player_number_(level["next_player_number"].to_int(player_number_ + 1)),
-	do_healing_(level["do_healing"].to_bool(false)),
-	init_side_done_(level["init_side_done"].to_bool(false)),
-	start_event_fired_(!level["playing_team"].empty()),
-	server_request_number_(level["server_request_number"].to_int()),
-	first_human_team_(-1)
+game_state::game_state(const config& level, play_controller& pc)
+	: gamedata_(level)
+	, board_(level)
+	, tod_manager_(level)
+	, pathfind_manager_(new pathfind::manager(level))
+	, reports_(new reports())
+	, lua_kernel_(new game_lua_kernel(*this, pc, *reports_))
+	, ai_manager_()
+	, events_manager_(new game_events::manager())
+	, undo_stack_(new actions::undo_list())
+	, player_number_(level["playing_team"].to_int() + 1)
+	, next_player_number_(level["next_player_number"].to_int(player_number_ + 1))
+	, do_healing_(level["do_healing"].to_bool(false))
+	, server_request_number_(level["server_request_number"].to_int())
 {
 	lua_kernel_->load_core();
-	if(const config& endlevel_cfg = level.child("end_level_data")) {
+	if(auto endlevel_cfg = level.optional_child("end_level_data")) {
 		end_level_data el_data;
-		el_data.read(endlevel_cfg);
+		el_data.read(*endlevel_cfg);
 		el_data.transient.carryover_report = false;
 		end_level_data_ = el_data;
 	}
 }
-
-game_state::game_state(const config & level, play_controller & pc, game_board& board) :
-	gamedata_(level),
-	board_(board),
-	tod_manager_(level),
-	pathfind_manager_(new pathfind::manager(level)),
-	reports_(new reports()),
-	lua_kernel_(new game_lua_kernel(*this, pc, *reports_)),
-	ai_manager_(),
-	events_manager_(new game_events::manager()),
-	player_number_(level["playing_team"].to_int() + 1),
-	next_player_number_(level["next_player_number"].to_int(player_number_ + 1)),
-	do_healing_(level["do_healing"].to_bool(false)),
-	end_level_data_(),
-	init_side_done_(level["init_side_done"].to_bool(false)),
-	start_event_fired_(!level["playing_team"].empty()),
-	server_request_number_(level["server_request_number"].to_int()),
-	first_human_team_(-1)
-{
-	lua_kernel_->load_core();
-	events_manager_->read_scenario(level);
-	if(const config& endlevel_cfg = level.child("end_level_data")) {
-		end_level_data el_data;
-		el_data.read(endlevel_cfg);
-		el_data.transient.carryover_report = false;
-		end_level_data_ = el_data;
-	}
-}
-
 
 game_state::~game_state() {}
 
@@ -169,52 +137,51 @@ void game_state::place_sides_in_preferred_locations(const config& level)
 		if(placed.count(i->side) == 0 && positions_taken.count(i->pos) == 0) {
 			placed.insert(i->side);
 			positions_taken.insert(i->pos);
-			board_.map_->set_starting_position(i->side,i->pos);
-			LOG_NG << "placing side " << i->side << " at " << i->pos << std::endl;
+			board_.map().set_starting_position(i->side,i->pos);
+			LOG_NG << "placing side " << i->side << " at " << i->pos;
 		}
 	}
 }
 
 void game_state::init(const config& level, play_controller & pc)
 {
-	events_manager_->read_scenario(level);
+	events_manager_->read_scenario(level, *lua_kernel_);
 	gui2::dialogs::loading_screen::progress(loading_stage::init_teams);
 	if (level["modify_placing"].to_bool()) {
-		LOG_NG << "modifying placing..." << std::endl;
+		LOG_NG << "modifying placing...";
 		place_sides_in_preferred_locations(level);
 	}
 
-	LOG_NG << "initialized time of day regions... "    << (SDL_GetTicks() - pc.ticks()) << std::endl;
+	LOG_NG << "initialized time of day regions... "    << (SDL_GetTicks() - pc.ticks());
 	for (const config &t : level.child_range("time_area")) {
 		tod_manager_.add_time_area(board_.map(),t);
 	}
 
-	LOG_NG << "initialized teams... "    << (SDL_GetTicks() - pc.ticks()) << std::endl;
+	LOG_NG << "initialized teams... "    << (SDL_GetTicks() - pc.ticks());
 
-	board_.teams_.resize(level.child_count("side"));
-	if (player_number_ > static_cast<int>(board_.teams_.size())) {
-		ERR_NG << "invalid player number " <<  player_number_ << " #sides=" << board_.teams_.size() << "\n";
+	board_.teams().resize(level.child_count("side"));
+	if (player_number_ != 1 && player_number_ > static_cast<int>(board_.teams().size())) {
+		ERR_NG << "invalid player number " <<  player_number_ << " #sides=" << board_.teams().size();
 		player_number_ = 1;
 		// in case there are no teams, using player_number_ migh still cause problems later.
 	}
 
-	std::vector<team_builder_ptr> team_builders;
+	std::vector<team_builder> team_builders;
+
+	// Note this isn't strictly necessary since team_builder declares a move constructor which will
+	// be used if a copy is needed (see the class documentation for why a copy causes crashes), but
+	// it can't hurt to be doubly safe.
+	team_builders.reserve(board_.teams().size());
 
 	int team_num = 0;
 	for (const config &side : level.child_range("side"))
 	{
-		if (first_human_team_ == -1) {
-			const std::string &controller = side["controller"];
-			if (controller == "human" && side["is_local"].to_bool(true)) {
-				first_human_team_ = team_num;
-			}
-		}
 		++team_num;
-		team_builder_ptr tb_ptr = create_team_builder(side,
-			board_.teams_, level, board_, team_num);
-		build_team_stage_one(tb_ptr);
-		team_builders.push_back(tb_ptr);
+
+		team_builders.emplace_back(side, board_.get_team(team_num), level, board_, team_num);
+		team_builders.back().build_team_stage_one();
 	}
+
 	//Initialize the lua kernel before the units are created.
 	lua_kernel_->initialize(level);
 
@@ -224,13 +191,18 @@ void game_state::init(const config& level, play_controller & pc)
 
 		tod_manager_.resolve_random(*randomness::generator);
 
-		for(team_builder_ptr tb_ptr : team_builders)
-		{
-			build_team_stage_two(tb_ptr);
+		undo_stack_->read(level.child_or_empty("undo_stack"));
+
+		for(team_builder& tb : team_builders) {
+			tb.build_team_stage_two();
 		}
-		for(std::size_t i = 0; i < board_.teams_.size(); i++) {
+		for(team_builder& tb : team_builders) {
+			tb.build_team_stage_three();
+		}
+
+		for(std::size_t i = 0; i < board_.teams().size(); i++) {
 			// Labels from players in your ignore list default to hidden
-			if(preferences::is_ignored(board_.teams_[i].current_player())) {
+			if(preferences::is_ignored(board_.teams()[i].current_player())) {
 				std::string label_cat = "side:" + std::to_string(i + 1);
 				board_.hidden_label_categories().push_back(label_cat);
 			}
@@ -245,8 +217,9 @@ void game_state::set_game_display(game_display * gd)
 
 void game_state::write(config& cfg) const
 {
-	cfg["init_side_done"] = init_side_done_;
-	if(gamedata_.phase() == game_data::PLAY) {
+	// dont write this before we fired the (pre)start events
+	// This is the case for the 'replay_start' part of the savegame.
+	if(!in_phase(game_data::INITIAL, game_data::PRELOAD)) {
 		cfg["playing_team"] = player_number_ - 1;
 		cfg["next_player_number"] = next_player_number_;
 	}
@@ -273,7 +246,7 @@ void game_state::write(config& cfg) const
 	// Preserve the undo stack so that fog/shroud clearing is kept accurate.
 	undo_stack_->write(cfg.add_child("undo_stack"));
 
-	if(end_level_data_.get_ptr() != nullptr) {
+	if(end_level_data_) {
 		end_level_data_->write(cfg.add_child("end_level_data"));
 	}
 }
@@ -428,13 +401,13 @@ public:
 	{
 	}
 
-	/// We are in a game with no mp server and need to do this choice locally
+	/** We are in a game with no mp server and need to do this choice locally */
 	virtual config local_choice() const
 	{
 		return config{};
 	}
 
-	/// tThe request which is sent to the mp server.
+	/** The request which is sent to the mp server. */
 	virtual config request() const
 	{
 		return config{};
@@ -452,11 +425,11 @@ private:
 
 void game_state::add_side_wml(config cfg)
 {
-	cfg["side"] = board_.teams_.size() + 1;
+	cfg["side"] = board_.teams().size() + 1;
 	//if we want to also allow setting the controller we must update the server code.
-	cfg["controller"] = "null";
+	cfg["controller"] = side_controller::none;
 	//TODO: is this it? are there caches which must be cleared?
-	board_.teams_.emplace_back();
-	board_.teams_.back().build(cfg, board_.map(), cfg["gold"].to_int());
+	board_.teams().emplace_back();
+	board_.teams().back().build(cfg, board_.map(), cfg["gold"].to_int());
 	config choice = synced_context::ask_server_choice(add_side_wml_choice());
 }

@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2014 - 2018 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2014 - 2023
+	by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -69,10 +70,10 @@ namespace randomness
 		 * should be one.
 		 * @param first	Iterator to the beginning of the container
 		 * @param last	Iterator to the end of the container
-		 * @ret			The index of the selected number
+		 * @return		The index of the selected number
 		 */
 		template <typename T>
-		unsigned int get_random_element(T first, T last);
+		typename T::difference_type get_random_element(T first, T last);
 
 		// For compatibility with the C++ UniformRandomBitGenerator concept
 		using result_type = uint32_t;
@@ -108,7 +109,7 @@ namespace randomness
 	extern rng* generator;
 
 	template <typename T>
-	unsigned int rng::get_random_element(T first, T last)
+	typename T::difference_type rng::get_random_element(T first, T last)
 	{
 		double target = get_random_double();
 		double sum = 0.0;

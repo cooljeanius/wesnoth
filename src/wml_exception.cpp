@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2007 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2007 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -28,6 +29,9 @@
 
 static lg::log_domain log_engine("engine");
 #define WRN_NG LOG_STREAM(warn, log_engine)
+
+static lg::log_domain log_wml("wml");
+#define ERR_WML LOG_STREAM(err, log_wml)
 
 void throw_wml_exception(
 		  const char* cond
@@ -80,7 +84,7 @@ std::string missing_mandatory_wml_key(
 		} else {
 			WRN_NG << __func__
 					<< " parameter 'section' should contain brackets."
-					<< " Added them.\n";
+					<< " Added them.";
 			symbols["section"] = "[" + section + "]";
 		}
 	}
@@ -97,68 +101,4 @@ std::string missing_mandatory_wml_key(
 		return VGETTEXT("In section '[$section|]' the "
 			"mandatory key '$key|' isn't set.", symbols);
 	}
-}
-
-std::string deprecate_wml_key_warning(
-		  const std::string& key
-		, const std::string& removal_version)
-{
-	assert(!key.empty());
-	assert(!removal_version.empty());
-
-	utils::string_map symbols;
-	symbols["key"] = key;
-	symbols["removal_version"] = removal_version;
-
-	return VGETTEXT("The key '$key' is deprecated and support "
-			"will be removed in version $removal_version.", symbols);
-}
-
-std::string deprecated_renamed_wml_key_warning(
-		  const std::string& deprecated_key
-		, const std::string& key
-		, const std::string& removal_version)
-{
-	assert(!deprecated_key.empty());
-	assert(!key.empty());
-	assert(!removal_version.empty());
-
-	utils::string_map symbols;
-	symbols["deprecated_key"] = deprecated_key;
-	symbols["key"] = key;
-	symbols["removal_version"] = removal_version;
-
-	return VGETTEXT(
-			  "The key '$deprecated_key' has been renamed to '$key'. "
-				"Support for '$deprecated_key' will be removed in version "
-				"$removal_version."
-			, symbols);
-}
-
-const config::attribute_value& get_renamed_config_attribute(
-		  const config& cfg
-		, const std::string& deprecated_key
-		, const std::string& key
-		, const std::string& removal_version)
-{
-
-	const config::attribute_value* result = cfg.get(key);
-	if(result) {
-		return *result;
-	}
-
-	result = cfg.get(deprecated_key);
-	if(result) {
-		lg::wml_error()
-			<< deprecated_renamed_wml_key_warning(
-				  deprecated_key
-				, key
-				, removal_version)
-			<< '\n';
-
-		return *result;
-	}
-
-	static const config::attribute_value empty_attribute;
-	return empty_attribute;
 }

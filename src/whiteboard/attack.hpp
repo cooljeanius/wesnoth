@@ -1,16 +1,17 @@
 /*
- Copyright (C) 2010 - 2018 by Gabriel Morin <gabrielmorin (at) gmail (dot) com>
- Part of the Battle for Wesnoth Project https://www.wesnoth.org
+	Copyright (C) 2010 - 2023
+	by Gabriel Morin <gabrielmorin (at) gmail (dot) com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
- See the COPYING file for more details.
- */
+	See the COPYING file for more details.
+*/
 
 /**
  * @file
@@ -72,15 +73,17 @@ private:
 	virtual void do_hide() {invalidate();}
 	virtual void do_show() {invalidate();}
 
-	///invalidates the move-destination and attack-target hexes
+	/** invalidates the move-destination and attack-target hexes */
 	void invalidate();
 
-	///the target of the attack
+	/** the target of the attack */
 	map_location target_hex_;
 
 	int weapon_choice_;
 	int attack_movement_cost_;
 	int temp_movement_subtracted_;
+	int attack_count_;
+	int temp_attacks_subtracted_;
 };
 
 /** Dumps an attack on a stream, for debug purposes. */

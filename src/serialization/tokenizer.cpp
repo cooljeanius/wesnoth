@@ -1,21 +1,19 @@
 /*
-   Copyright (C) 2004 - 2009 by Philippe Plantier <ayin@anathas.org>
-   Copyright (C) 2010 - 2018 by Guillaume Melquiond <guillaume.melquiond@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org
+	Copyright (C) 2010 - 2023
+	by Guillaume Melquiond <guillaume.melquiond@gmail.com>
+	Copyright (C) 2004 - 2009 by Philippe Plantier <ayin@anathas.org>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
-/** @file */
-
-#include "global.hpp"
 #include "serialization/tokenizer.hpp"
 #include "wesconfig.h"
 
@@ -58,7 +56,7 @@ const token &tokenizer::next_token()
 	token_.value.clear();
 
 	// Dump spaces and inlined comments
-	for(;;)
+	while(true)
 	{
 		while (is_space(current_)) {
 			next_char_fast();
@@ -134,7 +132,7 @@ const token &tokenizer::next_token()
 			token_.value = current_;
 			break;
 		}
-		FALLTHROUGH;
+		[[fallthrough]];
 
 	default:
 		if (is_alnum(current_) || current_ == '$') {

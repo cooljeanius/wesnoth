@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2006 - 2018 by Jeremy Rosen <jeremy.rosen@enst-bretagne.fr>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2006 - 2023
+	by Jeremy Rosen <jeremy.rosen@enst-bretagne.fr>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -24,9 +25,9 @@
 #include "color.hpp"
 #include "halo.hpp"
 #include "picture.hpp"
+#include <optional>
 
 #include <boost/logic/tribool.hpp>
-#include <boost/optional.hpp>
 
 class config;
 
@@ -50,8 +51,8 @@ struct frame_parameters
 	std::string sound;
 	std::string text;
 
-	boost::optional<color_t> text_color;
-	boost::optional<color_t> blend_with;
+	std::optional<color_t> text_color;
+	std::optional<color_t> blend_with;
 
 	double blend_ratio;
 	double highlight_ratio;
@@ -115,8 +116,8 @@ private:
 	std::string sound_;
 	std::string text_;
 
-	boost::optional<color_t> text_color_;
-	boost::optional<color_t> blend_with_;
+	std::optional<color_t> text_color_;
+	std::optional<color_t> blend_with_;
 
 	std::string blend_ratio_;
 	std::string highlight_ratio_;
@@ -177,8 +178,8 @@ private:
 	std::string sound_;
 	std::string text_;
 
-	boost::optional<color_t> text_color_;
-	boost::optional<color_t> blend_with_;
+	std::optional<color_t> text_color_;
+	std::optional<color_t> blend_with_;
 
 	progressive_double blend_ratio_;
 	progressive_double highlight_ratio_;
@@ -206,15 +207,15 @@ public:
 	void redraw(const int frame_time, bool on_start_time, bool in_scope_of_frame, const map_location& src, const map_location& dst,
 		halo::handle& halo_id, halo::manager& halo_man, const frame_parameters& animation_val, const frame_parameters& engine_val) const;
 
-	const frame_parameters merge_parameters(int current_time, const frame_parameters& animation_val,
+	frame_parameters merge_parameters(int current_time, const frame_parameters& animation_val,
 		const frame_parameters& engine_val = frame_parameters()) const;
 
-	const frame_parameters parameters(int current_time) const
+	frame_parameters parameters(int current_time) const
 	{
 		return builder_.parameters(current_time);
 	}
 
-	const frame_parameters end_parameters() const
+	frame_parameters end_parameters() const
 	{
 		return builder_.parameters(duration());
 	}

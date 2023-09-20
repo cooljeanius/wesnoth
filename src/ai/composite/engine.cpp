@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2009 - 2018 by Yurii Chernyi <terraninfo@terraninfo.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2009 - 2023
+	by Yurii Chernyi <terraninfo@terraninfo.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -36,7 +37,7 @@ engine::engine( readonly_context &context, const config &cfg )
 	, id_(cfg["id"])
 	, name_(cfg["name"])
 {
-	LOG_AI_ENGINE << "side "<< ai_.get_side() << " : "<<" created engine with name=["<<name_<<"]"<<std::endl;
+	LOG_AI_ENGINE << "side "<< ai_.get_side() << " : "<<" created engine with name=["<<name_<<"]";
 }
 
 engine::~engine()
@@ -75,7 +76,6 @@ void engine::parse_engine_from_config( readonly_context &context, const config &
 	}
 }
 
-
 void engine::parse_goal_from_config( readonly_context &context, const config &cfg, std::back_insert_iterator<std::vector< goal_ptr >> b )
 {
 	engine_ptr eng = context.get_engine_by_cfg(cfg);
@@ -84,7 +84,6 @@ void engine::parse_goal_from_config( readonly_context &context, const config &cf
 		eng->do_parse_goal_from_config(cfg, b);
 	}
 }
-
 
 void engine::parse_stage_from_config( ai_context &context, const config &cfg, std::back_insert_iterator<std::vector< stage_ptr >> b )
 {
@@ -100,7 +99,6 @@ void engine::do_parse_aspect_from_config( const config &/*cfg*/, const std::stri
 
 }
 
-
 void engine::do_parse_candidate_action_from_config( rca_context &/*context*/, const config &/*cfg*/, std::back_insert_iterator<std::vector< candidate_action_ptr >> /*b*/ ){
 
 }
@@ -109,11 +107,9 @@ void engine::do_parse_engine_from_config( const config &/*cfg*/, std::back_inser
 
 }
 
-
 void engine::do_parse_goal_from_config( const config &/*cfg*/, std::back_insert_iterator<std::vector< goal_ptr >> /*b*/ ){
 
 }
-
 
 void engine::do_parse_stage_from_config( ai_context &/*context*/, const config &/*cfg*/, std::back_insert_iterator<std::vector< stage_ptr >> /*b*/ )
 {
@@ -152,11 +148,10 @@ readonly_context& engine::get_readonly_context()
 bool engine_factory::is_duplicate(const std::string& name)
 {
 	if (get_list().find(name) != get_list().end()) {
-		ERR_AI_ENGINE << "Error: Attempt to double-register engine " << name << std::endl;
+		ERR_AI_ENGINE << "Error: Attempt to double-register engine " << name;
 		return true;
 	}
 	return false;
 }
-
 
 } //end of namespace ai

@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2009 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2009 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #define GETTEXT_DOMAIN "wesnoth-lib"
@@ -23,7 +24,7 @@
 #include "gettext.hpp"
 #include "wml_exception.hpp"
 
-#include "utils/functional.hpp"
+#include <functional>
 
 namespace gui2
 {
@@ -57,79 +58,23 @@ void scrollbar_panel::set_self_active(const bool /*active*/)
 scrollbar_panel_definition::scrollbar_panel_definition(const config& cfg)
 	: styled_widget_definition(cfg)
 {
-	DBG_GUI_P << "Parsing scrollbar panel " << id << '\n';
+	DBG_GUI_P << "Parsing scrollbar panel " << id;
 
 	load_resolutions<resolution>(cfg);
 }
 
-/*WIKI
- * @page = GUIWidgetDefinitionWML
- * @order = 1_scrollbar_panel
- *
- * == Scrollbar panel ==
- *
- * @begin{parent}{name="gui/"}
- * @begin{tag}{name="scrollbar_panel_definition"}{min=0}{max=-1}{super="generic/widget_definition"}
- * @begin{tag}{name="resolution"}{min=0}{max=-1}{super="gui/window_definition/resolution"}
- * The definition of a panel with scrollbars. A panel is a container holding
- * other elements in its grid. A panel is always enabled and can't be
- * disabled. Instead it uses the states as layers to draw on.
- *
- * @begin{table}{config}
- *     grid & grid & &                    A grid containing the widgets for main
- *                                     widget. $
- * @end{table}
- * The following layers exist:
- * * background, the background of the panel.
- * * foreground, the foreground of the panel.
- *
- * @end{tag}{name="resolution"}
- * @end{tag}{name="scrollbar_panel_definition"}
- * @end{parent}{name="gui/"}
- */
 scrollbar_panel_definition::resolution::resolution(const config& cfg)
 	: resolution_definition(cfg), grid()
 {
 	// The panel needs to know the order.
-	state.emplace_back(cfg.child("background"));
-	state.emplace_back(cfg.child("foreground"));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "background", _("Missing required background for scrollbar panel")));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "foreground", _("Missing required foreground for scrollbar panel")));
 
-	const config& child = cfg.child("grid");
-	VALIDATE(child, _("No grid defined."));
-
+	auto child = VALIDATE_WML_CHILD(cfg, "grid", _("Missing required grid for scrollbar panel"));
 	grid = std::make_shared<builder_grid>(child);
 }
 
 // }---------- BUILDER -----------{
-
-/*WIKI
- * @page = GUIWidgetInstanceWML
- * @order = 2_scrollbar_panel
- *
- * == Scrollbar panel ==
- * @begin{parent}{name="gui/window/resolution/grid/row/column/"}
- * @begin{tag}{name="scrollbar_panel"}{min="0"}{max="-1"}{super="generic/widget_instance"}
- * Instance of a scrollbar_panel.
- *
- * List with the scrollbar_panel specific variables:
- * @begin{table}{config}
- *     vertical_scrollbar_mode & scrollbar_mode & initial_auto &
- *                                     Determines whether or not to show the
- *                                     scrollbar. $
- *     horizontal_scrollbar_mode & scrollbar_mode & initial_auto &
- *                                     Determines whether or not to show the
- *                                     scrollbar. $
- *
- *     definition & section & &        This defines how a scrollbar_panel item
- *                                     looks. It must contain the grid
- *                                     definition for 1 row of the list. $
- *
- * @end{table}
- * @begin{tag}{name="definition"}{min=0}{max=1}{super="gui/window/resolution/grid"}
- * @end{tag}{name="definition"}
- * @end{tag}{name="scrollbar_panel"}
- * @end{parent}{name="gui/window/resolution/grid/row/column/"}
- */
 
 namespace implementation
 {
@@ -142,27 +87,27 @@ builder_scrollbar_panel::builder_scrollbar_panel(const config& cfg)
 			  get_scrollbar_mode(cfg["horizontal_scrollbar_mode"]))
 	, grid_(nullptr)
 {
-	const config& grid_definition = cfg.child("definition");
+	auto grid_definition = cfg.optional_child("definition");
 
 	VALIDATE(grid_definition, _("No list defined."));
-	grid_ = std::make_shared<builder_grid>(grid_definition);
+	grid_ = std::make_shared<builder_grid>(*grid_definition);
 	assert(grid_);
 }
 
-widget* builder_scrollbar_panel::build() const
+std::unique_ptr<widget> builder_scrollbar_panel::build() const
 {
-	scrollbar_panel* panel = new scrollbar_panel(*this);
+	auto panel = std::make_unique<scrollbar_panel>(*this);
 
 	panel->set_vertical_scrollbar_mode(vertical_scrollbar_mode);
 	panel->set_horizontal_scrollbar_mode(horizontal_scrollbar_mode);
 
 	DBG_GUI_G << "Window builder: placed scrollbar_panel '" << id
-			  << "' with definition '" << definition << "'.\n";
+			  << "' with definition '" << definition << "'.";
 
 	const auto conf = panel->cast_config_to<scrollbar_panel_definition>();
 	assert(conf);
 
-	panel->init_grid(conf->grid);
+	panel->init_grid(*conf->grid);
 	panel->finalize_setup();
 
 	/*** Fill the content grid. ***/
@@ -183,8 +128,8 @@ widget* builder_scrollbar_panel::build() const
 													 grid_->col_grow_factor[y]);
 			}
 
-			widget* widget = grid_->widgets[x * cols + y]->build();
-			content_grid->set_child(widget,
+			auto widget = grid_->widgets[x * cols + y]->build();
+			content_grid->set_child(std::move(widget),
 									x,
 									y,
 									grid_->flags[x * cols + y],

@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2013 - 2018 by Andrius Silinskas <silinskas.andrius@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2013 - 2023
+	by Andrius Silinskas <silinskas.andrius@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -21,7 +22,7 @@
 #include <set>
 
 namespace randomness { class mt_rng; }
-struct mp_campaign_info;
+struct mp_game_metadata;
 class game_config_view;
 
 namespace ng {
@@ -37,7 +38,6 @@ enum controller {
 class connect_engine;
 class side_engine;
 
-typedef const std::unique_ptr<connect_engine> connect_engine_ptr;
 typedef std::shared_ptr<side_engine> side_engine_ptr;
 typedef std::pair<ng::controller, std::string> controller_option;
 
@@ -45,7 +45,7 @@ class connect_engine
 {
 public:
 	connect_engine(saved_game& state,
-		const bool first_scenario, mp_campaign_info* campaign_info);
+		const bool first_scenario, mp_game_metadata* metadata);
 
 	config* current_config();
 
@@ -60,7 +60,7 @@ public:
 	// Import all sides into the level.
 	void update_level();
 	// Updates the level and sends a diff to the clients.
-	void update_and_send_diff(bool update_time_of_day = false);
+	void update_and_send_diff();
 
 	bool can_start_game() const;
 	void start_game();
@@ -82,10 +82,10 @@ public:
 	const config& level() const { return level_; }
 	config& scenario()
 	{
-		if(config& scenario = level_.child("scenario"))
-			return scenario;
-		else if(config& snapshot = level_.child("snapshot"))
-			return snapshot;
+		if(auto scenario = level_.optional_child("scenario"))
+			return *scenario;
+		else if(auto snapshot = level_.optional_child("snapshot"))
+			return *snapshot;
 		else
 			throw "No scenariodata found";
 	}
@@ -109,16 +109,9 @@ public:
 	bool first_scenario() const { return first_scenario_; }
 	bool force_lock_settings() const { return force_lock_settings_; }
 
-	bool receive_from_server(config& dst) const;
-
-	const mp_campaign_info* campaign_info() const
-	{
-		return campaign_info_;
-	}
-
 private:
 	connect_engine(const connect_engine&) = delete;
-	void operator=(const connect_engine&) = delete;
+	connect_engine& operator=(const connect_engine&) = delete;
 
 	void send_level_data() const;
 
@@ -135,7 +128,7 @@ private:
 	const mp_game_settings& params_;
 
 	const ng::controller default_controller_;
-	mp_campaign_info* campaign_info_;
+	mp_game_metadata* mp_metadata_;
 	const bool first_scenario_;
 
 	bool force_lock_settings_;
@@ -145,7 +138,6 @@ private:
 	std::vector<team_data_pod> team_data_;
 
 	std::set<std::string>& connected_users_rw();
-	void send_to_server(const config& cfg) const;
 };
 
 class side_engine
@@ -204,7 +196,6 @@ public:
 	void set_index(int index) { index_ = index; }
 	unsigned team() const { return team_; }
 	void set_team(unsigned team) { team_ = team; }
-	std::vector<std::string> get_children_to_swap();
 	std::multimap<std::string, config> get_side_children();
 	void set_side_children(std::multimap<std::string, config> children);
 	int color() const { return color_; }
@@ -242,7 +233,9 @@ public:
 
 private:
 	side_engine(const side_engine& engine) = delete;
-	void operator=(const side_engine&) = delete;
+	side_engine& operator=(const side_engine&) = delete;
+
+	friend class connect_engine;
 
 	void add_controller_option(ng::controller controller,
 		const std::string& name, const std::string& controller_value);

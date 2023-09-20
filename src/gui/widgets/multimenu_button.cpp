@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2008 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #define GETTEXT_DOMAIN "wesnoth-lib"
@@ -26,8 +27,9 @@
 #include "sound.hpp"
 
 #include "formula/string_utils.hpp"
-#include "utils/functional.hpp"
+#include <functional>
 #include "gettext.hpp"
+#include "wml_exception.hpp"
 
 #define LOG_SCOPE_HEADER get_control_type() + " [" + id() + "] " + __func__
 #define LOG_HEADER LOG_SCOPE_HEADER + ':'
@@ -50,16 +52,21 @@ multimenu_button::multimenu_button(const implementation::builder_multimenu_butto
 	values_.emplace_back("label", this->get_label());
 
 	connect_signal<event::MOUSE_ENTER>(
-			std::bind(&multimenu_button::signal_handler_mouse_enter, this, _2, _3));
+		std::bind(&multimenu_button::signal_handler_mouse_enter, this, std::placeholders::_2, std::placeholders::_3));
 	connect_signal<event::MOUSE_LEAVE>(
-			std::bind(&multimenu_button::signal_handler_mouse_leave, this, _2, _3));
+		std::bind(&multimenu_button::signal_handler_mouse_leave, this, std::placeholders::_2, std::placeholders::_3));
 
-	connect_signal<event::LEFT_BUTTON_DOWN>(std::bind(
-			&multimenu_button::signal_handler_left_button_down, this, _2, _3));
+	connect_signal<event::LEFT_BUTTON_DOWN>(
+		std::bind(&multimenu_button::signal_handler_left_button_down, this, std::placeholders::_2, std::placeholders::_3));
 	connect_signal<event::LEFT_BUTTON_UP>(
-			std::bind(&multimenu_button::signal_handler_left_button_up, this, _2, _3));
-	connect_signal<event::LEFT_BUTTON_CLICK>(std::bind(
-			&multimenu_button::signal_handler_left_button_click, this, _2, _3));
+		std::bind(&multimenu_button::signal_handler_left_button_up, this, std::placeholders::_2, std::placeholders::_3));
+	connect_signal<event::LEFT_BUTTON_CLICK>(
+		std::bind(&multimenu_button::signal_handler_left_button_click, this, std::placeholders::_2, std::placeholders::_3));
+
+	// TODO: might need to position this differently in the queue if it's called after
+	// dialog-specific callbacks.
+	connect_signal<event::NOTIFY_MODIFIED>(
+		std::bind(&multimenu_button::signal_handler_notify_changed, this));
 }
 
 void multimenu_button::set_active(const bool active)
@@ -83,13 +90,13 @@ void multimenu_button::set_state(const state_t state)
 {
 	if(state != state_) {
 		state_ = state;
-		set_is_dirty(true);
+		queue_redraw();
 	}
 }
 
 void multimenu_button::signal_handler_mouse_enter(const event::ui_event event, bool& handled)
 {
-	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	set_state(FOCUSED);
 	handled = true;
@@ -97,7 +104,7 @@ void multimenu_button::signal_handler_mouse_enter(const event::ui_event event, b
 
 void multimenu_button::signal_handler_mouse_leave(const event::ui_event event, bool& handled)
 {
-	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	set_state(ENABLED);
 	handled = true;
@@ -105,7 +112,7 @@ void multimenu_button::signal_handler_mouse_leave(const event::ui_event event, b
 
 void multimenu_button::signal_handler_left_button_down(const event::ui_event event, bool& handled)
 {
-	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	window* window = get_window();
 	if(window) {
@@ -118,7 +125,7 @@ void multimenu_button::signal_handler_left_button_down(const event::ui_event eve
 
 void multimenu_button::signal_handler_left_button_up(const event::ui_event event, bool& handled)
 {
-	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	set_state(FOCUSED);
 	handled = true;
@@ -127,13 +134,12 @@ void multimenu_button::signal_handler_left_button_up(const event::ui_event event
 void multimenu_button::signal_handler_left_button_click(const event::ui_event event, bool& handled)
 {
 	assert(get_window());
-	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	sound::play_UI_sound(settings::sound_button_click);
 
 	// If a button has a retval do the default handling.
-	dialogs::drop_down_menu droplist(this->get_rectangle(), this->values_, -1, this->get_use_markup(), true,
-		std::bind(&multimenu_button::toggle_state_changed, this));
+	dialogs::drop_down_menu droplist(this, values_, -1, true);
 
 	droplist_ = &droplist;
 	droplist.show();
@@ -169,6 +175,9 @@ void multimenu_button::update_label()
 		if(selected.size() > max_shown_) {
 			const unsigned excess = selected.size() - max_shown_;
 			selected.resize(max_shown_ + 1);
+			// TRANSLATORS: In a drop-down menu that's a list of toggle-boxes, this becomes part
+			// of the text on the button when many of the boxes are selected. The text becomes
+			// "x, y and 1 other", "x, y and 2 others", etc.
 			selected.back() = VNGETTEXT("multimenu^$excess other", "$excess others", excess, {{"excess", std::to_string(excess)}});
 		}
 		set_label(utils::format_conjunct_list(_("multimenu^None Selected"), selected));
@@ -191,22 +200,17 @@ void multimenu_button::reset_toggle_states()
 	update_label();
 }
 
-void multimenu_button::toggle_state_changed()
+void multimenu_button::signal_handler_notify_changed()
 {
 	assert(droplist_ != nullptr);
 
 	toggle_states_ = droplist_->get_toggle_states();
-	fire(event::NOTIFY_MODIFIED, *this, nullptr);
 	update_label();
 }
 
 void multimenu_button::select_option(const unsigned option, const bool selected)
 {
 	assert(option < values_.size());
-
-	if(option < toggle_states_.size()) {
-		toggle_states_.resize(option + 1);
-	}
 	toggle_states_[option] = selected;
 	update_config_from_toggle_states();
 	update_label();
@@ -222,7 +226,7 @@ void multimenu_button::select_options(boost::dynamic_bitset<> states)
 
 void multimenu_button::set_values(const std::vector<::config>& values)
 {
-	set_is_dirty(true);
+	queue_redraw(); // TODO: draw_manager - does this need a relayout first?
 
 	values_ = values;
 	toggle_states_.resize(values_.size(), false);
@@ -236,88 +240,22 @@ void multimenu_button::set_values(const std::vector<::config>& values)
 multimenu_button_definition::multimenu_button_definition(const config& cfg)
 	: styled_widget_definition(cfg)
 {
-	DBG_GUI_P << "Parsing multimenu_button " << id << '\n';
+	DBG_GUI_P << "Parsing multimenu_button " << id;
 
 	load_resolutions<resolution>(cfg);
 }
 
-/*WIKI
- * @page = GUIWidgetDefinitionWML
- * @order = 1_multimenu_button
- *
- * == multimenu_button ==
- *
- * @macro = multimenu_button_description
- *
- * The following states exist:
- * * state_enabled, the multimenu_button is enabled.
- * * state_disabled, the multimenu_button is disabled.
- * * state_pressed, the left mouse multimenu_button is down.
- * * state_focused, the mouse is over the multimenu_button.
- * @begin{parent}{name="gui/"}
- * @begin{tag}{name="multimenu_button_definition"}{min=0}{max=-1}{super="generic/widget_definition"}
- * @begin{tag}{name="resolution"}{min=0}{max=-1}{super="generic/widget_definition/resolution"}
- * @begin{tag}{name="state_enabled"}{min=0}{max=1}{super="generic/state"}
- * @end{tag}{name="state_enabled"}
- * @begin{tag}{name="state_disabled"}{min=0}{max=1}{super="generic/state"}
- * @end{tag}{name="state_disabled"}
- * @begin{tag}{name="state_pressed"}{min=0}{max=1}{super="generic/state"}
- * @end{tag}{name="state_pressed"}
- * @begin{tag}{name="state_focused"}{min=0}{max=1}{super="generic/state"}
- * @end{tag}{name="state_focused"}
- * @end{tag}{name="resolution"}
- * @end{tag}{name="multimenu_button_definition"}
- * @end{parent}{name="gui/"}
- */
 multimenu_button_definition::resolution::resolution(const config& cfg)
 	: resolution_definition(cfg)
 {
 	// Note the order should be the same as the enum state_t in multimenu_button.hpp.
-	state.emplace_back(cfg.child("state_enabled"));
-	state.emplace_back(cfg.child("state_disabled"));
-	state.emplace_back(cfg.child("state_pressed"));
-	state.emplace_back(cfg.child("state_focused"));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_enabled", _("Missing required state for multimenu button")));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_disabled", _("Missing required state for multimenu button")));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_pressed", _("Missing required state for multimenu button")));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_focused", _("Missing required state for multimenu button")));
 }
 
 // }---------- BUILDER -----------{
-
-/*WIKI_MACRO
- * @begin{macro}{multimenu_button_description}
- *
- *        A multimenu_button is a styled_widget to choose an element from a list of elements.
- * @end{macro}
- */
-
-/*WIKI
- * @page = GUIWidgetInstanceWML
- * @order = 2_multimenu_button
- * @begin{parent}{name="gui/window/resolution/grid/row/column/"}
- * @begin{tag}{name="multimenu_button"}{min=0}{max=-1}{super="generic/widget_instance"}
- * == multimenu_button ==
- *
- * @macro = multimenu_button_description
- *
- * Instance of a multimenu_button. When a multimenu_button has a return value it sets the
- * return value for the window. Normally this closes the window and returns
- * this value to the caller. The return value can either be defined by the
- * user or determined from the id of the multimenu_button. The return value has a
- * higher precedence as the one defined by the id. (Of course it's weird to
- * give a multimenu_button an id and then override its return value.)
- *
- * When the multimenu_button doesn't have a standard id, but you still want to use the
- * return value of that id, use return_value_id instead. This has a higher
- * precedence as return_value.
- *
- * List with the multimenu_button specific variables:
- * @begin{table}{config}
- *     return_value_id & string & "" &   The return value id. $
- *     return_value & int & 0 &          The return value. $
- *     maximum_shown & int & -1 &        The maximum number of currently selected values to list on the button. $
- *
- * @end{table}
- * @end{tag}{name="multimenu_button"}
- * @end{parent}{name="gui/window/resolution/grid/row/column/"}
- */
 
 namespace implementation
 {
@@ -332,9 +270,9 @@ builder_multimenu_button::builder_multimenu_button(const config& cfg)
 	}
 }
 
-widget* builder_multimenu_button::build() const
+std::unique_ptr<widget> builder_multimenu_button::build() const
 {
-	multimenu_button* widget = new multimenu_button(*this);
+	auto widget = std::make_unique<multimenu_button>(*this);
 
 	widget->set_max_shown(max_shown_);
 	if(!options_.empty()) {
@@ -342,7 +280,7 @@ widget* builder_multimenu_button::build() const
 	}
 
 	DBG_GUI_G << "Window builder: placed multimenu_button '" << id
-	          << "' with definition '" << definition << "'.\n";
+	          << "' with definition '" << definition << "'.";
 
 	return widget;
 }

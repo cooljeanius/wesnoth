@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2003 - 2018 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2003 - 2023
+	by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -27,7 +28,8 @@
 
 #pragma once
 
-#include "global.hpp"
+#include "tstring.hpp"
+#include "utils/variant.hpp"
 
 #include <climits>
 #include <ctime>
@@ -40,15 +42,6 @@
 #include <type_traits>
 #include <memory>
 
-#include <boost/exception/exception.hpp>
-#include <boost/variant/apply_visitor.hpp>
-#include <boost/variant/variant.hpp>
-#include <boost/range/iterator_range.hpp>
-
-#include "tstring.hpp"
-
-class enum_tag;
-
 /**
  * Variant for storing WML attributes.
  * The most efficient type is used when assigning a value. For instance,
@@ -58,8 +51,10 @@ class enum_tag;
  */
 class config_attribute_value
 {
-	/// A wrapper for bool to get the correct streaming ("true"/"false").
-	/// Most visitors can simply treat this as bool.
+	/**
+	 * A wrapper for bool to get the correct streaming ("true"/"false").
+	 * Most visitors can simply treat this as bool.
+	 */
 public:
 	class true_false
 	{
@@ -75,8 +70,10 @@ public:
 	};
 	friend std::ostream& operator<<(std::ostream &os, const true_false &v) { return os << v.str(); }
 
-	/// A wrapper for bool to get the correct streaming ("yes"/"no").
-	/// Most visitors can simply treat this as bool.
+	/**
+	 * A wrapper for bool to get the correct streaming ("yes"/"no").
+	 * Most visitors can simply treat this as bool.
+	 */
 	class yes_no
 	{
 		bool value_;
@@ -91,9 +88,9 @@ public:
 	};
 	friend std::ostream& operator<<(std::ostream &os, const yes_no &v) { return os << v.str(); }
 private:
-	/// Visitor for checking equality.
+	/** Visitor for checking equality. */
 	class equality_visitor;
-	/// Visitor for converting a variant to a string.
+	/** Visitor for converting a variant to a string. */
 	class string_visitor;
 
 	// Data will be stored in a variant, allowing for the possibility of
@@ -103,25 +100,27 @@ private:
 	// use few types (to keep the overhead low), we do have use cases for
 	// fractions (double) and huge numbers (up to the larger of LLONG_MAX
 	// and SIZE_MAX).
-	typedef boost::variant<boost::blank,
+	typedef utils::variant<utils::monostate,
 		true_false, yes_no,
 		int, unsigned long long, double,
 		std::string, t_string
 	> value_type;
-	/// The stored value will always use the first type from the variant
-	/// definition that can represent it and that can be streamed to the
-	/// correct string representation (if applicable).
-	/// This is enforced upon assignment.
+	/**
+	 * The stored value will always use the first type from the variant
+	 * definition that can represent it and that can be streamed to the
+	 * correct string representation (if applicable).
+	 * This is enforced upon assignment.
+	 */
 	value_type value_;
 
 public:
-	/// Default implementation, but defined out-of-line for efficiency reasons.
+	/** Default implementation, but defined out-of-line for efficiency reasons. */
 	config_attribute_value();
-	/// Default implementation, but defined out-of-line for efficiency reasons.
+	/** Default implementation, but defined out-of-line for efficiency reasons. */
 	~config_attribute_value();
-	/// Default implementation, but defined out-of-line for efficiency reasons.
+	/** Default implementation, but defined out-of-line for efficiency reasons. */
 	config_attribute_value(const config_attribute_value &);
-	/// Default implementation, but defined out-of-line for efficiency reasons.
+	/** Default implementation, but defined out-of-line for efficiency reasons. */
 	config_attribute_value &operator=(const config_attribute_value &);
 
 	// Numeric assignments:
@@ -137,12 +136,8 @@ public:
 	// String assignments:
 	config_attribute_value& operator=(const char *v) { return operator=(std::string(v)); }
 	config_attribute_value& operator=(const std::string &v);
+	config_attribute_value& operator=(const std::string_view &v);
 	config_attribute_value& operator=(const t_string &v);
-	template<typename T>
-	std::enable_if_t<std::is_base_of<enum_tag, T>::value, config_attribute_value&> operator=(const T &v)
-	{
-		return operator=(T::enum_to_string(v));
-	}
 
 	/** Calls @ref operator=(const std::string&) if @a v is not empty. */
 	void write_if_not_empty(const std::string& v);
@@ -157,16 +152,6 @@ public:
 	double to_double(double def = 0.) const;
 	std::string str(const std::string& fallback = "") const;
 	t_string t_str() const;
-	/**
-		@tparam T a type created with MAKE_ENUM macro
-		NOTE: since T::VALUE constants is not of type T but of the underlying enum type you must specify the template parameter explicitly
-		TODO: Fix this in c++11 using constexpr types.
-	*/
-	template<typename T>
-	std::enable_if_t<std::is_base_of<enum_tag, T>::value, T> to_enum(const T &v) const
-	{
-		return T::string_to_enum(this->str(), v);
-	}
 
 	// Implicit conversions:
 	operator int() const { return to_int(); }
@@ -175,9 +160,9 @@ public:
 	// This is to prevent int conversion being used when an attribute value is tested in an if statement
 	explicit operator bool() const {return to_bool(); }
 
-	/// Tests for an attribute that was never set.
+	/** Tests for an attribute that was never set. */
 	bool blank() const;
-	/// Tests for an attribute that either was never set or was set to "".
+	/** Tests for an attribute that either was never set or was set to "". */
 	bool empty() const;
 
 
@@ -192,14 +177,14 @@ public:
 	// These function prevent t_string creation in case of c["a"] == "b" comparisons.
 	// The templates are needed to prevent using these function in case of c["a"] == 0 comparisons.
 	template<typename T>
-	std::enable_if_t<std::is_same<const std::string, std::add_const_t<T>>::value, bool>
+	std::enable_if_t<std::is_same_v<const std::string, std::add_const_t<T>>, bool>
 		friend operator==(const config_attribute_value &val, const T &str)
 	{
 		return val.equals(str);
 	}
 
 	template<typename T>
-	std::enable_if_t<std::is_same<const char*, T>::value, bool>
+	std::enable_if_t<std::is_same_v<const char*, T>, bool>
 		friend operator==(const config_attribute_value& val, T str)
 	{
 		return val.equals(std::string(str));
@@ -226,13 +211,15 @@ public:
 	// Streaming:
 	friend std::ostream& operator<<(std::ostream& os, const config_attribute_value& v);
 
-	// Visitor support:
-	/// Applies a visitor to the underlying variant.
-	/// (See the documentation for Boost.Variant.)
+	/**
+	 * Visitor support:
+	 * Applies a visitor to the underlying variant.
+	 * (See the documentation for Boost.Variant.)
+	 */
 	template <typename V>
-	typename V::result_type apply_visitor(const V & visitor) const
+	auto apply_visitor(const V & visitor) const
 	{
-		return boost::apply_visitor(visitor, value_);
+		return utils::visit(visitor, value_);
 	}
 
 private:
@@ -241,8 +228,12 @@ private:
 	static const std::string s_true, s_false;
 };
 
+#ifndef USING_BOOST_VARIANT
+/** Specialize operator<< for monostate. Boost already does this, but the STL does not. */
+inline std::ostream& operator<<(std::ostream& os, const std::monostate&) { return os; }
+#endif
+
 namespace utils
 {
 	std::vector<std::string> split(const config_attribute_value& val);
 }
-

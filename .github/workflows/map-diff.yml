@@ -1,0 +1,75 @@
+name: Map Diff
+
+on:
+  pull_request_target:
+    paths:
+    - '**.map'
+
+jobs:
+  comment-map-diff:
+    permissions:
+      pull-requests: write
+    continue-on-error: true
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: utils/wesnoth-map-diff
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+    - name: Package install
+      run: npm install
+    - name: Package build
+      run: npm run build:prod
+    - name: Get maps diff
+      id: get-maps-diff
+      env:
+        SHA: ${{ github.event.pull_request.head.sha }}
+      run: |
+        sudo apt-get install -y pngquant
+        comment_body=""
+
+        ## Get maps changed
+        git fetch --depth=1 origin "$SHA"
+        mapfile -t map_paths < <(git diff --name-only HEAD "$SHA" | grep '\.map$')
+
+        for map_path in "${map_paths[@]}"
+        do
+          echo "** Working on $map_path **"
+
+          ## Get new map version
+          new_map=${map_path##*/}
+          git show "$SHA":"$map_path" > "$new_map"
+
+          ## Run map diff
+          diff_image=${new_map%.map}.png
+          node build/index.js "../../$map_path" "$new_map" "$diff_image"
+
+          ## Compress image
+          pngquant --force --output "$diff_image" "$diff_image"
+
+          ## Write comment body
+          curl_result=$(curl -F "image=@\"$diff_image\"" "https://api.imgur.com/3/upload")
+
+          echo "Imgur result:"
+          echo "$curl_result"
+
+          comment_body+=$(jq -r --arg path "$map_path" '@html "<h3>\($path)</h3><img src=\"\(.data.link)\" /> <br />"' <<< "$curl_result")
+        done
+
+        printf 'COMMENT_BODY=%s\n' "$comment_body" >> "$GITHUB_OUTPUT"
+    - name: Find comment
+      uses: peter-evans/find-comment@v2
+      id: fc
+      with:
+        issue-number: ${{ github.event.pull_request.number }}
+        comment-author: 'github-actions[bot]'
+    - name: Add comment
+      uses: peter-evans/create-or-update-comment@v3
+      with:
+        issue-number: ${{ github.event.pull_request.number }}
+        comment-id: ${{ steps.fc.outputs.comment-id }}
+        edit-mode: replace
+        body: ${{ steps.get-maps-diff.outputs.COMMENT_BODY }}

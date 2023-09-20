@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2011 - 2018 by Sytyi Nick <nsytyi@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2011 - 2023
+	by Sytyi Nick <nsytyi@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -68,8 +69,7 @@ private:
 			ensure_valid_or_end();
 		}
 		// Construct an end iterator
-		// That weird expression is to get a reference to an "invalid" config.
-		iterator() : match(config().child("a")) {}
+		iterator() : match(config().child_or_empty("fsdfsdf")) {}
 	private:
 		friend class boost::iterator_core_access;
 		void init(const wml_tag& base_tag);
@@ -113,6 +113,8 @@ public:
 		: name_("")
 		, min_(0)
 		, max_(0)
+		, min_children_(0)
+		, max_children_(INT_MAX)
 		, super_("")
 		, tags_()
 		, keys_()
@@ -126,6 +128,8 @@ public:
 		: name_(name)
 		, min_(min)
 		, max_(max)
+		, min_children_(0)
+		, max_children_(INT_MAX)
 		, super_(super)
 		, tags_()
 		, keys_()
@@ -169,6 +173,16 @@ public:
 		return max_;
 	}
 
+	int get_min_children() const
+	{
+		return min_children_;
+	}
+
+	int get_max_children() const
+	{
+		return max_children_;
+	}
+
 	const std::string& get_super() const
 	{
 		return super_;
@@ -202,8 +216,21 @@ public:
 		max_ = o;
 	}
 
+	void set_min_children(int o)
+	{
+		min_children_ = o;
+	}
+
+	void set_max_children(int o)
+	{
+		max_children_ = o;
+	}
+
 	void set_min(const std::string& s);
 	void set_max(const std::string& s);
+
+	void set_min_children(const std::string& s);
+	void set_max_children(const std::string& s);
 
 	void set_super(const std::string& s)
 	{
@@ -302,11 +329,17 @@ private:
 	/** name of tag. */
 	std::string name_;
 
-	/** number of minimum occasions. */
+	/** minimum number of occurrences. */
 	int min_;
 
-	/** number of maximum occasions. */
+	/** maximum number of occurrences. */
 	int max_;
+
+	/** minimum number of children. */
+	int min_children_;
+
+	/** maximum number of children. */
+	int max_children_;
 
 	/**
 	 * name of tag to extend "super-tag"

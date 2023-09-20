@@ -1,17 +1,17 @@
 /*
-   Copyright (C) 2003 by David White <dave@whitevine.net>
-   Copyright (C) 2005 - 2018 by Philippe Plantier <ayin@anathas.org>
+	Copyright (C) 2005 - 2023
+	by Philippe Plantier <ayin@anathas.org>
+	Copyright (C) 2003 by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
-
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -45,25 +45,17 @@ class vconfig
 {
 private:
 
-/*
- * Starting with the rc of gcc 4.6 the code failed to compile due to the
- * missing default constructor for vconfig. Not entirely sure whether it's a
- * bug in gcc or not. For now make the code conditional.
- */
-#if __GNUC__ == 4 && __GNUC_MINOR__ == 6 && defined(__GXX_EXPERIMENTAL_CXX0X__)
-	template<class T1, class T2>
-	friend class std::pair;
-#endif
-
 	vconfig();
 	vconfig(const config & cfg, const std::shared_ptr<const config> & cache);
 	vconfig(const config& cfg, const std::shared_ptr<const config> & cache, const variable_set& variables);
 public:
-	/// Constructor from a config.
-	/// Equivalent to vconfig(cfg, false).
-	/// Do not use if the vconfig will persist after @a cfg is destroyed!
-	explicit vconfig(const config &cfg);// : cache_(), cfg_(&cfg) {}
-	explicit vconfig(config &&cfg);// : cache_(new config(std::move(cfg))), cfg_(cache_.get()) { }
+	/**
+	 * Constructor from a config.
+	 * Equivalent to vconfig(cfg, false).
+	 * Do not use if the vconfig will persist after @a cfg is destroyed!
+	 */
+	explicit vconfig(const config &cfg);
+	explicit vconfig(config &&cfg);
 	// Construct a vconfig referencing a non-default set of variables.
 	// Note that the vconfig does NOT take ownership of these variables,
 	// so you need to make sure that their scope encloses the vconfig's scope!
@@ -74,11 +66,12 @@ public:
 	static vconfig empty_vconfig(); // Valid to dereference. Contains nothing
 	static vconfig unconstructed_vconfig(); // Must not be dereferenced
 
-	/// A vconfig evaluates to true iff it can be dereferenced.
+	/** A vconfig evaluates to true iff it can be dereferenced. */
 	explicit operator bool() const	{ return !null(); }
 
 	bool null() const { assert(cfg_); return cfg_ == &default_empty_config; }
-	const vconfig& make_safe() const; //!< instruct the vconfig to make a private copy of its underlying data.
+	/** instruct the vconfig to make a private copy of its underlying data. */
+	const vconfig& make_safe() const;
 	const config& get_config() const { return *cfg_; }
 	config get_parsed_config() const;
 
@@ -199,13 +192,15 @@ public:
 	}
 
 private:
-	/// Returns true if *this has made a copy of its config.
+	/** Returns true if *this has made a copy of its config. */
 	bool memory_managed() const { return static_cast<bool>(cache_); }
 
-	/// Keeps a copy of our config alive when we manage our own memory.
-	/// If this is not null, then cfg_ points to *cache_ or a child of *cache_.
+	/**
+	 * Keeps a copy of our config alive when we manage our own memory.
+	 * If this is not null, then cfg_ points to *cache_ or a child of *cache_.
+	 */
 	mutable std::shared_ptr<const config> cache_;
-	/// Used to access our config (original or copy, as appropriate).
+	/** Used to access our config (original or copy, as appropriate). */
 	mutable const config* cfg_;
 	const variable_set* variables_;
 	static const config default_empty_config;
@@ -244,11 +239,11 @@ private:
 class scoped_weapon_info : public scoped_wml_variable
 {
 public:
-	scoped_weapon_info(const std::string& var_name, const config &data)
+	scoped_weapon_info(const std::string& var_name, optional_const_config data)
 		: scoped_wml_variable(var_name), data_(data) {}
 	void activate();
 private:
-	const config& data_;
+	optional_const_config data_;
 };
 
 class scoped_xy_unit : public scoped_wml_variable

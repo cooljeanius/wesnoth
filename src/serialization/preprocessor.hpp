@@ -1,31 +1,31 @@
 /*
-   Copyright (C) 2003 by David White <dave@whitevine.net>
-   Copyright (C) 2005 - 2018 by Guillaume Melquiond <guillaume.melquiond@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2005 - 2023
+	by Guillaume Melquiond <guillaume.melquiond@gmail.com>
+	Copyright (C) 2003 by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
-
-/** @file */
 
 #pragma once
 
+#include "deprecation.hpp"
+#include "exceptions.hpp"
 #include "filesystem.hpp"
+#include "game_version.hpp"
+
 #include <iosfwd>
 #include <map>
+#include <string>
+#include <optional>
 #include <vector>
-#include <boost/optional.hpp>
-
-#include "exceptions.hpp"
-#include "game_version.hpp"
-#include "deprecation.hpp"
 
 class config_writer;
 class config;
@@ -61,7 +61,7 @@ struct preproc_define
 			int line,
 			const std::string& loc,
 			const std::string& dep_msg,
-			boost::optional<DEP_LEVEL> dep_lvl, const version_info& dep_ver)
+			std::optional<DEP_LEVEL> dep_lvl, const version_info& dep_ver)
 		: value(val)
 		, arguments(args)
 		, optional_arguments(optargs)
@@ -88,16 +88,17 @@ struct preproc_define
 
 	std::string deprecation_message;
 
-	boost::optional<DEP_LEVEL> deprecation_level = boost::none;
+	std::optional<DEP_LEVEL> deprecation_level;
 
 	version_info deprecation_version;
 
 	bool is_deprecated() const {
-		return deprecation_level != boost::none;
+		return deprecation_level.has_value();
 	}
 
 	void write(config_writer&, const std::string&) const;
 	void write_argument(config_writer&, const std::string&) const;
+	void write_argument(config_writer&, const std::string&, const std::string&) const;
 
 	void read(const config&);
 	void read_argument(const config&);
@@ -135,6 +136,7 @@ std::ostream& operator<<(std::ostream& stream, const preproc_map::value_type& de
  * Function to use the WML preprocessor on a file.
  *
  * @param defines                 A map of symbols defined.
+ * @param fname                   The file to be preprocessed.
  *
  * @returns                       The resulting preprocessed file data.
  */

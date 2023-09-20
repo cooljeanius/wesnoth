@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2012 - 2018 by Fabian Mueller <fabianmueller5@gmx.de>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2012 - 2023
+	by Fabian Mueller <fabianmueller5@gmx.de>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -74,10 +75,8 @@ public:
 	/** Cycle to the next brush. */
 	void cycle_brush();
 
-	/** TODO */
 	void set_brush(std::string id);
 
-	/** TODO */
 	bool is_active_brush(std::string id) const { return brush_->id() == id; }
 
 	palette_manager* get_palette_manager() { return palette_manager_.get(); }

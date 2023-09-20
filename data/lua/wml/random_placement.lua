@@ -9,11 +9,11 @@ wesnoth.wml_actions.random_placement = function(cfg)
 	local num_items = cfg.num_items or wml.error("[random_placement] missing required 'num_items' attribute")
 	local variable = cfg.variable or wml.error("[random_placement] missing required 'variable' attribute")
 	local allow_less = cfg.allow_less == true
-	local variable_previous = utils.start_var_scope(variable)
+	local variable_previous <close> = utils.scoped_var(variable)
 	local math_abs = math.abs
-	local locs = wesnoth.get_locations(filter)
+	local locs = wesnoth.map.find(filter)
 	if type(num_items) == "string" then
-		if num_items:match('^%s%(.*%)%s$') then
+		if num_items:match('^%s*%(.*%)%s*$') then
 			local params = {size = #locs}
 			local result = wesnoth.eval_formula(num_items, params)
 			num_items = math.floor(tonumber(result))
@@ -35,14 +35,15 @@ wesnoth.wml_actions.random_placement = function(cfg)
 				wml.error("[random_placement] failed to place items. only " .. i .. " items were placed")
 			end
 		end
-		local index = wesnoth.random(size)
+		local index = mathx.random(size)
 		local point = locs[index]
 		wml.variables[variable .. ".x"] = point[1]
 		wml.variables[variable .. ".y"] = point[2]
 		wml.variables[variable .. ".n"] = i
-		wml.variables[variable .. ".terrain"] = wesnoth.get_terrain(point[1], point[2])
+		wml.variables[variable .. ".terrain"] = wesnoth.current.map[point]
 		if distance < 0 then
 			-- optimisation: nothing to do for distance < 0
+			goto skip
 		elseif distance == 0 then
 			-- optimisation: for distance = 0 we just need to remove the element at index
 			-- optimisation: swapping elements and storing size in an extra variable is faster than table.remove(locs, j)
@@ -77,6 +78,7 @@ wesnoth.wml_actions.random_placement = function(cfg)
 				::continue::
 			end
 		end
+		::skip::
 		-- TODO: This should really be "do" but is kept as "command" for compatibility
 		for do_child in wml.child_range(cfg, "command") do
 			local action = utils.handle_event_commands(do_child, "loop")
@@ -87,11 +89,8 @@ wesnoth.wml_actions.random_placement = function(cfg)
 				utils.set_exiting("none")
 				break
 			elseif action ~= "none" then
-				utils.end_var_scope(variable, variable_previous)
 				return
 			end
 		end
 	end
-	utils.end_var_scope(variable, variable_previous)
-
 end

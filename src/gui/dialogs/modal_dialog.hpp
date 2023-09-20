@@ -1,29 +1,29 @@
 /*
-   Copyright (C) 2008 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
 
 #include "gui/auxiliary/field-fwd.hpp"
 #include "gui/core/static_registry.hpp"
-#include "utils/functional.hpp"
+#include "gui/widgets/window.hpp"
 
+#include <functional>
 #include <string>
 #include <vector>
 
-namespace gui2
-{
-namespace dialogs
+namespace gui2::dialogs
 {
 /**
  * Registers a window.
@@ -38,21 +38,21 @@ namespace dialogs
  *                                the same window so the id doesn't need to be
  *                                unique.
  */
-#define REGISTER_WINDOW(id)                                                                                            \
-	namespace                                                                                                          \
-	{                                                                                                                  \
-	namespace ns_##id                                                                                                  \
-	{                                                                                                                  \
-		struct register_helper                                                                                         \
-		{                                                                                                              \
-			register_helper()                                                                                          \
-			{                                                                                                          \
-				register_window(#id);                                                                                  \
-			}                                                                                                          \
-		};                                                                                                             \
-                                                                                                                       \
-		struct register_helper register_helper;                                                                        \
-	}                                                                                                                  \
+#define REGISTER_WINDOW(id)                                                  \
+	namespace                                                                \
+	{                                                                        \
+	namespace ns_##id                                                        \
+	{                                                                        \
+		struct register_helper                                               \
+		{                                                                    \
+			register_helper()                                                \
+			{                                                                \
+				register_window(#id);                                        \
+			}                                                                \
+		};                                                                   \
+                                                                             \
+		struct register_helper register_helper;                              \
+	}                                                                        \
 	}
 
 /**
@@ -61,7 +61,6 @@ namespace dialogs
  * Call this function to register a window. In the header of the class it adds
  * the following code:
  *@code
- *  // Inherited from modal_dialog, implemented by REGISTER_DIALOG.
  *	virtual const std::string& id() const;
  *@endcode
  * Then use this macro in the implementation, inside the gui2 namespace.
@@ -74,11 +73,12 @@ namespace dialogs
  *                                the same window so the id doesn't need to be
  *                                unique.
  */
-#define REGISTER_DIALOG2(type, id)                                                                                     \
-	REGISTER_WINDOW(id) const std::string& type::window_id() const                                                     \
-	{                                                                                                                  \
-		static const std::string result(#id);                                                                          \
-		return result;                                                                                                 \
+#define REGISTER_DIALOG2(type, id)                                           \
+	REGISTER_WINDOW(id)                                                      \
+	const std::string& type::window_id() const                               \
+	{                                                                        \
+		static const std::string result(#id);                                \
+		return result;                                                       \
 	}
 
 /**
@@ -90,30 +90,30 @@ namespace dialogs
 
 /**
  * Adds a bare-bones static `display` function to a dialog class that immediately
- * invokes the dialogs's @ref modal_dialog::show function. If more complex behavior
+ * invokes the dialogs's modal_dialog::show function. If more complex behavior
  * is desired, the function should be defined manually.
  *
- * See the @ref modal_dialog documentation (below) for more info.
+ * See the modal_dialog documentation (below) for more info.
  */
-#define DEFINE_SIMPLE_DISPLAY_WRAPPER(dialog)                                                                          \
-	template<typename... T>                                                                                            \
-	static void display(T&&... args)                                                                                   \
-	{                                                                                                                  \
-		dialog(std::forward<T>(args)...).show();                                                                       \
+#define DEFINE_SIMPLE_DISPLAY_WRAPPER(dialog)                                \
+	template<typename... T>                                                  \
+	static void display(T&&... args)                                         \
+	{                                                                        \
+		dialog(std::forward<T>(args)...).show();                             \
 	}
 
 /**
  * Adds a bare-bonesstatic `execute` function to a dialog class that immediately
- * invokes and return the result of the dialogs's @ref modal_dialog::show function.
+ * invokes and return the result of the dialogs's modal_dialog::show function.
  * If more complex behavior is desired, the function should be defined manually.
  *
- * See the @ref modal_dialog documentation (below) for more info.
+ * See the modal_dialog documentation (below) for more info.
  */
-#define DEFINE_SIMPLE_EXECUTE_WRAPPER(dialog)                                                                          \
-	template<typename... T>                                                                                            \
-	static bool execute(T&&... args)                                                                                   \
-	{                                                                                                                  \
-		return dialog(std::forward<T>(args)...).show();                                                                \
+#define DEFINE_SIMPLE_EXECUTE_WRAPPER(dialog)                                \
+	template<typename... T>                                                  \
+	static bool execute(T&&... args)                                         \
+	{                                                                        \
+		return dialog(std::forward<T>(args)...).show();                      \
 	}
 
 /**
@@ -139,10 +139,10 @@ namespace dialogs
  * When a function only has 'in parameters' it should return a void value and
  * the function should be called @p display, if it has 'in + out parameters' it
  * must return a bool value. This value indicates whether or not the OK button
- * was pressed to close the dialog. See @ref editor_new_map::execute for an
+ * was pressed to close the dialog. See editor_new_map::execute for an
  * example.
  */
-class modal_dialog
+class modal_dialog : public window
 {
 	/**
 	 * Special helper function to get the id of the window.
@@ -150,10 +150,10 @@ class modal_dialog
 	 * This is used in the unit tests, but these implementation details
 	 * shouldn't be used in the normal code.
 	 */
-	friend std::string unit_test_mark_as_tested(const modal_dialog& dialog);
+	friend std::string get_modal_dialog_id(const modal_dialog& dialog);
 
 public:
-	modal_dialog();
+	explicit modal_dialog(const std::string& window_id);
 
 	virtual ~modal_dialog();
 
@@ -170,15 +170,20 @@ public:
 	 */
 	bool show(const unsigned auto_close_time = 0);
 
-
 	/***** ***** ***** setters / getters for members ***** ****** *****/
 
+	// TODO: this is now completely redundant, as a modal dialog is a window
 	/** Returns a pointer to the dialog's window. Will be null if it hasn't been built yet. */
-	window* get_window() const
+	window* get_window()
 	{
-		return window_.get();
+		return this;
+	}
+	const window* get_window() const
+	{
+		return this;
 	}
 
+	/** Returns the cached window exit code. */
 	int get_retval() const
 	{
 		return retval_;
@@ -187,11 +192,6 @@ public:
 	void set_always_save_fields(const bool always_save_fields)
 	{
 		always_save_fields_ = always_save_fields;
-	}
-
-	void set_restore(const bool restore)
-	{
-		restore_ = restore;
 	}
 
 	void set_allow_plugin_skip(const bool allow_plugin_skip)
@@ -205,6 +205,17 @@ public:
 	}
 
 protected:
+	/**
+	 * Creates a new field of given type with given arguments.
+	 *
+	 * The field created is owned by modal_dialog, the returned pointer can be used
+	 * in the child classes as access to a field.
+	 *
+	 * @param args                Arguments to forward to the field constructor.
+	 */
+	template<typename T, typename... Args>
+	T* register_field(Args&&... args);
+
 	/**
 	 * Creates a new boolean field.
 	 *
@@ -221,6 +232,7 @@ protected:
 	 *                            with ok.
 	 * @param callback_change     When the value of the widget changes this
 	 *                            callback is called.
+	 * @param initial_fire
 	 *
 	 * @returns                   Pointer to the created widget.
 	 */
@@ -244,6 +256,7 @@ protected:
 	 *                            @ref field::field for more information.
 	 * @param callback_change     When the value of the widget changes this
 	 *                            callback is called.
+	 * @param initial_fire
 	 *
 	 * @returns                   Pointer to the created widget.
 	 */
@@ -325,12 +338,17 @@ protected:
 		return register_label(id, mandatory, filename);
 	}
 
-protected:
-	/** The window object build for this dialog. */
-	std::unique_ptr<window> window_;
-
 private:
-	/** Returns the window exit status, 0 means not shown. */
+	/**
+	 * The window's exit code (return value).
+	 *
+	 * We keep a copy here so it may be accessed even after the dialog is closed and
+	 * the window object is destroyed.
+	 *
+	 * This value is initially set to 0 (retval::NONE) meaning the dialog was not
+	 * shown. After @ref show returns, it will hold the most recent retval of the
+	 * window object, including any modifications made in @ref post_show.
+	 */
 	int retval_;
 
 	/**
@@ -358,15 +376,6 @@ private:
 	std::string focus_;
 
 	/**
-	 * Restore the screen after showing?
-	 *
-	 * Most windows should restore the display after showing so this value
-	 * defaults to true. Toplevel windows (like the titlescreen don't want this
-	 * behavior so they can change it in pre_show().
-	 */
-	bool restore_;
-
-	/**
 	 * Allow plugins to skip through the dialog?
 	 * Most dialogs install a plugins context to allow plugins to accept whatever the dialog is offering
 	 * and continue. Some dialogs, especially those that install their own plugins context, may want to
@@ -381,27 +390,8 @@ private:
 	 */
 	bool show_even_without_video_;
 
-	/** The id of the window to build. */
+	/** The ID of the window to build. Usually set by REGISTER_DIALOG. */
 	virtual const std::string& window_id() const = 0;
-
-	/**
-	 * Builds the window.
-	 *
-	 * Every dialog shows it's own kind of window, this function should return
-	 * the window to show.
-	 *
-	 * @returns                   The window to show.
-	 */
-	window* build_window() const;
-
-	/**
-	 * Actions to be taken directly after the window is build.
-	 *
-	 * At this point the registered fields are not yet registered.
-	 *
-	 * @param window              The window just created.
-	 */
-	virtual void post_build(window& window);
 
 	/**
 	 * Actions to be taken before showing the window.
@@ -412,6 +402,7 @@ private:
 	 * @param window              The window to be shown.
 	 */
 	virtual void pre_show(window& window);
+	// TODO: this window parameter is now redundant
 
 	/**
 	 * Actions to be taken after the window has been shown.
@@ -422,24 +413,25 @@ private:
 	 * @param window              The window which has been shown.
 	 */
 	virtual void post_show(window& window);
+	// TODO: this window parameter is now redundant
 
 	/**
 	 * Initializes all fields in the dialog and set the keyboard focus.
 	 *
 	 * @param window              The window which has been shown.
 	 */
-	virtual void init_fields(window& window);
+	virtual void init_fields();
+	// TODO: Nothing else uses this. Why is it virtual?
 
 	/**
 	 * When the dialog is closed with the OK status saves all fields.
 	 *
 	 * Saving only happens if a callback handler is installed.
 	 *
-	 * @param window              The window which has been shown.
 	 * @param save_fields         Does the value in the fields need to be saved?
 	 */
-	virtual void finalize_fields(window& window, const bool save_fields);
+	virtual void finalize_fields(const bool save_fields);
+	// TODO: Nothing else uses this. Why is it virtual?
 };
 
 } // namespace dialogs
-} // namespace gui2

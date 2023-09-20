@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2008 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #define GETTEXT_DOMAIN "wesnoth-lib"
@@ -23,8 +24,9 @@
 #include "gui/widgets/settings.hpp"
 
 #include "wml_exception.hpp"
+#include "gettext.hpp"
 
-#include "utils/functional.hpp"
+#include <functional>
 
 namespace gui2
 {
@@ -72,11 +74,12 @@ unsigned horizontal_scrollbar::offset_after() const
 
 bool horizontal_scrollbar::on_positioner(const point& coordinate) const
 {
-	SDL_Rect positioner_rect =
-		sdl::create_rect(get_positioner_offset(), 0, get_positioner_length(), get_height());
+	rect positioner_rect(
+		get_positioner_offset(), 0, get_positioner_length(), get_height()
+	);
 
 	// Note we assume the positioner is over the entire height of the widget.
-	return sdl::point_in_rect(coordinate, positioner_rect);
+	return positioner_rect.contains(coordinate);
 }
 
 int horizontal_scrollbar::on_bar(const point& coordinate) const
@@ -110,59 +113,11 @@ horizontal_scrollbar_definition::horizontal_scrollbar_definition(
 		const config& cfg)
 	: styled_widget_definition(cfg)
 {
-	DBG_GUI_P << "Parsing horizontal scrollbar " << id << '\n';
+	DBG_GUI_P << "Parsing horizontal scrollbar " << id;
 
 	load_resolutions<resolution>(cfg);
 }
 
-/*WIKI
- * @page = GUIWidgetDefinitionWML
- * @order = 1_vertical_scrollbar
- *
- * == Horizontal scrollbar ==
- *
- * @macro = horizontal_scrollbar_description
- * @begin{parent}{name="gui/"}
- * @begin{tag}{name="horizontal_scrollbar_definition"}{min=0}{max=-1}{super="generic/widget_definition"}
- * The resolution for a horizontal scrollbar also contains the following keys:
- * @begin{tag}{name="resolution"}{min=0}{max=-1}{super="generic/widget_definition/resolution"}
- * @begin{table}{config}
- *     minimum_positioner_length & unsigned & &
- *                                     The minimum size the positioner is
- *                                     allowed to be. The engine needs to know
- *                                     this in order to calculate the best size
- *                                     for the positioner. $
- *     maximum_positioner_length & unsigned & 0 &
- *                                     The maximum size the positioner is
- *                                     allowed to be. If minimum and maximum are
- *                                     the same value the positioner is fixed
- *                                     size. If the maximum is 0 (and the
- *                                     minimum not) there's no maximum. $
- *     left_offset & unsigned & 0 &      The number of pixels at the left which
- *                                     can't be used by the positioner. $
- *     right_offset & unsigned & 0 &     The number of pixels at the right which
- *                                     can't be used by the positioner. $
- * @end{table}
- *
- * The following states exist:
- * * state_enabled, the horizontal scrollbar is enabled.
- * * state_disabled, the horizontal scrollbar is disabled.
- * * state_pressed, the left mouse button is down on the positioner of the
- *   horizontal scrollbar.
- * * state_focused, the mouse is over the positioner of the horizontal
- *   scrollbar.
- * @begin{tag}{name="state_enabled"}{min=0}{max=1}{super="generic/state"}
- * @end{tag}{name="state_enabled"}
- * @begin{tag}{name="state_disabled"}{min=0}{max=1}{super="generic/state"}
- * @end{tag}{name="state_disabled"}
- * @begin{tag}{name="state_pressed"}{min=0}{max=1}{super="generic/state"}
- * @end{tag}{name="state_pressed"}
- * @begin{tag}{name="state_focused"}{min=0}{max=1}{super="generic/state"}
- * @end{tag}{name="state_focused"}
- * @end{tag}{name="resolution"}
- * @end{tag}{name="horizontal_scrollbar_definition"}
- * @end{parent}{name="gui/"}
- */
 horizontal_scrollbar_definition::resolution::resolution(const config& cfg)
 	: resolution_definition(cfg)
 	, minimum_positioner_length(cfg["minimum_positioner_length"])
@@ -175,36 +130,13 @@ horizontal_scrollbar_definition::resolution::resolution(const config& cfg)
 									   "minimum_positioner_length"));
 
 	// Note the order should be the same as the enum state_t is scrollbar.hpp.
-	state.emplace_back(cfg.child("state_enabled"));
-	state.emplace_back(cfg.child("state_disabled"));
-	state.emplace_back(cfg.child("state_pressed"));
-	state.emplace_back(cfg.child("state_focused"));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_enabled", _("Missing required state for horizontal scrollbar")));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_disabled", _("Missing required state for horizontal scrollbar")));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_pressed", _("Missing required state for horizontal scrollbar")));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_focused", _("Missing required state for horizontal scrollbar")));
 }
 
 // }---------- BUILDER -----------{
-
-/*WIKI_MACRO
- * @begin{macro}{horizontal_scrollbar_description}
- *
- *        A horizontal scrollbar is a widget that shows a horizontal scrollbar.
- *        This widget is most of the time used in a container to control the
- *        scrolling of its contents.
- * @end{macro}
- */
-
-/*WIKI
- * @page = GUIToolkitWML
- * @order = 2_horizontal_scrollbar
- *
- * == Horizontal scrollbar ==
- *
- * @macro = horizontal_scrollbar_description
- * @begin{parent}{name="gui/window/resolution/grid/row/column/"}
- * @begin{tag}{name="horizontal_scrollbar"}{min=0}{max=-1}{super="generic/widget_instance"}
- * @end{tag}{name="horizontal_scrollbar"}
- * @end{parent}{name="gui/window/resolution/grid/row/column/"}
- * A horizontal scrollbar has no special fields.
- */
 
 namespace implementation
 {
@@ -214,15 +146,15 @@ builder_horizontal_scrollbar::builder_horizontal_scrollbar(const config& cfg)
 {
 }
 
-widget* builder_horizontal_scrollbar::build() const
+std::unique_ptr<widget> builder_horizontal_scrollbar::build() const
 {
-	horizontal_scrollbar* widget = new horizontal_scrollbar(*this);
+	auto widget = std::make_unique<horizontal_scrollbar>(*this);
 
 	widget->finalize_setup();
 
 	DBG_GUI_G << "Window builder:"
 			  << " placed horizontal scrollbar '" << id << "' with definition '"
-			  << definition << "'.\n";
+			  << definition << "'.";
 
 	return widget;
 }

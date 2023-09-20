@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2008 - 2018 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -51,6 +52,7 @@
 #include "ai/formula/function_table.hpp"           // for ai_function_symbol_table
 #include "ai/game_info.hpp"  // for move_result_ptr, move_map, etc
 #include "ai/formula/candidates.hpp"               // for base_candidate_action, etc
+#include "utils/variant.hpp"
 
 #include <cassert>                     // for assert
 #include <ctime>                       // for time
@@ -64,7 +66,6 @@ static lg::log_domain log_formula_ai("ai/engine/fai");
 #define LOG_AI LOG_STREAM(info, log_formula_ai)
 #define WRN_AI LOG_STREAM(warn, log_formula_ai)
 #define ERR_AI LOG_STREAM(err, log_formula_ai)
-
 
 using namespace wfl;
 
@@ -84,7 +85,7 @@ ca_ptr formula_ai::load_candidate_action_from_config(const config& rc_action)
 		} else if( type == "attack") {
 			new_ca = std::make_shared<attack_candidate_action>(name, type, rc_action, &function_table_);
 		} else {
-			ERR_AI << "Unknown candidate action type: " << type << std::endl;
+			ERR_AI << "Unknown candidate action type: " << type;
 		}
 	} catch(const formula_error& e) {
 		handle_exception(e, "Error while registering candidate action '" + name + "'");
@@ -95,7 +96,6 @@ ca_ptr formula_ai::load_candidate_action_from_config(const config& rc_action)
 int formula_ai::get_recursion_count() const{
 	return recursion_counter_.get_count();
 }
-
 
 formula_ai::formula_ai(readonly_context &context, const config &cfg)
 	:
@@ -111,7 +111,7 @@ formula_ai::formula_ai(readonly_context &context, const config &cfg)
 	function_table_(*this)
 {
 	init_readonly_context_proxy(context);
-	LOG_AI << "creating new formula ai"<< std::endl;
+	LOG_AI << "creating new formula ai";
 }
 
 void formula_ai::handle_exception(const formula_error& e) const
@@ -121,14 +121,14 @@ void formula_ai::handle_exception(const formula_error& e) const
 
 void formula_ai::handle_exception(const formula_error& e, const std::string& failed_operation) const
 {
-	LOG_AI << failed_operation << ": " << e.formula << std::endl;
+	LOG_AI << failed_operation << ": " << e.formula;
 	display_message(failed_operation + ": " + e.formula);
 	//if line number = 0, don't display info about filename and line number
 	if (e.line != 0) {
-		LOG_AI << e.type << " in " << e.filename << ":" << e.line << std::endl;
+		LOG_AI << e.type << " in " << e.filename << ":" << e.line;
 		display_message(e.type + " in " + e.filename + ":" + std::to_string(e.line));
 	} else {
-		LOG_AI << e.type << std::endl;
+		LOG_AI << e.type;
 		display_message(e.type);
 	}
 }
@@ -150,12 +150,10 @@ formula_ptr formula_ai::create_optional_formula(const std::string& formula_strin
 	}
 }
 
-
 void formula_ai::set_ai_context(ai_context *context)
 {
 	ai_ptr_ = context;
 }
-
 
 std::string formula_ai::evaluate(const std::string& formula_str)
 {
@@ -190,14 +188,14 @@ wfl::variant formula_ai::make_action(wfl::const_formula_ptr formula_, const wfl:
 	if (!formula_) {
 		throw formula_error("null formula passed to make_action","","formula",0);
 	}
-	LOG_AI << "do move...\n";
+	LOG_AI << "do move...";
 	const variant var = formula_->evaluate(variables);
 	variant res;
 
 	if (ai_ptr_) {
 		res = variant(this->fake_ptr()).execute_variant(var);
 	} else {
-		ERR_AI << "skipped execution of action because ai context is not set correctly" << std::endl;
+		ERR_AI << "skipped execution of action because ai context is not set correctly";
 	}
 
 	return res;
@@ -207,71 +205,71 @@ pathfind::plain_route formula_ai::shortest_path_calculator(const map_location &s
 	const map_location &dst, unit_map::iterator &unit_it,
 	pathfind::teleport_map& allowed_teleports) const
 {
-    map_location destination = dst;
+	map_location destination = dst;
 
-    unit_map &units_ = resources::gameboard->units();
-    pathfind::shortest_path_calculator calc(*unit_it, current_team(), resources::gameboard->teams(), resources::gameboard->map());
+	unit_map &units_ = resources::gameboard->units();
+	pathfind::shortest_path_calculator calc(*unit_it, current_team(), resources::gameboard->teams(), resources::gameboard->map());
 
-    unit_map::const_iterator dst_un = units_.find(destination);
+	unit_map::const_iterator dst_un = units_.find(destination);
 
-    map_location res;
+	map_location res;
 
-    if( dst_un != units_.end() ) {
-        //there is unit standing at dst, let's try to find free hex to move to
-        const map_location::DIRECTION preferred = destination.get_relative_dir(src);
+	if( dst_un != units_.end() ) {
+		//there is unit standing at dst, let's try to find free hex to move to
+		const map_location::DIRECTION preferred = destination.get_relative_dir(src);
 
-        int best_rating = 100;//smaller is better
-        adjacent_loc_array_t adj;
-        get_adjacent_tiles(destination,adj.data());
+		int best_rating = 100;//smaller is better
+		const auto adj = get_adjacent_tiles(destination);
 
-        for(std::size_t n = 0; n < adj.size(); ++n) {
-                if(resources::gameboard->map().on_board(adj[n]) == false) {
-                        continue;
-                }
+		for(std::size_t n = 0; n < adj.size(); ++n) {
+			if(resources::gameboard->map().on_board(adj[n]) == false) {
+				continue;
+			}
 
-                if(units_.find(adj[n]) != units_.end()) {
-                        continue;
-                }
+			if(units_.find(adj[n]) != units_.end()) {
+				continue;
+			}
 
-                static const std::size_t NDIRECTIONS = map_location::NDIRECTIONS;
-                unsigned int difference = std::abs(static_cast<int>(preferred - n));
-                if(difference > NDIRECTIONS/2) {
-                        difference = NDIRECTIONS - difference;
-                }
+			static const std::size_t NDIRECTIONS = map_location::NDIRECTIONS;
+			unsigned int difference = std::abs(static_cast<int>(preferred - n));
+			if(difference > NDIRECTIONS/2) {
+				difference = NDIRECTIONS - difference;
+			}
 
-                const int rating = difference * 2;
-                if(rating < best_rating || res.valid() == false) {
-                       best_rating = rating;
-                       res = adj[n];
-                }
-        }
-    }
+			const int rating = difference * 2;
+			if(rating < best_rating || res.valid() == false) {
+				best_rating = rating;
+				res = adj[n];
+			}
+		}
+	}
 
-    if( res != map_location() ) {
-        destination = res;
-    }
+	if( res != map_location() ) {
+		destination = res;
+	}
 
-    pathfind::plain_route route = pathfind::a_star_search(src, destination, 1000.0, calc,
-            resources::gameboard->map().w(), resources::gameboard->map().h(), &allowed_teleports);
+	pathfind::plain_route route = pathfind::a_star_search(src, destination,
+		1000.0, calc, resources::gameboard->map().w(),
+		resources::gameboard->map().h(), &allowed_teleports);
 
-    return route;
+	return route;
 }
 
 pathfind::teleport_map formula_ai::get_allowed_teleports(unit_map::iterator& unit_it) const
 {
-  return pathfind::get_teleport_locations(*unit_it, current_team(), true);
+	return pathfind::get_teleport_locations(*unit_it, current_team(), true);
 }
 
 void formula_ai::add_formula_function(const std::string& name, const_formula_ptr formula, const_formula_ptr precondition, const std::vector<std::string>& args)
 {
-	formula_function_ptr fcn(new user_formula_function(name,formula,precondition,args));
-	function_table_.add_function(name, std::move(fcn));
+	function_table_.add_function(name, std::make_shared<user_formula_function>(name, formula, precondition, args));
 }
 
-namespace {
+namespace
+{
 template<typename Container>
-variant villages_from_set(const Container& villages,
-				          const std::set<map_location>* exclude=nullptr) {
+variant villages_from_set(const Container& villages, const std::set<map_location>* exclude = nullptr)
+{
 	std::vector<variant> vars;
 	for(const map_location& loc : villages) {
 		if(exclude && exclude->count(loc)) {
@@ -282,7 +280,22 @@ variant villages_from_set(const Container& villages,
 
 	return variant(vars);
 }
+
+// TODO: I have no damn idea what to name this function
+variant visit_helper(const utils::variant<bool, std::vector<std::string>>& input)
+{
+	return utils::visit(
+		[](const auto& v) {
+			if constexpr(utils::decayed_is_same<bool, decltype(v)>) {
+				return variant(v);
+			} else {
+				const std::vector<variant> vars(v.begin(), v.end());
+				return variant(vars);
+			}
+		},
+		input);
 }
+} // namespace
 
 variant formula_ai::get_value(const std::string& key) const
 {
@@ -291,6 +304,10 @@ variant formula_ai::get_value(const std::string& key) const
 	if(key == "aggression")
 	{
 		return variant(get_aggression()*1000,variant::DECIMAL_VARIANT);
+
+	} else if(key == "allow_ally_villages")
+	{
+		return visit_helper(get_allow_ally_villages());
 
 	} else if(key == "avoid")
 	{
@@ -312,17 +329,7 @@ variant formula_ai::get_value(const std::string& key) const
 
 	} else if(key == "leader_ignores_keep")
 	{
-		boost::variant<bool, std::vector<std::string>> leader_ignores_keep = get_leader_ignores_keep();
-		if (leader_ignores_keep.which() == 0) {
-			return variant(boost::get<bool>(leader_ignores_keep));
-		} else {
-			std::vector<std::string> &strlist = boost::get<std::vector<std::string>>(leader_ignores_keep);
-			std::vector<variant> vars;
-			for(const std::string &i : strlist) {
-				vars.emplace_back(i);
-			}
-			return variant(vars);
-		}
+		return visit_helper(get_leader_ignores_keep());
 
 	} else if(key == "leader_value")
 	{
@@ -330,31 +337,11 @@ variant formula_ai::get_value(const std::string& key) const
 
 	} else if(key == "passive_leader")
 	{
-		boost::variant<bool, std::vector<std::string>> passive_leader = get_passive_leader();
-		if (passive_leader.which() == 0) {
-			return variant(boost::get<bool>(passive_leader));
-		} else {
-			std::vector<std::string> &strlist = boost::get<std::vector<std::string>>(passive_leader);
-			std::vector<variant> vars;
-			for(const std::string &i : strlist) {
-				vars.emplace_back(i);
-			}
-			return variant(vars);
-		}
+		return visit_helper(get_passive_leader());
 
 	} else if(key == "passive_leader_shares_keep")
 	{
-		boost::variant<bool, std::vector<std::string>> passive_leader_shares_keep = get_passive_leader_shares_keep();
-		if (passive_leader_shares_keep.which() == 0) {
-			return variant(boost::get<bool>(passive_leader_shares_keep));
-		} else {
-			std::vector<std::string> &strlist = boost::get<std::vector<std::string>>(passive_leader_shares_keep);
-			std::vector<variant> vars;
-			for(const std::string &i : strlist) {
-				vars.emplace_back(i);
-			}
-			return variant(vars);
-		}
+		return visit_helper(get_passive_leader_shares_keep());
 
 	} else if(key == "recruitment_pattern")
 	{
@@ -364,6 +351,14 @@ variant formula_ai::get_value(const std::string& key) const
 			vars.emplace_back(i);
 		}
 		return variant(vars);
+
+	} else if(key == "retreat_enemy_weight")
+	{
+		return variant(get_retreat_enemy_weight()*1000,variant::DECIMAL_VARIANT);
+
+	} else if(key == "retreat_factor")
+	{
+		return variant(get_retreat_factor()*1000,variant::DECIMAL_VARIANT);
 
 	} else if(key == "scout_village_targeting")
 	{
@@ -585,6 +580,9 @@ variant formula_ai::get_value(const std::string& key) const
 	{
 		return villages_from_set(resources::gameboard->map().villages(), &current_team().villages());
 	}
+	else if(key == "world") {
+		return variant(std::make_shared<gamestate_callable>());
+	}
 
 	return variant();
 }
@@ -618,6 +616,7 @@ void formula_ai::get_inputs(formula_input_vector& inputs) const
 	add_input(inputs, "my_villages");
 	add_input(inputs, "villages_of_side");
 	add_input(inputs, "enemy_and_unowned_villages");
+	add_input(inputs, "world");
 }
 
 void formula_ai::set_value(const std::string& key, const variant& value) {
@@ -632,10 +631,8 @@ variant formula_ai::get_keeps() const
 			for(std::size_t y = 0; y != std::size_t(resources::gameboard->map().h()); ++y) {
 				const map_location loc(x,y);
 				if(resources::gameboard->map().is_keep(loc)) {
-					adjacent_loc_array_t adj;
-					get_adjacent_tiles(loc,adj.data());
-					for(std::size_t n = 0; n < adj.size(); ++n) {
-						if(resources::gameboard->map().is_castle(adj[n])) {
+					for(const map_location& adj : get_adjacent_tiles(loc)) {
+						if(resources::gameboard->map().is_castle(adj)) {
 							vars.emplace_back(std::make_shared<location_callable>(loc));
 							break;
 						}
@@ -687,20 +684,17 @@ void formula_ai::on_create(){
 		}
 	}
 
-
 	vars_ = map_formula_callable();
-	if (const config &ai_vars = cfg_.child("vars"))
+	if (const auto ai_vars = cfg_.optional_child("vars"))
 	{
 		variant var;
-		for(const config::attribute &i : ai_vars.attribute_range()) {
+		for(const config::attribute &i : ai_vars->attribute_range()) {
 			var.serialize_from_string(i.second);
 			vars_.add(i.first, var);
 		}
 	}
 
-
 }
-
 
 void formula_ai::evaluate_candidate_action(ca_ptr fai_ca)
 {
@@ -761,11 +755,7 @@ bool formula_ai::gamestate_change_observer::continue_check() {
 
 config formula_ai::to_config() const
 {
-	if (!cfg_)
-	{
-		return config();
-	}
-	DBG_AI << "formula_ai::to_config(): "<< cfg_<<std::endl;
+	DBG_AI << "formula_ai::to_config(): "<< cfg_;
 	config cfg = cfg_;
 
 	//formula AI variables
@@ -779,7 +769,7 @@ config formula_ai::to_config() const
 			try {
 				str = i->second.serialize_to_string();
 			} catch(const type_error&) {
-				WRN_AI << "variable ["<< i->first <<"] is not serializable - it will not be persisted across savegames"<<std::endl;
+				WRN_AI << "variable ["<< i->first <<"] is not serializable - it will not be persisted across savegames";
 				continue;
 			}
 				if (!str.empty())

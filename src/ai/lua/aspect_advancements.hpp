@@ -1,19 +1,19 @@
 /*
-   Copyright (C) 2013 - 2018 by Felix Bauer <fehlxb+wesnoth@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2013 - 2023
+	by Felix Bauer <fehlxb+wesnoth@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
-#ifndef UNIT_ADVANCEMENT_ACPECT_H_INCLUDED
-#define UNIT_ADVANCEMENT_ACPECT_H_INCLUDED
+#pragma once
 
 #include <string>
 #include <vector>
@@ -40,5 +40,3 @@ private:
 	int ref_;
 };
 }
-
-#endif

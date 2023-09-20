@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2014 - 2018 by Chris Beck <render787@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2014 - 2023
+	by Chris Beck <render787@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #define GETTEXT_DOMAIN "wesnoth-lib"
@@ -37,14 +38,13 @@
 #include "scripting/lua_kernel_base.hpp"
 #include "serialization/string_utils.hpp"
 #include "serialization/unicode.hpp"
-#include "lexical_cast.hpp"
 #include "log.hpp"
 #include "font/pango/escape.hpp"
 
 #include <sstream>
 #include <string>
 #include <vector>
-#include "utils/functional.hpp"
+#include <functional>
 
 #ifdef HAVE_HISTORY
 #include "filesystem.hpp"
@@ -57,21 +57,8 @@ static lg::log_domain log_lua_int("lua/interpreter");
 #define WRN_LUA LOG_STREAM(warn, log_lua_int)
 #define ERR_LUA LOG_STREAM(err, log_lua_int)
 
-namespace gui2
+namespace gui2::dialogs
 {
-namespace dialogs
-{
-
-/*WIKI
- * @page = GUIWindowDefinitionWML
- * @order = 3_lua_interpretter
- *
- * == Settings manager ==
- *
- * This shows the settings manager
- *
- */
-
 
 REGISTER_DIALOG(lua_interpreter)
 
@@ -98,12 +85,8 @@ public:
 	void update_contents(const std::string & str)
 	{
 		assert(msg_label);
-
 		msg_label->set_label(str);
-		window_->set_callback_next_draw([this]()
-		{
-			msg_label->scroll_vertical_scrollbar(scrollbar_base::END);
-		});
+		msg_label->scroll_vertical_scrollbar(scrollbar_base::END);
 	}
 
 	void pg_up()
@@ -138,8 +121,8 @@ public:
 		, log_()
 		, raw_log_()
 	{
-		DBG_LUA << "constructing a lua_interpreter::model\n";
-		//DBG_LUA << "incoming:\n" << lk.get_log().rdbuf() << "\n.\n";
+		DBG_LUA << "constructing a lua_interpreter::model";
+		//DBG_LUA << "incoming:\n" << lk.get_log().rdbuf() << "\n.";
 		log_ << font::escape_text(lk.get_log().str()) << std::flush;
 		raw_log_ << lk.get_log().str() << std::flush;
 		// Lua kernel sends log strings to this function
@@ -147,14 +130,14 @@ public:
 			log_ << font::escape_text(str);
 			raw_log_ << str;
 		});
-		//DBG_LUA << "received:\n" << log_.str() << "\n.\n";
+		//DBG_LUA << "received:\n" << log_.str() << "\n.";
 
-		DBG_LUA << "finished constructing a lua_interpreter::model\n";
+		DBG_LUA << "finished constructing a lua_interpreter::model";
 	}
 
 	~lua_model()
 	{
-		DBG_LUA << "destroying a lua_interpreter::model\n";
+		DBG_LUA << "destroying a lua_interpreter::model";
 		L_.set_external_log(nullptr); //deregister our log since it's about to be destroyed
 	}
 
@@ -167,11 +150,14 @@ public:
 	 **/
 	void add_dialog_message(const std::string & msg);
 
-	std::string get_log() const { return log_.str(); } ///< Get the log string
-	std::string get_raw_log() const { return raw_log_.str(); } ///< Get the unescaped log
-	std::string get_name() const { return L_.my_name(); } ///< Get a string describing the name of lua kernel
+	/** Get the log string */
+	std::string get_log() const { return log_.str(); }
+	/** Get the unescaped log */
+	std::string get_raw_log() const { return raw_log_.str(); }
+	/** Get a string describing the name of lua kernel */
+	std::string get_name() const { return L_.my_name(); }
 
-	/// Clear the console log
+	/** Clear the console log */
 	void clear_log() {
 		L_.clear_log();
 		log_.str("");
@@ -227,12 +213,11 @@ public:
 			}
 
 			history_truncate_file (filename_.c_str(), history_max);
-		} catch (...) { std::cerr << "Swallowed an exception when trying to write lua command line history\n";}
+		} catch (...) { PLAIN_LOG << "Swallowed an exception when trying to write lua command line history";}
 	}
 #endif
-	void add_to_history (const std::string& str) {
+	void add_to_history ([[maybe_unused]] const std::string& str) {
 		prefix_ = "";
-		UNUSED(str);
 #ifdef HAVE_HISTORY
 		add_history(str.c_str());
 #endif
@@ -241,18 +226,18 @@ public:
 	}
 
 	void maybe_update_prefix (const std::string & text) {
-		LOG_LUA << "maybe update prefix\n";
-		LOG_LUA << "prefix_: '"<< prefix_ << "'\t text='"<< text << "'\n";
+		LOG_LUA << "maybe update prefix";
+		LOG_LUA << "prefix_: '"<< prefix_ << "'\t text='"<< text << "'";
 
 		if (!end_of_history_) return;
 
 		prefix_ = text;
-		LOG_LUA << "updated prefix\n";
+		LOG_LUA << "updated prefix";
 	}
 
-	std::string search( int direction ) {
+	std::string search([[maybe_unused]] int direction ) {
 #ifdef HAVE_HISTORY
-		LOG_LUA << "searching in direction " << direction << " from position " << where_history() << "\n";
+		LOG_LUA << "searching in direction " << direction << " from position " << where_history();
 
 		HIST_ENTRY * e = nullptr;
 		if (end_of_history_) {
@@ -283,18 +268,17 @@ public:
 		}
 
 		if (e) {
-			LOG_LUA << "found something at " << where_history() << "\n";
+			LOG_LUA << "found something at " << where_history();
 			std::string ret = e->line;
 			end_of_history_ = false;
 			return ret;
 		}
 #endif
 
-		LOG_LUA << "didn't find anything\n";
+		LOG_LUA << "didn't find anything";
 
 		// reset, set history to the end and prefix_ to empty, and return the current prefix_ for the user to edit
 		end_of_history_ = true;
-		UNUSED(direction);
 		std::string temp = prefix_;
 		prefix_ = "";
 		return temp;
@@ -322,7 +306,7 @@ public:
 
 			std::string result;
 			for (int i = 0; the_list[i]; i++) {
-				result += lexical_cast<std::string, int>(i+history_base);
+				result += std::to_string(i+history_base);
 				result += ": ";
 				result += the_list[i]->line;
 				result += "\n";
@@ -339,7 +323,7 @@ public:
 	// Does history expansion in a command line. A return value of true indicates an error,
 	// the error message will be returned in the string argument. A return value of false
 	// indicates success and that execution should proceed.
-	bool do_history_expansion (std::string & cmd) {
+	bool do_history_expansion ([[maybe_unused]] std::string & cmd) {
 #ifdef HAVE_HISTORY
 		// Do history expansions
 		std::unique_ptr<char[]> cmd_cstr(new char[cmd.length()+1]);
@@ -358,7 +342,6 @@ public:
 		cmd = expansion;
 		free(expansion);
 #endif
-		UNUSED(cmd);
 		return false;
 	}
 };
@@ -406,7 +389,8 @@ public:
 						   const SDL_Keycode key,
 						   window& window);
 
-	void update_view(); ///< Update the view based on the model
+	/** Update the view based on the model */
+	void update_view();
 
 	friend class lua_interpreter;
 };
@@ -416,7 +400,7 @@ public:
 /** Execute a command, and report any errors encountered. */
 bool lua_interpreter::lua_model::execute (const std::string & cmd)
 {
-	LOG_LUA << "lua_interpreter::model::execute...\n";
+	LOG_LUA << "lua_interpreter::model::execute...";
 
 	try {
 		L_.interactive_run(cmd.c_str());
@@ -440,19 +424,19 @@ void lua_interpreter::lua_model::add_dialog_message(const std::string & msg) {
 /** Update the view based on the model. */
 void lua_interpreter::controller::update_view()
 {
-	LOG_LUA << "lua_interpreter update_view...\n";
+	LOG_LUA << "lua_interpreter update_view...";
 	assert(lua_model_);
 	assert(view_);
 
 	view_->update_contents(lua_model_->get_log());
 
-	LOG_LUA << "lua_interpreter update_view finished\n";
+	LOG_LUA << "lua_interpreter update_view finished";
 }
 
 /** Find all the widgets managed by the controller and connect them to handler methods. */
 void lua_interpreter::controller::bind(window& window)
 {
-	LOG_LUA << "Entering lua_interpreter::controller::bind" << std::endl;
+	LOG_LUA << "Entering lua_interpreter::controller::bind";
 	assert(view_);
 	view_->bind(window);
 
@@ -467,9 +451,9 @@ void lua_interpreter::controller::bind(window& window)
 			*text_entry,
 			std::bind(&lua_interpreter::controller::input_keypress_callback,
 						this,
-						_3,
-						_4,
-						_5,
+						std::placeholders::_3,
+						std::placeholders::_4,
+						std::placeholders::_5,
 						std::ref(window)));
 
 	copy_button = find_widget<button>(&window, "copy", false, true);
@@ -491,7 +475,7 @@ void lua_interpreter::controller::bind(window& window)
 		copy_button->set_tooltip(_("Clipboard support not found, contact your packager"));
 	}
 
-	LOG_LUA << "Exiting lua_interpreter::controller::bind" << std::endl;
+	LOG_LUA << "Exiting lua_interpreter::controller::bind";
 }
 
 /** Copy text to the clipboard */
@@ -519,18 +503,18 @@ void lua_interpreter::controller::input_keypress_callback(bool& handled,
 	assert(lua_model_);
 	assert(text_entry);
 
-	LOG_LUA << "keypress_callback\n";
+	LOG_LUA << "keypress_callback";
 	if(key == SDLK_RETURN || key == SDLK_KP_ENTER) { // handle executing whatever is in the command entry field
-		LOG_LUA << "executing...\n";
+		LOG_LUA << "executing...";
 		execute();
 		handled = true;
 		halt = true;
 
 		// Commands such as `wesnoth.interface.zoom` might cause the display to redraw and leave the window half-drawn.
 		// This preempts that.
-		window.set_is_dirty(true);
+		window.queue_redraw();
 
-		LOG_LUA << "finished executing\n";
+		LOG_LUA << "finished executing";
 	} else if(key == SDLK_TAB) {	// handle tab completion
 		tab();
 		handled = true;
@@ -561,7 +545,7 @@ void lua_interpreter::controller::execute()
 
 	cmd.erase(cmd.find_last_not_of(" \n\r\t")+1); //right trim the string
 
-	LOG_LUA << "Executing '"<< cmd << "'\n";
+	LOG_LUA << "Executing '"<< cmd << "'";
 
 	if (cmd.size() >= 13 && (cmd.substr(0,13) == "history clear" || cmd.substr(0,13) == "clear history")) {
 		lua_model_->add_dialog_message(input_model_->clear_history());
@@ -693,7 +677,7 @@ void lua_interpreter::display(lua_kernel_base * lk) {
 	}
 #endif
 	if (!lk) {
-		ERR_LUA << "Tried to open console with a null lua kernel pointer.\n";
+		ERR_LUA << "Tried to open console with a null lua kernel pointer.";
 		return;
 	}
 
@@ -712,7 +696,7 @@ void lua_interpreter::display(lua_interpreter::WHICH_KERNEL which) {
 /** Bind the controller, initialize one of the static labels with info about this kernel, and update the view. */
 void lua_interpreter::pre_show(window& window)
 {
-	LOG_LUA << "Entering lua_interpreter::view::pre_show" << std::endl;
+	LOG_LUA << "Entering lua_interpreter::view::pre_show";
 	register_text("text_entry", false, controller_->text_entry_, true);
 	controller_->bind(window);
 
@@ -721,15 +705,15 @@ void lua_interpreter::pre_show(window& window)
 
 	controller_->update_view();
 	//window.invalidate_layout(); // workaround for assertion failure
-	LOG_LUA << "Exiting lua_interpreter::view::pre_show" << std::endl;
+	LOG_LUA << "Exiting lua_interpreter::view::pre_show";
 }
 
 lua_interpreter::lua_interpreter(lua_kernel_base & lk)
-		: controller_(new lua_interpreter::controller(lk))
+	: modal_dialog(window_id())
+	, controller_(new lua_interpreter::controller(lk))
 {
-	LOG_LUA << "entering lua_interpreter ctor...\n";
-	LOG_LUA << "finished lua_interpreter ctor...\n";
+	LOG_LUA << "entering lua_interpreter ctor...";
+	LOG_LUA << "finished lua_interpreter ctor...";
 }
 
 } // namespace dialogs
-} // namespace gui2

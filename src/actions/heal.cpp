@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2003 - 2018 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2003 - 2023
+	by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -29,6 +30,7 @@
 #include "units/abilities.hpp"
 #include "units/udisplay.hpp"
 #include "units/map.hpp"
+#include "utils/general.hpp"
 
 #include <list>
 #include <vector>
@@ -192,26 +194,22 @@ namespace {
 
 			// Regeneration?
 			unit_ability_list regen_list = patient.get_abilities("regenerate");
-			unit_abilities::effect regen_effect(regen_list, 0, false);
+			unit_abilities::effect regen_effect(regen_list, 0);
 			update_healing(healing, harming, regen_effect.get_composite_value());
 		}
 
 		// Check healing from other units.
 		unit_ability_list heal_list = patient.get_abilities("heals");
 		// Remove all healers not on this side (since they do not heal now).
-		unit_ability_list::iterator heal_it = heal_list.begin();
-		while ( heal_it != heal_list.end() ) {
-			unit_map::iterator healer = units.find(heal_it->teacher_loc);
+		utils::erase_if(heal_list, [&](const unit_ability& i) {
+			unit_map::iterator healer = units.find(i.teacher_loc);
 			assert(healer != units.end());
 
-			if ( healer->side() != side )
-				heal_it = heal_list.erase(heal_it);
-			else
-				++heal_it;
-		}
+			return healer->side() != side;
+		});
 
 		// Now we can get the aggregate healing amount.
-		unit_abilities::effect heal_effect(heal_list, 0, false);
+		unit_abilities::effect heal_effect(heal_list, 0);
 		if ( update_healing(healing, harming, heal_effect.get_composite_value()) )
 		{
 			// Collect the healers involved.
@@ -219,7 +217,7 @@ namespace {
 				healers.push_back(&*units.find(heal.loc));
 
 			if ( !healers.empty() ) {
-				DBG_NG << "Unit has " << healers.size() << " healers.\n";
+				DBG_NG << "Unit has " << healers.size() << " healers.";
 			}
 		}
 
@@ -291,7 +289,7 @@ namespace {
 // Simple algorithm: no maximum number of patients per healer.
 void calculate_healing(int side, bool update_display)
 {
-	DBG_NG << "beginning of healing calculations\n";
+	DBG_NG << "beginning of healing calculations";
 
 	std::list<heal_unit> unit_list;
 
@@ -302,7 +300,7 @@ void calculate_healing(int side, bool update_display)
 			continue;
 		}
 
-		DBG_NG << "found healable unit at (" << patient.get_location() << ")\n";
+		DBG_NG << "found healable unit at (" << patient.get_location() << ")";
 
 		POISON_STATUS curing = POISON_NORMAL;
 		int healing = 0;
@@ -340,7 +338,7 @@ void calculate_healing(int side, bool update_display)
 			continue;
 
 		if (!healers.empty()) {
-			DBG_NG << "Just before healing animations, unit has " << healers.size() << " potential healers.\n";
+			DBG_NG << "Just before healing animations, unit has " << healers.size() << " potential healers.";
 		}
 
 		if (!resources::controller->is_skipping_replay() && update_display)
@@ -356,5 +354,5 @@ void calculate_healing(int side, bool update_display)
 
 	animate_heals(unit_list);
 
-	DBG_NG << "end of healing calculations\n";
+	DBG_NG << "end of healing calculations";
 }

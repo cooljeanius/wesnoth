@@ -1,14 +1,15 @@
 /*
-   Copyright (C) 2017-2018 by the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2017 - 2023
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #include "chat_events.hpp"
@@ -21,8 +22,6 @@
 #include "preferences/credentials.hpp"
 #include "preferences/general.hpp"
 #include "preferences/game.hpp"
-
-#include <boost/range/algorithm/find_if.hpp>
 
 static lg::log_domain log_engine("engine");
 #define ERR_NG LOG_STREAM(err, log_engine)
@@ -59,7 +58,7 @@ void chat_handler::change_logging(const std::string& data) {
 		symbols["level"] = level;
 		const std::string& msg =
 			VGETTEXT("Unknown debug level: '$level'.", symbols);
-		ERR_NG << msg << std::endl;
+		ERR_NG << msg;
 		add_chat_message(std::time(nullptr), _("error"), 0, msg);
 		return;
 	}
@@ -68,7 +67,7 @@ void chat_handler::change_logging(const std::string& data) {
 		symbols["domain"] = domain;
 		const std::string& msg =
 			VGETTEXT("Unknown debug domain: '$domain'.", symbols);
-		ERR_NG << msg << std::endl;
+		ERR_NG << msg;
 		add_chat_message(std::time(nullptr), _("error"), 0, msg);
 		return;
 	}
@@ -78,7 +77,7 @@ void chat_handler::change_logging(const std::string& data) {
 		symbols["domain"] = domain;
 		const std::string& msg =
 			VGETTEXT("Switched domain: '$domain' to level: '$level'.", symbols);
-		LOG_NG << msg << "\n";
+		LOG_NG << msg;
 		add_chat_message(std::time(nullptr), "log", 0, msg);
 	}
 }
@@ -101,11 +100,8 @@ void chat_handler::send_command(const std::string& cmd, const std::string& args 
 	else if (cmd == "report") {
 		data.add_child("query")["type"] = "report " + args;
 	}
-	else if (cmd == "join") {
-		data.add_child("room_join")["room"] = args;
-	}
-	else if (cmd == "part") {
-		data.add_child("room_part")["room"] = args;
+	else if (cmd == "roll") {
+		data.add_child("query")["type"] = "roll " + args;
 	}
 	send_to_server(data);
 }

@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2009 - 2018 by Yurii Chernyi <terraninfo@terraninfo.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2009 - 2023
+	by Yurii Chernyi <terraninfo@terraninfo.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -19,33 +20,21 @@
 
 #pragma once
 
+#include "ai/ai_target.hpp"
 #include "ai/contexts.hpp"
 #include "formula/callable.hpp"
-#include "utils/make_enum.hpp"
 
 //============================================================================
 namespace ai {
 
-
 struct target {
-	MAKE_ENUM(TYPE,
-		(VILLAGE, "village")
-		(LEADER, "leader")
-		(EXPLICIT, "explicit")
-		(THREAT, "threat")
-		(BATTLE_AID, "battle aid")
-		(MASS, "mass")
-		(SUPPORT, "support")
-	)
-
-	target(const map_location& pos, double val, TYPE target_type=TYPE::VILLAGE) : loc(pos), value(val), type(target_type)
+	target(const map_location& pos, double val, ai_target::type target_type = ai_target::type::village) : loc(pos), value(val), type(target_type)
 	{}
 	map_location loc;
 	double value;
 
-	TYPE type;
+	ai_target::type type;
 };
-
 
 class attack_analysis : public wfl::action_callable
 {
@@ -133,45 +122,32 @@ public:
 	wfl::variant execute_self(wfl::variant ctxt) override;
 };
 
-
 class default_ai_context;
 class default_ai_context : public virtual readwrite_context{
 public:
 
 	virtual int count_free_hexes_in_castle(const map_location& loc, std::set<map_location> &checked_hexes) = 0;
 
-
 	/** Constructor */
 	default_ai_context();
-
 
 	/** Destructor */
 	virtual ~default_ai_context();
 
-
 	virtual const std::vector<target>& additional_targets() const = 0;
-
 
 	virtual void add_target(const target& t) const = 0;
 
-
 	virtual void clear_additional_targets() const = 0;
-
 
 	virtual default_ai_context& get_default_ai_context() = 0;
 
-
 	virtual std::vector<target> find_targets(const move_map& enemy_dstsrc) = 0;
-
 
 	virtual int rate_terrain(const unit& u, const map_location& loc) const = 0;
 
-
 	virtual config to_default_ai_context_config() const = 0;
-
-
 };
-
 
 // proxies
 class default_ai_context_proxy : public virtual default_ai_context, public virtual readwrite_context_proxy {
@@ -182,54 +158,44 @@ public:
 		return target_->count_free_hexes_in_castle(loc, checked_hexes);
 	}
 
-
 	default_ai_context_proxy()
 		: target_(nullptr)
 	{
 	}
 
-
 	virtual	~default_ai_context_proxy();
-
 
 	virtual const std::vector<target>& additional_targets() const
 	{
 		return target_->additional_targets();
 	}
 
-
 	virtual void add_target(const target& t) const
 	{
 		target_->add_target(t);
 	}
-
 
 	virtual void clear_additional_targets() const
 	{
 		target_->clear_additional_targets();
 	}
 
-
 	virtual default_ai_context& get_default_ai_context()
 	{
 		return target_->get_default_ai_context();
 	}
-
 
 	virtual std::vector<target> find_targets(const move_map& enemy_dstsrc)
 	{
 		return target_->find_targets(enemy_dstsrc);
 	}
 
-
 	void init_default_ai_context_proxy(default_ai_context &target);
-
 
 	virtual int rate_terrain(const unit& u, const map_location& loc) const
 	{
 		return target_->rate_terrain(u,loc);
 	}
-
 
 	virtual config to_default_ai_context_config() const
 	{
@@ -240,12 +206,10 @@ private:
 	default_ai_context *target_;
 };
 
-
 class default_ai_context_impl : public virtual readwrite_context_proxy, public default_ai_context {
 public:
 
 	int count_free_hexes_in_castle(const map_location& loc, std::set<map_location> &checked_hexes);
-
 
 	default_ai_context_impl(readwrite_context &context, const config &/*cfg*/)
 		: recursion_counter_(context.get_recursion_count()),additional_targets_()
@@ -253,40 +217,30 @@ public:
 		init_readwrite_context_proxy(context);
 	}
 
-
 	virtual ~default_ai_context_impl();
-
 
 	virtual default_ai_context& get_default_ai_context();
 
-
 	virtual const std::vector<target>& additional_targets() const;
-
 
 	virtual void add_target(const target& t) const;
 
-
 	virtual void clear_additional_targets() const;
-
 
 	int get_recursion_count() const
 	{
 		return recursion_counter_.get_count();
 	}
 
-
 	virtual std::vector<target> find_targets(const move_map& enemy_dstsrc);
 
-
 	virtual int rate_terrain(const unit& u, const map_location& loc) const;
-
 
 	virtual config to_default_ai_context_config() const;
 
 private:
 	recursion_counter recursion_counter_;
 	mutable std::vector<target> additional_targets_;// TODO: refactor this (remove mutable)
-
 
 };
 

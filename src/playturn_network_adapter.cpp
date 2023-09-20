@@ -1,25 +1,27 @@
 /*
-   Copyright (C) 2017-2018 by the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2017 - 2023
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #include "playturn_network_adapter.hpp"
 #include "log.hpp"
+#include "utils/general.hpp"
 
-#include "utils/functional.hpp"
-#include <iostream>
+#include <functional>
 #include <cassert>
 
 
 static lg::log_domain log_network("network");
+#define DBG_NW LOG_STREAM(debug, log_network)
 #define LOG_NW LOG_STREAM(info, log_network)
 #define ERR_NW LOG_STREAM(err, log_network)
 
@@ -36,7 +38,8 @@ void playturn_network_adapter::read_from_network()
 	}
 	catch(...)
 	{
-		//Readin from network can throw, we want to ignore the possibly corrupt packet in this case.
+		//Reading from network can throw, we want to ignore the possibly corrupt packet in this case.
+		DBG_NW << "Caught exception reading from the network: " << utils::get_unknown_exception_type();
 		this->data_.pop_back();
 		throw;
 	}
@@ -51,7 +54,7 @@ void playturn_network_adapter::read_from_network()
 
 	if(!back.attribute_range().empty() )
 	{
-		ERR_NW << "found unexpected attribute:" <<back.debug() << std::endl;
+		ERR_NW << "found unexpected attribute:" <<back.debug();
 		this->data_.pop_back();
 		//ignore those here
 	}
@@ -141,7 +144,7 @@ playturn_network_adapter::~playturn_network_adapter()
 	try {
 		if(!is_at_end())
 		{
-			LOG_NW << "Destroying playturn_network_adapter with an non empty buffer, this means loss of network data" << std::endl;
+			LOG_NW << "Destroying playturn_network_adapter with an non empty buffer, this means loss of network data";
 		}
 	} catch (...) {}
 }
@@ -168,5 +171,5 @@ static bool read_config(config& src, config& dst)
 
 playturn_network_adapter::source_type playturn_network_adapter::get_source_from_config(config& cfg)
 {
-	return std::bind(read_config, std::ref(cfg), _1);
+	return std::bind(read_config, std::ref(cfg), std::placeholders::_1);
 }

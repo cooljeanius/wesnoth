@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2003 - 2018 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2003 - 2023
+	by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -23,7 +24,8 @@
 
 #include "ai/lua/aspect_advancements.hpp"
 #include "attack_prediction.hpp"
-#include "units/alignment.hpp"
+#include "units/ptr.hpp"
+#include "units/unit_alignments.hpp"
 
 #include <vector>
 
@@ -58,10 +60,6 @@ struct battle_context_unit_stats
 	bool petrifies;          /**< Attack petrifies opponent when it hits. */
 	bool plagues;            /**< Attack turns opponent into a zombie when fatal. */
 	bool poisons;            /**< Attack poisons opponent when it hits. */
-	bool backstab_pos;       /**<
-	                           * True if the attacker is in *position* to backstab the defender (this is used to
-                               * determine whether to apply the backstab bonus in case the attacker has backstab).
-                               */
 	bool swarm;              /**< Attack has swarm special. */
 	bool firststrike;        /**< Attack has firststrike special. */
 	bool disable;            /**< Attack has disable special. */
@@ -82,14 +80,13 @@ struct battle_context_unit_stats
 
 	std::string plague_type; /**< The plague type used by the attack, if any. */
 
-	battle_context_unit_stats(const unit& u,
+	battle_context_unit_stats(nonempty_unit_const_ptr u,
 			const map_location& u_loc,
 			int u_attack_num,
 			bool attacking,
-			const unit& opp,
+			nonempty_unit_const_ptr opp,
 			const map_location& opp_loc,
-			const_attack_ptr opp_weapon,
-			const unit_map& units);
+			const_attack_ptr opp_weapon);
 
 	/** Used by AI for combat analysis, and by statistics_dialog */
 	battle_context_unit_stats(const unit_type* u_type,
@@ -104,8 +101,7 @@ struct battle_context_unit_stats
 	{
 	}
 
-	/// Calculates the number of blows we would have if we had @a new_hp
-	// instead of the recorded hp.
+	/** Calculates the number of blows we would have if we had @a new_hp instead of the recorded hp. */
 	unsigned int calc_blows(unsigned new_hp) const
 	{
 		return swarm_blows(swarm_min, swarm_max, new_hp, max_hp);
@@ -137,7 +133,6 @@ struct battle_context_unit_stats
 		, petrifies(false)
 		, plagues(false)
 		, poisons(false)
-		, backstab_pos(false)
 		, swarm(do_swarm)
 		, firststrike(first)
 		, disable(false)
@@ -185,8 +180,8 @@ public:
 			int defender_weapon = -1,
 			double aggression = 0.0,
 			const combatant* prev_def = nullptr,
-			const unit* attacker_ptr = nullptr,
-			const unit* defender_ptr = nullptr);
+			unit_const_ptr attacker_ptr = unit_const_ptr(),
+			unit_const_ptr defender_ptr = unit_const_ptr());
 
 	/** Used by the AI which caches battle_context_unit_stats */
 	battle_context(const battle_context_unit_stats& att, const battle_context_unit_stats& def);
@@ -225,26 +220,23 @@ public:
 	void simulate(const combatant* prev_def);
 private:
 	battle_context(
-			const unit& attacker,
+			nonempty_unit_const_ptr attacker,
 			const map_location& attacker_loc,
 			int attacker_weapon,
-			const unit& defender,
+			nonempty_unit_const_ptr defender,
 			const map_location& defender_loc,
-			int defender_weapon,
-			const unit_map& units);
+			int defender_weapon);
 
-	static battle_context choose_attacker_weapon(const unit& attacker,
-			const unit& defender,
-			const unit_map& units,
+	static battle_context choose_attacker_weapon(nonempty_unit_const_ptr attacker,
+			nonempty_unit_const_ptr defender,
 			const map_location& attacker_loc,
 			const map_location& defender_loc,
 			double harm_weight,
 			const combatant* prev_def);
 
-	static battle_context choose_defender_weapon(const unit& attacker,
-			const unit& defender,
+	static battle_context choose_defender_weapon(nonempty_unit_const_ptr attacker,
+			nonempty_unit_const_ptr defender,
 			unsigned attacker_weapon,
-			const unit_map& units,
 			const map_location& attacker_loc,
 			const map_location& defender_loc,
 			const combatant* prev_def);
@@ -287,7 +279,7 @@ int under_leadership(const unit &u, const map_location& loc, const_attack_ptr we
 int combat_modifier(const unit_map& units,
 		const gamemap& map,
 		const map_location& loc,
-		UNIT_ALIGNMENT alignment,
+		unit_alignments::type alignment,
 		bool is_fearless);
 
 /**
@@ -295,14 +287,14 @@ int combat_modifier(const unit_map& units,
  * due to the current time of day.
  */
 int combat_modifier(const time_of_day& effective_tod,
-		UNIT_ALIGNMENT alignment,
+		unit_alignments::type alignment,
 		bool is_fearless);
 
 /**
  * Returns the amount that a unit's damage should be multiplied by
  * due to a given lawful_bonus.
  */
-int generic_combat_modifier(int lawful_bonus, UNIT_ALIGNMENT alignment, bool is_fearless, int max_liminal_bonus);
+int generic_combat_modifier(int lawful_bonus, unit_alignments::type alignment, bool is_fearless, int max_liminal_bonus);
 /**
  * Function to check if an attack will satisfy the requirements for backstab.
  * Input:

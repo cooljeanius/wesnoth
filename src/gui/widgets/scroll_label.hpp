@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2008 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -33,11 +34,31 @@ struct builder_scroll_label;
 }
 
 /**
+ * @ingroup GUIWidgetWML
+ *
  * Label showing a text.
  *
- * This version shows a scrollbar if the text gets too long and has some
- * scrolling features. In general this widget is slower as the normal label so
- * the normal label should be preferred.
+ * This version shows a scrollbar if the text gets too long and has some scrolling features.
+ * In general this widget is slower as the normal label so the normal label should be preferred.
+ *
+ * Key          |Type                        |Default  |Description
+ * -------------|----------------------------|---------|-----------
+ * grid         | @ref guivartype_grid "grid"|mandatory|A grid containing the widgets for main widget.
+ *
+ * TODO: we need one definition for a vertical scrollbar since this is the second time we use it.
+ *
+ * ID (return value)|Type                        |Default  |Description
+ * -----------------|----------------------------|---------|-----------
+ * _content_grid    | @ref guivartype_grid "grid"|mandatory|A grid which should only contain one label widget.
+ * _scrollbar_grid  | @ref guivartype_grid "grid"|mandatory|A grid for the scrollbar (Merge with listbox info.)
+ * The following states exist:
+ * * state_enabled - the scroll label is enabled.
+ * * state_disabled - the scroll label is disabled.
+ * List with the scroll label specific variables:
+ * Key                      |Type                                            |Default     |Description
+ * -------------------------|------------------------------------------------|------------|-----------
+ * vertical_scrollbar_mode  | @ref guivartype_scrollbar_mode "scrollbar_mode"|initial_auto|Determines whether or not to show the scrollbar.
+ * horizontal_scrollbar_mode| @ref guivartype_scrollbar_mode "scrollbar_mode"|initial_auto|Determines whether or not to show the scrollbar.
  */
 class scroll_label : public scrollbar_container
 {
@@ -99,6 +120,8 @@ private:
 
 	PangoAlignment text_alignment_;
 
+	bool link_aware_;
+
 	void finalize_subclass() override;
 
 	label* get_internal_label();
@@ -143,12 +166,13 @@ struct builder_scroll_label : public builder_styled_widget
 
 	using builder_styled_widget::build;
 
-	widget* build() const;
+	virtual std::unique_ptr<widget> build() const override;
 
 	scrollbar_container::scrollbar_mode vertical_scrollbar_mode;
 	scrollbar_container::scrollbar_mode horizontal_scrollbar_mode;
 	bool wrap_on;
 	const PangoAlignment text_alignment;
+	bool link_aware;
 };
 
 } // namespace implementation

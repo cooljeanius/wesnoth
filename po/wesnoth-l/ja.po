@@ -1,16 +1,17 @@
 #
 # Translators:
-# RatArmy <broadbarredfirefish@gmail.com>, 2019
-# tamanegi, 2019
+# tamanegi, 2021
+# k konami, 2022
+# RatArmy, 2022
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
-"POT-Creation-Date: 2020-03-09 23:11 UTC\n"
-"PO-Revision-Date: 2018-09-12 07:30+0000\n"
-"Last-Translator: tamanegi, 2019\n"
-"Language-Team: Japanese (https://www.transifex.com/wesnoth-jp/teams/60513/"
+"POT-Creation-Date: 2023-09-17 03:32 UTC\n"
+"PO-Revision-Date: 2021-06-26 08:32+0000\n"
+"Last-Translator: RatArmy, 2022\n"
+"Language-Team: Japanese (https://app.transifex.com/wesnoth-jp/teams/60513/"
 "ja/)\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -19,7 +20,9 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. [campaign]: id=Liberty
+#. [achievement_group]
 #: data/campaigns/Liberty/_main.cfg:10 data/campaigns/Liberty/_main.cfg:11
+#: data/campaigns/Liberty/achievements.cfg:3
 msgid "Liberty"
 msgstr "自由"
 
@@ -45,8 +48,8 @@ msgstr "無法者"
 
 #. [campaign]: id=Liberty
 #: data/campaigns/Liberty/_main.cfg:21
-msgid "Difficult"
-msgstr "難しい"
+msgid "Challenging"
+msgstr "挑戦的"
 
 #. [campaign]: id=Liberty
 #: data/campaigns/Liberty/_main.cfg:21
@@ -54,48 +57,97 @@ msgid "Fugitive"
 msgstr "逃亡者"
 
 #. [campaign]: id=Liberty
-#. Yes, that is "marchlanders", not "marshlanders".
-#. "marchlander" is archaic English for an inhabitant of a border region.
-#: data/campaigns/Liberty/_main.cfg:26
+#. "marchlander" is archaic English for an inhabitant of a border region, not to be confused with "marshlander"
+#: data/campaigns/Liberty/_main.cfg:25
 msgid ""
-"As the shadow of civil war lengthens across Wesnoth, a band of hardy "
-"marchlanders revolts against the tyranny of Queen Asheviere. To win their "
-"way to freedom, they must defeat not just the trained blades of Wesnothian "
-"troops but darker foes including orcs and undead.\n"
+"As the shadow of civil war deepens across Wesnoth, a band of hardy "
+"marchlanders revolts against the governance of the new queen. To win their "
+"way to freedom, they must learn to use shadows and deception to rout the "
+"trained blades of the Wesnothian army.\n"
 "\n"
 msgstr ""
-"内戦の影が Wesnoth に広がると、たくましい辺境人の一団が女王 Asheviere の圧政"
-"に対し反乱を起こした。彼らが自由を勝ち取るためには、Wesnoth 正規軍の研ぎ澄ま"
-"された刃だけではなく、オークやアンデッドのような邪悪な敵をも打ち破らなければ"
-"ならない。\n"
+"Wesnoth に内戦の機運が高まる中、頑健な辺境民の一団が新女王の圧政に対して反乱"
+"を起こした。Wesnoth 正規軍の研ぎ澄まされた刃を砕き、自由を勝ち取るため、欺瞞"
+"や邪悪の力でも使えるものは何でも使え。\n"
 "\n"
 
 #. [campaign]: id=Liberty
-#: data/campaigns/Liberty/_main.cfg:28
-#, fuzzy
-#| msgid "(Novice level, 8 scenarios.)"
+#: data/campaigns/Liberty/_main.cfg:27
 msgid "(Novice level, 7 scenarios.)"
-msgstr "（初級レベル、8 シナリオ）"
+msgstr "（入門レベル、7 シナリオ）"
 
 #. [about]
-#: data/campaigns/Liberty/_main.cfg:31
-msgid "Campaign Design"
-msgstr "キャンペーンデザイン"
+#: data/campaigns/Liberty/_main.cfg:30
+msgid "Original Campaign Design"
+msgstr "オリジナルキャンペーンデザイン"
 
 #. [about]
-#: data/campaigns/Liberty/_main.cfg:37
-msgid "Prose-doctoring and preparation for mainline"
-msgstr "公式キャンペーン化のための文章の作成と精査"
+#: data/campaigns/Liberty/_main.cfg:36
+msgid "Latest Rewrite"
+msgstr "最新の書き直し"
 
 #. [about]
-#: data/campaigns/Liberty/_main.cfg:43
+#: data/campaigns/Liberty/_main.cfg:42
 msgid "Campaign Maintenance"
 msgstr "キャンペーンメンテナンス"
 
 #. [about]
-#: data/campaigns/Liberty/_main.cfg:53
+#: data/campaigns/Liberty/_main.cfg:52
 msgid "Artwork and Graphics Design"
 msgstr "アートワークとグラフィックスデザイン"
+
+#. [achievement]: id=liberty_or_death
+#: data/campaigns/Liberty/achievements.cfg:7
+msgid "Give Me Liberty or Give Me Death!"
+msgstr ""
+
+#. [achievement]: id=liberty_or_death
+#: data/campaigns/Liberty/achievements.cfg:8
+msgid "Complete Civil Disobedience with at least 3 peasants remaining."
+msgstr ""
+
+#. [achievement]: id=liberty_nameless
+#: data/campaigns/Liberty/achievements.cfg:14
+msgid "The Nameless General"
+msgstr ""
+
+#. [achievement]: id=liberty_nameless
+#: data/campaigns/Liberty/achievements.cfg:15
+msgid "Find out the name of the general in Unlawful Orders."
+msgstr ""
+
+#. [achievement]: id=liberty_iron
+#: data/campaigns/Liberty/achievements.cfg:21
+msgid "Harper vs. Goliath"
+msgstr ""
+
+#. [achievement]: id=liberty_iron
+#: data/campaigns/Liberty/achievements.cfg:22
+msgid "Defeat an Iron Mauler with Harper in Hide and Seek."
+msgstr ""
+
+#. [achievement]: id=liberty_hunter
+#. this is the achievement for the scenario The Hunters
+#: data/campaigns/Liberty/achievements.cfg:29
+#, fuzzy
+#| msgid "Peasant Hunter"
+msgid "Perfect Hunter"
+msgstr "農民の狩人"
+
+#. [achievement]: id=liberty_hunter
+#: data/campaigns/Liberty/achievements.cfg:30
+msgid "Complete The Hunters with no losses"
+msgstr ""
+
+#. [achievement]: id=liberty_army
+#: data/campaigns/Liberty/achievements.cfg:36
+msgid "Force of Arms is Pointless Without Strategy"
+msgstr ""
+
+#. [achievement]: id=liberty_army
+#: data/campaigns/Liberty/achievements.cfg:37
+msgid "On Challenging difficulty, defeat Dommel in Glory."
+msgstr ""
 
 #. [scenario]: id=01_The_Raid
 #: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:4
@@ -108,756 +160,1131 @@ msgid "Dallben"
 msgstr "Dallben"
 
 #. [part]
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:20
+#. Baldras is an old man from the country and both speaks and writes with many grammatical errors due to his relative lack of education
+#. He is also a little bit rude and grumpy, so languages with ruder or more informal variants of words should use those where appropriate
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:22
 msgid ""
-"In the Era of Turmoil, during the reign of King Garard II, the border towns "
-"of Delwyn and Dallben in the Province of Annuvin grew increasingly "
-"dissatisfied with the King’s rule. Being preoccupied with the great wars, "
-"the King was unable to send adequate forces to protect the frontier."
+"From the journal of Baldras, 21 Scatterseed, 501 YW\n"
+"\n"
+"Months... seven months it’s been since the Crown did send a single guard "
+"here to help us. This Garard II be a pompous stinker, even worser than his "
+"pa! Us of these border towns Delwyn and Dallben already be poor and needy, "
+"yet alls ‘His Majesty’ can think of is tax, tax, tax, takin’ all our hard "
+"earned gold from us. Then he uses our gold to provoke more wars with more "
+"orcs just for personal glory and more land for them grubby nobles to lord "
+"over."
 msgstr ""
-"Garard II世の治世、「混乱の時代」と呼ばれる時代、Annuvin 州にある辺境の町 "
-"Delwyn と Dallben では、王の統治に対する不満が日に日に高まっていました。王は"
-"大きな戦の対応に追われており、辺境を充分守れるだけの兵力を派遣できなかったの"
-"です。"
-
-#. [part]
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:24
-msgid ""
-"Though untrained in wielding proper military weapons, the hardy people of "
-"the Western Marches were at home in the forests and swamps, and learned to "
-"use their simple slings and clubs to great effect. They established their "
-"own trading routes and pacts of mutual defense, quickly becoming self-"
-"reliant against the raiding orc hordes."
-msgstr ""
+"Baldras の日記より、Wesnoth 暦 501 年 蒔種の月 21 日\n"
+"\n"
+"あの王様とやらがたった一人の兵士を助けによこしてくれたのはいつだったか……もう "
+"7 ヶ月も前のことか。Garard II 世とかいう奴は本当にクソ野郎だ！これならあいつ"
+"の親の方がまだマシだった。ワシら、辺境の村 Delwyn と Dallben はまさに困窮して"
+"いるというのに、どっかにいる大層お偉い方が考えていることは税、税、税！ワシら"
+"から苦労して稼いだ金を奪うことだけだ！しかもだ、集めた金を何に使うかと言え"
+"ば、個人的な名誉と強欲な貴族に土地を与えるためにオークに戦争を仕掛けていると"
+"来ている。"
 
 #. [part]
 #: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:28
 msgid ""
-"The people of Annuvin eventually established a form of independence, content "
-"with the lack of aid — or interference — from the King. Queen Asheviere, "
-"however, had other plans for her husband and the “ill-suited” self-rule of "
-"the countryfolk."
+"To abbadon with the Crown! We got no armies and we don’t even got real "
+"weapons, but we of the Western Marches make do just fine with our slings and "
+"clubs. In all Annuvin Province, there won’t be nobody besting us in these "
+"swamps. We’re self-reliant out here. We gots our own trade routes and pacts "
+"of mutual defense. No need for them Wesnothians. Not a single bit."
 msgstr ""
+"あんな王家なんて棄てちまえば良い！あいつら、軍勢をよこさないどころか、武器す"
+"らよこさない！ワシらはずっと独立独歩でやってきた。棍棒とスリングも自分たちで"
+"作った。この Annuvin の湿地でワシらに勝てる奴はいない。交易路も、近くの村との"
+"相互防衛協定もワシらがやった。Wesnoth の連中は必要ない。欠片たりとも。"
+
+#. [part]
+#. Some languages, including Norwegian and Old English, don't have a single word for "uncle", dividing it into
+#. mother's-brother vs. father's-brother. Baldras is Harper's mother's brother.
+#. Erwen is Baldras' younger sister, so languages with a special word for that should use it
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:35
+#, fuzzy
+#| msgid ""
+#| "The sun were out today, but it were raining too. Weird mix of brightness "
+#| "and woe. Reminds me of the day Harper’s pa died in that orc raid. Since "
+#| "my sis Erwen passed when he were young, poor lad had nobody but me. Never "
+#| "wanted no kid of my own but... he’s mine to take care of now. Fine lad, "
+#| "that one, just a bit careless like his pa. I needs to keep a good eye on "
+#| "him now, with all them orcs running round here of late."
+msgid ""
+"The sun were out today, but it were raining too. Weird mix of brightness and "
+"woe. Reminds me of the day Harper’s pa died in that orc raid. Since my sis "
+"Erwen passed when she were young, poor lass had nobody but me. Never wanted "
+"no kid of my own but... she’s mine to take care of now. Fine lass, that one, "
+"just a bit careless like her pa. I needs to keep a good eye on her now, with "
+"all them orcs running round here of late."
+msgstr ""
+"今日は日が出ていたが、雨も降っていた。妙な日だ。そういえば、Harper の父親が"
+"オークの襲撃で死んだ日もこんな天気だった。母親、ワシの妹の Erwen もその前に死"
+"んでいたから、あの可哀想な小僧にはワシしかいなかった。ワシも自分の子が欲しい"
+"気持ちはあった……が、あいつの世話はワシがしなきゃならん。元気な小僧だ、まあ、"
+"父親に似たのか、少し注意力に欠けるところはあるが。だから、きちんと目を配って"
+"やらなきゃならん。最近はオークが近場をうろついているからな。"
 
 #. [side]: type=Bandit_Peasant, id=Baldras
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:40
-#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:20
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:47
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:37
 msgid "Baldras"
 msgstr "Baldras"
 
 #. [side]: type=Goblin Pillager, id=Fal Khag
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:70
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:78
 msgid "Fal Khag"
 msgstr "Fal Khag"
 
 #. [side]: type=Goblin Pillager, id=Fal Khag
+#. [side]: type=Orcish Warrior, id=Urk Delek
+#. [side]: type=Saurian Oracle, id=Thhsthss
 #. [side]: type=Orcish Warlord, id=Vashna
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:76
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:120
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:85
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:106
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:131
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:119
 msgid "Orcs"
 msgstr "オーク"
 
 #. [objective]: condition=win
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:99
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:108
 msgid "Defeat all of the Goblin marauders"
 msgstr "すべてのゴブリンの襲撃者を倒す"
 
 #. [objective]: condition=lose
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:103
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:112
 msgid "Goblins reach the village of Dallben"
 msgstr "ゴブリンが Dallben 村に到達する"
 
 #. [objective]: condition=lose
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:107
-#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:76
-#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:136
-#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:97
-#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:118
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:141
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:116
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:100
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:161
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:129
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:155
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:186
 #: data/campaigns/Liberty/scenarios/07_Glory.cfg:156
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:222
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:397
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:225
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:420
 msgid "Death of Baldras"
 msgstr "Baldras の死"
 
 #. [objective]: condition=lose
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:111
-#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:80
-#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:140
-#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:101
-#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:122
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:145
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:120
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:104
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:165
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:133
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:159
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:190
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:160
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:229
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:424
 msgid "Death of Harper"
 msgstr "Harper の死"
 
 #. [event]
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:151
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:166
 msgid "Gatrakh"
 msgstr "Gatrakh"
 
 #. [event]
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:152
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:167
 msgid "Thurg"
 msgstr "Thurg"
 
 #. [event]
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:155
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:160
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:165
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:170
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:175
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:180
 msgid "Krung"
 msgstr "Krung"
 
 #. [event]
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:156
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:161
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:166
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:171
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:176
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:181
 msgid "Gorokh"
 msgstr "Gorokh"
 
 #. [message]: speaker=Fal Khag
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:188
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:203
 msgid ""
-"I long to burn human cities, but until our great chieftains provide us with "
-"sufficient forces we must look to these villagers to feed our wolves and "
-"slake the thirst of our blades."
+"I long to burn human cities, but that weaselly witch thinks we’re only good "
+"enough for these puny villages. These hapless clods barely have anything, "
+"but at least the witch’s gold is good."
 msgstr ""
-"俺は長らく人間の街を焼き払いたいと思っていた。しかし、十分な兵力が無く、俺た"
-"ちの刃の渇きを潤し、オオカミの餌とすべきこの村人どもをただ眺めるしかなかっ"
-"た。しかし、ついに我らの大族長たちが十分な兵力をよこしてくれた。"
+"俺は人間の都市を焼きたい。でも、あのコソ泥魔女は俺たちではこんな小さい村が精"
+"一杯だと思っている。この不運な奴等はロクなものを持ってないだろうが、あの魔女"
+"が金をくれるはずだ。"
 
 #. [message]: speaker=Fal Khag
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:192
-msgid ""
-"Ride, you worms, I want to finish our raid before the hunting party returns "
-"to the human village."
-msgstr "野郎共、駆けろ！狩猟団が村に戻ってくるまでに襲撃を終えるんだ。"
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:207
+msgid "Ride, you worms! Let’s finish our raid before their hunters return."
+msgstr "クソ虫ども、乗れ！駆けろ！狩人が戻る前に村を片付ける！"
 
 #. [event]
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:201
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:216
 msgid "Jalak"
 msgstr "Jalak"
 
-#. [event]
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:202
+#. [unit]: type=Footpad_Peasant, id=Delurin
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:220
 msgid "Delurin"
 msgstr "Delurin"
 
 #. [event]
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:203
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:228
 msgid "Red"
 msgstr "Red"
 
 #. [event]
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:204
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:229
 msgid "Ordo"
 msgstr "Ordo"
 
 #. [event]
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:205
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:230
 msgid "Novus"
 msgstr "Novus"
 
 #. [event]
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:206
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:231
 msgid "Teneor"
 msgstr "Teneor"
 
 #. [event]
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:207
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:232
 msgid "Kembe"
 msgstr "Kembe"
 
 #. [event]
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:208
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:233
 msgid "Treagh"
 msgstr "Treagh"
 
 #. [unit]: type=Footpad_Peasant, id=Harper
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:215
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:240
 msgid "Harper"
 msgstr "Harper"
 
 #. [message]: speaker=Red
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:241
+#. Other country folk also have accents
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:268
 msgid ""
-"Look, goblin riders approach! You were right, they were going to raid "
-"Dallben while we were gone."
+"Look, goblin riders approach! You was right, they was going to raid Dallben "
+"while we was gone."
 msgstr ""
-"見ろ、ゴブリンライダー達が接近してくる！あんたが正しかった。やつら、俺達が留"
+"見ろ、ゴブリンライダーが近くに来ている！あんたが正しかった。やつら、俺達が留"
 "守にしている間に Dellben を襲うつもりだったんだ。"
 
 #. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:245
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:272
 msgid ""
-"We must stop them before they reach the village. Damn the crown, they have "
-"long since forgotten about us out here."
+"We gots to stop them or they’ll burn down the whole village. Damn these "
+"goblins and damn the Crown. We always be havin’ to fight for ourselves."
 msgstr ""
-"やつらが村に達する前に止めなければならん。いまいましい王都の連中め。あやつ"
-"ら、ここに住むわしらのことをずっと忘れてやがる。"
+"あいつらを止めないと、村は焼かれてしまう。ゴブリンに王、あのクソ野郎どもが！"
+"結局ワシらは自分達でやるしかないのだ。"
 
 #. [message]: speaker=Harper
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:249
+#. Harper has a bit of an accent, but not as much as Baldras. She's a bit reckless as Baldras alludes to, but is more polite.
+#. Harper is quite the tomboy and her personality should reflect that, she should use words that are exciting and high spirited
+#. She's also pretty young (teenagerish) so her dialogue should reflect some lack of experience or immaturity
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:279
 msgid ""
-"That goblin leader is heading full-speed straight for Dallben. But we’ll "
-"need to chase them all down if we’re going to stop them."
+"Uncle, we got no time to talk! Them riders are heading full speed straight "
+"for Dallben. We’ll need to chase them down through those woods, and fast, or "
+"we won’t be able to catch up."
 msgstr ""
-"ゴブリンのリーダーはまっすぐ全速力で Dallben に向かってるぜ。しかし、ゴブリン"
-"どもを止めるには、リーダーだけじゃなくて奴ら全員を捕まえないといけねえ。"
+"叔父さん、おしゃべりしている暇は無い！あいつらは全速で Dallben に向かってい"
+"る。早く森を抜けて追わないと、捕まえられない。"
 
 #. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:253
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:283
 msgid ""
-"Do it. Try to hold them back until us old-timers can get there and finish "
-"them off."
+"Do it. Hold them beasts back till us old-timers get there to finish ‘em off."
 msgstr ""
-"やるしかない。わしらジジイが追いついて奴らを仕留めるまで、なんとか押しとどめ"
-"てくれ。"
+"行け。ワシら老いぼれが追いつくまでなんとか足止めしてくれ。後はワシらがなんと"
+"かする。"
 
 #. [message]: speaker=Baldras
-#. Some languages, including Norwegian and Old English, don't
-#. have a single word for "uncle", dividing it into
-#. mother's-brother vs. father's-brother. Baldras is
-#. Harper's mother's brother. In some human societies,
-#. including the Navaho and Akan, this would give him a
-#. special responsibility for the boy.
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:263
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:287
 msgid ""
-"And Harper... don’t get yourself killed. I’m responsible for you now that "
-"your father is gone, and I won’t dishonor his memory by breaking my promise "
-"to keep you safe."
+"And Harper... don’t be getting reckless on me today. Your old man died like "
+"that, charging into a pack of goblins by ‘imself. I won’t lose ya the same "
+"way."
 msgstr ""
-"それから Harper……死ぬなよ。お前の親父が死んじまった今、わしがお前の保護者だか"
-"らな。お前を危険な目には遭わせないという約束を破って、あいつに不義理を働くわ"
-"けにはいかないからな。"
+"それと Harper…… 無茶はするな。お前も知っている男は一人でゴブリンの群れに突っ"
+"込み、そして死んだ。同じようなことになったら悲しい。"
 
 #. [message]: speaker=Harper
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:267
-msgid "... I know... All right now, let’s stop these goblins!"
-msgstr "……分かってる。それじゃあ、ゴブリンどもを止めにいくぞ！"
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:291
+msgid "I know, I know, no need to worry so much. All right, let’s go!"
+msgstr "わかってる、わかってる、だからそんなに心配しないでくれ。良し、行くぞ！"
 
 #. [message]: speaker=Harper
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:300
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:305
 msgid ""
-"We are barely able to survive these orc raids. We lost two men last week, "
-"more today... yet Weldyn does nothing!"
+"These orc raids keep getting harder and harder to hold off. Feels like every "
+"new day’s just another chance for us to lose everything..."
 msgstr ""
-"俺たちはオークの襲撃をかろうじて凌いでいるだけだ。先週も二人やられた。そして"
-"今日も……それでも Weldyn の連中は動かねぇ！"
-
-#. [message]: speaker=Harper
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:307
-msgid ""
-"We are barely able to survive these orc raids. We lost two men last week, "
-"more could have died today... yet Weldyn does nothing!"
-msgstr ""
-"俺たちはオークの襲撃をかろうじて凌いでいるだけだ。先週も二人やられた。そして"
-"今日も誰かが死んでてもおかしくなかった……それでも Weldyn の連中は動かねぇ！"
+"オークの襲撃は日に日に激しくなっていて、守るのも難しくなる一方だ。今日こそ全"
+"てを失ってしまうかもしれない、いつもそんなことばかり考えている……"
 
 #. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:309
+msgid ""
+"That Garard II stopped sendin’ patrols out here a while back. Stinker "
+"probably sent his troops on some new war against them orcs. Don’t really "
+"matter. Technically Annuvin be under the charge of Elensefar, but you don’t "
+"see ‘em coming to help us either."
+msgstr ""
+"Garard II 世がパトロールの兵士をよこさなくなってからだいぶ経つ。クソ野郎は"
+"オークとの戦に部隊を送ることしか考えていないのだろう。あんなものに頼っても無"
+"駄だ。それと、理屈としては、Annuvin は Elensefar に監督されているはずだ。ま"
+"あ、そちらがワシらを助けに来てくれるわけでもないが。"
+
+#. [message]: speaker=Harper
 #: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:313
 msgid ""
-"The King stopped sending patrols out here once the war started. Once that "
-"happened, the burden fell to us. We are citizens of Wesnoth, and as long as "
-"her banner flies we will resist the horde."
+"Then why do we got to pay taxes to the King? Maybe Elensefar doesn’t help "
+"us, but at least they don’t take our gold."
 msgstr ""
-"戦争が始まるやいなや、王は巡視兵をこの土地へ寄越さなくなった。ひとたび戦争が"
-"起これば、その重荷はわしらに降りかかる。しかしそれでもわしらは Wesnoth の民"
-"だ。その旗のたなびく限り、大軍でも押し返してみせよう。"
-
-#. [message]: speaker=Harper
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:317
-msgid "The banner will fly over a ghost town if help does not come soon."
-msgstr ""
-"すぐに助けが来なければ、その旗もゴーストタウンに翻ることになるだろうな。"
-
-#. [message]: speaker=Harper
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:347
-msgid ""
-"They’re getting closer to our village! What about the town guards, can they "
-"help us?"
-msgstr "やつらが村に迫っている！番兵はどうしたんだ、手伝ってくれねえのか？"
+"それならなんで俺たちは王に税金を払っているんだ？Elensefar は俺たちを助けてく"
+"れないが、逆に俺たちの金を持ち去ることも無いじゃないか。"
 
 #. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:351
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:317
+#, fuzzy
+#| msgid ""
+#| "We don’t got no choice, lad. If I don’t gives them what they want, "
+#| "they’ll make trouble for everyone in Dallben."
 msgid ""
-"They’ll come out when they see those riders, or us, approaching, but there "
-"aren’t many of them... I wouldn’t count on them being able to protect the "
-"village alone for long."
+"We don’t got no choice, lass. If I don’t gives them what they want, they’ll "
+"make trouble for everyone in Dallben."
 msgstr ""
-"ウルフライダーが迫ってくるのを見れば、あるいはわしらが近づけば出てくるだろ"
-"う。しかし、大した人数はいない…… 連中だけで長く村を守れるとは思えんな。"
+"ワシらに選択肢なんて無いのさ。あいつらが欲しがるものをワシが渡さなかった場"
+"合、Dallben の全員に迷惑がかかってしまうのさ。"
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:321
+msgid ""
+"But we can’t keep doing this forever, Uncle. If we stay like this, those "
+"orcs will eventually overrun us. What should we do?"
+msgstr ""
+"叔父さん、そうは言っても、ずっとこのままではいられない。このままじゃ、いずれ"
+"俺たちがオークに太刀打ちできなくなる日が来る。どうしたら良い？"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:325
+msgid ""
+"I don’t know, Harper. I just don’t know. Alls I can say is we’re on our own "
+"out here."
+msgstr ""
+"わからないんだ、Harper。本当にわからないんだ。唯一ワシにわかることは、ワシら"
+"の力でどうにかしなきゃならない、ってことだけだ。"
+
+#. [message]: speaker=Harper
+#. Harper has a scar from a fire burn on the right side of her face
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:347
+msgid "My face kinda itches... I gotta be careful around these big ones."
+msgstr ""
+
+#. [message]: speaker=Fal Khag
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:364
+msgid "Time to feast on these puny pinkskins."
+msgstr "さあ、弱虫の肉をたっぷり食っていいぞ。"
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:369
+msgid "Hey! Who ya calling puny?"
+msgstr "ハン！誰が弱虫だって？"
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:384
+msgid "Ahh! I <i>really</i> don’t like fire..."
+msgstr ""
+
+#. [message]: speaker=Fal Khag
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:396
+msgid "I was... too weak..?"
+msgstr "俺は…… そんなに弱かったのか……？"
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:401
+msgid "Silly goblin."
+msgstr "愚かなゴブリンだな。"
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:416
+msgid ""
+"Hey, someone left their pack here. I could use it to carry some more rocks."
+msgstr ""
+"おっ、誰かが鞄を忘れていったのか。これを使えば、より多くの岩を運べそうだ。"
+
+#. [message]: speaker=unit
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:449
+msgid "Spooky."
+msgstr "不気味だ。"
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:489
+msgid "They’re getting close to Dallben! What should we do?"
+msgstr "やつらが村に迫っている！どうすれば良い？"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:493
+msgid ""
+"There be a couple guards in the village. Might be able to slow them wolves "
+"down if they gets closer."
+msgstr "村には二人の守衛を残している。足止めくらいはできるはずだ。"
 
 #. [event]
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:364
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:506
 msgid "Remald"
 msgstr "Remald"
 
 #. [event]
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:365
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:507
 msgid "Wolmas"
 msgstr "Wolmas"
 
 #. [event]
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:370
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:512
 msgid "Jasken"
 msgstr "Jasken"
 
 #. [message]: speaker=Wolmas
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:377
-msgid "What’s happening here? Why are you running like mad, $unit.name|?"
-msgstr ""
-"何が起こっているんだ？$unit.name|、なんでそんなにあわてて走ってるんだ？"
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:519
+msgid "What’s happening here? Why be you running like mad, $unit.name|?"
+msgstr "何が起きているんだ？$unit.name|、なんでそんなに必死に走ってるんだ？"
 
 #. [message]: speaker=unit
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:381
-msgid "Goblin riders on the hunt. We must not let any of them to the village!"
-msgstr "ウルフライダーの襲撃だ。一匹たりとも村に入れるな！"
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:523
+msgid ""
+"Goblin riders be on the hunt, headed right for Dallben. We gots to stop them!"
+msgstr ""
+"狩りの途中でゴブリンライダーを見つけた。連中はまっすぐ Dallben に向かってい"
+"る。止めないと！"
 
 #. [message]: speaker=Wolmas
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:388
-msgid "Look! Goblin riders are on the hunt — and heading right for Dallben!"
-msgstr "見ろ！ウルフライダーどもの襲撃だ…… Dallben にまっすぐ向かって来るぞ！"
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:530
+msgid "Look! Goblin riders be on the hunt, headed right for Dallben!"
+msgstr "見ろ、ゴブリンライダーだ！まっすぐ Dallben に向かって来ている！"
 
 #. [message]: speaker=Remald
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:392
-msgid "Halt!"
-msgstr "止まれ！"
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:534
+msgid "We gots to stop them!"
+msgstr "俺たちで止めるぞ！"
 
-#. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:412
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:554
 msgid ""
-"The goblins reached the village! There will surely be nothing left when they "
-"are done pillaging it."
-msgstr ""
-"ゴブリンが村に着いた！やつらに略奪されちまったら、何も残らねぇだろうよ……"
-
-#. [message]: speaker=narrator
-#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:425
-msgid ""
-"None remarked on the passing of the tiny, isolated frontier town. It was but "
-"a harbinger of the evil to come under the tyranny of Asheviere."
-msgstr ""
-"辺境にぽつんと存在する小さな町の消滅など、誰一人として気にしませんでした。し"
-"かし、それは Asheviere の暴政がもたらす悪夢の前触れだったのです。"
+"The goblins reached the village! Now there’ll be nothing left after they "
+"raid our homes..."
+msgstr "ゴブリンが村に着いてしまった！俺たちの村もこれでおしまいだ……"
 
 #. [scenario]: id=02_Civil_Disobedience
 #: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:4
 msgid "Civil Disobedience"
-msgstr "市民の反抗"
+msgstr "民の反抗"
 
+#. [label]
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:16
+msgid "Baldras’ farm"
+msgstr "Baldras の畑"
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:21
+#, fuzzy
+#| msgid ""
+#| "Baldras’ journal, 6 Deeproot, 501 YW:\n"
+#| "\n"
+#| "Me and Harper visited Erwen’s grave today. I helped the lad pick her a "
+#| "bunch of flowers — we even found some of her favorite, blue lillies. "
+#| "Harper don’t remember her much, but he still thinks lots about her. Lad "
+#| "reminds me so much of his ma often times, real bright and brassy, even if "
+#| "he don’t got her sense or wits. I’m just hoping he be learning more with "
+#| "time."
+msgid ""
+"Baldras’ journal, 6 Deeproot, 501 YW:\n"
+"\n"
+"Me and Harper visited Erwen’s grave today. I helped the lass pick her a "
+"bunch of flowers — we even found some of her favorite, blue lillies. Harper "
+"don’t remember her much, but still thinks lots about her. Lass reminds me so "
+"much of her ma often times, real bright and brassy, even if she don’t got "
+"the same sense or wits. I’m just hoping she be learning more with time."
+msgstr ""
+"Baldras の日記、Wesnoth 暦 501 年 深根の月 6 日：\n"
+"\n"
+"ワシと Harper は Erwen の墓を訪れた。小僧が花を摘むのを手伝った ── 幸運なこと"
+"に、あいつの好きだった青いユリの花を見つけることができた。Harper はあいつのこ"
+"とをあまり覚えていない。しかし、あいつのことを良く考えているようだ。この小僧"
+"を見ていると良くあいつのことを思い出す。物事の感じ方や使う言葉は違えども、あ"
+"いつと同じように、明るくて厚かましい。こいつは長生きして、色々学んでいって欲"
+"しいと思う。"
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:27
+msgid ""
+"Speaking of sense, I gots me a bad feeling in my gut about today. I’d better "
+"ready our hunting troop when I get back to the village, just in case..."
+msgstr ""
+"そういえば、なぜだか今日は嫌な予感が頭から離れない。村に戻っても狩人連中には"
+"警戒を続けさせておいた方が良さそうだ、念のために……"
+
+#. [side]: type=Bandit_Peasant, id=Baldras
+#. [side]
 #. [side]: type=Bandit, id=Baldras
+#. [side]: type=Highwayman_Peasant, id=Relana
 #. [side]: type=General, id=Lord Maddock
 #. [side]: type=Rogue, id=Hans
 #. [side]: type=Highwayman, id=Baldras
 #. [side]: type=Shadow Lord, id=Helicrom
-#. [side]
-#. [side]: type=Bandit_Peasant, id=Baldras
-#. [side]: type=Highwayman_Peasant, id=Relana
-#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:26
-#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:63
-#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:38
-#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:67
-#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:37
-#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:57
-#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:35
-#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:91
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:56
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:76
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:50
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:44
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:83
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:48
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:78
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:38
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:59
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:71
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:128
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:82
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:103
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:46
 #: data/campaigns/Liberty/scenarios/07_Glory.cfg:132
 msgid "Rebels"
 msgstr "反乱軍"
 
 #. [side]: type=Cavalier, id=Tarwen
-#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:35
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:53
 msgid "Tarwen"
 msgstr "Tarwen"
 
+#. [side]: type=Cavalier, id=Tarwen
 #. [side]: type=General, id=Kestrel
 #. [side]: type=Master Bowman, id=Quentin
 #. [side]
 #. [side]: type=Shock Trooper, id=Linneus
 #. [side]: type=Lieutenant, id=Archarel
 #. [side]: type=General, id=Dommel
-#. [side]: type=Cavalier, id=Tarwen
-#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:41
-#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:78
-#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:48
-#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:64
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:93
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:111
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:91
-msgid "Asheviere"
-msgstr "Asheviere"
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:60
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:82
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:85
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:101
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:121
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:140
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:88
+msgid "Weldyn"
+msgstr "Weldyn"
 
 #. [objective]: condition=win
-#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:72
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:96
 msgid "Kill the Wesnoth army captain, Tarwen"
 msgstr "Wesnoth 軍の隊長 Tarwen を殺す"
 
 #. [message]: speaker=Harper
-#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:123
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:152
 msgid "Look, riders approach."
-msgstr "見てくれ、騎兵が近づいてきたぞ。"
+msgstr "おっ、騎兵が近づいてくるぞ。"
 
 #. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:127
-msgid "Stand fast, nephew."
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:156
+#, fuzzy
+#| msgid "Stand fast, nephew."
+msgid "Stand fast, Harper."
 msgstr "気圧されるなよ、Harper。"
 
 #. [message]: speaker=Tarwen
-#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:140
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:169
 msgid ""
-"By order of the Queen, the magistrate of this town is ordered to travel with "
-"us to Elensefar for vetting."
+"By order of the Queen, the magistrate of this town is to travel with us to "
+"Elensefar for vetting."
 msgstr ""
-"女王陛下の命令だ。取調べのため、ここの村長は我らとともに Elensefar まで行って"
-"もらう。"
+"女王陛下よりの命令だ。この町の長よ、われらと共に Elensefar に向かい、審問を受"
+"けるのだ。"
 
 #. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:144
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:173
 msgid ""
-"The Crown has long since abandoned our village to its own affairs. We have "
-"been offered no aid against the orc raids — nor have we expected any. Your "
-"orders are not ours to heed."
+"The Crown did long since abandon our village. You Wesnothians be too busy "
+"countin’ the gold from our taxes to be sending aid against them orcs. Nobody "
+"here be leaving to nowhere."
 msgstr ""
-
-#. [message]: speaker=Harper
-#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:148
-#, fuzzy
-#| msgid "Garard is the King of Wesnoth. We are ruled by no queen."
-msgid "Besides, Garard is the King of Wesnoth. We are ruled by no queen."
-msgstr "Wesnoth の国王は Garard だ。女王なんか知らねぇよ。"
+"ワシらの村をずっと見捨てていた国が何を言っている。貴様等 Wesnoth 人は税で集め"
+"た金をオークとの戦いに送るのに忙しいんじゃなかったのか？そんな命令を聞いてや"
+"る義理は無い。"
 
 #. [message]: speaker=Tarwen
-#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:152
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:177
 msgid ""
-"Insolent peasants, you will kneel before your betters! Asheviere is the "
-"Queen of Wesnoth. The King fell three weeks ago at Abez. I shall not bandy "
-"words with you. Your magistrate will be coming with us, and we do not care "
-"if it is dead or alive."
+"Insolent peasant. Try not my patience, else I shall be forced to drag thy "
+"deceased corpse back with me to the city."
 msgstr ""
-"無礼な農民風情が、頭が高いぞ！今は Asheviere 陛下が Wesnoth の女王なのだ。王"
-"は三週間前に Abez で倒れた。こちらは貴様らと下らん話し合いをするつもりはな"
-"い。村長は我々に同行しろ、そういう命令だ。ついでに言っておくと、そいつの生死"
-"は問われていないぞ。"
+"無知な農民の分際で。私を怒らせない方が良いぞ、どの道お前は町へ行くことになる"
+"のだ。どうせ行くのならば、死体にならずに済む方が良いのではないか？"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:181
+msgid "Try it then, stinker."
+msgstr "やってみろ、クソ野郎。"
 
 #. [message]: speaker=Tarwen
-#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:186
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:185
+msgid "As you wish."
+msgstr "望みどおりにしてやろう。"
+
+#. [message]: speaker=Tarwen
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:219
 msgid "Guard the gate."
 msgstr "門を固めろ。"
 
-#. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:199
-msgid "Harper, get out of here. This is no battle for you."
-msgstr "Harper、ここから逃げろ。お前が戦う必要はない。"
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:232
+msgid "<i>Uncle, since when did we have a queen?</i>"
+msgstr "<i>なあ、叔父さん、いつの間に女王なんてのができたんだ？</i>"
 
 #. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:204
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:236
 msgid ""
-"I am the magistrate of Dallben, and it is <i>you</i> who will be leaving "
-"Dallben, be it dead or alive."
+"<i>Since a few years back, I thinks, but weren’t never her giving out no "
+"orders...</i>"
 msgstr ""
-"わしが Dallben の村長だ。この Dallben から出て行くのは<i>てめえの方</i>だよ、"
-"生きて出られるかは知らねぇがな。"
+"<i>最近 2, 3 年のことじゃないのか？いや、そんな奴から命令が来たことがないだけ"
+"かもしれない……</i>"
 
-#. [message]: speaker=Tarwen
-#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:229
-msgid "Get back, you cur!"
-msgstr "下がれ、下郎！"
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:240
+msgid ""
+"<i>It don’t really matter right now. Harper, get yerself out o’ here. This "
+"be no kind of battle for you.</i>"
+msgstr ""
+"<i>しかしそれはどうでも良い。Harper、早くここを離れるんだ。これはお前が関わる"
+"ような戦いじゃない。</i>"
 
-#. [message]: speaker=second_unit
-#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:243
-msgid "Get out of my village!"
-msgstr "俺の村から出て行け！"
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:244
+msgid "I can fight!"
+msgstr "俺も戦える！"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:248
+msgid "<i>Harper, do what I says to ya.</i>"
+msgstr "<i>Harper、ワシの言うことを聞いてくれ。</i>"
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:252
+msgid "We’re in this together. Death to the Wesnothians!"
+msgstr "俺だけ仲間外れにしないでくれ。Wesnoth 人に死を！"
 
 #. [message]: speaker=Baldras
 #: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:256
-msgid ""
-"Our lives were hard enough when we were beneath the attention of the Crown. "
-"But now I fear things will be worse."
-msgstr ""
-"王の庇護の下にあったときでもわしらの生活は苦しかったが、しかし、今や事態はさ"
-"らに悪い方向に向かっている気がしてならん。"
+#, fuzzy
+#| msgid "Impulsive lad..."
+msgid "Impulsive lass..."
+msgstr "この跳ねっ返りめ……"
+
+#. [message]: speaker=second_unit
+#. this is from Monty Python and the Holy Grail :)
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:269
+msgid "Help, help! I’m being repressed!"
+msgstr "助けて、助けてくれ！"
 
 #. [message]: speaker=Harper
-#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:261
-msgid "We must tell the people of Delwyn about this."
-msgstr "Delwyn の連中にこのことを知らせなきゃな。"
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:281
+msgid "They just killed an innocent man! Murderers!"
+msgstr "無実の農民を殺すなんて！この殺人鬼どもめ！"
+
+#. [message]: speaker=Tarwen
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:286
+msgid "Cry thine eyes out for me, peasant."
+msgstr "せいぜい泣き喚くが良い。"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:299
+msgid "I oughta bring out the good mace to fight off these thugs."
+msgstr "あの強盗と戦うのだから、良いメイスを持っていくか。"
+
+#. [message]: speaker=Tarwen
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:345
+msgid "Back, back ye curs!"
+msgstr "戻れ！臆病者どもよ、戻って私を守れ！"
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:357
+msgid "Take that, you bullies!"
+msgstr "これでも食らえ、この野郎！"
+
+#. [message]: speaker=second_unit
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:371
+msgid "Get out of my village!"
+msgstr "俺の村から出て行け！"
 
 #. [message]: role=Advisor
-#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:274
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:405
 msgid ""
-"That is true. We have always flown to their aid, and they to ours. This is "
-"something we should face together."
-msgstr ""
-"その通りだ。あいつらに何かあればいつもおれたちは助けに飛んでいったし、また助"
-"けられてもきた。これはみんなで一緒に対峙するべき事案だ。"
+"We beat their leader, but a couple of them riders escaped. What should we do?"
+msgstr "敵リーダーは倒したが、騎兵が何騎か逃げてしまった。どうする？"
 
 #. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:279
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:410
 msgid ""
-"Very well. We will go to Delwyn and share counsel with them. I never thought "
-"Wesnoth would fall into darkness. Now, not only do the orcs threaten our "
-"lands, but some sinister thing is happening with the ascent of the Queen to "
-"the throne."
+"Somethin’ be very wrong here. That Garard weren’t never no hero or nothing, "
+"but his men never would’ve attacked us. The Queen must’ve did something to "
+"him."
 msgstr ""
-"そうだな。Delwyn に行ってあいつらと相談しよう。Wesnoth が闇に堕ちるなど、わし"
-"は想像したこともなかった。しかし今、女王の誕生によって、オークどもがわしらの"
-"土地を脅かすだけでなく、何かそれ以上に悪いことが起こっているようだ。"
+"何かがおかしい。Garard はヒーローにはほど遠い奴だったが、少なくともワシらを攻"
+"撃したことは無い。Garard に何かがあって、女王とやらが何かをしているのか？"
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:416
+msgid ""
+"We’ve got to tell the people of Delwyn about this. Ol’ magistrate Relana "
+"will have some ideas."
+msgstr ""
+"Delwyn の人達と相談した方が良い。長老 Relana なら何か考えが浮かぶかもしれな"
+"い。"
+
+#. [message]: role=Advisor
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:421
+msgid ""
+"That’s true. Whenever there’s been troubles, we’ve always looked to her for "
+"help."
+msgstr ""
+"そうだな。ここらで何かあったら、俺たちはいつもあの人を頼っていたんだから。"
 
 #. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:284
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:426
 msgid ""
-"Today we may no longer be citizens of Wesnoth. I wish it could be otherwise, "
-"but we are now outlaws."
+"Fine. We’ll go to Delwyn, see what Relana gots to say. With them riders so "
+"eagerly attackin’ us today, I’m thinking Delwyn will be under threat too."
 msgstr ""
-"わしらはもう Wesnoth の民ではないのかもしれん。どうしてこうなったのか、わしら"
-"は今や無法者だ。"
+"良し。Delwyn に行って Relana の考えを聞こう。ワシらの村にあれだけの騎兵が押し"
+"寄せてきたんだ、Delwyn も似たような状況になっている可能性が高い。"
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:431
+msgid "So we’ll have to fight them Wesnothians again?"
+msgstr "だとすると、また Wesnoth と戦うことになるのか？"
 
 #. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:355
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:436
 msgid ""
-"Oh, no! We have run out of time, they have arrived with reinforcements..."
-msgstr "なんてことだ！ 時間がかかりすぎて、援軍が来ちまった……"
-
-#. [message]: speaker=narrator
-#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:368
-msgid ""
-"They would be remembered only as traitors rightly put down by the Queen’s "
-"lances. And in the dark years to come, woe betide any who questioned it."
+"Alls I can say for certain is we’ve made ourselves enemies of the Crown. "
+"They’ll be hunting us now."
 msgstr ""
-"彼らは女王の槍において正しく鎮圧された反逆者としてのみ記憶されるでしょう。そ"
-"して、来たる暗黒の世ではそれに疑問を抱く全ての者に災いが降りかかるでしょう。"
+"確実なことは、ワシらが国の敵になってしまったってことだ。連中はワシらを狙って"
+"くるだろう。"
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:441
+msgid "Then we’re outlaws."
+msgstr "そんなら俺たちは無法者ってことか。"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:446
+msgid "Aye, outlaws."
+msgstr "ああ、無法者だ。"
+
+#. [message]: speaker=Reinforcement Knight
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:539
+msgid "At your order, Captain."
+msgstr "隊長、ご命令を。"
+
+#. [message]: speaker=Tarwen
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:543
+msgid "Slay them all."
+msgstr "皆殺しにしろ。"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:547
+msgid ""
+"Curses! Their reinforcements has arrived. We gots no chance to fight ‘em off "
+"now..."
+msgstr "畜生！援軍が来てしまったか。もうどうにもならない……"
 
 #. [scenario]: id=03_A_Strategy_of_Hope
 #: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:4
 msgid "A Strategy of Hope"
-msgstr "希望の計画"
+msgstr "希望への道筋"
 
 #. [part]
-#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:18
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:17
 msgid ""
-"Fearing that the Queen’s army would return in force in the wake of its "
-"fallen patrol, Baldras and his men fled Dallben. They tracked to Delwyn and "
-"sent ahead for the magistrate, Relana, to meet them in a secluded strath in "
-"the swamps."
+"Baldras’ journal, 10 Deeproot, 501 YW:\n"
+"\n"
+"Been a strange few days. Had to leave Dallben real quick. We grabbed "
+"whatever we could in just a day, some food, some clothes, sis’s lucky "
+"bracelet... and made off for Delwyn as quick as these old bones would let "
+"me. It be a three day journey there for me, but I sended Harper ahead for "
+"Relana first. Said we’d meet her in the usual hiding spot in the swamp."
 msgstr ""
-"巡視兵の死をきっかけとして女王の軍勢が押し寄せる可能性を恐れ、Baldras と仲間"
-"たちは Dallben から脱出しました。彼らは Delwyn へと向かい、長である Relana に"
-"使者を送り、人里から離れた沼地の峡谷で落ち合うことにしました。"
+"Baldras の日記、Wesnoth 暦 501 年 深根の月 10 日：\n"
+"\n"
+"ここ数日、奇妙なことばかりだ。速やかに Dallben を離れねばならない。食料、衣"
+"類、妹の幸運のブレスレット……手近にあるものを一日の内に全てかき集め、老骨にで"
+"きる限り速やかに Delwyn へと向かった。ワシにとっては 3 日の旅路だが、それに先"
+"立って Harper を先に Relana の元に送った。沼地にあるいつもの隠れ家で落ち合う"
+"よう、Relana に伝えるために。"
 
 #. [part]
-#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:22
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:23
 msgid ""
-"As morning dawned over the day after next, they found Relana already waiting "
-"for them."
+"This whole mess be utter stupidness. Of all the things to be driving us from "
+"our home, how did it ended up being those accursed Wesnothians? Blasted "
+"Crown. Don’t matter whoever’s the one giving out them orders, those stinkers "
+"in Weldyn always be making trouble for us countryfolk."
 msgstr ""
-"丸一日とさらに一晩をかけて目的の場所にたどり着くと、そこでは既に Relana が"
-"待っていました。"
+"近頃のゴタゴタは全くもって意味がわからない。ワシらを村から追い出そうとする者"
+"が、なんでよりにもよって Wesnoth のクソ野郎共なのだ？王族ってやつは本当にクソ"
+"だ。実際に命令を出したのが誰かなんて知ったこっちゃないが、Weldyn にいるあのク"
+"ソ野郎共はワシら辺境民にとって本当にロクでもないことしか言わない。　"
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:27
+msgid ""
+"I’m too old for all this. Them orc raids already be plenty for me to deal "
+"with. I don’t be keen on fighting no war with Wesnoth. But... I guess, I "
+"don’t really got no choice either. Harper’s still too young to be leading "
+"anyone, and it don’t seem like anyone else in the village be suitable."
+msgstr ""
+"ワシのような年寄りはどうしていいのかわからん。ワシはオークの襲撃に対応するだ"
+"けで精一杯だ。Wesnoth と戦争なんざやりたくない。しかし……そうも言っていられな"
+"いのかもしれない。Harper はまだ若すぎるし、村の他の者にしても、皆を導けるよう"
+"なものはいない。"
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:31
+#, fuzzy
+#| msgid ""
+#| "In times like these... I still wish Erwen was here with us. Little sis "
+#| "were always the better of us two. She always knew how to keep her temper "
+#| "and her wits about her. What would she say to me now? Probably something "
+#| "like, “Quit yapping ya old dog and focus on what you’re doing. We’ve got "
+#| "to be getting them people to safety.” Cheeky kid, that one. But, she’d be "
+#| "right, I has me a responsibility to our people. Got a lot of trouble "
+#| "ahead of us..."
+msgid ""
+"In times like these... I still wish Erwen was here with us. Little sis were "
+"always the better of us two. She always knew how to keep her temper and her "
+"wits about her. What would she say to me now? Probably something like, “Quit "
+"yapping ya old dog and focus on what you’re doing. What’s done is done. Just "
+"look at what’s ahead of ya and get them people to safety.” Cheeky, that one. "
+"But, she’d be right, I has me a responsibility to our people. Got a lot of "
+"trouble ahead of us..."
+msgstr ""
+"こんなとき Erwen がいてくれたら……どんなに心強かっただろう。あのチビな妹はいつ"
+"もワシよりも良くできる奴だった。あいつはどんな時でもいつも通りに振る舞い、"
+"しゃべることができた。今のワシを見たらあいつは何と言うだろう？「老いぼれ犬は"
+"愚痴を垂らしてないで今に集中しなさい。あなたがみんなの安全を何とかするんで"
+"しょう？」、といったところだろうか。本当に生意気な奴だ。しかし、今度もどうや"
+"らあいつが正しそうだ。ワシは責任ある身だ、皆のためになんとかしなきゃならん。"
+"前を向き、山のように積み上がった問題と向き合うのだ……"
 
 #. [side]: type=Highwayman_Peasant, id=Relana
-#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:47
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:57
 msgid "Relana"
 msgstr "Relana"
 
 #. [side]: type=Orcish Warrior, id=Urk Delek
-#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:75
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:86
 msgid "Urk Delek"
 msgstr "Urk Delek"
 
-#. [side]: type=Orcish Warrior, id=Urk Delek
 #. [side]: type=Saurian Oracle, id=Thhsthss
-#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:94
-#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:118
-msgid "Evil"
-msgstr "悪"
-
-#. [side]: type=Saurian Oracle, id=Thhsthss
-#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:103
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:115
 msgid "Thhsthss"
 msgstr "Thhsthss"
 
 #. [objective]: condition=win
-#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:132
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:157
 msgid "Defeat both enemy leaders"
 msgstr "敵のリーダーを両方とも倒す"
 
 #. [objective]: condition=lose
-#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:144
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:169
 msgid "Death of Relana"
 msgstr "Relana の死"
 
-#. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:178
-msgid ""
-"Relana, thank you for welcoming our messenger and agreeing to meet with us. "
-"In your many years as Delwyn’s magistrate I have never known your judgment "
-"to err."
-msgstr ""
-"Relana、使いの者を受け入れ、わしらに会うのを承諾してくれて感謝する。あんたは"
-"長年 Delwyn の村長として働いているが、その間に一度たりとも判断を誤ったことは"
-"なかった事を、わしは知っている。"
-
 #. [message]: speaker=Relana
-#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:182
-msgid ""
-"It has been a long time, old friend. Your news worries us. Yet, there is no "
-"problem we have not worked out together."
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:203
+msgid "Baldras! Ya made it! Lil Harper here told me all about what happened."
 msgstr ""
-"旧友よ、久しぶりだね。あんたからの知らせを聞いて不安も覚えたが、この秘密の会"
-"議場で解決しなかった問題などないね。"
+"Baldras！良くやったね！何があったのかは Harper の小僧から聞いているよ。"
 
 #. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:186
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:207
 msgid ""
-"You do not understand. We attacked a Wesnoth army patrol. Not only that, the "
-"leader was no man I had ever seen in Annuvin Province before. Never has one "
-"been sent out here as a patrol captain who was so ruthless and cruel."
+"Aye, Relana. It were one o’ the Queen’s patrol, strange as it do sound. "
+"Turns out they was itchin’ to attack us soon as I wasn’t willing to leave "
+"with ‘em."
 msgstr ""
-"そんな簡単な問題じゃないぞ。わしらは Wesnoth の巡視隊を攻撃したんだ。それだけ"
-"じゃない、あの指揮官は Annuvin 州じゃ見たことがない奴だった。これまで、あれほ"
-"ど非情で残虐なやつが巡視隊長として赴任してきたことはなかったぞ。"
+"ああ、Relana。女王の部下とかいうのが来た。何のことだかわからないが。連中には "
+"Elensefar までついて来いと言われたが、ワシがそれを拒否すると、連中はすぐさま"
+"攻撃してきた。"
 
 #. [message]: speaker=Harper
-#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:190
-msgid ""
-"Had they taken my uncle, they would have surely shown up in Delwyn today "
-"with the same ultimatum. As it is, several riders escaped."
-msgstr ""
-"もしあいつらが叔父を連れてったとしたら、すぐに Delwyn にもやってきて同じ最後"
-"通牒を伝えただろうな、確実に。それはそうと、騎兵に何人か逃げられちまった。"
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:211
+msgid "But we fought those ugly scoundrels off!"
+msgstr "しかし、俺たちはあの悪党共を打ち破った！"
 
 #. [message]: speaker=Relana
-#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:194
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:215
 msgid ""
-"Well, it won’t be long until they report back to the local garrison with the "
-"details of your encounter."
+"Queen’s patrol, ya say? They sent them a messenger our way a couple days "
+"ago, demanding our allegiance to some ‘Asheviere’. Weren’t that Garard’s "
+"young bride or something? Why’s she the one in charge now?"
 msgstr ""
-"ふむ、そいつらがあんたらとの戦闘の詳細を駐屯地へ持ちかえるまで、長くはかから"
-"んだろうね。"
+"女王の部下、といったね？数日前にこっちにも使い走りが来たよ。「Asheviere」とや"
+"らに忠誠を誓え、とね。そいつは Garard の若い嫁か何かじゃなかったかね？なんで"
+"そんなのが偉そうに命令してきとるのかね？"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:219
+msgid ""
+"I don’t know, but some of them riders escaped us. Bet they’ll report back to "
+"their local garrison, tell them we’re a bunch o’ traitors."
+msgstr ""
+"わからない。それと、何騎かの騎兵を逃している。連中は確実に基地で報告している"
+"ことだろう、ワシらが反逆者だとな。"
 
 #. [message]: role=Advisor
-#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:198
-msgid "Then they’ll be back in force."
-msgstr "そのうち、大挙して戻ってくるだろうさ。"
-
-#. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:202
-msgid ""
-"An offense to decency, this is! Since when has Wesnoth been ruled by fear "
-"and treachery? We should consult with Lord Maddock of Elensefar. We have "
-"known him for years to be noble in deed as well as in name."
-msgstr ""
-"これは良識に対する攻撃だ！いつから Wesnoth は恐怖と不実に支配されるようになっ"
-"ちまったんだ？わしらは Elensefar の Maddock 卿に相談するべきだ。あの方は、そ"
-"の高貴な名に恥じぬ、高潔な御仁だ。そのことをわしらはよく知っている。"
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:223
+msgid "Then they’ll be comin’ back in force."
+msgstr "そして軍勢を連れて戻ってくる、ってとこだろうな。"
 
 #. [message]: speaker=Relana
-#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:206
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:227
 msgid ""
-"I agree. But, Baldras, what will you tell him? We know something has been "
-"going badly wrong in Wesnoth of late, that more than ordinary corruption and "
-"incompetence is afoot. But when the effects fall on mere peasants, the wrong "
-"of it may not seem so obvious from a noble’s chair."
+"We needs more information. We should consult ourselves with Elensefar. Lord "
+"Maddock surely gots to know more than us."
 msgstr ""
-"同感だね。だが Baldras、彼に何と言う？最近の Wesnoth は何か非常に悪い方へ向"
-"かっている、そう私たちは確信している。ただの腐敗や機能不全以上のことが起こっ"
-"ているんだ。が、もし農民だけが影響を受けているとしたら、貴族の座からはその悪"
-"い部分がはっきりと見えないかもしれないよ。"
+"あたしらには情報が要る。Elensefar に相談するべきだ。Maddock 卿ならばあたしら"
+"よりも色々と知っているはずさね。"
 
 #. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:213
-msgid ""
-"We need evidence. Hard evidence... but wait— Are those orcish war drums I "
-"hear?"
-msgstr ""
-"証拠が必要だな。確固とした証拠が…… ん、ちょっと待て、今聞こえたのはオークの戦"
-"いのドラムか？"
-
-#. [message]: speaker=Relana
-#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:217
-msgid ""
-"I think they are, old friend. And that rank smell on the wind tells another "
-"tale: saurians approach. To arms!"
-msgstr ""
-"どうやらそのようだね。風に乗ったひどい悪臭がもうひとつ教えてくれたよ。トカゲ"
-"どもが来やがった。武器を取りな！"
-
-#. [message]: speaker=Urk Delek
-#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:225
-msgid ""
-"By the sound of the wolves, the scent trail of Fal Khag’s killers ends here."
-msgstr "狼どもの鼻によると、Fal Khag を殺った奴の臭いはここで途切れている。"
-
-#. [message]: speaker=Thhsthss
 #: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:231
-msgid "Fal Khag is nothing to usss, orc. You promissed uss gold. Bright gold."
-msgstr "Fal Khag などどうでもいい。お前は金を約束ししした。輝く黄金。"
+msgid "Elensefar? Why him?"
+msgstr "Elensefar？なんでその男に？"
 
-#. [message]: speaker=Urk Delek
+#. [message]: speaker=Relana
 #: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:235
-msgid "You will get gold. And our wolves will get meat."
-msgstr "金は貴様らにくれてやる。肉は狼どものものだ。"
+msgid ""
+"Well all Annuvin be ruled by Elensefar, right? We don’t gots to heed "
+"anything Wesnoth says. Lord Maddock’s technically the one we answer to."
+msgstr ""
+"そうだね、Annuvin が Elensefar に監督されているのは知ってるだろう？Wesnoth は"
+"あたしらにとって直接やりとりする相手じゃない。そして、理屈の上では Maddock 卿"
+"こそがあたしらとやりとりする立場ってことさね。"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:239
+msgid ""
+"It don’t matter. Weldyn be doing whatever it likes while Maddock says "
+"nothing. He knows, but he don’t care."
+msgstr ""
+"もうそういう問題じゃないだろう。Maddock が何も言っていないのに、Weldyn はやり"
+"たいようにやっている。彼は知っているんだろう、しかし結局何もしてくれない。"
+
+#. [message]: speaker=Relana
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:243
+msgid ""
+"But we still need that knowledge, Baldras. We can’t be coming up with any "
+"great plan without no information. We both knows that if Weldyn brings one "
+"o’ their armies here, there be no way we can fight them off."
+msgstr ""
+"しかしね、あたしらには情報が足りないんだよ、Baldras。何も知らずに対案を立てた"
+"ところがたかが知れている。それにわかってるだろう？Weldyn が軍勢を連れて来た"
+"ら、あたしらに対抗する術は無いんだよ。"
 
 #. [message]: speaker=Baldras
 #: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:247
 msgid ""
-"Something is very wrong here. Those orcs were carrying weapons with Army "
-"forge-markings."
+"Perhaps, but — hold there. Did ya hear that? Sounded like some wolf howl."
 msgstr ""
-"それにしても、こいつは大分おかしいぞ。オークどもは軍工廠の刻印つきの武器を"
-"持っていたぞ。"
+"そうかもしれない、しかし ── ちょっと待ってくれ。今のを聞いたか？狼の遠吠えの"
+"ような音が聞こえたぞ。"
 
 #. [message]: speaker=Relana
 #: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:251
-msgid "Aye. And the gold in their pouches looked new from the mint."
-msgstr ""
-"あぁ、それにやつらの持っていた袋の中の金貨は造幣局で鋳造したての新品のよう"
-"だったね。"
+msgid "Somethin’ smells like lizard too. We’re not alone here."
+msgstr "トカゲのような臭いも漂ってきてるね。どうやらお客さんのようだよ。"
 
-#. [message]: speaker=Baldras
+#. [message]: speaker=Harper
 #: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:255
-msgid ""
-"Can the darkest rumors be true, then? Does the Kingdom— Does Queen "
-"Asheviere... send orcs against her own people?"
-msgstr ""
-"とすると、あの邪悪極まりない噂は本当なのか？王国が…… 女王 Asheviere が…… 自ら"
-"の民にオークを差し向けていると？"
+msgid "Finally, some action!"
+msgstr "ごちゃごちゃ考えるよりはこっちの方が良いな！"
 
-#. [message]: speaker=Relana
-#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:259
+#. [message]: speaker=Urk Delek
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:263
 msgid ""
-"I think your mission to Lord Maddock just became more urgent than we knew, "
-"Baldras. I must remain here to see to the defense of Delwyn and Dallben, but "
-"you should fly to Elensefar with all speed."
+"Blasted humans and blasted Fal Khag! Stupid goblin was only supposed to "
+"scout that puny village, not fight it by himself. Then those damned humans "
+"rejected our help and look where that got them."
 msgstr ""
-"どうやら思っていたよりも緊急に Maddock 卿に連絡しなければならなくなったようだ"
-"ね、Baldras。あたしが Delwyn と Dallben を守るためここに残るから、あんたは大"
-"急ぎで Elensefar へ向かいな。"
+"人間のクソども、それに Fal Khag のクソ野郎が！ あのしょぼい村を偵察しろって"
+"言ったのに、何で勝手に攻撃してるんだ！しかも負けやがって！おかげで人間のクソ"
+"共に協力を拒否されて、余計な仕事が増えたじゃねぇか！"
 
-#. [message]: speaker=Baldras
+#. [message]: speaker=Urk Delek
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:267
+msgid ""
+"“Don’t know why the Queen hired some stinkin’ orcs, we don’t need you here.” "
+"Yeah, well now they’re dead like a bunch of beasts."
+msgstr ""
+"「臭いオークども、女王がなぜ貴様等を雇ったのかは知らない。貴様等はここには必"
+"要無い。」、とか言ってたか。ムカついたから獣のように皆殺しにしちまった。"
+
+#. [message]: speaker=Thhsthss
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:273
+msgid "Your ordersss mean nothing to usss, orc. You promissed uss gold."
+msgstr "おおおお前の命令は、どどどうでも良い。おおお前は金くれる約束した。"
+
+#. [message]: speaker=Urk Delek
 #: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:277
 msgid ""
-"We have tarried here for far too long... There is no way we can reach "
-"Elensefar and return with help before the Wesnoth army destroys our homes. "
-"Retreat!"
+"Shut your trap, lizard. You’ll get your gold as soon as my wolves get their "
+"meat."
+msgstr "口を閉じろ、トカゲ。狼達にあいつらの肉をご馳走してくれたら金は払うぞ。"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:286
+msgid ""
+"We gots to be headin’ for Elensefar soon before them Wesnothians come back."
+msgstr "Wesnoth の連中が戻ってくる前に Elensefar に向かわねば。"
+
+#. [message]: speaker=unit
+#. fishperson is the same as merfolk
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:300
+msgid "Looks like some fishperson used to live here."
+msgstr "以前、魚人がここに住んでいたようだな。"
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:318
+msgid "Looks like they still do. Ick."
+msgstr "まだ住んでいたようだな。おえっ。"
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:330
+msgid "Ewww, I think it be smelling even worse now. Least it’s stopped moving."
+msgstr "うえっ、臭いがひどくなった気がするぞ。何にしろ、動かなくはなったな。"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:358
+msgid "I don’t likes me the look of that water."
+msgstr "この水辺はなんか嫌な感じがするな。"
+
+#. [message]: speaker=unit
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:391
+msgid "Ahh! Help, it’s a tentacle monster!"
+msgstr "うわー！助けてくれ、触手の化け物だ！"
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:404
+msgid "That’s some fresh tasty water. Mmm!"
+msgstr "新鮮でうまそうな水だな！"
+
+#. [message]: speaker=Urk Delek
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:435
+msgid "Blasted pinkskins..."
+msgstr "クソ人間どもめ…"
+
+#. [message]: speaker=Thhsthss
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:448
+msgid "Thissss was not part of the deal..."
+msgstr "ここここんな取引は しししていない……"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:457
+#, fuzzy
+#| msgid ""
+#| "Something be very wrong here. These orcs has weapons with Army forge-"
+#| "markings."
+msgid ""
+"Something be very wrong here. These orcs has weapons with army forge-"
+"markings."
 msgstr ""
-"長時間ここに留まり過ぎた…… どうあがいても、Elensefar から応援を連れてくる前"
-"に Wesnoth 軍に村を蹂躙されてしまう。撤退だ！！"
+"何がどうなっているんだ。このオーク達は軍工廠の刻印の入った武器を持っていた"
+"ぞ。"
+
+#. [message]: speaker=Relana
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:461
+msgid ""
+"Aye, and the gold in their pouches looks new from mint. Could just be "
+"plunder, but..."
+msgstr ""
+"ああ、それに連中のポーチにあった金は鋳造されたばかりの新品のようだね。単に略"
+"奪にあっただけなのか……"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:465
+msgid ""
+"Don’t seem like it. I be thinking these orcs were hired to scout us. But for "
+"what? Of all the alliances to be making, why would Weldyn be hiring orcs?"
+msgstr ""
+"そうではないと思う。このオークはワシらを偵察するために雇われたのだと思う。し"
+"かし何のために？どこかと手を結ぶにしても、一体どうすれば Weldyn がオークを雇"
+"うようなことになるのだ？"
+
+#. [message]: speaker=Relana
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:469
+msgid ""
+"I thinks your mission to Lord Maddock just became even more urgent. We needs "
+"to know the Queen’s motives."
+msgstr ""
+"Maddock 卿の元に向かう任務の緊急性はさらに増した、あたしはそう思うね。あたし"
+"らはその女王とやらの真意を知らなきゃならない。"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:473
+msgid ""
+"I don’t like leaving our people here alone, but I sees your point. If we "
+"wait, more will be coming."
+msgstr ""
+"皆を残して行きたくはないが、あんたの言う通りのようだな。待てばもっとやってく"
+"るだけだ。"
+
+#. [message]: speaker=Relana
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:477
+msgid ""
+"For now, I can stay here and perhaps talk them Wesnothians out of attacking "
+"us directly, but I don’t thinks it will work forever. To survive this, we "
+"needs to act quick, Baldras."
+msgstr ""
+"ひとまず、あたしはここに留まって、攻撃をしかけてくる Wesnoth の連中に交渉を持"
+"ちかけてみるとするさね。しかし長くは保つとは思えないね。生き延びるためには素"
+"早い行動が必要だよ、Baldras。"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:481
+msgid "Then we’ll go to Elensefar as fast as we can. Luck be with ya, Relana."
+msgstr ""
+"ならばワシらはできるだけ急いで Elensefar に向かう。Relana、幸運を祈る。"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:499
+msgid ""
+"We gots no more time to be spending here nor to be traveling to Elensefar... "
+"them Wesnothians probably already be mobilizing against us. We’ve got to "
+"head back to Dallben!"
+msgstr ""
+"Wesnoth の連中はもうワシらへの攻撃のための動員を始めているはずだ。ワシらはこ"
+"れ以上ここで時間を浪費することも、Elensefar に向かうこともできない……急いで "
+"Dallben に戻るぞ！"
 
 #. [message]: speaker=narrator
-#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:283
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:505
 msgid ""
 "Baldras and Relana returned to their villages to find them destroyed, with "
-"those who fought left dead and the few survivors borne away to unknown "
-"fates. It was a bitter doom, and as Wesnoth descended into darkness they "
-"would live to see worse."
+"any survivors borne away to unknown fates. It was a bitter doom, and as "
+"Wesnoth descended into chaos, they would live to see worse."
 msgstr ""
-"それぞれの村へと戻った Baldras と Relana が見たものは無残に破壊された村でし"
-"た。戦った者は殺され、逃げ延びた生存者がどうなったのかはわかりません。それは"
-"悲惨な結果でした。しかし、Wesnoth の闇がさらに深まれば、彼らはもっと悲惨な光"
-"景をその目で目撃することになるでしょう。"
+"Baldras と Relana はそれぞれの村へと戻ったが、村は無残にも破壊されていた。生"
+"存者もどこに連れ去られてしまったのかわからない。悲痛なる光景であった。しか"
+"し、これより Wesnoth はさらなる混沌に陥り、残された彼らはさらなる悲劇を目にす"
+"ることになる……"
 
 #. [scenario]: id=04_Unlawful_Orders
 #: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:4
@@ -875,672 +1302,1186 @@ msgid "Port of Elensefar"
 msgstr "Elensefar 港"
 
 #. [side]: type=General, id=Lord Maddock
-#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:44
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:45
 msgid "Lord Maddock"
 msgstr "Maddock 卿"
 
-#. [side]: type=General, id=Kestrel
-#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:66
-msgid "Kestrel"
-msgstr "Kestrel"
-
 #. [objective]: condition=win
-#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:93
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:125
 msgid "Defeat the enemy general"
 msgstr "敵の将軍を倒す"
 
 #. [objective]: condition=lose
-#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:105
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:137
 msgid "Death of Maddock"
 msgstr "Maddock の死"
 
-#. [event]
-#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:128
-msgid "Rothel"
-msgstr "Rothel"
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:212
+msgid "Maddock, I be coming to report—"
+msgstr "Maddock、ワシは──"
 
 #. [message]: speaker=Lord Maddock
-#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:179
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:216
 msgid ""
-"Baldras, your trip here was not wise. The Queen’s patrols have been visiting "
-"the local villages and bringing the elders here. Those that swear allegiance "
-"to the Queen are allowed to return home. Those that do not—"
+"I am already aware of your altercation in Dallben, Baldras. Your dissent was "
+"not wise."
 msgstr ""
-"Baldras よ、そなたがここへ来たのは賢明ではなかった。女王の巡視隊は、地方の"
-"村々を訪ね、村長たちをここへ連れてきている。女王に忠誠を誓ったものは帰還を許"
-"されるが、誓わなかったものたちは……"
+"Dallben であった口論についてはこちらでも把握している、Baldras。ただ、異議を唱"
+"えたことはまずかったと言う他無い。"
 
 #. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:183
+#. pigdirt is slang for bullshit or hogwash
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:221
 msgid ""
-"— Are dispatched on the spot. I know the price of dissent. But what of you?"
+"Dissent? Maddock, I’m not trusting no strange riders who show up out of "
+"nowhere claimin’ to be from the Queen. Seems like a bunch of pigdirt to me."
 msgstr ""
-"……即座に処刑される。わしは異議申し立ての対価を知っとります。しかし、あなた"
-"は？"
+"異議？Maddock、突然どこからともなく現れた、女王とやらの使いを名乗る怪しい輩を"
+"どう考えたら信用できるんだ？ワシにとっては、クソみたいなことばかりだ。"
 
 #. [message]: speaker=Lord Maddock
-#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:187
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:225
 msgid ""
-"Well, they do not come within the walls of my city. They are actually camped "
-"nearby, and the main garrison is further south at Halstead. I know my time "
-"will soon come to swear allegiance, but they do not press me. They are "
-"afraid I will refuse."
+"That was partially my fault, since I was not able to send a messenger to you "
+"in time. I shall have to inform you now. Five weeks ago, at the Ford of "
+"Abez, Queen Asheviere’s men allied themselves with the northern orcs and "
+"betrayed King Garard II."
 msgstr ""
-"うむ、彼らは都市の城壁の中までやってこないのだ。連中はここのすぐ近くに野営し"
-"てはいるが、本当の駐屯地はさらに南の Halstead だ。私が忠誠を誓わされる時もそ"
-"う遠くないことは判っているが、今のところ強要はしてこない。私が拒否するのを恐"
-"れているのだ。"
+"それについては、事前に事情を伝えられなかった私にも非がある。ここで伝えておく"
+"べきだろう。5 週間前、Abez の浅瀬にて、王妃 Asheviere が北部のオークと同盟を"
+"結び、国王 Garard II 世を裏切った。"
+
+#. [message]: speaker=Lord Maddock
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:229
+msgid ""
+"Since Prince Eldred died in the battle, the Queen took the throne and has "
+"been consolidating her power. Part of that has been bringing the elders from "
+"the local villages here, forcing them to swear allegiance to her. That was "
+"the purpose of that patrol."
+msgstr ""
+"そして Eldred 王子もその戦いで命を落としたため、王妃は王位を奪い、その力を確"
+"固たるものとしつつある。その一環として、周辺の村長たちをここに連れ出し、女王"
+"への忠誠を誓わせようとしている。お前達のところに来た騎兵もこれだ。"
 
 #. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:191
-msgid "Will you?"
-msgstr "拒否するのですか？"
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:233
+msgid "Annuvin province be ruled by Elensefar! We has no duty to Weldyn."
+msgstr ""
+"Annuvin は Elensefar に監督されている！ワシらは Weldyn に対して何の義務も無"
+"い！"
 
 #. [message]: speaker=Lord Maddock
-#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:195
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:237
 msgid ""
-"Yes. The Queen ascended to the throne through the vilest of treachery. "
-"However, while most of my forces were sent with the King to fight the orcs, "
-"we have a strong enough contingent here to make the Queen’s forces think "
-"twice about attacking Elensefar outright."
+"You do now. I do not really need to tell you what will happen should you "
+"refuse Her Majesty’s offer."
 msgstr ""
-"そうだ。女王は裏切りという最も卑劣なやりかたで王位に就いたのだからな。我が軍"
-"の大部分は王と共にオークと戦うために派兵してしまったが、しかし、それでも女王"
-"軍に Elensefar への攻撃をためらわせる程度の兵力は残っている。"
+"今はあるということだ。女王の意見に逆らった場合にどうなるのかは、身を持って"
+"知っているだろう？"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:241
+msgid ""
+"Grow a spine, Maddock. If they come to ya and make you swear fealty to this "
+"Asheviere, would ya really give up that easy?"
+msgstr ""
+"Maddock、あんたに牙は無いのか？連中がここに来て、あんたにその Asheviere への"
+"忠誠を求めたら、おとなしく従うってのか？"
 
 #. [message]: speaker=Lord Maddock
-#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:199
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:245
 msgid ""
-"We have an uneasy peace until they are done with the smaller villages and "
-"finally come around to obtaining my oath. The treaty between Elensefar and "
-"Wesnoth is ancient, but I am not so naïve as to place my full trust in it. "
-"Not in these wicked times."
+"Well, they do not come within the walls of my city. There is a large "
+"garrison south at the great fortress of Halstead, but even should they "
+"mobilize all their troops, I doubt they could take Elensefar. It is true "
+"that for now, the majority of my forces are still returning from the battle "
+"of Abez, but unless we are attacked within the next few days, I shall be "
+"able to hold the city."
 msgstr ""
-"小さい村々での仕事を終わらせ、最終的に私の誓約を取りに来るまで、表面上は平和"
-"が続くだろう。Elensefar と Wesnoth との盟約は古くから続くものだが、それを全面"
-"的に信用するほど私はお人よしではない。今はずいぶんと物騒な時代なのでな。"
+"ふむ、この街の城壁の中までは入ってこないだろう。ここの南に Halstead の大きな"
+"要塞に大規模な部隊が駐屯しているが、そこの全兵力を動員したとしても Elensefar "
+"が落ちることは無い。とはいえ、軍の主力が Abez での戦より帰還の途中である今は"
+"そうとは言いきれない部分もある。ただ、万一これから数日の間に攻撃を受けること"
+"になったとしても、街は必ず守り抜いてみせよう。"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:249
+msgid "And what abouts us? Throw us like dogs to those Wesnothians?"
+msgstr ""
+"それでワシらはどうなる？あの Wesnoth の連中と同じように、ワシらを犬のように捨"
+"てるのか？"
+
+#. [message]: speaker=Lord Maddock
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:253
+msgid ""
+"We have an uneasy peace to maintain. The treaty between Elensefar and "
+"Wesnoth is ancient, and I do not think Her Majesty means to break it. At the "
+"same time, I have some concessions that I shall have to make. I cannot "
+"afford a war with Weldyn, as you can surely understand."
+msgstr ""
+"平和は微妙なバランスで成り立っている。Elensefar と Wesnoth の間の取り決めは昔"
+"から続くものであり、女王も故意に破棄するとは思えない。一方で、譲歩しなければ"
+"ならない部分も出てくるだろう。私は今 Weldyn と事を構えるわけにはいかないの"
+"だ。それはお前もわかっているだろう。"
 
 #. [message]: speaker=Harper
-#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:203
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:257
 msgid ""
-"What can we do then? We have brought with us many from Annuvin Province who "
-"are willing to fight, but our families are still at home. They will not last "
-"long if the Queen’s patrols return."
+"But we can’t do nothing! The Queen even be sending them beast orcs against "
+"us, that’s how evil she is! Surely you can’t stand for this..."
 msgstr ""
-"ではどうすりゃいいのですか？ おれたちは Annuvin 州から戦う意思のある者を大勢"
-"連れてきましたが、その家族はまだ村に残っています。女王の巡視隊が戻ってきた"
-"ら、あいつらが持たねぇんだ。"
+"なら俺たちにどうしろってんだ！女王は俺たちに獣のようなオークを差し向けたんだ"
+"ぞ！あの女王はそれほどに邪悪だ。あんただってきっと耐えられないぞ……"
 
 #. [message]: speaker=Lord Maddock
-#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:207
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:261
 msgid ""
-"I am unwilling to start a civil war. I believe the Queen will remain "
-"preoccupied with order throughout the kingdom and, more importantly, with "
-"quelling the Northerner threat. We are a matter she will choose to deal with "
-"later rather than sooner, if she can."
+"Yes, I am aware of Queen Asheviere’s propensity for hiring orcs to "
+"supplement her forces. That does not mean I could do anything about it, even "
+"if I were so inclined. The best advice I can give you is to just apologize. "
+"Even if they may want your head, Baldras, you still have the chance to "
+"preserve your village. Think of the bigger picture."
 msgstr ""
-"私は内戦を始めるつもりは無い。思うに、女王は、国中に支配を行き届かせること、"
-"さらに重要なこととして、北方の脅威を抑えることに没頭したままになるだろう。"
-"我々のことは、彼女にとっては急ぎで対処する必要が無い問題で、後回しでも良いの"
-"だろう。"
+"女王 Asheviere が力を補うためにオークを雇うような者であることは承知している。"
+"とは言え、たとえその気になったところで私にできることは無い。速やかに謝罪すべ"
+"き、というのが私の思いつく最上の方法だ。Baldras、彼らはお前の首を望むかもしれ"
+"ないが、それでも村が残る可能性は十分にある。大局的に考えるのだ。"
 
-#. [message]: speaker=Kestrel
-#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:211
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:265
 msgid ""
-"A foolish miscalculation, Lord Maddock. These men with which you consort are "
-"outlaws and fugitives. They are a well-organized gang of criminals and "
-"murderers. We will kill them and then expect your oath of allegiance to "
-"Queen Asheviere."
+"The bigger picture of you idly sittin’ here waiting till them Wesnothians "
+"come to take the city right from your hands."
 msgstr ""
-"それはとんだ読み違いですな、Maddock 卿。あなたと共にいる者は無法者と逃亡者で"
-"すぞ。そいつらは犯罪者と殺人者からなるならず者集団だ。そいつらを殺したら、あ"
-"なたにも女王 Asheviere 陛下への忠誠を誓ってもらうとしましょう。"
+"大局的に考えた結果、何もせず、Wesnoth の連中に街を奪わせることに決めたってこ"
+"とか。"
 
 #. [message]: speaker=Lord Maddock
-#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:215
-msgid "Men, to arms! The defense of Elensefar has begun!"
-msgstr "者ども、武器を取れ！Elensefar 防衛戦の始まりだ！"
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:269
+msgid "I very much doubt they would be bold enough to attack us outright—"
+msgstr "彼らが堂々と我等を攻撃するようなことは全くありえないと──"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:273
+msgid ""
+"Head out of your behind, Maddock. Open your eyes! Look south and tell me "
+"that again!"
+msgstr ""
+"Maddock、引きこもってないで出てこい！目を開け！そして南を見ろ！その上で今の台"
+"詞をもう一度言ってみろ！"
+
+#. [message]: speaker=Lord Maddock
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:286
+msgid ""
+"An invading army? No, something is not right with those soldiers... but I "
+"presume we have no time to ponder that. To arms!"
+msgstr ""
+"侵略軍？そんな！いや、あの兵士達は何か間違って、……確かにうだうだと考えている"
+"場合ではなさそうだ。武器を取れ！"
+
+#. [message]: speaker=unit
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:309
+msgid "Hey, look! Some buried treasure!"
+msgstr "おっ、見ろ！お宝が隠されていたぞ！"
+
+#. [message]: speaker=unit
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:334
+msgid "Looks like someone left some supplies here."
+msgstr "誰かが物資をここに放置したようだな。"
+
+#. [message]: speaker=unit
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:359
+msgid ""
+"It says, “Here lies Daneth, child of the Light, loyal defender of Lord and "
+"Land.” Whoever that was."
+msgstr ""
+"ふむ、「光の子にして街とその主の守護者、Daneth ここに眠る。」とある。誰のこと"
+"だ？"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:363
+msgid "Maddock’s firstborn son."
+msgstr "Maddock の最初の息子のことだ。"
+
+#. [message]: speaker=unit
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:367
+msgid "Oh."
+msgstr "おお。"
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:380
+msgid ""
+"That’s a deep well! Wonder how far down it goes. Guess I’ll chuck a rock "
+"down and find out."
+msgstr ""
+"これは深い井戸だな！どれだけ深いんだ？石ころでも落として確かめてみるか。"
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:384
+msgid ""
+"...\n"
+"...\n"
+"..."
+msgstr ""
+"……\n"
+"……\n"
+"……"
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:390
+msgid "Plunk!"
+msgstr "ドン！"
+
+#. [message]: speaker=Lord Maddock
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:423
+msgid "Hold there, soldier! Can we not come to terms without bloodshed?"
+msgstr "待て、兵士よ！血を流さずに済ませられないのか？"
+
+#. [message]: speaker=unit
+#. [message]: speaker=Lord Maddock
+#. [message]: type=Spearman
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:427
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:871
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:885
+msgid "..."
+msgstr "……"
+
+#. [message]: speaker=Lord Maddock
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:431
+msgid "Hmm. Something is quite wrong indeed..."
+msgstr "ムム。一体どうなっているのだ……"
 
 #. [message]: speaker=narrator
-#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:242
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:444
+msgid "<i>The sun sets...</i>"
+msgstr "<i>日が沈む……</i>"
+
+#. [message]: speaker=narrator
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:449
 msgid ""
-"As the sun set, a horrific change began to take place to the human "
-"adversaries of Baldras and his allies..."
-msgstr "日が沈むと、Baldras たちに敵対する人間に恐ろしい変化が起こりました……"
+"Baldras and Harper watch, petrified, as the skin and flesh of their "
+"adversaries begin to rot away."
+msgstr ""
+"Baldras と Harper は思わず凍りつきました。突然、目の前にいる敵の皮膚や肉が腐"
+"り落ちてしまったのです。"
 
 #. [wml_message]
-#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:321
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:530
 msgid "Could not convert a $stored_changers[$i].type, please report!"
 msgstr "$stored_changers[$i].type を変換できません。バグ報告をお願いします！"
 
 #. [message]: speaker=Harper
-#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:616
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:793
+#, fuzzy
+#| msgid ""
+#| "By the Light! Them things look like evil spirits! Are they those undead "
+#| "you told me about, Uncle?"
 msgid ""
-"I cannot believe what my eyes are seeing! The flesh runs from their bones... "
-"these are not human warriors we fight. They are evil spirits masquerading as "
-"human!"
+"Them things look like evil spirits! Are they those undead you told me about, "
+"Uncle?"
 msgstr ""
-"信じられねぇ、目を疑う光景だ！肉が骨から削げ落ちて行く……おれたちが戦っている"
-"のは人間の戦士じゃねぇ。人間の皮をかぶった悪霊だ！"
+"なんてこった！邪悪な幽霊みたいだ！叔父さん、これが前に聞いたアンデッドって奴"
+"なのか？"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:797
+msgid ""
+"They bears some likeness, but these men almost seem half alive. This be some "
+"kind of truly dreadful sorcery."
+msgstr ""
+"似たようなものではあるだろう。しかし、こいつらは半分生きているようにも見え"
+"る。これは本当にとんでもなく恐ろしい魔術だ。"
 
 #. [message]: speaker=Lord Maddock
-#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:627
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:806
 msgid ""
-"Their human aspect is returning! This is an evil manner of sorcery we face, "
-"but one that we may yet overcome. CHARGE!"
+"So, their human aspect returns. Whatever these creatures are, we shall crush "
+"them all under the light of the sun."
 msgstr ""
-"人間の容貌に戻りつつあるぞ！我々が対峙しているのは魔術による邪悪なものではあ"
-"るが、倒せないものではない。<b>突撃</b>！"
+"人間の部分が戻ってきたか。彼らが何であろうと、日の光の下で砕いてしまえば良"
+"い。"
+
+#. [modify_unit]
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:828
+#, fuzzy
+#| msgid "Kestrel"
+msgid "General Kestrel"
+msgstr "Kestrel"
 
 #. [message]: speaker=second_unit
-#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:641
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:835
 msgid "Who are you? What are you?"
 msgstr "おまえは誰だ？いや、おまえは何なんだ？"
 
 #. [message]: speaker=Kestrel
-#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:645
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:839
 msgid ""
-"We are accursed. We were once under the command of Prince Eldred, the King’s "
-"son and betrayer. The price for our treason is this hellish existence. We "
-"know not who or what inflicted this curse upon us, but our mortal deaths may "
-"be only the beginning of the penance we are doomed to pay."
+"We... are accursed. We were the soldiers of Prince Eldred, the King’s son "
+"and betrayer... when the Prince was slain at the hands of the mage Delfador, "
+"those of us who bore witness to it were warped into these twisted forms. "
+"Now, our mortal bodies pass... into another plane of hellish existence..."
 msgstr ""
-"我らは呪われているのだ。かつて、我らは王の息子にして裏切り者である Eldred 王"
-"子の指揮下にあった。反逆の代償でこのようなおぞましい存在になってしまったの"
-"だ。誰、もしくは何がこの呪いをかけたのかはわからない。しかし、我らの人として"
-"の死は、果たさねばならない贖罪の始まりにすぎないように思う。"
-
-#. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:656
-msgid "Lord Maddock, now that we are victorious, will you help us?"
-msgstr "Maddock 卿、わしらは勝利した。それで、わしらを助けてくれるか？"
+"我々は……呪われている。我々は王の息子で裏切り者である Eldred 王子の兵士だっ"
+"た…… 王子が魔術師 Delfador の手によって討たれた時、その場にいた我々はこのよう"
+"な歪んだモノと化した。今や我々の肉体は、悪夢のような存在との間を行き来するよ"
+"うになってしまった……"
 
 #. [message]: speaker=Lord Maddock
-#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:660
-msgid ""
-"I will not. Unless you want me to round up the city’s thieves to fight for "
-"you, I do not have the troops to spare. However, I am not the only one who "
-"commands men in this corner of Wesnoth."
-msgstr ""
-"それはできない。そなたたちに兵士をつける余裕はない。Wesnoth のこの地方で人に"
-"命令できる立場にあるのは私一人だけではないのだ。もっとも、この街の盗賊を集め"
-"てほしいと言うのなら話は別かもしれんが。"
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:862
+msgid "Such is the price for treachery."
+msgstr "これが裏切りの代償なのか。"
 
 #. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:664
-msgid "I don’t understand. There are no other noble lords in this area."
-msgstr "分からん。この地方には他に貴族はいないはずだ。"
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:866
+msgid "Maddock, we helped you defend your city. Will you help us now?"
+msgstr "Maddock、ワシらは街の防衛に手を貸した。ワシらを助ける気は無いのか？"
 
 #. [message]: speaker=Lord Maddock
-#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:668
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:876
 msgid ""
-"Southeast of here there is a town, and there you may find assistance of the "
-"type I cannot give."
+"<i>Listen carefully. I shall not openly speak against Asheviere seeing as "
+"some of her spies are in the city... however, rest assured, I certainly do "
+"not trust the Queen and her questionable tactics.</i>"
 msgstr ""
-"ここの南東に町がある。そこで私では与えられない類の支援を受けられるだろう。"
+"<i>良く聞け。Asheviere の密偵が街のどこにいるかわからないため、私は公然と彼女"
+"を批判することができない…… しかし安心しろ、私は女王のことも彼女のやりかたも全"
+"く信用していない。</i>"
 
 #. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:672
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:880
+msgid "<i>What can ya offer us then?</i>"
+msgstr "<i>それで、何かあるのか？</i>"
+
+#. [message]: speaker=Lord Maddock
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:884
 msgid ""
-"Wish us well. If we are to resist the Wesnoth army a second time, we’re "
-"going to need more than clubs and slings against steel."
+"<i>Well, I do not normally make my relationship with them known, but I can "
+"make an exception. Southeast of here, in Carcyn, you may find assistance "
+"from one of my... contacts. Their methods should be better suited to your "
+"needs. As for your homes, I cannot offer you protection against Weldyn, but "
+"I can arrange for some roads to be closed to delay their patrols. That is "
+"the most I can do for you.</i>"
 msgstr ""
-"わしらに神の加護があらんことを。また Wesnoth 軍と戦わねばならんのなら、鋼に対"
-"抗するために棍棒やスリング以上のものが必要になるでしょうな。"
+"<i>うむ、通常はこのカードを公にはしないのだが、今回は例外だ。ここから南東、"
+"Carcyn で、……手がかり、を見つけられるだろう。彼らのやりかたはお前のやりたいこ"
+"ととは矛盾しないはずだ。それでお前たちの村のことだが、残念だが、Weldyn から"
+"守ってやることはできん。だが、道を封鎖するなどして連中を足止めすることはでき"
+"る。私にできることはこれが精一杯だ。</i>"
 
 #. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:692
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:888
 msgid ""
-"Look, more riders come from the southeast. We cannot survive another "
-"assault. We are finished!"
+"<i>Hmph. Clear that you won’t help us fight, but I gots no more time to be "
+"stayin’ here. If we is going to resist the Crown a second time, we needs "
+"ourselves a good plan. Hope that you’re not sending us to our deaths, "
+"Maddock.</i>"
 msgstr ""
-"見ろ、南東から騎兵がたくさん来るぞ。次の襲撃は乗り切れん。わしらはおしまい"
+"<i>ふん。ワシらに直接手を貸すことはできんか。しかし、これ以上ここで時間を無駄"
+"にはできん。もう一度国に逆らうのならば、何か妙案が必要だ。Maddock、あんたには"
+"ワシらを陥れるつもりが無いと願っているよ。</i>"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:908
+msgid ""
+"More troops be coming from the south! With all them reinforcements, we gots "
+"no chance to defend Elensefar!"
+msgstr ""
+"南からさらに軍勢が来ている！これだけの軍勢から Elensefar を守ることは不可能"
 "だ！"
 
 #. [message]: speaker=narrator
-#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:705
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:921
 msgid ""
-"Indeed, Asheviere’s armies had mustered and struck before the nascent "
-"rebellion could even be planned. Her power and ruthlessness — and their toll "
-"of death — would only grow greater with time."
+"Asheviere’s armies assembled and struck before the nascent rebellion could "
+"even be planned. Without the necessary forces, Annuvin soon fell under "
+"Weldyn’s absolute control."
 msgstr ""
-"そのとおりでした。Asheviere の軍隊はすでに召集を受け、芽生え始めた反乱は計画"
-"すらさせてもらないままに潰されました。女王の力と非情さ…そして犠牲者の数……それ"
-"らは時と共にさらに増えていくことでしょう。"
+"反乱が計画される前に Asheviere の軍勢は集結し、行動を開始しました。対抗する力"
+"を持たない Annuvin が Weldyn の絶対的な統制の下に入るまで、大した時間はかから"
+"ないでしょう。"
 
 #. [scenario]: id=05_Hide_and_Seek
 #: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:6
 msgid "Hide and Seek"
 msgstr "かくれんぼ"
 
-#. [time]: id=midnight
-#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:12
-msgid "Midnight"
-msgstr "真夜中"
+#. [part]
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:46
+msgid ""
+"22 Deeproot, 501 YW\n"
+"\n"
+"Been a tough few days since we left Elensefar with all them patrols running "
+"around. Going by boat along the Great River, we has been managing to avoid "
+"them Wesnothians, but being constantly on the lookout be real taxing. I "
+"truly be starting to feel that tiredness in my bones... old men like me "
+"should be sitting back at home, resting our grey bodies and watchin’ over "
+"them younger folk growing up. I don’t got no business here, running around "
+"as some outlaw. Maybe if I was ten years younger..."
+msgstr ""
+"Wesnoth 暦 501 年 深根の月 22 日\n"
+"\n"
+"Elensefar を離れてからの数日は、そこら中にいる巡回の兵士をなんとかするため、"
+"しんどい日々だった。 大いなる川を小船で進むことで、なんとか Wesnoth の連中を"
+"避けることはできたが、四六時中気を張り続けていると心も身体も休まらない。正直"
+"なところ、身体には本当に限界を感じ始めている……ワシのような老いぼれは、家で座"
+"りながらくたびれた身体を休め、若い者が成長していく様を眺めているべきなのだ。"
+"それなのに、最近のワシと言えば、無法者のようにこそこそ動き回っていて、しかも"
+"何の成果も得られないときている。ワシもあと 10 才若ければもう少しは……"
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:52
+msgid ""
+"Anyway, the messenger I sent back to Relana should be in Delwyn already. We "
+"should be arriving to Carcyn soon too, to where that coward Maddock said his "
+"‘contact’ be. Truths be told, I don’t know how this’ll be turning out, "
+"especially since I don’t be no social butterfly like sis were. Don’t like me "
+"no city folk really. But I’ll deal with them if I gots to."
+msgstr ""
+"それはともかく、Relana に送った伝令はもう Delwyn に着いていることだろう。ワシ"
+"らももうすぐ Carcyn に着く。臆病者の Maddock が言うには、そこに「手がかり」の"
+"用意があるということらしいが。正直なところ、今やっていることがどんな結果につ"
+"ながるのかが全く予想できない。それに、ワシは妹と違って社交的ではないのだが、"
+"うまくやれるのだろうか。都市の人間はどうも好きになれない。それでも必要ならば"
+"やる他ない。"
 
 #. [side]: type=Master Bowman, id=Quentin
-#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:44
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:80
 msgid "Quentin"
 msgstr "Quentin"
 
 #. [side]: type=Rogue, id=Hans
-#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:81
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:118
 msgid "Hans"
 msgstr "Hans"
 
 #. [objective]: condition=win
-#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:114
-msgid "Take Baldras to meet the leader of the insurgency"
-msgstr "Baldras が反乱の指導者と会う"
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:151
+#, fuzzy
+#| msgid "Enter the Grey Woods"
+msgid "Enter the Grey Woods with Hans"
+msgstr "灰色森に入る"
+
+#. [objective]: condition=lose
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:163
+#, fuzzy
+#| msgid "Death of Harper"
+msgid "Death of Hans"
+msgstr "Harper の死"
 
 #. [note]
-#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:127
-msgid ""
-"Remember that in fog, units always see one hex further than they can move."
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:168
+msgid "In fog, units always see one hex further than they can move."
 msgstr ""
-"霧の中では、ユニットが移動できる範囲に加えて、その移動可能範囲の 1 ヘクス先ま"
-"でが視界に入ります。気をつけましょう。"
+"霧の中では、ユニットが移動できる範囲の 1 ヘクス先までが視界に入ります。気をつ"
+"けましょう。"
 
 #. [message]: speaker=narrator
-#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:308
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:349
+#, fuzzy
+#| msgid ""
+#| "Relentlessly pursued by riders patrolling the road to Elensefar, Baldras "
+#| "and his men traveled unseen along the swampy banks of the Great River to "
+#| "the city of Carcyn. They hid until nightfall, then crept out to find the "
+#| "help Lord Maddock hinted was here."
 msgid ""
 "Relentlessly pursued by riders patrolling the road to Elensefar, Baldras and "
-"his men traveled unseen along the swampy banks of the Great River to the "
-"city of Carcyn."
+"the villagers traveled unseen along the swampy banks of the Great River to "
+"the city of Carcyn. They hid until nightfall, then crept out to find the "
+"help Lord Maddock hinted was here."
 msgstr ""
-"Elensefar の街道では警らする騎兵に執拗な追跡を受けたため、Baldras たちは大い"
-"なる川のじめじめした川岸をつたって、気付かれないように Carcyn へ向かいまし"
-"た。"
+"騎兵達が Elensefar への道を執拗に巡回する中、Baldras と仲間達は大いなる川のぬ"
+"かるむ岸辺を通って秘密裏に Carcyn に向かいました。夕方までは隠れて過ごし、夜"
+"になったら隠れ場所から這い出して進み、Maddock 卿の示した場所を目指したので"
+"す。"
 
-#. [message]: speaker=narrator
-#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:313
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:397
 msgid ""
-"They hid until nightfall, then crept out to find the help Lord Maddock "
-"hinted was here."
-msgstr ""
-"彼らは日が落ちるまで隠れ、夜になると忍び出て Maddock 卿が示唆した助けを探しま"
-"した。"
+"Wow, is that Carcyn in the distance? Look at how grand some of them spires "
+"be!"
+msgstr "おお、あそこに見えるのが Carcyn か？あの尖塔なんて見事だなあ！"
 
 #. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:361
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:402
 msgid ""
-"I’m not sure where we’re supposed to go now. If we go into town we can start "
-"asking around for information."
-msgstr "どこに行けばよいのか分からん。街に入れば聞き込みができるが。"
+"Not since I were a young lad did I come this far south. Maybe it looks "
+"impressive now, but city life weren’t never something real nice. Them city "
+"folk be real impatient and mean. Always wantin’ some price for their help, "
+"too."
+msgstr ""
+"こんな南まで来たのは、ワシがまだ若造だったころ以来か。始めは感動的に見えるだ"
+"ろうが、実際に都会で生活するとそこまで良いものじゃないぞ。都会の人間は本当に"
+"せっかちで、不親切だ。それに、ちょっと手を借りようとしたら、必ず金を要求され"
+"る。"
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:407
+msgid ""
+"Well, we need their help now, don’t we? So we got to figure out a way to get "
+"to Lord Maddock’s friend. But he didn’t say anything about who that was."
+msgstr ""
+"ええっと、今、俺たちは誰かの手を借りる必要があるよな？俺たちだけじゃ Maddock "
+"卿の友人とやらがどこにいるかわからないぞ。彼は誰のことなのか言わなかったから"
+"な。"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:412
+msgid ""
+"Harper, when a noble lord says he don’t want some kind of relationship "
+"known, it means some kind o’ connection with the black market. We be looking "
+"for criminals, probably some thieves’ den. Or, maybe they be looking for us."
+msgstr ""
+"Harper、貴族が言葉を濁すような関係とは、普通は闇の世界との関係を指すものだ。"
+"だからワシらは犯罪者、おそらくは盗賊の巣のようなとこを探すべきだろう。もしか"
+"したら、向こうがこちらを探しているかもしれんな。"
 
 #. [unit]: type=Thief, id=Link
-#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:377
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:428
 msgid "Link"
 msgstr "Link"
 
 #. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:382
-msgid "Who are you?"
-msgstr "何者だ？"
-
-#. [message]: speaker=Link
-#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:386
-msgid ""
-"I have come to find you. You must make it through the city without being "
-"seen. The soldiers are normally out hunting for my kind, but a company of "
-"heavy infantry arrived three days ago and took over the patrols."
-msgstr ""
-"俺はあんたを探しに来た。これからあんたは見つからないように街を通らなければな"
-"らん。兵士どもは普段なら俺たちのような連中を狩る為に外に出ているはずなんだ"
-"が、三日前に重装兵の一団が到着して、警備を引き受けているんだ。"
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:433
+msgid "Right on time."
+msgstr "噂をすれば影、というやつだな。"
 
 #. [message]: speaker=Harper
-#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:390
-msgid "They’re looking for us."
-msgstr "その兵士たちはおれたちを探しているんだな。"
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:438
+msgid "How do we know we can trust him?"
+msgstr "彼は信用できるのだろうか？"
 
 #. [message]: speaker=Link
-#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:394
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:443
+#, fuzzy
+#| msgid ""
+#| "If you were one of my quarries, your throat would be slit by now, boy. As "
+#| "it is, you two are still in imminent danger. Just a week ago, the Crown "
+#| "sent a contingent of heavy infantry here to supervise the city. They’re "
+#| "patrolling the streets and forests for us."
 msgid ""
-"Well, good thing I found you first. Now hurry, you must make it past the "
-"city into the Grey Woods. There is a small path in the southeast that leads "
-"into the forest; look for the signpost. My brother Hans is waiting for you "
-"there and will take you to our master. Try to avoid the soldiers if you can."
+"If you were one of my quarries, your throat would be slit by now. As it is, "
+"you two are still in imminent danger. Just a week ago, the Crown sent a "
+"contingent of heavy infantry here to supervise the city. They’re patrolling "
+"the streets and forests for us."
 msgstr ""
-"そうだな。先に見つけることができて良かったぜ。さあ急いでくれ。市街地を抜けて"
-"灰色森まで行かなければならん。南東に森の中へ続く小路がある…… 道しるべを探して"
-"くれ。そこで俺の兄弟の Hans が待っていて、リーダーのところまであんたらを連れ"
-"て行く手はずになっている。兵士はできる限り避けるようにしてくれよ。"
-
-#. [message]: speaker=second_unit
-#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:432
-msgid ""
-"Looks like these guards hold stationary posts, so if we’re careful enough we "
-"should be able to slip our way around them unnoticed."
-msgstr ""
-"衛兵達は持ち場から動かないようだな。それなら、充分に注意すれば気付かれずにす"
-"り抜けていけるぞ。"
+"小僧、お前たちが俺たちの獲物だったなら、今頃その喉は掻き切られている。そして"
+"実際にお前たちはお尋ね者ではあるのだ。ちょうど一週間前、王家は重歩兵の部隊を"
+"送り出し、この街を監督させている。そいつらは道や森を巡回し、俺たちを見つけよ"
+"うとしている。"
 
 #. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:436
-msgid ""
-"Harper, you younger and faster folks need to be our eyes now. Scout ahead "
-"and try to find a way for us to get past the guards, but make sure to not "
-"stay where they can see you or we’re all in big trouble..."
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:448
+msgid "I be assuming they’ll also try to stop us if they see us."
 msgstr ""
-"Harper よ、若くてすばしっこいお前が「目」となれ。先の方を探って衛兵をすり抜け"
-"るルートを見つけるんだ。だが、やつらの視界内で止まらないように気をつけろよ。"
-"さもないと大変なことになるぞ……"
+"そいつらがワシらを発見したら、お前たちの場合と似たような対応になるということ"
+"か。"
+
+#. [message]: speaker=Link
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:453
+msgid ""
+"Very likely. Now hurry, you must make it past the city into the Grey Woods. "
+"There is a small path in the southeast that leads into the forest. Look for "
+"the signpost. My brother Hans will guide you from there. Avoid the soldiers "
+"if you can."
+msgstr ""
+"ほぼ間違いなく。さあ急げ。街を抜けて、灰色森に入るのだ。南東に森へと続く細い"
+"道がある。道標を探せ。そこからは俺の兄弟、Hans が案内する。それと、できる限り"
+"敵兵は避けろ。"
+
+#. [message]: speaker=second_unit
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:491
+msgid ""
+"Looks like these guards be holding stationary posts. If we’re careful, we "
+"can get ourselves around them unnoticed."
+msgstr ""
+"どうやら、衛兵達は定められた場所を守っているようだ。慎重に行動すれば、見つか"
+"らずに通り抜けられるはずだ。"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:495
+msgid ""
+"Harper, you younger and faster folks needs to be our eyes. Scout ahead and "
+"find a way past them guards, but make sure ya don’t get yourselves spotted..."
+msgstr ""
+"Harper、若くて素早いお前がワシらの目だ。前方を偵察し、見つからない経路を見つ"
+"けてくれ。お前も絶対に見つかってはならんぞ。絶対にだ……"
+
+#. [message]: speaker=unit
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:566
+msgid "Who goes there? Halt!"
+msgstr "誰だ？止まれ！"
 
 #. [message]: speaker=Harper
-#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:509
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:570
 msgid "They’ve seen us! <i>Run</i>!"
 msgstr "見つかった！<i>逃げろ</i>！"
 
 #. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:526
-msgid "Fall back, quickly! Maybe we can yet lose them!"
-msgstr "早く退け！まだ逃げきれるかもしれん！"
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:587
+msgid "Quick, back into the shadows! Maybe we can still lose them!"
+msgstr "視界の外まで逃げろ！早く！まだなんとか撒けるかもしれん！"
+
+#. [message]: speaker=Harper
+#. Harper defeats an Iron Mauler
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:605
+msgid "Uncle, we did it! We beat one of them iron monsters!"
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:609
+msgid "A fine job lass, but more sure gots to be coming. Let’s keep movin’."
+msgstr ""
 
 #. [message]: speaker=unit
-#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:542
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:628
 msgid ""
-"Gentlemen, please come this way and follow the path into the forest. Our "
-"leader is anxious to meet you."
-msgstr ""
-"皆様、どうぞこちらへ。この小路に沿って森の中まで。我らがリーダーは是非ともあ"
-"なた方にお会いしたいと思っておられます。"
-
-#. [message]: speaker=second_unit
-#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:546
-msgid ""
-"As soon as we escape the Wesnoth death squad, we will be happy to oblige."
-msgstr "Wesnoth の殺し屋集団を振り切ったら、喜んでそうしてやるよ。"
-
-#. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:550
-msgid ""
-"I haven’t run this much in years. If you were to ask me to infiltrate a "
-"heavily guarded city relying on nothing but the cover of darkness and my "
-"wits, I would say you were crazy."
-msgstr ""
-"こんなに走ったのは何年ぶりか。なあ、あんたらは、夜の帳と自分自身の機転だけを"
-"頼りにして、これだけ厳重に警備された都市に潜入してくれと言ったのか？だとした"
-"ら、あんたらは狂っているな。"
-
-#. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:554
-msgid "As it turns out, I’m the crazy one. Let’s finish this folly."
-msgstr ""
-"まぁ、それを実行したわしも十分狂っているのだろうな。さて、この馬鹿馬鹿しいこ"
-"ともそろそろお仕舞いにしよう。"
+"This way, into the forest! We’ll be able to lose them in the Grey Woods."
+msgstr "こっちだ。森に入れ！灰色森に入れば、逃げきれる。"
 
 #. [message]: speaker=Hans
-#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:579
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:653
 msgid ""
-"You can come if you wish, but the leader is only interested in speaking to "
+"You can come if you wish, but we are mostly interested in speaking to "
 "Baldras."
-msgstr ""
-"望むなら来ても構いませんが、リーダーは Baldras と話すことにしか興味がないので"
-"すよ。"
-
-#. [message]: speaker=Hans
-#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:599
-msgid "Fly, and we may yet evade them in the Grey Woods."
-msgstr "急いで。灰色森に入ればやつらを撒けるでしょう。"
+msgstr "お前が来るのは構わないが、俺たちは Baldras と話したいと思っている。"
 
 #. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:604
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:673
+msgid ""
+"I haven’t run so much in years. Feels like I be a real outlaw now, "
+"infiltrating a heavily guarded city relyin’ on nothing but the cover of "
+"darkness and my wits."
+msgstr ""
+"これだけ走ったのはいつぶりだ。衛兵があふれた街を、夜の闇と自分の機転だけを頼"
+"りに突破することになるとは。本当に無法者になったような気分だ。"
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:678
+msgid "It was fun, wasn’t it?"
+msgstr "おもしろかったよな？"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:683
+msgid "Perhaps a little."
+msgstr "そうでもないな。"
+
+#. [message]: speaker=Hans
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:688
+msgid ""
+"Enough chatter, you still have some guards on your tail. We need to head "
+"deeper into the Grey Woods to lose them."
+msgstr ""
+"おしゃべりはそのくらいにしろ。まだ近くに衛兵がいる。早く灰色森の奥に入ってし"
+"まった方が良い。"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:693
 msgid "Lead the way."
 msgstr "案内してくれ。"
 
 #. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:628
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:717
 msgid ""
-"We have spent too much time here. Surely the Queen’s forces have returned to "
-"Dallben. Our mission is unfinished, but we must return to fight a suicide "
-"battle."
+"Blast it, we was too slow! With the sun rising already, them guards will "
+"have no trouble spotting us now..."
 msgstr ""
-"ここであまりに長い時間を無駄に費やしてしまった。女王の軍は確実に Dallben まで"
-"戻っただろうな。わしらの任務はまだ終わってねぇが、戻って最期の一戦を交えなけ"
-"ればならんな。"
+"畜生！時間をかけすぎた！もう太陽が登っている。衛兵はすぐにワシらに気づいてし"
+"まうだろう……"
+
+#. [message]: speaker=Hans
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:734
+msgid "You fools! You weren’t supposed to lead them to me..."
+msgstr ""
 
 #. [scenario]: id=06_The_Hunters
 #: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:4
 msgid "The Hunters"
 msgstr "狩人"
 
+#. [part]
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:45
+msgid ""
+"24 Deeproot, 501 YW\n"
+"\n"
+"The sun don’t really shine at all in these Grey Woods, but truth be told, I "
+"has been getting used to it more and more. Lounging out in the warm "
+"daylight, talkin’ with Erwen while watching them kids play out in the "
+"fields... those times were so long ago. Our lives weren’t never real "
+"peaceful, but back then, we had our homes and our friends and our family... "
+"now we be creatures of the dark."
+msgstr ""
+"Wesnoth 暦 501 年、深根の月 24 日\n"
+"\n"
+"この灰色森には太陽の光はほとんど入らない。しかし正直なところ、このような環境"
+"にだいぶ慣れてしまってきている。暖かな日差しの中、Erwen と話しながらくつろ"
+"ぎ、野原で遊ぶ子供たちを見て過ごす…… そんな思い出も遠い昔のことだ。ワシらの生"
+"活は決して楽なものではなかったが、少なくともその頃は家も、友も、家族もいた…… "
+"そんなワシらも今は立派な闇の生き物だ。"
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:51
+#, fuzzy
+#| msgid ""
+#| "It be real lonesome like this. I still has me Harper, and I be grateful "
+#| "for the boy, but he don’t really understand an old man like me. I know "
+#| "the past be the past, but I just can’t help but think of sis in times "
+#| "like these. How she used to be dragging me out on some silly little romp, "
+#| "a little job here and there for some gold or lil trinket, or sometimes "
+#| "just for fun... I never wanted to go, of course. I were always real lazy. "
+#| "Still am, even now."
+msgid ""
+"It be real lonesome like this. I still has me Harper, and I be grateful for "
+"the lass, but she don’t really understand an old man like me. I know the "
+"past be the past, but I just can’t help but think of sis in times like "
+"these. How she used to be dragging me out on some silly little romp, a "
+"little job here and there for some gold or lil trinket, or sometimes just "
+"for fun... I never wanted to go, of course. I were always real lazy. Still "
+"am, even now."
+msgstr ""
+"本当に寂しいと感じる。ワシにはまだ Harper がいるし、この小僧がいてくれて本当"
+"に良かったと思う。それでも、小僧にはワシのような老いぼれを本当に理解すること"
+"はできない。どうしても過ぎ去った過去に思いを馳せてしまう。金やちょっとした物"
+"のための作業、きまぐれに思いついたこと、妹がワシをそんなばかげた遊びにひきず"
+"り回したこと……もちろん、ワシはそんなことをやりたくなかった。あの頃も、そして"
+"今も、ワシはのんびりとした気質であるのだから。"
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:55
+#, fuzzy
+#| msgid ""
+#| "Then, Harper tells me, “Come on Uncle, we’re on an adventure! Don’t be so "
+#| "mopey, live a little!” I know he be trying to be cheery, but he really "
+#| "don’t know how much he be reminding me of her sometimes..."
+msgid ""
+"Then, Harper tells me, “Come on Uncle, we’re on an adventure! Don’t be so "
+"mopey, live a little!” I know she be trying to be cheery, but she really "
+"don’t know how much she be reminding me of Erwen sometimes..."
+msgstr ""
+"そんな時、Harper がワシに言った。「行こうぜ叔父さん、俺たちは冒険の旅の真っ最"
+"中なんだから！落ち込んだってしょうがないぜ、元気出して行こう！」こいつは、単"
+"に陽気な雰囲気にしようとしているだけなのだろう、その様子を見て、ワシが妹のこ"
+"とを思い出してしまっていることには気づいていない……気付く理由もないのだが……"
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:59
+msgid ""
+"I must be strong. That’s what I tells myself. I should be strong, but... I "
+"don’t know what be keeping me going, if it be this misguided sense of pride, "
+"or my duties to the village, or Harper, or even just remembering the past, "
+"making some futile attempts to go back to better times."
+msgstr ""
+"ワシは強くあらねばならない。これはワシが常に自分に言い聞かせていることだ。ワ"
+"シは強くあるべきではあるが……ワシを支えるものとは何なのだろうか？肥大化した自"
+"尊心なのか、村や Harper に対する義務感なのか、それとも記憶の中にある幸せな過"
+"去へ戻りたいという叶わない願いなのか。"
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:63
+msgid "Either way, I be here now, on this adventure."
+msgstr "それが何であれ、ワシは今ここにいる。冒険の旅の真っ最中だ。"
+
 #. [side]: type=Shadow Lord, id=Helicrom
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:64
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:90
 msgid "Helicrom"
 msgstr "Helicrom"
 
 #. [side]: type=Shock Trooper, id=Linneus
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:83
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:111
 msgid "Linneus"
 msgstr "Linneus"
 
 #. [side]: type=Lieutenant, id=Archarel
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:101
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:130
 msgid "Archarel"
 msgstr "Archarel"
 
 #. [objective]: condition=win
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:137
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:182
 msgid "Kill all enemy patrols before they reach the outpost"
-msgstr ""
+msgstr "基地にたどりつく前に敵の巡回兵を全て殺す"
 
 #. [objective]: condition=lose
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:149
-#, fuzzy
-#| msgid "Death of Harper"
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:194
 msgid "Death of Helicrom"
-msgstr "Harper の死"
+msgstr "Helicrom の死"
 
 #. [objective]: condition=lose
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:153
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:198
 msgid "Any patrol units survive when turns run out"
-msgstr ""
+msgstr "時間切れ時に巡回兵が生き残っている"
 
 #. [objective]: condition=lose
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:157
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:202
 msgid "Any allied unit is sighted by the outpost guards"
-msgstr ""
+msgstr "基地の衛兵に自軍か友軍のユニットが発見される"
 
 #. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:208
-msgid "The leader, I presume."
-msgstr "あんたがリーダー、だな？"
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:255
+msgid "The leader, I presumes."
+msgstr "あんたがリーダーだな？"
 
 #. [message]: speaker=Helicrom
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:212
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:259
 msgid ""
-"I am Helicrom, and you should not be so glib. I control dangerous men. My "
-"henchmen can slip unseen through any city, rob a man while he sleeps, or "
-"attack a caravan head-on. It’s not noble work, but our pursuits require "
-"plenty of gold."
+"Indeed, I am Lord Helicrom, the Crow of the Grey Woods. We are acquaintances "
+"of Lord Maddock, who sent word to us of your predicament. I believe we can "
+"work something out for your situation."
 msgstr ""
-"私は Helicrom だ。そして、ここではそう饒舌であってはならない。私は物騒な連中"
-"を操っている。我が部下は、どんな都市でも見つからずに忍び込めるし、眠っている"
-"間に盗みを働いたり、あるいは商隊を真正面から襲うこともできる。立派な仕事とは"
-"いえないが、探求のためには多くの金が必要なのだ。"
+"その通り。私は Helicrom 卿、灰色森のカラスと呼ばれている。Maddock 卿の知人で"
+"あり、君たちの苦境についても彼から聞き及んでいる。そういうことならば協力でき"
+"ることもあると確信している。"
 
 #. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:216
-msgid "Your pursuits?"
-msgstr "探求？"
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:263
+msgid "What be your pursuits?"
+msgstr "なぜ追われている？"
 
 #. [message]: speaker=Helicrom
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:220
-msgid ""
-"The former King’s magic ministry kept a tight control on the training and "
-"employment of mages in Wesnoth. Those of us who dared to... depart from the "
-"curriculum, you might say, were dealt with harshly. We are outcasts because "
-"we seek to master shadow magic. Our secrecy and security are not cheap."
-msgstr ""
-"前王の魔法大臣は、Wesnoth における魔術師の訓練と雇用を厳格に管理していた。我"
-"らは…… そうだな、その「レール」から自ら外れようとした者達といったところか。我"
-"らは影の魔法を修めようとし、そのために追放された。それゆえ、我らの秘密は安っ"
-"ぽいものではない。"
-
-#. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:224
-#, fuzzy
-#| msgid "I... see, I think. Why do you want to help us?"
-msgid "Why do you want to help us?"
-msgstr "わかった……ような気はする。しかしなぜわしらを助けようとする？"
-
-#. [message]: speaker=Helicrom
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:228
-#, fuzzy
-#| msgid ""
-#| "We don’t. You have sought us out. But, I do know of your situation and am "
-#| "willing to help. Any weakening of the Throne of Wesnoth, whether it be "
-#| "occupied by King or Queen, aids us."
-msgid ""
-"You are the ones who have sought us out. But, I do know of your situation "
-"and am willing to help. Any weakening of the Throne of Wesnoth, whether it "
-"be occupied by King or Queen, aids us. Do you know of Halstead?"
-msgstr ""
-"別にそんなつもりはなかった。こちらを捜し出したのはお前達の方だ。だが事情を"
-"知った今、お前達を助けようと思ってはいる。そこに座るのが王であれ女王であれ、"
-"Wesnoth の玉座を脅かす要素は、我らにとっては助けとなる。"
-
-#. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:232
-msgid ""
-"The great fort standing between Aldril and Elensefar? It is a bastion of "
-"central importance, second only to Elensefar itself. Of course I know of it."
-msgstr ""
-
-#. [message]: speaker=Helicrom
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:236
-msgid ""
-"Then you should also know this. During the past week, several patrols have "
-"again ventured across the Great River into Annuvin. A woman named Relana "
-"opposed them with a small militia and was victorious. The Crown, however, "
-"has begun to take notice of this rebellion. Asheviere has begun to mass her "
-"forces within Halstead. Should she manage to raise a full army, even "
-"Elensefar would be threatened, nevermind our band of rogues."
-msgstr ""
-
-#. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:240
-#, fuzzy
-#| msgid ""
-#| "The words of Lord Maddock have weighed heavy on me these past few days. "
-#| "It has dawned on me that we can never win. We will never defeat the "
-#| "entire army of Wesnoth. Idiocy! If the noble lord of Elensefar is "
-#| "unwilling to resist the Queen, how should I ever expect to?"
-msgid ""
-"Well, what can we do? It seems to me that we can never win. It is impossible "
-"for us to face the entire forces of Weldyn by ourselves. Idiocy! If the "
-"noble lord of Elensefar is unwilling to resist the Queen, how can we expect "
-"to?"
-msgstr ""
-"ここ数日 Maddock 卿の言葉がわしに重くのしかかってきている。勝てっこねぇという"
-"ことが分かってきたよ。Wesnoth の全軍を破ることなんて絶対できやしねぇ。そんな"
-"んは愚かな妄想だ！Elensefar の貴族にさえ女王に抗うつもりがねぇなら、わしは一"
-"体どうしたら良いって言うんだ？"
-
-#. [message]: speaker=Helicrom
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:244
-msgid ""
-"A direct fight against the Crown would be undoubtedly foolish, but we have "
-"other means within our grasp. From Dan Tonk to Halstead the fastest path "
-"lies through the pass between the Brown Hills and the Gryphon Mountains "
-"followed by the trek through these Grey Woods. We are in prime position to "
-"gnaw away at their troops, crippling their forces before they ever arrive at "
-"their destination."
-msgstr ""
-
-#. [message]: speaker=Harper
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:248
-msgid "There’s no way we can fight them all... can we?"
-msgstr ""
-
-#. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:252
-#, fuzzy
-#| msgid ""
-#| "Do you propose surrender? It’s this or nothing. All we can do is see it "
-#| "through to the end."
-msgid ""
-"We... cannot just surrender either. Helicrom is right. It’s this or nothing. "
-"All we can do is see it through to the end."
-msgstr ""
-"じゃあ、降伏するか？もうやるしかないのだ。さもなくば、座して死を待つ他ない。"
-
-#. [message]: speaker=Helicrom
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:256
-msgid ""
-"My scouts have counted five platoons of troops marching towards the garrison "
-"in the last day. We must eliminate them all before they reach the outpost at "
-"the end of the woods. The outpost also must not be alerted to our presence, "
-"or we will have the bulk of their foces upon us."
-msgstr ""
-
-#. [message]: speaker=Harper
 #: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:267
-#, fuzzy
-#| msgid "Another platoon approaches..."
-msgid "The first platoon approaches..."
-msgstr "別の小隊が近づいてくるぞ……"
+msgid ""
+"The former king’s magic ministry kept a tight control on the training and "
+"employment of mages in Wesnoth. Those of us who dared to... depart from the "
+"curriculum were dealt with harshly. Many of us were forced to escape here to "
+"continue our study of our brand of magic. Our security and secrecy are not "
+"cheap."
+msgstr ""
+"前の王の魔法大臣は Wesnoth での魔術師の雇用と訓練をきっちりと管理していた。"
+"我々のような……カリキュラムから逸脱しようとする者に対する扱いは非常に厳しかっ"
+"た。ここにいる多くの者は、ここで扱う類の魔法を研究していくため、ここに逃げ込"
+"む他なかったのだ。当然ながら、我々のセキュリティと秘匿性は安っぽいものではな"
+"い。"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:271
+msgid "Then you be fellow outlaws. But why do you wants to help us?"
+msgstr ""
+"それならばワシらと同じく無法者ということか。しかし、どうしてワシらに手を貸そ"
+"うと？"
 
 #. [message]: speaker=Helicrom
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:311
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:275
+msgid ""
+"<i>Quid pro quo.</i> Our aid is never given freely. You have something that "
+"may be useful to us."
+msgstr "<i>復讐だ。</i>我等はタダでは動かぬ。さて、そちらは何を提供するのだ？"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:279
+msgid "Manpower. Mages be no good at fighting, I knows. But what for?"
+msgstr "人員。魔術師はあまり戦闘が得意では無いだろう。しかし何のために？"
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:283
+msgid ""
+"Understand this. Any weakening of the Throne of Wesnoth, whether it be "
+"occupied by king or queen, aids us. To accomplish that, we must destabilize "
+"their forces in this region. The key is Halstead."
+msgstr ""
+"Wesnoth 王家の力を弱めるようなことであれば手を貸そう。支配者が王であるのか、"
+"女王であるのかはどうでも良い。そのためには、この地域の敵軍を動揺させねばなら"
+"ない。その鍵は Halstead にある。"
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:287
+#, fuzzy
+#| msgid "The great fort standing between Aldril and Elensefar?"
+msgid "That big ol’ fort between Aldril and Elensefar?"
+msgstr "Aldril と Elensefar にある巨大な砦のことか？"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:291
+msgid ""
+"Aye, Harper. What the mage says be no surprise. It be a bastion of central "
+"importance, rivalin’ Elensefar even. Maddock said the Queen’s troops were "
+"gathering there. But we gots no way to fight a war with them, not since "
+"Maddock won’t send his soldiers to battle."
+msgstr ""
+"そうだ、Harper。たしかにあそこは鍵ではあろう。あそこは最重要拠点で、"
+"Elensefar とも対抗できるほどだ。Maddock も女王の軍勢があそこに集まっていると"
+"言っていた。しかし、ワシらだけであそこと戦うのは無理だ。例え Maddock が兵士を"
+"送ってくれたとしても、その事実は変わらない。"
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:295
+msgid ""
+"Know this, Baldras. During the past week, several patrols have again "
+"ventured across the Great River into Annuvin. A woman named Relana opposed "
+"them with a small militia and was victorious, but with heavy losses. The "
+"Crown, however, has begun to take notice of this rebellion and is massing "
+"forces within Halstead. When its armies are raised, none of your little "
+"villages will be able to resist them. Your only choice would be to flee "
+"farther north into orcish territory."
+msgstr ""
+"もちろんそれは承知しているぞ、Baldras。先週、いくつかの巡回部隊が危険を省み"
+"ず、大いなる川を越えて Annuvin へと入った。Relana という女性が小規模な民兵の"
+"一団を率いてこれに対抗し、かなりの損害を出しつつも勝利を収めたらしい。王家は"
+"この反乱に注目しており、Halstead に軍勢を集め始めたようだ。この軍勢の準備が"
+"整ったら、お前たちの小さな村がどれだけ力を合わせても対抗できまい。そこで残る"
+"選択肢は、さらに北のオークの領域に逃げることくらいだろう。"
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:299
+msgid ""
+"We’d never survive there. But would it be so bad if we just swore fealty to "
+"the Queen?"
+msgstr ""
+"それでは生き残るのは無理だ。それならば、女王に忠誠を誓った方がまだマシじゃな"
+"いのか？"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:303
+msgid "Only if we gots no other choice. Let’s hear the mage’s plan first."
+msgstr "それは最後の手段だな。まずはこの魔術師の計画を拝聴しよう。"
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:307
 #, fuzzy
 #| msgid ""
-#| "When we are done, no one will fear the open roads and night sky more than "
-#| "the army of the usurper. Strike fast, strike silently... and leave no one "
+#| "I’m not asking you to fight a war. A direct fight against Weldyn’s armies "
+#| "would be undoubtedly foolish. However, we have other means within our "
+#| "grasp. From Dan Tonk to Halstead, the fastest path lies through the pass "
+#| "between the Brown Hills and the Gryphon Mountains followed by the trek "
+#| "through these Grey Woods. We are in prime position to gnaw away at their "
+#| "troops, crippling their forces before they ever arrive at their "
+#| "destination."
+msgid ""
+"I’m not asking you to fight a war. A direct fight against Weldyn’s armies "
+"would be undoubtedly foolish. However, we have other means within our grasp. "
+"From Dan’Tonk to Halstead, the fastest path lies through the pass between "
+"the Brown Hills and the Gryphon Mountains followed by the trek through these "
+"Grey Woods. We are in prime position to gnaw away at their troops, crippling "
+"their forces before they ever arrive at their destination."
+msgstr ""
+"戦争をしてもらおうとは思っていない。当然のことながら、Weldyn の軍勢と直接戦っ"
+"たところで勝機は無い。しかし、我々が動ける範囲でできることがあるのだ。Dan "
+"Tonk から Halstead に最速で向かうには、茶色丘陵とグリフォンの山の間を抜け、こ"
+"の灰色森を通ることになる。つまり、ここは目的地に着く前に敵の力を削ぐために最"
+"上の場所であるのだ。"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:311
+msgid "Then what?"
+msgstr "それで？"
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:315
+msgid "I am sure you can guess, magistrate."
+msgstr "その先はもうわかっているだろう、村長。"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:319
+msgid "You means to sack Halstead itself."
+msgstr "Halstead を落とすのか。"
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:323
+msgid "There’s no way we can fight them all... can we?"
+msgstr "そこの全員を俺たちでなんとかするのは無理……って言ってたよな？"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:327
+msgid ""
+"I don’t know. But, for now, ambushing them patrols be easy enough. That’ll "
+"slow them Wesnothians down enough for us to figure out the next step."
+msgstr ""
+"ワシにはわからん。しかし、とりあえず、移動中の兵士に奇襲をかけるのは簡単な仕"
+"事だ。Wesnoth の連中を足止めし、次のステップを考える時間くらいは稼げるだろ"
+"う。"
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:331
+msgid ""
+"In the last day, my scouts have counted five platoons of troops marching "
+"towards the garrison. We must eliminate them all before they reach the "
+"outpost at the end of the woods. The outpost also must not be alerted to our "
+"presence, or we will have the bulk of their forces upon us."
+msgstr ""
+"私の放った斥候の報告によると、5 つの部隊が現在要塞へ移動している。我々は彼ら"
+"が森の外にある基地までたどりつく前に排除しなければならない。もちろん、基地に"
+"我々の存在を気付かせてもいけない。もし見つかれば、敵の大軍が我等に向かってき"
+"てしまう。"
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:342
+msgid "The first platoon approaches..."
+msgstr "一つ目の部隊が近づいてきた……"
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:386
+#, fuzzy
+#| msgid ""
+#| "My men and I shall pincer them from the other side of this path. When we "
+#| "are done, no one shall fear the open roads and night sky more than the "
+#| "armies of Weldyn. Strike quickly, strike silently... and leave no one "
 #| "alive."
 msgid ""
-"My henchmen and I shall pincer them from the other side of this path. When "
-"we are done, no one will fear the open roads and night sky more than the "
-"army of the usurper. Strike fast, strike silently... and leave no one alive."
+"We shall pincer them from the other side of this path. When we are done, no "
+"one shall fear the open roads and night sky more than the armies of Weldyn. "
+"Strike quickly, strike silently... and leave no one alive."
 msgstr ""
-"これを成し遂げた暁には、簒奪者の軍勢は誰よりも開けた道と夜空に震え上がるよう"
-"になるだろう。速やかに打ち、静かに落とせ…… 誰一人生きて帰すな。"
+"私と部下達が道の反対側から攻撃し、挟み撃ちにする。これを成し遂げれば、Weldyn "
+"の軍隊は開けた道と夜空を何よりも恐れるようになるだろう。素早く、そして静かに"
+"潰せ。……そして、誰も生かして返すな。"
 
 #. [message]: speaker=Linneus
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:423
-#, fuzzy
-#| msgid "It’s an ambush! Hold your ground!"
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:508
 msgid "It’s an ambush! Run!"
-msgstr "待ち伏せか！押し返すぞ！"
+msgstr "奇襲だ！走れ！"
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:523
+msgid ""
+"Ah, here it is. I was wondering where I had misplaced my favorite blade."
+msgstr ""
+"ああ、こんなところにあったのか。このナイフは気に入っていたのだが、どこにある"
+"のかわからなくなっていたのだ。"
+
+#. [message]: speaker=unit
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:557
+msgid "Hey, I found some old coins in this shack."
+msgstr "掘っ立て小屋に古い金貨があったぞ。"
+
+#. [message]: speaker=unit
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:593
+msgid "Bleagh, a slimy tentacle. Why’s it so big?"
+msgstr "うわ、ヌルヌルした触手だ。なんでこんなにでかいんだ？"
+
+#. [message]: speaker=unit
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:606
+msgid "There’s a rusty key here. I wonder if it could be useful?"
+msgstr "錆びた鍵がある。何か役に立つのか？"
+
+#. [message]: speaker=unit
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:633
+msgid "There is a waterlogged coffin here."
+msgstr "水浸しになった棺がある。"
+
+#. [message]: speaker=unit
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:646
+msgid "Hey, that key fits in this coffin. Should I open it?"
+msgstr "お、あの鍵はこの棺の鍵だったようだ。開けてもいいか？"
+
+#. [option]
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:651
+msgid "No, that be a terrible idea."
+msgstr "やめろ、嫌な予感がする。"
+
+#. [option]
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:658
+msgid "Fine, do it."
+msgstr "よし、やってみろ。"
+
+#. [message]: speaker=unit
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:673
+msgid "What is this disgusting monster?"
+msgstr "この気持ち悪い怪物は一体何だ？"
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:678
+msgid ""
+"A ghoul, a creature of disease and pestilence. Kill the putrid thing. Its "
+"stench is making me sick."
+msgstr ""
+"グール。病気や疫病の怪物だ。その腐った化け物をさっさと殺すのだ。臭くてかなわ"
+"ん。"
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:703
+msgid ""
+"Disgusting though it may be, perhaps that creature’s corpse could be useful."
+msgstr "不快ではあるが、その屍は役に立つかもしれん。"
+
+#. [message]: speaker=unit
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:718
+msgid "Should I use this potion?"
+msgstr "この薬を使ってもいいか？"
+
+#. [option]
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:720
+msgid "Yes, I’ll use it."
+msgstr "使ってくれ。"
+
+#. [object]: id=poison_weapon
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:728
+msgid "Vile Concoction"
+msgstr "不快な調合薬"
+
+#. [object]: id=poison_weapon
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:730
+msgid ""
+"This unit’s melee weapons gain the poison special and this unit gains a "
+"small number of hitpoints."
+msgstr ""
+"このユニットの近接攻撃は毒の特殊能力を獲得し、ユニットの HP が少し増加しま"
+"す。"
+
+#. [option]
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:764
+msgid "No, I’ll leave it for someone else."
+msgstr "いや、他の誰かに使わせる。"
+
+#. [message]: type=Spearman
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:877
+msgid "Doesn’t something about these woods feel weird to you, sir?"
+msgstr "何かこの森は嫌な感じがしませんか、隊長？"
+
+#. [message]: type=Pikeman
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:881
+msgid "Afraid of ghosts, soldier?"
+msgstr "幽霊でも怖がっているのか？"
+
+#. [message]: type=Master at Arms
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:991
+msgid ""
+"Woods, woods, woods and more woods! Bah, that general had better have a good "
+"reason for dragging me out to Halstead with all these oafs."
+msgstr ""
+"森、森、森、そしてまた森！フン、あの将軍め、このアホどもと一緒に Halstead ま"
+"で呼び出すとは。せめてまともな理由があるといいのだがな。"
+
+#. [message]: type=Duelist
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:995
+msgid "But cap’n, we’re your loyal troops..."
+msgstr "しかし隊長、我々はあなたの忠実な部隊で……"
+
+#. [message]: type=Master at Arms
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:999
+msgid "Shut it and keep moving."
+msgstr "黙ってさっさと進め。"
 
 #. [message]: speaker=Archarel
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:647
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1020
 msgid ""
 "Several platoons of troops were supposed to arrive today. I wonder if "
-"something has happened to them."
+"something happened to them."
 msgstr ""
+"いくつかの部隊が今日到着するはずだったのだが。彼らに何かがあったのだろうか。"
 
 #. [message]: speaker=Archarel
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:664
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1037
 msgid ""
 "Something about these woods seems quite unnatural. Perhaps we should stop "
 "sending our soldiers this way."
-msgstr ""
+msgstr "森の様子が極めて不自然に見える。兵士をあちらに送らない方が良さそうだ。"
 
 #. [message]: speaker=Archarel
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:680
-#, fuzzy
-#| msgid ""
-#| "Troops, to arms! These peasant scum think they are above the law. We will "
-#| "show them the law!"
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1053
 msgid ""
-"Troops, to arms! These fugitive scum think they are above the law. We will "
-"show them the law!"
-msgstr ""
-"全軍、武器を取れ！あの農民の屑どもは、自分が法より偉いと思っていやがる。やつ"
-"らに法の何たるかを示せ！"
+"Troops, to arms! Show these fugitive scum the meaning of the Queen’s law!"
+msgstr "戦闘準備だ！逃亡者どもに女王の法を教えてやれ！"
 
-#. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:684
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1057
 msgid ""
 "With the outpost aware of our presence, we can no longer harry their "
-"reinforcements. I fear their forces will soon grow too powerful for us to "
-"resist."
+"reinforcements. Their forces will soon grow too powerful for us to resist."
 msgstr ""
+"基地が我等の存在に気付いてしまったら、集結中の部隊を攻撃することができない。"
+"時間の問題で我々は対抗できなくなるだろう。"
 
 #. [message]: speaker=narrator
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:700
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1073
 msgid ""
 "The next morning, the local night patrol returned to the nearby outpost. "
 "They were surprised to see their fellow soldiers engaged in combat with the "
@@ -1550,85 +2491,123 @@ msgstr ""
 "していた無法者の一団と友軍が交戦しているのを見て驚愕しました。"
 
 #. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:749
-msgid ""
-"What a bloody mess, but it is done. Their patrols are shattered and broken."
-msgstr ""
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1133
+msgid "It be done. Their patrols be shattered and broken."
+msgstr "やったか。連中の部隊を完全に潰したな。"
 
 #. [message]: speaker=Helicrom
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:754
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1138
 msgid ""
-"A job well done, but the fight is far from over. We have only sacked a few "
-"of their platoons, but more will come. These tactics will not work forever."
+"Well done, but the fight is far from over. We will not be able to employ "
+"these tactics when more platoons arrive. You must make your choice. Will you "
+"fight? Or will you return to your village and beg for amnesty?"
 msgstr ""
+"良くやった。しかし戦いはまだまだこれからだ。たくさんの部隊が来るようになれ"
+"ば、この戦術も使えない。ここで選択してもらおう。戦うか？それとも、村に戻って"
+"女王の慈悲にすがるか？"
 
 #. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:759
-#, fuzzy
-#| msgid ""
-#| "What a bloody mess. We must attack Halstead next. If we wait, they will "
-#| "become invincible. If we can burn it to the ground before that happens, "
-#| "our people may have a chance. Rest well tonight, because tomorrow’s "
-#| "battle will decide the fate of our homes, our families, and our freedom."
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1143
 msgid ""
-"It seems to me that our only choice is to attack Halstead itself. If we "
-"wait, their armies will become invincible. If we can burn it to the ground "
-"before the Queen’s forces rally, we may yet be able to break their foothold "
-"in this province."
+"Amnesty? Knowing these Wesnothians, they’ll have my head. Then again, if I "
+"could gives my life to save my whole village, I would."
 msgstr ""
-"何という血生臭い光景だ。しかし、わしらは次に Halstead をも攻めねばならん。攻"
-"撃が遅れれば、もはや太刀打ちできなくなる。そうなる前に焼き尽くすことができれ"
-"ば、同胞を助けられるかもしれん。今夜はゆっくり休んでくれ。明日の戦いでわしら"
-"の故郷と、家族と、そして自由の運命が決まるのだからな。"
+"慈悲？それでも Wesnoth の連中はワシの首を欲しがるだろう。しかし、それで村が助"
+"かるのならば、それも悪くはない。"
 
 #. [message]: speaker=Harper
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:764
-msgid ""
-"Attack them directly? I thought you said there was no way we could fight "
-"them head on."
-msgstr ""
-
-#. [message]: speaker=Helicrom
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:769
-msgid ""
-"The only other option is to flee, but just as you have chosen to fight to "
-"protect your village, we are not so keen on abandoning our home in these "
-"woods."
-msgstr ""
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1148
+msgid "We need you! Uncle..."
+msgstr "そんな！俺たちには叔父さんが必要だ……"
 
 #. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:774
-msgid "So you’ll join us?"
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1153
+#, fuzzy
+#| msgid ""
+#| "I know what you is going to say, Harper. That we should be fighting for "
+#| "our homes, just like we do against them orcs. But we be risking "
+#| "everything on this, lad."
+msgid ""
+"I know what you is going to say, Harper. That we should be fighting for our "
+"homes, just like we do against them orcs. But we be risking everything on "
+"this, lass."
 msgstr ""
+"Harper、お前が何を言おうとしているかはわかっている。オークと戦った時と同じよ"
+"うに、ワシらの村のために戦おう、というところだろう。しかし、そうすれば村全体"
+"が危険になってしまう。"
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1158
+msgid ""
+"If we go back like this, that means we’ll surrender to them Wesnothians and "
+"live our whole lives in oppression. You saw how they were sending so many "
+"soldiers and even orcs against us."
+msgstr ""
+"戻って、Wesnoth に降伏したところで、抑圧されて暮らすことになるのだろう。たく"
+"さんの兵士やオークまでもが俺たちのところへ送り込まれたのを叔父さんも見ただろ"
+"う。"
 
 #. [message]: speaker=Helicrom
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:779
-msgid "We will."
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1163
+#, fuzzy
+#| msgid ""
+#| "The boy is naive, but his spirit is in the right place. You risk your "
+#| "homes and the lives of your people, yes, but what good will they be if "
+#| "you live in tyranny? Believe me, I have been there. I would rather die "
+#| "than go back."
+msgid ""
+"The girl is naive, but her spirit is in the right place. You risk your homes "
+"and the lives of your people, yes, but what good will they be if you live in "
+"tyranny? Believe me, I have been there. I would rather die than go back."
 msgstr ""
+"その少年は素直すぎるかもしれんが、その心は善良だ。村や村人を危険にさらすこと"
+"になるのは事実だ。しかし、暴君の元で生きることは本当に幸せなのか？私はそのよ"
+"うな環境で生きてきた者だ。そして、そんな私は、あんな暮らしに戻るくらいなら死"
+"んだ方がマシ、と思っている。"
 
 #. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:784
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1168
 msgid ""
-"Then it’s decided. We will attack the fort and raze it. Rest well tonight. "
-"Tomorrow’s battle will be a difficult one."
+"Yes... Erwen would’ve said the same. If we march on Halstead, we gots to "
+"burn it to the ground before the Queen’s forces rally. If we does that, "
+"Weldyn won’t have no foothold in Annuvin no more."
 msgstr ""
+"そうだな…… Erwen も同じことを言っただろう。Halstead に向かい、女王の軍勢が集"
+"結する前に跡形もなく破壊する。それを成し遂げれば、Weldyn は Annuvin への足が"
+"かりを完全に失うことになる。"
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1173
+msgid ""
+"It would be months before they could reassemble their forces here. Enough "
+"time for you to secure your homes, or relocate."
+msgstr ""
+"その状況で軍勢を集めるには、数ヶ月はかかるだろう。村を守るにしても、移転する"
+"にしても時間は十分だろう。"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1178
+msgid "Then it be decided. We’ll attack the fort together. Luck be with us."
+msgstr "決断はくだされた。ワシらはともに要塞を攻撃する。幸運があらんことを。"
 
 #. [message]: speaker=unit
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:822
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1219
 msgid ""
 "Lieutenant, we were assaulted by a band of outlaws en route to the outpost. "
-"We were only barely able to evade them and make it here!"
+"We were barely able to evade them and make it here!"
 msgstr ""
+"副官よ、基地への道で無法者の襲撃を受けた。我々はなんとか難を避けてここまでた"
+"どり着いた！"
 
 #. [message]: speaker=second_unit
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:842
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1239
 msgid "Look there! Outlaws and bandits roam these woods, harrying our patrols!"
-msgstr ""
+msgstr "見ろ！無法者や盗賊が森をうろつき、巡回の兵を妨害している！"
 
 #. [message]: speaker=Helicrom
-#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:859
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1256
 msgid "This is the end for me..."
-msgstr ""
+msgstr "私もこれで終わりか……"
 
 #. [scenario]: id=07_Glory
 #: data/campaigns/Liberty/scenarios/07_Glory.cfg:4
@@ -1637,353 +2616,416 @@ msgstr "栄光"
 
 #. [part]
 #: data/campaigns/Liberty/scenarios/07_Glory.cfg:20
+#, fuzzy
+#| msgid ""
+#| "From the Annals of Alduin, 98 YW\n"
+#| "\n"
+#| "One score and eight years ago, in 70 YW, the King of Wesnoth and the Lord "
+#| "of Elensefar signed a treaty of trade and alliance in order to further "
+#| "the security of humankind. The realization of this treaty required the "
+#| "creation of a safe path between Weldyn and Elensefar, with all manner of "
+#| "hostile creature or beast scoured from these civilized lands. From Dan "
+#| "Tonk, the establishment of Aldril and Carcyn secured the once hazardous "
+#| "passage alongside the Grey Woods, completing the way between the two "
+#| "cities. With this, the alliance can truly be deemed a coalition of men."
 msgid ""
-"In the Year of Wesnoth 161, the newly crowned king sought to tame the "
-"wildlands that separated the human cities surrounding Weldyn and the coastal "
-"regions of Elensefar once and for all."
+"From the Annals of Alduin, 98 YW\n"
+"\n"
+"One score and eight years ago, in 70 YW, the King of Wesnoth and the Lord of "
+"Elensefar signed a treaty of trade and alliance in order to further the "
+"security of humankind. The realization of this treaty required the creation "
+"of a safe path between Weldyn and Elensefar, with all manner of hostile "
+"creature or beast scoured from these civilized lands. From Dan’Tonk, the "
+"establishment of Aldril and Carcyn secured the once hazardous passage "
+"alongside the Grey Woods, completing the way between the two cities. With "
+"this, the alliance can truly be deemed a coalition of men."
 msgstr ""
-"Wesnoth 歴 161 年、新たに戴冠した王は、Weldyn 周辺の人間の都市と Elensefar 周"
-"辺の沿岸地域を隔てている荒野の平定についに乗り出しました。"
+"Alduin 年代記より、Wesnoth 暦 98 年\n"
+"\n"
+"今より 20 と 8 年の前、Wesnoth 暦 70 年、Wesnoth の王と Elensefar の領主は、"
+"人間族全体の安全をさらに確実にするため、通商と軍事同盟の条約に調印した。この"
+"条約の実現には Weldyn と Elensefar を結ぶ安全な経路の創出が必須であった。その"
+"ため、この地域におけるあらゆる敵対的な存在は徹底的に排除された。Dan Tonk から"
+"道が作られ、Aldril と Carcyn の居留地が設立されたことで灰色森近くを通るかつて"
+"危険だった道も安全となり、二つの都市の間に安全な経路が確保された。これを持っ"
+"て、人間族が真に統合されたと考えられるようになった。"
 
 #. [part]
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:23
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:26
 msgid ""
-"The grand army of Wesnoth, personally led by the High Council of Archmagi, "
-"scoured the plains of all manner of hostile creature, be it beast, orc, or "
-"elf. The city-state of Elensefar was formally united to the kingdom and "
-"settlements rapidly spread. The country of Wesnoth had been carved in deed "
-"as well as in name."
+"To commemorate the concordat, six years ago, the Lords of Weldyn and "
+"Elensefar decreed that a monument be erected in the heart of these once "
+"wildlands. We, the magi of Alduin, lent our services to demonstrate the full "
+"prowess and might of human magic. Above a series of old catacombs in a scant "
+"hill, we spent these years raising an immense stronghold from the earth’s "
+"living rock."
 msgstr ""
-"大魔導高等評議会に直々に率いられた Wesnoth の大軍隊は、平原に住まうあらゆる種"
-"類の敵対的な生物、野獣やオーク、あるいはエルフを掃討して回りました。都市国家 "
-"Elensefar は正式に王国に併合され、開拓地は急速に広がりました。Wesnoth の国が"
-"名実共に切り開かれたのです。"
+"条約の成立を祝うため、6 年前、Weldyn と Elensefar の領主はかつて原野だった場"
+"所の中心に、記念碑を建立するとの布告を出した。我々、Alduin 島の魔術師は人間の"
+"魔術の力と技を誇示するため、その事業に協力することになった。それからこれまで"
+"時間をかけ、地下墓地が連なる小さな丘の上に天然石で作られた巨大な要塞を建設し"
+"ていた。"
 
 #. [part]
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:27
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:30
 msgid ""
-"A monument to this achievement was erected in the very heart of the "
-"wildlands. In a twelve-year ritual, the High Council demonstrated the height "
-"to which human magic had grown over the years by drawing the monument "
-"directly from the earth’s living rock."
+"Completed, as it is on this day, this sentinel of the west now towers "
+"hundreds of paces tall, a great monolith looming sheer above the plains. The "
+"sight of these colossal walls, to even us magi, is both awe-inspiring and "
+"terrifying. So tall these towers peak and so mighty these walls arise that "
+"such a feat seems more like a force of nature than a work of man. That we "
+"have fashioned this mountain as insignificant humans is almost "
+"inconceivable. Halstead, as we have named it, is impenetrable. No one shall "
+"ever overcome these tidal waves of stone."
 msgstr ""
-"荒野のちょうど中心に、この偉業達成の記念碑が建立されました。十二年にも及ぶ儀"
-"式の果て、高等評議会は大地にある自然の石から直接、この巨大な記念碑を引き出す"
-"ことによって、人間の魔術が年月を経て到達した高みを示したのです。"
-
-#. [part]
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:31
-msgid ""
-"Hundreds of feet tall, the mountain towered high above the plains, its sheer "
-"walls both inspiring and terrifying. Men from all over the countryside "
-"labored there, building the most formidable fortress ever conceived. It "
-"became the Stronghold of Halstead."
-msgstr ""
-"魔術によって引き出されたそれは、何百フィートもの高さがあり、平野に高くそびえ"
-"立つ山のようでした。その切り立った壁は感動的であり、恐ろしいものでもありまし"
-"た。そして、辺境地帯全域の人々がそこで働き、それまでに考えられたなかでもっと"
-"も堅固な砦となりました。それが Halstead の要塞です。"
-
-#. [part]
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:35
-msgid ""
-"This sentinel of the western plains stood watch as Wesnoth prospered for "
-"many centuries under its protection. No war has overcome it, and its walls "
-"have never been overrun. The blood of invaders stains its parapets and the "
-"bones of the defeated crumble at the base of Halstead’s frozen waves of "
-"stone."
-msgstr ""
-"その庇護の下で Wesnoth は何世紀も続く繁栄を遂げ、西の平野に立つこの巨大な衛士"
-"もずっとその様子を見つづけてきました。どんな戦争でも陥落することはなく、その"
-"壁は一度たりとも乗り越えられたことがありません。侵略者の血は胸壁に染みを付"
-"け、敗北者の骨は砕かれ、Halstead の礎石の前に散らばるばかりでした。"
+"それが本日完成を迎えた。平原に数百歩の高さで垂直に屹立する巨大なモノリス、こ"
+"の西方の衛士はその勇姿をたたえている。この壮大な壁を見ると、我々魔術師でさえ"
+"も畏敬の念とそして恐怖を抱いてしまうほどだ。天を突くその頂と頑強な壁を見てし"
+"まうと、人の手で作られたとは到底思えず、大自然の妙技であるとの念が自然とわい"
+"てしまう。我々の作ったこの山は、市井の凡夫には全く理解できないものであろう。"
+"Halstead、我々が名づけたこの要塞が落ちることはない。誰もこの岩の高波を越える"
+"ことはできないのだ。"
 
 #. [side]: type=General, id=Dommel
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:59
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:56
 msgid "Dommel"
 msgstr "Dommel"
 
 #. [side]: type=Orcish Warlord, id=Vashna
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:101
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:99
 msgid "Vashna"
 msgstr "Vashna"
 
 #. [objective]: condition=win
 #: data/campaigns/Liberty/scenarios/07_Glory.cfg:152
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:218
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:393
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:221
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:416
 msgid "Destroy the stronghold of Halstead"
 msgstr "Halstead 要塞を破壊する"
 
 #. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:249
-msgid "There it is. The stronghold of Halstead."
-msgstr "見えたぞ。Halstead 要塞だ。"
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:252
+msgid "There be it. The stronghold of Halstead."
+msgstr "これが Halstead 要塞だな。"
 
 #. [message]: speaker=Harper
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:262
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:265
 msgid ""
-"Look at how tall it is! Those towers rise sheer out of the ground, as if "
-"called forth out of the earth."
+"Look at how tall it is! Those towers be so sheer and smooth, it almost looks "
+"like magic called them up out of the earth!"
 msgstr ""
-"何て高さだ！塔がまるで大地から引き抜かれたかのように地面に垂直に立っている"
-"ぞ。"
+"何て高さだ！まるで魔法で大地から引き抜かれたかのように、塔が地面に垂直に立っ"
+"ている！"
 
 #. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:267
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:270
 msgid ""
-"That may not be too far from the truth. During the time of the Great Kings "
-"of Wesnoth, this land was tamed with powerful magic. Wizards of an ancient "
-"era forged the walls of Halstead from the rock below."
+"Aye, there may be some truths in that. Old stories tells us that in times "
+"past, Elensefar and Weldyn had some real strong mages, much more adept than "
+"them ones who only be politicking nowadays. They helped tame the lands "
+"between the cities and forged the walls of Halstead itself to honor the "
+"alliance."
 msgstr ""
-"その表現は言い得て妙だな。Wesnoth の偉大な王の時代、この地は強大な魔術の力で"
-"征服された。その後、いにしえの魔術師たちが Halstead の壁を地下の岩石から作り"
-"出したと言われている。"
+"ああ、それはある意味正しいとも言えるかもな。昔話によると、そのころの "
+"Elensefar や Weldyn には本当にすごい魔術師達がいたらしい。今の政治ごっこしか"
+"しない連中なんざ、彼らと比べたら見習い程度でしかないだろう。同盟を讃えるため"
+"の記念碑とするため、そのすごい魔術師達が大地を操り、Halstead の壁として作り上"
+"げたと言われているな。"
 
 #. [message]: speaker=Harper
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:272
-msgid ""
-"I don’t see how we can bring it down. They are already invincible in there!"
-msgstr ""
-"どうすればあれを攻め落とせるのか見当も付かねぇ。中にいるだけで無敵じゃねぇ"
-"か！"
-
-#. [message]: speaker=Helicrom
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:276
-msgid ""
-"No, my young friend. Halstead indeed has a weakness. Among my many assets is "
-"access to a wealth of secrets few in Wesnoth are privy to."
-msgstr ""
-"それは違う、年若き友よ。Halstead には実のところ、弱点がある。私の持つ資産の中"
-"には、Wesnoth でも少数の者のみが関知している秘密に関わるものがあるのだ。"
-
-#. [message]: speaker=Helicrom
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:280
-msgid ""
-"You see, the mountain on which the fort was built is solid, but the castle "
-"on top has been built and rebuilt many times over the ages. It is not as "
-"indestructible as you might think."
-msgstr ""
-"見ての通り、あの砦が造られた山は堅固ではあるが、その上の城は何度も建て直され"
-"ている。あれはお前が思っているほど不滅なものではない。"
-
-#. [message]: speaker=Helicrom
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:284
-msgid ""
-"Beneath the structure is a system of catacombs that connects all four towers "
-"to the central keep. Over time, after many wars, supports were required to "
-"hold up the middle."
-msgstr ""
-"建物の下には、四つの塔と中心の天守をつなぐ地下通路網がある。時が経ち、多くの"
-"戦争を経ると、中央部を支えるのに支柱が必要になった。"
-
-#. [message]: speaker=Harper
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:288
-msgid ""
-"So... we can knock out the supports and bring down the stronghold of "
-"Halstead. Would it really work?"
-msgstr ""
-"ってことは…… 支柱を破壊して Halstead 要塞を陥落させることができると言うわけ"
-"か。本当にうまくいくのか？"
-
-#. [message]: speaker=Helicrom
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:292
-msgid ""
-"I believe it will. Each tower has a passage down to the catacombs. If we can "
-"reach the center of each tower, one of our men can escape down to the bowels "
-"of the mountain and destroy its support. I am sure we will need to demolish "
-"no less than all four supports to raze the fortress."
-msgstr ""
-"そうだ、と信じておる。各塔には地下通路につながる通路がある。それぞれの塔の中"
-"央に着くことができたなら、山の内部に入って支柱を破壊できる。要塞を破壊するた"
-"めには 4 本の支柱全てを破壊するしかないだろう。"
-
-#. [message]: speaker=Harper
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:296
-msgid ""
-"I hope you’re right. In a few hours, night will fall, and we will find out."
-msgstr ""
-"そいつが正しいってことを願ってるぜ。数時間もすれば夜になる、正確なところもそ"
-"のうちわかるだろうぜ。"
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:275
+msgid "I don’t see how we can bring it down. They seem invincible in there!"
+msgstr "どうやってあんなものを壊すんだ？あんなものが壊れるとは思えない！"
 
 #. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:300
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:279
+msgid "Indeed..."
+msgstr "たしかに……"
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:283
 msgid ""
-"We must be cautious. Look there, a substantial orc force is also advancing "
-"on Halstead. They must think Wesnoth’s army is spread out right now."
+"Worry not, Halstead has a weakness. What Baldras spoke was partly true. "
+"Previous orders of magi did help erect the fortress. What is not made known "
+"to most is that the original construction of the castle was flawed."
 msgstr ""
-"用心しろ。あれを見ろ、相当数のオークの軍勢も Halstead へ進軍してきているぞ。"
-"オークどもめ、Wesnoth の軍隊がちょうど今ばらばらに散っていると考えたに違いな"
-"い。"
+"心配するな。Halstead には弱点がある。Baldras の言ったことが全て正しいわけでは"
+"ないのだ。当時の魔術師会がこの要塞の建設に関与していたことには間違い無い。し"
+"かし、一般に知られていないことがある。最初に建築された城には欠点があったの"
+"だ。"
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:287
+msgid ""
+"These walls were raised over a system of catacombs, which connect the four "
+"towers to the central keep. Though they appear impressive, the tunnels were "
+"never meant to hold up such a tremendous weight. Supports were added later "
+"to hold up the middle, which eventually began to collapse without them. "
+"Naturally, this was made secret by the magi, who did not want others to "
+"learn of their error."
+msgstr ""
+"この壁は地下墓地群の上に建っている。4 つの塔と中央の主塔の下には地下墓地の空"
+"洞があるのだ。この要塞そのものは非常に堅牢ではあるが、地下に空洞があるため"
+"に、本来ここの地面はこのようなとてつもない重量を支えることはできない。そのた"
+"めに、途中で支持材が追加され、補強されている。つまり、その支持材を撤去してし"
+"まえば、要塞は自壊するということだ。当然のことながら、そのことを知っていた魔"
+"術師達によって、この事実は秘されていた。"
 
 #. [message]: speaker=Harper
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:304
-msgid "Heh. They’re in for a surprise. This may work to our advantage."
-msgstr "へっ。奇襲を仕掛けてきたってか。こっちに有利に働くかもしれないな。"
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:291
+msgid ""
+"So... we can knock out the supports and bring down the main keep. Would it "
+"really work?"
+msgstr ""
+"ということは……その支持材とか言うのをどかしてしまえば、兵士の駐留している中央"
+"の主塔ごと崩壊するってことか。そんなにうまく行くのか？"
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:295
+msgid ""
+"I believe it will. Each tower has a passage down to the catacombs. We must "
+"enter the tunnels and demolish all four supports, then the fortress should "
+"crumble."
+msgstr ""
+"うまくいくと信じている。それぞれの塔には地下墓地へ続く通路がある。我々はトン"
+"ネルに入り、4 つ全ての支持材を破壊しなければならない。それで要塞は崩壊するは"
+"ずだ。"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:299
+msgid "Let’s hope you be right. Everything be hinging on this battle."
+msgstr ""
+"あんたの言うことが正しいことを願っているよ。全てはこの戦闘にかかっているのだ"
+"からな。"
+
+#. [message]: speaker=Vashna
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:308
+msgid ""
+"Dommel! The Queen has sent me and my warriors to support your forces. We "
+"come to squash the puny peasant rebellion."
+msgstr ""
+"Dommel！お前を助けるため、女王が俺と部下たちをここに寄越したぞ。協力して惰弱"
+"な農民どもの反乱を叩き潰すぞ。"
+
+#. [message]: speaker=Dommel
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:312
+msgid "I received no word from Her Majesty of your arrival, orc."
+msgstr "オークよ、私は女王陛下からそのようなことは聞いていない。"
+
+#. [message]: speaker=Vashna
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:316
+msgid "I have the orders right here."
+msgstr "命令書はここにある。"
+
+#. [message]: speaker=Dommel
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:320
+#, fuzzy
+#| msgid ""
+#| "I do not care. I would be a fool and an oaf to let a band of stinky "
+#| "raider orcs into Halstead without a fight."
+msgid ""
+"As if those could possibly be real. I would be a fool and an oaf to let a "
+"band of stinky raider orcs into Halstead without a fight."
+msgstr ""
+"そんなものは知らない。貴様等のように臭う略奪者を戦いもせずに Halstead に入れ"
+"てしまったら、私がとんでもない無能だと吹聴するようなものだ。"
+
+#. [message]: speaker=Vashna
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:324
+msgid ""
+"What? Now look here, you coddled pinkskin. Your helpless ‘soldiers’ have "
+"been getting bested by a filthy bunch of vagrant bandits. Your army is as "
+"useless as you are pink. The Queen sent us here to clean up the mess that "
+"you are clearly too stupid to fix on your own."
+msgstr ""
+"何だと？貴様は物分かりの悪いガキなのか？お前のかわいそうな兵士たちは薄汚れた"
+"無法者に良いようにやられているじゃないか。お前の部下もお前と同程度に無能なよ"
+"うだ。女王も、お前がアホすぎて何もできないから俺を送ったのだろうな。"
+
+#. [message]: speaker=Dommel
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:328
+msgid ""
+"A fine story. Most likely, this is a pitiful excuse for you to enter our "
+"fortress to plunder our armory. Even if Her Majesty did order you here, we "
+"have no need for the help of you uncouth orcs. We have always managed just "
+"fine without you."
+msgstr ""
+"良くできた話だな。大方、要塞に入り、武器庫を略奪したくてそんなみじめな言い訳"
+"をしているのだろう。それに、たとえ女王陛下の命令が本当だったとしても、貴様等"
+"のように粗野なオークの手助けは無用だ。自分たちの力だけでどうにでもできるのだ"
+"から。"
+
+#. [message]: speaker=Vashna
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:332
+msgid ""
+"Yeah? Well, we will see how fine you manage <i>against</i> us. I’ll show you "
+"just how weak you pinkskins are."
+msgstr ""
+"ぼう、そうか？じゃあ、俺たち相手にその力とやらを見せてもらうとするか、このウ"
+"スノロ野郎！"
+
+#. [message]: speaker=Dommel
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:336
+msgid "Come try it, cretin."
+msgstr "やれるものならやってみろ、クズめ。"
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:340
+msgid ""
+"Infighting among the forces of Weldyn does not bode well for the new queen, "
+"but is awfully convenient for us..."
+msgstr ""
+"Weldyn の軍勢同士で戦っても新女王のためになるわけがないのだが……まぁ、こちらに"
+"とっては信じがたいほどに好都合だから良しとしよう。"
 
 #. [message]: role=farseer
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:322
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:358
 msgid "Look in the distance... riders approach!"
 msgstr "あっちを見てみろ…… 騎兵が近づいてくる！"
 
-#. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:331
-msgid "Who is it?"
-msgstr "何者だ？"
-
-#. [message]: role=farseer
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:335
-msgid "Help, I hope. Circumstances cannot afford to get much more dire."
-msgstr "援軍であると願いたい。状況はもう一杯一杯だからな。"
-
-#. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:341
-msgid "Riders approach from the northwest! Stand fast, men."
-msgstr "北西から騎兵がやって来るぞ！野郎ども、うろたえるなよ。"
-
 #. [unit]: type=Paladin, id=Sir Gwydion
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:350
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:365
 msgid "Sir Gwydion"
 msgstr "Gwydion 卿"
 
 #. [message]: type=Lancer
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:365
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:380
 msgid "Sound the advance!"
-msgstr "進軍の命令を！"
+msgstr "進軍！"
+
+#. [message]: type=Lancer
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:384
+msgid "At your order, my liege."
+msgstr "ご命令、承りました。"
 
 #. [message]: speaker=Sir Gwydion
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:369
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:388
 msgid ""
-"Knights of Elensefar, behold: the battle has already begun! Make camp here. "
-"Then, we charge!"
+"Lo, Knights of Elensefar, the battle hath begun ere our arrival. Though I "
+"disobey my father in this endeavor, our presence surely is much needed."
 msgstr ""
-"Elensefar の騎士たちよ、見よ。戦いは既に始まっている！ここに野営地をつくれ。"
-"それがすんだら、突撃だ！"
+"見よ、Elensefar の騎士達よ。既に戦火が上がっている。我等はこの場にあらねばな"
+"らんのだ。たとえ父の意に背けども。"
 
-#. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:382
-msgid ""
-"Amazing. Lord Maddock sent his house guards... his finest troops! Elensefar "
-"must be defenseless now. More hinges on this battle than I thought."
-msgstr ""
-"驚いた。Maddock 卿は近衛兵…… 最も精強な部隊を送ってきたぞ！ Elensefar は現"
-"在、無防備に違いない。この戦いは想像以上に重要だ。"
-
-#. [message]: role=farseer
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:387
-msgid ""
-"Baldras, Gwydion is Lord Maddock’s son. This battle isn’t just about Annuvin "
-"anymore."
-msgstr ""
-"Baldras、Gwydion は Maddock 卿の子息だ。この戦いはもう Annuvin だけのものでは"
-"ない。"
-
-#. [message]: speaker=narrator
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:421
-msgid ""
-"The siege on Halstead did not go unnoticed. Not even a full day had passed "
-"before the first advance elements of Wesnoth's main army started to arrive..."
-msgstr ""
-
-#. [message]: speaker=narrator
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:428
+#. [message]: speaker=Sir Gwydion
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:392
 #, fuzzy
 #| msgid ""
-#| "That afternoon, another advance element of the main Wesnoth army "
-#| "arrived..."
+#| "Ready thine lances, mine brethren. Let us charge down the armies of "
+#| "Weldyn!"
+msgid ""
+"Ready thy lances! Let us trample the armies of Weldyn beneath our steeds!"
+msgstr "同胞達、槍を構えろ。Weldyn の軍勢を突き破れ！"
+
+#. [message]: role=farseer
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:405
+msgid ""
+"A horde of knights, bearing the emblem of Elensefar! Amazing. I’ve never "
+"seen me so many riders in one place."
+msgstr ""
+"騎士の一団で、Elensefar の記章を身につけているぞ！なんてこった。こんなにたく"
+"さんの騎兵が集まっているのは初めて見た。"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:410
+msgid ""
+"Gwydion be Lord Maddock’s son... more be hinging on victory than I thought. "
+"This battle don’t just be about our little villages no more."
+msgstr ""
+"Gwydion は Maddock 卿の息子……思ったよりも勝機があるのかもしれんな。もう、ワシ"
+"らのちっぽけな村のためだけの戦いではないのだな。"
+
+#. [message]: speaker=narrator
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:447
+msgid ""
+"Not even a full day had passed before the first advance elements of "
+"Wesnoth’s main army began to arrive..."
+msgstr ""
+"一日も経たない内に Wesnoth 主力の先行部隊の最初の一団が到着してしまったようで"
+"す……"
+
+#. [message]: speaker=narrator
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:454
 msgid ""
 "That morning, another advance element of the main Wesnoth army arrived..."
-msgstr "この午後、Wesnoth 軍本隊の先行部隊がまた一つ到着しました……"
+msgstr "この朝、さらなる Wesnoth 主力の先行部隊の一団が到着しました……"
 
 #. [message]: speaker=Dommel
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:494
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:519
 msgid ""
 "I think... I think they’re trying to storm Halstead itself... the fools!"
 msgstr ""
 "見たところ……やつら、Halstead 要塞自体を攻撃しようと言うのか…… バカ共め！"
 
 #. [message]: speaker=Dommel
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:514
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:538
 msgid "They have breached the fortress gate! Repulse them!"
 msgstr "城門を破られた！撃退せよ！"
 
 #. [message]: speaker=unit
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:530
-msgid "I’m inside the tower! I’m going down to the catacombs — cover me."
-msgstr "塔の中に入った！地下通路に降りる……援護は頼む。"
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:560
+msgid "I’m inside! I’m heading down to the catacombs."
+msgstr "侵入に成功！地下墓地に向かう。"
 
 #. [message]: speaker=narrator
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:540
-msgid "After about an hour..."
-msgstr "約一時間後……"
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:578
+msgid "After some time..."
+msgstr "しばらくたって……"
 
 #. [message]: speaker=unit
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:550
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:598
 msgid "It’s done."
 msgstr "やったぞ。"
 
 #. [message]: speaker=narrator
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:577
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:625
 msgid "The stronghold of Halstead began to shake..."
 msgstr "Halstead 要塞が振動し始めました……"
 
 #. [message]: speaker=unit
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:582
-msgid "We cannot stay here. The fortress has started to collapse!"
-msgstr "ここには居られない。要塞が崩れ始めた！"
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:631
+msgid "We can’t stay here. The fortress is starting to collapse!"
+msgstr "ここから離れないと。要塞が崩壊を始めている！"
 
 #. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:613
-msgid "I think it’s working! Everybody get clear <i>now</i>!"
-msgstr "うまくいっているようだ！全員要塞から離れろ、<i>今すぐにだ</i>！"
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:666
+msgid "I think it be working! Everybody get clear!"
+msgstr "うまくいっているようだ！早く逃げろ！"
 
 #. [message]: speaker=narrator
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:637
-#, fuzzy
-#| msgid ""
-#| "With a thunderous roar and a vast billowing of dust, thousands of tons of "
-#| "stone and wood crashed in on itself. Some of it tumbled down the steep "
-#| "sides, while the remainder came to rest several hundred feet below "
-#| "ground, in the bowels of the hollowed-out mountain."
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:707
 msgid ""
 "With a thunderous roar and a vast billowing of dust, thousands of tons of "
 "stone and wood crashed in on itself. Some of the wreckage tumbled down the "
 "steep sides, while the remainder came to rest several hundred feet below "
 "ground, in the bowels of the hollowed-out mountain."
 msgstr ""
-"雷鳴のような地震と土ぼこりの巨大なうねりとともに、何千トンもの石と木ががらが"
-"らと崩れていきました。そのいくつかは崖を転げ落ちましたが、残りは地下数百"
-"フィート、空ろとなった山のはらわたの中で眠りにつきました。"
+"雷鳴のような咆哮と土ぼこりの巨大なうねりとともに、途方もない量の石と木ががら"
+"がらと崩れていきました。そのいくつかは崖を転げ落ちましたが、残りは地下数百"
+"フィート、虚ろとなった山のはらわたの中で眠りにつきました。"
 
 #. [message]: speaker=narrator
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:642
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:715
 msgid "No one inside the fortress would make it out alive."
 msgstr "砦の中にいた者が生きて出られることはないでしょう。"
 
 #. [message]: speaker=narrator
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:711
-#, fuzzy
-#| msgid ""
-#| "After more than a week of fierce fighting, the main body of Asheviere’s "
-#| "host arrived from Weldyn. The battle was soon finished. Every last man "
-#| "from the Province of Annuvin was executed."
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:800
 msgid ""
-"After several days of fierce fighting, the main body of Asheviere’s host "
-"arrived from Weldyn. The battle was soon finished. Every last man from the "
-"Province of Annuvin was executed."
+"After several days of fierce fighting, the main body of Weldyn’s host "
+"arrived. The battle was soon finished. Every last man from the rebellion was "
+"executed."
 msgstr ""
-"一週間以上もの猛烈な戦いの後、Asheviere 軍の本体が Weldyn から到着しました。"
-"戦闘はすぐに終結しました。Annuvin の人間は最後の一人までことごとく処刑されま"
-"した。"
+"激しい戦いは数日間続きましたが、ついに Weldyn の主力が到着しました。戦闘はす"
+"ぐに終わりました。反乱に参加した全ての者は処刑されました。"
 
 #. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:741
-msgid "Men, help me out of here! I am trapped under this rubble."
-msgstr ""
-"誰か、ここから助け出してくれ！わしはこの瓦礫の下に閉じ込められちまったんだ。"
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:829
+msgid "The fort be done with... but I be crushed... under this rubble..."
+msgstr "要塞は破壊した……しかしワシも……瓦礫の下に……"
 
 #. [message]: speaker=narrator
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:745
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:833
 msgid ""
 "No one was able to get to Baldras in time. He and many of his companions "
 "died that day beneath the stronghold of Halstead."
@@ -1992,96 +3034,59 @@ msgstr ""
 "Halstead 要塞の下で死ぬことになりました。"
 
 #. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:750
-msgid "I hope this sacrifice is not in vain... but we will never know."
-msgstr "この犠牲が無駄ではないと願おう…… わしらはそれを知ることはねぇが。"
-
-#. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:756
-msgid "Our dream of freedom... gone... Unngh."
-msgstr "自由への夢……潰えてしまった……うぐ……。"
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:840
+msgid "I knew... this wouldn’t work..."
+msgstr "やはり……だめだったか……"
 
 #. [message]: speaker=narrator
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:763
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:845
 msgid ""
 "The rebellion had staked its all on victory at Halstead, but win or lose, "
-"there would be no help for the villagers, ground beneath the wheels of "
-"Asheviere’s wrath."
+"there would be no help for the doomed villagers."
 msgstr ""
-"反乱軍はその全てを Halstead での勝利に賭けていました。しかし、そこで勝とうが"
-"負けようが、Asheviere の怒りに轢き殺される村の人々にとっては何の救いにもなら"
-"なかったでしょう。"
+"反乱軍は Halstead での勝利に全てを賭けていました。しかし、こうなってしまって"
+"は、絶望した村人達にはもはや救いはないでしょう。"
 
 #. [message]: speaker=Harper
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:779
-msgid "Uncle!"
-msgstr "叔父さん！"
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:864
+#: data/campaigns/Liberty/utils/utils.cfg:34
+msgid "Unngh..."
+msgstr "うぐぐ……"
 
 #. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:783
-msgid "NO!"
-msgstr "だめだ！"
-
-#. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:787
-msgid "I promised your father I would watch after you... and I failed."
-msgstr ""
-"わしがお前の面倒を見るってお前の親父と約束したのに……約束を守れなかった。"
-
-#. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:791
-msgid ""
-"But we are so close to the end. We must finish this. I am sorry you will not "
-"be able to enjoy our freedom. Goodbye, Harper."
-msgstr ""
-"だが終わりは近い。いや、終わらせなければならん。おまえが自由を享受できねぇこ"
-"とが残念でならん。さらばだ、Harper。"
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:868
+#: data/campaigns/Liberty/utils/utils.cfg:38
+msgid "Harper, no!"
+msgstr "Harper、そんな！"
 
 #. [message]: speaker=Helicrom
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:804
-msgid ""
-"Carry on, my friends. Fighting by your side is the most honorable thing I "
-"have done..."
-msgstr ""
-"続けるのだ、我が同志たちよ。お前達の側について戦ったことは、我が生涯で最も誇"
-"らしいことであった……"
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:884
+msgid "Ended... like this? Fight on without me..."
+msgstr "終わり……なのか？後は頼んだぞ……"
 
 #. [message]: speaker=second_unit
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:851
-msgid "Your reign of terror is over, General."
-msgstr "おまえの恐怖による支配は終わりだ、将軍！"
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:931
+msgid "Your time is over, General."
+msgstr "将軍よ、お前は終わりだ。"
 
 #. [message]: speaker=Dommel
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:856
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:936
 msgid ""
-"You will never successfully oppose Asheviere. Her power is too great... This "
-"small victory today is but a reprieve from the unimaginable pain you will "
-"suffer when the full force of her wrath descends upon you."
+"I may be done... but my death shall only bring the full wrath of the Crown "
+"upon you... relish your small victory, peasants, while you still can..."
 msgstr ""
-"Asheviere 陛下への反乱は決して成功することはない。陛下の力はあまりにも偉大"
-"だ……今日のこの小さな勝利は、貴様等に陛下の憤怒が降りかかり、想像を絶する苦し"
-"みを味わうまでに一時的な猶予をもたらすに過ぎぬ。"
+"私はここまで……だが、私が死んだところで国の怒りが貴様等に向くだけのこと……今の"
+"うちにこの小さな勝利を喜んでおくがいい……"
 
-#. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:867
-msgid ""
-"This was no small victory. You underestimate the power of love for freedom."
-msgstr "これは小さい勝利などではない。おまえは自由を愛する力を見くびっている。"
+#. [message]: speaker=Vashna
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:956
+msgid "Grrarrghh... you... fools..."
+msgstr "ガぁぁぁ……この…クソ野郎が………"
 
 #. [message]: speaker=Dommel
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:872
-msgid ""
-"You... underestimate the... cruelty and ambition of your Queen... Uungh..."
-msgstr "おまえこそ……見くびっている……女王の残虐さと野心を……うぐ……"
-
-#. [message]: speaker=Baldras
-#: data/campaigns/Liberty/scenarios/07_Glory.cfg:878
-msgid ""
-"Small victory? Bah! Now we will raze this fortress and bury it in the earth "
-"from whence it came."
-msgstr ""
-"小さい勝利だと？フンっ！わしらはこれからこの要塞を破壊し、元の大地へと葬り還"
-"すのだぞ。"
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:961
+msgid "Idiot orc. Know your place."
+msgstr "愚かなオークだ。身の程を知れ。"
 
 #. [scenario]: id=08_Epilogue
 #: data/campaigns/Liberty/scenarios/08_Epilogue.cfg:4
@@ -2091,173 +3096,179 @@ msgstr "自由：エピローグ"
 #. [part]
 #: data/campaigns/Liberty/scenarios/08_Epilogue.cfg:14
 msgid ""
-"The rest of the battle was a blur. The shock of what had happened stunned "
-"everybody."
+"03 Scryer’s Bloom, 501 YW\n"
+"\n"
+"It were a real shock. I were so stunned, I barely even remember what "
+"happened after."
 msgstr ""
-"その後の戦いがどうなったのかははっきりとしません。起こったことの衝撃に誰もが"
-"呆然としました。"
+"Wesnoth 暦 501 年、占華の月 3 日\n"
+"\n"
+"本当に衝撃的なことだった。あまりに呆然としてしまい、あの後に何があったのかを"
+"ほとんど覚えていない。"
 
 #. [part]
-#: data/campaigns/Liberty/scenarios/08_Epilogue.cfg:17
+#: data/campaigns/Liberty/scenarios/08_Epilogue.cfg:19
+msgid ""
+"Helicrom, I don’t know what happened to him, didn’t see what happened to "
+"Maddock’s son either. Me and Harper and the few of us who survived got up "
+"and ran. We be heading back north now, toward Carcyn and Elensefar. Them "
+"patrols seems to be in real disarray, mostly seeming to be riding back south "
+"to regroup. It be looking like we really did disrupt Weldyn’s chain of "
+"command."
+msgstr ""
+"Helicrom がどうなったのかは知らない。Maddock の息子がどうなったのかもわからな"
+"い。ワシと Harper、他に生き残った者は集まり、そして逃げた。今、ワシらは北へ、"
+"Carcyn や Elensefar の方に戻ろうとしている最中だ。巡回の兵士は本当に混乱して"
+"いるが、多くの者は南に戻って部隊を再編しようとしているようだ。ワシらは本当に "
+"Weldyn の指揮系統をずたずたにしてしまったのだと実感した。"
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/08_Epilogue.cfg:22
+msgid ""
+"I’m sure them Wesnothians will come back in time and with Maddock holed up "
+"in his stupid tower, they’ll eventually siege Elensefar and take the city... "
+"but that don’t be my problem anymore. I has me a village to worry about. I "
+"need to get back, consult myself with Relana and figure out what to do next. "
+"We gots some more time now, but we can’t wait forever."
+msgstr ""
+"時間の問題で Wesnoth の連中は確実に戻ってくる。その間、Maddock は愚かにも自分"
+"の塔に引きこもっていることだろう。そうしている内に Elensefar は包囲され、街は"
+"陥落するだろうが……ワシにとってはどうでも良いことだ。ワシが気になるのは村のこ"
+"とだけだ。ワシは戻らねばならん。Relana と一緒に相談し、次の行動を決める必要が"
+"ある。ある程度の時間はあるだろうが、ずっとそのままではいられない。"
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/08_Epilogue.cfg:25
+msgid ""
+"10 Scryer’s Bloom, 501 YW\n"
+"\n"
+"We got back to Dallben today, but the village were empty. There were a few "
+"bodies and some burned houses, but it weren’t raided or nothing. Must’ve "
+"been one of them Wesnoth patrols, curse those damned stinkers! When I first "
+"saw the scene with my eyes, I thoughts that we failed, that we was too "
+"late... but now that I thinks of it, it be real weird that so few died. The "
+"others must’ve escaped to somewhere. But I didn’t see any clues here."
+msgstr ""
+"Wesnoth 暦 501 年、占華の月 10 日\n"
+"\n"
+"今日 Dallben まで戻ったが、村はもぬけの空だった。複数の家が焼け落ちていて、い"
+"くつかの死体も見つかった。一方で、襲撃を受けたようにも見えない。オークなどで"
+"はなく、Wesnoth の兵隊が何かしたのだろう、あのクソ野郎どもめ！この光景を見た"
+"時、ワシらの行動は手遅れで、失敗だったかと思ったが…… それならば死者がこんなに"
+"少ないのは明らかにおかしい、と思い直した。他の者達はどこかに逃げたのだろう。"
+"しかしここには何の手がかりも無い。"
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/08_Epilogue.cfg:31
 #, fuzzy
 #| msgid ""
-#| "Baldras and his men fled the plains of western Wesnoth under the cover of "
-#| "night. The spectacle of Halstead’s destruction stunned them into a daze "
-#| "that only slowly wore off as they made their way north to and past "
-#| "Elensefar."
+#| "I sended Harper off to Delwyn. Hope he’ll find something there. In the "
+#| "meantimes, I’ll rest this tired body for a little and go see sis, maybe "
+#| "pick her up some lilies. Seems like this’ll probably be the last time I "
+#| "gets to see her..."
 msgid ""
-"Baldras and his men fled the plains of western Wesnoth under the cover of "
-"night. The spectacle of Halstead’s destruction held them in a daze that only "
-"slowly wore off as they made their way north to and past Elensefar."
+"I sended Harper off to Delwyn. Hope she’ll find something there. In the "
+"meantimes, I’ll rest this tired body for a little and go see sis, maybe pick "
+"her up some lilies. Seems like this’ll probably be the last time I gets to "
+"see her..."
 msgstr ""
-"Baldras と仲間たちは夜の帳に乗じて Wesnoth 西部の平原から逃れました。Wesnoth "
-"軍は Halstead の崩壊の光景に長らく呆然としていました。彼らが立ち直るまでに、"
-"Baldras たちは進路を北に向け、Elensefar を通過してしまいました。"
+"ワシは Harper を Delwyn に送った。あいつが何かを見つけてくれると期待して。そ"
+"の間、ワシはくたびれた身体を少しだけ休ませ、そして、妹に会いにいくとしよう。"
+"百合の花も摘んでいってやりたい。おそらく、あいつのところに行くのもこれが最後"
+"になるだろうから……"
 
 #. [part]
-#: data/campaigns/Liberty/scenarios/08_Epilogue.cfg:20
+#: data/campaigns/Liberty/scenarios/08_Epilogue.cfg:34
 #, fuzzy
 #| msgid ""
-#| "The Elense riders routed the orcish army, small as it was, and sent them "
-#| "back across the Great River. They then scattered to the countryside and "
-#| "were not heard from again. Baldras thought this behavior odd when he "
-#| "heard about it."
+#| "She’ll tell me not to be sad, of course. That life just be a big "
+#| "adventure and filled with fun, that I shouldn’t think about stuffs I "
+#| "can’t change. The world be huge and vast, much bigger than small little "
+#| "people like me. I don’t got the power to change it, so why not try to "
+#| "live as best I can? Besides, she’ll say that I still gots me a little "
+#| "piece of her in Harper, so I should cherish the lad."
 msgid ""
-"The Elense riders routed the orcish army, small as it was, and sent them "
-"back across the Great River. They then scattered to the countryside and were "
-"not heard from again. Baldras thought this behavior odd when word of this "
-"first reached him."
+"She’ll tell me not to be sad, of course. That life just be a big adventure "
+"and filled with fun, that I shouldn’t think about stuffs I can’t change. The "
+"world be huge and vast, much bigger than small little people like me. I "
+"don’t got the power to change it, so why not try to live as best I can? "
+"Besides, she’ll say that I still gots me a little piece of her in Harper, so "
+"I should cherish the lass."
 msgstr ""
-"Elense の騎兵たちは、オークの軍勢、実は小規模なものでしたが、これを敗走させ大"
-"いなる川の向こう側に追いやりました。以降、彼らは辺境に散り、二度と噂は聞かれ"
-"ませんでした。Baldras はそれを耳にしたとき、妙な振舞いだと感じました。"
+"もちろん、あいつはワシに悲しむな、と言うだろう。人生とは大きな冒険の旅で、喜"
+"びで満たされるもの、変えようが無いことを思い悩んでも仕方が無い。世界とはワシ"
+"のようなちっぽけな人間よりもずっと広く、大きいものだ。ワシにそんなものを変え"
+"る力があるはずもない。できないことをがんばるのではなく、できることをがんばっ"
+"て、できるだけ幸せに生きるべきなのだろう。あいつの欠片を受け継いだ Harper も"
+"まだいる。ワシはあいつを大事にしてやらにゃならん。"
 
 #. [part]
-#: data/campaigns/Liberty/scenarios/08_Epilogue.cfg:23
+#: data/campaigns/Liberty/scenarios/08_Epilogue.cfg:37
 msgid ""
-"As the main body of Asheviere’s army neared the ruins of Halstead, strange "
-"things began to happen. Every night, men would disappear. Others were found "
-"hacked to bloody pieces. Unexplained misfortune plagued the marching "
-"columns. Soldiers dropped dead where they stood, slain by unseen assassins. "
-"Fear of an undead menace spread through the ranks."
+"I do, Erwen, I really do. This all be real hard. I don’t be no brave soul, "
+"nor some great warrior, but I does my best. And I haven’t forgotten about "
+"all them good times we had together ― somehow, some way, they keeps me "
+"going. Me and Harper, we won’t give up till the very end."
 msgstr ""
-"Asheviere 軍の本隊が Halstead の跡に近づくにつれ、奇妙なことが起こり始めまし"
-"た。毎晩、兵士が姿を消していきました。血まみれの断片に切り刻まれた兵士も発見"
-"されました。姿の見えない暗殺者によって立ったまま殺され、突然倒れた兵士もいま"
-"した。説明不可能な災難に軍勢は悩まされました。アンデッドの脅威への恐怖は階級"
-"を越えて広まっていきました。"
-
-#. [part]
-#: data/campaigns/Liberty/scenarios/08_Epilogue.cfg:26
-#, fuzzy
-#| msgid ""
-#| "When the army of Wesnoth found the ruins of the mighty fortress Halstead, "
-#| "it was too much. Their shock that such a thing could happen combined with "
-#| "the invisible terror stalking them convinced Asheviere’s second in "
-#| "command the entire countryside was cursed. He quickly retreated to the "
-#| "traditional border and set up strong defenses against the west."
-msgid ""
-"When the army of Wesnoth found the ruins of the mighty fortress Halstead, it "
-"was too much. Their shock that such a thing could happen, combined with the "
-"invisible terror stalking them, convinced Asheviere’s second in command the "
-"entire countryside was cursed. He quickly retreated to the traditional "
-"border and set up strong defenses against the west."
-msgstr ""
-"Wesnoth 軍が巨大な Halstead の要塞の跡を見つけたとき、それはあまりに酷いあり"
-"さまでした。このようなことが起こりえるという衝撃は、彼らに忍び寄る不可視の恐"
-"怖と相まって Asheviere の副司令官に辺境全体が呪われていると確信させました。彼"
-"は速やかに古い国境線まで退却して、西に対する強固な防衛線を構築しました。"
-
-#. [part]
-#: data/campaigns/Liberty/scenarios/08_Epilogue.cfg:29
-msgid ""
-"Baldras had just crossed the Great River when rumors of night-stalkers "
-"filtered through his ranks. With bitter humor he realized that Lord "
-"Maddock’s men were successfully using tactics Baldras had mastered and used "
-"during his resistance."
-msgstr ""
-"夜の追跡者の噂を兵卒から伝え聞いたとき、Baldras はちょうど大いなる川を渡ると"
-"ころでした。Baldras が抵抗している間に習得し、使用していた戦術を、Maddock 卿"
-"の部下も首尾よく使っているのだと悟り、彼は苦笑いしました。"
-
-#. [part]
-#: data/campaigns/Liberty/scenarios/08_Epilogue.cfg:32
-msgid ""
-"The peasants-turned-outlaws finally reached Dallben. It was burnt to the "
-"ground. In a panic, they raced through the forest to Delwyn. It was likewise "
-"devastated. However, they did find one clue as to what happened..."
-msgstr ""
-"農民から無法者となった者たちはようやく Dallben に到着しました。Dallben は焼け"
-"落ちていました。混乱の中、彼らは森を大急ぎで抜け、Delwyn へ向かいました。そこ"
-"も同じように荒廃していました。それでも、起こったことに関する一つの手がかりを"
-"見つけました…… "
-
-#. [part]
-#: data/campaigns/Liberty/scenarios/08_Epilogue.cfg:36
-msgid ""
-"... a grimy note nailed to a charred post that read, <i>“Baldras, You would "
-"have been proud. We gave ’em hell. But in the end, it wasn’t enough.”</i>"
-msgstr ""
-"……黒焦げの柱に打ち付けられた汚れた紙片は次のように読めました。<i>「Baldras、"
-"あんたは誇りに思っていただろう。やつらに地獄を見せてやったと。しかしそれでも"
-"十分ではなかった。」</i>"
+"ワシはやるよ、Erwen。本当だぞ。本当に大変なことではあるが。ワシは勇者じゃない"
+"し、偉大な戦士でも無い。それでも最善を尽くすとするよ。それと、共に過ごした幸"
+"せな時のことを忘れるつもりもないぞ ── あれがなければワシはやっとれんからな。"
+"ワシも Harper も絶対に諦めないぞ。最期の時まで。"
 
 #. [part]
 #: data/campaigns/Liberty/scenarios/08_Epilogue.cfg:40
+#, fuzzy
+#| msgid ""
+#| "14 Scryer’s Bloom, 501 YW\n"
+#| "\n"
+#| "Harper got back today from Delwyn. Said he didn’t find no one alive "
+#| "there, but he did bring back a note he found. Let’s see what it says."
 msgid ""
-"<i>“We fled like criminals in the night, but we made sure that no one would "
-"harass us anymore.”</i>"
+"14 Scryer’s Bloom, 501 YW\n"
+"\n"
+"Harper got back today from Delwyn. Said she didn’t find no one alive there, "
+"but she did bring back a note she found. Let’s see what it says."
 msgstr ""
-"<i>「あたしたちは夜のうちに犯罪者のように逃れたが、もう誰にも追われないと確信"
-"した。」</i>"
+"Wesnoth 暦 501 年、占華の月 14 日\n"
+"\n"
+"Harper が今日 Delwyn に戻ってきた。生存者を見つけることはできなかったが、メモ"
+"を見つけて持ち帰ってきた。何が書いてあるのか見てみよう。"
 
 #. [part]
-#: data/campaigns/Liberty/scenarios/08_Epilogue.cfg:44
+#: data/campaigns/Liberty/scenarios/08_Epilogue.cfg:47
 msgid ""
-"<i>“If you wish to find us, head southwest. When you reach the land’s end, "
-"just keep going. See you in the Three Sisters, old friend. ― Relana”</i>"
+"<i>“Baldras, you would’ve been proud. We fought them soldiers off twice, "
+"gave them a good ol’ thrashing they won’t ever forget. But in the end, it "
+"weren’t enough. We had to run like criminals before they killed us all.”</i>"
 msgstr ""
-"<i>「もしあたしたちを見つけたければ、南西に向かいな。地の果てに達してもそのま"
-"ま進み続けろ。三姉妹の島にて会おう、旧友よ。    Relana」</i>"
+"<i>「Baldras、お前は事をやり遂げたと誇りに思っていたことだろう。あたしらも二"
+"度ばかり兵士達と戦い、徹底的に叩きのめしてやった。一生忘れられない思い出だろ"
+"うさ。しかし、それでは足りなかったのさ。結局、あたしらは皆殺しになる前に犯罪"
+"者のように逃げるしかなかった。」</i>"
 
-#. [unit_type]: id=Bone Knight, race=undead
-#: data/campaigns/Liberty/units/Bone_Knight.cfg:5
-msgid "Bone Knight"
-msgstr "ボーンナイト"
-
-#. [unit_type]: id=Bone Knight, race=undead
-#: data/campaigns/Liberty/units/Bone_Knight.cfg:27
+#. [part]
+#: data/campaigns/Liberty/scenarios/08_Epilogue.cfg:51
 msgid ""
-"Once great warriors across the plains, these mounted riders atop their "
-"skeletal horses were raised from the ground by unholy magic to spread fear "
-"and destruction."
+"<i>“I don’t know if you and Harper will see this note, but if you do, I’m "
+"expecting ya to come find us. Remember them ol’ pirate islands we used to "
+"hear some of them Elensefar sailors talk about? We be heading there, "
+"southwest of the city and past the land’s end. See you in the Three Sisters, "
+"old friend. ― Relana”</i>"
 msgstr ""
-"かつて平野を駆け巡った偉大な戦士、骸骨の馬に乗る騎士は、恐怖と破壊を撒き散ら"
-"すため、不浄な魔法によって大地から蘇りました。"
+"<i>「あんたや Harper がこのメモを見ることがあるかどうかはわからない。しかし、"
+"もし見つけたんなら、あたしらを見つけ出しておくれ。昔に一緒に聞いた Elensefar "
+"の船乗りの話を覚えているかい？海賊の島々の話さ。あたしらはそこに向かってい"
+"る。街の南西、陸地の端から海に出るのさ。三姉妹の島でまた会おう、旧い友よ ── "
+"Relana」</i>"
 
-#. [attack]: type=impact
-#: data/campaigns/Liberty/units/Bone_Knight.cfg:44
-msgid "trample"
-msgstr "踏みつけ"
-
-#. [unit_type]: id=Death Squire, race=undead
-#: data/campaigns/Liberty/units/Death_Squire.cfg:4
-msgid "Death Squire"
-msgstr "死の従騎士"
-
-#. [unit_type]: id=Death Squire, race=undead
-#: data/campaigns/Liberty/units/Death_Squire.cfg:26
+#. [part]
+#: data/campaigns/Liberty/scenarios/08_Epilogue.cfg:55
 msgid ""
-"Sometimes the mightiest warriors and generals, cursed with hate and angst, "
-"came back to this world as Death Knights. Death Squires serve them whilst "
-"accruing enough unholy power to become Death Knights. In the process they "
-"pick up a good deal of the Knight’s power, including the ability to command "
-"underlings."
+"So they survived! Them islands be a bit far, but I suppose this sack of old "
+"bones has one more adventure left in it..."
 msgstr ""
-"憎悪や苦悩に苦しめられた力強い戦士や将軍は、時折、死の騎士として現世に戻って"
-"きました。死の従騎士は死の騎士になれるだけの不浄な力を身につけるまで彼らに仕"
-"えます。その過程で騎士の力の多くを、部下に命令する能力も含めて、習い覚えま"
-"す。"
+"あいつらは生き残っていた！しかし、その島々はちょっと遠いぞ。この老いぼれもも"
+"う一度冒険の旅に出ねばならんようだな……"
 
 #. [unit_type]: id=Rogue Mage, race=human
 #: data/campaigns/Liberty/units/Rogue_Mage.cfg:5
@@ -2280,7 +3291,7 @@ msgstr ""
 "えます。"
 
 #. [attack]: type=cold
-#: data/campaigns/Liberty/units/Rogue_Mage.cfg:34
+#: data/campaigns/Liberty/units/Rogue_Mage.cfg:33
 msgid "ice blast"
 msgstr "氷弾"
 
@@ -2303,18 +3314,18 @@ msgstr ""
 "はや物理的な武器は必要とせず、敵と従者の双方から恐れられます。"
 
 #. [attack]: type=blade
-#: data/campaigns/Liberty/units/Shadow_Lord.cfg:35
+#: data/campaigns/Liberty/units/Shadow_Lord.cfg:33
 msgid "astral blade"
 msgstr "星域の刃"
 
 #. [attack]: type=cold
-#: data/campaigns/Liberty/units/Shadow_Lord.cfg:46
-#: data/campaigns/Liberty/units/Shadow_Mage.cfg:47
+#: data/campaigns/Liberty/units/Shadow_Lord.cfg:44
+#: data/campaigns/Liberty/units/Shadow_Mage.cfg:45
 msgid "shadow bolt"
 msgstr "影の矢"
 
 #. [attack]: type=impact
-#: data/campaigns/Liberty/units/Shadow_Lord.cfg:58
+#: data/campaigns/Liberty/units/Shadow_Lord.cfg:56
 msgid "shadow blast"
 msgstr "影破"
 
@@ -2339,21 +3350,6 @@ msgstr ""
 "魔力を行使する同業者との直接的な魔法戦闘に劣る代わりに、彼らはそのエネルギー"
 "を破壊的な格闘攻撃に注ぎこみました。彼らは強い力を持っていますが、その魂の腐"
 "敗が心身へ有害な影響を与え始めています。"
-
-#. [unit_type]: id=Skeleton Rider, race=undead
-#: data/campaigns/Liberty/units/Skeleton_Rider.cfg:5
-msgid "Skeleton Rider"
-msgstr "スケルトンライダー"
-
-#. [unit_type]: id=Skeleton Rider, race=undead
-#: data/campaigns/Liberty/units/Skeleton_Rider.cfg:33
-msgid ""
-"Once great warriors thundering across the plains, these mounted riders atop "
-"their skeletal horses were raised from the grave by unholy magic to spread "
-"fear and destruction."
-msgstr ""
-"かつて平野を雷鳴のように駆け巡った偉大な戦士、骸骨の馬に乗る騎士は、恐怖と破"
-"壊を撒き散らすために不浄な魔法によって墓地から蘇りました。"
 
 #. [unit_type]: id=Thug_Peasant
 #: data/campaigns/Liberty/units/Villagers.cfg:20
@@ -2512,385 +3508,58 @@ msgstr ""
 
 #. [message]: speaker=Baldras
 #: data/campaigns/Liberty/utils/utils.cfg:19
-msgid "Tell my wife... that I loved her!"
-msgstr "妻に伝えてくれ……愛していたと！"
-
-#. [message]: speaker=Harper
-#: data/campaigns/Liberty/utils/utils.cfg:34
-msgid "Unngh... Now our people may never be free..."
-msgstr "ううぅ……仲間たちを自由にしてやりたかったってのに………"
+msgid "I’m coming... Erwen..."
+msgstr "ワシもそっちに行くぞ…… Erwen……"
 
 #. [message]: speaker=Relana
-#: data/campaigns/Liberty/utils/utils.cfg:48
-msgid "I am finished... will we ever be free?"
-msgstr "やられた……あたしたちは自由になれるんだろうか？"
+#: data/campaigns/Liberty/utils/utils.cfg:52
+msgid "I’m finished..."
+msgstr "あたしもこれまでだね……"
 
 #. [message]: speaker=Lord Maddock
-#: data/campaigns/Liberty/utils/utils.cfg:62
-msgid "How can this be? We have lost."
-msgstr "どうしてこうなったんだ？我々の敗北だ。"
+#: data/campaigns/Liberty/utils/utils.cfg:66
+msgid "How can this be?"
+msgstr "どうしてこんなことに？"
 
-#. [message]: speaker=narrator
-#: data/campaigns/Liberty/utils/utils.cfg:78
-msgid ""
-"They returned to their village to find it destroyed, with those who fought "
-"left dead and the few survivors borne away to unknown fates. It was a bitter "
-"doom, but as Asheviere’s grip tightened they would live to see worse."
-msgstr ""
-"戻った彼らが見たものは無残に破壊された村でした。戦った者は殺され、逃げ延びた"
-"生存者がどうなったのかはわかりません。それは悲惨な結果でした。しかし、"
-"Asheviere の支配がさらに深まれば、彼らはもっと悲惨な光景をその目で目撃するこ"
-"とになるでしょう。"
+#~ msgid "Rothel"
+#~ msgstr "Rothel"
+
+#~ msgid "Bone Knight"
+#~ msgstr "ボーンナイト"
 
 #~ msgid ""
-#~ "The hardy people of these marches learned self-reliance and survival "
-#~ "skills against the raiding orc hordes and savage saurians. They "
-#~ "established their own trading routes and pacts of mutual defense."
+#~ "Once great warriors across the plains, these mounted riders atop their "
+#~ "skeletal horses were raised from the ground by unholy magic to spread "
+#~ "fear and destruction."
 #~ msgstr ""
-#~ "その結果、辺境のたくましい民衆は自立し、オーク族や野蛮なトカゲ族の襲撃に対"
-#~ "抗する術を身に着けました。彼らは独自の交易路を確立し、相互防衛条約を結びま"
-#~ "した。"
+#~ "かつて平野を駆け巡った偉大な戦士、骸骨の馬に乗る騎士は、恐怖と破壊を撒き散"
+#~ "らすため、不浄な魔法によって大地から蘇りました。"
+
+#~ msgid "trample"
+#~ msgstr "踏みつけ"
+
+#~ msgid "Death Squire"
+#~ msgstr "死の従騎士"
 
 #~ msgid ""
-#~ "Although not permitted to train with proper military weapons, these "
-#~ "woodsmen were at home in the forests and swamps of the Western Marches, "
-#~ "and became very effective with their simple slings and clubs."
+#~ "Sometimes the mightiest warriors and generals, cursed with hate and "
+#~ "angst, came back to this world as Death Knights. Death Squires serve them "
+#~ "whilst accruing enough unholy power to become Death Knights. In the "
+#~ "process they pick up a good deal of the Knight’s power, including the "
+#~ "ability to command underlings."
 #~ msgstr ""
-#~ "彼らは正規軍用の武器を扱うことは許されていませんでした。しかし、西部辺境の"
-#~ "森林と湿地帯の地形に精通し、また簡単なスリングと棍棒の扱いに非常に練達する"
-#~ "ようになりました。"
+#~ "憎悪や苦悩に苦しめられた力強い戦士や将軍は、時折、死の騎士として現世に戻っ"
+#~ "てきました。死の従騎士は死の騎士になれるだけの不浄な力を身につけるまで彼ら"
+#~ "に仕えます。その過程で騎士の力の多くを、部下に命令する能力も含めて、習い覚"
+#~ "えます。"
+
+#~ msgid "Skeleton Rider"
+#~ msgstr "スケルトンライダー"
 
 #~ msgid ""
-#~ "After the betrayal of the King by Queen Asheviere, the new regent of "
-#~ "Wesnoth sought to consolidate her ill-gotten power. She sent her armies "
-#~ "across Wesnoth to intimidate the provincial rulers and secure her "
-#~ "continued reign."
+#~ "Once great warriors thundering across the plains, these mounted riders "
+#~ "atop their skeletal horses were raised from the grave by unholy magic to "
+#~ "spread fear and destruction."
 #~ msgstr ""
-#~ "王を裏切り、Wesnoth の実権を握った女王 Asheviere は、簒奪した権力を確固た"
-#~ "るものにしようと画策しました。彼女は Wesnoth 全土に軍を送って地方領主を威"
-#~ "圧し、自身の統治を確実なものとしようとしました。"
-
-#~ msgid ""
-#~ "The people of Annuvin were unwilling to relinquish their hard-earned self-"
-#~ "rule, especially not to this pretender..."
-#~ msgstr ""
-#~ "Annuvin の人々はやっと手に入れた自治を手放すつもりはありませんでした。特"
-#~ "に、女王を僭称するような者にそれを渡すことなど……"
-
-#~ msgid "The Grey Woods"
-#~ msgstr "灰色森"
-
-#~ msgid "Mal-Jarrof"
-#~ msgstr "Mal-Jarrof"
-
-#~ msgid "Mal-Jerod"
-#~ msgstr "Mal-Jerod"
-
-#~ msgid "Sel-Mana"
-#~ msgstr "Sel-Mana"
-
-#~ msgid "Defeat the lich and its minions"
-#~ msgstr "リッチとその手先を倒す"
-
-#~ msgid "I have heard of you. Necromancers. Barely-human scum, I say."
-#~ msgstr ""
-#~ "聞いたことがあるぞ。ネクロマンサー。かろうじて人間であるクズ、だと。"
-
-#~ msgid ""
-#~ "Wrong. Necromancers become slaves to their lich masters and eventually "
-#~ "lose their humanity. We have proven that practicing the dark arts need "
-#~ "not lead down that path to damnation. We remain human, and seek the "
-#~ "mystical secret of balance between the ways of light and darkness. We "
-#~ "dance between both ways, adhering to neither."
-#~ msgstr ""
-#~ "違う。ネクロマンサーはリッチの奴隷となり、いずれ人間ではなくなる存在だ。闇"
-#~ "の業を実践するために人間を辞める必要はない、それを証明した点で我々は連中と"
-#~ "は違う。我らは、人間のままでいながら、光と闇の均衡の神秘的な秘密を探求して"
-#~ "いるのだ。二つの道の狭間を行き来していながら、どちらにも偏ることはない。"
-
-#~ msgid ""
-#~ "Carcyn is always foggy as of late because these woods have recently "
-#~ "become home to a lich and two of its underling necromancers. Our "
-#~ "experiments may have actually aroused it from sleep... We’re not sure."
-#~ msgstr ""
-#~ "最近、この森がリッチとその配下の二人のネクロマンサーの住み処となったため、"
-#~ "Carcyn はいつも霧が深く立ち込めている。我らの実験が連中を眠りから目覚めさ"
-#~ "せたかもしれん……確信があるわけではないが。"
-
-#~ msgid ""
-#~ "So now you need to defend your rear as well as your front... I see your "
-#~ "predicament. My men will wipe this land clean if you can help us defend "
-#~ "our homeland."
-#~ msgstr ""
-#~ "それで、前方に加えて後方も守らにゃならんわけか……あんたがたの窮状は理解し"
-#~ "た。わしらの故郷を守る手助けをしてくれるのなら、わしと仲間たちでこの地をき"
-#~ "れいにしよう。"
-
-#~ msgid "Finally, that creature is dead, yet its foolish minions resist."
-#~ msgstr "ついにあの化け物は死んだが、愚かな下僕どもがまだ抵抗している。"
-
-#~ msgid "The lich is destroyed and its minions dead."
-#~ msgstr "リッチは破壊され、下僕どももみんな死んだ。"
-
-#~ msgid ""
-#~ "The defeat of the evil lich infesting the Grey Woods was a bittersweet "
-#~ "victory. With Helicrom dead, the guild of shadow magic was thrown into "
-#~ "disarray."
-#~ msgstr ""
-#~ "灰色森を荒らす邪悪なリッチを撃破したものの、それはほろ苦い勝利でした。"
-#~ "Helicrom の死が、影の魔術のギルドを混乱へと叩き込んだのです。"
-
-#~ msgid ""
-#~ "The remaining members were very grateful and offered Baldras a sizable "
-#~ "sum of gold for his help. It was not the help he was hoping for, but he "
-#~ "knew it would have to be enough for the coming conflict."
-#~ msgstr ""
-#~ "残ったメンバーは Baldras に感謝し、かなりの量の金を援助として差し出しまし"
-#~ "た。それは期待していた助けではありませんでしたが、来たるべき闘争に十分有用"
-#~ "ではありました。"
-
-#~ msgid ""
-#~ "With the undead driven out, we may live here in relative peace and pursue "
-#~ "our studies. For this, Baldras, I am grateful."
-#~ msgstr ""
-#~ "アンデッドがいなくなれば、幾分か平和に暮らせるようになり、研究も進められ"
-#~ "る。このことについては感謝する、Baldras。"
-
-#~ msgid ""
-#~ "Studies? Peace? You mean to continue feeding on the lawful citizens of "
-#~ "Wesnoth. There will be no peace for them."
-#~ msgstr ""
-#~ "平和？研究？要するに Wesnoth の罪無き民を食い物にし続けると言うことだな。"
-#~ "民にとっては平和とは言えんな。"
-
-#~ msgid ""
-#~ "No one here is in a position to be dispensing moral judgments. "
-#~ "Regardless, you have done great service to us today, and we owe you a "
-#~ "debt. I will help you to the utmost of my ability."
-#~ msgstr ""
-#~ "道徳や良識を語れる者はこの場にはいない。とにかく、お前達は今日、我らに多大"
-#~ "な貢献を果たした。よってお前達には借りができた。私の力が及ぶ限りの援助をし"
-#~ "よう。"
-
-#~ msgid ""
-#~ "I was planning on giving you gold. Any good army is well financed, and "
-#~ "with the lich gone we can now spare it."
-#~ msgstr ""
-#~ "私はお前に金を与えようと思っていた。良い軍隊には十分な資金が必要だ。リッチ"
-#~ "がいなくなった今なら、金を与えることもできる。"
-
-#~ msgid ""
-#~ "But, I think it would help you more if I lent you some of my men to join "
-#~ "you on your adventures. The Queen has been sending mages out here, and my "
-#~ "men are itching for some payback."
-#~ msgstr ""
-#~ "しかし、我が部下を貸し出し、お前達の冒険に参加させた方が助けになるかも知れ"
-#~ "ぬ。女王は魔術師たちをここへも差し向けており、部下たちもなにがしかの報復を"
-#~ "したくてうずうずしているしな。"
-
-#~ msgid ""
-#~ "On the other hand, if I keep the full force of my organization here, we "
-#~ "might be able to regroup and join you on the battlefield when the time "
-#~ "comes."
-#~ msgstr ""
-#~ "一方、我が組織の全戦力をここに留めておいて、時が来た時に戦場で合流するのも"
-#~ "悪くはないかもしれない。"
-
-#~ msgid "I leave it to you to decide."
-#~ msgstr "どうするかはお前に任せよう。"
-
-#~ msgid "I will take the gold. How does 500 sound?"
-#~ msgstr "金をもらおう。500 ではどうだ？"
-
-#~ msgid "Agreed. Good luck and farewell to you, Master Baldras."
-#~ msgstr "いいだろう。幸運を祈る。そしてさらばだ、Baldras 殿。"
-
-#~ msgid ""
-#~ "Send your men with us. They will be valuable help as we prepare for the "
-#~ "assault from the Wesnoth army garrison."
-#~ msgstr ""
-#~ "部下をよこしてくれ。Wesnoth 軍の守備隊からの襲撃に備えるのに貴重な助けにな"
-#~ "る。"
-
-#~ msgid ""
-#~ "Done. My finest mages and thieves are at your disposal. Use them well."
-#~ msgstr ""
-#~ "わかった。盗賊と、配下の中でも腕利きの魔術師を出してやろう。うまく使って"
-#~ "やってくれ。"
-
-#~ msgid "I wish you to join us in battle against the Queen’s forces."
-#~ msgstr "女王軍との戦いで合流して欲しい。"
-
-#~ msgid ""
-#~ "All right. I need time to clean up this forest and recall my men from the "
-#~ "countryside. We will be ready to march in seven days. All now hinges on "
-#~ "you! Until then..."
-#~ msgstr ""
-#~ "了解した。この森をきれいにして、地方にいる部下を召集する時間が必要だ。7 日"
-#~ "の内には進軍する準備ができているだろう。あとは全てお前次第だ！ではその時ま"
-#~ "で……"
-
-#~ msgid "My men... have failed to protect me! I perish..."
-#~ msgstr "部下は…… 私を守りきれなかった！私は死ぬのか……"
-
-#~ msgid ""
-#~ "Baldras and his men quickly left the Grey Woods, not entirely convinced "
-#~ "of their safety even after eradicating the lich."
-#~ msgstr ""
-#~ "リッチを根絶したとはいえど安全を確信できる状況ではなく、Baldras たちは急い"
-#~ "で灰色森を後にしました。"
-
-#~ msgid ""
-#~ "As they marched, many men and women from the small hamlets peppering the "
-#~ "area around Carcyn and the Grey Woods approached the group, asking to "
-#~ "join them. The ascent of the Queen had cast an uneasy pall over the "
-#~ "citizens of Wesnoth, and some of them were willing to resist it."
-#~ msgstr ""
-#~ "進軍中、Carcyn と灰色森の周囲に点在する小さい村々から多くの男女がやってき"
-#~ "て、参加を求めました。女王の即位は Wesnoth の市民に不穏な影を投げかけてお"
-#~ "り、一部の人々はそれに抵抗する意思を持っていたのでした。"
-
-#~ msgid ""
-#~ "Knowing they too would be labeled criminals, he reluctantly accepted "
-#~ "their help.\n"
-#~ "<b>Note:</b> Baldras is now able to recruit Outlaws."
-#~ msgstr ""
-#~ "参加すれば彼らにも犯罪者のレッテルを貼られることがわかっていたため、"
-#~ "Baldras は渋っていましたが、最終的には彼らを受け入れることになりました。\n"
-#~ "<b>メモ:</b> 今後、Baldras は無法者を雇用することができます。"
-
-#~ msgid ""
-#~ "Camped at the edge of the forest, they quietly observed substantial troop "
-#~ "movements coming from the direction of Aldril, a nearby city, and "
-#~ "marching to the northwest. Unsure what to make of it, they debated their "
-#~ "next course of action..."
-#~ msgstr ""
-#~ "彼らが森の端に野営している時、相当な規模の軍隊が近くの都市 Aldril の方角か"
-#~ "ら来て、北西へ向かって進軍しているのをひそかに目撃しました。次の行動方針を"
-#~ "決めるため、彼らは議論を交わしました……"
-
-#~ msgid "Kill all enemy forces"
-#~ msgstr "敵軍の全滅"
-
-#~ msgid "Jingo"
-#~ msgstr "Jingo"
-
-#~ msgid "Majel"
-#~ msgstr "Majel"
-
-#~ msgid ""
-#~ "What’s worse is that she appears to have taken notice. We have counted "
-#~ "five platoons of heavy infantry marching towards the garrison in just the "
-#~ "last two hours."
-#~ msgstr ""
-#~ "さらに悪いことに、女王様の気を引いちまったようだ。この、ほんの二時間の間に"
-#~ "重歩兵の小隊が 5 つ、駐屯地の方へ行軍していったぜ。"
-
-#~ msgid ""
-#~ "The garrison. The towers of Halstead are more than a garrison, nephew, "
-#~ "they are a fortress. They used to protect this area from the enemies of "
-#~ "Wesnoth; I never imagined they would house its enemies."
-#~ msgstr ""
-#~ "駐屯地か。Halstead の塔は単なる駐屯地とは言えないぞ。Harper よ、あれは要塞"
-#~ "だ。かつては Wesnoth の敵からこの地域を守っていた。しかしなぁ、まさかあの"
-#~ "要塞の中に敵が入ることになるとは思いもしなかった。"
-
-#~ msgid "Pitcher"
-#~ msgstr "Pitcher"
-
-#~ msgid "whisper^<i>Baldras!</i>"
-#~ msgstr "<i>Baldras！</i>"
-
-#~ msgid "Uncle, he wears the crest of the Elense. We should answer."
-#~ msgstr ""
-#~ "叔父さん、彼は Elense の紋章を身に着けているぜ。応えた方が良さそうだ。"
-
-#~ msgid "Rider, hush before we are discovered! Come to us, but quietly!"
-#~ msgstr ""
-#~ "騎手さんよ、静かにしてくれ、見つかっちまう！こっちへ来い、ただし静かにだ"
-#~ "ぞ！"
-
-#~ msgid ""
-#~ "Master Baldras, I bring news from the north. During the past week, "
-#~ "several patrols have again ventured across the Great River into Annuvin. "
-#~ "A woman named Relana opposed them with a small militia. She was "
-#~ "victorious."
-#~ msgstr ""
-#~ "Baldras 殿、北からの知らせを持ってきました。先週、巡視隊が数隊大いなる川を"
-#~ "渡って Annuvin 州へ入りました。Relana という名の女が少数の民兵を率いてこれ"
-#~ "と交戦、勝利しました。"
-
-#~ msgid "This is surely good news!"
-#~ msgstr "こいつはまさに朗報だ！"
-
-#~ msgid ""
-#~ "I am afraid it is not. The Queen is sending a branch of her main field "
-#~ "army directly from Weldyn. As soon as they arrive, they will burn every "
-#~ "village to the ground. No one will live."
-#~ msgstr ""
-#~ "残念ながら、そうとは言えません。女王は Weldyn にある主力から一隊を割いて、"
-#~ "送り出しました。それが到着すれば、すぐに全ての村は根こそぎ焼き払われるで"
-#~ "しょう。人々も皆殺しにされるでしょう。"
-
-#~ msgid ""
-#~ "The troop movements all make sense now. We must stop this army from "
-#~ "reaching the garrison. We cannot swallow them whole, but we can gnaw away "
-#~ "at them. They mustn’t take one step without us being there to harass and "
-#~ "delay them. When they reach Halstead they must be exhausted or dying."
-#~ msgstr ""
-#~ "そういうことか。軍の動きの意味が今ようやく分かった。連中が駐屯地へ向かうの"
-#~ "を止めねばならん。全てを飲み込むのは不可能だが、噛み付くぐらいはできる。わ"
-#~ "しらは連中にいやがらせをして、進軍速度を遅らせる。連中に無事に先に進ませて"
-#~ "はならん。Halstead にたどりつけるのは消耗しきった奴か、死にかけの奴だけ"
-#~ "だ。"
-
-#~ msgid "You just said we can’t beat their entire army!"
-#~ msgstr ""
-#~ "さっき軍全体をやっつけることなんてできねぇって言っていたじゃないか！"
-
-#~ msgid ""
-#~ "May you prevail in peace and war. I must depart before I am seen so far "
-#~ "from my Lord’s borders."
-#~ msgstr ""
-#~ "あなた方のご武運をお祈りいたします。さて、我が主の領地からこんなに離れた所"
-#~ "にいるのを見られる前に、私は出発しなければなりません。"
-
-#~ msgid "Ow! Fire hot! No step in fire!"
-#~ msgstr "おぅ！熱っ！火の中には踏み込めない！"
-
-#~ msgid ""
-#~ "Send word to Helicrom that we are ready. It is time for him to repay his "
-#~ "debt."
-#~ msgstr "Helicrom に準備ができたと伝えてくれ。貸しを返してもらう時が来たと。"
-
-#~ msgid ""
-#~ "We have spent too much time here. Surely the entire Wesnoth army marches "
-#~ "on our position. We are done for!"
-#~ msgstr ""
-#~ "ここであまりに長い時間を無駄に費やしてしまった。Wesnoth の全軍がわしらの所"
-#~ "に進撃してくるのは確実だ。もう駄目だ！"
-
-#~ msgid "No, young one. Halstead indeed has a weakness."
-#~ msgstr "それは違うな、若造。Halstead には実のところ、弱点がある。"
-
-#~ msgid "How do you know?"
-#~ msgstr "何でそんなこと知ってるんだ？"
-
-#~ msgid ""
-#~ "When I was a boy, my father — your grandfather — brought your mother and "
-#~ "me to live in Aldril after orcs massacred many in our village. We grew up "
-#~ "around here, and we learned many things."
-#~ msgstr ""
-#~ "わしが小さかった頃、オークが村で多くの人々を虐殺した後、わしの父、おまえに"
-#~ "とっては祖父だな、その男がわしとおまえの父を Aldril に連れて来た。わしらは"
-#~ "この辺りで育ち、そして多くのことを学んだ。"
-
-#~ msgid ""
-#~ "Beneath the structure is a system of catacombs that connects all four "
-#~ "towers to the central keep. The catacombs growing over time, combined "
-#~ "with centuries of war, made it necessary to install supports to hold up "
-#~ "the middle."
-#~ msgstr ""
-#~ "あの建物の下には、四つの塔と中心の天守をつなぐ地下通路網がある。地下通路は"
-#~ "時が経つにつれ広がっていき、何世紀にも渡る戦争のせいもあって、中央部を支え"
-#~ "る支柱を据え付ける必要が生じた。"
+#~ "かつて平野を雷鳴のように駆け巡った偉大な戦士、骸骨の馬に乗る騎士は、恐怖と"
+#~ "破壊を撒き散らすために不浄な魔法によって墓地から蘇りました。"

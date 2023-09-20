@@ -1,43 +1,53 @@
 /*
-   Copyright (C) 2003 - 2018 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2003 - 2023
+	by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #include "events.hpp"
+
 #include "cursor.hpp"
 #include "desktop/clipboard.hpp"
 #include "log.hpp"
+#include "draw_manager.hpp"
 #include "quit_confirmation.hpp"
-#include "video.hpp"
 #include "sdl/userevent.hpp"
+#include "utils/ranges.hpp"
+#include "utils/general.hpp"
+#include "video.hpp"
 
 #if defined _WIN32
 #include "desktop/windows_tray_notification.hpp"
 #endif
 
 #include <algorithm>
-#include <atomic>
 #include <cassert>
 #include <deque>
+#include <future>
 #include <iterator>
+#include <thread>
 #include <utility>
 #include <vector>
-#include <thread>
 
 #include <SDL2/SDL.h>
 
-#include <boost/range/adaptor/reversed.hpp>
-
 #define ERR_GEN LOG_STREAM(err, lg::general)
+
+static lg::log_domain log_display("display");
+#define LOG_DP LOG_STREAM(info, log_display)
+
+static lg::log_domain log_event("event");
+#define LOG_EV LOG_STREAM(info, log_event)
+#define DBG_EV LOG_STREAM(debug, log_event)
 
 namespace
 {
@@ -45,8 +55,7 @@ struct invoked_function_data
 {
 	explicit invoked_function_data(const std::function<void(void)>& func)
 		: f(func)
-		, finished(false)
-		, thrown_exception()
+		, finished()
 	{
 	}
 
@@ -54,23 +63,22 @@ struct invoked_function_data
 	const std::function<void(void)>& f;
 
 	/** Whether execution in the main thread is complete. */
-	std::atomic_bool finished;
-
-	/** Stores any exception thrown during the execution of @ref f. */
-	std::exception_ptr thrown_exception;
+	std::promise<void> finished;
 
 	void call()
 	{
 		try {
 			f();
-		} catch(const CVideo::quit&) {
+		} catch(const video::quit&) {
 			// Handle this exception in the main thread.
 			throw;
 		} catch(...) {
-			thrown_exception = std::current_exception();
+			DBG_EV << "Caught exception in invoked function: " << utils::get_unknown_exception_type();
+			finished.set_exception(std::current_exception());
+			return;
 		}
 
-		finished = true;
+		finished.set_value();
 	}
 };
 }
@@ -251,7 +259,7 @@ sdl_handler::sdl_handler(const sdl_handler &that)
 		event_contexts.front().add_handler(this);
 	} else if(has_joined_) {
 		bool found_context = false;
-		for(auto &context : boost::adaptors::reverse(event_contexts)) {
+		for(auto &context : utils::reversed_view(event_contexts)) {
 			if(context.has_handler(&that)) {
 				found_context = true;
 				context.add_handler(this);
@@ -270,7 +278,7 @@ sdl_handler &sdl_handler::operator=(const sdl_handler &that)
 	if(that.has_joined_global_) {
 		join_global();
 	} else if(that.has_joined_) {
-		for(auto &context : boost::adaptors::reverse(event_contexts)) {
+		for(auto &context : utils::reversed_view(event_contexts)) {
 			if(context.has_handler(&that)) {
 				join(context);
 				break;
@@ -331,7 +339,7 @@ void sdl_handler::join_same(sdl_handler* parent)
 		leave(); // should not be in multiple event contexts
 	}
 
-	for(auto& context : boost::adaptors::reverse(event_contexts)) {
+	for(auto& context : utils::reversed_view(event_contexts)) {
 		if(context.has_handler(parent)) {
 			join(context);
 			return;
@@ -353,7 +361,7 @@ void sdl_handler::leave()
 		member->leave();
 	}
 
-	for(auto& context : boost::adaptors::reverse(event_contexts)) {
+	for(auto& context : utils::reversed_view(event_contexts)) {
 		if(context.remove_handler(this)) {
 			break;
 		}
@@ -444,42 +452,36 @@ bool has_focus(const sdl_handler* hand, const SDL_Event* event)
 	return false;
 }
 
-const uint32_t resize_timeout = 100;
-SDL_Event last_resize_event;
-bool last_resize_event_used = true;
-
-static bool remove_on_resize(const SDL_Event& a)
+static void raise_window_event(const SDL_Event& event)
 {
-	if(a.type == DRAW_EVENT || a.type == DRAW_ALL_EVENT) {
-		return true;
+	for(auto& context : event_contexts) {
+		for(auto handler : context.handlers) {
+			handler->handle_window_event(event);
+		}
 	}
 
-	if(a.type == SHOW_HELPTIP_EVENT) {
-		return true;
+	for(auto global_handler : event_contexts.front().handlers) {
+		global_handler->handle_window_event(event);
 	}
-
-	if((a.type == SDL_WINDOWEVENT) && (
-		a.window.event == SDL_WINDOWEVENT_RESIZED ||
-		a.window.event == SDL_WINDOWEVENT_SIZE_CHANGED ||
-		a.window.event == SDL_WINDOWEVENT_EXPOSED)
-	) {
-		return true;
-	}
-
-	return false;
 }
 
 // TODO: I'm uncertain if this is always safe to call at static init; maybe set in main() instead?
 static const std::thread::id main_thread = std::this_thread::get_id();
 
+// this should probably be elsewhere, but as the main thread is already
+// being tracked here, this went here.
+bool is_in_main_thread()
+{
+	return std::this_thread::get_id() == main_thread;
+}
+
 void pump()
 {
-	if(std::this_thread::get_id() != main_thread) {
+	if(!is_in_main_thread()) {
 		// Can only call this on the main thread!
 		return;
 	}
 
-	peek_for_resize();
 	pump_info info;
 
 	// Used to keep track of double click events
@@ -498,7 +500,6 @@ void pump()
 		}
 
 		++poll_count;
-		peek_for_resize();
 
 		if(!begin_ignoring && temp_event.type == SDL_WINDOWEVENT && (
 			temp_event.window.event == SDL_WINDOWEVENT_ENTER ||
@@ -523,37 +524,6 @@ void pump()
 		}
 	}
 
-	bool resize_found = false;
-	for(const SDL_Event& event : boost::adaptors::reverse(events)) {
-		if(event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_RESIZED) {
-			resize_found = true;
-			last_resize_event = event;
-			last_resize_event_used = false;
-
-			// Since we're working backwards, the first resize event found is the last in the list.
-			break;
-		}
-	}
-
-	// remove all inputs, draw events and only keep the last of the resize events
-	// This will turn horrible after ~49 days when the uint32_t wraps.
-	if(resize_found || SDL_GetTicks() <= last_resize_event.window.timestamp + resize_timeout) {
-		events.erase(std::remove_if(events.begin(), events.end(), remove_on_resize), events.end());
-	} else if(SDL_GetTicks() > last_resize_event.window.timestamp + resize_timeout && !last_resize_event_used) {
-		events.insert(events.begin(), last_resize_event);
-		last_resize_event_used = true;
-	}
-
-	// Move all draw events to the end of the queue
-	auto first_draw_event = std::stable_partition(events.begin(), events.end(),
-		[](const SDL_Event& e) { return e.type != DRAW_EVENT; }
-	);
-
-	if(first_draw_event != events.end()) {
-		// Remove all draw events except one
-		events.erase(first_draw_event + 1, events.end());
-	}
-
 	for(SDL_Event& event : events) {
 		for(context& c : event_contexts) {
 			c.add_staging_handlers();
@@ -569,7 +539,8 @@ void pump()
 
 				if(event.motion.state & SDL_BUTTON(SDL_BUTTON_RIGHT))
 				{
-					SDL_Rect r = CVideo::get_singleton().screen_area();
+					// Events are given by SDL in draw space
+					point c = video::game_canvas_size();
 
 					// TODO: Check if SDL_FINGERMOTION is actually signaled for COMPLETE motions (I doubt, but tbs)
 					SDL_Event touch_event;
@@ -578,10 +549,10 @@ void pump()
 					touch_event.tfinger.timestamp = event.motion.timestamp;
 					touch_event.tfinger.touchId = 1;
 					touch_event.tfinger.fingerId = 1;
-					touch_event.tfinger.dx = static_cast<float>(event.motion.xrel) / r.w;
-					touch_event.tfinger.dy = static_cast<float>(event.motion.yrel) / r.h;
-					touch_event.tfinger.x = static_cast<float>(event.motion.x) / r.w;
-					touch_event.tfinger.y = static_cast<float>(event.motion.y) / r.h;
+					touch_event.tfinger.dx = static_cast<float>(event.motion.xrel) / c.x;
+					touch_event.tfinger.dy = static_cast<float>(event.motion.yrel) / c.y;
+					touch_event.tfinger.x = static_cast<float>(event.motion.x) / c.x;
+					touch_event.tfinger.y = static_cast<float>(event.motion.y) / c.y;
 					touch_event.tfinger.pressure = 1;
 					::SDL_PushEvent(&touch_event);
 
@@ -596,7 +567,9 @@ void pump()
 					event.button.button = SDL_BUTTON_LEFT;
 					event.button.which = SDL_TOUCH_MOUSEID;
 
-					SDL_Rect r = CVideo::get_singleton().screen_area();
+					// Events are given by SDL in draw space
+					point c = video::game_canvas_size();
+
 					SDL_Event touch_event;
 					touch_event.type = (event.type == SDL_MOUSEBUTTONDOWN) ? SDL_FINGERDOWN : SDL_FINGERUP;
 					touch_event.tfinger.type = touch_event.type;
@@ -605,8 +578,8 @@ void pump()
 					touch_event.tfinger.fingerId = 1;
 					touch_event.tfinger.dx = 0;
 					touch_event.tfinger.dy = 0;
-					touch_event.tfinger.x = static_cast<float>(event.button.x) / r.w;
-					touch_event.tfinger.y = static_cast<float>(event.button.y) / r.h;
+					touch_event.tfinger.x = static_cast<float>(event.button.x) / c.x;
+					touch_event.tfinger.y = static_cast<float>(event.button.y) / c.y;
 					touch_event.tfinger.pressure = 1;
 					::SDL_PushEvent(&touch_event);
 
@@ -630,25 +603,40 @@ void pump()
 				cursor::set_focus(1);
 				break;
 
+			// Size changed is called before resized.
+			// We can ensure the video framebuffer is valid here.
+			case SDL_WINDOWEVENT_SIZE_CHANGED:
+				LOG_DP << "events/SIZE_CHANGED "
+					<< event.window.data1 << 'x' << event.window.data2;
+				video::update_buffers(false);
+				break;
+
+			// Resized comes after size_changed.
+			// Here we can trigger any watchers for resize events.
+			// Video settings such as game_canvas_size() will be correct.
 			case SDL_WINDOWEVENT_RESIZED:
+				LOG_DP << "events/RESIZED "
+					<< event.window.data1 << 'x' << event.window.data2;
 				info.resize_dimensions.first = event.window.data1;
 				info.resize_dimensions.second = event.window.data2;
 				break;
+
+			// Once everything has had a chance to respond to the resize,
+			// an expose is triggered to display the changed content.
+			case SDL_WINDOWEVENT_EXPOSED:
+				LOG_DP << "events/EXPOSED";
+				draw_manager::invalidate_all();
+				break;
+
+			case SDL_WINDOWEVENT_MAXIMIZED:
+			case SDL_WINDOWEVENT_RESTORED:
+			case SDL_WINDOWEVENT_SHOWN:
+			case SDL_WINDOWEVENT_MOVED:
+				// Not used.
+				break;
 			}
 
-			// make sure this runs in it's own scope.
-			{
-				flip_locker flip_lock(CVideo::get_singleton());
-				for(auto& context : event_contexts) {
-					for(auto handler : context.handlers) {
-						handler->handle_window_event(event);
-					}
-				}
-
-				for(auto global_handler : event_contexts.front().handlers) {
-					global_handler->handle_window_event(event);
-				}
-			}
+			raise_window_event(event);
 
 			// This event was just distributed, don't re-distribute.
 			continue;
@@ -656,7 +644,7 @@ void pump()
 		case SDL_MOUSEMOTION: {
 			// Always make sure a cursor is displayed if the mouse moves or if the user clicks
 			cursor::set_focus(true);
-			raise_help_string_event(event.motion.x, event.motion.y);
+			process_tooltip_strings(event.motion.x, event.motion.y);
 			break;
 		}
 
@@ -684,20 +672,6 @@ void pump()
 				last_click_y = event.button.y;
 			}
 			break;
-		}
-
-		case DRAW_ALL_EVENT: {
-			flip_locker flip_lock(CVideo::get_singleton());
-
-			/* Iterate backwards as the most recent things will be at the top */
-			// FIXME? ^ that isn't happening here.
-			for(auto& context : event_contexts) {
-				for(auto handler : context.handlers) {
-					handler->handle_event(event);
-				}
-			}
-
-			continue; // do not do further handling here
 		}
 
 #ifndef __APPLE__
@@ -738,8 +712,24 @@ void pump()
 		}
 
 		if(event_contexts.empty() == false) {
-			for(auto handler : event_contexts.back().handlers) {
-				handler->handle_event(event);
+			// As pump() can recurse, pretty much anything can happen here
+			// including destroying handlers or the event context.
+			size_t ec_index = event_contexts.size();
+			context& c = event_contexts.back();
+			handler_list& h = c.handlers;
+			size_t h_size = h.size();
+			for(auto it = h.begin(); it != h.end(); ++it) {
+				// Pass the event on to the handler.
+				(*it)->handle_event(event);
+				// Escape if anything has changed.
+				if(event_contexts.size() != ec_index) {
+					LOG_EV << "ec size changed! bugging out";
+					break;
+				}
+				if(h_size != h.size()) {
+					LOG_EV << "h size changed! bugging out";
+					break;
+				}
 			}
 		}
 	}
@@ -748,6 +738,11 @@ void pump()
 	for(auto monitor : pump_monitors) {
 		monitor->process(info);
 	}
+}
+
+void draw()
+{
+	draw_manager::sparkle();
 }
 
 void raise_process_event()
@@ -763,70 +758,21 @@ void raise_process_event()
 
 void raise_resize_event()
 {
+	point size = video::window_size();
 	SDL_Event event;
 	event.window.type = SDL_WINDOWEVENT;
 	event.window.event = SDL_WINDOWEVENT_RESIZED;
 	event.window.windowID = 0; // We don't check this anyway... I think...
-	event.window.data1 = CVideo::get_singleton().get_width();
-	event.window.data2 = CVideo::get_singleton().get_height();
+	event.window.data1 = size.x;
+	event.window.data2 = size.y;
 
-	SDL_PushEvent(&event);
+	raise_window_event(event);
 }
 
-void raise_draw_event()
-{
-	if(event_contexts.empty() == false) {
-		event_contexts.back().add_staging_handlers();
-
-		// Events may cause more event handlers to be added and/or removed,
-		// so we must use indexes instead of iterators here.
-		for(auto handler : event_contexts.back().handlers) {
-			handler->draw();
-		}
-	}
-}
-
-void raise_draw_all_event()
-{
-	for(auto& context : event_contexts) {
-		for(auto handler : context.handlers) {
-			handler->draw();
-		}
-	}
-}
-
-void raise_volatile_draw_event()
+void process_tooltip_strings(int mousex, int mousey)
 {
 	if(event_contexts.empty() == false) {
 		for(auto handler : event_contexts.back().handlers) {
-			handler->volatile_draw();
-		}
-	}
-}
-
-void raise_volatile_draw_all_event()
-{
-	for(auto& context : event_contexts) {
-		for(auto handler : context.handlers) {
-			handler->volatile_draw();
-		}
-	}
-}
-
-void raise_volatile_undraw_event()
-{
-	if(event_contexts.empty() == false) {
-		for(auto handler : event_contexts.back().handlers) {
-			handler->volatile_undraw();
-		}
-	}
-}
-
-void raise_help_string_event(int mousex, int mousey)
-{
-	if(event_contexts.empty() == false) {
-		for(auto handler : event_contexts.back().handlers) {
-			handler->process_help_string(mousex, mousey);
 			handler->process_tooltip_string(mousex, mousey);
 		}
 	}
@@ -855,20 +801,9 @@ void discard_input()
 	SDL_FlushEvents(INPUT_MIN, INPUT_MAX);
 }
 
-void peek_for_resize()
-{
-	SDL_Event events[100];
-	int num = SDL_PeepEvents(events, 100, SDL_PEEKEVENT, SDL_WINDOWEVENT, SDL_WINDOWEVENT);
-	for(int i = 0; i < num; ++i) {
-		if(events[i].type == SDL_WINDOWEVENT && events[i].window.event == SDL_WINDOWEVENT_RESIZED) {
-			CVideo::get_singleton().update_framebuffer();
-		}
-	}
-}
-
 void call_in_main_thread(const std::function<void(void)>& f)
 {
-	if(std::this_thread::get_id() == main_thread) {
+	if(is_in_main_thread()) {
 		// nothing special to do if called from the main thread.
 		f();
 		return;
@@ -884,13 +819,8 @@ void call_in_main_thread(const std::function<void(void)>& f)
 
 	SDL_PushEvent(&sdl_event);
 
-	while(!fdata.finished) {
-		SDL_Delay(10);
-	}
-
-	if(fdata.thrown_exception) {
-		std::rethrow_exception(fdata.thrown_exception);
-	}
+	// Block until execution is complete in the main thread. Rethrows any exceptions.
+	fdata.finished.get_future().wait();
 }
 
 } // end events namespace

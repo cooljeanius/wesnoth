@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2011 - 2018 by Sytyi Nick <nsytyi@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2011 - 2023
+	by Sytyi Nick <nsytyi@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -21,7 +22,6 @@
 #include "serialization/schema/key.hpp"
 #include "serialization/validator.hpp"
 
-#include <iostream>
 #include <queue>
 #include <stack>
 #include <string>
@@ -53,10 +53,15 @@ public:
 		create_exceptions_ = value;
 	}
 
+	const std::vector<std::string>& get_errors() const
+	{
+		return errors_;
+	}
+
 	virtual void open_tag(const std::string& name, const config& parent, int start_line = 0, const std::string& file = "", bool addition = false) override;
 	virtual void close_tag() override;
 	virtual void validate(const config& cfg, const std::string& name, int start_line, const std::string& file) override;
-	virtual void validate_key(const config& cfg, const std::string& name, const std::string& value, int start_line, const std::string& file) override;
+	virtual void validate_key(const config& cfg, const std::string& name, const config_attribute_value& value, int start_line, const std::string& file) override;
 
 private:
 	// types section
@@ -77,9 +82,8 @@ private:
 	typedef std::stack<cnt_map> cnt_stack;
 
 protected:
-	enum message_type{ WRONG_TAG, EXTRA_TAG, MISSING_TAG, EXTRA_KEY, MISSING_KEY, WRONG_VALUE, WRONG_TYPE, WRONG_PATH };
-private:
-	// error_cache
+	using message_type = int;
+	enum { WRONG_TAG, EXTRA_TAG, MISSING_TAG, EXTRA_KEY, MISSING_KEY, WRONG_VALUE, NEXT_ERROR };
 
 	/**
 	 * Messages are cached.
@@ -99,8 +103,9 @@ private:
 		std::string tag;
 		std::string key;
 		std::string value;
+		std::string expected;
 
-		message_info(message_type t, const std::string& file, int line = 0, int n = 0, const std::string& tag = "", const std::string& key = "", const std::string& value = "")
+		message_info(message_type t, const std::string& file, int line = 0, int n = 0, const std::string& tag = "", const std::string& key = "", const std::string& value = "", const std::string& expected = "")
 			: type(t)
 			, file(file)
 			, line(line)
@@ -108,23 +113,26 @@ private:
 			, tag(tag)
 			, key(key)
 			, value(value)
+			, expected(expected)
 		{
 		}
 	};
 
+	/** Controls the way to print errors. */
+	bool create_exceptions_;
+
+	virtual void print(message_info&);
+private:
+	void print_cache();
+
 	typedef std::deque<message_info> message_list;
 	typedef std::map<const config*, message_list> message_map;
-
-	void print(message_info&);
 
 	/** Reads config from input. */
 	bool read_config_file(const std::string& filename);
 
 	/** Shows, if validator is initialized with schema file. */
 	bool config_read_;
-
-	/** Controls the way to print errors. */
-	bool create_exceptions_;
 
 	/** Root of schema information. */
 	wml_tag root_;
@@ -141,8 +149,16 @@ private:
 	wml_type::map types_;
 
 	bool validate_schema_;
+
+	std::vector<std::string> errors_;
+
 protected:
-	void queue_message(const config& cfg, message_type t, const std::string& file, int line = 0, int n = 0, const std::string& tag = "", const std::string& key = "", const std::string& value = "");
+	template<typename... T>
+	void queue_message(const config& cfg, T&&... args)
+	{
+		cache_.top()[&cfg].emplace_back(std::forward<T>(args)...);
+	}
+
 	const wml_tag& active_tag() const;
 	std::string active_tag_path() const;
 	bool have_active_tag() const;
@@ -159,7 +175,7 @@ public:
 	virtual void open_tag(const std::string& name, const config& parent, int start_line = 0, const std::string& file = "", bool addition = false) override;
 	virtual void close_tag() override;
 	virtual void validate(const config& cfg, const std::string& name, int start_line, const std::string& file) override;
-	virtual void validate_key(const config& cfg, const std::string& name, const std::string& value, int start_line, const std::string& file) override;
+	virtual void validate_key(const config& cfg, const std::string& name, const config_attribute_value& value, int start_line, const std::string& file) override;
 private:
 	struct reference {
 		reference(const std::string& value, const std::string& file, int line, const std::string& tag)
@@ -182,6 +198,11 @@ private:
 	std::multimap<std::string, std::string> derivations_;
 	int type_nesting_, condition_nesting_;
 	bool tag_path_exists(const config& cfg, const reference& ref);
+	void check_for_duplicates(const std::string& name, std::vector<std::string>& seen, const config& cfg, message_type type, const std::string& file, int line, const std::string& tag);
+	static bool name_matches(const std::string& pattern, const std::string& name);
+
+	void print(message_info& message) override;
+	enum { WRONG_TYPE = NEXT_ERROR, WRONG_PATH, DUPLICATE_TAG, DUPLICATE_KEY, SUPER_LOOP, NEXT_ERROR };
 };
 
 } // namespace schema_validation{

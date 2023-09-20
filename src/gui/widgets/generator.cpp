@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2008 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #define GETTEXT_DOMAIN "wesnoth-lib"
@@ -20,6 +21,7 @@
 #include "wml_exception.hpp"
 
 #include <numeric>
+#include <cmath>
 
 namespace gui2
 {
@@ -83,7 +85,7 @@ bool one_item::deselect_item(const unsigned index)
 void one_item::delete_item(const unsigned index)
 {
 	// this needs the same logic for ensuring that at least one item is selected
-	set_item_shown(index, false);
+	one_item::set_item_shown(index, false);
 }
 
 void no_item::set_item_shown(const unsigned index, const bool show)
@@ -578,14 +580,11 @@ point table::calculate_best_size() const
 		);
 
 		int row_max_width = row_min_width + max_xtra;
-		int row = 0;
 
 		point row_size, total_size;
 
 		for(std::size_t n = 0; n < item_sizes.size(); n++) {
 			if(row_size.x + item_sizes[n].x > row_max_width) {
-				// Start new row
-				row++;
 
 				total_size.y += row_size.y;
 
@@ -1027,13 +1026,14 @@ namespace select_action
 void selection::select(grid& grid, const bool select)
 {
 	selectable_item* selectable = dynamic_cast<selectable_item*>(grid.get_widget(0, 0));
-	assert(selectable);
+	//the check in selection::init is not strict enouth to guaranetee this.
+	VALIDATE(selectable, "Only toggle buttons and panels are allowed as the cells of a list definition.");
 
 	selectable->set_value(select);
 }
 
 void selection::init(grid* g,
-		const std::map<std::string /* widget id */, string_map>& data,
+		const widget_data& data,
 		const std::function<void(widget&)>& callback)
 {
 	for(unsigned row = 0; row < g->get_rows(); ++row) {
@@ -1046,9 +1046,9 @@ void selection::init(grid* g,
 			toggle_panel* panel = dynamic_cast<toggle_panel*>(widget);
 
 			if(btn) {
-				connect_signal_notify_modified(*btn, std::bind(callback, _1));
+				connect_signal_notify_modified(*btn, std::bind(callback, std::placeholders::_1));
 
-				std::map<std::string, string_map>::const_iterator itor = data.find(btn->id());
+				widget_data::const_iterator itor = data.find(btn->id());
 
 				if(itor == data.end()) {
 					itor = data.find("");
@@ -1057,7 +1057,7 @@ void selection::init(grid* g,
 					btn->set_members(itor->second);
 				}
 			} else if(panel) {
-				connect_signal_notify_modified(*panel, std::bind(callback, _1));
+				connect_signal_notify_modified(*panel, std::bind(callback, std::placeholders::_1));
 
 				panel->set_child_members(data);
 			} else if(child_grid) {
@@ -1070,7 +1070,7 @@ void selection::init(grid* g,
 }
 
 void show::init(grid* grid,
-		const std::map<std::string /* widget id */, string_map>& data,
+		const widget_data& data,
 		const std::function<void(widget&)>& callback)
 {
 	assert(!callback);
@@ -1105,16 +1105,16 @@ static_assert(false, "GUI2/Generator: GENERATE_PLACEMENT already defined!");
 #define GENERATE_PLACEMENT                                                                                             \
 	switch(placement) {                                                                                                \
 	case generator_base::horizontal_list:                                                                              \
-		result = new generator<minimum, maximum, policy::placement::horizontal_list, select_action>;                   \
+		result = std::make_unique<generator<minimum, maximum, policy::placement::horizontal_list, select_action>>();   \
 		break;                                                                                                         \
 	case generator_base::vertical_list:                                                                                \
-		result = new generator<minimum, maximum, policy::placement::vertical_list, select_action>;                     \
+		result = std::make_unique<generator<minimum, maximum, policy::placement::vertical_list, select_action>>();     \
 		break;                                                                                                         \
 	case generator_base::table:                                                                                        \
-		result = new generator<minimum, maximum, policy::placement::table, select_action>;                             \
+		result = std::make_unique<generator<minimum, maximum, policy::placement::table, select_action>>();             \
 		break;                                                                                                         \
 	case generator_base::independent:                                                                                  \
-		result = new generator<minimum, maximum, policy::placement::independent, select_action>;                       \
+		result = std::make_unique<generator<minimum, maximum, policy::placement::independent, select_action>>();       \
 		break;                                                                                                         \
 	default:                                                                                                           \
 		assert(false);                                                                                                 \
@@ -1160,10 +1160,10 @@ static_assert(false, "GUI2/Generator: GENERATE_BODY already defined!");
 	}
 #endif
 
-generator_base* generator_base::build(
+std::unique_ptr<generator_base>  generator_base::build(
 		const bool has_minimum, const bool has_maximum, const placement placement, const bool select)
 {
-	generator_base* result = nullptr;
+	std::unique_ptr<generator_base> result = nullptr;
 	GENERATE_BODY;
 	return result;
 }

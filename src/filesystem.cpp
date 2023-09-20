@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2003 - 2012 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2003 - 2023
+	by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -22,24 +23,23 @@
 
 #include "config.hpp"
 #include "deprecation.hpp"
-#include "game_config.hpp"
-#include "game_version.hpp"
 #include "gettext.hpp"
 #include "log.hpp"
+#include "serialization/base64.hpp"
+#include "serialization/string_utils.hpp"
 #include "serialization/unicode.hpp"
 #include "serialization/unicode_cast.hpp"
+#include "utils/general.hpp"
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/iostreams/device/file_descriptor.hpp>
 #include <boost/iostreams/stream.hpp>
-#include <boost/system/windows_error.hpp>
+#include <boost/process.hpp>
 #include "game_config_view.hpp"
 
 #ifdef _WIN32
-#include "log_windows.hpp"
-
 #include <boost/locale.hpp>
 
 #include <windows.h>
@@ -71,8 +71,32 @@ static lg::log_domain log_filesystem("filesystem");
 #define WRN_FS LOG_STREAM(warn, log_filesystem)
 #define ERR_FS LOG_STREAM(err, log_filesystem)
 
+namespace bp = boost::process;
 namespace bfs = boost::filesystem;
 using boost::system::error_code;
+
+namespace game_config
+{
+//
+// Path info
+//
+#ifdef WESNOTH_PATH
+std::string path = WESNOTH_PATH;
+#else
+std::string path = "";
+#endif
+
+#ifdef DEFAULT_PREFS_PATH
+std::string default_preferences_path = DEFAULT_PREFS_PATH;
+#else
+std::string default_preferences_path = "";
+#endif
+bool check_migration = false;
+
+const std::string observer_team_name = "observer";
+
+int cache_compression_level = 6;
+}
 
 namespace
 {
@@ -169,7 +193,7 @@ public:
 		try {
 			customcodecvt_do_conversion<char, wchar_t>(state, from, from_end, from_next, to, to_end, to_next);
 		} catch(...) {
-			ERR_FS << "Invalid UTF-8 string'" << std::string(from, from_end) << "' " << std::endl;
+			ERR_FS << "Invalid UTF-8 string'" << std::string(from, from_end) << "' with exception: " << utils::get_unknown_exception_type();
 			return std::codecvt_base::error;
 		}
 
@@ -187,7 +211,7 @@ public:
 		try {
 			customcodecvt_do_conversion<wchar_t, char>(state, from, from_end, from_next, to, to_end, to_next);
 		} catch(...) {
-			ERR_FS << "Invalid UTF-16 string" << std::endl;
+			ERR_FS << "Invalid UTF-16 string with exception: " << utils::get_unknown_exception_type();
 			return std::codecvt_base::error;
 		}
 
@@ -233,6 +257,40 @@ bool is_filename_case_correct(const std::string& /*fname*/, const boost::iostrea
 namespace filesystem
 {
 
+const blacklist_pattern_list default_blacklist{
+	{
+		/* Blacklist dot-files/dirs, which are hidden files in UNIX platforms */
+		".+",
+		"#*#",
+		"*~",
+		"*-bak",
+		"*.swp",
+		"*.pbl",
+		"*.ign",
+		"_info.cfg",
+		"*.exe",
+		"*.bat",
+		"*.cmd",
+		"*.com",
+		"*.scr",
+		"*.sh",
+		"*.js",
+		"*.vbs",
+		"*.o",
+		"*.ini",
+		/* Remove junk created by certain file manager ;) */
+		"Thumbs.db",
+		/* Eclipse plugin */
+		"*.wesnoth",
+		"*.project",
+	},
+	{
+		".+",
+		/* macOS metadata-like cruft (http://floatingsun.net/2007/02/07/whats-with-__macosx-in-zip-files/) */
+		"__MACOSX",
+	}
+};
+
 static void push_if_exists(std::vector<std::string>* vec, const bfs::path& file, bool full)
 {
 	if(vec != nullptr) {
@@ -246,11 +304,7 @@ static void push_if_exists(std::vector<std::string>* vec, const bfs::path& file,
 
 static inline bool error_except_not_found(const error_code& ec)
 {
-	return (ec && ec.value() != boost::system::errc::no_such_file_or_directory
-#ifdef _WIN32
-		&& ec.value() != boost::system::windows_error::path_not_found
-#endif /*_WIN32*/
-	);
+	return ec && ec != boost::system::errc::no_such_file_or_directory;
 }
 
 static bool is_directory_internal(const bfs::path& fpath)
@@ -258,7 +312,7 @@ static bool is_directory_internal(const bfs::path& fpath)
 	error_code ec;
 	bool is_dir = bfs::is_directory(fpath, ec);
 	if(error_except_not_found(ec)) {
-		LOG_FS << "Failed to check if " << fpath.string() << " is a directory: " << ec.message() << '\n';
+		LOG_FS << "Failed to check if " << fpath.string() << " is a directory: " << ec.message();
 	}
 
 	return is_dir;
@@ -269,7 +323,7 @@ static bool file_exists(const bfs::path& fpath)
 	error_code ec;
 	bool exists = bfs::exists(fpath, ec);
 	if(error_except_not_found(ec)) {
-		ERR_FS << "Failed to check existence of file " << fpath.string() << ": " << ec.message() << '\n';
+		ERR_FS << "Failed to check existence of file " << fpath.string() << ": " << ec.message();
 	}
 
 	return exists;
@@ -283,7 +337,7 @@ static bfs::path get_dir(const bfs::path& dirpath)
 		bfs::create_directory(dirpath, ec);
 
 		if(ec) {
-			ERR_FS << "Failed to create directory " << dirpath.string() << ": " << ec.message() << '\n';
+			ERR_FS << "Failed to create directory " << dirpath.string() << ": " << ec.message();
 		}
 
 		// This is probably redundant
@@ -291,7 +345,7 @@ static bfs::path get_dir(const bfs::path& dirpath)
 	}
 
 	if(!is_dir) {
-		ERR_FS << "Could not open or create directory " << dirpath.string() << '\n';
+		ERR_FS << "Could not open or create directory " << dirpath.string();
 		return std::string();
 	}
 
@@ -304,19 +358,19 @@ static bool create_directory_if_missing(const bfs::path& dirpath)
 	bfs::file_status fs = bfs::status(dirpath, ec);
 
 	if(error_except_not_found(ec)) {
-		ERR_FS << "Failed to retrieve file status for " << dirpath.string() << ": " << ec.message() << '\n';
+		ERR_FS << "Failed to retrieve file status for " << dirpath.string() << ": " << ec.message();
 		return false;
 	} else if(bfs::is_directory(fs)) {
-		DBG_FS << "directory " << dirpath.string() << " exists, not creating\n";
+		DBG_FS << "directory " << dirpath.string() << " exists, not creating";
 		return true;
 	} else if(bfs::exists(fs)) {
-		ERR_FS << "cannot create directory " << dirpath.string() << "; file exists\n";
+		ERR_FS << "cannot create directory " << dirpath.string() << "; file exists";
 		return false;
 	}
 
 	bool created = bfs::create_directory(dirpath, ec);
 	if(ec) {
-		ERR_FS << "Failed to create directory " << dirpath.string() << ": " << ec.message() << '\n';
+		ERR_FS << "Failed to create directory " << dirpath.string() << ": " << ec.message();
 	}
 
 	return created;
@@ -324,7 +378,7 @@ static bool create_directory_if_missing(const bfs::path& dirpath)
 
 static bool create_directory_if_missing_recursive(const bfs::path& dirpath)
 {
-	DBG_FS << "creating recursive directory: " << dirpath.string() << '\n';
+	DBG_FS << "creating recursive directory: " << dirpath.string();
 
 	if(dirpath.empty()) {
 		return false;
@@ -334,7 +388,7 @@ static bool create_directory_if_missing_recursive(const bfs::path& dirpath)
 	bfs::file_status fs = bfs::status(dirpath);
 
 	if(error_except_not_found(ec)) {
-		ERR_FS << "Failed to retrieve file status for " << dirpath.string() << ": " << ec.message() << '\n';
+		ERR_FS << "Failed to retrieve file status for " << dirpath.string() << ": " << ec.message();
 		return false;
 	} else if(bfs::is_directory(fs)) {
 		return true;
@@ -345,7 +399,7 @@ static bool create_directory_if_missing_recursive(const bfs::path& dirpath)
 	if(!dirpath.has_parent_path() || create_directory_if_missing_recursive(dirpath.parent_path())) {
 		return create_directory_if_missing(dirpath);
 	} else {
-		ERR_FS << "Could not create parents to " << dirpath.string() << '\n';
+		ERR_FS << "Could not create parents to " << dirpath.string();
 		return false;
 	}
 }
@@ -353,9 +407,9 @@ static bool create_directory_if_missing_recursive(const bfs::path& dirpath)
 void get_files_in_dir(const std::string& dir,
 		std::vector<std::string>* files,
 		std::vector<std::string>* dirs,
-		file_name_option mode,
-		file_filter_option filter,
-		file_reorder_option reorder,
+		name_mode mode,
+		filter_mode filter,
+		reorder_mode reorder,
 		file_tree_checksum* checksum)
 {
 	if(bfs::path(dir).is_relative() && !game_config::path.empty()) {
@@ -370,13 +424,13 @@ void get_files_in_dir(const std::string& dir,
 
 	const bfs::path dirpath(dir);
 
-	if(reorder == DO_REORDER) {
-		LOG_FS << "searching for _main.cfg in directory " << dir << '\n';
+	if(reorder == reorder_mode::DO_REORDER) {
+		LOG_FS << "searching for _main.cfg in directory " << dir;
 		const bfs::path maincfg = dirpath / maincfg_filename;
 
 		if(file_exists(maincfg)) {
-			LOG_FS << "_main.cfg found : " << maincfg << '\n';
-			push_if_exists(files, maincfg, mode == ENTIRE_FILE_PATH);
+			LOG_FS << "_main.cfg found : " << maincfg;
+			push_if_exists(files, maincfg, mode == name_mode::ENTIRE_FILE_PATH);
 			return;
 		}
 	}
@@ -391,35 +445,35 @@ void get_files_in_dir(const std::string& dir,
 	}
 
 	for(; di != end; ++di) {
+		ec.clear();
 		bfs::file_status st = di->status(ec);
 		if(ec) {
-			LOG_FS << "Failed to get file status of " << di->path().string() << ": " << ec.message() << '\n';
+			LOG_FS << "Failed to get file status of " << di->path().string() << ": " << ec.message();
 			continue;
 		}
 
 		if(st.type() == bfs::regular_file) {
 			{
 				std::string basename = di->path().filename().string();
-				if(filter == SKIP_PBL_FILES && looks_like_pbl(basename))
+				if(filter == filter_mode::SKIP_PBL_FILES && looks_like_pbl(basename))
 					continue;
 				if(!basename.empty() && basename[0] == '.')
 					continue;
 			}
 
-			push_if_exists(files, di->path(), mode == ENTIRE_FILE_PATH);
+			push_if_exists(files, di->path(), mode == name_mode::ENTIRE_FILE_PATH);
 
 			if(checksum != nullptr) {
 				std::time_t mtime = bfs::last_write_time(di->path(), ec);
 				if(ec) {
-					LOG_FS << "Failed to read modification time of " << di->path().string() << ": " << ec.message()
-						   << '\n';
+					LOG_FS << "Failed to read modification time of " << di->path().string() << ": " << ec.message();
 				} else if(mtime > checksum->modified) {
 					checksum->modified = mtime;
 				}
 
 				uintmax_t size = bfs::file_size(di->path(), ec);
 				if(ec) {
-					LOG_FS << "Failed to read filesize of " << di->path().string() << ": " << ec.message() << '\n';
+					LOG_FS << "Failed to read filesize of " << di->path().string() << ": " << ec.message();
 				} else {
 					checksum->sum_size += size;
 				}
@@ -433,7 +487,7 @@ void get_files_in_dir(const std::string& dir,
 				continue;
 			}
 
-			if(filter == SKIP_MEDIA_DIR && (basename == "images" || basename == "sounds")) {
+			if(filter == filter_mode::SKIP_MEDIA_DIR && (basename == "images" || basename == "sounds")) {
 				continue;
 			}
 
@@ -441,13 +495,13 @@ void get_files_in_dir(const std::string& dir,
 			bfs::file_status main_st = bfs::status(inner_main, ec);
 
 			if(error_except_not_found(ec)) {
-				LOG_FS << "Failed to get file status of " << inner_main.string() << ": " << ec.message() << '\n';
-			} else if(reorder == DO_REORDER && main_st.type() == bfs::regular_file) {
+				LOG_FS << "Failed to get file status of " << inner_main.string() << ": " << ec.message();
+			} else if(reorder == reorder_mode::DO_REORDER && main_st.type() == bfs::regular_file) {
 				LOG_FS << "_main.cfg found : "
-					   << (mode == ENTIRE_FILE_PATH ? inner_main.string() : inner_main.filename().string()) << '\n';
-				push_if_exists(files, inner_main, mode == ENTIRE_FILE_PATH);
+					   << (mode == name_mode::ENTIRE_FILE_PATH ? inner_main.string() : inner_main.filename().string());
+				push_if_exists(files, inner_main, mode == name_mode::ENTIRE_FILE_PATH);
 			} else {
-				push_if_exists(dirs, di->path(), mode == ENTIRE_FILE_PATH);
+				push_if_exists(dirs, di->path(), mode == name_mode::ENTIRE_FILE_PATH);
 			}
 		}
 	}
@@ -460,7 +514,7 @@ void get_files_in_dir(const std::string& dir,
 		std::sort(dirs->begin(), dirs->end());
 	}
 
-	if(files != nullptr && reorder == DO_REORDER) {
+	if(files != nullptr && reorder == reorder_mode::DO_REORDER) {
 		// move finalcfg_filename, if present, to the end of the vector
 		for(unsigned int i = 0; i < files->size(); i++) {
 			if(ends_with((*files)[i], "/" + finalcfg_filename)) {
@@ -514,14 +568,14 @@ std::string get_next_filename(const std::string& name, const std::string& extens
 
 static bfs::path user_data_dir, user_config_dir, cache_dir;
 
-static const std::string get_version_path_suffix(const version_info& version)
+const std::string get_version_path_suffix(const version_info& version)
 {
 	std::ostringstream s;
 	s << version.major_version() << '.' << version.minor_version();
 	return s.str();
 }
 
-static const std::string& get_version_path_suffix()
+const std::string& get_version_path_suffix()
 {
 	static std::string suffix;
 
@@ -554,12 +608,10 @@ static const std::string& get_version_path_suffix()
 
 		if(bfs::is_directory(new_saves_dir)) {
 			if(!bfs::exists(old_saves_dir)) {
-				std::cout << "Apple developer's userdata migration: ";
-				std::cout << "symlinking " << old_saves_dir << " to " << new_saves_dir << "\n";
+				LOG_FS << "Apple developer's userdata migration: symlinking " << old_saves_dir.string() << " to " << new_saves_dir.string();
 				bfs::create_symlink(new_saves_dir, old_saves_dir);
 			} else if(!bfs::symbolic_link_exists(old_saves_dir)) {
-				std::cout << "Apple developer's userdata migration: ";
-				std::cout << "Problem! Old (non-containerized) directory " << old_saves_dir << " is not a symlink. Your savegames are scattered around 2 locations.\n";
+				ERR_FS << "Apple developer's userdata migration: Problem! Old (non-containerized) directory " << old_saves_dir.string() << " is not a symlink. Your savegames are scattered around 2 locations.";
 			}
 			return;
 		}
@@ -572,25 +624,25 @@ static void setup_user_data_dir()
 #if defined(__APPLE__) && !defined(__IPHONEOS__)
 	migrate_apple_config_directory_for_unsandboxed_builds();
 #endif
+	if(!file_exists(user_data_dir)) {
+		game_config::check_migration = true;
+	}
 
 	if(!create_directory_if_missing_recursive(user_data_dir)) {
-		ERR_FS << "could not open or create user data directory at " << user_data_dir.string() << '\n';
+		ERR_FS << "could not open or create user data directory at " << user_data_dir.string();
 		return;
 	}
 	// TODO: this may not print the error message if the directory exists but we don't have the proper permissions
 
 	// Create user data and add-on directories
-	create_directory_if_missing(user_data_dir / "editor");
-	create_directory_if_missing(user_data_dir / "editor" / "maps");
-	create_directory_if_missing(user_data_dir / "editor" / "scenarios");
-	create_directory_if_missing(user_data_dir / "data");
-	create_directory_if_missing(user_data_dir / "data" / "add-ons");
-	create_directory_if_missing(user_data_dir / "saves");
-	create_directory_if_missing(user_data_dir / "persist");
-
-#ifdef _WIN32
-	lg::finish_log_file_setup();
-#endif
+	create_directory_if_missing(get_legacy_editor_dir());
+	create_directory_if_missing(get_legacy_editor_dir() + "/maps");
+	create_directory_if_missing(get_legacy_editor_dir() + "/scenarios");
+	create_directory_if_missing(get_addons_data_dir());
+	create_directory_if_missing(get_addons_dir());
+	create_directory_if_missing(get_saves_dir());
+	create_directory_if_missing(get_wml_persist_dir());
+	create_directory_if_missing(get_logs_dir());
 }
 
 #ifdef _WIN32
@@ -611,9 +663,7 @@ static bool is_path_relative_to_cwd(const std::string& str)
 
 void set_user_data_dir(std::string newprefdir)
 {
-	bool relative_ok = false;
-	// Not always but it can be unused in some configurations
-	UNUSED(relative_ok);
+	[[maybe_unused]] bool relative_ok = false;
 
 #ifdef PREFERENCES_DIR
 	if(newprefdir.empty()) {
@@ -654,7 +704,7 @@ void set_user_data_dir(std::string newprefdir)
 			//
 			ERR_FS << "Could not determine path to user's Documents folder! (" << std::hex << "0x" << res << std::dec << ") "
 				   << "User config/data directories may be unavailable for "
-				   << "this session. Please report this as a bug.\n";
+				   << "this session. Please report this as a bug.";
 			user_data_dir = bfs::path(get_cwd()) / newprefdir;
 		} else {
 			bfs::path games_path = bfs::path(docs_path) / "My Games";
@@ -717,6 +767,7 @@ void set_user_data_dir(std::string newprefdir)
 #else
 	if(newprefdir.empty()) {
 		newprefdir = backupprefdir;
+		relative_ok = true;
 	}
 
 	const char* home_str = getenv("HOME");
@@ -741,17 +792,42 @@ void set_user_data_dir(std::string newprefdir)
 	user_data_dir = normalize_path(user_data_dir.string(), true, true);
 }
 
+bool rename_dir(const std::string& old_dir, const std::string& new_dir)
+{
+	error_code ec;
+	bfs::rename(old_dir, new_dir, ec);
+
+	if(ec) {
+		ERR_FS << "Failed to rename directory '" << old_dir << "' to '" << new_dir << "'";
+		return false;
+	}
+	return true;
+}
+
 static void set_user_config_path(bfs::path newconfig)
 {
 	user_config_dir = newconfig;
 	if(!create_directory_if_missing_recursive(user_config_dir)) {
-		ERR_FS << "could not open or create user config directory at " << user_config_dir.string() << '\n';
+		ERR_FS << "could not open or create user config directory at " << user_config_dir.string();
 	}
 }
 
 void set_user_config_dir(const std::string& newconfigdir)
 {
 	set_user_config_path(newconfigdir);
+}
+
+static void set_cache_path(bfs::path newcache)
+{
+	cache_dir = newcache;
+	if(!create_directory_if_missing_recursive(cache_dir)) {
+		ERR_FS << "could not open or create cache directory at " << cache_dir.string() << '\n';
+	}
+}
+
+void set_cache_dir(const std::string& newcachedir)
+{
+	set_cache_path(newcachedir);
 }
 
 static const bfs::path& get_user_data_path()
@@ -795,6 +871,11 @@ std::string get_user_config_dir()
 std::string get_user_data_dir()
 {
 	return get_user_data_path().string();
+}
+
+std::string get_logs_dir()
+{
+	return filesystem::get_user_data_dir() + "/logs";
 }
 
 std::string get_cache_dir()
@@ -843,7 +924,7 @@ std::vector<other_version_dir> find_other_version_saves_dirs()
 	std::vector<other_version_dir> result;
 
 	// For 1.16, check for saves from all versions up to 1.20.
-	for(auto minor = ms_ver.minor_version(); minor <= w_ver.minor_version() + 4; ++minor) {
+	for(auto minor = w_ver.minor_version() + 4; minor >= ms_ver.minor_version(); --minor) {
 		if(minor == w_ver.minor_version())
 			continue;
 
@@ -869,7 +950,7 @@ std::vector<other_version_dir> find_other_version_saves_dirs()
 #elif defined(__APPLE__)
 		path = get_user_data_path().parent_path() / ("Wesnoth_" + suffix) / "saves";
 #endif
-		
+
 		if(bfs::exists(path)) {
 			result.emplace_back(suffix, path.string());
 		}
@@ -885,12 +966,28 @@ std::string get_cwd()
 	bfs::path cwd = bfs::current_path(ec);
 
 	if(ec) {
-		ERR_FS << "Failed to get current directory: " << ec.message() << '\n';
+		ERR_FS << "Failed to get current directory: " << ec.message();
 		return "";
 	}
 
 	return cwd.generic_string();
 }
+
+bool set_cwd(const std::string& dir)
+{
+	error_code ec;
+	bfs::current_path(bfs::path{dir}, ec);
+
+	if(ec) {
+		ERR_FS << "Failed to set current directory: " << ec.message();
+		return false;
+	} else {
+		LOG_FS << "Process working directory set to " << dir;
+	}
+
+	return true;
+}
+
 std::string get_exe_dir()
 {
 #ifdef _WIN32
@@ -906,18 +1003,34 @@ std::string get_exe_dir()
 	bfs::path exe(process_path);
 	return exe.parent_path().string();
 #else
+	// first check /proc
 	if(bfs::exists("/proc/")) {
 		bfs::path self_exe("/proc/self/exe");
 		error_code ec;
 		bfs::path exe = bfs::read_symlink(self_exe, ec);
-		if(ec) {
-			return std::string();
+		if(!ec) {
+			return exe.parent_path().string();
 		}
-
-		return exe.parent_path().string();
-	} else {
-		return get_cwd();
 	}
+
+	// check the PATH for wesnoth's location
+	// with version
+	std::string version = std::to_string(game_config::wesnoth_version.major_version()) + "." + std::to_string(game_config::wesnoth_version.minor_version());
+	std::string exe = filesystem::get_program_invocation("wesnoth-"+version);
+	bfs::path search = bp::search_path(exe).string();
+	if(!search.string().empty()) {
+		return search.parent_path().string();
+	}
+
+	// versionless
+	exe = filesystem::get_program_invocation("wesnoth");
+	search = bp::search_path(exe).string();
+	if(!search.string().empty()) {
+		return search.parent_path().string();
+	}
+
+	// return the current working directory
+	return get_cwd();
 #endif
 }
 
@@ -926,7 +1039,7 @@ bool make_directory(const std::string& dirname)
 	error_code ec;
 	bool created = bfs::create_directory(bfs::path(dirname), ec);
 	if(ec) {
-		ERR_FS << "Failed to create directory " << dirname << ": " << ec.message() << '\n';
+		ERR_FS << "Failed to create directory " << dirname << ": " << ec.message();
 	}
 
 	return created;
@@ -939,13 +1052,13 @@ bool delete_directory(const std::string& dirname, const bool keep_pbl)
 	std::vector<std::string> dirs;
 	error_code ec;
 
-	get_files_in_dir(dirname, &files, &dirs, ENTIRE_FILE_PATH, keep_pbl ? SKIP_PBL_FILES : NO_FILTER);
+	get_files_in_dir(dirname, &files, &dirs, name_mode::ENTIRE_FILE_PATH, keep_pbl ? filter_mode::SKIP_PBL_FILES : filter_mode::NO_FILTER);
 
 	if(!files.empty()) {
 		for(const std::string& f : files) {
 			bfs::remove(bfs::path(f), ec);
 			if(ec) {
-				LOG_FS << "remove(" << f << "): " << ec.message() << '\n';
+				LOG_FS << "remove(" << f << "): " << ec.message();
 				ret = false;
 			}
 		}
@@ -963,7 +1076,7 @@ bool delete_directory(const std::string& dirname, const bool keep_pbl)
 	if(ret) {
 		bfs::remove(bfs::path(dirname), ec);
 		if(ec) {
-			LOG_FS << "remove(" << dirname << "): " << ec.message() << '\n';
+			LOG_FS << "remove(" << dirname << "): " << ec.message();
 			ret = false;
 		}
 	}
@@ -976,10 +1089,36 @@ bool delete_file(const std::string& filename)
 	error_code ec;
 	bool ret = bfs::remove(bfs::path(filename), ec);
 	if(ec) {
-		ERR_FS << "Could not delete file " << filename << ": " << ec.message() << '\n';
+		ERR_FS << "Could not delete file " << filename << ": " << ec.message();
 	}
 
 	return ret;
+}
+
+std::vector<uint8_t> read_file_binary(const std::string& fname)
+{
+	std::ifstream file(fname, std::ios::binary);
+	std::vector<uint8_t> file_contents;
+
+	file_contents.reserve(file_size(fname));
+	file_contents.assign(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>());
+
+	return file_contents;
+}
+
+std::string read_file_as_data_uri(const std::string& fname)
+{
+	std::vector<uint8_t> file_contents = filesystem::read_file_binary(fname);
+	utils::byte_string_view view = {file_contents.data(), file_contents.size()};
+	std::string name = filesystem::base_name(fname);
+	std::string img = "";
+
+	if(name.find(".") != std::string::npos) {
+		// convert to web-safe base64, since the + symbols will get stripped out when reading this back in later
+		img = "data:image/"+name.substr(name.find(".")+1)+";base64,"+base64::encode(view);
+	}
+
+	return img;
 }
 
 std::string read_file(const std::string& fname)
@@ -992,10 +1131,10 @@ std::string read_file(const std::string& fname)
 
 filesystem::scoped_istream istream_file(const std::string& fname, bool treat_failure_as_error)
 {
-	LOG_FS << "Streaming " << fname << " for reading.\n";
+	LOG_FS << "Streaming " << fname << " for reading.";
 
 	if(fname.empty()) {
-		ERR_FS << "Trying to open file with empty name.\n";
+		ERR_FS << "Trying to open file with empty name.";
 		filesystem::scoped_istream s(new bfs::ifstream());
 		s->clear(std::ios_base::failbit);
 		return s;
@@ -1008,9 +1147,9 @@ filesystem::scoped_istream istream_file(const std::string& fname, bool treat_fai
 
 		// TODO: has this still use ?
 		if(!fd.is_open() && treat_failure_as_error) {
-			ERR_FS << "Could not open '" << fname << "' for reading.\n";
+			ERR_FS << "Could not open '" << fname << "' for reading.";
 		} else if(!is_filename_case_correct(fname, fd)) {
-			ERR_FS << "Not opening '" << fname << "' due to case mismatch.\n";
+			ERR_FS << "Not opening '" << fname << "' due to case mismatch.";
 			filesystem::scoped_istream s(new bfs::ifstream());
 			s->clear(std::ios_base::failbit);
 			return s;
@@ -1019,7 +1158,7 @@ filesystem::scoped_istream istream_file(const std::string& fname, bool treat_fai
 		return std::make_unique<boost::iostreams::stream<boost::iostreams::file_descriptor_source>>(fd, 4096, 0);
 	} catch(const std::exception&) {
 		if(treat_failure_as_error) {
-			ERR_FS << "Could not open '" << fname << "' for reading.\n";
+			ERR_FS << "Could not open '" << fname << "' for reading.";
 		}
 
 		filesystem::scoped_istream s(new bfs::ifstream());
@@ -1028,32 +1167,28 @@ filesystem::scoped_istream istream_file(const std::string& fname, bool treat_fai
 	}
 }
 
-filesystem::scoped_ostream ostream_file(const std::string& fname, bool create_directory)
+filesystem::scoped_ostream ostream_file(const std::string& fname, std::ios_base::openmode mode, bool create_directory)
 {
-	LOG_FS << "streaming " << fname << " for writing.\n";
-#if 1
+	LOG_FS << "streaming " << fname << " for writing.";
 	try {
-		boost::iostreams::file_descriptor_sink fd(bfs::path(fname), std::ios_base::binary);
+		boost::iostreams::file_descriptor_sink fd(bfs::path(fname), mode);
 		return std::make_unique<boost::iostreams::stream<boost::iostreams::file_descriptor_sink>>(fd, 4096, 0);
 	} catch(const BOOST_IOSTREAMS_FAILURE& e) {
 		// If this operation failed because the parent directory didn't exist, create the parent directory and
 		// retry.
 		error_code ec_unused;
 		if(create_directory && bfs::create_directories(bfs::path(fname).parent_path(), ec_unused)) {
-			return ostream_file(fname, false);
+			return ostream_file(fname, mode, false);
 		}
 
 		throw filesystem::io_exception(e.what());
 	}
-#else
-	return new bfs::ofstream(bfs::path(fname), std::ios_base::binary);
-#endif
 }
 
 // Throws io_exception if an error occurs
-void write_file(const std::string& fname, const std::string& data)
+void write_file(const std::string& fname, const std::string& data, std::ios_base::openmode mode)
 {
-	scoped_ostream os = ostream_file(fname);
+	scoped_ostream os = ostream_file(fname, mode);
 	os->exceptions(std::ios_base::goodbit);
 
 	const std::size_t block_size = 4096;
@@ -1068,6 +1203,11 @@ void write_file(const std::string& fname, const std::string& data)
 			throw io_exception("Error writing to file: '" + fname + "'");
 		}
 	}
+}
+
+void copy_file(const std::string& src, const std::string& dest)
+{
+	write_file(dest, read_file(src));
 }
 
 bool create_directory_if_missing(const std::string& dirname)
@@ -1095,7 +1235,7 @@ std::time_t file_modified_time(const std::string& fname)
 	error_code ec;
 	std::time_t mtime = bfs::last_write_time(bfs::path(fname), ec);
 	if(ec) {
-		LOG_FS << "Failed to read modification time of " << fname << ": " << ec.message() << '\n';
+		LOG_FS << "Failed to read modification time of " << fname << ": " << ec.message();
 	}
 
 	return mtime;
@@ -1116,7 +1256,7 @@ int file_size(const std::string& fname)
 	error_code ec;
 	uintmax_t size = bfs::file_size(bfs::path(fname), ec);
 	if(ec) {
-		LOG_FS << "Failed to read filesize of " << fname << ": " << ec.message() << '\n';
+		LOG_FS << "Failed to read filesize of " << fname << ": " << ec.message();
 		return -1;
 	} else if(size > INT_MAX) {
 		return INT_MAX;
@@ -1137,7 +1277,7 @@ int dir_size(const std::string& pname)
 	}
 
 	if(ec) {
-		LOG_FS << "Failed to read directorysize of " << pname << ": " << ec.message() << '\n';
+		LOG_FS << "Failed to read directorysize of " << pname << ": " << ec.message();
 		return -1;
 	} else if(size_sum > INT_MAX) {
 		return INT_MAX;
@@ -1307,7 +1447,7 @@ void binary_paths_manager::set_paths(const game_config_view& cfg)
 	for(const config& bp : cfg.child_range("binary_path")) {
 		std::string path = bp["path"].str();
 		if(path.find("..") != std::string::npos) {
-			ERR_FS << "Invalid binary path '" << path << "'\n";
+			ERR_FS << "Invalid binary path '" << path << "'";
 			continue;
 		}
 
@@ -1336,34 +1476,34 @@ void clear_binary_paths_cache()
 
 static bool is_legal_file(const std::string& filename_str)
 {
-	DBG_FS << "Looking for '" << filename_str << "'.\n";
+	DBG_FS << "Looking for '" << filename_str << "'.";
 
 	if(filename_str.empty()) {
-		LOG_FS << "  invalid filename\n";
+		LOG_FS << "  invalid filename";
 		return false;
 	}
 
 	if(filename_str.find("..") != std::string::npos) {
-		ERR_FS << "Illegal path '" << filename_str << "' (\"..\" not allowed).\n";
+		ERR_FS << "Illegal path '" << filename_str << "' (\"..\" not allowed).";
 		return false;
 	}
 
 	if(filename_str.find('\\') != std::string::npos) {
 		ERR_FS << "Illegal path '" << filename_str
-			   << R"end(' ("\" not allowed, for compatibility with GNU/Linux and macOS).)end" << std::endl;
+			   << R"end(' ("\" not allowed, for compatibility with GNU/Linux and macOS).)end";
 		return false;
 	}
 
 	bfs::path filepath(filename_str);
 
 	if(default_blacklist.match_file(filepath.filename().string())) {
-		ERR_FS << "Illegal path '" << filename_str << "' (blacklisted filename)." << std::endl;
+		ERR_FS << "Illegal path '" << filename_str << "' (blacklisted filename).";
 		return false;
 	}
 
 	if(std::any_of(filepath.begin(), filepath.end(),
 			   [](const bfs::path& dirname) { return default_blacklist.match_dir(dirname.string()); })) {
-		ERR_FS << "Illegal path '" << filename_str << "' (blacklisted directory name)." << std::endl;
+		ERR_FS << "Illegal path '" << filename_str << "' (blacklisted directory name).";
 		return false;
 	}
 
@@ -1383,7 +1523,7 @@ const std::vector<std::string>& get_binary_paths(const std::string& type)
 
 	if(type.find("..") != std::string::npos) {
 		// Not an assertion, as language.cpp is passing user data as type.
-		ERR_FS << "Invalid WML type '" << type << "' for binary paths\n";
+		ERR_FS << "Invalid WML type '" << type << "' for binary paths";
 		static std::vector<std::string> dummy;
 		return dummy;
 	}
@@ -1434,20 +1574,20 @@ std::string get_binary_file_location(const std::string& type, const std::string&
 		bfs::path bpath(bp);
 		bpath /= filename;
 
-		DBG_FS << "  checking '" << bp << "'\n";
+		DBG_FS << "  checking '" << bp << "'";
 
 		if(file_exists(bpath)) {
-			DBG_FS << "  found at '" << bpath.string() << "'\n";
+			DBG_FS << "  found at '" << bpath.string() << "'";
 			if(result.empty()) {
 				result = bpath.string();
 			} else {
-				WRN_FS << "Conflicting files in binary_path: '" << sanitize_path(result)
-					   << "' and '" << sanitize_path(bpath.string()) << "'\n";
+				WRN_FS << "Conflicting files in binary_path: '" << result
+					   << "' and '" << bpath.string() << "'";
 			}
 		}
 	}
 
-	DBG_FS << "  not found\n";
+	DBG_FS << "  not found";
 	return result;
 }
 
@@ -1460,14 +1600,14 @@ std::string get_binary_dir_location(const std::string& type, const std::string& 
 	for(const std::string& bp : get_binary_paths(type)) {
 		bfs::path bpath(bp);
 		bpath /= filename;
-		DBG_FS << "  checking '" << bp << "'\n";
+		DBG_FS << "  checking '" << bp << "'";
 		if(is_directory_internal(bpath)) {
-			DBG_FS << "  found at '" << bpath.string() << "'\n";
+			DBG_FS << "  found at '" << bpath.string() << "'";
 			return bpath.string();
 		}
 	}
 
-	DBG_FS << "  not found\n";
+	DBG_FS << "  not found";
 	return std::string();
 }
 
@@ -1484,7 +1624,7 @@ std::string get_wml_location(const std::string& filename, const std::string& cur
 
 	if(filename[0] == '~') {
 		result /= get_user_data_path() / "data" / filename.substr(1);
-		DBG_FS << "  trying '" << result.string() << "'\n";
+		DBG_FS << "  trying '" << result.string() << "'";
 	} else if(*fpath.begin() == ".") {
 		if(!current_dir.empty()) {
 			result /= bfs::path(current_dir);
@@ -1498,10 +1638,10 @@ std::string get_wml_location(const std::string& filename, const std::string& cur
 	}
 
 	if(result.empty() || !file_exists(result)) {
-		DBG_FS << "  not found\n";
+		DBG_FS << "  not found";
 		result.clear();
 	} else {
-		DBG_FS << "  found: '" << result.string() << "'\n";
+		DBG_FS << "  found: '" << result.string() << "'";
 	}
 
 	return result.string();
@@ -1543,9 +1683,9 @@ std::string get_short_wml_path(const std::string& filename)
 	return filename;
 }
 
-std::string get_independent_image_path(const std::string& filename)
+std::string get_independent_binary_file_path(const std::string& type, const std::string& filename)
 {
-	bfs::path full_path(get_binary_file_location("images", filename));
+	bfs::path full_path(get_binary_file_location(type, filename));
 
 	if(full_path.empty()) {
 		return full_path.generic_string();
@@ -1575,7 +1715,7 @@ std::string get_program_invocation(const std::string& program_name)
 #endif
 	);
 
-	return (bfs::path(game_config::wesnoth_program_dir) / real_program_name).string();
+	return real_program_name;
 }
 
 std::string sanitize_path(const std::string& path)
@@ -1592,51 +1732,6 @@ std::string sanitize_path(const std::string& path)
 	}
 
 	return canonicalized;
-}
-
-namespace {
-	// Check if localized file is up-to-date according to l10n track index.
-	// Make sure only that the image is not explicitly recorded as fuzzy,
-	// in order to be able to use non-tracked images (e.g. from UMC).
-	std::set<std::string> fuzzy_localized_files;
-	bool localized_file_uptodate(const std::string& loc_file)
-	{
-		if(fuzzy_localized_files.empty()) {
-			// First call, parse track index to collect fuzzy files by path.
-			std::string fsep = "\xC2\xA6"; // UTF-8 for "broken bar"
-			std::string trackpath = filesystem::get_binary_file_location("", "l10n-track");
-
-			// l10n-track file not present. Assume image is up-to-date.
-			if(trackpath.empty()) {
-				return true;
-			}
-
-			std::string contents = filesystem::read_file(trackpath);
-
-			for(const std::string& line : utils::split(contents, '\n')) {
-				std::size_t p1 = line.find(fsep);
-				if(p1 == std::string::npos) {
-					continue;
-				}
-
-				std::string state = line.substr(0, p1);
-				boost::trim(state);
-				if(state == "fuzzy") {
-					std::size_t p2 = line.find(fsep, p1 + fsep.length());
-					if(p2 == std::string::npos) {
-						continue;
-					}
-
-					std::string relpath = line.substr(p1 + fsep.length(), p2 - p1 - fsep.length());
-					fuzzy_localized_files.insert(game_config::path + '/' + relpath);
-				}
-			}
-
-			fuzzy_localized_files.insert(""); // make sure not empty any more
-		}
-
-		return fuzzy_localized_files.count(loc_file) == 0;
-	}
 }
 
 // Return path to localized counterpart of the given file, if any, or empty string.
@@ -1673,7 +1768,7 @@ std::string get_localized_path(const std::string& file, const std::string& suff)
 	langs.push_back("en_US");
 	for(const std::string& lang : langs) {
 		std::string loc_file = dir + "/" + "l10n" + "/" + lang + "/" + loc_base;
-		if(filesystem::file_exists(loc_file) && localized_file_uptodate(loc_file)) {
+		if(filesystem::file_exists(loc_file)) {
 			return loc_file;
 		}
 	}

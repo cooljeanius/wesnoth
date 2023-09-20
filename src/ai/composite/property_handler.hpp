@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2009 - 2018 by Yurii Chernyi <terraninfo@terraninfo.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2009 - 2023
+	by Yurii Chernyi <terraninfo@terraninfo.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -19,7 +20,7 @@
 
 #pragma once
 
-#include "utils/functional.hpp"
+#include <functional>
 #include "config.hpp"
 #include "ai/composite/component.hpp"
 
@@ -53,7 +54,6 @@ private:
 	path_element element_;
 };
 
-
 class component;
 
 class base_property_handler {
@@ -79,10 +79,9 @@ public:
 	vector_property_handler(const std::string &property, ptr_vector &values, std::function<void(ptr_vector&, const config&)> &construction_factory)
 		: factory_(construction_factory), property_(property), values_(values){}
 
-
-        component* handle_get(const path_element &child)
+	component* handle_get(const path_element &child)
 	{
-			typename ptr_vector::iterator i = std::find_if(values_.begin(),values_.end(),path_element_matches<ptr>(child));
+		typename ptr_vector::iterator i = std::find_if(values_.begin(),values_.end(),path_element_matches<ptr>(child));
 		if (i!=values_.end()){
 			return &*(*i);
 		}
@@ -130,7 +129,6 @@ public:
 		return false;
 	}
 
-
 	std::vector<component*> handle_get_children()
 	{
 		std::vector<component*> children;
@@ -166,8 +164,6 @@ private:
 	ptr_vector &values_;
 
 };
-
-
 
 template<typename T>
 class facets_property_handler : public vector_property_handler<T> {
@@ -213,8 +209,6 @@ private:
 	ptr& default_;
 };
 
-
-
 template<typename T>
 class aspect_property_handler : public base_property_handler {
 public:
@@ -226,8 +220,7 @@ public:
 	{
 	}
 
-
-        component* handle_get(const path_element &child)
+	component* handle_get(const path_element &child)
 	{
 		typename aspect_map::const_iterator a = aspects_.find(child.id);
 		if (a!=aspects_.end()){
@@ -267,7 +260,6 @@ public:
 		return false;
 	}
 
-
 	std::vector<component*> handle_get_children()
 	{
 		std::vector<component*> children;
@@ -284,7 +276,6 @@ private:
 	std::function<void(aspect_map&, const config&, std::string)> factory_;
 
 };
-
 
 template<typename X>
 static inline void register_vector_property(property_handler_map& property_handlers, const std::string& property,

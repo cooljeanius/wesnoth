@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2008 - 2018 by Pauli Nieminen <paniemin@cc.hut.fi>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by Pauli Nieminen <paniemin@cc.hut.fi>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #define GETTEXT_DOMAIN "wesnoth-test"
@@ -24,7 +25,7 @@
 #include "units/types.hpp"
 #include "units/unit.hpp"
 
-#include "utils/functional.hpp"
+#include <functional>
 
 
 /*
@@ -85,8 +86,8 @@ BOOST_AUTO_TEST_CASE( test_1 ) {
 	BOOST_CHECK_MESSAGE(uresult1.first == unit_map.end(), "Didn't Add at invalid location.");
 
 
-	// std::cerr<<"ID real ="<<orc1_side0_real.underlying_id()<<"\n";
-	// std::cerr<<"ID fake ="<<orc2_side0_fake.underlying_id()<<"\n";
+	// PLAIN_LOG<<"ID real ="<<orc1_side0_real.underlying_id();
+	// PLAIN_LOG<<"ID fake ="<<orc2_side0_fake.underlying_id();
 
 	lg::set_log_domain_severity("engine", lg::err().get_severity() - 1); // Don't log anything
 	lg::set_log_domain_severity("unit", lg::err());
@@ -99,25 +100,8 @@ BOOST_AUTO_TEST_CASE( test_1 ) {
 	BOOST_CHECK_MESSAGE(uresult1.first->underlying_id() != orc1_side0_real->underlying_id(), "Found Orc1");
 
 	BOOST_CHECK_MESSAGE(!unit_map.end().valid(), "Hmm, unit_map.end() is valid for dereference...");
-	//To check that the collisions will cut off change the cutoff in unit_map.cpp from 1e6 to less than the guard value below
-	// unit_map.add(map_location(1,3), orc2_side0_fake);
-	// unit_map.add(map_location(1,3), orc2_side0_fake);
 
-	// unsigned long long guard =0;
-	// for(; guard< 2e2;++guard) {
-	// 	unit_map.add(map_location(2,guard), orc1_side0_real);
-	// };
-
-	// std::cerr<<"BREAK\n;";
-	// unit_map.add(map_location(1,3), orc2_side0_fake);
-	// unit_map.add(map_location(1,4), orc2_side0_fake);
-	// try {
-	// 	unit_map.add(map_location(1,5), orc2_side0_fake);
-	// }catch (std::runtime_error e ){
-	// 	BOOST_CHECK_MESSAGE(std::string(e.what()) == std::string("One million collisions in unit_map")
-	// 						, "One million uid collision exception");
-	// }
-
+	lg::set_log_domain_severity("all", lg::warn());
 }
 
 BOOST_AUTO_TEST_CASE( track_real_unit_by_underlying_id ) {

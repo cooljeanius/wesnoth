@@ -1,19 +1,18 @@
 /*
-   Copyright (C) 2006 - 2009 by Rusty Russell <rusty@rustcorp.com.au>
-   Copyright (C) 2010 - 2018 by Guillaume Melquiond <guillaume.melquiond@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2010 - 2023
+	by Guillaume Melquiond <guillaume.melquiond@gmail.com>
+	Copyright (C) 2006 - 2009 by Rusty Russell <rusty@rustcorp.com.au>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
-
-/** @file */
 
 #pragma once
 
@@ -98,8 +97,7 @@
  */
 class unit_map
 {
-	/// The pointer to the unit and a reference counter to record the number of extant iterators
-	/// pointing to this unit.
+	/** The pointer to the unit and a reference counter to record the number of extant iteratorspointing to this unit. */
 	struct unit_pod
 	{
 		unit_pod()
@@ -145,7 +143,7 @@ public:
 		typedef std::forward_iterator_tag iterator_category;
 		typedef int difference_type;
 		typedef typename iter_types::value_type value_type;
-		typedef boost::intrusive_ptr<value_type> pointer;
+		typedef std::shared_ptr<value_type> pointer;
 		typedef value_type& reference;
 		typedef typename iter_types::container_type container_type;
 		typedef typename iter_types::iterator_type iterator_type;
@@ -351,8 +349,10 @@ public:
 
 		friend class unit_map;
 
-		iterator_type i_;      /// local iterator
-		container_type* tank_; /// the unit_map for i_
+		/** local iterator */
+		iterator_type i_;
+		/** the unit_map for i_ */
+		container_type* tank_;
 	};
 
 	// ~~~ End iterator code ~~~
@@ -388,14 +388,14 @@ public:
 	unit_ptr find_unit_ptr(const T& val)
 	{
 		auto res = find(val);
-		return res != end() ? res.get_shared_ptr() : unit_ptr();
+		return res != end() ? unit_ptr(res.get_shared_ptr()) : unit_ptr();
 	}
 
 	template<typename T>
 	unit_const_ptr find_unit_ptr(const T& val) const
 	{
 		auto res = find(val);
-		return res != end() ? res.get_shared_ptr() : unit_ptr();
+		return res != end() ? unit_const_ptr(res.get_shared_ptr()) : unit_const_ptr();
 	}
 
 	unit_iterator find_leader(int side);

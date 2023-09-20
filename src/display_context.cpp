@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2014 - 2018 by Chris Beck <render787@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2014 - 2023
+	by Chris Beck <render787@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #include "display_context.hpp"
@@ -27,11 +28,7 @@ const team& display_context::get_team(int side) const
 
 bool display_context::would_be_discovered(const map_location & loc, int side_num, bool see_all)
 {
-	adjacent_loc_array_t adjs;
-	get_adjacent_tiles(loc,adjs.data());
-
-	for (const map_location &u_loc : adjs)
-	{
+	for(const map_location& u_loc : get_adjacent_tiles(loc)) {
 		unit_map::const_iterator u_it = units().find(u_loc);
 		if (!u_it.valid()) {
 			continue;
@@ -61,48 +58,64 @@ const unit * display_context::get_visible_unit(const map_location & loc, const t
 	return &*u;
 }
 
-/**
- * Will return true iff the unit @a u has any possible moves
- * it can do (including attacking etc).
- */
-
-bool display_context::unit_can_move(const unit &u) const
+unit_const_ptr display_context::get_visible_unit_shared_ptr(const map_location & loc, const team &current_team, bool see_all) const
 {
-	if(!u.attacks_left() && u.movement_left()==0)
-		return false;
+	if (!map().on_board(loc)) return nullptr;
+	const unit_map::const_iterator u = units().find(loc);
+	if (!u.valid() || !u->is_visible_to_team(current_team, see_all)) {
+		return unit_const_ptr();
+	}
+	return u.get_shared_ptr();
+}
+
+display_context::can_move_result display_context::unit_can_move(const unit& u) const
+{
+	if(!u.attacks_left() && u.movement_left() == 0)
+		return {false, false};
 
 	// Units with goto commands that have already done their gotos this turn
 	// (i.e. don't have full movement left) should have red globes.
 	if(u.has_moved() && u.has_goto()) {
-		return false;
+		return {false, false};
 	}
 
-	const team &current_team = get_team(u.side());
+	const team& current_team = get_team(u.side());
 
-	adjacent_loc_array_t locs;
-	get_adjacent_tiles(u.get_location(), locs.data());
-	for(unsigned n = 0; n < locs.size(); ++n) {
-		if (map().on_board(locs[n])) {
-			const unit_map::const_iterator i = units().find(locs[n]);
-			if (i.valid() && !i->incapacitated() &&
-			    current_team.is_enemy(i->side())) {
-				return true;
+	can_move_result result = {false, false};
+	for(const map_location& adj : get_adjacent_tiles(u.get_location())) {
+		if (map().on_board(adj)) {
+			if(!result.attack_here) {
+				const unit_map::const_iterator i = units().find(adj);
+				if (i.valid() && !i->incapacitated() && current_team.is_enemy(i->side())) {
+					result.attack_here = true;
+				}
 			}
 
-			if (u.movement_cost(map()[locs[n]]) <= u.movement_left()) {
-				return true;
+			if (!result.move && u.movement_cost(map()[adj]) <= u.movement_left()) {
+				result.move = true;
 			}
 		}
 	}
 
-	return false;
+	// This should probably check if the unit can teleport too
+
+	return result;
 }
 
+orb_status display_context::unit_orb_status(const unit& u) const
+{
+	if(u.user_end_turn())
+		return orb_status::moved;
+	if(u.movement_left() == u.total_movement() && u.attacks_left() == u.max_attacks())
+		return orb_status::unmoved;
+	auto can_move = unit_can_move(u);
+	if(!can_move)
+		return orb_status::moved;
+	if(can_move.move && u.attacks_left() == 0)
+		return orb_status::disengaged;
+	return orb_status::partial;
+}
 
-/**
- * Given the location of a village, will return the 0-based index
- * of the team that currently owns it, and -1 if it is unowned.
- */
 int display_context::village_owner(const map_location& loc) const
 {
 	const std::vector<team> & t = teams();
@@ -126,7 +139,7 @@ bool display_context::is_observer() const
 	return true;
 }
 
-/// Static info getters previously declared at global scope in unit.?pp
+// Static info getters previously declared at global scope in unit.?pp
 
 int display_context::side_units(int side) const
 {

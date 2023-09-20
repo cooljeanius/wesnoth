@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2008 - 2018 by Fabian Mueller <fabianmueller5@gmx.de>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by Fabian Mueller <fabianmueller5@gmx.de>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -31,11 +32,11 @@ namespace editor
 {
 IMPLEMENT_ACTION(unit)
 
-editor_action* editor_action_unit::perform(map_context& mc) const
+std::unique_ptr<editor_action> editor_action_unit::perform(map_context& mc) const
 {
-	editor_action_ptr undo(new editor_action_unit_delete(loc_));
+	auto undo = std::make_unique<editor_action_unit_delete>(loc_);
 	perform_without_undo(mc);
-	return undo.release();
+	return undo;
 }
 
 void editor_action_unit::perform_without_undo(map_context& mc) const
@@ -47,16 +48,15 @@ void editor_action_unit::perform_without_undo(map_context& mc) const
 
 IMPLEMENT_ACTION(unit_delete)
 
-editor_action* editor_action_unit_delete::perform(map_context& mc) const
+std::unique_ptr<editor_action> editor_action_unit_delete::perform(map_context& mc) const
 {
 	unit_map& units = mc.units();
 	unit_map::const_unit_iterator unit_it = units.find(loc_);
 
-	editor_action_ptr undo;
 	if(unit_it != units.end()) {
-		undo.reset(new editor_action_unit(loc_, *unit_it));
+		auto undo = std::make_unique<editor_action_unit>(loc_, *unit_it);
 		perform_without_undo(mc);
-		return undo.release();
+		return undo;
 	}
 
 	return nullptr;
@@ -66,7 +66,7 @@ void editor_action_unit_delete::perform_without_undo(map_context& mc) const
 {
 	unit_map& units = mc.units();
 	if(!units.erase(loc_)) {
-		ERR_ED << "Could not delete unit on " << loc_ << std::endl;
+		ERR_ED << "Could not delete unit on " << loc_;
 	} else {
 		mc.add_changed_location(loc_);
 	}
@@ -74,12 +74,11 @@ void editor_action_unit_delete::perform_without_undo(map_context& mc) const
 
 IMPLEMENT_ACTION(unit_replace)
 
-editor_action* editor_action_unit_replace::perform(map_context& mc) const
+std::unique_ptr<editor_action> editor_action_unit_replace::perform(map_context& mc) const
 {
-	editor_action_ptr undo(new editor_action_unit_replace(new_loc_, loc_));
-
+	auto undo = std::make_unique<editor_action_unit_replace>(new_loc_, loc_);
 	perform_without_undo(mc);
-	return undo.release();
+	return undo;
 }
 
 void editor_action_unit_replace::perform_without_undo(map_context& mc) const
@@ -109,11 +108,11 @@ void editor_action_unit_replace::perform_without_undo(map_context& mc) const
 
 IMPLEMENT_ACTION(unit_facing)
 
-editor_action* editor_action_unit_facing::perform(map_context& mc) const
+std::unique_ptr<editor_action> editor_action_unit_facing::perform(map_context& mc) const
 {
-	editor_action_ptr undo(new editor_action_unit_facing(loc_, old_direction_, new_direction_));
+	auto undo = std::make_unique<editor_action_unit_facing>(loc_, old_direction_, new_direction_);
 	perform_without_undo(mc);
-	return undo.release();
+	return undo;
 }
 
 void editor_action_unit_facing::perform_without_undo(map_context& mc) const

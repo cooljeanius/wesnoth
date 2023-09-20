@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2003 - 2018 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2003 - 2023
+	by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -21,6 +22,7 @@
 
 #include "game_board.hpp"               // for game_board
 #include "game_display.hpp"          // for game_display
+#include "gui/dialogs/transient_message.hpp"
 #include "log.hpp"                   // for LOG_STREAM, logger, etc
 #include "map/map.hpp"                      // for gamemap
 #include "map/location.hpp"  // for map_location, operator<<, etc
@@ -84,7 +86,7 @@ undo_action_base * undo_list::create_action(const config & cfg)
 
 	else if ( str == "recruit" ) {
 		// Validate the unit type.
-		const config & child = cfg.child("unit");
+		const config & child = cfg.mandatory_child("unit");
 		const unit_type * u_type = unit_types.find(child["type"]);
 
 		if ( !u_type ) {
@@ -100,7 +102,7 @@ undo_action_base * undo_list::create_action(const config & cfg)
 		res =  new undo::recall_action(cfg, map_location(cfg.child_or_empty("leader"), nullptr));
 
 	else if ( str == "dismiss" )
-		res =  new undo::dismiss_action(cfg, cfg.child("unit"));
+		res =  new undo::dismiss_action(cfg, cfg.mandatory_child("unit"));
 
 	else if ( str == "auto_shroud" )
 		res =  new undo::auto_shroud_action(cfg["active"].to_bool());
@@ -112,7 +114,7 @@ undo_action_base * undo_list::create_action(const config & cfg)
 	else
 	{
 		// Unrecognized type.
-		ERR_NG << "Unrecognized undo action type: " << str << "." << std::endl;
+		ERR_NG << "Unrecognized undo action type: " << str << ".";
 		return nullptr;
 	}
 	return res;
@@ -123,11 +125,9 @@ undo_action_base * undo_list::create_action(const config & cfg)
  * Constructor.
  * The config is allowed to be invalid.
  */
-undo_list::undo_list(const config & cfg) :
+undo_list::undo_list() :
 	undos_(), redos_(), side_(1), committed_actions_(false)
 {
-	if ( cfg )
-		read(cfg);
 }
 
 /**
@@ -145,17 +145,11 @@ undo_list::~undo_list()
  */
 void undo_list::add_auto_shroud(bool turned_on)
 {
-	/// @todo: Consecutive shroud actions can be collapsed into one.
-
-	// Do not call add(), as this should not clear the redo stack.
 	add(new undo::auto_shroud_action(turned_on));
 }
 
 void undo_list::add_dummy()
 {
-	/// @todo: Consecutive shroud actions can be collapsed into one.
-
-	// Do not call add(), as this should not clear the redo stack.
 	add(new undo_dummy_action());
 }
 
@@ -204,8 +198,6 @@ void undo_list::add_recruit(const unit_const_ptr u, const map_location& loc,
  */
 void undo_list::add_update_shroud()
 {
-	/// @todo: Consecutive shroud actions can be collapsed into one.
-
 	add(new undo::update_shroud_action());
 }
 
@@ -240,7 +232,7 @@ void undo_list::clear()
  * This may fire events and change the game state.
  * @param[in]  is_replay  Set to true when this is called during a replay.
  */
-void undo_list::commit_vision()
+bool undo_list::commit_vision()
 {
 	// Update fog/shroud.
 	bool cleared_something = apply_shroud_changes();
@@ -252,6 +244,7 @@ void undo_list::commit_vision()
 		//undos_.erase(undos_.begin(), undos_.begin() + erase_to);
 		committed_actions_ = true;
 	}
+	return cleared_something;
 }
 
 
@@ -263,13 +256,13 @@ void undo_list::new_side_turn(int side)
 {
 	// Error checks.
 	if ( !undos_.empty() ) {
-		ERR_NG << "Undo stack not empty in new_side_turn()." << std::endl;
+		ERR_NG << "Undo stack not empty in new_side_turn().";
 		// At worst, someone missed some sighted events, so try to recover.
 		undos_.clear();
 		redos_.clear();
 	}
 	else if ( !redos_.empty() ) {
-		ERR_NG << "Redo stack not empty in new_side_turn()." << std::endl;
+		ERR_NG << "Redo stack not empty in new_side_turn().";
 		// Sloppy tracking somewhere, but not critically so.
 		redos_.clear();
 	}
@@ -299,13 +292,13 @@ void undo_list::read(const config & cfg)
 				undos_.emplace_back(action);
 			}
 		} catch (const bad_lexical_cast &) {
-			ERR_NG << "Error when parsing undo list from config: bad lexical cast." << std::endl;
-			ERR_NG << "config was: " << child.debug() << std::endl;
-			ERR_NG << "Skipping this undo action..." << std::endl;
+			ERR_NG << "Error when parsing undo list from config: bad lexical cast.";
+			ERR_NG << "config was: " << child.debug();
+			ERR_NG << "Skipping this undo action...";
 		} catch (const config::error& e) {
-			ERR_NG << "Error when parsing undo list from config: " << e.what() << std::endl;
-			ERR_NG << "config was: " << child.debug() << std::endl;
-			ERR_NG << "Skipping this undo action..." << std::endl;
+			ERR_NG << "Error when parsing undo list from config: " << e.what();
+			ERR_NG << "config was: " << child.debug();
+			ERR_NG << "Skipping this undo action...";
 		}
 	}
 
@@ -314,13 +307,13 @@ void undo_list::read(const config & cfg)
 		try {
 			redos_.emplace_back(new config(child));
 		} catch (const bad_lexical_cast &) {
-			ERR_NG << "Error when parsing redo list from config: bad lexical cast." << std::endl;
-			ERR_NG << "config was: " << child.debug() << std::endl;
-			ERR_NG << "Skipping this redo action..." << std::endl;
+			ERR_NG << "Error when parsing redo list from config: bad lexical cast.";
+			ERR_NG << "config was: " << child.debug();
+			ERR_NG << "Skipping this redo action...";
 		} catch (const config::error& e) {
-			ERR_NG << "Error when parsing redo list from config: " << e.what() << std::endl;
-			ERR_NG << "config was: " << child.debug() << std::endl;
-			ERR_NG << "Skipping this redo action..." << std::endl;
+			ERR_NG << "Error when parsing redo list from config: " << e.what();
+			ERR_NG << "config was: " << child.debug();
+			ERR_NG << "Skipping this redo action...";
 		}
 	}
 }
@@ -365,7 +358,7 @@ void undo_list::undo()
 			return;
 		}
 		if(last_unit_id - undoable_action->unit_id_diff < 0) {
-			ERR_NG << "Next unit id is below 0 after undoing" << std::endl;
+			ERR_NG << "Next unit id is below 0 after undoing";
 		}
 		resources::gameboard->unit_id_manager().set_save_id(last_unit_id - undoable_action->unit_id_diff);
 
@@ -403,33 +396,35 @@ void undo_list::undo()
  */
 void undo_list::redo()
 {
-	if ( redos_.empty() )
+	if (redos_.empty()) {
 		return;
-
-	const events::command_disabler disable_commands;
-
-	game_display & gui = *game_display::get_singleton();
-
-	// Get the action to redo. (This will be placed on the undo stack, but
-	// only if the redo is successful.)
+	}
+	// Get the action to redo.
 	auto action = std::move(redos_.back());
 	redos_.pop_back();
 
-	const config& command_wml = action->child("command");
-	std::string commandname = command_wml.all_children_range().front().key;
-	const config& data = command_wml.all_children_range().front().cfg;
+	auto [commandname, data] = action->mandatory_child("command").all_children_range().front();
 
-	resources::recorder->redo(const_cast<const config&>(*action));
+	// Note that this might add more than one [command]
+	resources::recorder->redo(*action);
 
+	auto error_handler =  [](const std::string&  msg) {
+		ERR_NG << "Out of sync when redoing: " << msg;
+		gui2::show_transient_message(_("Redo Error"),
+					_("The redo stack is out of sync. This is most commonly caused by a corrupt save file or by faulty WML code in the scenario or era. Details:") + msg);
 
-	// synced_context::run readds the undo command with the normal undo_lis::add function which clears the
-	// redo stack which makes redoign of more than one move impossible. to work around that we save redo stack here and set it later.
+	};
+	// synced_context::run readds the undo command with the normal
+	// undo_list::add function which clears the redo stack which would
+	// make redoing of more than one move impossible. To work around
+	// that we save redo stack here and set it later.
 	redos_list temp;
 	temp.swap(redos_);
-	synced_context::run(commandname, data, /*use_undo*/ true, /*show*/ true);
+	synced_context::run(commandname, data, /*use_undo*/ true, /*show*/ true, error_handler);
 	temp.swap(redos_);
 
 	// Screen updates.
+	game_display & gui = *game_display::get_singleton();
 	gui.invalidate_unit();
 	gui.invalidate_game_status();
 	gui.redraw_minimap();
@@ -460,7 +455,7 @@ bool undo_list::apply_shroud_changes() const
 	// Loop through the list of undo_actions.
 	for( std::size_t i = 0; i != list_size; ++i ) {
 		if (const shroud_clearing_action* action = dynamic_cast<const shroud_clearing_action*>(undos_[i].get())) {
-			LOG_NG << "Turning an undo...\n";
+			LOG_NG << "Turning an undo...";
 
 			// Clear the hexes this unit can see from each hex occupied during
 			// the action.

@@ -8,558 +8,566 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Battle for Wesnoth 1.4.2+dev\n"
 "Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
-"POT-Creation-Date: 2020-01-25 15:18-0300\n"
-"PO-Revision-Date: 2008-07-01 17:35-0000\n"
+"POT-Creation-Date: 2023-08-19 20:56-0500\n"
+"PO-Revision-Date: 2022-06-15 11:47+0100\n"
 "Last-Translator: amnay <amnay@operamail.com>\n"
 "Language-Team: none\n"
-"Language: \n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.0.1\n"
+"X-Poedit-Bookmarks: 32,-1,-1,-1,-1,-1,-1,-1,-1,-1\n"
 
 #. [brush]: id=brush-1
 #: data/core/editor/brushes.cfg:6
 msgid "Single Hex"
-msgstr ""
+msgstr "سداسي واحد"
 
 #. [brush]: id=brush-2
 #: data/core/editor/brushes.cfg:16
 msgid "Radius 1 Hex"
-msgstr ""
+msgstr "محيط 1 سداسي"
 
 #. [brush]: id=brush-3
 #: data/core/editor/brushes.cfg:26
 msgid "Radius 2 Hex"
-msgstr ""
+msgstr "محيط 2 سداسي"
 
 #. [brush]: id=brush-nw-se
 #: data/core/editor/brushes.cfg:47
 msgid "Hex Line NW-SE"
-msgstr ""
+msgstr "خط سداسي شمال غربي - جنوب شرقي "
 
 #. [brush]: id=brush-sw-ne
 #: data/core/editor/brushes.cfg:63
 msgid "Hex Line SW-NE"
-msgstr ""
+msgstr "خط سداسي جنوب غربي - شمال شرقي "
 
 #. [editor_group]: id=all
 #: data/core/editor/terrain-groups.cfg:11
-#, fuzzy
 msgid "all"
-msgstr "استدعاء"
+msgstr "الكل"
 
 #. [editor_group]: id=water
 #: data/core/editor/terrain-groups.cfg:17
-#, fuzzy
 msgid "water"
-msgstr "حفرة"
+msgstr "مياه"
 
 #. [editor_group]: id=flat
 #: data/core/editor/terrain-groups.cfg:24
 msgid "flat"
-msgstr ""
+msgstr "مستوي"
 
 #. [editor_group]: id=desert
 #: data/core/editor/terrain-groups.cfg:31
-#, fuzzy
 msgid "desert"
 msgstr "صحراء"
 
 #. [editor_group]: id=embellishments
 #: data/core/editor/terrain-groups.cfg:38
 msgid "embellishments"
-msgstr ""
+msgstr "زخرفة"
 
 #. [editor_group]: id=forest
 #: data/core/editor/terrain-groups.cfg:45
-#, fuzzy
 msgid "forest"
 msgstr "غابة"
 
 #. [editor_group]: id=fall
 #: data/core/editor/terrain-groups.cfg:52
 msgid "fall"
-msgstr ""
+msgstr "سقط"
 
 #. [editor_group]: id=frozen
 #: data/core/editor/terrain-groups.cfg:59
 msgid "frozen"
-msgstr ""
+msgstr "متجمد"
 
 #. [editor_group]: id=rough
 #: data/core/editor/terrain-groups.cfg:66
 msgid "rough"
-msgstr ""
+msgstr "خشن"
 
 #. [editor_group]: id=cave
 #: data/core/editor/terrain-groups.cfg:73
-#, fuzzy
 msgid "cave"
 msgstr "كهف"
 
 #. [editor_group]: id=obstacle
 #: data/core/editor/terrain-groups.cfg:80
 msgid "obstacle"
-msgstr ""
+msgstr "عائق"
 
 #. [editor_group]: id=village
 #: data/core/editor/terrain-groups.cfg:87
-#, fuzzy
 msgid "village"
 msgstr "قرية"
 
 #. [editor_group]: id=castle
 #: data/core/editor/terrain-groups.cfg:94
-#, fuzzy
 msgid "castle"
 msgstr "قصر"
 
 #. [editor_group]: id=bridge
 #: data/core/editor/terrain-groups.cfg:101
-#, fuzzy
 msgid "bridge"
-msgstr "جسر"
+msgstr "جسر مائي"
 
 #. [editor_group]: id=special
 #: data/core/editor/terrain-groups.cfg:108
 msgid "special"
-msgstr ""
+msgstr "خاص"
+
+#. [editor_group]: id=elevation
+#: data/core/editor/terrain-groups.cfg:115
+#, fuzzy
+#| msgid "Fill Selection"
+msgid "elevation"
+msgstr "ملء المنتقى"
 
 #. [editor_times]: id=empty
 #. Describes a scenario in the editor that has not set a time of day schedule
 #: data/core/editor/time-of-day.cfg:6
 msgid "time of day^None"
-msgstr ""
+msgstr "الفترة الزمنية من اليوم ^ لا شيء"
 
 #. [editor_times]: id=test
 #: data/core/editor/time-of-day.cfg:11
 msgid "Test"
-msgstr ""
+msgstr "اختبار"
 
 #. [editor_times]: id=default
 #: data/core/editor/time-of-day.cfg:22
-#, fuzzy
-#| msgid "Default Zoom"
 msgid "Default"
-msgstr "التكبير الأصلي"
+msgstr "التكبير المعتمد"
 
 #. [editor_times]: id=summer
 #: data/core/editor/time-of-day.cfg:28
 msgid "Summer"
-msgstr ""
+msgstr "صيف"
 
 #. [editor_times]: id=winter
 #: data/core/editor/time-of-day.cfg:34
 msgid "Winter"
-msgstr ""
+msgstr "شتاء"
 
 #. [editor_times]: id=24
 #: data/core/editor/time-of-day.cfg:60
 msgid "24 Hour Schedule"
-msgstr ""
+msgstr "تنظيم عرض 24 ساعة"
 
 #. [editor_times]: id=after_the_fall
 #: data/core/editor/time-of-day.cfg:66
 msgid "After the Fall"
-msgstr ""
+msgstr "بعد السقوط"
 
 #. [theme]: id=editor
 #: data/themes/editor.cfg:11
-#, fuzzy
-#| msgid "Quit Editor"
 msgid "theme^Editor"
-msgstr "مغادرة المحرّر"
+msgstr "السمة العامة ^ محرر"
 
 #. [menu]: id=menu-editor-file, type=turbo
 #: data/themes/editor.cfg:61
-#, fuzzy
 msgid "File"
-msgstr "الملف:"
+msgstr "ملف"
 
 #. [menu]: id=menu-editor-recent
 #: data/themes/editor.cfg:72
-#, fuzzy
-#| msgid "Load Game"
 msgid "Load Recent"
-msgstr "تحميل لعبة"
+msgstr "تحميل آخر اللملفات"
 
 #. [menu]: id=menu-editor-map
-#: data/themes/editor.cfg:90
-#, fuzzy
+#: data/themes/editor.cfg:80
 msgid "Map"
-msgstr "خريطة جديدة"
+msgstr "خريطة"
 
 #. [menu]: id=menu-unit-facing
-#: data/themes/editor.cfg:98
-#, fuzzy
-#| msgid "Unit List"
+#: data/themes/editor.cfg:88
 msgid "Unit Facing"
-msgstr "قائمة الوحدات"
+msgstr "اتجاه صور الوحدات"
 
 #. [menu]: id=menu-editor-transitions
-#: data/themes/editor.cfg:104
-#, fuzzy
-#| msgid "Delay transition updates"
+#: data/themes/editor.cfg:94
 msgid "Transition Update"
-msgstr "تأخير تجديد الانتقال بين الخانات"
+msgstr "تحديث الانتقال بين الخانات"
 
 #. [menu]: id=menu-editor-window
-#: data/themes/editor.cfg:111
-#, fuzzy
+#: data/themes/editor.cfg:101
 msgid "Window"
-msgstr "غلق النافدة"
+msgstr "النافذة"
+
+#. [menu]: id=menu-editor-addon
+#: data/themes/editor.cfg:110
+msgid "Add-on"
+msgstr ""
 
 #. [menu]: id=menu-editor-areas
-#: data/themes/editor.cfg:120
+#: data/themes/editor.cfg:119
 msgid "Areas"
-msgstr ""
+msgstr "مناطق"
 
 #. [menu]: id=menu-editor-local-time
-#: data/themes/editor.cfg:128
+#: data/themes/editor.cfg:127
 msgid "Assign Local Time"
-msgstr ""
+msgstr "تحديد التوقيت المحلي"
 
 #. [menu]: id=menu-editor-local-schedule
-#: data/themes/editor.cfg:134
+#: data/themes/editor.cfg:133
 msgid "Assign Local Time Schedule"
-msgstr ""
+msgstr "تعيين جدول التوقيت المحلي"
 
 #. [menu]: id=menu-editor-side
-#: data/themes/editor.cfg:142
-#, fuzzy
-#| msgid "Next Side"
+#: data/themes/editor.cfg:141
 msgid "Side"
-msgstr "الطرف التالي"
+msgstr "الطرف"
 
 #. [label]: id=villages-icon
-#: data/themes/editor.cfg:159
-#, fuzzy
+#: data/themes/editor.cfg:158
 msgid "villages"
 msgstr "القرى"
 
 #. [label]: id=units-icon
-#: data/themes/editor.cfg:175
+#: data/themes/editor.cfg:174
 msgid "units"
-msgstr ""
+msgstr "الوحدات"
 
 #. [menu]: id=switch_time
-#: data/themes/editor.cfg:454
+#: data/themes/editor.cfg:453
 msgid "Time Schedule Menu"
-msgstr ""
+msgstr "قائمة جدول الوقت"
 
 #. [menu]: id=menu-playlist
-#: data/themes/editor.cfg:465
-#, fuzzy
-#| msgid "Play"
+#: data/themes/editor.cfg:464
 msgid "Playlist"
-msgstr "إلعب"
+msgstr "قائمة التشغيل"
 
 #. [menu]: id=menu-editor-schedule
-#: data/themes/editor.cfg:471
+#: data/themes/editor.cfg:470
 msgid "Assign Time Schedule"
-msgstr ""
+msgstr "تعيين الجدول الزمني"
+
+#: src/editor/action/mouse/mouse_action_unit.cpp:64
+msgid "Identifier: "
+msgstr "المعرف"
+
+#: src/editor/action/mouse/mouse_action_unit.cpp:66
+msgid "Name: "
+msgstr "اسم:"
 
 #: src/editor/action/mouse/mouse_action_unit.cpp:68
-msgid "(Unknown unit type: $type)"
-msgstr ""
-
-#: src/editor/action/mouse/mouse_action_unit.cpp:72
-msgid "Identifier: "
-msgstr ""
-
-#: src/editor/action/mouse/mouse_action_unit.cpp:73
-#, fuzzy
-#| msgid "Name: "
-msgid "Name: "
-msgstr "الإسم:"
-
-#: src/editor/action/mouse/mouse_action_unit.cpp:74
 msgid "Type: "
-msgstr ""
+msgstr "النوع:"
 
-#: src/editor/action/mouse/mouse_action_unit.cpp:75
+#: src/editor/action/mouse/mouse_action_unit.cpp:69
 msgid "Level: "
-msgstr ""
+msgstr "المستوى:"
 
-#: src/editor/action/mouse/mouse_action_unit.cpp:76
+#: src/editor/action/mouse/mouse_action_unit.cpp:70
 msgid "Cost: "
-msgstr ""
+msgstr "التكلفة:"
 
-#: src/editor/action/mouse/mouse_action_unit.cpp:77
-#, fuzzy
-#| msgid "Recruit"
-msgid "Recruit: "
-msgstr "تجنيد"
-
-#: src/editor/controller/editor_controller.cpp:178
+#: src/editor/controller/editor_controller.cpp:186
 msgid "Fatal error"
-msgstr ""
+msgstr "خطأ فادح"
 
-#: src/editor/controller/editor_controller.cpp:208
+#: src/editor/controller/editor_controller.cpp:216
 msgid "Do you really want to quit?"
 msgstr "أتريد فعلاً المغادرة؟"
 
-#: src/editor/controller/editor_controller.cpp:210
+#: src/editor/controller/editor_controller.cpp:218
 msgid ""
 "Do you really want to quit? Changes to this map since the last save will be "
 "lost."
 msgstr ""
+"حقيقة تريد المغادرة؟ ستفقد التغييرات التي تم إجراؤها على هذه الخريطة منذ آخر "
+"عملية حفظ."
 
-#: src/editor/controller/editor_controller.cpp:212
+#: src/editor/controller/editor_controller.cpp:220
 msgid ""
 "Do you really want to quit? The following maps were modified and all changes "
 "since the last save will be lost:"
 msgstr ""
+"حقيقة تريد المغادرة؟ ستفقد التغييرات التي تم إجراؤها على هذه الخرائط منذ آخر "
+"عملية حفظ."
 
-#: src/editor/controller/editor_controller.cpp:221
+#: src/editor/controller/editor_controller.cpp:229
 msgid "No editor time-of-day found."
-msgstr ""
+msgstr "لم يتم العثور على محرر فترة-اليوم."
 
-#: src/editor/controller/editor_controller.cpp:1147
-#, fuzzy
-#| msgid "Change Unit Side (Debug!)"
+#: src/editor/controller/editor_controller.cpp:1197
 msgid "Change Unit ID"
-msgstr "تغيير طرف الوحدة (تنقيح!)"
+msgstr "تغيير معرف الوحدة"
 
-#: src/editor/controller/editor_controller.cpp:1148
+#: src/editor/controller/editor_controller.cpp:1198
 msgid "ID:"
-msgstr ""
+msgstr "المعرف:"
 
-#: src/editor/controller/editor_controller.cpp:1164
+#: src/editor/controller/editor_controller.cpp:1214
 msgid "Rename Unit"
 msgstr "إعادة تسمية الوحدة"
 
-#: src/editor/controller/editor_controller.cpp:1165
-#, fuzzy
-#| msgid "Name: "
+#: src/editor/controller/editor_controller.cpp:1215
 msgid "Name:"
-msgstr "الإسم:"
+msgstr "اسم:"
 
-#: src/editor/map/context_manager.cpp:202
+#: src/editor/map/context_manager.cpp:219
 msgid "Load Map"
 msgstr "تحميل خريطة"
 
-#: src/editor/map/context_manager.cpp:270 src/editor/map/map_context.cpp:838
-#, fuzzy
+#: src/editor/map/context_manager.cpp:315 src/editor/map/map_context.cpp:1045
 msgid "New Map"
-msgstr "إنشاء خريطة جديدة"
+msgstr "خريطة جديدة"
 
-#: src/editor/map/context_manager.cpp:283 src/editor/map/map_context.cpp:838
-#, fuzzy
+#: src/editor/map/context_manager.cpp:328 src/editor/map/map_context.cpp:1045
 msgid "New Scenario"
-msgstr "إنشاء خريطة جديدة"
+msgstr "إنشاء سيناريو  جديد"
 
-#: src/editor/map/context_manager.cpp:339
-#, fuzzy
-#| msgid "Delete File"
+#: src/editor/map/context_manager.cpp:384
 msgid "No Recent Files"
-msgstr "حذف الملف"
+msgstr "لا يوجد ملف مرجعي"
 
-#: src/editor/map/context_manager.cpp:377
-#, fuzzy
+#: src/editor/map/context_manager.cpp:422
 msgid "Unnamed Area"
-msgstr "إنشاء خريطة جديدة"
+msgstr "منطقة بدون إسم"
 
-#: src/editor/map/context_manager.cpp:408
-#, fuzzy
+#: src/editor/map/context_manager.cpp:453
 msgid "New Side"
-msgstr "إنشاء خريطة جديدة"
+msgstr "إنشاء طرف جديد"
 
-#: src/editor/map/context_manager.cpp:464
-#, fuzzy
-#| msgid "Apply"
+#: src/editor/map/context_manager.cpp:509
 msgid "Apply Mask"
-msgstr "تطبيق"
+msgstr "تطبيق قناع الخريطة"
 
-#: src/editor/map/context_manager.cpp:473
+#: src/editor/map/context_manager.cpp:518
 msgid "Error loading mask"
-msgstr ""
+msgstr "خطأ في تحميل قناع الخريطة"
 
-#: src/editor/map/context_manager.cpp:493
+#: src/editor/map/context_manager.cpp:538
 msgid "Identifier:"
-msgstr ""
+msgstr "تعريف:"
 
-#: src/editor/map/context_manager.cpp:493
-#, fuzzy
-#| msgid "Rename Unit"
+#: src/editor/map/context_manager.cpp:538
 msgid "Rename Area"
-msgstr "إعادة تسمية الوحدة"
+msgstr "إعادة تسمية المنطقة"
 
-#: src/editor/map/context_manager.cpp:507
-#, fuzzy
+#: src/editor/map/context_manager.cpp:552
 msgid "Choose Target Map"
-msgstr "لاعب"
+msgstr "اختيار الخريطة-الهدف"
 
-#: src/editor/map/context_manager.cpp:516
-#: src/editor/map/context_manager.cpp:925
+#: src/editor/map/context_manager.cpp:561
+#: src/editor/map/context_manager.cpp:954
 msgid "Error loading map"
-msgstr ""
+msgstr "خطأ في تحميل الخريطة"
 
-#: src/editor/map/context_manager.cpp:642
-#, fuzzy
+#: src/editor/map/context_manager.cpp:689
 msgid "Save Map As"
-msgstr "حفظ الخريطة"
+msgstr "حفظ الخريطة ك:"
 
-#: src/editor/map/context_manager.cpp:663
-#, fuzzy
-msgid "Save Scenario As"
-msgstr "حفظ الخريطة"
-
-#: src/editor/map/context_manager.cpp:695
-msgid "No random map generators found."
-msgstr ""
-
-#: src/editor/map/context_manager.cpp:708
-#: src/editor/map/context_manager.cpp:713
-msgid "Map creation failed."
-msgstr "فشل إعداد الخرطة"
-
-#: src/editor/map/context_manager.cpp:728
-msgid "Unsaved Changes"
-msgstr ""
-
-#: src/editor/map/context_manager.cpp:729
-msgid "Do you want to discard all changes made to the map since the last save?"
-msgstr ""
-
-#: src/editor/map/context_manager.cpp:785
-#, fuzzy
-msgid "This scenario is already open."
-msgstr "هذا المفتاح مُستعمَلٌ"
-
-#: src/editor/map/context_manager.cpp:808
-#: src/editor/map/context_manager.cpp:871
-#, fuzzy
+#: src/editor/map/context_manager.cpp:700
+#: src/editor/map/context_manager.cpp:902
 msgid "This map is already open."
-msgstr "هذا المفتاح مُستعمَلٌ"
+msgstr "هذه الخريطة مفتوحة بطبعها"
 
-#: src/editor/map/context_manager.cpp:832
-#, fuzzy
-#| msgid "Scenario Objectives"
+#: src/editor/map/context_manager.cpp:721
+msgid "Save Scenario As"
+msgstr "حفظ السيناريو ك:"
+
+#: src/editor/map/context_manager.cpp:733
+msgid "This scenario is already open."
+msgstr "هذا السيناريو مفتوح بطبعه"
+
+#: src/editor/map/context_manager.cpp:767
+msgid "No random map generators found."
+msgstr "لا يوجد مولد خرائط عشوائية"
+
+#: src/editor/map/context_manager.cpp:780
+#: src/editor/map/context_manager.cpp:785
+msgid "Map creation failed."
+msgstr "فشل إعداد الخريطة"
+
+#: src/editor/map/context_manager.cpp:800
+msgid "Unsaved Changes"
+msgstr "التغييرات غير محفوظة"
+
+#: src/editor/map/context_manager.cpp:801
+msgid "Do you want to discard all changes made to the map since the last save?"
+msgstr "هل ترغب بحذف كل التغييرات المحدثة على الخريطة منذ آخر دخول؟"
+
+#: src/editor/map/context_manager.cpp:863
 msgid "Scenario saved."
-msgstr "أهداف السِيناريُو"
+msgstr "سيناريو تم تسجيله"
 
-#: src/editor/map/context_manager.cpp:847
+#: src/editor/map/context_manager.cpp:878
 msgid "Map saved."
-msgstr ""
+msgstr "خريطة تم تسجيلها"
 
-#: src/editor/map/context_manager.cpp:904
+#: src/editor/map/context_manager.cpp:946
 msgid "Loaded embedded map data"
-msgstr ""
+msgstr "تحميل بيانات الخريطة المضمنة"
 
-#: src/editor/map/context_manager.cpp:905
-#: src/editor/map/context_manager.cpp:918
+#: src/editor/map/context_manager.cpp:947
+#: src/editor/map/context_manager.cpp:950
 msgid "Map loaded from scenario"
-msgstr ""
+msgstr "تم تحميل الخريطة من السيناريو"
 
-#: src/editor/map/context_manager.cpp:915
-msgid ""
-"Loaded referenced map file:\n"
+#: src/editor/map/context_manager.cpp:950
+#, fuzzy
+#| msgid ""
+#| "Loaded referenced map file:\n"
+#| "$new"
+msgid "Loaded referenced map file:"
+msgstr ""
+"ملف الخريطة المشار إليه الذي تم تحميله:\n"
 "$new"
-msgstr ""
 
-#: src/editor/map/editor_map.cpp:148
+#: src/editor/map/editor_map.cpp:146
 #: src/editor/palette/location_palette.cpp:119
 msgid "Player $side_num"
-msgstr ""
+msgstr "اللاعب رقم $side_num"
 
-#: src/editor/map/editor_map.cpp:283
+#: src/editor/map/editor_map.cpp:281
 msgid "The size of the target map is different from the current map"
-msgstr ""
+msgstr "حجم الخريطة الهدف يختلف عن الخريطة الحالية"
 
-#: src/editor/map/map_context.cpp:145
+#: src/editor/map/map_context.cpp:182
 msgid "File not found"
-msgstr ""
+msgstr "لم يتم العثور على الملف"
 
-#: src/editor/map/map_context.cpp:152
+#: src/editor/map/map_context.cpp:189
 msgid "Empty file"
+msgstr "ملف فارغ"
+
+#: src/editor/map/map_context.cpp:195
+msgid "File does not have .map or .cfg extension"
 msgstr ""
 
-#: src/editor/map/map_context.cpp:208
+#: src/editor/map/map_context.cpp:241
 msgid ""
 "The map file looks like a scenario, but the map_data value does not point to "
 "an existing file"
 msgstr ""
+"يبدو ملف الخريطة كسيناريو ، لكن قيمة بيانات الخريطة لا تشير إلى ملف موجود"
 
-#: src/editor/map/map_context.cpp:604
-msgid "Could not save the scenario: $msg"
+#: src/editor/map/map_context.cpp:260
+msgid "Found the characters '<<' indicating inline lua is present - aborting"
 msgstr ""
 
-#: src/editor/map/map_context.cpp:639
-msgid "Could not save into scenario"
-msgstr ""
-
-#: src/editor/map/map_context.cpp:649
-msgid "Could not save the map: $msg"
-msgstr ""
-
-#: src/editor/palette/editor_palettes.cpp:51
-msgid "(Unknown Group)"
-msgstr ""
-
-#: src/editor/palette/editor_palettes.cpp:284
-msgid "(non-core)"
-msgstr ""
-
-#: src/editor/palette/editor_palettes.cpp:285
-msgid "Will not work in game without extra care."
-msgstr ""
-
-#: src/editor/palette/location_palette.cpp:256
-msgid "Go To"
-msgstr ""
-
-#: src/editor/palette/location_palette.cpp:263
-msgid "Add"
-msgstr ""
-
+#: src/editor/map/map_context.cpp:265
 #: src/editor/palette/location_palette.cpp:265
-msgid "New Location Identifier"
-msgstr ""
-
-#: src/editor/palette/location_palette.cpp:272
 msgid "Error"
 msgstr "خطأ"
 
-#: src/editor/palette/location_palette.cpp:273
+#: src/editor/map/map_context.cpp:265
+msgid "Failed to load the scenario, attempting to load only the map."
+msgstr ""
+
+#: src/editor/map/map_context.cpp:272
+#, fuzzy
+#| msgid ""
+#| "The map file looks like a scenario, but the map_data value does not point "
+#| "to an existing file"
+msgid ""
+"The map file looks like a scenario, but the map_file value does not point to "
+"an existing file"
+msgstr ""
+"يبدو ملف الخريطة كسيناريو ، لكن قيمة بيانات الخريطة لا تشير إلى ملف موجود"
+
+#: src/editor/map/map_context.cpp:287
+msgid "Unable to parse file to find map data"
+msgstr ""
+
+#: src/editor/map/map_context.cpp:811
+msgid "Could not save the scenario: $msg"
+msgstr "تعذر حفظ السيناريو: $msg"
+
+#: src/editor/map/map_context.cpp:846
+msgid "Could not save into scenario"
+msgstr "لا يمكن الحفظ في السيناريو"
+
+#: src/editor/map/map_context.cpp:856
+msgid "Could not save the map: $msg"
+msgstr "تعذر حفظ الخريطة: $msg"
+
+#: src/editor/palette/editor_palettes.cpp:52
+msgid "(Unknown Group)"
+msgstr "(مجموعة غير معروفة)"
+
+#: src/editor/palette/editor_palettes.cpp:314
+msgid "(non-core)"
+msgstr "(غير مضمن في الملفات الأساسية)"
+
+#: src/editor/palette/editor_palettes.cpp:315
+msgid "Will not work in game without extra care."
+msgstr "لن تعمل في اللعبة بدون رعاية إضافية."
+
+#: src/editor/palette/location_palette.cpp:249
+msgid "Go To"
+msgstr "اذهب إلى"
+
+#: src/editor/palette/location_palette.cpp:256
+msgid "Add"
+msgstr "إضافة"
+
+#: src/editor/palette/location_palette.cpp:258
+msgid "New Location Identifier"
+msgstr "معرّف موقع جديد"
+
+#: src/editor/palette/location_palette.cpp:266
 msgid "Invalid location id"
-msgstr ""
+msgstr "معرف الموقع غير صالح"
 
-#: src/editor/palette/location_palette.cpp:280
+#: src/editor/palette/location_palette.cpp:273
 msgid "Delete"
-msgstr ""
+msgstr "حذف"
 
+#: src/editor/palette/terrain_palettes.cpp:224
+msgid "Left-click: "
+msgstr "الزر الأيسر:"
+
+#: src/editor/palette/terrain_palettes.cpp:225
+msgid "Right-click: "
+msgstr "الزر الأيمن: "
+
+#. TRANSLATORS: Similar behavior applies to shift + right-click. This message specifies left-click
+#. because the logic of whether to show the "overlay only" or "base only" version depends on the
+#. terrain currently selected for the left button.
 #: src/editor/palette/terrain_palettes.cpp:230
-msgid "FG: "
-msgstr ""
+msgid "Shift + left-click: paint overlay layer only"
+msgstr "Shift + النقر بزر الماوس الأيسر: طلاء طبقة التراكب فقط"
 
-#: src/editor/palette/terrain_palettes.cpp:231
-msgid "BG: "
-msgstr ""
+#: src/editor/palette/terrain_palettes.cpp:232
+msgid "Shift + left-click: paint base layer only"
+msgstr "Shift + النقر بزر الماوس الأيسر: طلاء الطبقة الأساسية فقط"
 
-#: src/gui/dialogs/editor/custom_tod.cpp:137
+#: src/editor/palette/terrain_palettes.cpp:235
+msgid "Cmd + click: copy terrain"
+msgstr "Cmd + النقر: نسخ التضاريس"
+
+#: src/editor/palette/terrain_palettes.cpp:237
+msgid "Ctrl + click: copy terrain"
+msgstr "Ctrl + النقر: نسخ التضاريس"
+
+#: src/gui/dialogs/editor/custom_tod.cpp:94
 msgid "Clipboard support not found, contact your packager"
-msgstr ""
+msgstr "لم يتم العثور على دعم الحافظة، اتصل بالمسئول عن الرزم"
 
-#: src/gui/dialogs/editor/custom_tod.cpp:201
-#, fuzzy
+#: src/gui/dialogs/editor/custom_tod.cpp:158
 msgid "Choose File"
-msgstr "لاعب"
+msgstr "اختر ملف"
 
-#: src/gui/dialogs/editor/custom_tod.cpp:202
-#, fuzzy
-#| msgid "Select All"
+#: src/gui/dialogs/editor/custom_tod.cpp:159
 msgid "Select"
-msgstr "انتقاء الكل"
+msgstr "اختار"
 
-#: src/gui/dialogs/editor/set_starting_position.cpp:84
 #, fuzzy
-msgid "player^None"
-msgstr "اللاعبون:"
+#~ msgid "player^None"
+#~ msgstr "اللاعبون:"
 
-#: src/gui/dialogs/editor/set_starting_position.cpp:97
-msgid "Player $player_number"
-msgstr ""
+#, fuzzy
+#~| msgid "Recruit"
+#~ msgid "Recruit: "
+#~ msgstr "تجنيد"
 
 #~ msgid "None"
 #~ msgstr "لا شيء"
@@ -1244,9 +1252,6 @@ msgstr ""
 
 #~ msgid "Flood Fill"
 #~ msgstr "ملء"
-
-#~ msgid "Fill Selection"
-#~ msgstr "ملء المنتقى"
 
 #~ msgid "Rotate Selection"
 #~ msgstr "إدارة المنتقى"

@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2010 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2010 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #define GETTEXT_DOMAIN "wesnoth-lib"
@@ -22,7 +23,7 @@
 #include "gui/core/window_builder/helper.hpp"
 #include "gui/widgets/settings.hpp"
 #include "gui/widgets/window.hpp"
-#include "utils/functional.hpp"
+#include <functional>
 #include "wml_exception.hpp"
 
 #define LOG_SCOPE_HEADER get_control_type() + " [" + id() + "] " + __func__
@@ -39,11 +40,11 @@ tree_view::tree_view(const implementation::builder_tree_view& builder)
 	, node_definitions_(builder.nodes)
 	, indentation_step_size_(0)
 	, need_layout_(false)
-	, root_node_(new tree_view_node("root", nullptr, *this, std::map<std::string, string_map>()))
+	, root_node_(nullptr)
 	, selected_item_(nullptr)
 {
 	connect_signal<event::LEFT_BUTTON_DOWN>(
-		std::bind(&tree_view::signal_handler_left_button_down, this, _2), event::dispatcher::back_pre_child);
+		std::bind(&tree_view::signal_handler_left_button_down, this, std::placeholders::_2), event::dispatcher::back_pre_child);
 }
 
 tree_view::~tree_view()
@@ -54,12 +55,12 @@ tree_view::~tree_view()
 }
 
 tree_view_node& tree_view::add_node(
-		const std::string& id, const std::map<std::string /* widget id */, string_map>& data, const int index)
+	const std::string& id, const widget_data& data, const int index)
 {
 	return get_root_node().add_child(id, data, index);
 }
 
-std::pair<tree_view_node::ptr_t, int> tree_view::remove_node(tree_view_node* node)
+std::pair<std::shared_ptr<tree_view_node>, int> tree_view::remove_node(tree_view_node* node)
 {
 	assert(node && node != root_node_ && node->parent_node_);
 	const point node_size = node->get_size();
@@ -82,24 +83,13 @@ std::pair<tree_view_node::ptr_t, int> tree_view::remove_node(tree_view_node* nod
 		resize_content(0, -node_size.y);
 	}
 
-	return std::make_pair(std::move(old_node), position);
+	return std::pair(std::move(old_node), position);
 }
 
 void tree_view::clear()
 {
 	get_root_node().clear();
 	resize_content(0, -content_grid()->get_size().y);
-}
-
-void
-tree_view::child_populate_dirty_list(window& caller,
-									  const std::vector<widget*>& call_stack)
-{
-	// Inherited.
-	scrollbar_container::child_populate_dirty_list(caller, call_stack);
-
-	assert(root_node_);
-	root_node_->impl_populate_dirty_list(caller, call_stack);
 }
 
 void tree_view::set_self_active(const bool /*active*/)
@@ -119,16 +109,16 @@ void tree_view::layout_children()
 
 void tree_view::resize_content(const int width_modification,
 		const int height_modification,
-		const int width__modification_pos,
+		const int width_modification_pos,
 		const int height_modification_pos)
 {
 	DBG_GUI_L << LOG_HEADER << " current size " << content_grid()->get_size() << " width_modification "
-			  << width_modification << " height_modification " << height_modification << ".\n";
+			  << width_modification << " height_modification " << height_modification << ".";
 
 	if(content_resize_request(
 		width_modification,
 		height_modification,
-		width__modification_pos,
+		width_modification_pos,
 		height_modification_pos
 	)) {
 		// Calculate new size.
@@ -143,12 +133,12 @@ void tree_view::resize_content(const int width_modification,
 		need_layout_ = true;
 		// If the content grows assume it "overwrites" the old content.
 		if(width_modification < 0 || height_modification < 0) {
-			set_is_dirty(true);
+			queue_redraw();
 		}
 		horizontal_scrollbar_moved();
-		DBG_GUI_L << LOG_HEADER << " succeeded.\n";
+		DBG_GUI_L << LOG_HEADER << " succeeded.";
 	} else {
-		DBG_GUI_L << LOG_HEADER << " failed.\n";
+		DBG_GUI_L << LOG_HEADER << " failed.";
 	}
 }
 
@@ -170,15 +160,18 @@ void tree_view::finalize_setup()
 	// Inherited.
 	scrollbar_container::finalize_setup();
 
+	auto root = std::make_unique<tree_view_node>(root_node_id, nullptr, *this, widget_data{});
+	root_node_ = root.get();
+
 	assert(content_grid());
 	content_grid()->set_rows_cols(1, 1);
 	content_grid()->set_child(
-		root_node_, 0, 0, grid::VERTICAL_GROW_SEND_TO_CLIENT | grid::HORIZONTAL_GROW_SEND_TO_CLIENT, 0);
+		std::move(root), 0, 0, grid::VERTICAL_GROW_SEND_TO_CLIENT | grid::HORIZONTAL_GROW_SEND_TO_CLIENT, 0);
 }
 
 void tree_view::signal_handler_left_button_down(const event::ui_event event)
 {
-	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	get_window()->keyboard_capture(this);
 }
@@ -262,104 +255,25 @@ void tree_view::handle_key_right_arrow(SDL_Keymod modifier, bool& handled)
 tree_view_definition::tree_view_definition(const config& cfg)
 	: styled_widget_definition(cfg)
 {
-	DBG_GUI_P << "Parsing tree view " << id << '\n';
+	DBG_GUI_P << "Parsing tree view " << id;
 
 	load_resolutions<resolution>(cfg);
 }
 
-/*WIKI
- * @page = GUIWidgetDefinitionWML
- * @order = 1_tree_view
- *
- * == Tree view ==
- *
- * @macro = tree_view_description
- *
- * The documentation is not written yet.
- *
- * The following states exist:
- * * state_enabled, the listbox is enabled.
- * * state_disabled, the listbox is disabled.
- * @begin{parent}{name="gui/"}
- * @begin{tag}{name="ree_view_definition"}{min=0}{max=-1}{super="generic/widget_definition"}
- * @begin{tag}{name="resolution"}{min=0}{max=-1}{super="generic/widget_definition/resolution"}
- * @allow{link}{name="gui/window/resolution/grid"}
- * @begin{tag}{name="state_enabled"}{min=0}{max=1}{super="generic/state"}
- * @end{tag}{name="state_enabled"}
- * @begin{tag}{name="state_disabled"}{min=0}{max=1}{super="generic/state"}
- * @end{tag}{name="state_disabled"}
- * @end{tag}{name="resolution"}
- * @end{tag}{name="ree_view_definition"}
- * @end{parent}{name="gui/"}
- */
 tree_view_definition::resolution::resolution(const config& cfg)
 	: resolution_definition(cfg)
 	, grid(nullptr)
 {
 	// Note the order should be the same as the enum state_t is listbox.hpp.
-	state.emplace_back(cfg.child("state_enabled"));
-	state.emplace_back(cfg.child("state_disabled"));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_enabled", _("Missing required state for tree view")));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_disabled", _("Missing required state for tree view")));
 
-	const config& child = cfg.child("grid");
-	VALIDATE(child, _("No grid defined."));
+	auto child = VALIDATE_WML_CHILD(cfg, "grid", _("No grid defined for tree view"));
 
 	grid = std::make_shared<builder_grid>(child);
 }
 
 // }---------- BUILDER -----------{
-
-/*WIKI_MACRO
- * @begin{macro}{tree_view_description}
- *
- *        A tree view is a styled_widget that holds several items of the same or
- *        different types. The items shown are called tree view nodes and when
- *        a node has children, these can be shown or hidden. Nodes that contain
- *        children need to provide a clickable button in order to fold or
- *        unfold the children.
- * @end{macro}
- */
-
-/*WIKI
- * @page = GUIWidgetInstanceWML
- * @order = 2_tree_view
- *
- * == Tree view ==
- * @begin{parent}{name="gui/window/resolution/grid/row/column/"}
- * @begin{tag}{name="tree_view"}{min=0}{max=-1}{super="generic/widget_instance"}
- * @macro = tree_view_description
- *
- * List with the tree view specific variables:
- * @begin{table}{config}
- *     vertical_scrollbar_mode & scrollbar_mode & initial_auto &
- *                                     Determines whether or not to show the
- *                                     scrollbar. $
- *     horizontal_scrollbar_mode & scrollbar_mode & initial_auto &
- *                                     Determines whether or not to show the
- *                                     scrollbar. $
- *
- *     indentation_step_size & unsigned & 0 &
- *                                     The number of pixels every level of
- *                                     nodes is indented from the previous
- *                                     level. $
- *
- *     node & section &  &             The tree view can contain multiple node
- *                                     sections. This part needs more
- *                                     documentation. $
- * @end{table}
- * @begin{tag}{name="node"}{min=0}{max=-1}
- * @begin{table}{config}
- *     id & string & "" &  $
- * @end{table}
- * @begin{tag}{name="node_definition"}{min=0}{max=-1}{super="gui/window/resolution/grid"}
- * @begin{table}{config}
- *     return_value_id & string & "" &  $
- * @end{table}
- * @end{tag}{name="node_definition"}
- * @end{tag}{name="node"}
- * @end{tag}{name="tree_view"}
- * @end{parent}{name="gui/window/resolution/grid/row/column/"}
- * NOTE more documentation and examples are needed.
- */ // TODO annotate node
 
 namespace implementation
 {
@@ -377,25 +291,25 @@ builder_tree_view::builder_tree_view(const config& cfg)
 	VALIDATE(!nodes.empty(), _("No nodes defined for a tree view."));
 }
 
-widget* builder_tree_view::build() const
+std::unique_ptr<widget> builder_tree_view::build() const
 {
 	/*
 	 *  TODO see how much we can move in the constructor instead of
 	 *  building in several steps.
 	 */
-	tree_view* widget = new tree_view(*this);
+	auto widget = std::make_unique<tree_view>(*this);
 
 	widget->set_vertical_scrollbar_mode(vertical_scrollbar_mode);
 	widget->set_horizontal_scrollbar_mode(horizontal_scrollbar_mode);
 
 	widget->set_indentation_step_size(indentation_step_size);
 
-	DBG_GUI_G << "Window builder: placed tree_view '" << id << "' with definition '" << definition << "'.\n";
+	DBG_GUI_G << "Window builder: placed tree_view '" << id << "' with definition '" << definition << "'.";
 
 	const auto conf = widget->cast_config_to<tree_view_definition>();
 	assert(conf);
 
-	widget->init_grid(conf->grid);
+	widget->init_grid(*conf->grid);
 	widget->finalize_setup();
 
 	return widget;
@@ -408,13 +322,14 @@ tree_node::tree_node(const config& cfg)
 {
 	VALIDATE(!id.empty(), missing_mandatory_wml_key("node", "id"));
 
-	VALIDATE(id != "root", _("[node]id 'root' is reserved for the implementation."));
+	// TODO: interpolate this value into the error message
+	VALIDATE(id != tree_view::root_node_id, _("[node]id 'root' is reserved for the implementation."));
 
-	const config& node_definition = cfg.child("node_definition");
+	auto node_definition = cfg.optional_child("node_definition");
 
 	VALIDATE(node_definition, _("No node defined."));
 
-	builder = std::make_shared<builder_grid>(node_definition);
+	builder = std::make_shared<builder_grid>(*node_definition);
 }
 
 } // namespace implementation

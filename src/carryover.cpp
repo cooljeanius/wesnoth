@@ -1,23 +1,23 @@
 /*
-   Copyright (C) 2003 - 2018 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2003 - 2023
+	by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #include "carryover.hpp"
 
 #include "config.hpp"
 #include "log.hpp"
-#include "team.hpp"
-#include "units/unit.hpp"
+#include "serialization/string_utils.hpp"
 #include <cassert>
 
 static lg::log_domain log_engine("engine");
@@ -38,21 +38,6 @@ carryover::carryover(const config& side)
 		recall_list_.push_back(u);
 		config& u_back = recall_list_.back();
 		u_back.remove_attributes("side", "goto_x", "goto_y", "x", "y", "hidden");
-	}
-}
-
-carryover::carryover(const team& t, const int gold, const bool add)
-		: add_ (add)
-		, current_player_(t.current_player())
-		, gold_(gold)
-		, previous_recruits_(t.recruits())
-		, recall_list_()
-		, save_id_(t.save_id())
-		, variables_(t.variables())
-{
-	for(const unit_const_ptr u : t.recall_list()) {
-		recall_list_.emplace_back();
-		u->write(recall_list_.back());
 	}
 }
 
@@ -137,7 +122,7 @@ carryover_info::carryover_info(const config& cfg, bool from_snpashot)
 		{
 			//this shouldn't happen outside a snpshot.
 			if(!from_snpashot) {
-				ERR_NG << "found invalid carryover data in saved game, lost='" << side["lost"] << "' persistent='" << side["persistent"] << "' save_id='" << side["save_id"] << "'\n";
+				ERR_NG << "found invalid carryover data in saved game, lost='" << side["lost"] << "' persistent='" << side["persistent"] << "' save_id='" << side["save_id"] << "'";
 			}
 			continue;
 		}
@@ -146,7 +131,7 @@ carryover_info::carryover_info(const config& cfg, bool from_snpashot)
 	for(const config& item : cfg.child_range("menu_item"))
 	{
 		if(item["persistent"].to_bool(true)) {
-			wml_menu_items_.push_back(new config(item));
+			wml_menu_items_.push_back(item);
 		}
 	}
 }

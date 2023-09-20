@@ -1,14 +1,15 @@
 /*
-   Copyright (C) 2017-2018 by the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2017 - 2023
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -31,18 +32,17 @@ public:
 protected:
 	void do_emote();
 	void do_network_send();
+	void do_network_send(const std::string& data);
 	void do_network_send_req_arg();
-	void do_room_query();
-	void do_room_query_noarg();
-	void do_gen_room_query();
 	void do_whisper();
-	void do_chanmsg();
 	void do_log();
 	void do_ignore();
 	void do_friend();
 	void do_remove();
 	void do_display();
 	void do_version();
+	void do_clear_messages();
+	void do_mp_report();
 
 	/** Request information about a user from the server. */
 	void do_info();
@@ -69,6 +69,7 @@ protected:
 	void init_map()
 	{
 		set_cmd_prefix("/");
+		set_cmd_flag(false);
 		register_command("query", &chat_command_handler::do_network_send,
 			_("Send a query to the server. Without arguments the server"
 				" should tell you the available commands."));
@@ -89,7 +90,7 @@ protected:
 			_("Mute/Unmute all observers. (toggles)"), "");
 		register_command("ping", &chat_command_handler::do_network_send,
 			_("Send some data to the server. Can be used to verify the network connection and notice disconnects."));
-		register_command("report", &chat_command_handler::do_network_send_req_arg,
+		register_command("report", &chat_command_handler::do_mp_report,
 			_("Report abuse, rule violations, etc. to the server moderators. "
 				"Make sure to mention relevant nicknames, etc."), "");
 		register_alias("report", "adminmsg");  // deprecated
@@ -110,24 +111,14 @@ protected:
 			_("Add a nickname to your friends list."), _("<nickname>"));
 		register_command("remove", &chat_command_handler::do_remove,
 			_("Remove a nickname from your ignores or friends list."), _("<nickname>"));
+		register_command("roll", &chat_command_handler::do_network_send_req_arg,
+			_("Get a random number between 1 and N visible in the game setup lobby."), _("<N>"));
 		register_command("version", &chat_command_handler::do_version,
 			_("Display version information."));
 		register_command("info", &chat_command_handler::do_info,
 			_("Request information about a nickname."), _("<nickname>"));
-		register_command("join", &chat_command_handler::do_network_send_req_arg,
-			_("Join a room."), _("<room>"));
-		register_alias("join", "j");
-		register_command("part", &chat_command_handler::do_network_send_req_arg,
-			_("Part a room."), _("<room>"));
-		register_command("names", &chat_command_handler::do_room_query,
-			_("List room members."), _("<room>"));
-		register_command("rooms", &chat_command_handler::do_room_query_noarg,
-			_("List available rooms."));
-		register_command("room", &chat_command_handler::do_chanmsg,
-			_("Room message."), _("<room> <msg>"));
-		register_command("room_query", &chat_command_handler::do_gen_room_query,
-			_("Room query."), _("<room> <type> [value]"));
-		register_alias("room_query", "rq");
+		register_command("clear", &chat_command_handler::do_clear_messages,
+			_("Clear chat history."));
 	}
 private:
 	chat_handler& chat_handler_;

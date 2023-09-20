@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Battle for Wesnoth 1.1.1+dev\n"
 "Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
-"POT-Creation-Date: 2020-03-09 23:11 UTC\n"
+"POT-Creation-Date: 2023-02-20 04:03 UTC\n"
 "PO-Revision-Date: 2012-04-16 17:13+0900\n"
 "Last-Translator: mistzone <drier22@gmail.com>\n"
 "Language-Team: none\n"
@@ -31,13 +31,15 @@ msgstr "4p - 신천지"
 #| "the land. Use map settings. The recommended starting gold is 100."
 msgid ""
 "This 4p survival scenario allows you to construct buildings and terraform "
-"the land. The recommended starting gold is 100."
+"the land.\n"
+"\n"
+"For experienced players, it’s recommended to lower the starting gold to 75."
 msgstr ""
 "이 4인용 생존 시나리오에서는 건물을 세우고 땅을 마음대로 바꿀 수 있습니다. "
 "맵 설정에 따르세요. 추천하는 최초 자금은 100입니다."
 
 #. [part]
-#: data/multiplayer/scenarios/4p_A_New_Land.cfg:26
+#: data/multiplayer/scenarios/4p_A_New_Land.cfg:28
 msgid ""
 "In the aftermath of the great war the remnants of humanity fled to an "
 "obscure secluded glen. Though they knew they could not hide from the mighty "
@@ -50,10 +52,10 @@ msgstr ""
 "희망했다."
 
 #. [side]
-#: data/multiplayer/scenarios/4p_A_New_Land.cfg:46
-#: data/multiplayer/scenarios/4p_A_New_Land.cfg:62
-#: data/multiplayer/scenarios/4p_A_New_Land.cfg:78
-#: data/multiplayer/scenarios/4p_A_New_Land.cfg:94
+#: data/multiplayer/scenarios/4p_A_New_Land.cfg:48
+#: data/multiplayer/scenarios/4p_A_New_Land.cfg:72
+#: data/multiplayer/scenarios/4p_A_New_Land.cfg:93
+#: data/multiplayer/scenarios/4p_A_New_Land.cfg:114
 #, fuzzy
 #| msgid "teamname^Team 1"
 msgid "teamname^Settlers"
@@ -61,89 +63,89 @@ msgstr "레지스탕스"
 
 #. [side]: type=Death Knight
 #. [side]: type=Orcish Sovereign
-#: data/multiplayer/scenarios/4p_A_New_Land.cfg:114
-#: data/multiplayer/scenarios/4p_A_New_Land.cfg:147
-#: data/multiplayer/scenarios/4p_A_New_Land.cfg:180
-#: data/multiplayer/scenarios/4p_A_New_Land.cfg:213
+#: data/multiplayer/scenarios/4p_A_New_Land.cfg:139
+#: data/multiplayer/scenarios/4p_A_New_Land.cfg:172
+#: data/multiplayer/scenarios/4p_A_New_Land.cfg:205
+#: data/multiplayer/scenarios/4p_A_New_Land.cfg:238
 #, fuzzy
 #| msgid "teamname^Team 1"
 msgid "teamname^Enemies"
 msgstr "레지스탕스"
 
 #. [side]: type=Death Knight
-#: data/multiplayer/scenarios/4p_A_New_Land.cfg:123
+#: data/multiplayer/scenarios/4p_A_New_Land.cfg:148
 msgid "Mal Sevu"
 msgstr ""
 
 #. [side]: type=Orcish Sovereign
-#: data/multiplayer/scenarios/4p_A_New_Land.cfg:156
+#: data/multiplayer/scenarios/4p_A_New_Land.cfg:181
 msgid "Gol Goroth"
 msgstr ""
 
 #. [side]: type=Orcish Sovereign
-#: data/multiplayer/scenarios/4p_A_New_Land.cfg:189
+#: data/multiplayer/scenarios/4p_A_New_Land.cfg:214
 msgid "Greg"
 msgstr ""
 
 #. [side]: type=Death Knight
-#: data/multiplayer/scenarios/4p_A_New_Land.cfg:222
+#: data/multiplayer/scenarios/4p_A_New_Land.cfg:247
 msgid "Mal Shiki"
 msgstr ""
 
 #. [side]
-#: data/multiplayer/scenarios/4p_A_New_Land.cfg:250
+#: data/multiplayer/scenarios/4p_A_New_Land.cfg:275
 #, fuzzy
 #| msgid "teamname^Team 1"
 msgid "teamname^Prisoners"
 msgstr "레지스탕스"
 
 #. [side]
-#: data/multiplayer/scenarios/4p_A_New_Land.cfg:274
+#: data/multiplayer/scenarios/4p_A_New_Land.cfg:299
 #, fuzzy
 #| msgid "teamname^Team 1"
 msgid "teamname^Monsters"
 msgstr "레지스탕스"
 
 #. [message]: speaker=narrator
-#: data/multiplayer/scenarios/4p_A_New_Land.cfg:473
+#: data/multiplayer/scenarios/4p_A_New_Land.cfg:498
 msgid ""
 "You destroy the mushroom mine. The northwest undead now have 10 less income."
 msgstr "버섯 광산을 파괴했습니다. 북서쪽 언데드의 수입이 10 줄어듭니다."
 
 #. [message]: speaker=narrator
-#: data/multiplayer/scenarios/4p_A_New_Land.cfg:501
+#: data/multiplayer/scenarios/4p_A_New_Land.cfg:536
 msgid ""
 "You destroy the mushroom mine. The northeast orcs now have 10 less income."
 msgstr "버섯 광산을 파괴했습니다. 북동쪽 오크의 수입이 10 줄어듭니다."
 
 #. [message]: speaker=narrator
-#: data/multiplayer/scenarios/4p_A_New_Land.cfg:529
+#: data/multiplayer/scenarios/4p_A_New_Land.cfg:574
 msgid ""
 "You destroy the mushroom mine. The southwest orcs now have 10 less income."
 msgstr "버섯 광산을 파괴했습니다. 남서쪽 오크의 수입이 10 줄어듭니다."
 
 #. [message]: speaker=narrator
-#: data/multiplayer/scenarios/4p_A_New_Land.cfg:557
+#: data/multiplayer/scenarios/4p_A_New_Land.cfg:612
 msgid ""
 "You destroy the mushroom mine. The southeast undead now have 10 less income."
 msgstr "버섯 광산을 파괴했습니다. 남동쪽 언데드의 수입이 10 줄어듭니다."
 
 #. [message]: speaker=narrator
-#: data/multiplayer/scenarios/4p_A_New_Land.cfg:672
+#: data/multiplayer/scenarios/4p_A_New_Land.cfg:737
 msgid ""
 "One of your peasants has happened upon some spiders’ nests in the north and "
 "south."
 msgstr "당신의 일꾼이 우연히 북쪽과 남쪽에 있는 거미의 둥지를 발견했습니다."
 
 #. [message]: type=Peasant
-#: data/multiplayer/scenarios/4p_A_New_Land.cfg:678
+#: data/multiplayer/scenarios/4p_A_New_Land.cfg:743
 msgid ""
 "I swear I saw somebody trapped in the spider’s web. Maybe we should rescue "
 "him?"
 msgstr "누가 거미줄에 걸려있는걸 분명히 봤어요. 우리가 구해주면 어떨까요?"
 
 #. [message]: speaker=narrator
-#: data/multiplayer/scenarios/4p_A_New_Land.cfg:700
+#: data/multiplayer/scenarios/4p_A_New_Land.cfg:765
 msgid ""
 "Move any unit next to these captives and they will join your side. The "
 "spiders guarding each captive are currently wounded, the sooner you get "
@@ -154,7 +156,7 @@ msgstr ""
 "아집니다."
 
 #. [message]: speaker=narrator
-#: data/multiplayer/scenarios/4p_A_New_Land.cfg:712
+#: data/multiplayer/scenarios/4p_A_New_Land.cfg:777
 msgid ""
 "Your men report strange sounds coming from some caves to the east and west."
 msgstr ""
@@ -162,7 +164,7 @@ msgstr ""
 "왔습니다."
 
 #. [message]
-#: data/multiplayer/scenarios/4p_A_New_Land.cfg:718
+#: data/multiplayer/scenarios/4p_A_New_Land.cfg:783
 msgid ""
 "It would seem the enemy has built some underground mushroom mines nearby — "
 "it must be where the mainstay of their resources are produced. If we could "
@@ -173,7 +175,7 @@ msgstr ""
 "희망이 그렇게까지 희박해지진 않을거야."
 
 #. [message]: speaker=narrator
-#: data/multiplayer/scenarios/4p_A_New_Land.cfg:740
+#: data/multiplayer/scenarios/4p_A_New_Land.cfg:805
 msgid ""
 "Move any unit onto these villages to destroy the mine. Each one you destroy "
 "will reduce the enemy’s income by 10."
@@ -182,12 +184,12 @@ msgstr ""
 "괴하면 적의 수입이 10 줄어듭니다."
 
 #. [message]
-#: data/multiplayer/scenarios/4p_A_New_Land.cfg:753
+#: data/multiplayer/scenarios/4p_A_New_Land.cfg:818
 msgid "This battle is nearly at an end. Victory is close at hand!"
 msgstr "전투가 막바지에 이르렀다. 승리가 눈앞에 있다!"
 
 #. [message]
-#: data/multiplayer/scenarios/4p_A_New_Land.cfg:765
+#: data/multiplayer/scenarios/4p_A_New_Land.cfg:830
 msgid ""
 "We have survived the onslaught! The tide of the battle has turned, victory "
 "cannot elude us now!"
@@ -196,29 +198,29 @@ msgstr ""
 "는 우리 손에 놓였습니다!"
 
 #. [message]: speaker=narrator
-#: data/multiplayer/scenarios/4p_A_New_Land.cfg:769
+#: data/multiplayer/scenarios/4p_A_New_Land.cfg:834
 msgid "You have won the game, but you may continue if you wish..."
 msgstr ""
 "당신은 게임에서 승리했습니다. 원한다면 더 하실 수 있습니다...(적 대장 격파로 "
 "진정한 승리를 쟁취합시다 by 한글화 팀)"
 
 #. [message]: speaker=unit
-#: data/multiplayer/scenarios/4p_A_New_Land.cfg:785
+#: data/multiplayer/scenarios/4p_A_New_Land.cfg:856
 msgid "I have fallen, but all is not lost!"
 msgstr "나는 쓰러지지만, 아직 우린 끝나지 않았다!"
 
 #. [message]: speaker=unit
-#: data/multiplayer/scenarios/4p_A_New_Land.cfg:798
+#: data/multiplayer/scenarios/4p_A_New_Land.cfg:869
 msgid "I am done for, but we have yet to lose this battle!"
 msgstr "나는 당했지만, 우린 아직 이 전투에서 패배하지 않았다!"
 
 #. [message]: speaker=unit
-#: data/multiplayer/scenarios/4p_A_New_Land.cfg:811
+#: data/multiplayer/scenarios/4p_A_New_Land.cfg:882
 msgid "Comrades, avenge me!"
 msgstr "전우들이여, 복수를!"
 
 #. [message]: speaker=unit
-#: data/multiplayer/scenarios/4p_A_New_Land.cfg:824
+#: data/multiplayer/scenarios/4p_A_New_Land.cfg:895
 msgid "Do not fear, there is hope for us still!"
 msgstr "두려워 마라, 아직 우리에겐 희망이 있다!"
 
@@ -329,9 +331,9 @@ msgstr ""
 "사들은 자동으로 당신이 선택한 목표 연구를 진전시킵니다. 대학에 있는 마법사를 "
 "오른쪽 클릭해서 목표 연구를 바꿀 수 있습니다."
 
-#. [set_menu_item]: id=anl_diplomacy
 #. [message]: speaker=narrator
 #. [option]
+#. [set_menu_item]: id=anl_diplomacy
 #: data/multiplayer/scenarios/ANL_utils/ANL_help.cfg:69
 #: data/multiplayer/scenarios/ANL_utils/ANL_help.cfg:147
 #: data/multiplayer/scenarios/ANL_utils/ANL_leader_options.cfg:217
@@ -430,24 +432,24 @@ msgstr ""
 
 #. [message]: speaker=unit
 #: data/multiplayer/scenarios/ANL_utils/ANL_leader_options.cfg:310
-#: data/multiplayer/scenarios/ANL_utils/ANL_leader_options.cfg:348
-#: data/multiplayer/scenarios/ANL_utils/ANL_leader_options.cfg:393
+#: data/multiplayer/scenarios/ANL_utils/ANL_leader_options.cfg:346
+#: data/multiplayer/scenarios/ANL_utils/ANL_leader_options.cfg:391
 msgid "Diplomatic Options"
 msgstr "외교 옵션"
 
 #. [message]: speaker=unit
-#: data/multiplayer/scenarios/ANL_utils/ANL_leader_options.cfg:313
+#: data/multiplayer/scenarios/ANL_utils/ANL_leader_options.cfg:312
 msgid "What shall I do?"
 msgstr "뭘 할까?"
 
 #. [option]
-#: data/multiplayer/scenarios/ANL_utils/ANL_leader_options.cfg:319
+#: data/multiplayer/scenarios/ANL_utils/ANL_leader_options.cfg:317
 #: data/multiplayer/scenarios/ANL_utils/ANL_worker_options.cfg:48
 msgid "Nothing"
 msgstr "아무것도 안한다"
 
 #. [option]
-#: data/multiplayer/scenarios/ANL_utils/ANL_leader_options.cfg:332
+#: data/multiplayer/scenarios/ANL_utils/ANL_leader_options.cfg:330
 msgid ""
 "<span color='green'>Donate Funds</span>\n"
 "Give 20 gold to another player"
@@ -456,18 +458,18 @@ msgstr ""
 "다른 플레이어에게 20원을 준다"
 
 #. [message]: speaker=unit
-#: data/multiplayer/scenarios/ANL_utils/ANL_leader_options.cfg:351
+#: data/multiplayer/scenarios/ANL_utils/ANL_leader_options.cfg:349
 msgid "Who will you donate funds to?"
 msgstr "누구에게 자금을 지원하겠습니까?"
 
 #. [option]
-#: data/multiplayer/scenarios/ANL_utils/ANL_leader_options.cfg:354
-#: data/multiplayer/scenarios/ANL_utils/ANL_leader_options.cfg:399
+#: data/multiplayer/scenarios/ANL_utils/ANL_leader_options.cfg:352
+#: data/multiplayer/scenarios/ANL_utils/ANL_leader_options.cfg:397
 msgid "Back"
 msgstr "뒤로"
 
 #. [option]
-#: data/multiplayer/scenarios/ANL_utils/ANL_leader_options.cfg:377
+#: data/multiplayer/scenarios/ANL_utils/ANL_leader_options.cfg:375
 msgid ""
 "<span color='green'>Share Knowledge</span>\n"
 "Help an ally with their research"
@@ -476,12 +478,12 @@ msgstr ""
 "동맹의 연구를 지원한다"
 
 #. [message]: speaker=unit
-#: data/multiplayer/scenarios/ANL_utils/ANL_leader_options.cfg:396
+#: data/multiplayer/scenarios/ANL_utils/ANL_leader_options.cfg:394
 msgid "Who will you share knowledge with?"
 msgstr "누구와 지식을 공유하겠습니까?"
 
 #. [option]
-#: data/multiplayer/scenarios/ANL_utils/ANL_leader_options.cfg:435
+#: data/multiplayer/scenarios/ANL_utils/ANL_leader_options.cfg:433
 msgid ""
 "<span color='green'>Negotiate with the Dwarves</span>\n"
 "Lets you recruit a Dwarvish unit\n"
@@ -490,11 +492,11 @@ msgid ""
 msgstr ""
 "<span color='green'>드워프와 협상하기</span>\n"
 "드워프 유닛을 소집할 수 있게 해준다\n"
-"협상 성과: $player_$side_number|.leader_option_1.progress|/$player_"
-"$side_number|.leader_option_1.target"
+"협상 성과: $player_$side_number|.leader_option_1.progress|/"
+"$player_$side_number|.leader_option_1.target"
 
 #. [option]
-#: data/multiplayer/scenarios/ANL_utils/ANL_leader_options.cfg:491
+#: data/multiplayer/scenarios/ANL_utils/ANL_leader_options.cfg:489
 msgid ""
 "<span color='green'>Negotiate with the Elves</span>\n"
 "Lets you recruit an Elvish unit\n"
@@ -503,17 +505,17 @@ msgid ""
 msgstr ""
 "<span color='green'>엘프와 협상하기</span>\n"
 "엘프 유닛을 소집할 수 있게 해준다\n"
-"협상 성과: $player_$side_number|.leader_option_2.progress|/$player_"
-"$side_number|.leader_option_2.target"
+"협상 성과: $player_$side_number|.leader_option_2.progress|/"
+"$player_$side_number|.leader_option_2.target"
 
 #. [message]: speaker=narrator
-#: data/multiplayer/scenarios/ANL_utils/ANL_leader_options.cfg:559
-#: data/multiplayer/scenarios/ANL_utils/ANL_leader_options.cfg:591
+#: data/multiplayer/scenarios/ANL_utils/ANL_leader_options.cfg:557
+#: data/multiplayer/scenarios/ANL_utils/ANL_leader_options.cfg:587
 msgid "Negotiation Complete"
 msgstr "협상 완료"
 
 #. [message]: speaker=narrator
-#: data/multiplayer/scenarios/ANL_utils/ANL_leader_options.cfg:562
+#: data/multiplayer/scenarios/ANL_utils/ANL_leader_options.cfg:559
 msgid ""
 "Our talks are complete — the Dwarves will gladly fight by your side. Which "
 "of our brethren do you want to recruit?"
@@ -522,7 +524,7 @@ msgstr ""
 "리 형제들 중 누구를 소집하고 싶소?"
 
 #. [message]: speaker=narrator
-#: data/multiplayer/scenarios/ANL_utils/ANL_leader_options.cfg:594
+#: data/multiplayer/scenarios/ANL_utils/ANL_leader_options.cfg:589
 msgid ""
 "Our talks are complete — the Elves shall aid you in this battle. Which our "
 "of kin do you wish to recruit?"
@@ -589,9 +591,9 @@ msgstr "새로운 소집 부대를 선택"
 #. [message]: speaker=unit
 #. [message]: speaker=narrator
 #: data/multiplayer/scenarios/ANL_utils/ANL_research_options.cfg:69
-#: data/multiplayer/scenarios/ANL_utils/ANL_research_options.cfg:207
-#: data/multiplayer/scenarios/ANL_utils/ANL_research_options.cfg:239
-#: data/multiplayer/scenarios/ANL_utils/ANL_research_options.cfg:266
+#: data/multiplayer/scenarios/ANL_utils/ANL_research_options.cfg:205
+#: data/multiplayer/scenarios/ANL_utils/ANL_research_options.cfg:237
+#: data/multiplayer/scenarios/ANL_utils/ANL_research_options.cfg:264
 msgid "Study Complete"
 msgstr "연구 완료"
 
@@ -611,7 +613,7 @@ msgid "Research"
 msgstr "연구"
 
 #. [message]: speaker=unit
-#: data/multiplayer/scenarios/ANL_utils/ANL_research_options.cfg:126
+#: data/multiplayer/scenarios/ANL_utils/ANL_research_options.cfg:125
 msgid ""
 "We are currently studying $player_$side_number|.research."
 "target_language_name|. To which end would you have our scholars devote their "
@@ -627,32 +629,32 @@ msgstr ""
 "Our mines produce $player_$side_number|.mining.gold|g\n"
 
 #. [option]
-#: data/multiplayer/scenarios/ANL_utils/ANL_research_options.cfg:134
+#: data/multiplayer/scenarios/ANL_utils/ANL_research_options.cfg:132
 msgid "Continue as before"
 msgstr "하던 연구를 계속"
 
 #. [option]
-#: data/multiplayer/scenarios/ANL_utils/ANL_research_options.cfg:144
+#: data/multiplayer/scenarios/ANL_utils/ANL_research_options.cfg:142
 msgid ""
 "<span color='green'>Agriculture</span>\n"
 "Farmers produce +1 gold\n"
-"Study Progress: $player_$side_number|.farming.progress|/$player_"
-"$side_number|.farming.target"
+"Study Progress: $player_$side_number|.farming.progress|/"
+"$player_$side_number|.farming.target"
 msgstr ""
 "<span color='green'>농업</span>\n"
 "농부들의 생산량이 1원 증가\n"
 "연구 진척도: $player_$side_number|.farming.progress|/$player_$side_number|."
 "farming.target"
 
-#. [research]
 #. [command]
-#: data/multiplayer/scenarios/ANL_utils/ANL_research_options.cfg:148
+#. [research]
+#: data/multiplayer/scenarios/ANL_utils/ANL_research_options.cfg:146
 #: data/multiplayer/scenarios/ANL_utils/ANL_special_macros.cfg:99
 msgid "agriculture"
 msgstr "농업"
 
 #. [option]
-#: data/multiplayer/scenarios/ANL_utils/ANL_research_options.cfg:156
+#: data/multiplayer/scenarios/ANL_utils/ANL_research_options.cfg:154
 msgid ""
 "<span color='green'>Mining</span>\n"
 "Miners produce +1 gold\n"
@@ -665,17 +667,17 @@ msgstr ""
 "mining.target"
 
 #. [command]
-#: data/multiplayer/scenarios/ANL_utils/ANL_research_options.cfg:160
+#: data/multiplayer/scenarios/ANL_utils/ANL_research_options.cfg:158
 msgid "mining"
 msgstr "광업"
 
 #. [option]
-#: data/multiplayer/scenarios/ANL_utils/ANL_research_options.cfg:168
+#: data/multiplayer/scenarios/ANL_utils/ANL_research_options.cfg:166
 msgid ""
 "<span color='green'>Warfare</span>\n"
 "Allows you to recruit a new type of unit\n"
-"Study Progress: $player_$side_number|.warfare.progress|/$player_"
-"$side_number|.warfare.target"
+"Study Progress: $player_$side_number|.warfare.progress|/"
+"$player_$side_number|.warfare.target"
 msgstr ""
 "<span color='green'>전쟁</span>\n"
 "새로운 종류의 유닛을 소집할 수 있게 함\n"
@@ -683,12 +685,12 @@ msgstr ""
 "warfare.target"
 
 #. [command]
-#: data/multiplayer/scenarios/ANL_utils/ANL_research_options.cfg:179
+#: data/multiplayer/scenarios/ANL_utils/ANL_research_options.cfg:177
 msgid "warfare"
 msgstr "전쟁"
 
 #. [message]: speaker=narrator
-#: data/multiplayer/scenarios/ANL_utils/ANL_research_options.cfg:209
+#: data/multiplayer/scenarios/ANL_utils/ANL_research_options.cfg:207
 msgid ""
 "$player_$side_number|.name|’s farms now produce $player_$side_number|."
 "farming.gold gold."
@@ -697,7 +699,7 @@ msgstr ""
 "원을 생산합니다."
 
 #. [message]: speaker=narrator
-#: data/multiplayer/scenarios/ANL_utils/ANL_research_options.cfg:241
+#: data/multiplayer/scenarios/ANL_utils/ANL_research_options.cfg:239
 msgid ""
 "$player_$side_number|.name|’s mines now produce $player_$side_number|.mining."
 "gold gold."
@@ -706,7 +708,7 @@ msgstr ""
 "gold 원이 나옵니다."
 
 #. [message]: speaker=narrator
-#: data/multiplayer/scenarios/ANL_utils/ANL_research_options.cfg:268
+#: data/multiplayer/scenarios/ANL_utils/ANL_research_options.cfg:266
 msgid ""
 "$player_$side_number|.name|, we have finished researching warfare. Right-"
 "click on a mage in a university to select a unit to recruit."
@@ -743,7 +745,7 @@ msgstr "풀밭으로 전환"
 #: data/multiplayer/scenarios/ANL_utils/ANL_worker_options.cfg:65
 #: data/multiplayer/scenarios/ANL_utils/ANL_worker_options.cfg:84
 #: data/multiplayer/scenarios/ANL_utils/ANL_worker_options.cfg:369
-#: data/multiplayer/scenarios/ANL_utils/ANL_worker_options.cfg:578
+#: data/multiplayer/scenarios/ANL_utils/ANL_worker_options.cfg:582
 msgid "Cost: 0g"
 msgstr "비용: 0원"
 
@@ -769,7 +771,7 @@ msgstr "성채 건축"
 
 #. [option]: description=<span size='small'>
 #: data/multiplayer/scenarios/ANL_utils/ANL_worker_options.cfg:124
-#: data/multiplayer/scenarios/ANL_utils/ANL_worker_options.cfg:525
+#: data/multiplayer/scenarios/ANL_utils/ANL_worker_options.cfg:529
 msgid "Cost: 6g"
 msgstr "비용: 6원"
 
@@ -865,22 +867,22 @@ msgid "Earns: 3g"
 msgstr "수입: 3원"
 
 #. [option]: description=<span size='small'>
-#: data/multiplayer/scenarios/ANL_utils/ANL_worker_options.cfg:524
+#: data/multiplayer/scenarios/ANL_utils/ANL_worker_options.cfg:528
 msgid "Build a Keep"
 msgstr "본성 건축"
 
 #. [option]: description=<span size='small'>
-#: data/multiplayer/scenarios/ANL_utils/ANL_worker_options.cfg:550
+#: data/multiplayer/scenarios/ANL_utils/ANL_worker_options.cfg:554
 msgid "Establish University"
 msgstr "대학 건립"
 
 #. [option]: description=<span size='small'>
-#: data/multiplayer/scenarios/ANL_utils/ANL_worker_options.cfg:551
+#: data/multiplayer/scenarios/ANL_utils/ANL_worker_options.cfg:555
 msgid "Cost: 7g"
 msgstr "비용: 7원"
 
 #. [option]: description=<span size='small'>
-#: data/multiplayer/scenarios/ANL_utils/ANL_worker_options.cfg:577
+#: data/multiplayer/scenarios/ANL_utils/ANL_worker_options.cfg:581
 msgid "Clear the Ground"
 msgstr "땅을 청소한다"
 

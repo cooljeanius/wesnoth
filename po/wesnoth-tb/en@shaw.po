@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: en@shaw\n"
 "Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
-"POT-Creation-Date: 2020-03-09 23:11 UTC\n"
+"POT-Creation-Date: 2023-08-20 01:56 UTC\n"
 "PO-Revision-Date: 2009-10-10 23:40-0400\n"
 "Last-Translator: Arc Riley <arcriley@ubuntu.com>\n"
 "Language-Team: Shavian English <ubuntu-l10n-en-shaw@lists.launchpad.net>\n"
@@ -52,7 +52,9 @@ msgstr "(𐑗𐑨𐑤𐑩𐑯𐑡𐑦𐑙)"
 
 #. [campaign]: id=Two_Brothers
 #: data/campaigns/Two_Brothers/_main.cfg:19
-msgid "Knight"
+#, fuzzy
+#| msgid "Knight"
+msgid "Grand Knight"
 msgstr "𐑯𐑲𐑑"
 
 #. [campaign]: id=Two_Brothers
@@ -109,13 +111,22 @@ msgid "Rooting Out a Mage"
 msgstr "𐑮𐑵𐑑𐑦𐑙 𐑬𐑑 𐑩 𐑥𐑱𐑡"
 
 #. [part]
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:50
+#. This text is shown with the journey map, showing the village in the foothills along the route between Aldril and Dan’Tonk.
+#. I'm assuming the beacons either use smoke signals or basic fire signals, with a few agreed ones to request goods or indicate that surplus is for sale.
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:52
+#, fuzzy
+#| msgid ""
+#| "The remote freehold of Maghre in the western reaches of the kingdom of "
+#| "Wesnoth was once a peaceful place, its inhabitants largely unaware of the "
+#| "comings and goings of the wider world. Wars and the rumor of wars touched "
+#| "them not, until the day a dark mage settled in the region and began "
+#| "seeking sacrifices for his evil summonings."
 msgid ""
-"The remote freehold of Maghre in the western reaches of the kingdom of "
+"The remote freehold of Maghre in the western reaches of the Kingdom of "
 "Wesnoth was once a peaceful place, its inhabitants largely unaware of the "
 "comings and goings of the wider world. Wars and the rumor of wars touched "
-"them not, until the day a dark mage settled in the region and began seeking "
-"sacrifices for his evil summonings."
+"them not. Even merchants were rarely seen, although caravans between Aldril "
+"and Dan’Tonk might send a wagon when called by the beacon tower."
 msgstr ""
 "𐑞 𐑮𐑦𐑥𐑴𐑑 𐑓𐑮𐑰𐑣𐑴𐑤𐑛 𐑝 ·𐑥𐑨𐑜𐑮𐑰 𐑦𐑯 𐑞 𐑢𐑧𐑕𐑑𐑼𐑯 𐑮𐑰𐑗𐑩𐑟 𐑝 𐑞 𐑒𐑦𐑙𐑛𐑩𐑥 𐑝 ·𐑢𐑧𐑕𐑯𐑷𐑔 𐑢𐑪𐑟 𐑢𐑳𐑯𐑕 𐑩 "
 "𐑐𐑰𐑕𐑓𐑩𐑤 𐑐𐑤𐑱𐑕, 𐑦𐑑𐑕 𐑦𐑯𐑣𐑨𐑚𐑦𐑑𐑩𐑯𐑑𐑕 𐑤𐑸𐑡𐑤𐑦 𐑩𐑯𐑩𐑢𐑺 𐑝 𐑞 𐑒𐑩𐑥𐑦𐑙𐑟 𐑯 𐑜𐑴𐑦𐑙𐑟 𐑝 𐑞 𐑢𐑲𐑛𐑼 𐑢𐑻𐑤𐑛. "
@@ -123,9 +134,12 @@ msgstr ""
 "𐑚𐑩𐑜𐑨𐑯 𐑕𐑰𐑒𐑦𐑙 𐑕𐑨𐑒𐑮𐑦𐑓𐑲𐑕𐑩𐑟 𐑓𐑹 𐑣𐑦𐑟 𐑰𐑝𐑩𐑤 𐑕𐑳𐑥𐑪𐑯𐑦𐑙𐑕."
 
 #. [part]
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:54
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:57
 #, fuzzy
 msgid ""
+"Then came the day that a dark mage settled in the region and began seeking "
+"sacrifices for his summonings.\n"
+"\n"
 "Skeletons and zombies killed cattle and fired fields. <i>“Fear and obey "
 "Mordak the Mage!”</i> they cried in fell voices as they did their foul "
 "deeds. People vanished from isolated farmsteads. Men and women began to fear "
@@ -139,7 +153,7 @@ msgstr ""
 "𐑥𐑹 𐑞𐑨𐑯 𐑩 𐑛𐑱'𐑟 𐑮𐑲𐑛 𐑛𐑦𐑕𐑑𐑩𐑯𐑑, 𐑯 𐑥𐑧𐑕𐑩𐑯𐑡𐑼𐑟 𐑕𐑧𐑯𐑑 𐑑 𐑕𐑰𐑒 𐑣𐑦𐑟 𐑣𐑧𐑤𐑐 𐑛𐑦𐑛 𐑯𐑪𐑑 𐑮𐑦𐑑𐑻𐑯."
 
 #. [part]
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:58
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:63
 #, fuzzy
 #| msgid ""
 #| "There was a man named Bjarn who had shown talent as a mage when he was "
@@ -166,7 +180,7 @@ msgstr ""
 "𐑞 𐑮𐑧𐑕𐑑."
 
 #. [part]
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:62
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:68
 #, fuzzy
 #| msgid ""
 #| "Now Bjarn had a brother named Arne who had also left Maghre to seek his "
@@ -178,10 +192,9 @@ msgstr ""
 msgid ""
 "Now Baran had a brother named Arvith who had also left Maghre to seek his "
 "fortune, and had become the leader of a small band of horsemen who hired out "
-"as guards to merchant caravans. Fortunate it was for all that when Baran was "
-"but an apprentice mage, he had made a pair of amulets for himself and his "
-"brother, with which they might call to each other when in dire need. Baran "
-"sent out that call."
+"as guards to merchant caravans. Fortunate it was for all that, in better "
+"times, the brothers had talked of using trade beacons for other signals when "
+"in dire need. Baran sent out that call."
 msgstr ""
 "𐑯𐑬 ·𐑚𐑿𐑸𐑥 𐑣𐑨𐑛 𐑩 𐑚𐑮𐑳𐑞𐑼 𐑯𐑱𐑥𐑛 ·𐑸𐑯𐑰 𐑣𐑵 𐑣𐑨𐑛 𐑷𐑤𐑕𐑴 𐑤𐑧𐑓𐑑 ·𐑥𐑨𐑜𐑮𐑰 𐑑 𐑕𐑰𐑒 𐑣𐑦𐑟 𐑓𐑹𐑑𐑿𐑯, 𐑯 "
 "𐑣𐑨𐑛 𐑚𐑦𐑒𐑳𐑥 𐑞 𐑤𐑰𐑛𐑻 𐑝 𐑩 𐑕𐑥𐑷𐑤 𐑚𐑨𐑯𐑛 𐑝 𐑣𐑹𐑕𐑥𐑩𐑯 𐑣𐑵 𐑣𐑲𐑼𐑛 𐑬𐑑 𐑨𐑟 𐑜𐑸𐑛𐑟 𐑑 𐑥𐑻𐑗𐑩𐑯𐑑 "
@@ -190,37 +203,36 @@ msgstr ""
 "𐑦𐑯 𐑛𐑲𐑮 𐑯𐑰𐑛. ·𐑚𐑿𐑸𐑥 𐑕𐑧𐑯𐑑 𐑬𐑑 𐑞𐑨𐑑 𐑒𐑷𐑤."
 
 #. [part]
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:66
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:72
 msgid ""
 "12 V, 363 YW\n"
 "Excerpt from the journal of Baran of Maghre\n"
 "\n"
 "If I could but face this ‘Mordak’! I think my magic might prove stronger "
 "than his. But he bides in the hills, well-guarded by his servants, and I "
-"muster frightened peasants to fight his minions with blades and sticks. I "
-"need my brother; he always had a better head for battle than I.\n"
+"muster frightened peasants to fight his minions with blades and sticks.\n"
 "\n"
-"Will he heed the call? I do not know if he has kept the amulet; we have not "
-"spoken since that evil day at Toen Caric. If he will not come for me, "
-"perhaps he will return to aid our village in its hour of desperate need."
+"I need my brother; he always had a better head for battle than I. Yet we "
+"have not spoken since that evil day at Toen Caric. If he will not come for "
+"me, perhaps he will return to aid our village in its hour of desperate need."
 msgstr ""
 
 #. [part]
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:75
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:81
 #, fuzzy
 #| msgid ""
 #| "Heeding the call of his amulet, Arne gathered such men as he could and "
 #| "hurried to Maghre to help Bjarn."
 msgid ""
-"Heeding the call of his amulet, Arvith gathered such men as he could and "
-"hurried to Maghre to help Baran."
+"Heeding the call, Arvith gathered such men as he could and hurried to Maghre "
+"to help Baran."
 msgstr ""
 "𐑣𐑰𐑛𐑦𐑙 𐑞 𐑒𐑷𐑤 𐑝 𐑣𐑦𐑟 𐑨𐑥𐑘𐑩𐑤𐑩𐑑, ·𐑸𐑯𐑰 𐑜𐑨𐑞𐑼𐑛 𐑕𐑳𐑗 𐑥𐑧𐑯 𐑨𐑟 𐑣𐑰 𐑒𐑫𐑛 𐑯 𐑣𐑳𐑮𐑦𐑛 𐑑 ·𐑥𐑨𐑜𐑮𐑰 𐑑 "
 "𐑣𐑧𐑤𐑐 ·𐑚𐑿𐑸𐑥."
 
 #. [side]
 #. [side]: type=Longbowman, id=Reeve Hoban
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:93
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:99
 #: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:66
 #: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:56
 #: data/campaigns/Two_Brothers/scenarios/04_Return_to_the_Village.cfg:58
@@ -228,11 +240,11 @@ msgstr ""
 msgid "Humans"
 msgstr "𐑣𐑿𐑥𐑩𐑯𐑟"
 
+#. [side]: type=Dark Sorcerer, id=Mordak
 #. [side]: type=Dark Sorcerer, id=Rotharik
 #. [side]
-#. [side]: type=Dark Sorcerer, id=Mordak
 #. [side]: type=Orcish Warlord, id=Tairach
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:114
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:120
 #: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:81
 #: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:131
 #: data/campaigns/Two_Brothers/scenarios/04_Return_to_the_Village.cfg:82
@@ -240,63 +252,63 @@ msgid "Enemies"
 msgstr "𐑧𐑯𐑦𐑥𐑦𐑟"
 
 #. [side]: type=Dark Sorcerer, id=Mordak
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:119
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:125
 msgid "Mordak"
 msgstr "·𐑥𐑹𐑛𐑭𐑒"
 
 #. [event]
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:146
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:152
 msgid "Alwyn"
 msgstr "·𐑨𐑤𐑢𐑦𐑯"
 
 #. [event]
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:147
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:153
 msgid "Brent"
 msgstr "·𐑚𐑮𐑧𐑯𐑑"
 
 #. [event]
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:148
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:154
 msgid "Cadell"
 msgstr "·𐑒𐑭𐑛𐑱𐑤"
 
 #. [event]
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:149
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:155
 msgid "Dannen"
 msgstr "·𐑛𐑨𐑯𐑩𐑯"
 
 #. [event]
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:150
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:156
 msgid "Efran"
 msgstr "·𐑰𐑓𐑮𐑨𐑯"
 
 #. [event]
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:151
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:157
 msgid "Faren"
 msgstr ""
 
 #. [event]
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:154
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:160
 msgid "Tarek"
 msgstr ""
 
 #. [event]
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:155
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:161
 msgid "Hann"
 msgstr ""
 
 #. [event]
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:156
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:162
 msgid "Magrid"
 msgstr ""
 
 #. [objective]: condition=win
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:161
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:167
 msgid "Slay Mordak, the evil mage"
 msgstr "𐑕𐑤𐑱 ·𐑥𐑹𐑛𐑭𐑒, 𐑞 𐑰𐑝𐑩𐑤 𐑥𐑱𐑡"
 
 #. [objective]: condition=lose
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:165
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:292
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:171
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:270
 #: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:339
 #: data/campaigns/Two_Brothers/scenarios/04_Return_to_the_Village.cfg:143
 #: data/campaigns/Two_Brothers/scenarios/04_Return_to_the_Village.cfg:288
@@ -306,34 +318,34 @@ msgid "Death of Arvith"
 msgstr "𐑛𐑧𐑔 𐑝 ·𐑸𐑯𐑰"
 
 #. [objectives]
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:176
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:182
 msgid ""
 "Use footpads as fodder to protect your loyal units and attack during the day "
 "to minimize the damage your forces take."
 msgstr ""
 
 #. [message]: speaker=Baran
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:186
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:192
 msgid "Greetings, brother, and welcome home."
 msgstr ""
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:191
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:197
 msgid "Hail."
 msgstr ""
 
 #. [message]: speaker=Baran
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:196
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:202
 msgid "Is that all, Arvith? I understand, but..."
 msgstr ""
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:201
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:207
 msgid "You called, and I came; be content with that. What ails Maghre?"
 msgstr ""
 
 #. [message]: speaker=Baran
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:206
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:212
 #, fuzzy
 #| msgid ""
 #| "A dark mage has come upon us; his creatures call him Mordak. They have "
@@ -351,7 +363,7 @@ msgstr ""
 "𐑑𐑱𐑒𐑩𐑯 𐑳𐑐 𐑢𐑧𐑐𐑩𐑯𐑟 𐑚𐑳𐑑 𐑞𐑱 𐑸 𐑯𐑪𐑑 𐑑𐑮𐑱𐑯𐑛 𐑓𐑲𐑑𐑻𐑟; 𐑚𐑳𐑑 𐑢𐑰 𐑯𐑰𐑛 𐑿𐑼 𐑥𐑧𐑯, 𐑯 𐑿 𐑑 𐑤𐑧𐑛 𐑞𐑧𐑥."
 
 #. [message]: speaker=Baran
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:211
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:217
 #, fuzzy
 msgid ""
 "I can feel Mordak’s foul touch on the hidden currents of the earth and air. "
@@ -361,14 +373,14 @@ msgstr ""
 "𐑝 𐑣𐑽, 𐑲 𐑢𐑫𐑛 𐑕𐑱 𐑯𐑪𐑑 𐑥𐑹 𐑞𐑨𐑯 𐑑𐑵 𐑛𐑱𐑟' 𐑮𐑲𐑛."
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:216
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:222
 msgid ""
 "All right. I will do this for the village. Can you keep the mage off our "
 "backs?"
 msgstr ""
 
 #. [message]: speaker=Baran
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:221
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:227
 #, fuzzy
 msgid ""
 "I will go stealthily with a handful of our best scouts and woodsmen. While "
@@ -382,12 +394,12 @@ msgstr ""
 "𐑢𐑪𐑑 𐑲𐑞𐑼 𐑩𐑤𐑴𐑯 𐑥𐑱 𐑯𐑪𐑑."
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:226
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:232
 msgid "... Aye. Just make sure you’re there when we need you."
 msgstr ""
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:237
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:243
 #, fuzzy
 #| msgid ""
 #| "Bjarn should be in position by now. Press them, distract the adept so "
@@ -400,17 +412,17 @@ msgstr ""
 "𐑣𐑦𐑟 𐑑𐑮𐑨𐑐!"
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:248
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:254
 msgid "Baran has not made his attack!"
 msgstr ""
 
 #. [message]: role=Mercenary
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:253
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:259
 msgid "Could he have abandoned us?"
 msgstr ""
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:258
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:264
 #, fuzzy
 msgid ""
 "No... No. This is something else. I’m worried about him... but right now it "
@@ -420,23 +432,23 @@ msgstr ""
 "𐑞𐑦𐑕 ·𐑥𐑹𐑛𐑭𐑒 𐑬𐑼𐑕𐑧𐑤𐑝𐑟!"
 
 #. [message]: speaker=unit
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:270
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:276
 msgid "Argh!"
 msgstr "𐑸𐑜!"
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:275
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:281
 msgid "Good work, men! But what has become of my brother?"
 msgstr "𐑜𐑫𐑛 𐑢𐑻𐑒, 𐑥𐑧𐑯! 𐑚𐑳𐑑 𐑢𐑪𐑑 𐑣𐑨𐑟 𐑚𐑦𐑒𐑳𐑥 𐑝 𐑥𐑲 𐑚𐑮𐑳𐑞𐑼?"
 
 #. [message]: speaker=unit
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:280
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:286
 #, fuzzy
 msgid "Worried about him, are you? E-he-he... hergh... gaargh..."
 msgstr "𐑢𐑳𐑮𐑦𐑛 𐑩𐑚𐑬𐑑 𐑣𐑦𐑥, 𐑸 𐑿? 𐑰-𐑣𐑰-𐑣𐑰..𐑣𐑧𐑮𐑜...𐑜𐑱𐑮𐑜..."
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:290
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:296
 #, fuzzy
 #| msgid ""
 #| "There’s nothing more to be had from this one; we will have to search for "
@@ -448,7 +460,7 @@ msgstr ""
 "𐑞𐑺'𐑟 𐑯𐑳𐑔𐑦𐑙 𐑥𐑹 𐑑 𐑚𐑰 𐑣𐑨𐑛 𐑓𐑮𐑪𐑥 𐑞𐑦𐑕 𐑢𐑳𐑯; 𐑢𐑰 𐑢𐑦𐑤 𐑣𐑨𐑝 𐑑 𐑕𐑻𐑗 𐑓𐑹 ·𐑚𐑿𐑸𐑥 𐑬𐑼𐑕𐑧𐑤𐑝𐑟!"
 
 #. [message]: role=Reporter
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:312
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:318
 #, fuzzy
 #| msgid ""
 #| "Sir, our scouts report that Bjarn was seen captured and carried away "
@@ -459,18 +471,18 @@ msgid ""
 msgstr "𐑕𐑻, 𐑬𐑼 𐑕𐑒𐑬𐑑𐑕 𐑮𐑩𐑐𐑹𐑑 𐑞𐑨𐑑 ·𐑚𐑿𐑸𐑥 𐑢𐑪𐑟 𐑕𐑰𐑯 𐑒𐑨𐑐𐑗𐑻𐑛 𐑯 𐑒𐑨𐑮𐑦𐑛 𐑩𐑢𐑱 𐑓𐑻𐑞𐑼 𐑯𐑹𐑔!"
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:317
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:323
 msgid "That they should dare this! We will give chase at once."
 msgstr "𐑞𐑨𐑑 𐑞𐑱 𐑖𐑫𐑛 𐑛𐑺 𐑞𐑦𐑕! 𐑢𐑰 𐑢𐑦𐑤 𐑜𐑦𐑝 𐑗𐑱𐑕 𐑨𐑑 𐑢𐑳𐑯𐑕."
 
 #. [message]: speaker=Mordak
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:338
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:349
 #, fuzzy
 msgid "Your brother’s plan to ambush me has failed. He is our prisoner now."
 msgstr "𐑿𐑼 𐑚𐑮𐑳𐑞𐑼'𐑟 𐑐𐑤𐑨𐑯 𐑑 𐑨𐑥𐑚𐑫𐑖 𐑥𐑰 𐑣𐑨𐑟 𐑓𐑱𐑤𐑛. 𐑣𐑰 𐑦𐑟 𐑬𐑼 𐑐𐑮𐑦𐑟𐑩𐑯𐑼 𐑯𐑬."
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:343
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:354
 #, fuzzy
 msgid ""
 "My brother, kidnapped? I have failed you, Baran! And even now Mordak’s "
@@ -480,12 +492,12 @@ msgstr ""
 "𐑞 𐑝𐑦𐑤𐑦𐑡!"
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:359
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:370
 msgid "I hear these creatures are nigh-immune to our weapons, let us see!"
 msgstr "𐑲 𐑣𐑽 𐑞𐑰𐑟 𐑒𐑮𐑰𐑗𐑼𐑟 𐑸 𐑯𐑲-𐑦𐑥𐑿𐑯 𐑑 𐑬𐑼 𐑢𐑧𐑐𐑩𐑯𐑟, 𐑤𐑧𐑑 𐑳𐑕 𐑕𐑰!"
 
 #. [message]: speaker=second_unit
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:375
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:386
 msgid "That was not so hard!"
 msgstr "𐑞𐑨𐑑 𐑢𐑪𐑟 𐑯𐑪𐑑 𐑕𐑴 𐑣𐑸𐑛!"
 
@@ -509,7 +521,9 @@ msgid ""
 "hunch was to head north into the borderlands, where the necromancer’s "
 "minions could safely hide; everywhere else is more farmland. At first I "
 "thought the search might be useless, but late in the first day we found a "
-"set of tracks. Some of them had been made by skeletal feet.\n"
+"set of tracks. Some of them had been made by skeletal feet, although after "
+"their first campsite the tracks were merely those of men carrying heavy "
+"loads.\n"
 "\n"
 "We’re close enough to be certain now: those tracks are heading into the Grey "
 "Woods. No one from Maghre or any of the other villages has gone into that "
@@ -560,76 +574,105 @@ msgid "Muff Toras"
 msgstr "·𐑥𐑩𐑓 ·𐑑𐑹𐑨𐑕"
 
 #. [objective]: condition=win
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:261
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:239
 msgid "Fight your way through the woods before the kidnappers escape"
 msgstr "𐑓𐑲𐑑 𐑿𐑼 𐑢𐑱 𐑔𐑮𐑵 𐑞 𐑢𐑫𐑛𐑟 𐑚𐑦𐑓𐑹 𐑞 𐑒𐑦𐑛𐑯𐑨𐑐𐑻𐑟 𐑦𐑕𐑒𐑱𐑐"
 
 #. [objective]: condition=win
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:278
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:256
 msgid "Catch the kidnappers"
 msgstr "𐑒𐑨𐑗 𐑞 𐑒𐑦𐑛𐑯𐑨𐑐𐑻𐑟"
 
 #. [objective]: condition=win
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:288
-msgid "Kill the Dark Adept before his reinforcements arrive"
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:266
+#, fuzzy
+#| msgid "Kill the Dark Adept before his reinforcements arrive"
+msgid "Kill the Dark Adept before more elves arrive"
 msgstr "𐑒𐑦𐑤 𐑞 𐑛𐑸𐑒 𐑩𐑛𐑧𐑐𐑑 𐑚𐑦𐑓𐑹 𐑣𐑦𐑟 𐑮𐑦𐑦𐑯𐑓𐑹𐑕𐑥𐑩𐑯𐑑𐑕 𐑩𐑮𐑲𐑝"
 
 #. [objectives]
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:304
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:282
 msgid ""
-"The Elvish forces are spread out. Seek to fight them one at a time with "
+"The elvish forces are spread out. Seek to fight them one at a time with "
 "several of your units."
 msgstr ""
 
 #. [objectives]
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:317
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:295
 msgid ""
 "Use horsemen or footpads to quickly explore the shrouded woods to locate the "
 "kidnappers."
 msgstr ""
 
 #. [objectives]
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:332
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:310
 msgid ""
 "Separate the Dark Adept from his guards and attack in force for an easy kill."
 msgstr ""
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:375
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:353
 msgid ""
 "Come on, men. A stroll through such lovely green woods, what could be finer?"
 msgstr "𐑒𐑳𐑥 𐑪𐑯, 𐑥𐑧𐑯. 𐑩 𐑕𐑑𐑮𐑴𐑤 𐑔𐑮𐑵 𐑕𐑳𐑗 𐑤𐑳𐑝𐑤𐑰 𐑜𐑮𐑰𐑯 𐑢𐑫𐑛𐑟, 𐑢𐑪𐑑 𐑒𐑫𐑛 𐑚𐑰 𐑓𐑦𐑯𐑼?"
 
 #. [message]: speaker=Nil-Galion
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:380
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:358
 msgid "You there! Halt and explain yourself."
 msgstr "𐑿 𐑞𐑺! 𐑣𐑷𐑤𐑑 𐑯 𐑦𐑒𐑕𐑐𐑤𐑱𐑯 𐑿𐑼𐑕𐑧𐑤𐑓."
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:385
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:363
 #, fuzzy
 msgid "We’re chasing after some men who kidnapped my brother!"
 msgstr "𐑢𐑰'𐑼 𐑗𐑱𐑕𐑦𐑙 𐑭𐑓𐑑𐑼 𐑕𐑳𐑥 𐑥𐑧𐑯 𐑣𐑵 𐑒𐑦𐑛𐑯𐑨𐑐𐑑 𐑥𐑲 𐑚𐑮𐑳𐑞𐑼!"
 
 #. [message]: speaker=Nil-Galion
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:390
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:368
 msgid ""
-"Those men told me their prisoner had attempted to murder their master, and "
-"warned that evil men would follow him. Advance no further, or you will die."
+"Those men caught their prisoner practicing necromancy; for your sake, I hope "
+"he was not your brother. Assume that the man they caught was your brother’s "
+"murderer, and rest assured that the grey mages will release all of the souls "
+"that their prisoner’s evil magic has bound to this world."
 msgstr ""
-"𐑞𐑴𐑟 𐑥𐑧𐑯 𐑑𐑴𐑤𐑛 𐑥𐑰 𐑞𐑺 𐑐𐑮𐑦𐑟𐑩𐑯𐑼 𐑣𐑨𐑛 𐑩𐑑𐑧𐑥𐑐𐑑𐑩𐑛 𐑑 𐑥𐑻𐑛𐑼 𐑞𐑺 𐑥𐑭𐑕𐑑𐑼, 𐑯 𐑢𐑹𐑯𐑛 𐑞𐑨𐑑 𐑰𐑝𐑩𐑤 𐑥𐑧𐑯 "
-"𐑢𐑫𐑛 𐑓𐑪𐑤𐑴 𐑣𐑦𐑥. 𐑩𐑛𐑝𐑭𐑯𐑕 𐑯𐑴 𐑓𐑻𐑞𐑼, 𐑹 𐑿 𐑢𐑦𐑤 𐑛𐑲."
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:395
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:379
+msgid ""
+"We killed the necromancer on the battlefield! I struck the killing blow "
+"myself."
+msgstr ""
+
+#. [message]: speaker=Arvith
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:385
+msgid ""
+"We killed the necromancer on the battlefield! I saw the killing blow with my "
+"own eyes."
+msgstr ""
+
+#. [message]: speaker=Nil-Galion
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:392
+msgid ""
+"We heard the sounds of battle three days ago, but the foul reek of death was "
+"unmistakable as the prisoner passed us; if your brother really is the "
+"prisoner then he is also a necromancer. Remember your brother as we all hope "
+"he was, and know that the prisoner’s fate will be revenge as dire as you "
+"could wish.\n"
+"\n"
+"Either way, nothing will be gained by your intrusion into our woods. Now "
+"advance no further, for we will defend our land."
+msgstr ""
+
+#. [message]: speaker=Arvith
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:399
 #, fuzzy
 msgid ""
-"So much for those ghost stories. Mere elves will not stop me from freeing "
-"Baran!"
+"So much for those ghost stories, but even ghosts might have been more "
+"observant than these elves. Still, they will not stop me from freeing Baran!"
 msgstr "𐑕𐑴 𐑥𐑳𐑗 𐑓𐑹 𐑞𐑴𐑟 𐑜𐑴𐑕𐑑 𐑕𐑑𐑹𐑦𐑟. 𐑥𐑽 𐑧𐑤𐑝𐑟 𐑢𐑦𐑤 𐑯𐑪𐑑 𐑕𐑑𐑪𐑐 𐑥𐑰 𐑓𐑮𐑪𐑥 𐑓𐑮𐑰𐑦𐑙 𐑥𐑲 𐑚𐑮𐑳𐑞𐑼!"
 
 #. [message]: role=Mercenary
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:400
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:404
 msgid ""
 "I am glad at least that we will not have to face ghosts. But those elves "
 "will have us at a disadvantage; our horses will not maneuver well in the "
@@ -639,7 +682,7 @@ msgstr ""
 "𐑩 𐑛𐑦𐑕𐑩𐑛𐑝𐑭𐑯𐑑𐑦𐑡; 𐑬𐑼 𐑣𐑹𐑕𐑩𐑟 𐑢𐑦𐑤 𐑯𐑪𐑑 𐑥𐑩𐑯𐑵𐑝𐑻 𐑢𐑧𐑤 𐑦𐑯 𐑞 𐑑𐑮𐑰𐑟."
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:405
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:409
 msgid ""
 "Bah, just stay on the paths; our spearmen and bowmen can fight in the deeper "
 "woods. We have faced and won through greater perils than those amateurs can "
@@ -649,28 +692,41 @@ msgstr ""
 "𐑓𐑱𐑕𐑑 𐑯 𐑢𐑳𐑯 𐑔𐑮𐑵 𐑜𐑮𐑱𐑑𐑼 𐑐𐑺𐑩𐑤𐑟 𐑞𐑨𐑯 𐑞𐑴𐑟 𐑨𐑥𐑩𐑑𐑻𐑟 𐑒𐑨𐑯 𐑪𐑓𐑼."
 
 #. [message]: speaker=second_unit
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:445
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:450
 msgid "I see them! There they are!"
 msgstr "𐑲 𐑕𐑰 𐑞𐑧𐑥! 𐑞𐑺 𐑞𐑱 𐑸!"
 
 #. [message]: speaker=Muff Toras
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:450
-#, fuzzy
+#. There are no undead on the map yet, but Muff Toras summons some immediately after saying this
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:462
 msgid ""
-"Curses! If they had been an hour slower, our master’s reinforcements would "
-"already be here to meet us."
+"Curses! Had they been a few hours slower, I might have covered our tracks "
+"without arousing the elves’ suspicions. Still, no need for the disguise any "
+"more."
 msgstr ""
-"𐑒𐑻𐑕𐑦𐑟! 𐑦𐑓 𐑞𐑱 𐑣𐑨𐑛 𐑚𐑰𐑯 𐑩𐑯 𐑬𐑼 𐑕𐑤𐑴𐑻 𐑬𐑼 𐑥𐑭𐑕𐑑𐑼'𐑟 𐑮𐑦𐑦𐑯𐑓𐑹𐑕𐑥𐑩𐑯𐑑𐑕 𐑢𐑫𐑛 𐑷𐑤𐑮𐑧𐑛𐑦 𐑚𐑰 𐑣𐑽 𐑑 "
-"𐑥𐑰𐑑 𐑳𐑕."
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:462
+#. it's likely that all the elves are already dead, and Arvith is just shouting to the forest
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:498
+msgid "Well, elves? Now do you see who the necromancers are?"
+msgstr ""
+
+#. [message]: speaker=messenger_elf
+#. a elven scout rides in from off-map, takes their first look at the situation, and realises that they have no idea what's going on
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:517
+msgid ""
+"I heard sounds of battle, but did not expect to see this. I will inform the "
+"Council, they can work out who the necromancers are."
+msgstr ""
+
+#. [message]: speaker=Arvith
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:544
 #, fuzzy
 msgid "Come on, men, let’s catch those kidnappers!"
 msgstr "𐑒𐑳𐑥 𐑪𐑯, 𐑥𐑧𐑯, 𐑤𐑧𐑑'𐑕 𐑒𐑨𐑗 𐑞𐑴𐑟 𐑒𐑦𐑛𐑯𐑨𐑐𐑻𐑟!"
 
 #. [message]: speaker=unit
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:476
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:556
 #, fuzzy
 msgid ""
 "Hah! You have captured me, but it will avail you nothing. I sent your "
@@ -682,7 +738,7 @@ msgstr ""
 "𐑚𐑲 𐑯𐑬."
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:481
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:561
 msgid ""
 "My blade is at your throat. Give us the way to my brother now, or I will "
 "spill your wretched blood on the ground."
@@ -691,47 +747,47 @@ msgstr ""
 "𐑪𐑯 𐑞 𐑜𐑮𐑬𐑯𐑛."
 
 #. [event]
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:484
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:564
 msgid "Sithrak"
 msgstr "·𐑕𐑦𐑔𐑮𐑨𐑒"
 
 #. [event]
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:485
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:565
 msgid "Eleben"
 msgstr "·𐑧𐑤𐑧𐑚𐑧𐑯"
 
 #. [event]
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:486
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:566
 msgid "Jarlom"
 msgstr "·𐑡𐑸𐑤𐑭𐑥"
 
 #. [event]
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:487
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:567
 msgid "Hamik"
 msgstr "·𐑣𐑨𐑥𐑦𐑒"
 
 #. [event]
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:491
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:571
 msgid "Akranbral"
 msgstr "·𐑨𐑒𐑮𐑨𐑯𐑚𐑮𐑩𐑤"
 
 #. [event]
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:492
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:572
 msgid "Drakanal"
 msgstr "·𐑛𐑮𐑨𐑒𐑨𐑥𐑩𐑤"
 
 #. [event]
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:493
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:573
 msgid "Xaskanat"
 msgstr "·𐑟𐑨𐑕𐑒𐑨𐑯𐑩𐑑"
 
 #. [event]
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:494
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:574
 msgid "Katklagad"
 msgstr "·𐑒𐑨𐑑𐑒𐑤𐑨𐑜𐑭𐑛"
 
 #. [message]: speaker=unit
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:500
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:580
 #, fuzzy
 #| msgid ""
 #| "Three days ride to the northeast, in a deserted castle. The passwords to "
@@ -739,39 +795,39 @@ msgstr "·𐑒𐑨𐑑𐑒𐑤𐑨𐑜𐑭𐑛"
 #| "$second_password_$second_password_number|."
 msgid ""
 "Three days ride to the northeast, in a deserted castle. The passwords to the "
-"guards are $first_password_$first_password and $second_password_"
-"$second_password|."
+"guards are $first_password_$first_password and "
+"$second_password_$second_password|."
 msgstr ""
 "𐑔𐑮𐑰 𐑛𐑱𐑟 𐑮𐑲𐑛 𐑑 𐑞 𐑯𐑹𐑔𐑰𐑕𐑑, 𐑦𐑯 𐑩 𐑛𐑩𐑟𐑻𐑑𐑩𐑛 𐑒𐑨𐑕𐑩𐑤. 𐑞 𐑐𐑭𐑕𐑢𐑼𐑛𐑟 𐑑 𐑞 𐑜𐑸𐑛𐑟 𐑸 "
-"$first_password_$first_password_number 𐑯 $second_password_"
-"$second_password_number|."
+"$first_password_$first_password_number 𐑯 "
+"$second_password_$second_password_number|."
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:508
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:588
 msgid "Bind him and take him with us. If he has played us false, he will die."
 msgstr "𐑚𐑲𐑯𐑛 𐑣𐑦𐑥 𐑯 𐑑𐑱𐑒 𐑣𐑦𐑥 𐑢𐑦𐑞 𐑳𐑕. 𐑦𐑓 𐑣𐑰 𐑣𐑨𐑟 𐑐𐑤𐑱𐑛 𐑳𐑕 𐑓𐑷𐑤𐑕, 𐑣𐑰 𐑢𐑦𐑤 𐑛𐑲."
 
 #. [message]: role=Mercenary
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:520
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:602
 msgid ""
 "Captain, what are we riding into? I thought you wanted nothing to do with "
 "Baran any more, not since Toen Caric."
 msgstr ""
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:525
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:607
 msgid ""
 "I’m no longer sure. What’s between us remains, but knowing someone else has "
 "lain hands on him changes things. Mount up, and let’s get moving."
 msgstr ""
 
 #. [event]
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:540
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:622
 msgid "Brena"
 msgstr "·𐑚𐑮𐑰𐑯𐑩"
 
 #. [message]: speaker=Brena
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:549
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:631
 msgid ""
 "Greetings. I am Brena, a knight errant. I saw you pursuing and fighting the "
 "foul undead. Are there more of them to be destroyed?"
@@ -780,7 +836,7 @@ msgstr ""
 "𐑝 𐑞𐑧𐑥 𐑑 𐑚𐑰 𐑛𐑩𐑕𐑑𐑮𐑶𐑛?"
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:554
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:636
 #, fuzzy
 msgid ""
 "Aye. We think there’s a nest of them north-east of here. They’ve captured my "
@@ -788,7 +844,7 @@ msgid ""
 msgstr "𐑲. 𐑢𐑰 𐑔𐑦𐑙𐑒 𐑞𐑺'𐑟 𐑩 𐑯𐑧𐑕𐑑 𐑝 𐑞𐑧𐑥 𐑯𐑹𐑔-𐑰𐑕𐑑 𐑝 𐑣𐑽. 𐑞𐑱'𐑝 𐑒𐑨𐑐𐑗𐑻𐑛 𐑥𐑲 𐑚𐑮𐑳𐑞𐑼."
 
 #. [message]: speaker=Brena
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:559
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:641
 msgid ""
 "I bear a great hatred towards their kind. I will follow and fight them with "
 "you, if you permit."
@@ -796,32 +852,32 @@ msgstr ""
 "𐑲 𐑚𐑺 𐑩 𐑜𐑮𐑱𐑑 𐑣𐑱𐑑𐑮𐑩𐑛 𐑑𐑫𐑢𐑹𐑛𐑟 𐑞𐑺 𐑒𐑲𐑯𐑛. 𐑲 𐑢𐑦𐑤 𐑓𐑪𐑤𐑴 𐑯 𐑓𐑲𐑑 𐑞𐑧𐑥 𐑢𐑦𐑞 𐑿, 𐑦𐑓 𐑿 𐑐𐑼𐑥𐑦𐑑."
 
 #. [message]: role=Mercenary
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:564
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:646
 msgid "He would only slow us down!"
 msgstr "𐑣𐑰 𐑢𐑫𐑛 𐑴𐑯𐑤𐑦 𐑕𐑤𐑴 𐑳𐑕 𐑛𐑬𐑯!"
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:569
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:651
 msgid "It is my place to decide this."
 msgstr "𐑦𐑑 𐑦𐑟 𐑥𐑲 𐑐𐑤𐑱𐑕 𐑑 𐑛𐑦𐑕𐑲𐑛 𐑞𐑦𐑕."
 
 #. [option]
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:571
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:653
 msgid "Oh, all right then. Come along with us."
 msgstr "𐑴, 𐑷𐑤 𐑮𐑲𐑑 𐑞𐑧𐑯. 𐑒𐑳𐑥 𐑩𐑤𐑪𐑙 𐑢𐑦𐑞 𐑳𐑕."
 
 #. [message]: speaker=Brena
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:575
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:657
 msgid "Thank you. My comrades and I will help you on your noble quest."
 msgstr "𐑔𐑨𐑙𐑒 𐑿. 𐑥𐑲 𐑒𐑪𐑥𐑮𐑩𐑛𐑟 𐑯 𐑲 𐑢𐑦𐑤 𐑣𐑧𐑤𐑐 𐑿 𐑪𐑯 𐑿𐑼 𐑯𐑴𐑚𐑤 𐑒𐑢𐑧𐑕𐑑."
 
 #. [option]
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:580
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:662
 msgid "I am sorry. We have not the time to spare."
 msgstr "𐑲 𐑨𐑥 𐑕𐑪𐑮𐑦. 𐑢𐑰 𐑣𐑨𐑝 𐑯𐑪𐑑 𐑞 𐑑𐑲𐑥 𐑑 𐑕𐑐𐑺."
 
 #. [message]: speaker=Brena
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:584
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:666
 msgid ""
 "Take this, then, for I see that you are on a quest. My comrades will help "
 "you whenever you call for them."
@@ -830,32 +886,33 @@ msgstr ""
 "𐑓𐑹 𐑞𐑧𐑥."
 
 #. [message]: speaker=narrator
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:599
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:681
 msgid "You receive 70 pieces of gold!"
 msgstr "𐑿 𐑮𐑦𐑕𐑰𐑝 70 𐑐𐑰𐑕𐑩𐑟 𐑝 𐑜𐑴𐑤𐑛!"
 
-#. [message]: speaker=Muff Toras
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:622
-msgid "My reinforcements are here!"
-msgstr "𐑥𐑲 𐑮𐑦𐑦𐑯𐑓𐑹𐑕𐑥𐑩𐑯𐑑𐑕 𐑸 𐑣𐑽!"
+#. [message]: speaker=Arvith
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:710
+msgid ""
+"These elves have delayed us too long, the kidnappers’ trail will have faded "
+"by now."
+msgstr ""
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:627
-msgid "He escaped us..."
-msgstr "𐑣𐑰 𐑦𐑕𐑒𐑱𐑐𐑑 𐑳𐑕..."
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:716
+msgid ""
+"More elves are arriving; even if they believe me, the kidnappers’ trail is "
+"sure to fade before we can follow."
+msgstr ""
 
 #. [message]: speaker=Nil-Galion
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:639
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:730
 msgid ""
-"Foolish human, you have killed me but you will not catch the undead in time. "
-"I have fulfilled my contract, and will be reanimated soon to become a lord "
-"of their armies."
+"Deluded fool, you are rescuing a necromancer. I can only hope that you are "
+"too late, and that our souls will rest in peace."
 msgstr ""
-"𐑓𐑵𐑤𐑦𐑖 𐑣𐑿𐑥𐑩𐑯, 𐑿 𐑣𐑨𐑝 𐑒𐑦𐑤𐑛 𐑥𐑰 𐑚𐑳𐑑 𐑿 𐑢𐑦𐑤 𐑯𐑪𐑑 𐑒𐑨𐑗 𐑞 𐑳𐑯𐑛𐑧𐑛 𐑦𐑯 𐑑𐑲𐑥. 𐑲 𐑣𐑨𐑝 𐑓𐑫𐑤𐑓𐑦𐑤𐑛 "
-"𐑥𐑲 𐑒𐑩𐑯𐑑𐑮𐑨𐑒𐑑, 𐑯 𐑢𐑦𐑤 𐑚𐑰 𐑮𐑰𐑨𐑯𐑦𐑥𐑱𐑑𐑧𐑛 𐑕𐑵𐑯 𐑑 𐑚𐑦𐑒𐑳𐑥 𐑩 𐑤𐑹𐑛 𐑝 𐑞𐑺 𐑸𐑥𐑰𐑟."
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:649
+#: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:740
 msgid "Follow their back trail!"
 msgstr "𐑓𐑪𐑤𐑴 𐑞𐑺 𐑚𐑨𐑒 𐑑𐑮𐑱𐑤!"
 
@@ -1533,22 +1590,27 @@ msgstr ""
 "𐑮𐑧𐑒𐑑. 𐑯 𐑞𐑱 𐑒𐑫𐑛 𐑒𐑳𐑥 𐑩𐑜𐑱𐑯."
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/04_Return_to_the_Village.cfg:365
+#. "you have my word" is a idiom for promising to do something
+#: data/campaigns/Two_Brothers/scenarios/04_Return_to_the_Village.cfg:366
+#, fuzzy
+#| msgid ""
+#| "I must go back to earning my living. But we have our amulets, little "
+#| "brother. If you are beset again, I will come."
 msgid ""
-"I must go back to earning my living. But we have our amulets, little "
-"brother. If you are beset again, I will come."
+"I must go back to earning my living. But you have my word, little brother; "
+"if you are beset again, I will come."
 msgstr ""
 "𐑲 𐑥𐑳𐑕𐑑 𐑜𐑴 𐑚𐑨𐑒 𐑑 𐑻𐑯𐑦𐑙 𐑥𐑲 𐑤𐑦𐑝𐑦𐑙. 𐑚𐑳𐑑 𐑢𐑰 𐑣𐑨𐑝 𐑬𐑼 𐑨𐑥𐑘𐑩𐑤𐑩𐑑𐑕, 𐑤𐑦𐑑𐑩𐑤 𐑚𐑮𐑳𐑞𐑼. 𐑦𐑓 𐑿 𐑸 "
 "𐑚𐑦𐑕𐑧𐑑 𐑩𐑜𐑱𐑯, 𐑲 𐑢𐑦𐑤 𐑒𐑳𐑥."
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/04_Return_to_the_Village.cfg:383
+#: data/campaigns/Two_Brothers/scenarios/04_Return_to_the_Village.cfg:384
 #, fuzzy
 msgid "I don’t think we can rescue anyone from these villages. It is too late."
 msgstr "𐑲 𐑛𐑴𐑯𐑑 𐑔𐑦𐑙𐑒 𐑢𐑰 𐑒𐑨𐑯 𐑮𐑧𐑕𐑒𐑿 𐑧𐑯𐑦𐑢𐑳𐑯 𐑓𐑮𐑪𐑥 𐑞𐑰𐑟 𐑝𐑦𐑤𐑦𐑡𐑦𐑟. 𐑦𐑑 𐑦𐑟 𐑑𐑵 𐑤𐑱𐑑."
 
 #. [message]: speaker=Baran
-#: data/campaigns/Two_Brothers/scenarios/04_Return_to_the_Village.cfg:388
+#: data/campaigns/Two_Brothers/scenarios/04_Return_to_the_Village.cfg:389
 #, fuzzy
 msgid "I was too weak to protect these people. Oh, why did this happen to me?!"
 msgstr "𐑲 𐑢𐑪𐑟 𐑑𐑵 𐑢𐑰𐑒 𐑑 𐑐𐑮𐑩𐑑𐑧𐑒𐑑 𐑞𐑰𐑟 𐑐𐑰𐑐𐑩𐑤. 𐑴 𐑢𐑲 𐑛𐑦𐑛 𐑞𐑦𐑕 𐑣𐑨𐑐𐑩𐑯 𐑑 𐑥𐑰?!?"
@@ -1605,13 +1667,43 @@ msgid "It is over, I am vanquished."
 msgstr "𐑦𐑑 𐑦𐑟 𐑴𐑝𐑼, 𐑲 𐑨𐑥 𐑝𐑨𐑙𐑒𐑢𐑦𐑖𐑑."
 
 #. [unit]: id=Baran, type=Red Mage
-#: data/campaigns/Two_Brothers/utils/characters.cfg:128
+#: data/campaigns/Two_Brothers/utils/characters.cfg:141
 msgid "Baran"
 msgstr ""
 
 #: data/campaigns/Two_Brothers/utils/macros.cfg:4
 msgid "Hint:"
 msgstr ""
+
+#, fuzzy
+#~ msgid ""
+#~ "Curses! If they had been an hour slower, our master’s reinforcements "
+#~ "would already be here to meet us."
+#~ msgstr ""
+#~ "𐑒𐑻𐑕𐑦𐑟! 𐑦𐑓 𐑞𐑱 𐑣𐑨𐑛 𐑚𐑰𐑯 𐑩𐑯 𐑬𐑼 𐑕𐑤𐑴𐑻 𐑬𐑼 𐑥𐑭𐑕𐑑𐑼'𐑟 𐑮𐑦𐑦𐑯𐑓𐑹𐑕𐑥𐑩𐑯𐑑𐑕 𐑢𐑫𐑛 𐑷𐑤𐑮𐑧𐑛𐑦 𐑚𐑰 𐑣𐑽 "
+#~ "𐑑 𐑥𐑰𐑑 𐑳𐑕."
+
+#~ msgid "My reinforcements are here!"
+#~ msgstr "𐑥𐑲 𐑮𐑦𐑦𐑯𐑓𐑹𐑕𐑥𐑩𐑯𐑑𐑕 𐑸 𐑣𐑽!"
+
+#~ msgid "He escaped us..."
+#~ msgstr "𐑣𐑰 𐑦𐑕𐑒𐑱𐑐𐑑 𐑳𐑕..."
+
+#~ msgid ""
+#~ "Those men told me their prisoner had attempted to murder their master, "
+#~ "and warned that evil men would follow him. Advance no further, or you "
+#~ "will die."
+#~ msgstr ""
+#~ "𐑞𐑴𐑟 𐑥𐑧𐑯 𐑑𐑴𐑤𐑛 𐑥𐑰 𐑞𐑺 𐑐𐑮𐑦𐑟𐑩𐑯𐑼 𐑣𐑨𐑛 𐑩𐑑𐑧𐑥𐑐𐑑𐑩𐑛 𐑑 𐑥𐑻𐑛𐑼 𐑞𐑺 𐑥𐑭𐑕𐑑𐑼, 𐑯 𐑢𐑹𐑯𐑛 𐑞𐑨𐑑 𐑰𐑝𐑩𐑤 "
+#~ "𐑥𐑧𐑯 𐑢𐑫𐑛 𐑓𐑪𐑤𐑴 𐑣𐑦𐑥. 𐑩𐑛𐑝𐑭𐑯𐑕 𐑯𐑴 𐑓𐑻𐑞𐑼, 𐑹 𐑿 𐑢𐑦𐑤 𐑛𐑲."
+
+#~ msgid ""
+#~ "Foolish human, you have killed me but you will not catch the undead in "
+#~ "time. I have fulfilled my contract, and will be reanimated soon to become "
+#~ "a lord of their armies."
+#~ msgstr ""
+#~ "𐑓𐑵𐑤𐑦𐑖 𐑣𐑿𐑥𐑩𐑯, 𐑿 𐑣𐑨𐑝 𐑒𐑦𐑤𐑛 𐑥𐑰 𐑚𐑳𐑑 𐑿 𐑢𐑦𐑤 𐑯𐑪𐑑 𐑒𐑨𐑗 𐑞 𐑳𐑯𐑛𐑧𐑛 𐑦𐑯 𐑑𐑲𐑥. 𐑲 𐑣𐑨𐑝 "
+#~ "𐑓𐑫𐑤𐑓𐑦𐑤𐑛 𐑥𐑲 𐑒𐑩𐑯𐑑𐑮𐑨𐑒𐑑, 𐑯 𐑢𐑦𐑤 𐑚𐑰 𐑮𐑰𐑨𐑯𐑦𐑥𐑱𐑑𐑧𐑛 𐑕𐑵𐑯 𐑑 𐑚𐑦𐑒𐑳𐑥 𐑩 𐑤𐑹𐑛 𐑝 𐑞𐑺 𐑸𐑥𐑰𐑟."
 
 #~ msgid "$first_password_1|!"
 #~ msgstr "$first_password_1|!"

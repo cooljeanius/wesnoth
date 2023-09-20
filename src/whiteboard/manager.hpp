@@ -1,16 +1,17 @@
 /*
- Copyright (C) 2010 - 2018 by Gabriel Morin <gabrielmorin (at) gmail (dot) com>
- Part of the Battle for Wesnoth Project https://www.wesnoth.org
+	Copyright (C) 2010 - 2023
+	by Gabriel Morin <gabrielmorin (at) gmail (dot) com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
- See the COPYING file for more details.
- */
+	See the COPYING file for more details.
+*/
 
 /**
  * @file
@@ -236,13 +237,13 @@ private:
 
 	std::vector<map_location> hidden_unit_hexes_;
 
-	///net_buffer_[i] = whiteboard network data to be sent "from" teams[i].
+	/** net_buffer_[i] = whiteboard network data to be sent "from" teams[i]. */
 	std::vector<config> net_buffer_;
 
-	///team_plans_hidden_[i] = whether or not to hide actions from teams[i].
+	/** team_plans_hidden_[i] = whether or not to hide actions from teams[i]. */
 	boost::dynamic_bitset<> team_plans_hidden_;
 
-	///used to keep track of units owning planned moves for visual ghosting/unghosting
+	/** used to keep track of units owning planned moves for visual ghosting/unghosting */
 	std::set<std::size_t> units_owning_moves_;
 };
 

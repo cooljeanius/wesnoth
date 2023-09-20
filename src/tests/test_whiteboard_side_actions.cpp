@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2012 - 2018 by Étienne Simon <etienne.jl.simon@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2012 - 2023
+	by Étienne Simon <etienne.jl.simon@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #define GETTEXT_DOMAIN "wesnoth-test"
@@ -49,9 +50,9 @@ BOOST_AUTO_TEST_CASE( test_insertion )
 	std::shared_ptr<dummy_action> dact;
 
 	// Basic insertions
-	std::shared_ptr<dummy_action> act1(new dummy_action(0, false, 1));
-	std::shared_ptr<dummy_action> act2(new dummy_action(0, false, 2));
-	std::shared_ptr<dummy_action> act3(new dummy_action(0, false, 3));
+	auto act1 = std::make_shared<dummy_action>(0, false, 1);
+	auto act2 = std::make_shared<dummy_action>(0, false, 2);
+	auto act3 = std::make_shared<dummy_action>(0, false, 3);
 
 	sac.queue(0, act2);
 	sac.queue(0, act3);
@@ -67,11 +68,11 @@ BOOST_AUTO_TEST_CASE( test_insertion )
 	}
 
 	// Multi-turn insertions
-	std::shared_ptr<dummy_action> act4(new dummy_action(0, false, 4));
-	std::shared_ptr<dummy_action> act5(new dummy_action(0, false, 5));
-	std::shared_ptr<dummy_action> act6(new dummy_action(0, false, 6));
-	std::shared_ptr<dummy_action> act7(new dummy_action(0, false, 7));
-	std::shared_ptr<dummy_action> act8(new dummy_action(0, false, 8));
+	auto act4 = std::make_shared<dummy_action>(0, false, 4);
+	auto act5 = std::make_shared<dummy_action>(0, false, 5);
+	auto act6 = std::make_shared<dummy_action>(0, false, 6);
+	auto act7 = std::make_shared<dummy_action>(0, false, 7);
+	auto act8 = std::make_shared<dummy_action>(0, false, 8);
 	sac.queue(1, act5);
 	sac.queue(2, act8);
 	sac.queue(1, act7);
@@ -102,12 +103,12 @@ BOOST_AUTO_TEST_CASE( test_removal )
 	side_actions_container sac;
 	std::shared_ptr<dummy_action> dact;
 
-	std::shared_ptr<dummy_action> act1(new dummy_action(0, false, 1));
-	std::shared_ptr<dummy_action> act2(new dummy_action(0, false, 2));
-	std::shared_ptr<dummy_action> act3(new dummy_action(0, false, 3));
-	std::shared_ptr<dummy_action> act4(new dummy_action(0, false, 4));
-	std::shared_ptr<dummy_action> act5(new dummy_action(0, false, 5));
-	std::shared_ptr<dummy_action> act6(new dummy_action(0, false, 6));
+	auto act1 = std::make_shared<dummy_action>(0, false, 1);
+	auto act2 = std::make_shared<dummy_action>(0, false, 2);
+	auto act3 = std::make_shared<dummy_action>(0, false, 3);
+	auto act4 = std::make_shared<dummy_action>(0, false, 4);
+	auto act5 = std::make_shared<dummy_action>(0, false, 5);
+	auto act6 = std::make_shared<dummy_action>(0, false, 6);
 
 	sac.queue(0, act1);
 	side_actions::iterator ite2 = sac.queue(0, act2);

@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2003 - 2018 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2003 - 2023
+	by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -23,6 +24,7 @@
 #include "game_board.hpp"
 #include "game_data.hpp"
 #include "log.hpp"
+#include "preferences/general.hpp"
 #include "recall_list_manager.hpp"
 #include "resources.hpp"
 #include "scripting/game_lua_kernel.hpp"
@@ -37,12 +39,15 @@
 static lg::log_domain log_engine("engine");
 #define WRN_NG LOG_STREAM(warn, log_engine)
 
+static lg::log_domain log_wml("wml");
+#define ERR_WML LOG_STREAM(err, log_wml)
+
 
 // This file is in the game_events namespace.
 namespace game_events {
 
 namespace builtin_conditions {
-	std::vector<std::pair<int,int>> default_counts = utils::parse_ranges("1-infinity");
+	std::vector<std::pair<int,int>> default_counts = utils::parse_ranges_unsigned("1-infinity");
 
 	bool have_unit(const vconfig& cfg)
 	{
@@ -50,7 +55,7 @@ namespace builtin_conditions {
 			return false;
 		}
 		std::vector<std::pair<int,int>> counts = cfg.has_attribute("count")
-			? utils::parse_ranges(cfg["count"]) : default_counts;
+			? utils::parse_ranges_unsigned(cfg["count"]) : default_counts;
 		int match_count = 0;
 		const unit_filter ufilt(cfg);
 		for(const unit &i : resources::gameboard->units()) {
@@ -84,24 +89,37 @@ namespace builtin_conditions {
 	bool have_location(const vconfig& cfg)
 	{
 		std::set<map_location> res;
-		terrain_filter(cfg, resources::filter_con).get_locations(res);
+		terrain_filter(cfg, resources::filter_con, false).get_locations(res);
 
 		std::vector<std::pair<int,int>> counts = cfg.has_attribute("count")
-		? utils::parse_ranges(cfg["count"]) : default_counts;
+		? utils::parse_ranges_unsigned(cfg["count"]) : default_counts;
 		return in_ranges<int>(res.size(), counts);
 	}
 
 	bool variable_matches(const vconfig& values)
 	{
+		if(values["name"].blank()) {
+			lg::log_to_chat() << "[variable] with missing name=\n";
+			ERR_WML << "[variable] with missing name=";
+			return true;
+		}
 		const std::string name = values["name"];
 		config::attribute_value value = resources::gamedata->get_variable_const(name);
+
+		if(auto n = values.get_config().attribute_count(); n > 2) {
+			lg::log_to_chat() << "[variable] name='" << name << "' found with multiple comparison attributes\n";
+			ERR_WML << "[variable] name='" << name << "' found with multiple comparison attributes";
+		} else if(n < 2) {
+			lg::log_to_chat() << "[variable] name='" << name << "' found with no comparison attribute\n";
+			ERR_WML << "[variable] name='" << name << "' found with no comparison attribute";
+		}
 
 #define TEST_STR_ATTR(name, test) \
 		do { \
 			if (values.has_attribute(name)) { \
 				std::string attr_str = values[name].str(); \
 				std::string str_value = value.str(); \
-				if (!(test)) return false; \
+				return (test); \
 			} \
 		} while (0)
 
@@ -110,7 +128,7 @@ namespace builtin_conditions {
 			if (values.has_attribute(name)) { \
 				double attr_num = values[name].to_double(); \
 				double num_value = value.to_double(); \
-				if (!(test)) return false; \
+				return (test); \
 			} \
 		} while (0)
 
@@ -119,7 +137,7 @@ namespace builtin_conditions {
 			if (values.has_attribute(name)) { \
 				bool attr_bool = values[name].to_bool(); \
 				bool bool_value = value.to_bool(); \
-				if (!(test)) return false; \
+				return (test); \
 			} \
 		} while (0)
 
@@ -138,6 +156,7 @@ namespace builtin_conditions {
 #undef TEST_STR_ATTR
 #undef TEST_NUM_ATTR
 #undef TEST_BOL_ATTR
+
 		return true;
 	}
 }
@@ -152,19 +171,15 @@ namespace { // Support functions
 			return false;
 		}
 
-		vconfig::all_children_iterator cond_end = cond.ordered_end();
-		static const std::set<std::string> skip =
+		static const std::set<std::string> skip
 			{"then", "else", "elseif", "not", "and", "or", "do"};
 
-		for(vconfig::all_children_iterator it = cond.ordered_begin(); it != cond_end; ++it) {
-			std::string key = it.get_key();
-			bool result = true;
+		for(const auto& [key, filter] : cond.all_ordered()) {
 			if(std::find(skip.begin(), skip.end(), key) == skip.end()) {
 				assert(resources::lua_kernel);
-				result = resources::lua_kernel->run_wml_conditional(key, it.get_child());
-			}
-			if (!result) {
-				return false;
+				if(!resources::lua_kernel->run_wml_conditional(key, filter)) {
+					return false;
+				}
 			}
 		}
 
@@ -179,44 +194,22 @@ bool conditional_passed(const vconfig& cond)
 	bool matches = internal_conditional_passed(cond);
 
 	// Handle [and], [or], and [not] with in-order precedence
-	vconfig::all_children_iterator cond_i = cond.ordered_begin();
-	vconfig::all_children_iterator cond_end = cond.ordered_end();
-	while(cond_i != cond_end)
-	{
-		const std::string& cond_name = cond_i.get_key();
-		const vconfig& cond_filter = cond_i.get_child();
-
+	for(const auto& [key, filter] : cond.all_ordered()) {
 		// Handle [and]
-		if(cond_name == "and")
-		{
-			matches = matches && conditional_passed(cond_filter);
+		if(key == "and") {
+			matches = matches && conditional_passed(filter);
 		}
 		// Handle [or]
-		else if(cond_name == "or")
-		{
-			matches = matches || conditional_passed(cond_filter);
+		else if(key == "or") {
+			matches = matches || conditional_passed(filter);
 		}
 		// Handle [not]
-		else if(cond_name == "not")
-		{
-			matches = matches && !conditional_passed(cond_filter);
+		else if(key == "not") {
+			matches = matches && !conditional_passed(filter);
 		}
-		++cond_i;
 	}
-	return matches;
-}
 
-bool matches_special_filter(const config &cfg, const vconfig& filter)
-{
-	if (!cfg) {
-		WRN_NG << "attempt to filter attack for an event with no attack data." << std::endl;
-		// better to not execute the event (so the problem is more obvious)
-		return false;
-	}
-	// Though it may seem wasteful to put this on the heap, it's necessary.
-	// matches_filter() could potentially call a WFL formula, which would call shared_from_this().
-	auto attack = std::make_shared<const attack_type>(cfg);
-	return attack->matches_filter(filter.get_parsed_config());
+	return matches;
 }
 
 } // end namespace game_events

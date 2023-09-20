@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2008 - 2018 by Fabian Mueller <fabianmueller5@gmx.de>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by Fabian Mueller <fabianmueller5@gmx.de>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -35,35 +36,35 @@ public:
 	{
 	}
 
-	bool has_context_menu() const {
+	bool has_context_menu() const override {
 		return true;
 	}
 
-	void move(editor_display& disp, const map_location& hex);
+	void move(editor_display& disp, const map_location& hex) override;
 
 	/**
 	 * TODO
 	 */
-	editor_action* click_left(editor_display& disp, int x, int y);
+	std::unique_ptr<editor_action> click_left(editor_display& disp, int x, int y) override;
 
 	/**
 	 * TODO
 	 */
-	editor_action* up_left(editor_display& disp, int x, int y);
+	std::unique_ptr<editor_action> up_left(editor_display& disp, int x, int y) override;
 
-	editor_action* drag_left(editor_display& disp, int x, int y, bool& partial, editor_action* last_undo);
+	std::unique_ptr<editor_action> drag_left(editor_display& disp, int x, int y, bool& partial, editor_action* last_undo) override;
 
 	/**
 	 * Drag end replaces the unit when clicked left, or adjusts
 	 * the facing when clicked right.
 	 */
-	editor_action* drag_end_left(editor_display& disp, int x, int y);
+	std::unique_ptr<editor_action> drag_end_left(editor_display& disp, int x, int y) override;
 
-	editor_action* click_right(editor_display& /*disp*/, int /*x*/, int /*y*/) {
+	std::unique_ptr<editor_action> click_right(editor_display& /*disp*/, int /*x*/, int /*y*/) override {
 		return nullptr;
 	}
 
-	virtual void set_mouse_overlay(editor_display& disp);
+	virtual void set_mouse_overlay(editor_display& disp) override;
 	void set_unit_mouse_overlay(editor_display& disp, const unit_type& u);
 
 private:

@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2011 - 2018 by Sytyi Nick <nsytyi@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2011 - 2023
+	by Sytyi Nick <nsytyi@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -30,17 +31,22 @@ wml_tag::wml_tag(const config& cfg)
 	: name_(cfg["name"].str())
 	, min_(cfg["min"].to_int())
 	, max_(cfg["max"].str() == "infinite" ? -1 : cfg["max"].to_int(1))
+	, min_children_(cfg["min_tags"].to_int())
+	, max_children_(cfg["max_tags"].str() == "infinite" ? -1 : cfg["max_tags"].to_int(-1))
 	, super_("")
 	, tags_()
 	, keys_()
 	, links_()
 	, conditions_()
 	, super_refs_()
-	, fuzzy_(name_.find_first_of("*?") != std::string::npos)
+	, fuzzy_(name_.find_first_of("*?+") != std::string::npos)
 	, any_tag_(cfg["any_tag"].to_bool())
 {
 	if(max_ < 0) {
 		max_ = INT_MAX;
+	}
+	if(max_children_ < 0) {
+		max_children_ = INT_MAX;
 	}
 
 	if(cfg.has_attribute("super")) {
@@ -262,31 +268,6 @@ void wml_tag::remove_keys_by_type(const std::string& type)
 	}
 }
 
-/*WIKI
- * @begin{parent}{name="wml_schema/"}
- * @begin{tag}{name="tag"}{min=0}{max=1}
- * @begin{table}{config}
- *     name & string & &          The name of tag. $
- *     min & int & &           The min number of occurrences. $
- *     max & int & &           The max number of occurrences. $
- *     super & string & "" &   The super-tag of this tag $
- * @end{table}
- * @begin{tag}{name="link"}{min=0}{max=-1}
- * @begin{table}{config}
- *     name & string & &          The name of link. $
- * @end{table}
- * @end{tag}{name="link"}
- * @begin{tag}{name="tag"}{min=0}{max=-1}{super="wml_schema/tag"}
- * @end{tag}{name="tag"}
- * @end{tag}{name="tag"}
- * @begin{tag}{name="type"}{min=0}{max=-1}
- * @begin{table}{config}
- *     name & string & &          The name of type. $
- *     value & string & &         The value of the type, regex. $
- * @end{table}
- * @end{tag}{name="type"}
- * @end{parent}{name="wml_schema/"}
- */
 void wml_tag::printl(std::ostream& os, int level, int step)
 {
 	std::string s;
@@ -380,7 +361,7 @@ void wml_tag::expand(wml_tag& root)
 				super_refs_.push_back(super_tag);
 			} else {
 				// TODO: Detect super cycles too!
-				//std::cerr << "the same" << super_tag->name_ << "\n";
+				//PLAIN_LOG << "the same" << super_tag->name_;
 			}
 		}
 		// TODO: Warn if the super doesn't exist
@@ -426,7 +407,7 @@ void wml_tag::add_switch(const config& switch_cfg)
 			// So just add an [and] tag that matches any other value
 			default_cfg.add_child("and")["glob_on_" + key] = "*";
 		}
-		conditions_.emplace_back(switch_cfg.child("else"), default_cfg);
+		conditions_.emplace_back(switch_cfg.mandatory_child("else"), default_cfg);
 		const std::string name = formatter() << get_name() << "[else]";
 		conditions_.back().set_name(name);
 	}
@@ -440,7 +421,7 @@ void wml_tag::add_filter(const config& cond_cfg)
 	// DO NOT MOVE THIS! It needs to be copied!
 	else_filter.add_child("not", filter);
 	if(cond_cfg.has_child("then")) {
-		conditions_.emplace_back(cond_cfg.child("then"), filter);
+		conditions_.emplace_back(cond_cfg.mandatory_child("then"), filter);
 		const std::string name = formatter() << get_name() << "[then]";
 		conditions_.back().set_name(name);
 	}
@@ -456,7 +437,7 @@ void wml_tag::add_filter(const config& cond_cfg)
 		conditions_.back().set_name(name);
 	}
 	if(cond_cfg.has_child("else")) {
-		conditions_.emplace_back(cond_cfg.child("else"), else_filter);
+		conditions_.emplace_back(cond_cfg.mandatory_child("else"), else_filter);
 		const std::string name = formatter() << get_name() << "[else]";
 		conditions_.back().set_name(name);
 	}

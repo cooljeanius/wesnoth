@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2010 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2010 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -28,6 +29,14 @@ struct builder_progress_bar;
 
 // ------------ WIDGET -----------{
 
+/**
+ * @ingroup GUIWidgetWML
+ *
+ * This object shows the progress of a certain action, or the value state of a certain item.
+ *
+ * The following states exist:
+ * * state_enabled - the progress bar is enabled.
+ */
 class progress_bar : public styled_widget
 {
 public:
@@ -102,7 +111,7 @@ struct builder_progress_bar : public builder_styled_widget
 
 	using builder_styled_widget::build;
 
-	widget* build() const;
+	virtual std::unique_ptr<widget> build() const override;
 };
 
 } // namespace implementation

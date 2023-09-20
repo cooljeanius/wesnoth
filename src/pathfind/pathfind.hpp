@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2003 - 2018 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2003 - 2023
+	by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -37,15 +38,16 @@ class teleport_map;
 
 enum VACANT_TILE_TYPE { VACANT_CASTLE, VACANT_ANY };
 
-/// Function that will find a location on the board that is as near
-/// to @a loc as possible, but which is unoccupied by any units.
+/**
+ * Function that will find a location on the board that is as near
+ * to @a loc as possible, but which is unoccupied by any units.
+ */
 map_location find_vacant_tile(const map_location& loc,
                               VACANT_TILE_TYPE vacancy=VACANT_ANY,
                               const unit* pass_check=nullptr,
                               const team* shroud_check=nullptr,
                               const game_board* board=nullptr);
-/// Wrapper for find_vacant_tile() when looking for a vacant castle tile
-/// near a leader.
+/** Wrapper for find_vacant_tile() when looking for a vacant castle tile near a leader. */
 map_location find_vacant_castle(const unit & leader);
 
 /** Determines if a given location is in an enemy zone of control. */
@@ -74,12 +76,12 @@ struct paths
 	{
 	}
 
-	/// Construct a list of paths for the specified unit.
+	/** Construct a list of paths for the specified unit. */
 	paths(const unit& u,
 	      bool force_ignore_zocs, bool allow_teleport,
 	      const team &viewing_team, int additional_turns = 0,
 	      bool see_all = false, bool ignore_units = false);
-	/// Virtual destructor (default processing).
+	/** Virtual destructor (default processing). */
 	virtual ~paths();
 
 	struct step
@@ -104,7 +106,6 @@ struct paths
  */
 struct vision_path : public paths
 {
-	/// Construct a list of seen hexes for a unit.
 	vision_path(const unit& viewer, const map_location& loc,
 	            const std::map<map_location, int>& jamming_map);
 	vision_path(const movetype::terrain_costs & view_costs, bool slowed,
@@ -112,7 +113,7 @@ struct vision_path : public paths
 	            const std::map<map_location, int>& jamming_map);
 	virtual ~vision_path();
 
-	/// The edges are the non-destination hexes bordering the destinations.
+	/** The edges are the non-destination hexes bordering the destinations. */
 	std::set<map_location> edges;
 };
 
@@ -121,7 +122,7 @@ struct vision_path : public paths
  */
 struct jamming_path : public paths
 {
-	/// Construct a list of jammed hexes for a unit.
+	/** Construct a list of jammed hexes for a unit. */
 	jamming_path(const unit& jammer, const map_location& loc);
 	virtual ~jamming_path();
 };

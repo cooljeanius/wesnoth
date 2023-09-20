@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2010 - 2018 by Fabian Mueller <fabianmueller5@gmx.de>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2010 - 2023
+	by Fabian Mueller <fabianmueller5@gmx.de>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -56,15 +57,10 @@ public:
 	{
 	}
 
-	/** Inherited from editor_action, implemented by IMPLEMENT_ACTION. */
-	editor_action_label* clone() const;
-
-	editor_action* perform(map_context& mc) const;
-
-	void perform_without_undo(map_context& mc) const;
-
-	/** Inherited from editor_action, implemented by IMPLEMENT_ACTION. */
-	const std::string& get_name() const;
+	std::unique_ptr<editor_action> clone() const override;
+	std::unique_ptr<editor_action> perform(map_context& mc) const override;
+	void perform_without_undo(map_context& mc) const override;
+	const std::string& get_name() const override;
 
 protected:
 	const std::string text_;
@@ -86,15 +82,10 @@ public:
 	{
 	}
 
-	/** Inherited from editor_action, implemented by IMPLEMENT_ACTION. */
-	editor_action_label_delete* clone() const;
-
-	editor_action* perform(map_context& mc) const;
-
-	void perform_without_undo(map_context& mc) const;
-
-	/** Inherited from editor_action, implemented by IMPLEMENT_ACTION. */
-	const std::string& get_name() const;
+	std::unique_ptr<editor_action> clone() const override;
+	std::unique_ptr<editor_action> perform(map_context& mc) const override;
+	void perform_without_undo(map_context& mc) const override;
+	const std::string& get_name() const override;
 };
 
 } // end namespace editor

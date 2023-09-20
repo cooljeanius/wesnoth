@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2008 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -17,6 +18,7 @@
 #include "font/font_options.hpp"
 #include "color.hpp"
 #include "sdl/surface.hpp"
+#include "sdl/texture.hpp"
 #include "serialization/string_utils.hpp"
 
 #include <pango/pango.h>
@@ -35,6 +37,9 @@ struct language_def;
 struct point;
 
 namespace font {
+
+/** Flush the rendered text cache. */
+void flush_texture_cache();
 
 // add background color and also font markup.
 
@@ -74,28 +79,51 @@ namespace font {
 class pango_text
 {
 public:
-
 	pango_text();
 
-    pango_text(const pango_text &) = delete;
-    pango_text & operator = (const pango_text &) = delete;
+	pango_text(const pango_text&) = delete;
+	pango_text& operator=(const pango_text&) = delete;
+
+	/**
+	 * Returns the cached texture, or creates a new one otherwise.
+	 *
+	 * texture::w() and texture::h() methods will return the expected
+	 * width and height of the texture in draw space. This may differ
+	 * from the real value returned by texture::get_info().
+	 *
+	 * In almost all cases, use w() and h() to get the size of the
+	 * rendered text for drawing.
+	 */
+	texture render_and_get_texture();
+
+private:
+	/**
+	 * Wrapper around render_surface which sets texture::w() and texture::h()
+	 * in the same way that render_and_get_texture does.
+	 *
+	 * The viewport rect is interpreted at the scale of render-space, not
+	 * drawing-space. This function has only been made private to preserve
+	 * the drawing-space encapsulation.
+	 */
+	texture render_texture(const SDL_Rect& viewport);
 
 	/**
 	 * Returns the rendered text.
 	 *
-	 * Before rendering it tests whether a redraw is needed and if so it first
-	 * redraws the surface before returning it.
+	 * The viewport rect is interpreted at the scale of render-space, not
+	 * drawing-space. This function has only been made private to preserve
+	 * the drawing-space encapsulation.
+	 *
+	 * @param viewport Only this area needs to be drawn - the returned
+	 * surface's origin will correspond to viewport.x and viewport.y, the
+	 * width and height will be at least viewport.w and viewport.h (although
+	 * they may be larger).
 	 */
-	surface& render();
+	surface render_surface(const SDL_Rect& viewport);
 
-	/** Returns the width needed for the text. */
-	int get_width() const;
-
-	/** Returns the height needed for the text. */
-	int get_height() const;
-
-	/** Returns the pixel size needed for the text. */
-	point get_size() const;
+public:
+	/** Returns the size of the text, in drawing coordinates. */
+	point get_size();
 
 	/** Has the text been truncated? This happens if it exceeds max width or height. */
 	bool is_truncated() const;
@@ -110,27 +138,6 @@ public:
 	 */
 	unsigned insert_text(const unsigned offset, const std::string& text);
 
-	/**
-	 * Inserts a unicode char.
-	 *
-	 * @param offset              The position to insert the char.
-	 * @param unicode             The character to insert.
-	 *
-	 * @returns                   True upon success, false otherwise.
-	 */
-	bool insert_unicode(const unsigned offset, char32_t unicode);
-
-	/**
-	 * Inserts unicode text.
-	 *
-	 * @param offset              The position to insert the text.
-	 * @param unicode             Vector with characters to insert.
-	 *
-	 * @returns                   The number of characters inserted.
-	 */
-	unsigned insert_unicode(
-		const unsigned offset, const std::u32string& unicode);
-
 	/***** ***** ***** ***** Font flags ***** ***** ***** *****/
 
 	// NOTE: these values must be powers of 2 in order to be bit-unique
@@ -144,7 +151,16 @@ public:
 	/***** ***** ***** ***** Query details ***** ***** ***** *****/
 
 	/**
-	 * Gets the location for the cursor.
+	 * Returns the maximum glyph height of a font, in drawing coordinates.
+	 *
+	 * @returns                       The height of the tallest possible glyph for the selected
+	 *                                font. More specifically, the result is the sum of the maximum
+	 *                                ascent and descent lengths.
+	 */
+	int get_max_glyph_height() const;
+
+	/**
+	 * Gets the location for the cursor, in drawing coordinates.
 	 *
 	 * @param column              The column offset of the cursor.
 	 * @param line                The line offset of the cursor.
@@ -169,6 +185,7 @@ public:
 	 * and not including any characters from the delimiters set.
 	 *
 	 * @param position            The pixel position in the text area.
+	 * @param delimiters
 	 *
 	 * @returns                   The token containing position, and none of the
 	 * 			      delimiter characters. If position is out of bounds,
@@ -195,6 +212,17 @@ public:
 	 *                            character if not found.
 	 */
 	point get_column_line(const point& position) const;
+
+	/**
+	 * Retrieves a list of strings with contents for each rendered line.
+	 *
+	 * This method is not const because it requires rendering the text.
+	 *
+	 * @note This is only intended for renderer implementation details. This
+	 *       is a rather expensive function because it copies everything at
+	 *       least once.
+	 */
+	std::vector<std::string> get_lines() const;
 
 	/**
 	 * Gets the length of the text in bytes.
@@ -224,7 +252,7 @@ public:
 
 	pango_text& set_family_class(font::family_class fclass);
 
-	pango_text& set_font_size(const unsigned font_size);
+	pango_text& set_font_size(unsigned font_size);
 
 	pango_text& set_font_style(const FONT_STYLE font_style);
 
@@ -257,10 +285,6 @@ private:
 	std::unique_ptr<PangoLayout, std::function<void(void*)>> layout_;
 	mutable PangoRectangle rect_;
 
-	/** The SDL surface to render upon used as a cache. */
-	mutable surface surface_;
-
-
 	/** The text to draw (stored as UTF-8). */
 	std::string text_;
 
@@ -271,12 +295,12 @@ private:
 	bool link_aware_;
 
 	/**
-     * The color to render links in.
-     *
-     * Links are formatted using pango &lt;span> as follows:
-     *
-     * &lt;span underline="single" color=" + link_color_ + ">
-     */
+	 * The color to render links in.
+	 *
+	 * Links are formatted using pango &lt;span> as follows:
+	 *
+	 * &lt;span underline="single" color=" + link_color_ + ">
+	 */
 	color_t link_color_;
 
 	/** The font family class used. */
@@ -351,33 +375,47 @@ private:
 	/** Length of the text. */
 	mutable std::size_t length_;
 
-	/**
-	 * Recalculates the text layout.
-	 *
-	 * When the text is recalculated the surface is dirtied.
-	 *
-	 * @param force               Recalculate even if not dirty?
-	 */
-	void recalculate(const bool force = false) const;
+	/** The pixel scale, used to render high-DPI text. */
+	int pixel_scale_;
+
+	/** Recalculates the text layout. */
+	void recalculate() const;
 
 	/** Calculates surface size. */
 	PangoRectangle calculate_size(PangoLayout& layout) const;
 
-	/** The dirty state of the surface. */
-	mutable bool surface_dirty_;
+	/** Allow specialization of std::hash for pango_text. */
+	friend struct std::hash<pango_text>;
 
 	/**
-	 * Renders the text.
+	 * Equivalent to create_surface(viewport), where the viewport's top-left is
+	 * at (0,0) and the area is large enough to contain the full text.
 	 *
-	 * It will do a recalculation first so no need to call both.
-	 *
-	 * @param force               Render even if not dirty? This parameter is
-	 *                            also send to recalculate().
+	 * The top-left of the viewport will be at (0,0), regardless of the values
+	 * of x and y in the rect_ member variable. If the x or y co-ordinates are
+	 * non-zero, then x columns and y rows of blank space are included in the
+	 * amount of memory allocated.
 	 */
-	void rerender(const bool force = false);
+	surface create_surface();
 
-	void render(PangoLayout& layout, const PangoRectangle& rect,
-		const std::size_t surface_buffer_offset, const unsigned stride);
+	/**
+	 * Renders the text to a surface that uses surface_buffer_ as its data store,
+	 * the buffer will be allocated or reallocated as necessary.
+	 *
+	 * The surface's origin will correspond to viewport.x and viewport.y, the
+	 * width and height will be at least viewport.w and viewport.h (although
+	 * they may be larger).
+	 *
+	 * @param viewport The area to draw, which can be a subset of the text. This
+	 * rectangle's coordinates use render-space's scale.
+	 */
+	surface create_surface(const SDL_Rect& viewport);
+
+	/**
+	 * This is part of create_surface(viewport). The separation is a legacy
+	 * from workarounds to the size limits of cairo_surface_t.
+	 */
+	void render(PangoLayout& layout, const SDL_Rect& viewport, const unsigned stride);
 
 	/**
 	 * Buffer to store the image on.
@@ -389,39 +427,43 @@ private:
 	mutable std::vector<uint8_t> surface_buffer_;
 
 	/**
-	 * Creates a new buffer.
-	 *
-	 * If needed frees the other surface and then creates a new buffer and
-	 * initializes the entire buffer with values 0.
-	 *
-	 * NOTE even though we're clearly modifying function we don't change the
-	 * state of the object. The const is needed so other functions can also be
-	 * marked const (those also don't change the state of the object.
-	 *
-	 * @param size                The required size of the buffer.
-	 */
-	void create_surface_buffer(const std::size_t size) const;
-
-	/**
 	 * Sets the markup'ed text.
 	 *
 	 * It tries to set the text as markup. If the markup is invalid it will try
 	 * a bit harder to recover from the errors and still set the markup.
 	 *
 	 * @param text                The text to set as markup.
+	 * @param layout
 	 *
 	 * @returns                   Whether the markup was set or an
 	 *                            unrecoverable error occurred and the text is
 	 *                            set as plain text with an error message.
 	 */
-	bool set_markup(utils::string_view text, PangoLayout& layout);
+	bool set_markup(std::string_view text, PangoLayout& layout);
 
-	bool validate_markup(utils::string_view text, char** raw_text, std::string& semi_escaped) const;
+	bool validate_markup(std::string_view text, char** raw_text, std::string& semi_escaped) const;
 
 	static void copy_layout_properties(PangoLayout& src, PangoLayout& dst);
 
-	std::vector<std::string> find_links(utils::string_view text) const;
-	void format_links(std::string& text, const std::vector<std::string>& links) const;
+	std::string format_links(std::string_view text) const;
+
+	/**
+	 * Adjust a texture's draw-width and height according to pixel scale.
+	 *
+	 * As fonts are rendered at output-scale, we need to do this just
+	 * before returning the rendered texture. These attributes are stored
+	 * as part of the returned texture object.
+	 */
+	texture with_draw_scale(const texture& t) const;
+
+	/** Scale the given render-space size to draw-space, rounding up. */
+	int to_draw_scale(int s) const;
+
+	/** Scale the given render-space point to draw-space, rounding up. */
+	point to_draw_scale(const point& p) const;
+
+	/** Update pixel scale, if necessary. */
+	void update_pixel_scale();
 };
 
 /**
@@ -433,4 +475,28 @@ private:
  */
 pango_text& get_text_renderer();
 
+/**
+ * Returns the maximum glyph height of a font, in pixels.
+ *
+ * @param size                    Desired font size in pixels.
+ * @param fclass                  Font family to use for measurement.
+ * @param style                   Font style to select the correct variant for measurement.
+ *
+ * @returns                       The height of the tallest possible glyph for the selected
+ *                                font. More specifically, the result is the sum of the maximum
+ *                                ascent and descent lengths.
+ */
+int get_max_height(unsigned size, font::family_class fclass = font::FONT_SANS_SERIF, pango_text::FONT_STYLE style = pango_text::STYLE_NORMAL);
+
 } // namespace font
+
+// Specialize std::hash for pango_text
+namespace std
+{
+template<>
+struct hash<font::pango_text>
+{
+	std::size_t operator()(const font::pango_text&) const;
+};
+
+} // namespace std

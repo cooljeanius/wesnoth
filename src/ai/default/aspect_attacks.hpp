@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2009 - 2018 by Yurii Chernyi <terraninfo@terraninfo.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2009 - 2023
+	by Yurii Chernyi <terraninfo@terraninfo.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -24,36 +25,36 @@
 
 namespace ai {
 
-
 namespace ai_default_rca {
 
 class aspect_attacks_base : public typesafe_aspect<attacks_vector> {
 public:
 	aspect_attacks_base(readonly_context &context, const config &cfg, const std::string &id);
 
-
 	virtual ~aspect_attacks_base() {}
-
 
 	virtual void recalculate() const;
 
-
 	virtual bool is_allowed_attacker(const unit& u) const = 0;
 	virtual bool is_allowed_enemy(const unit& u) const = 0;
-
 
 protected:
 	std::shared_ptr<attacks_vector> analyze_targets() const;
 
 	void do_attack_analysis(const map_location& loc,
-	                const move_map& srcdst, const move_map& dstsrc,
-			const move_map& fullmove_srcdst, const move_map& fullmove_dstsrc,
-	                const move_map& enemy_srcdst, const move_map& enemy_dstsrc,
-			const adjacent_loc_array_t& tiles, bool* used_locations,
-	                std::vector<map_location>& units,
-	                std::vector<attack_analysis>& result,
-			attack_analysis& cur_analysis,
-			 const team &current_team) const;
+		const move_map& srcdst,
+		const move_map& dstsrc,
+		const move_map& fullmove_srcdst,
+		const move_map& fullmove_dstsrc,
+		const move_map& enemy_srcdst,
+		const move_map& enemy_dstsrc,
+		const std::array<map_location, 6>& tiles,
+		std::array<bool, 6>& used_locations,
+		std::vector<map_location>& units,
+		std::vector<attack_analysis>& result,
+		attack_analysis& cur_analysis,
+		const team& current_team) const;
+
 	static int rate_terrain(const unit& u, const map_location& loc);
 };
 

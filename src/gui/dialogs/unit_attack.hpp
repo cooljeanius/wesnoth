@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2010 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2010 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -18,11 +19,25 @@
 #include "gui/dialogs/modal_dialog.hpp"
 #include "units/map.hpp"
 
-namespace gui2
-{
-namespace dialogs
+namespace gui2::dialogs
 {
 
+/**
+ * @ingroup GUIWindowDefinitionWML
+ *
+ * This shows the dialog for attacking units.
+ * Key               |Type          |Mandatory|Description
+ * ------------------|--------------|---------|-----------
+ * attacker_portrait | @ref image   |no       |Shows the portrait of the attacking unit.
+ * attacker_icon     | @ref image   |no       |Shows the icon of the attacking unit.
+ * attacker_name     | control      |no       |Shows the name of the attacking unit.
+ * defender_portrait | @ref image   |no       |Shows the portrait of the defending unit.
+ * defender_icon     | @ref image   |no       |Shows the icon of the defending unit.
+ * defender_name     | control      |no       |Shows the name of the defending unit.
+ * weapon_list       | @ref listbox |yes      |The list with weapons to choose from.
+ * attacker_weapon   | control      |no       |The weapon for the attacker to use.
+ * defender_weapon   | control      |no       |The weapon for the defender to use.
+ */
 class unit_attack : public modal_dialog
 {
 public:
@@ -39,16 +54,13 @@ public:
 	}
 
 private:
-	/** Inherited from modal_dialog, implemented by REGISTER_DIALOG. */
 	virtual const std::string& window_id() const override;
 
-	/** Inherited from modal_dialog. */
 	virtual void pre_show(window& window) override;
 
-	/** Inherited from modal_dialog. */
 	virtual void post_show(window& window) override;
 
-	void damage_calc_callback(window& window);
+	void damage_calc_callback();
 
 	/** The index of the selected weapon. */
 	int selected_weapon_;
@@ -67,4 +79,3 @@ private:
 };
 
 } // namespace dialogs
-} // namespace gui2

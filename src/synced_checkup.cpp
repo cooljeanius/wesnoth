@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2014 - 2018 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2014 - 2023
+	by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #include "synced_checkup.hpp"
@@ -47,7 +48,7 @@ ignored_checkup::~ignored_checkup()
 bool ignored_checkup::local_checkup(const config& /*expected_data*/, config& real_data)
 {
 	assert(real_data.empty());
-	LOG_REPLAY << "ignored_checkup::local_checkup called\n";
+	LOG_REPLAY << "ignored_checkup::local_checkup called";
 	return true;
 }
 
@@ -66,7 +67,7 @@ bool synced_checkup::local_checkup(const config& expected_data, config& real_dat
 	if(buffer_.child_count("result") > pos_)
 	{
 		//copying objects :o
-		real_data = buffer_.child("result",pos_);
+		real_data = buffer_.mandatory_child("result",pos_);
 		pos_ ++;
 		return real_data == expected_data;
 	}

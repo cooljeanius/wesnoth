@@ -4,7 +4,7 @@ local function path_locs(path)
 		local function special_locations()
 			return function()
 				for _,loc in ipairs(tostring(path.location_id):split()) do
-					loc = wesnoth.special_locations[loc]
+					loc = wesnoth.current.map.special_locations[loc]
 					if loc then coroutine.yield(loc[1], loc[2]) end
 				end
 			end
@@ -23,7 +23,7 @@ local function path_locs(path)
 							wml.error("Invalid direction:count in move_unit: " .. error_dir)
 						end
 					end
-					next_loc = wesnoth.map.get_direction(last.x, last.y, dir, count)
+					local next_loc = wesnoth.map.get_direction(last.x, last.y, dir, count)
 					coroutine.yield(next_loc[1], next_loc[2])
 					last.x, last.y = next_loc[1], next_loc[2]
 				end
@@ -68,7 +68,7 @@ function wesnoth.wml_actions.move_unit(cfg)
 	local check_passability = cfg.check_passability
 	if check_passability == nil then check_passability = true end
 	cfg = wml.literal(cfg)
-	cfg.to_location, cfg.to_x, cfg.to_y, cfg.fire_event, cfg.clear_shroud = nil
+	cfg.to_location, cfg.to_x, cfg.to_y, cfg.fire_event, cfg.clear_shroud = nil, nil, nil, nil, nil
 	local units = wesnoth.units.find_on_map(cfg)
 
 	for current_unit_index, current_unit in ipairs(units) do
@@ -83,9 +83,9 @@ function wesnoth.wml_actions.move_unit(cfg)
 			local x, y = locs(current_unit)
 			local prevX, prevY = tonumber(current_unit.x), tonumber(current_unit.y)
 			while true do
-				x = tonumber(x) or wml.error(coordinate_error)
-				y = tonumber(y) or wml.error(coordinate_error)
-				if not (x == prevX and y == prevY) then x, y = wesnoth.find_vacant_tile(x, y, pass_check) end
+				x = tonumber(x) or current_unit:to_map(false) or wml.error(coordinate_error)
+				y = tonumber(y) or current_unit:to_map(false) or wml.error(coordinate_error)
+				if not (x == prevX and y == prevY) then x, y = wesnoth.paths.find_vacant_hex(x, y, pass_check) end
 				if not x or not y then wml.error("Could not find a suitable hex near to one of the target hexes in [move_unit].") end
 				table.insert(x_list, x)
 				table.insert(y_list, y)
@@ -112,14 +112,13 @@ function wesnoth.wml_actions.move_unit(cfg)
 			}
 			local x2, y2 = current_unit.x, current_unit.y
 			current_unit.x, current_unit.y = x, y
-			current_unit:to_map()
-			
+			current_unit:to_map(false)
 			if unshroud then
 				wesnoth.wml_actions.redraw {clear_shroud=true}
 			end
 
 			if fire_event then
-				wesnoth.fire_event("moveto", x, y, x2, y2)
+				wesnoth.game_events.fire("moveto", x, y, x2, y2)
 			end
 		end
 	end

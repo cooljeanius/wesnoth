@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2011 - 2018 by Sergey Popov <loonycyborg@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2011 - 2023
+	by Sergey Popov <loonycyborg@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -33,23 +34,20 @@
 #include "configr_assign.hpp"
 #include "wesnothd_connection_error.hpp"
 
-#include <boost/asio.hpp>
+#include <boost/asio/io_context.hpp>
+#include <boost/asio/ip/tcp.hpp>
+#include <boost/asio/streambuf.hpp>
+#include <boost/asio/ssl.hpp>
 
 #include <condition_variable>
 #include <deque>
 #include <future>
 #include <list>
-#include <thread>
 #include <mutex>
 #include <queue>
+#include <thread>
 
 class config;
-enum class loading_stage;
-
-union data_union {
-	char binary[4];
-	uint32_t num;
-};
 
 /** A class that represents a TCP/IP connection to the wesnothd server. */
 class wesnothd_connection
@@ -62,32 +60,48 @@ public:
 
 	~wesnothd_connection();
 
-public:
 	/**
 	 * Constructor.
 	 *
-	 * @param host    Name of the host to connect to
-	 * @param service Service identifier such as "80" or "http"
+	 * @param host        Name of the host to connect to
+	 * @param service     Service identifier such as "80" or "http"
 	 */
 	wesnothd_connection(const std::string& host, const std::string& service);
 
-	bool fetch_data_with_loading_screen(config& cfg, loading_stage stage);
-
+	/**
+	 * Queues the given data to be sent to the server.
+	 *
+	 * @param request     The data to send
+	 */
 	void send_data(const configr_of& request);
 
+	/**
+	 * Receives the next pending data pack from the server, if available.
+	 *
+	 * @param result      The object to which the received data will be written.
+	 * @returns           True if any data was available, false otherwise.
+	 */
 	bool receive_data(config& result);
 
 	/**
-	 * Helper function that spins until data has been received.
-	 * Should be used in tandem with the loading screen or other multi-threaded components.
+	 * Unlike @ref receive_data, waits until data is available instead of returning immediately.
+	 *
+	 * @param data        Config object passed to @ref receive_data
+	 * @returns           True, since data will always be available.
 	 */
 	bool wait_and_receive_data(config& data);
 
+	/** Waits until the server handshake is complete. */
 	void wait_for_handshake();
+
+	/** True if connection is currently using TLS and thus is allowed to send cleartext passwords or auth tokens */
+	bool using_tls() const
+	{
+		return utils::holds_alternative<tls_socket>(socket_);
+	}
 
 	void cancel();
 
-	// Destroys this object.
 	void stop();
 
 	std::size_t bytes_to_write() const
@@ -123,13 +137,20 @@ public:
 private:
 	std::thread worker_thread_;
 
-	boost::asio::io_service io_service_;
+	boost::asio::io_context io_context_;
 
 	typedef boost::asio::ip::tcp::resolver resolver;
 	resolver resolver_;
 
-	typedef boost::asio::ip::tcp::socket socket;
-	socket socket_;
+	boost::asio::ssl::context tls_context_;
+
+	std::string host_;
+	std::string service_;
+	typedef std::unique_ptr<boost::asio::ip::tcp::socket> raw_socket;
+	typedef std::unique_ptr<boost::asio::ssl::stream<raw_socket::element_type>> tls_socket;
+	typedef utils::variant<raw_socket, tls_socket> any_socket;
+	bool use_tls_;
+	any_socket socket_;
 
 	boost::system::error_code last_error_;
 
@@ -139,15 +160,18 @@ private:
 
 	boost::asio::streambuf read_buf_;
 
-	void handle_resolve(const boost::system::error_code& ec, resolver::iterator iterator);
+	using results_type = resolver::results_type;
+	using endpoint = const boost::asio::ip::tcp::endpoint&;
 
-	void connect(resolver::iterator iterator);
-	void handle_connect(const boost::system::error_code& ec, resolver::iterator iterator);
+	void handle_resolve(const boost::system::error_code& ec, results_type results);
+	void handle_connect(const boost::system::error_code& ec, endpoint endpoint);
 
 	void handshake();
 	void handle_handshake(const boost::system::error_code& ec);
 
-	data_union handshake_response_;
+	uint32_t handshake_response_;
+
+	void fallback_to_unencrypted();
 
 	std::size_t is_write_complete(const boost::system::error_code& error, std::size_t bytes_transferred);
 	void handle_write(const boost::system::error_code& ec, std::size_t bytes_transferred);
@@ -158,10 +182,12 @@ private:
 	void send();
 	void recv();
 
+	void set_keepalive(int seconds);
+
 	template<typename T>
 	using data_queue = std::queue<T, std::list<T>>;
 
-	data_queue<std::shared_ptr<boost::asio::streambuf>> send_queue_;
+	data_queue<std::unique_ptr<boost::asio::streambuf>> send_queue_;
 	data_queue<config> recv_queue_;
 
 	std::mutex recv_queue_mutex_;
@@ -176,5 +202,3 @@ private:
 	std::size_t bytes_to_read_;
 	std::size_t bytes_read_;
 };
-
-using wesnothd_connection_ptr = std::unique_ptr<wesnothd_connection>;

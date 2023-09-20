@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2008 - 2018 by Fabian Mueller <fabianmueller5@gmx.de>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by Fabian Mueller <fabianmueller5@gmx.de>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #define GETTEXT_DOMAIN "wesnoth-editor"
@@ -34,57 +35,48 @@ namespace editor {
 
 void mouse_action_unit::move(editor_display& disp, const map_location& hex)
 {
-	if (hex != previous_move_hex_) {
+	if (hex == previous_move_hex_) {
+		return;
+	}
 
-		update_brush_highlights(disp, hex);
+	update_brush_highlights(disp, hex);
 
-		std::set<map_location> adjacent_set;
-		adjacent_loc_array_t adjacent;
-		get_adjacent_tiles(previous_move_hex_, adjacent.data());
+	std::set<map_location> adjacent_set;
+	for(const map_location& adj : get_adjacent_tiles(previous_move_hex_)) {
+		adjacent_set.insert(adj);
+	}
 
-		for (unsigned i = 0; i < adjacent.size(); i++)
-			adjacent_set.insert(adjacent[i]);
+	disp.invalidate(adjacent_set);
+	previous_move_hex_ = hex;
 
-		disp.invalidate(adjacent_set);
-		previous_move_hex_ = hex;
+	const unit_map& units = disp.get_units();
+	const unit_map::const_unit_iterator unit_it = units.find(hex);
+	if (unit_it != units.end()) {
 
-		const unit_map& units = disp.get_units();
-		const unit_map::const_unit_iterator unit_it = units.find(hex);
-		if (unit_it != units.end()) {
+		disp.clear_mouseover_hex_overlay();
 
-			disp.set_mouseover_hex_overlay(nullptr);
-
-			SDL_Rect rect;
-			rect.x = disp.get_location_x(hex);
-			rect.y = disp.get_location_y(hex);
-			rect.h = disp.hex_size();
-			rect.w = disp.hex_size();
-			std::stringstream str;
-			const auto& recruits = unit_it->recruits();
-			std::vector<t_string> recruit_type_names;
-			std::transform(recruits.begin(), recruits.end(), std::back_inserter(recruit_type_names),
-				[](const std::string& type_id) -> t_string {
-					const unit_type *new_unit_type = unit_types.find(type_id);
-					if(!new_unit_type) return VGETTEXT("(Unknown unit type: $type)", { { "type", type_id } });
-					return new_unit_type->type_name();
-				}
-			);
-			str << _("Identifier: ") << unit_it->id()     << "\n"
-				<< _("Name: ")    << unit_it->name()      << "\n"
-				<< _("Type: ")    << unit_it->type_name() << "\n"
-				<< _("Level: ")   << unit_it->level()     << "\n"
-				<< _("Cost: ")    << unit_it->cost()      << "\n"
-				<< _("Recruit: ") << utils::join(recruit_type_names) << "\n";
-			tooltips::clear_tooltips();
-			tooltips::add_tooltip(rect, str.str());
+		SDL_Rect rect;
+		rect.x = disp.get_location_x(hex);
+		rect.y = disp.get_location_y(hex);
+		rect.h = disp.hex_size();
+		rect.w = disp.hex_size();
+		std::stringstream str;
+		str << _("Identifier: ") << unit_it->id()     << "\n";
+		if(unit_it->name() != "") {
+			str	<< _("Name: ")    << unit_it->name()      << "\n";
 		}
-		else {
-			set_mouse_overlay(disp);
-		}
+		str	<< _("Type: ")    << unit_it->type_name() << "\n"
+			<< _("Level: ")   << unit_it->level()     << "\n"
+			<< _("Cost: ")    << unit_it->cost()      << "\n";
+		tooltips::clear_tooltips();
+		tooltips::add_tooltip(rect, str.str());
+	}
+	else {
+		set_mouse_overlay(disp);
 	}
 }
 
-editor_action* mouse_action_unit::click_left(editor_display& disp, int x, int y)
+std::unique_ptr<editor_action> mouse_action_unit::click_left(editor_display& disp, int x, int y)
 {
 	start_hex_ = disp.hex_clicked_on(x, y);
 	if (!disp.get_map().on_board(start_hex_)) {
@@ -100,14 +92,14 @@ editor_action* mouse_action_unit::click_left(editor_display& disp, int x, int y)
 	return nullptr;
 }
 
-editor_action* mouse_action_unit::drag_left(editor_display& disp, int x, int y, bool& /*partial*/, editor_action* /*last_undo*/)
+std::unique_ptr<editor_action> mouse_action_unit::drag_left(editor_display& disp, int x, int y, bool& /*partial*/, editor_action* /*last_undo*/)
 {
 	map_location hex = disp.hex_clicked_on(x, y);
 	click_ = (hex == start_hex_);
 	return nullptr;
 }
 
-editor_action* mouse_action_unit::up_left(editor_display& disp, int x, int y)
+std::unique_ptr<editor_action> mouse_action_unit::up_left(editor_display& disp, int x, int y)
 {
 	if (!click_) return nullptr;
 	click_ = false;
@@ -125,7 +117,7 @@ editor_action* mouse_action_unit::up_left(editor_display& disp, int x, int y)
 	const unit_type *new_unit_type = unit_types.find(type_id);
 	if (!new_unit_type) {
 		//TODO rewrite the error message.
-		ERR_ED << "create unit dialog returned inexistent or unusable unit_type id '" << type_id << "'" << std::endl;
+		ERR_ED << "create unit dialog returned inexistent or unusable unit_type id '" << type_id << "'";
 		return nullptr;
 	}
 
@@ -133,14 +125,13 @@ editor_action* mouse_action_unit::up_left(editor_display& disp, int x, int y)
 	unit_race::GENDER gender = ut.genders().front();
 
 	unit_ptr new_unit = unit::create(ut, disp.viewing_side(), true, gender);
-	editor_action* action = new editor_action_unit(hex, *new_unit);
+	auto action = std::make_unique<editor_action_unit>(hex, *new_unit);
 	return action;
 }
 
-editor_action* mouse_action_unit::drag_end_left(editor_display& disp, int x, int y)
+std::unique_ptr<editor_action> mouse_action_unit::drag_end_left(editor_display& disp, int x, int y)
 {
 	if (click_) return nullptr;
-	editor_action* action = nullptr;
 
 	map_location hex = disp.hex_clicked_on(x, y);
 	if (!disp.get_map().on_board(hex))
@@ -151,88 +142,8 @@ editor_action* mouse_action_unit::drag_end_left(editor_display& disp, int x, int
 	if (unit_it == units.end())
 		return nullptr;
 
-	action = new editor_action_unit_replace(start_hex_, hex);
-	return action;
+	return std::make_unique<editor_action_unit_replace>(start_hex_, hex);
 }
-
-/*
-editor_action* mouse_action_unit::click_right(editor_display& disp, int x, int y)
-{
-	map_location hex = disp.hex_clicked_on(x, y);
-	start_hex_ = hex;
-	previous_move_hex_ = hex;
-
-	const unit_map& units = disp.units();
-	const unit_map::const_unit_iterator unit_it = units.find(start_hex_);
-
-	if (unit_it != units.end()) {
-		old_direction_ = unit_it->facing();
-	}
-
-	click_ = true;
-	return nullptr;
-}
-*/
-
-//editor_action* mouse_action_unit::drag_right(editor_display& disp, int x, int y, bool& /*partial*/, editor_action* /*last_undo*/)
-//{
-//	map_location hex = disp.hex_clicked_on(x, y);
-//	if (previous_move_hex_ == hex)
-//		return nullptr;
-//
-//	click_ = (start_hex_ == hex);
-//	previous_move_hex_ = hex;
-//
-//	const unit_map& units = disp.units();
-//
-//	const unit_map::const_unit_iterator unit_it = units.find(start_hex_);
-//	if (unit_it != units.end()) {
-//		for (map_location::DIRECTION new_direction = map_location::NORTH;
-//				new_direction <= map_location::NORTH_WEST;
-//				new_direction = map_location::DIRECTION(new_direction +1)){
-//			if (unit_it->get_location().get_direction(new_direction, 1) == hex) {
-//				return new editor_action_unit_facing(start_hex_, new_direction, old_direction_);
-//			}
-//		}
-//	}
-//
-//	return nullptr;
-//}
-
-//editor_action* mouse_action_unit::up_right(editor_display& disp, int /*x*/, int /*y*/)
-//{
-//	if (!click_) return nullptr;
-//	click_ = false;
-//
-//	const unit_map& units = disp.units();
-//	const unit_map::const_unit_iterator unit_it = units.find(start_hex_);
-//	if (unit_it != units.end()) {
-//		return new editor_action_unit_delete(start_hex_);
-//	}
-//
-//	return nullptr;
-//}
-
-//editor_action* mouse_action_unit::drag_end_right(editor_display& disp, int x, int y)
-//{
-//	if (click_) return nullptr;
-//
-//	map_location hex = disp.hex_clicked_on(x, y);
-//	if (!disp.get_map().on_board(hex))
-//		return nullptr;
-//
-//	if(new_direction_ != old_direction_) {
-//
-//	const unit_map& units = disp.units();
-//	const unit_map::const_unit_iterator unit_it = units.find(start_hex_);
-//		if (unit_it != units.end()) {
-//			return new editor_action_unit_facing(start_hex_, new_direction_, old_direction_);
-//		}
-//	}
-//
-//	return nullptr;
-//}
-
 
 void mouse_action_unit::set_mouse_overlay(editor_display& disp)
 {
@@ -242,22 +153,11 @@ void mouse_action_unit::set_mouse_overlay(editor_display& disp)
 
 void mouse_action_unit::set_unit_mouse_overlay(editor_display& disp, const unit_type& u)
 {
-
 	std::stringstream filename;
 	filename << u.image() << "~RC(" << u.flag_rgb() << '>'
 			<< team::get_side_color_id(disp.viewing_side()) << ')';
 
-	surface image(image::get_image(filename.str()));
-	uint8_t alpha = 196;
-	//TODO don't hardcode
-	int size = 72;
-	//int size = image->w;
-	int zoom = static_cast<int>(size * disp.get_zoom_factor());
-
-	// Add the alpha factor and scale the image
-	adjust_surface_alpha(image, alpha);
-	image = scale_surface(image, zoom, zoom);
-	disp.set_mouseover_hex_overlay(image);
+	disp.set_mouseover_hex_overlay(image::get_texture(filename.str()));
 }
 
 

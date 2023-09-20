@@ -1,16 +1,17 @@
 /*
-   Copyright (C) 2008 - 2018 by Jörg Hinrichs <joerg.hinrichs@alice-dsl.de>
-   Copyright (C) 2012 - 2018 by Iris Morelle <shadowm2006@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2012 - 2023
+	by Iris Morelle <shadowm2006@gmail.com>
+	Copyright (C) 2008 - 2018 by Jörg Hinrichs <joerg.hinrichs@alice-dsl.de>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #include "gui/dialogs/multiplayer/mp_host_game_prompt.hpp"
@@ -18,26 +19,8 @@
 #include "preferences/game.hpp"
 #include "gui/widgets/settings.hpp"
 
-namespace gui2
+namespace gui2::dialogs
 {
-namespace dialogs
-{
-
-/*WIKI
- * @page = GUIWindowDefinitionWML
- * @order = 2_mp_host_game_prompt
- *
- * == Host Networked Game prompt ==
- *
- * This shows the dialog to confirm deleting a savegame file.
- *
- * @begin{table}{dialog_widgets}
- *
- * do_not_show_again & & boolean_selector & m &
- *        A checkbox to not show this dialog again. $
- *
- * @end{table}
- */
 
 REGISTER_DIALOG(mp_host_game_prompt)
 
@@ -58,9 +41,8 @@ static void set_do_not_show_again(const bool do_not_show_again)
 }
 
 mp_host_game_prompt::mp_host_game_prompt()
+	: modal_dialog(window_id())
 {
-	set_restore(true);
-
 	register_bool("do_not_show_again",
 				  true,
 				  &get_do_not_show_again,
@@ -68,4 +50,3 @@ mp_host_game_prompt::mp_host_game_prompt()
 }
 
 } // namespace dialogs
-} // namespace gui2

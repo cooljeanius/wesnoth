@@ -1,16 +1,17 @@
 /*
-   Copyright (C) 2006 - 2018 by Joerg Hinrichs <joerg.hinrichs@alice-dsl.de>
-   wesnoth playturn Copyright (C) 2003 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2006 - 2023
+	by Joerg Hinrichs <joerg.hinrichs@alice-dsl.de>
+	Copyright (C) 2003 by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -37,6 +38,7 @@
 #include "game_end_exceptions.hpp"
 #include "game_events/pump.hpp"
 #include "preferences/game.hpp"
+#include "game_initialization/multiplayer.hpp"
 #include "game_state.hpp"
 #include "gettext.hpp"
 #include "gui/dialogs/chat_log.hpp"
@@ -70,6 +72,7 @@
 #include "preferences/credentials.hpp"
 #include "preferences/display.hpp"
 #include "replay.hpp"
+#include "replay_controller.hpp"
 #include "replay_helper.hpp"
 #include "resources.hpp"
 #include "save_index.hpp"
@@ -119,21 +122,6 @@ game_board& menu_handler::board() const
 	return gamestate().board_;
 }
 
-unit_map& menu_handler::units()
-{
-	return gamestate().board_.units_;
-}
-
-std::vector<team>& menu_handler::teams() const
-{
-	return gamestate().board_.teams_;
-}
-
-const gamemap& menu_handler::map() const
-{
-	return gamestate().board_.map();
-}
-
 gui::floating_textbox& menu_handler::get_textbox()
 {
 	return textbox_info_;
@@ -151,7 +139,7 @@ void menu_handler::objectives()
 
 void menu_handler::show_statistics(int side_num)
 {
-	gui2::dialogs::statistics_dialog::display(board().get_team(side_num));
+	gui2::dialogs::statistics_dialog::display(pc_.statistics(), board().get_team(side_num));
 }
 
 void menu_handler::unit_list()
@@ -185,7 +173,7 @@ void menu_handler::save_map()
 	}
 
 	try {
-		filesystem::write_file(dlg.path(), map().write());
+		filesystem::write_file(dlg.path(), pc_.get_map().write());
 		gui2::show_transient_message("", _("Map saved."));
 	} catch(const filesystem::io_exception& e) {
 		utils::string_map symbols;
@@ -197,9 +185,9 @@ void menu_handler::save_map()
 
 void menu_handler::preferences()
 {
-	gui2::dialogs::preferences_dialog::display(game_config_);
+	gui2::dialogs::preferences_dialog::display();
 	// Needed after changing fullscreen/windowed mode or display resolution
-	gui_->redraw_everything();
+	gui_->queue_rerender();
 }
 
 void menu_handler::show_chat_log()
@@ -243,9 +231,9 @@ bool menu_handler::has_friends() const
 		return !gui_->observers().empty();
 	}
 
-	for(std::size_t n = 0; n != teams().size(); ++n) {
-		if(n != gui_->viewing_team() && teams()[gui_->viewing_team()].team_name() == teams()[n].team_name()
-				&& teams()[n].is_network()) {
+	for(std::size_t n = 0; n != pc_.get_teams().size(); ++n) {
+		if(n != gui_->viewing_team() && pc_.get_teams()[gui_->viewing_team()].team_name() == pc_.get_teams()[n].team_name()
+				&& pc_.get_teams()[n].is_network()) {
 			return true;
 		}
 	}
@@ -259,16 +247,29 @@ void menu_handler::recruit(int side_num, const map_location& last_hex)
 
 	std::set<std::string> recruits = actions::get_recruits(side_num, last_hex);
 
+	std::vector<t_string> unknown_units;
 	for(const auto& recruit : recruits) {
 		const unit_type* type = unit_types.find(recruit);
 		if(!type) {
-			ERR_NG << "could not find unit '" << recruit << "'" << std::endl;
-			return;
+			ERR_NG << "could not find unit '" << recruit << "'";
+			unknown_units.emplace_back(recruit);
+			continue;
 		}
 
 		map_location ignored;
 		map_location recruit_hex = last_hex;
 		sample_units[type] = (can_recruit(type->id(), side_num, recruit_hex, ignored));
+	}
+	if(!unknown_units.empty()) {
+		auto unknown_ids = utils::format_conjunct_list("", unknown_units);
+		// TRANSLATORS: An error that should never happen, might happen when loading an old savegame. If there are
+		// any units that the player can recruit then their standard recruitment dialog will be shown after this
+		// error message, otherwise they'll get the "You have no units available to recruit." error after this one.
+		const auto message = VNGETTEXT("Error: there’s an unknown unit type on your recruit list: $unknown_ids",
+			"Error: there are several unknown unit types on your recruit list: $unknown_ids",
+			unknown_units.size(),
+			utils::string_map { { "unknown_ids", unknown_ids }});
+		gui2::show_transient_message("", message);
 	}
 
 	if(sample_units.empty()) {
@@ -386,9 +387,9 @@ void menu_handler::recall(int side_num, const map_location& last_hex)
 		empty = current_team.recall_list().empty();
 	}
 
-	DBG_WB << "menu_handler::recall: Contents of wb-modified recall list:\n";
+	DBG_WB << "menu_handler::recall: Contents of wb-modified recall list:";
 	for(const unit_const_ptr& unit : recall_list_team) {
-		DBG_WB << unit->name() << " [" << unit->id() << "]\n";
+		DBG_WB << unit->name() << " [" << unit->id() << "]";
 	}
 
 	if(empty) {
@@ -432,7 +433,7 @@ void menu_handler::recall(int side_num, const map_location& last_hex)
 		return;
 	}
 
-	LOG_NG << "recall index: " << res << "\n";
+	LOG_NG << "recall index: " << res;
 	const events::command_disabler disable_commands;
 
 	map_location recall_location = last_hex;
@@ -456,7 +457,7 @@ void menu_handler::recall(int side_num, const map_location& last_hex)
 				synced_context::ignore_error_function);
 
 		if(!success) {
-			ERR_NG << "menu_handler::recall(): Unit does not exist in the recall list." << std::endl;
+			ERR_NG << "menu_handler::recall(): Unit does not exist in the recall list.";
 		}
 	}
 }
@@ -472,14 +473,14 @@ void menu_handler::show_enemy_moves(bool ignore_units, int side_num)
 	gui_->unhighlight_reach();
 
 	// Compute enemy movement positions
-	for(auto& u : units()) {
+	for(auto& u : pc_.get_units()) {
 		bool invisible = u.invisible(u.get_location());
 
 		if(board().get_team(side_num).is_enemy(u.side()) && !gui_->fogged(u.get_location()) && !u.incapacitated()
 				&& !invisible) {
 			const unit_movement_resetter move_reset(u);
 			const pathfind::paths& path
-					= pathfind::paths(u, false, true, teams()[gui_->viewing_team()], 0, false, ignore_units);
+					= pathfind::paths(u, false, true, pc_.get_teams()[gui_->viewing_team()], 0, false, ignore_units);
 
 			gui_->highlight_another_reach(path, hex_under_mouse);
 		}
@@ -579,13 +580,13 @@ bool menu_handler::end_turn(int side_num)
 	}
 
 	std::size_t team_num = static_cast<std::size_t>(side_num - 1);
-	if(team_num < teams().size() && teams()[team_num].no_turn_confirmation()) {
+	if(team_num < pc_.get_teams().size() && pc_.get_teams()[team_num].no_turn_confirmation()) {
 		// Skip the confirmations that follow.
 	}
 	// Ask for confirmation if the player hasn't made any moves.
 	else if(preferences::confirm_no_moves() && !pc_.get_undo_stack().player_acted()
 			&& (!pc_.get_whiteboard() || !pc_.get_whiteboard()->current_side_has_actions())
-			&& units_alive(side_num, units())) {
+			&& units_alive(side_num, pc_.get_units())) {
 		const int res = gui2::show_message("",
 				_("You have not started your turn yet. Do you really want to end your turn?"),
 				gui2::dialogs::message::yes_no_buttons);
@@ -594,7 +595,7 @@ bool menu_handler::end_turn(int side_num)
 		}
 	}
 	// Ask for confirmation if units still have some movement left.
-	else if(preferences::yellow_confirm() && partmoved_units(side_num, units(), board(), pc_.get_whiteboard())) {
+	else if(preferences::yellow_confirm() && partmoved_units(side_num, pc_.get_units(), board(), pc_.get_whiteboard())) {
 		const int res = gui2::show_message("",
 				_("Some units have movement left. Do you really want to end your turn?"),
 				gui2::dialogs::message::yes_no_buttons);
@@ -603,7 +604,7 @@ bool menu_handler::end_turn(int side_num)
 		}
 	}
 	// Ask for confirmation if units still have all movement left.
-	else if(preferences::green_confirm() && unmoved_units(side_num, units(), board(), pc_.get_whiteboard())) {
+	else if(preferences::green_confirm() && unmoved_units(side_num, pc_.get_units(), board(), pc_.get_whiteboard())) {
 		const int res = gui2::show_message("",
 				_("Some units have not moved. Do you really want to end your turn?"),
 				gui2::dialogs::message::yes_no_buttons);
@@ -623,9 +624,9 @@ bool menu_handler::end_turn(int side_num)
 
 void menu_handler::goto_leader(int side_num)
 {
-	unit_map::const_iterator i = units().find_leader(side_num);
+	unit_map::const_iterator i = pc_.get_units().find_leader(side_num);
 	const display_context& dc = gui_->get_disp_context();
-	if(i != units().end() && i->is_visible_to_team(dc.get_team(gui_->viewing_side()), false)) {
+	if(i != pc_.get_units().end() && i->is_visible_to_team(dc.get_team(gui_->viewing_side()), false)) {
 		gui_->scroll_to_tile(i->get_location(), game_display::WARP);
 	}
 }
@@ -633,7 +634,7 @@ void menu_handler::goto_leader(int side_num)
 void menu_handler::unit_description()
 {
 	const unit_map::const_iterator un = current_unit();
-	if(un != units().end()) {
+	if(un != pc_.get_units().end()) {
 		help::show_unit_description(*un);
 	}
 }
@@ -641,19 +642,19 @@ void menu_handler::unit_description()
 void menu_handler::terrain_description(mouse_handler& mousehandler)
 {
 	const map_location& loc = mousehandler.get_last_hex();
-	if(map().on_board(loc) == false || gui_->shrouded(loc)) {
+	if(pc_.get_map().on_board(loc) == false || gui_->shrouded(loc)) {
 		return;
 	}
 
-	const terrain_type& type = map().get_terrain_info(loc);
-	// const terrain_type& info = board().map().get_terrain_info(terrain);
+	const terrain_type& type = pc_.get_map().get_terrain_info(loc);
+	// const terrain_type& info = board().pc_.get_map().get_terrain_info(terrain);
 	help::show_terrain_description(type);
 }
 
 void menu_handler::rename_unit()
 {
 	const unit_map::iterator un = current_unit();
-	if(un == units().end() || gui_->viewing_side() != un->side()) {
+	if(un == pc_.get_units().end() || gui_->viewing_side() != un->side()) {
 		return;
 	}
 
@@ -677,18 +678,18 @@ unit_map::iterator menu_handler::current_unit()
 	const mouse_handler& mousehandler = pc_.get_mouse_handler_base();
 	const bool see_all = gui_->show_everything() || (pc_.is_replay() && pc_.get_replay_controller()->see_all());
 
-	unit_map::iterator res = board().find_visible_unit(mousehandler.get_last_hex(), teams()[gui_->viewing_team()], see_all);
-	if(res != units().end()) {
+	unit_map::iterator res = board().find_visible_unit(mousehandler.get_last_hex(), pc_.get_teams()[gui_->viewing_team()], see_all);
+	if(res != pc_.get_units().end()) {
 		return res;
 	}
 
-	return board().find_visible_unit(mousehandler.get_selected_hex(), teams()[gui_->viewing_team()], see_all);
+	return board().find_visible_unit(mousehandler.get_selected_hex(), pc_.get_teams()[gui_->viewing_team()], see_all);
 }
 
 // Helpers for create_unit()
 namespace
 {
-/// Allows a function to return both a type and a gender.
+/** Allows a function to return both a type and a gender. */
 typedef std::tuple<const unit_type*, unit_race::GENDER, std::string> type_gender_variation;
 
 /**
@@ -714,15 +715,15 @@ type_gender_variation choose_unit()
 	const std::string& ut_id = create_dlg.choice();
 	const unit_type* utp = unit_types.find(ut_id);
 	if(!utp) {
-		ERR_NG << "Create unit dialog returned nonexistent or unusable unit_type id '" << ut_id << "'." << std::endl;
+		ERR_NG << "Create unit dialog returned nonexistent or unusable unit_type id '" << ut_id << "'.";
 		return type_gender_variation(static_cast<const unit_type*>(nullptr), unit_race::NUM_GENDERS, "");
 	}
 	const unit_type& ut = *utp;
 
 	unit_race::GENDER gender = create_dlg.gender();
 	// Do not try to set bad genders, may mess up l10n
-	/// @todo Is this actually necessary?
-	/// (Maybe create_dlg can enforce proper gender selection?)
+	// TODO: Is this actually necessary?
+	// (Maybe create_dlg can enforce proper gender selection?)
 	if(ut.genders().end() == std::find(ut.genders().begin(), ut.genders().end(), gender)) {
 		gender = ut.genders().front();
 	}
@@ -766,19 +767,18 @@ void menu_handler::create_unit(mouse_handler& mousehandler)
 	assert(gui_ != nullptr);
 
 	// Let the user select the kind of unit to create.
-	type_gender_variation selection = choose_unit();
-	if(std::get<0>(selection) != nullptr) {
+	if(const auto& [type, gender, variation] = choose_unit(); type != nullptr) {
 		// Make it so.
-		create_and_place(*gui_, map(), units(), destination, *std::get<0>(selection), std::get<1>(selection), std::get<2>(selection));
+		create_and_place(*gui_, pc_.get_map(), pc_.get_units(), destination, *type, gender, variation);
 	}
 }
 
 void menu_handler::change_side(mouse_handler& mousehandler)
 {
 	const map_location& loc = mousehandler.get_last_hex();
-	const unit_map::iterator i = units().find(loc);
-	if(i == units().end()) {
-		if(!map().is_village(loc)) {
+	const unit_map::iterator i = pc_.get_units().find(loc);
+	if(i == pc_.get_units().end()) {
+		if(!pc_.get_map().is_village(loc)) {
 			return;
 		}
 
@@ -786,19 +786,19 @@ void menu_handler::change_side(mouse_handler& mousehandler)
 		int team = board().village_owner(loc);
 		// team is 0-based so team=team::nteams() is not a team
 		// but this will make get_village free it
-		if(team > static_cast<int>(teams().size())) {
+		if(team > static_cast<int>(pc_.get_teams().size())) {
 			team = 0;
 		}
 		actions::get_village(loc, team);
 	} else {
 		int side = i->side();
 		++side;
-		if(side > static_cast<int>(teams().size())) {
+		if(side > static_cast<int>(pc_.get_teams().size())) {
 			side = 1;
 		}
 		i->set_side(side);
 
-		if(map().is_village(loc)) {
+		if(pc_.get_map().is_village(loc)) {
 			actions::get_village(loc, side);
 		}
 	}
@@ -813,7 +813,7 @@ void menu_handler::kill_unit(mouse_handler& mousehandler)
 void menu_handler::label_terrain(mouse_handler& mousehandler, bool team_only)
 {
 	const map_location& loc = mousehandler.get_last_hex();
-	if(map().on_board(loc) == false) {
+	if(pc_.get_map().on_board(loc) == false) {
 		return;
 	}
 
@@ -862,9 +862,9 @@ void menu_handler::label_settings()
 void menu_handler::continue_move(mouse_handler& mousehandler, int side_num)
 {
 	unit_map::iterator i = current_unit();
-	if(i == units().end() || !i->move_interrupted()) {
-		i = units().find(mousehandler.get_selected_hex());
-		if(i == units().end() || !i->move_interrupted()) {
+	if(i == pc_.get_units().end() || !i->move_interrupted()) {
+		i = pc_.get_units().find(mousehandler.get_selected_hex());
+		if(i == pc_.get_units().end() || !i->move_interrupted()) {
 			return;
 		}
 	}
@@ -877,7 +877,7 @@ void menu_handler::move_unit_to_loc(const unit_map::iterator& ui,
 		int side_num,
 		mouse_handler& mousehandler)
 {
-	assert(ui != units().end());
+	assert(ui != pc_.get_units().end());
 
 	pathfind::marked_route route = mousehandler.get_route(&*ui, target, board().get_team(side_num));
 
@@ -891,10 +891,11 @@ void menu_handler::move_unit_to_loc(const unit_map::iterator& ui,
 	gui_->unhighlight_reach();
 
 	{
-		LOG_NG << "move_unit_to_loc " << route.steps.front() << " to " << route.steps.back() << "\n";
+		LOG_NG << "move_unit_to_loc " << route.steps.front() << " to " << route.steps.back();
 		actions::move_unit_and_record(route.steps, &pc_.get_undo_stack(), continue_move);
 	}
 
+	mousehandler.deselect_hex();
 	gui_->set_route(nullptr);
 	gui_->invalidate_game_status();
 }
@@ -913,7 +914,7 @@ void menu_handler::execute_gotos(mouse_handler& mousehandler, int side)
 	do {
 		change = false;
 		blocked_unit = false;
-		for(auto& unit : units()) {
+		for(auto& unit : pc_.get_units()) {
 			if(unit.side() != side || unit.movement_left() == 0) {
 				continue;
 			}
@@ -926,7 +927,7 @@ void menu_handler::execute_gotos(mouse_handler& mousehandler, int side)
 				continue;
 			}
 
-			if(!map().on_board(goto_loc)) {
+			if(!pc_.get_map().on_board(goto_loc)) {
 				continue;
 			}
 
@@ -959,7 +960,7 @@ void menu_handler::execute_gotos(mouse_handler& mousehandler, int side)
 
 			// we delay each blocked move because some other change
 			// may open a another not blocked path
-			if(units().count(next_stop)) {
+			if(pc_.get_units().count(next_stop)) {
 				blocked_unit = true;
 				if(wait_blocker_move)
 					continue;
@@ -968,7 +969,7 @@ void menu_handler::execute_gotos(mouse_handler& mousehandler, int side)
 			gui_->set_route(&route);
 
 			{
-				LOG_NG << "execute goto from " << route.steps.front() << " to " << route.steps.back() << "\n";
+				LOG_NG << "execute goto from " << route.steps.front() << " to " << route.steps.back();
 				int moves = actions::move_unit_and_record(route.steps, &pc_.get_undo_stack());
 				change = moves > 0;
 			}
@@ -1005,8 +1006,8 @@ void menu_handler::toggle_grid()
 
 void menu_handler::unit_hold_position(mouse_handler& mousehandler, int side_num)
 {
-	const unit_map::iterator un = units().find(mousehandler.get_selected_hex());
-	if(un != units().end() && un->side() == side_num && un->movement_left() >= 0) {
+	const unit_map::iterator un = pc_.get_units().find(mousehandler.get_selected_hex());
+	if(un != pc_.get_units().end() && un->side() == side_num && un->movement_left() >= 0) {
 		un->toggle_hold_position();
 		gui_->invalidate(mousehandler.get_selected_hex());
 
@@ -1020,8 +1021,8 @@ void menu_handler::unit_hold_position(mouse_handler& mousehandler, int side_num)
 
 void menu_handler::end_unit_turn(mouse_handler& mousehandler, int side_num)
 {
-	const unit_map::iterator un = units().find(mousehandler.get_selected_hex());
-	if(un != units().end() && un->side() == side_num && un->movement_left() >= 0) {
+	const unit_map::iterator un = pc_.get_units().find(mousehandler.get_selected_hex());
+	if(un != pc_.get_units().end() && un->side() == side_num && un->movement_left() >= 0) {
 		un->toggle_user_end_turn();
 		gui_->invalidate(mousehandler.get_selected_hex());
 
@@ -1033,7 +1034,7 @@ void menu_handler::end_unit_turn(mouse_handler& mousehandler, int side_num)
 
 		// If cycle_units hasn't found a new unit to cycle to then the original unit is still selected, but
 		// in a state where left-clicking on it does nothing. Make it respond to mouse clicks again.
-		if(un == units().find(mousehandler.get_selected_hex())) {
+		if(un == pc_.get_units().find(mousehandler.get_selected_hex())) {
 			mousehandler.deselect_hex();
 		}
 	}
@@ -1200,7 +1201,7 @@ protected:
 	{
 		return !((c.has_flag('D') && !game_config::debug)
 		      || (c.has_flag('N') && !menu_handler_.pc_.is_networked_mp())
-		      || (c.has_flag('A') && !preferences::is_authenticated())
+		      || (c.has_flag('A') && !mp::logged_in_as_moderator())
 		      || (c.has_flag('S') && (synced_context::get_synced_state() != synced_context::UNSYNCED || !menu_handler_.pc_.current_team().is_local())));
 	}
 
@@ -1220,6 +1221,7 @@ protected:
 		chmap::get_command("remove")->flags = "";  // clear network-only flag
 
 		chmap::set_cmd_prefix(":");
+		chmap::set_cmd_flag(true);
 
 		register_command("refresh", &console_handler::do_refresh, _("Refresh gui."));
 		register_command("droid", &console_handler::do_droid, _("Switch a side to/from AI control."),
@@ -1244,8 +1246,8 @@ protected:
 		register_command("foreground", &console_handler::do_foreground, _("Debug foreground terrain."), "", "D");
 		register_command(
 				"layers", &console_handler::do_layers, _("Debug layers from terrain under the mouse."), "", "D");
-		register_command("fps", &console_handler::do_fps, _("Show fps (Frames Per Second)."));
-		register_command("benchmark", &console_handler::do_benchmark);
+		register_command("fps", &console_handler::do_fps, _("Display and log fps (Frames Per Second)."));
+		register_command("benchmark", &console_handler::do_benchmark, _("Similar to the 'fps' command, but also forces everything to redraw instead of only things that have changed."));
 		register_command("save", &console_handler::do_save, _("Save game."));
 		register_alias("save", "w");
 		register_command("quit", &console_handler::do_quit, _("Quit game."));
@@ -1314,8 +1316,8 @@ protected:
 				"whiteboard_options", &console_handler::do_whiteboard_options, _("Access whiteboard options dialog."));
 		register_alias("whiteboard_options", "wbo");
 
-		if(const config& alias_list = preferences::get_alias()) {
-			for(const config::attribute& a : alias_list.attribute_range()) {
+		if(auto alias_list = preferences::get_alias()) {
+			for(const config::attribute& a : alias_list->attribute_range()) {
 				register_alias(a.second, a.first);
 			}
 		}
@@ -1347,7 +1349,7 @@ void menu_handler::send_chat_message(const std::string& message, bool allies_onl
 		if(board().is_observer()) {
 			cfg["to_sides"] = game_config::observer_team_name;
 		} else {
-			cfg["to_sides"] = teams()[gui_->viewing_team()].allied_human_teams();
+			cfg["to_sides"] = pc_.get_teams()[gui_->viewing_team()].allied_human_teams();
 		}
 	}
 
@@ -1373,22 +1375,22 @@ void menu_handler::do_search(const std::string& new_search)
 		int x, y;
 		x = lexical_cast_default<int>(args[0], 0) - 1;
 		y = lexical_cast_default<int>(args[1], 0) - 1;
-		if(x >= 0 && x < map().w() && y >= 0 && y < map().h()) {
+		if(x >= 0 && x < pc_.get_map().w() && y >= 0 && y < pc_.get_map().h()) {
 			loc = map_location(x, y);
 			found = true;
 		}
 	}
 	// Start scanning the game map
 	if(loc.valid() == false) {
-		loc = map_location(map().w() - 1, map().h() - 1);
+		loc = map_location(pc_.get_map().w() - 1, pc_.get_map().h() - 1);
 	}
 
 	map_location start = loc;
 	while(!found) {
 		// Move to the next location
-		loc.x = (loc.x + 1) % map().w();
+		loc.x = (loc.x + 1) % pc_.get_map().w();
 		if(loc.x == 0)
-			loc.y = (loc.y + 1) % map().h();
+			loc.y = (loc.y + 1) % pc_.get_map().h();
 
 		// Search label
 		if(!gui_->shrouded(loc)) {
@@ -1396,7 +1398,7 @@ void menu_handler::do_search(const std::string& new_search)
 			if(label) {
 				std::string label_text = label->text().str();
 				if(std::search(label_text.begin(), label_text.end(), last_search_.begin(), last_search_.end(),
-						   chars_equal_insensitive)
+						   utils::chars_equal_insensitive)
 						!= label_text.end()) {
 					found = true;
 				}
@@ -1404,13 +1406,13 @@ void menu_handler::do_search(const std::string& new_search)
 		}
 		// Search unit name
 		if(!gui_->fogged(loc)) {
-			unit_map::const_iterator ui = units().find(loc);
-			if(ui != units().end()) {
+			unit_map::const_iterator ui = pc_.get_units().find(loc);
+			if(ui != pc_.get_units().end()) {
 				const std::string name = ui->name();
 				if(std::search(
-						   name.begin(), name.end(), last_search_.begin(), last_search_.end(), chars_equal_insensitive)
+						   name.begin(), name.end(), last_search_.begin(), last_search_.end(), utils::chars_equal_insensitive)
 						!= name.end()) {
-					if(!teams()[gui_->viewing_team()].is_enemy(ui->side())
+					if(!pc_.get_teams()[gui_->viewing_team()].is_enemy(ui->side())
 							|| !ui->invisible(ui->get_location())) {
 						found = true;
 					}
@@ -1461,7 +1463,7 @@ void console_handler::do_refresh()
 	sound::flush_cache();
 
 	menu_handler_.gui_->create_buttons();
-	menu_handler_.gui_->redraw_everything();
+	menu_handler_.gui_->queue_rerender();
 }
 
 void console_handler::do_droid()
@@ -1472,11 +1474,12 @@ void console_handler::do_droid()
 	std::transform(action.begin(), action.end(), action.begin(), tolower);
 	// default to the current side if empty
 	const unsigned int side = side_s.empty() ? team_num_ : lexical_cast_default<unsigned int>(side_s);
+	const bool is_your_turn = menu_handler_.pc_.current_side() == static_cast<int>(menu_handler_.gui_->viewing_side());
 
 	utils::string_map symbols;
 	symbols["side"] = std::to_string(side);
 
-	if(side < 1 || side > menu_handler_.teams().size()) {
+	if(side < 1 || side > menu_handler_.pc_.get_teams().size()) {
 		command_failed(VGETTEXT("Can't droid invalid side: '$side'.", symbols));
 		return;
 	} else if(menu_handler_.board().get_team(side).is_network()) {
@@ -1485,43 +1488,79 @@ void console_handler::do_droid()
 	} else if(menu_handler_.board().get_team(side).is_local()) {
 		bool changed = false;
 
+		const bool is_human = menu_handler_.board().get_team(side).is_human();
+		const bool is_droid = menu_handler_.board().get_team(side).is_droid();
+		const bool is_proxy_human = menu_handler_.board().get_team(side).is_proxy_human();
+		const bool is_ai = menu_handler_.board().get_team(side).is_ai();
+
 		if(action == "on") {
-			if(!menu_handler_.board().get_team(side).is_human() || !menu_handler_.board().get_team(side).is_droid()) {
+			if(is_ai && !is_your_turn) {
+				command_failed(_("It is not allowed to change a side from AI to human control when it's not your turn."));
+				return;
+			}
+			if(!is_human || !is_droid) {
 				menu_handler_.board().get_team(side).make_human();
 				menu_handler_.board().get_team(side).make_droid();
 				changed = true;
+				if(is_ai) {
+					menu_handler_.pc_.send_to_wesnothd(config {"change_controller", config {"side", side, "player", preferences::login(), "to", side_controller::human}});
+				}
 				print(get_cmd(), VGETTEXT("Side '$side' controller is now controlled by: AI.", symbols));
 			} else {
 				print(get_cmd(), VGETTEXT("Side '$side' is already droided.", symbols));
 			}
 		} else if(action == "off") {
-			if(!menu_handler_.board().get_team(side).is_human() || !menu_handler_.board().get_team(side).is_proxy_human()) {
+			if(is_ai && !is_your_turn) {
+				command_failed(_("It is not allowed to change a side from AI to human control when it's not your turn."));
+				return;
+			}
+			if(!is_human || !is_proxy_human) {
 				menu_handler_.board().get_team(side).make_human();
 				menu_handler_.board().get_team(side).make_proxy_human();
 				changed = true;
+				if(is_ai) {
+					menu_handler_.pc_.send_to_wesnothd(config {"change_controller", config {"side", side, "player", preferences::login(), "to", side_controller::human}});
+				}
 				print(get_cmd(), VGETTEXT("Side '$side' controller is now controlled by: human.", symbols));
 			} else {
 				print(get_cmd(), VGETTEXT("Side '$side' is already not droided.", symbols));
 			}
 		} else if(action == "full") {
-			if(!menu_handler_.board().get_team(side).is_ai() || !menu_handler_.board().get_team(side).is_droid()) {
+			if(!is_your_turn) {
+				command_failed(_("It is not allowed to change a side from human to AI control when it's not your turn."));
+				return;
+			}
+			if(!is_ai || !is_droid) {
 				menu_handler_.board().get_team(side).make_ai();
 				menu_handler_.board().get_team(side).make_droid();
 				changed = true;
+				if(is_human || is_proxy_human) {
+					menu_handler_.pc_.send_to_wesnothd(config {"change_controller", config {"side", side, "player", preferences::login(), "to", side_controller::ai}});
+				}
 				print(get_cmd(), VGETTEXT("Side '$side' controller is now fully controlled by: AI.", symbols));
 			} else {
 				print(get_cmd(), VGETTEXT("Side '$side' is already fully AI controlled.", symbols));
 			}
 		} else if(action == "") {
-			if(menu_handler_.board().get_team(side).is_ai() || menu_handler_.board().get_team(side).is_droid()) {
+			if(is_ai && !is_your_turn) {
+				command_failed(_("It is not allowed to change a side from AI to human control when it's not your turn."));
+				return;
+			}
+			if(is_ai || is_droid) {
 				menu_handler_.board().get_team(side).make_human();
 				menu_handler_.board().get_team(side).make_proxy_human();
 				changed = true;
+				if(is_ai) {
+					menu_handler_.pc_.send_to_wesnothd(config {"change_controller", config {"side", side, "player", preferences::login(), "to", side_controller::human}});
+				}
 				print(get_cmd(), VGETTEXT("Side '$side' controller is now controlled by: human.", symbols));
 			} else {
 				menu_handler_.board().get_team(side).make_human();
 				menu_handler_.board().get_team(side).make_droid();
 				changed = true;
+				if(is_ai) {
+					menu_handler_.pc_.send_to_wesnothd(config {"change_controller", config {"side", side, "player", preferences::login(), "to", side_controller::human}});
+				}
 				print(get_cmd(), VGETTEXT("Side '$side' controller is now controlled by: AI.", symbols));
 			}
 		} else {
@@ -1534,7 +1573,7 @@ void console_handler::do_droid()
 			}
 		}
 	}
-	menu_handler_.textbox_info_.close(*menu_handler_.gui_);
+	menu_handler_.textbox_info_.close();
 }
 
 void console_handler::do_terrain()
@@ -1564,7 +1603,7 @@ void console_handler::do_idle()
 	// default to the current side if empty
 	const unsigned int side = side_s.empty() ? team_num_ : lexical_cast_default<unsigned int>(side_s);
 
-	if(side < 1 || side > menu_handler_.teams().size()) {
+	if(side < 1 || side > menu_handler_.pc_.get_teams().size()) {
 		utils::string_map symbols;
 		symbols["side"] = side_s;
 		command_failed(VGETTEXT("Can't idle invalid side: '$side'.", symbols));
@@ -1591,7 +1630,7 @@ void console_handler::do_idle()
 			}
 		}
 	}
-	menu_handler_.textbox_info_.close(*menu_handler_.gui_);
+	menu_handler_.textbox_info_.close();
 }
 
 void console_handler::do_theme()
@@ -1632,9 +1671,10 @@ void console_handler::do_control()
 	try {
 		side_num = lexical_cast<unsigned int>(side);
 	} catch(const bad_lexical_cast&) {
-		const auto it_t = std::find_if(
-				resources::gameboard->teams().begin(), resources::gameboard->teams().end(), save_id_matches(side));
-		if(it_t == resources::gameboard->teams().end()) {
+		const auto& teams = menu_handler_.pc_.get_teams();
+		const auto it_t = std::find_if(teams.begin(), teams.end(), save_id_matches(side));
+
+		if(it_t == teams.end()) {
 			utils::string_map symbols;
 			symbols["side"] = side;
 			command_failed(VGETTEXT("Can't change control of invalid side: '$side'.", symbols));
@@ -1644,7 +1684,7 @@ void console_handler::do_control()
 		}
 	}
 
-	if(side_num < 1 || side_num > menu_handler_.teams().size()) {
+	if(side_num < 1 || side_num > menu_handler_.pc_.get_teams().size()) {
 		utils::string_map symbols;
 		symbols["side"] = side;
 		command_failed(VGETTEXT("Can't change control of out-of-bounds side: '$side'.", symbols));
@@ -1652,7 +1692,7 @@ void console_handler::do_control()
 	}
 
 	menu_handler_.request_control_change(side_num, player);
-	menu_handler_.textbox_info_.close(*(menu_handler_.gui_));
+	menu_handler_.textbox_info_.close();
 }
 
 void console_handler::do_controller()
@@ -1668,16 +1708,16 @@ void console_handler::do_controller()
 		return;
 	}
 
-	if(side_num < 1 || side_num > menu_handler_.teams().size()) {
+	if(side_num < 1 || side_num > menu_handler_.pc_.get_teams().size()) {
 		utils::string_map symbols;
 		symbols["side"] = side;
 		command_failed(VGETTEXT("Can't query control of out-of-bounds side: '$side'.", symbols));
 		return;
 	}
 
-	std::string report = menu_handler_.board().get_team(side_num).controller().to_string();
+	std::string report = side_controller::get_string(menu_handler_.board().get_team(side_num).controller());
 	if(!menu_handler_.board().get_team(side_num).is_proxy_human()) {
-		report += " (" + menu_handler_.board().get_team(side_num).proxy_controller().to_string() + ")";
+		report += " (" + side_proxy_controller::get_string(menu_handler_.board().get_team(side_num).proxy_controller()) + ")";
 	}
 
 	if(menu_handler_.board().get_team(side_num).is_network()) {
@@ -1694,7 +1734,8 @@ void console_handler::do_clear()
 
 void console_handler::do_foreground()
 {
-	menu_handler_.gui_->toggle_debug_foreground();
+	menu_handler_.gui_->toggle_debug_flag(display::DEBUG_FOREGROUND);
+	menu_handler_.gui_->invalidate_all();
 }
 
 void console_handler::do_layers()
@@ -1725,7 +1766,7 @@ void console_handler::do_fps()
 
 void console_handler::do_benchmark()
 {
-	menu_handler_.gui_->toggle_benchmark();
+	menu_handler_.gui_->toggle_debug_flag(display::DEBUG_BENCHMARK);
 }
 
 void console_handler::do_save()
@@ -1776,7 +1817,7 @@ void console_handler::do_choose_level()
 		// find scenarios of multiplayer campaigns
 		// (assumes that scenarios are ordered properly in the game_config)
 		std::string scenario_id = menu_handler_.pc_.get_mp_settings().mp_scenario;
-		if(const config& this_scenario = menu_handler_.game_config_.find_child(tag, "id", scenario_id)) {
+		if(auto this_scenario = menu_handler_.game_config_.find_child(tag, "id", scenario_id)) {
 			std::string addon_id = this_scenario["addon_id"].str();
 			for(const config& sc : menu_handler_.game_config_.child_range(tag)) {
 				if(sc["addon_id"] == addon_id) {
@@ -1926,7 +1967,7 @@ void console_handler::do_inspect()
 {
 	vconfig cfg = vconfig::empty_vconfig();
 	gui2::dialogs::gamestate_inspector::display(
-		resources::gamedata->get_variables(), *resources::game_events, *resources::gameboard);
+		menu_handler_.gamedata().get_variables(), *resources::game_events, menu_handler_.board());
 }
 
 void console_handler::do_control_dialog()
@@ -1942,7 +1983,12 @@ void console_handler::do_unit()
 	}
 
 	unit_map::iterator i = menu_handler_.current_unit();
-	if(i == menu_handler_.units().end()) {
+	if(i == menu_handler_.pc_.get_units().end()) {
+		utils::string_map symbols;
+		symbols["unit"] = get_arg(1);
+		command_failed(VGETTEXT(
+			"Debug command 'unit: $unit' failed: no unit selected or hovered over.",
+			symbols));
 		return;
 	}
 
@@ -1954,8 +2000,8 @@ void console_handler::do_unit()
 	}
 
 	if(parameters[0] == "alignment") {
-		unit_type::ALIGNMENT alignment;
-		if(!alignment.parse(parameters[1])) {
+		auto alignment = unit_alignments::get_enum(parameters[1]);
+		if(!alignment) {
 			utils::string_map symbols;
 			symbols["alignment"] = get_arg(1);
 			command_failed(VGETTEXT(
@@ -1996,7 +2042,7 @@ void console_handler::do_create()
 {
 	const mouse_handler& mousehandler = menu_handler_.pc_.get_mouse_handler_base();
 	const map_location& loc = mousehandler.get_last_hex();
-	if(menu_handler_.map().on_board(loc)) {
+	if(menu_handler_.pc_.get_map().on_board(loc)) {
 		const unit_type* ut = unit_types.find(get_data());
 		if(!ut) {
 			command_failed(_("Invalid unit type"));
@@ -2004,7 +2050,7 @@ void console_handler::do_create()
 		}
 
 		// Create the unit.
-		create_and_place(*menu_handler_.gui_, menu_handler_.map(), menu_handler_.units(), loc, *ut);
+		create_and_place(*menu_handler_.gui_, menu_handler_.pc_.get_map(), menu_handler_.pc_.get_units(), loc, *ut);
 	} else {
 		command_failed(_("Invalid location"));
 	}
@@ -2032,18 +2078,18 @@ void console_handler::do_event()
 
 void console_handler::do_toggle_draw_coordinates()
 {
-	menu_handler_.gui_->set_draw_coordinates(!menu_handler_.gui_->get_draw_coordinates());
+	menu_handler_.gui_->toggle_debug_flag(display::DEBUG_COORDINATES);
 	menu_handler_.gui_->invalidate_all();
 }
 void console_handler::do_toggle_draw_terrain_codes()
 {
-	menu_handler_.gui_->set_draw_terrain_codes(!menu_handler_.gui_->get_draw_terrain_codes());
+	menu_handler_.gui_->toggle_debug_flag(display::DEBUG_TERRAIN_CODES);
 	menu_handler_.gui_->invalidate_all();
 }
 
 void console_handler::do_toggle_draw_num_of_bitmaps()
 {
-	menu_handler_.gui_->set_draw_num_of_bitmaps(!menu_handler_.gui_->get_draw_num_of_bitmaps());
+	menu_handler_.gui_->toggle_debug_flag(display::DEBUG_NUM_BITMAPS);
 	menu_handler_.gui_->invalidate_all();
 }
 
@@ -2073,7 +2119,7 @@ void menu_handler::do_ai_formula(const std::string& str, int side_num, mouse_han
 		add_chat_message(std::time(nullptr), "wfl", 0, ai::manager::get_singleton().evaluate_command(side_num, str));
 	} catch(const wfl::formula_error&) {
 	} catch(...) {
-		add_chat_message(std::time(nullptr), "wfl", 0, "UNKNOWN ERROR IN FORMULA");
+		add_chat_message(std::time(nullptr), "wfl", 0, "UNKNOWN ERROR IN FORMULA: "+utils::get_unknown_exception_type());
 	}
 }
 

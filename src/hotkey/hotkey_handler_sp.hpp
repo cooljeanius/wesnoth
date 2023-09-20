@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2014 - 2018 by Chris Beck <render787@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2014 - 2023
+	by Chris Beck <render787@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -23,7 +24,7 @@
 #include "playsingle_controller.hpp"
 
 #include "hotkey/hotkey_handler.hpp"
-
+#include "replay_controller.hpp"
 class playsingle_controller::hotkey_handler : public play_controller::hotkey_handler {
 
 protected:
@@ -40,7 +41,7 @@ public:
 	virtual void recruit() override;
 	virtual void repeat_recruit() override;
 	virtual void recall() override;
-	virtual bool can_execute_command(const hotkey::hotkey_command& command, int index=-1) const override;
+	virtual bool can_execute_command(const hotkey::ui_command& cmd) const override;
 	virtual void toggle_shroud_updates() override;
 	virtual void update_shroud_now() override;
 	virtual void end_turn() override;
@@ -92,6 +93,6 @@ public:
 	virtual void reset_replay() override
 	{ return playsingle_controller_.reset_replay(); }
 	virtual void replay_exit() override;
-	virtual void load_autosave(const std::string& filename) override;
-	virtual hotkey::ACTION_STATE get_action_state(hotkey::HOTKEY_COMMAND command, int index) const override;
+	virtual void load_autosave(const std::string& filename, bool start_replay = false) override;
+	virtual hotkey::ACTION_STATE get_action_state(const hotkey::ui_command&) const override;
 };

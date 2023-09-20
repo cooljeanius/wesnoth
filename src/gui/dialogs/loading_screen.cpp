@@ -1,14 +1,15 @@
 /*
-   Copyright (C) 2016 - 2018 by the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2016 - 2023
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -21,23 +22,29 @@
 #include "gui/dialogs/loading_screen.hpp"
 
 #include "cursor.hpp"
+#include "draw_manager.hpp"
 #include "gettext.hpp"
 #include "gui/auxiliary/find_widget.hpp"
 #include "gui/core/timer.hpp"
+#include "gui/widgets/drawing.hpp"
 #include "gui/widgets/label.hpp"
 #include "gui/widgets/settings.hpp"
 #include "gui/widgets/window.hpp"
 #include "log.hpp"
 #include "preferences/general.hpp"
-#include "utils/functional.hpp"
+#include "sdl/rect.hpp"
 #include "video.hpp"
 
-#include <chrono>
 #include <cstdlib>
+#include <functional>
 
 static lg::log_domain log_loadscreen("loadscreen");
+#define LOG_LS LOG_STREAM(info, log_loadscreen)
 #define ERR_LS LOG_STREAM(err, log_loadscreen)
 #define WRN_LS LOG_STREAM(warn, log_loadscreen)
+
+static lg::log_domain log_display("display");
+#define DBG_DP LOG_STREAM(debug, log_display)
 
 static const std::map<loading_stage, std::string> stage_names {
 	{ loading_stage::build_terrain,       N_("Building terrain rules") },
@@ -65,36 +72,29 @@ static const std::map<loading_stage, std::string> stage_names {
 	{ loading_stage::download_lobby_data, N_("Downloading lobby data") },
 };
 
-namespace gui2
-{
-namespace dialogs
+namespace { int last_spin_ = 0; }
+
+namespace gui2::dialogs
 {
 REGISTER_DIALOG(loading_screen)
 
 loading_screen* loading_screen::singleton_ = nullptr;
 
 loading_screen::loading_screen(std::function<void()> f)
-	: animation_counter_(0)
-	, load_func_(f)
+	: modal_dialog(window_id())
+	, load_funcs_{f}
 	, worker_result_()
 	, cursor_setter_()
 	, progress_stage_label_(nullptr)
-	, animation_label_(nullptr)
+	, animation_(nullptr)
+	, animation_start_()
 	, current_stage_(loading_stage::none)
 	, visible_stages_()
-	, animation_stages_()
 	, current_visible_stage_()
+	, running_(false)
 {
-	for(const auto& pair : stage_names) {
-		visible_stages_[pair.first] = t_string(pair.second, "wesnoth-lib") + "...";
-	}
-
-	animation_stages_.reserve(20);
-
-	for(int i = 0; i != 20; ++i) {
-		std::string s(20, ' ');
-		s[i] = '.';
-		animation_stages_.push_back(std::move(s));
+	for(const auto& [stage, description] : stage_names) {
+		visible_stages_[stage] = t_string(description, "wesnoth-lib") + "...";
 	}
 
 	current_visible_stage_ = visible_stages_.end();
@@ -108,29 +108,8 @@ void loading_screen::pre_show(window& window)
 
 	cursor_setter_.reset(new cursor::setter(cursor::WAIT));
 
-	if(load_func_) {
-		// Run the load function in its own thread.
-		try {
-			worker_result_ = std::async(std::launch::async, [this]() {
-				try {
-					load_func_();
-				} catch(...) {
-					// TODO: guard this with a mutex.
-					exception_ = std::current_exception();
-				}
-			});
-		} catch(const std::system_error& e) {
-			ERR_LS << "Failed to create worker thread: " << e.what() << "\n";
-			throw;
-		}
-	}
-
 	progress_stage_label_ = find_widget<label>(&window, "status", false, true);
-	animation_label_ = find_widget<label>(&window, "test_animation", false, true);
-
-	// Add a draw callback to handle the animation, et al.
-	window.connect_signal<event::DRAW>(
-		std::bind(&loading_screen::draw_callback, this), event::dispatcher::front_child);
+	animation_ = find_widget<drawing>(&window, "animation", false, true);
 }
 
 void loading_screen::post_show(window& /*window*/)
@@ -142,28 +121,76 @@ void loading_screen::progress(loading_stage stage)
 {
 	if(singleton_ && stage != loading_stage::none) {
 		singleton_->current_stage_.store(stage, std::memory_order_release);
+		// Allow display to update, close events to be handled, etc.
+		events::pump_and_draw();
 	}
 }
 
+void loading_screen::spin()
+{
+	// If we're not showing a loading screen, do nothing.
+	if (!singleton_) {
+		return;
+	}
+
+	// If we're not the main thread, do nothing.
+	if (!events::is_in_main_thread()) {
+		return;
+	}
+
+	// Restrict actual update rate.
+	int elapsed = SDL_GetTicks() - last_spin_;
+	if (elapsed > draw_manager::get_frame_length() || elapsed < 0) {
+		last_spin_ = SDL_GetTicks();
+		events::pump_and_draw();
+	}
+}
+
+void loading_screen::raise()
+{
+	if (singleton_) {
+		draw_manager::raise_drawable(singleton_);
+	}
+}
+
+// This will be run inside the window::show() loop.
 void loading_screen::process(events::pump_info&)
 {
-	if(!load_func_ || loading_complete()) {
-		if(exception_) {
-			std::rethrow_exception(exception_);
-		}
+	if (load_funcs_.empty()) {
+		return;
+	}
 
-		get_window()->close();
+	// Do not automatically recurse.
+	if (running_) { return; }
+	running_ = true;
+
+	// Run the loading function.
+	auto func = load_funcs_.back();
+	load_funcs_.pop_back();
+	LOG_LS << "Executing loading screen worker function.";
+	func();
+
+	running_ = false;
+
+	// If there's nothing more to do, close.
+	if (load_funcs_.empty()) {
+		queue_redraw();
+		window::close();
 	}
 }
 
-void loading_screen::draw_callback()
+void loading_screen::layout()
 {
+	modal_dialog::layout();
+
+	DBG_DP << "loading_screen::layout";
+
 	loading_stage stage = current_stage_.load(std::memory_order_acquire);
 
 	if(stage != loading_stage::none && (current_visible_stage_ == visible_stages_.end() || stage != current_visible_stage_->first)) {
 		auto iter = visible_stages_.find(stage);
 		if(iter == visible_stages_.end()) {
-			WRN_LS << "Stage missing description." << std::endl;
+			WRN_LS << "Stage missing description.";
 			return;
 		}
 
@@ -171,54 +198,33 @@ void loading_screen::draw_callback()
 		progress_stage_label_->set_label(iter->second);
 	}
 
-	++animation_counter_;
-	if(animation_counter_ % 2 == 0) {
-		animation_label_->set_label(animation_stages_[(animation_counter_ / 2) % animation_stages_.size()]);
+	using namespace std::chrono;
+	const auto now = steady_clock::now();
+
+	// We only need to set the start time once;
+	if(!animation_start_.has_value()) {
+		animation_start_ = now;
 	}
+
+	animation_->get_drawing_canvas().set_variable("time", wfl::variant(duration_cast<milliseconds>(now - *animation_start_).count()));
+	animation_->queue_redraw();
 }
 
 loading_screen::~loading_screen()
 {
-	/* If the worker thread is running, exit the application to prevent memory corruption.
-	 * TODO: this is still not optimal. The main problem is that this code assumes that this
-	 * happened because the window was closed, which is not necessarily the case (other
-	 * possibilities might be a 'dialog doesn't fit on screen' exception caused by resizing
-	 * the window).
-	 *
-	 * Another approach might be to add exit points (boost::this_thread::interruption_point())
-	 * to the worker functions (filesystem.cpp, config parsing code, etc.) and then use that
-	 * to end the thread faster.
-	 */
-	if(!loading_complete()) {
-#if defined(_LIBCPP_VERSION) || defined(__MINGW32__)
-		std::_Exit(0);
-#else
-		std::quick_exit(0);
-#endif
-	}
-
+	LOG_LS << "Loading screen destroyed.";
 	singleton_ = nullptr;
 }
 
 void loading_screen::display(std::function<void()> f)
 {
-	const bool use_loadingscreen_animation = !preferences::disable_loadingscreen_animation();
-
-	if(singleton_ || CVideo::get_singleton().faked()) {
+	if(singleton_ || video::headless()) {
+		LOG_LS << "Directly executing loading function.";
 		f();
-	} else if(use_loadingscreen_animation) {
-		loading_screen(f).show();
 	} else {
-		loading_screen(std::function<void()>()).show();
-		f();
+		LOG_LS << "Creating new loading screen.";
+		loading_screen(f).show();
 	}
 }
 
-bool loading_screen::loading_complete() const
-{
-	using namespace std::chrono_literals;
-	return worker_result_.wait_for(0ms) == std::future_status::ready;
-}
-
 } // namespace dialogs
-} // namespace gui2

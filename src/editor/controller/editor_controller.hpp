@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2008 - 2018 by Tomasz Sniatowski <kailoran@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by Tomasz Sniatowski <kailoran@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -32,7 +33,7 @@
 class map_generator;
 
 namespace tooltips {
-struct manager;
+class manager;
 }
 
 namespace font {
@@ -43,13 +44,12 @@ namespace editor {
 
 class editor_map;
 
-std::string get_left_button_function();
-
 enum menu_type {
 	MAP,
 	LOAD_MRU,
 	PALETTE,
 	AREA,
+	ADDON,
 	SIDE,
 	TIME,
 	LOCAL_TIME,
@@ -79,7 +79,7 @@ class editor_controller : public controller_base,
 		 * to the map can be retrieved between the main loop's end and the controller's
 		 * destruction.
 		 */
-		editor_controller();
+		editor_controller(bool clear_id);
 
 		~editor_controller();
 
@@ -87,10 +87,7 @@ class editor_controller : public controller_base,
 		EXIT_STATUS main_loop();
 
 		/** Takes a screenshot **/
-		void do_screenshot(const std::string& screenshot_filename = "map_screenshot.bmp");
-
-		/** Process a hotkey quit command */
-		void hotkey_quit();
+		void do_screenshot(const std::string& screenshot_filename = "map_screenshot.png");
 
 		/** Show a quit confirmation dialog and returns true if the user pressed 'yes' */
 		bool quit_confirm();
@@ -102,13 +99,13 @@ class editor_controller : public controller_base,
 		void save_map() override {context_manager_->save_map();}
 
 		/** command_executor override */
-		bool can_execute_command(const hotkey::hotkey_command& command, int index = -1) const override;
+		bool can_execute_command(const hotkey::ui_command& command) const override;
 
 		/** command_executor override */
-		hotkey::ACTION_STATE get_action_state(hotkey::HOTKEY_COMMAND command, int index) const override;
+		hotkey::ACTION_STATE get_action_state(const hotkey::ui_command& command) const override;
 
 		/** command_executor override */
-		bool do_execute_command(const hotkey::hotkey_command& command, int index = -1, bool press = true, bool release = false) override;
+		bool do_execute_command(const hotkey::ui_command& command, bool press = true, bool release = false) override;
 
 		/** controller_base override */
 		void show_menu(const std::vector<config>& items_arg, int xloc, int yloc, bool context_menu, display& disp) override;
@@ -143,8 +140,6 @@ class editor_controller : public controller_base,
 
 		/** Export the WML-compatible list of selected tiles to the system clipboard */
 		void export_selection_coords();
-
-		void update_mouse_action_highlights();
 
 		/** Save the current selection to the active area. */
 		void save_area();
@@ -188,13 +183,13 @@ class editor_controller : public controller_base,
 		 * Perform an action, then delete the action object.
 		 * The pointer can be nullptr, in which case nothing will happen.
 		 */
-		void perform_delete(editor_action* action);
+		void perform_delete(std::unique_ptr<editor_action> action);
 
 		/**
 		 * Peform an action on the current map_context, then refresh the display
 		 * and delete the pointer. The pointer can be nullptr, in which case nothing will happen.
 		 */
-		void perform_refresh_delete(editor_action* action, bool drag_part = false);
+		void perform_refresh_delete(std::unique_ptr<editor_action> action, bool drag_part = false);
 
 
 		virtual std::vector<std::string> additional_actions_pressed() override;
@@ -210,14 +205,11 @@ class editor_controller : public controller_base,
 		/** init background music for the editor */
 		void init_music(const game_config_view& game_config);
 
-		/** Load editor-specific tooltips */
-		void load_tooltips();
-
 		/** Reload images */
 		void refresh_image_cache();
 
 		/**
-		 * Callback function passed to display to be called on each redraw_everything run.
+		 * Callback function passed to display to be called on queue_rerender.
 		 * Redraws toolbar, brush bar and related items.
 		 */
 		void display_redraw_callback(display&);
@@ -241,12 +233,14 @@ class editor_controller : public controller_base,
 		const std::unique_ptr<editor_display> gui_;
 
 		/** Pre-defined time of day lighting settings for the settings dialog */
-		typedef std::map<std::string, std::pair<std::string ,std::vector<time_of_day>> > tods_map;
+		typedef std::map<std::string, std::pair<std::string ,std::vector<time_of_day>>> tods_map;
 		tods_map tods_;
 
 		/* managers */
 	public:
 		const std::unique_ptr<context_manager> context_manager_;
+
+		static std::string current_addon_id_;
 	private:
 		std::unique_ptr<editor_toolkit> toolkit_;
 		tooltips::manager tooltip_manager_;

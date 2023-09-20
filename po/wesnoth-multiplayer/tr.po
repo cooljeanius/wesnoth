@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wesnoth-multiplayer\n"
 "Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
-"POT-Creation-Date: 2020-03-09 23:11 UTC\n"
-"PO-Revision-Date: 2020-01-14 15:26+0300\n"
+"POT-Creation-Date: 2023-08-20 01:56 UTC\n"
+"PO-Revision-Date: 2021-08-03 03:00+0300\n"
 "Last-Translator: Nilgün Belma Bugüner <nilgun@belgeler.gen.tr>\n"
 "Language-Team: Turkish <>\n"
 "Language: tr\n"
@@ -19,25 +19,120 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.11\n"
+"X-Generator: Poedit 2.2.1\n"
 
 #. [generic_multiplayer]: id=user_map
 #: data/multiplayer/_main.cfg:8
 msgid "User Map"
 msgstr "Kullanıcı Haritası"
 
-#. [multiplayer_side]: id=Random
-#: data/multiplayer/eras.cfg:6
-msgid "Random"
-msgstr "Rasgele"
+#. [achievement_group]
+#: data/multiplayer/achievements.cfg:3
+msgid "Wesnoth Multiplayer (Survivals)"
+msgstr ""
+
+#. [achievement]: id=Wesnoth_MP_Dark_Forecast
+#: data/multiplayer/achievements.cfg:9 data/multiplayer/achievements.cfg:10
+msgid "Foresight of Triumph"
+msgstr ""
+
+#. [achievement]: id=Wesnoth_MP_Dark_Forecast
+#: data/multiplayer/achievements.cfg:11
+msgid "Complete the survival scenario <i>2p - Dark Forecast</i>."
+msgstr ""
+
+#. [achievement]: id=Wesnoth_MP_Dark_Forecast
+#: data/multiplayer/achievements.cfg:12
+msgid "Completed the survival scenario <i>2p - Dark Forecast</i>."
+msgstr ""
+
+#. [achievement]: id=Wesnoth_MP_Isle_of_Mists
+#: data/multiplayer/achievements.cfg:20
+msgid "Banish the Mists"
+msgstr ""
+
+#. [achievement]: id=Wesnoth_MP_Isle_of_Mists
+#: data/multiplayer/achievements.cfg:21
+msgid "Banished the Mists"
+msgstr ""
+
+#. [achievement]: id=Wesnoth_MP_Isle_of_Mists
+#: data/multiplayer/achievements.cfg:22
+msgid "Complete the survival scenario <i>2p - Isle of Mists</i>."
+msgstr ""
+
+#. [achievement]: id=Wesnoth_MP_Isle_of_Mists
+#: data/multiplayer/achievements.cfg:23
+msgid "Completed the survival scenario <i>2p - Isle of Mists</i>."
+msgstr ""
+
+#. [achievement]: id=Wesnoth_MP_Team_Survival
+#: data/multiplayer/achievements.cfg:31 data/multiplayer/achievements.cfg:32
+msgid "Flawless Teamwork"
+msgstr ""
+
+#. [achievement]: id=Wesnoth_MP_Team_Survival
+#: data/multiplayer/achievements.cfg:33
+msgid "Complete the survival scenario <i>6p - Team Survival</i>."
+msgstr ""
+
+#. [achievement]: id=Wesnoth_MP_Team_Survival
+#: data/multiplayer/achievements.cfg:34
+msgid "Completed the survival scenario <i>6p - Team Survival</i>."
+msgstr ""
+
+#. [achievement]: id=Wesnoth_MP_ANL
+#: data/multiplayer/achievements.cfg:42 data/multiplayer/achievements.cfg:43
+msgid "Return to Glory"
+msgstr ""
+
+#. [achievement]: id=Wesnoth_MP_ANL
+#: data/multiplayer/achievements.cfg:44
+msgid "Complete the survival scenario <i>4p - A New Land</i>."
+msgstr ""
+
+#. [achievement]: id=Wesnoth_MP_ANL
+#: data/multiplayer/achievements.cfg:45
+msgid "Completed the survival scenario <i>4p - A New Land</i>."
+msgstr ""
+
+#. [achievement]: id=Wesnoth_MP_ANL_mines
+#: data/multiplayer/achievements.cfg:52 data/multiplayer/achievements.cfg:53
+msgid "Economic Recession"
+msgstr ""
+
+#. [achievement]: id=Wesnoth_MP_ANL_mines
+#: data/multiplayer/achievements.cfg:54
+msgid "Destroy all enemy mushroom mines in <i>4p - A New Land</i>."
+msgstr ""
+
+#. [achievement]: id=Wesnoth_MP_ANL_mines
+#: data/multiplayer/achievements.cfg:55
+msgid "Destroyed all enemy mushroom mines in <i>4p - A New Land</i>."
+msgstr ""
+
+#. [achievement]: id=Wesnoth_MP_ANL_rescue_allies
+#: data/multiplayer/achievements.cfg:63 data/multiplayer/achievements.cfg:64
+msgid "Rescue!"
+msgstr ""
+
+#. [achievement]: id=Wesnoth_MP_ANL_rescue_allies
+#: data/multiplayer/achievements.cfg:65
+msgid "Rescue the trapped units in <i>4p - A New Land</i>."
+msgstr ""
+
+#. [achievement]: id=Wesnoth_MP_ANL_rescue_allies
+#: data/multiplayer/achievements.cfg:66
+msgid "Rescued the trapped units in <i>4p - A New Land</i>."
+msgstr ""
 
 #. [era]: id=era_default, type=hybrid
-#: data/multiplayer/eras.cfg:53
+#: data/multiplayer/eras.cfg:5
 msgid "Default"
 msgstr "Öntanımlı"
 
 #. [era]: id=era_default, type=hybrid
-#: data/multiplayer/eras.cfg:54
+#: data/multiplayer/eras.cfg:6
 msgid ""
 "The standard era for Wesnoth multiplayer. Consists of six factions and is "
 "generally balanced."
@@ -46,12 +141,12 @@ msgstr ""
 "dengelidir."
 
 #. [era]: id=era_heroes
-#: data/multiplayer/eras.cfg:75
+#: data/multiplayer/eras.cfg:14
 msgid "Age of Heroes"
 msgstr "Kahramanlar Çağı"
 
 #. [era]: id=era_heroes
-#: data/multiplayer/eras.cfg:76
+#: data/multiplayer/eras.cfg:15
 msgid ""
 "An era with higher level units: level three leaders, with level one and two "
 "units available for recruit. Consists of six factions. Not considered "
@@ -62,12 +157,12 @@ msgstr ""
 "Dengeli sayılmaz."
 
 #. [era]: id=era_dunefolk
-#: data/multiplayer/eras.cfg:83
+#: data/multiplayer/eras.cfg:22
 msgid "Default + Dunefolk"
 msgstr "Öntanımlı + Kumul Halkı"
 
 #. [era]: id=era_dunefolk
-#: data/multiplayer/eras.cfg:84
+#: data/multiplayer/eras.cfg:23
 msgid ""
 "An era featuring an additional faction besides the six factions from Default "
 "Era. Dunefolk units rely on careful use of terrain and coordinated strikes "
@@ -84,12 +179,12 @@ msgstr ""
 "sorunları bildirdiğinizden emin olun."
 
 #. [era]: id=era_dunefolk_heroes
-#: data/multiplayer/eras.cfg:94
+#: data/multiplayer/eras.cfg:33
 msgid "Age of Heroes + Dunefolk"
 msgstr "Kahramanlar Çağı + Kumul Halkı"
 
 #. [era]: id=era_dunefolk_heroes
-#: data/multiplayer/eras.cfg:95
+#: data/multiplayer/eras.cfg:34
 msgid ""
 "An era featuring an additional faction besides the six factions from Age of "
 "Heroes Era. Dunefolk units rely on careful use of terrain and coordinated "
@@ -106,33 +201,52 @@ msgstr ""
 "sorunları bildirdiğinizden emin olun."
 
 #. [lua]: f
-#: data/multiplayer/eras.lua:62
-msgid "<span strikethrough='true' foreground='#%02x%02x%02x'>Side %d</span>"
-msgstr "<span strikethrough='true' foreground='#%02x%02x%02x'>%d. taraf</span>"
-
-#. [lua]: f
-#: data/multiplayer/eras.lua:76
+#. In the end-of-match summary, a side which has no units left and therefore lost. In English the loss is shown by displaying it with the text struck through.
+#: data/multiplayer/eras.lua:53
 msgid ""
-"<span foreground='#%02x%02x%02x'>Side %d</span>:  Income score = %d  Unit "
-"score = %d  Gold = %d"
+"<span strikethrough='true' foreground='$side_color'>Side $side_number</"
+"span>:  Has lost all units"
 msgstr ""
-"<span foreground='#%02x%02x%02x'>%d. Taraf</span>:  Gelir durumu= %d  Birim "
-"durumu = %d  Altın = %d"
+"<span strikethrough='true' foreground='$side_color'>$side_number|. taraf</"
+"span>: Tüm birimlerini kaybetti"
 
 #. [lua]: f
-#: data/multiplayer/eras.lua:76
-msgid "Grand total: <b>%d</b>"
-msgstr "Genel toplam: <b>%d</b>"
+#. In the end-of-match summary, any side that still has units left
+#: data/multiplayer/eras.lua:69
+msgid ""
+"<span foreground='$side_color'>Side $side_number</span>:  Income score = "
+"$income  Unit score = $units  Gold = $gold\n"
+"Grand total: <b>$total</b>"
+msgstr ""
+"<span foreground='$side_color'>$side_number|. Taraf</span>:  Gelir durumu = "
+"$income Birim durumu = $units  Altın = $gold\n"
+"Ana toplam: <b>$total</b>"
 
 #. [lua]: f
-#: data/multiplayer/eras.lua:93
-msgid "Sides %s and %d are tied."
-msgstr "Taralar %s ve %d bağlı."
+#. In the end-of-match summary, there's a single side that's won.
+#: data/multiplayer/eras.lua:84
+msgid ""
+"<span foreground='$side_color'>Side $side_number</span> has the advantage."
+msgstr ""
+"<span foreground='$side_color'>$side_number|. taraf</span>ın üstünlüğü var."
 
 #. [lua]: f
-#: data/multiplayer/eras.lua:95
-msgid "<span foreground='%s'>Side %d</span> has the advantage."
-msgstr "<span foreground='%s'>%d. taraf</span>ın üstünlüğü var."
+#. In the end-of-match summary, there's a two-way tie (this is only used for exactly two winning teams)
+#: data/multiplayer/eras.lua:89
+msgid "Sides $side_number and $other_side_number are tied."
+msgstr "Taralar $side_number ve $other_side_number berabere."
+
+#. [lua]: f
+#. In the end-of-match summary, three or more teams have all tied for the best score. $winners contains the result of formatting the conjunct list.
+#: data/multiplayer/eras.lua:94
+msgid "Sides $winners are tied."
+msgstr "Taraflar $winners berabere."
+
+#. [lua]: f
+#. "Turns Over", meaning "turn limit reached" is the title of the end-of-match summary dialog
+#: data/multiplayer/eras.lua:100
+msgid "dialog^Turns Over"
+msgstr "Eller Tükendi"
 
 #. [multiplayer_side]: id=Drakes, type=random
 #: data/multiplayer/factions/drakes-aoh.cfg:4
@@ -238,13 +352,13 @@ msgstr ""
 "şekilde, Kralcılar birliği, yakın dövüşe odaklı olup yaycıların ve "
 "büyücülerin menzilli desteğiyle çok yönlü bir birliktir."
 
-#. [multiplayer_side]: id=Northerners, type=random, description=<img>src='portraits/orcs/warlord.png~BG()' align='middle'</img>
+#. [multiplayer_side]: id=Northerners, type=random, description=<img>src='portraits/orcs/warlord.webp~BG()' align='middle'</img>
 #: data/multiplayer/factions/northerners-aoh.cfg:4
 #: data/multiplayer/factions/northerners-default.cfg:4
 msgid "Northerners"
 msgstr "Kuzeyliler"
 
-#. [multiplayer_side]: id=Northerners, type=random, description=<img>src='portraits/orcs/warlord.png~BG()' align='middle'</img>
+#. [multiplayer_side]: id=Northerners, type=random, description=<img>src='portraits/orcs/warlord.webp~BG()' align='middle'</img>
 #: data/multiplayer/factions/northerners-aoh.cfg:16
 #: data/multiplayer/factions/northerners-default.cfg:15
 msgid ""
@@ -379,7 +493,7 @@ msgstr ""
 #: data/multiplayer/scenarios/2p_Swamp_of_Dread.cfg:23
 #: data/multiplayer/scenarios/2p_The_Freelands.cfg:22
 #: data/multiplayer/scenarios/2p_The_Walls_of_Pyrennis.cfg:37
-#: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:67
+#: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:75
 #: data/multiplayer/scenarios/2p_Weldyn_Channel.cfg:21
 #: data/multiplayer/scenarios/3p_Alirok_Marsh.cfg:20
 #: data/multiplayer/scenarios/3p_Island_of_the_Horatii.cfg:20
@@ -419,7 +533,7 @@ msgstr "Kuzey"
 #: data/multiplayer/scenarios/2p_Swamp_of_Dread.cfg:34
 #: data/multiplayer/scenarios/2p_The_Freelands.cfg:33
 #: data/multiplayer/scenarios/2p_The_Walls_of_Pyrennis.cfg:25
-#: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:55
+#: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:63
 #: data/multiplayer/scenarios/2p_Weldyn_Channel.cfg:32
 #: data/multiplayer/scenarios/4p_Geothermal.cfg:20
 #: data/multiplayer/scenarios/4p_Geothermal.cfg:42
@@ -437,13 +551,13 @@ msgid "teamname^South"
 msgstr "Güney"
 
 #. [objective]: condition=win
-#: data/multiplayer/scenarios/2p_Aethermaw.cfg:288
-#: data/multiplayer/scenarios/2p_Tombs_of_Kesorak.cfg:155
+#: data/multiplayer/scenarios/2p_Aethermaw.cfg:308
+#: data/multiplayer/scenarios/2p_Tombs_of_Kesorak.cfg:154
 msgid "Defeat the enemy leader"
 msgstr "Düşman liderini yen"
 
 #. [note]
-#: data/multiplayer/scenarios/2p_Aethermaw.cfg:292
+#: data/multiplayer/scenarios/2p_Aethermaw.cfg:312
 msgid ""
 "The Great Mage Sulla has transported your armies to this bizarre nexus, and "
 "demands that you amuse her by doing battle."
@@ -452,7 +566,7 @@ msgstr ""
 "eğlendirmenizi istiyor."
 
 #. [note]
-#: data/multiplayer/scenarios/2p_Aethermaw.cfg:295
+#: data/multiplayer/scenarios/2p_Aethermaw.cfg:315
 msgid ""
 "Units may not move into a hex with a rock cairn. They may, however, be "
 "recruited to, and move from, such hexes."
@@ -461,7 +575,7 @@ msgstr ""
 "bu tür altıgenlerde asker alınabilir ve harekete buralardan başlanabilir."
 
 #. [note]
-#: data/multiplayer/scenarios/2p_Aethermaw.cfg:298
+#: data/multiplayer/scenarios/2p_Aethermaw.cfg:318
 msgid ""
 "Beginning on turn 4, the Great Mage Sulla will begin to unite the two halves "
 "of the battlefield. The process will be complete by the end of turn 6."
@@ -470,8 +584,8 @@ msgstr ""
 "birleştirmeye başlayacak. İşlem 6. elin sonunda tamamlanacaktır."
 
 #. [message]: speaker=narrator
-#: data/multiplayer/scenarios/2p_Aethermaw.cfg:311
-#: data/multiplayer/scenarios/2p_Aethermaw.cfg:328
+#: data/multiplayer/scenarios/2p_Aethermaw.cfg:331
+#: data/multiplayer/scenarios/2p_Aethermaw.cfg:348
 msgid "The Aethermaw growls."
 msgstr "Memati homurdanır."
 
@@ -525,7 +639,7 @@ msgstr ""
 #: data/multiplayer/scenarios/2p_Fallenstar_Lake.cfg:35
 #: data/multiplayer/scenarios/2p_Ruined_Passage.cfg:40
 #: data/multiplayer/scenarios/2p_Silverhead_Crossing.cfg:32
-#: data/multiplayer/scenarios/2p_Tombs_of_Kesorak.cfg:107
+#: data/multiplayer/scenarios/2p_Tombs_of_Kesorak.cfg:106
 #: data/multiplayer/scenarios/3p_Alirok_Marsh.cfg:31
 #: data/multiplayer/scenarios/3p_Island_of_the_Horatii.cfg:31
 #: data/multiplayer/scenarios/3p_Morituri.cfg:31
@@ -557,7 +671,7 @@ msgstr "Doğu"
 #: data/multiplayer/scenarios/2p_Fallenstar_Lake.cfg:24
 #: data/multiplayer/scenarios/2p_Ruined_Passage.cfg:24
 #: data/multiplayer/scenarios/2p_Silverhead_Crossing.cfg:21
-#: data/multiplayer/scenarios/2p_Tombs_of_Kesorak.cfg:119
+#: data/multiplayer/scenarios/2p_Tombs_of_Kesorak.cfg:118
 #: data/multiplayer/scenarios/3p_Alirok_Marsh.cfg:42
 #: data/multiplayer/scenarios/3p_Island_of_the_Horatii.cfg:42
 #: data/multiplayer/scenarios/3p_Morituri.cfg:42
@@ -603,7 +717,7 @@ msgstr ""
 #. [side]
 #: data/multiplayer/scenarios/2p_Caves_of_the_Basilisk.cfg:89
 #: data/multiplayer/scenarios/2p_Sullas_Ruins.cfg:95
-#: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:91
+#: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:101
 msgid "teamname^Statues"
 msgstr "Heykeller"
 
@@ -1102,7 +1216,7 @@ msgid ""
 "Note: You need to use the default map settings for the scenario to work "
 "right."
 msgstr ""
-"Kara Öngörü, YZ tarafından sahaya sürüyen birimlere karşı iki oyuncudan "
+"Kara Öngörü, YZ tarafından sahaya sürülen birimlere karşı iki oyuncudan "
 "oluşan bir takımın yer aldığı bir ayakta kalma mücadelesidir. Düşmanın hücum "
 "dalgaları bertaraf edilerek zafere ulaşılır. Oyun sırasında arazi hava "
 "durumuna bağlı olarak değiştirilir.\n"
@@ -1117,19 +1231,21 @@ msgstr "Asiler"
 
 #. [side]
 #: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:50
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:70
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:76
 msgid "teamname^Human"
 msgstr "İnsanlar"
 
 #. [then]
 #. [objective]: condition=lose
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:105
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:262
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:114
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:135
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:274
 msgid "Death of your leader"
 msgstr "Liderlerinizin ölümü."
 
 #. [then]
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:106
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:115
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:136
 msgid ""
 "Since your team has only one leader, the enemy waves will not be at full "
 "strength."
@@ -1138,28 +1254,31 @@ msgstr ""
 "olmayacak."
 
 #. [else]
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:109
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:118
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:143
 msgid "Death of both of your team’s leaders"
 msgstr "Her iki ekip liderinizin ölümü"
 
 #. [else]
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:110
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:119
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:144
 msgid ""
 "Since your team has two leaders, the enemy waves will be at full strength."
 msgstr "Takımınızın iki lideri olduğundan, düşman dalgaları tam güçte olacak."
 
 #. [objective]: condition=win
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:131
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:146
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:171
 msgid "Survive and defeat all enemy waves"
 msgstr "Tüm düşman akınlarına dayan ve savaşı kazan"
 
 #. [message]: speaker=narrator
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:151
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:166
 msgid "Dark Forecast — a random survival scenario"
 msgstr "Kara Öngörü - Bir rasgele hayatta kalma senaryosu"
 
 #. [message]: speaker=narrator
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:156
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:169
 msgid ""
 "Your aim is to survive the spawning waves of units and defeat the final "
 "archenemies.\n"
@@ -1202,12 +1321,12 @@ msgstr ""
 "\t- WML gerçeklenimi"
 
 #. [message]
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:176
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:188
 msgid "So this is the accursed valley — a land ours for the taking."
 msgstr "Bu lanetli vadi ülkeniz olacak — ele geçirebilirseniz."
 
 #. [message]
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:180
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:192
 msgid ""
 "The inhabitants are rumored to be a strange alliance of man and beast, and "
 "our claim is not going to be unopposed. We must be prepared for the "
@@ -1218,7 +1337,7 @@ msgstr ""
 "olmalıyız."
 
 #. [message]
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:184
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:196
 msgid ""
 "Then let us discover what lies in waiting and teach them not to oppose our "
 "claim."
@@ -1227,7 +1346,7 @@ msgstr ""
 "öğretelim."
 
 #. [message]: speaker=unit
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:203
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:215
 msgid ""
 "Ugh! How can this be? Defeated by mere barbarians! My gods have forsaken "
 "me..."
@@ -1235,7 +1354,7 @@ msgstr ""
 "Uh! Bu nasıl olur? Bu barbarlar beni yendi! Tanrılar günahlarımı affetsin..."
 
 #. [message]: speaker=second_unit
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:217
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:229
 msgid ""
 "Cheers of your enemy are the last thing you hear as you slip into death..."
 "their joy fills your last moments with pure hate."
@@ -1244,7 +1363,7 @@ msgstr ""
 "sevinci, son anlarını saf nefretle dolduruyordu."
 
 #. [message]
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:239
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:251
 msgid ""
 "The enemy cheers as a dark mist rises from the land, engulfing you. As "
 "ghostly wisps drain away your will, you realize that your time in this land "
@@ -1255,12 +1374,14 @@ msgstr ""
 "olduğunu fark edersin."
 
 #. [slider]: id=enemey_gold_factor
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:252
+#. [slider]: id=enemy_gold_factor
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:264
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:311
 msgid "Changes the gold worth of the enemy spawns by a certain percentage"
 msgstr "Düşmanların altın miktarını belli bir yüzdeye göre değiştirir"
 
 #. [lua]: final_spawn
-#: data/multiplayer/scenarios/2p_Dark_Forecast.lua:315
+#: data/multiplayer/scenarios/2p_Dark_Forecast.lua:300
 msgid ""
 "The last and most powerful of these creatures are almost upon us. I feel "
 "that if we can finish them off in time, we shall be victorious."
@@ -1269,7 +1390,7 @@ msgstr ""
 "zamanında bitirebilirsek, muzaffer olacağımızı hissediyorum."
 
 #. [lua]: final_spawn
-#: data/multiplayer/scenarios/2p_Dark_Forecast.lua:345
+#: data/multiplayer/scenarios/2p_Dark_Forecast.lua:330
 msgid ""
 "The screams and pleas for mercy are finally silenced, as you remove your "
 "blood soaked blade from the last of the rebels. There will be no more "
@@ -1280,27 +1401,32 @@ msgstr ""
 "fazla direnme gelmeyecek. Saltanatınız nihayet istikrar kazandı."
 
 #. [lua]: weather_map
-#: data/multiplayer/scenarios/2p_Dark_Forecast.lua:469
+#: data/multiplayer/scenarios/2p_Dark_Forecast.lua:458
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.lua:487
 msgid "Clear Weather"
 msgstr "Güneşli"
 
 #. [lua]: weather_map
-#: data/multiplayer/scenarios/2p_Dark_Forecast.lua:475
+#: data/multiplayer/scenarios/2p_Dark_Forecast.lua:464
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.lua:493
 msgid "Drought"
 msgstr "Kurak"
 
 #. [lua]: weather_map
-#: data/multiplayer/scenarios/2p_Dark_Forecast.lua:487
+#: data/multiplayer/scenarios/2p_Dark_Forecast.lua:476
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.lua:505
 msgid "Heavy Rains"
 msgstr "Fırtına"
 
 #. [lua]: weather_map
-#: data/multiplayer/scenarios/2p_Dark_Forecast.lua:493
+#: data/multiplayer/scenarios/2p_Dark_Forecast.lua:482
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.lua:525
 msgid "Snowfall"
 msgstr "Tipi"
 
 #. [lua]: weather_map
-#: data/multiplayer/scenarios/2p_Dark_Forecast.lua:499
+#: data/multiplayer/scenarios/2p_Dark_Forecast.lua:488
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.lua:531
 msgid "Heavy Snowfall"
 msgstr "Karatipi"
 
@@ -1441,8 +1567,8 @@ msgstr "Vilhelm Viskifıçısı"
 #. [unit]: type=Woodsman
 #: data/multiplayer/scenarios/2p_Hornshark_Island.cfg:231
 #: data/multiplayer/scenarios/2p_Hornshark_Island.cfg:242
-#: data/multiplayer/scenarios/2p_Hornshark_Island.cfg:650
-#: data/multiplayer/scenarios/2p_Hornshark_Island.cfg:661
+#: data/multiplayer/scenarios/2p_Hornshark_Island.cfg:649
+#: data/multiplayer/scenarios/2p_Hornshark_Island.cfg:660
 msgid "Clockwork Boy"
 msgstr "Kurmalı Bebek"
 
@@ -1467,47 +1593,47 @@ msgid "Sorrek, Chosen of Death"
 msgstr "Ölümü Seçen Sorrek"
 
 #. [unit]: type=Young Ogre
-#: data/multiplayer/scenarios/2p_Hornshark_Island.cfg:510
-#: data/multiplayer/scenarios/2p_Hornshark_Island.cfg:581
-#: data/multiplayer/scenarios/2p_Hornshark_Island.cfg:618
-#: data/multiplayer/scenarios/2p_Hornshark_Island.cfg:687
-#: data/multiplayer/scenarios/2p_Hornshark_Island.cfg:735
-#: data/multiplayer/scenarios/2p_Hornshark_Island.cfg:859
+#: data/multiplayer/scenarios/2p_Hornshark_Island.cfg:509
+#: data/multiplayer/scenarios/2p_Hornshark_Island.cfg:580
+#: data/multiplayer/scenarios/2p_Hornshark_Island.cfg:617
+#: data/multiplayer/scenarios/2p_Hornshark_Island.cfg:686
+#: data/multiplayer/scenarios/2p_Hornshark_Island.cfg:734
+#: data/multiplayer/scenarios/2p_Hornshark_Island.cfg:858
 msgid "Big Baby Dro"
 msgstr "Koca Bebek Dro"
 
 #. [unit]: type=Drake Fighter
-#: data/multiplayer/scenarios/2p_Hornshark_Island.cfg:522
+#: data/multiplayer/scenarios/2p_Hornshark_Island.cfg:521
 msgid "Gawffus the Dim"
 msgstr "Gerzek Gavfufus"
 
 #. [unit]: type=Dwarvish Scout
-#: data/multiplayer/scenarios/2p_Hornshark_Island.cfg:570
+#: data/multiplayer/scenarios/2p_Hornshark_Island.cfg:569
 msgid "Rublok"
 msgstr "Rublok"
 
 #. [unit]: type=Dwarvish Scout
-#: data/multiplayer/scenarios/2p_Hornshark_Island.cfg:593
+#: data/multiplayer/scenarios/2p_Hornshark_Island.cfg:592
 msgid "Ulysses Mantyjuuri"
 msgstr "İlyas Saltmantı"
 
 #. [unit]: type=Orcish Leader
-#: data/multiplayer/scenarios/2p_Hornshark_Island.cfg:709
+#: data/multiplayer/scenarios/2p_Hornshark_Island.cfg:708
 msgid "Neki the Brute"
 msgstr "Vahşi Neki"
 
 #. [unit]: type=Elvish Fighter
-#: data/multiplayer/scenarios/2p_Hornshark_Island.cfg:747
+#: data/multiplayer/scenarios/2p_Hornshark_Island.cfg:746
 msgid "Claiomh Dubh"
 msgstr "Klayom Dub"
 
 #. [unit]: type=Soulless
-#: data/multiplayer/scenarios/2p_Hornshark_Island.cfg:805
+#: data/multiplayer/scenarios/2p_Hornshark_Island.cfg:804
 msgid "Tyxrrn the Dauntless"
 msgstr "Korkusuz Tiksirin"
 
 #. [unit]: type=Skeleton
-#: data/multiplayer/scenarios/2p_Hornshark_Island.cfg:843
+#: data/multiplayer/scenarios/2p_Hornshark_Island.cfg:842
 msgid "Rukhos, Chosen of Death"
 msgstr "Ölümü Seçen Rukos"
 
@@ -1524,6 +1650,142 @@ msgid ""
 msgstr ""
 "Bir zamanların bu küçük ve zengin maden kolonisi artık hırsızların ve "
 "haydutların cenneti olmuş."
+
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:4
+msgid ""
+"Your aim is to survive spawning waves of units and defeat the final "
+"archenemies. Spawns are randomly generated and will be different each time "
+"Isle of Mists is played. The waves appear at somewhat regular intervals. The "
+"weather will also change randomly, affecting the layout of the map."
+msgstr ""
+"Göreviniz, düşman akınlarını bertaraf etmek ve son yıkıcı akına dayanmaktır. "
+"Düşman akınları rasgele ve her oynanışta farklı üretilir. Akınlar belli "
+"aralıklarla görülür. Ayrıca hava durumu da rastgele değişir ve harita "
+"yerleşimi bundan etkilenir."
+
+#. [multiplayer]: id=multiplayer_2p_Isle_of_Mists
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:9
+msgid "2p — Isle of Mists (Survival)"
+msgstr "2o — Sisler Adası (Ölümüne)"
+
+#. [multiplayer]: id=multiplayer_2p_Isle_of_Mists
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:10
+msgid ""
+"Isle of Mists is a survival scenario which can be played alone or with "
+"another player against randomly spawned AI units, catered for experienced "
+"players. Victory is achieved by surviving and defeating all enemy waves. "
+"During the course of play, the terrain will change based on random weather "
+"effects. Default map settings are required for the scenario to work "
+"properly. By Lord-Knightmare."
+msgstr ""
+"Sisler Adası, deneyimli oyuncular için hazırlanmış, YZ tarafından sahaya "
+"sürüyen birimlere karşı iki oyuncudan oluşan bir takımın yer aldığı bir "
+"ayakta kalma mücadelesidir. Düşmanın hücum dalgalarında hayatta kalarak ve "
+"onları yenerek zafere ulaşılır. Oyun sırasında arazi, hava durumuna bağlı "
+"olarak değiştirilir. Senaryonun doğru çalışması için öntanımlı harita "
+"ayarlarını kullanmalısınız. Lord-Knightmare yazdı."
+
+#. [side]
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:25
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:38
+msgid "teamname^Invaders"
+msgstr "İşgalciler"
+
+#. [side]
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:56
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:83
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:107
+#: data/multiplayer/scenarios/Test_Elevation_Test.cfg:45
+msgid "teamname^Defenders"
+msgstr "Savunucular"
+
+#. [label]
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:189
+msgid "Healing Keep"
+msgstr "İyileştirici İçkale"
+
+#. [message]: speaker=narrator
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:213
+msgid "Isle of Mists — a random survival scenario"
+msgstr "Sisler Adası — Rastgele hayatta kalma senaryosu"
+
+#. [message]
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:220
+msgid ""
+"You arrive near a mystic shrine, where the apparitions of ancient armies are "
+"forever trapped and doomed to eternally cleanse the isle of all interlopers."
+msgstr ""
+"Kadim orduların hayaletlerinin sonsuza dek tuzağa düşürüldüğü ve adanın tüm "
+"müdahalecilerinin sonsuza dek lanetllendiği gizemli bir tapınağın yanına "
+"varıyorsunuz. "
+
+#. [message]
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:224
+msgid ""
+"Phantom armies approach on the horizon. If we defeat them all, they may be "
+"released from this timeless prison."
+msgstr ""
+"Ufukta hayalet ordular yaklaşıyor. Hepsini yenersek, bu ebedi hapishaneden "
+"kurtulabilirler."
+
+#. [message]
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:228
+msgid "Let us prepare ourselves for the coming battle."
+msgstr "Yaklaşan savaşa hazırlanalım."
+
+#. [message]: speaker=unit
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:247
+msgid "How can this be? My gods have forsaken me..."
+msgstr "Bu nasıl olabilir? Tanrılarım beni terk etti... "
+
+#. [message]: speaker=second_unit
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:261
+msgid ""
+"As the cold grasp of death draws nearer, you feel your spirit being "
+"separated from your body. You realize that you will soon be doomed to the "
+"same fate as the phantom guardians of the shrine."
+msgstr ""
+"Ölümün soğuk kavrayışı yaklaştıkça, ruhunuzun bedeninizden ayrıldığını "
+"hissediyorsunuz. Yakında tapınağın hayalet muhafızlarıyla aynı kadere mahkum "
+"olacağınızı anlamaya başladınız."
+
+#. [message]
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:283
+msgid ""
+"A dark mist rises from the land, draining your senses and your will away. "
+"You dimly realize that you will soon join the other ghosts as another "
+"faceless guardian of the ancient shrine."
+msgstr ""
+"Karadan yükselen koyu bir sis, duyularınızı ve iradenizi köreltiyor. Eski "
+"tapınağın başka bir meçhul koruyucusu olarak yakında diğer hayaletlere "
+"katılacağınızı belli belirsiz fark ediyorsunuz."
+
+#. [lua]: final_spawn
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.lua:313
+msgid ""
+"The last and most powerful of our enemies are upon us. If we can finish them "
+"off in time, we shall be victorious."
+msgstr ""
+"Düşmanlarımızın sonuncusu ve en güçlüsü neredeyse tepemizde; işlerini "
+"zamanında bitirebilirsek, zafer bizim olacak."
+
+#. [lua]: final_spawn
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.lua:343
+msgid ""
+"As you finally defeat your last remaining foes, the dreary mists around the "
+"island seem to lift. The phantoms fade away, at last released from their "
+"eternal guardianship. You have finally cleansed the ancient shrine... for "
+"now."
+msgstr ""
+"Sonunda kalan son düşmanlarınızı yendiğinizde, adanın etrafındaki kasvetli "
+"sisler kalkıyor gibi görünüyor. Hayaletler kayboluyor, sonunda ebedi "
+"koruyuculuklarından kurtuluyorlar. Sonunda antik tapınağı temizlediniz ... "
+"şimdilik."
+
+#. [lua]: weather_map
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.lua:518
+msgid "Inundation"
+msgstr "Sel"
 
 #. [multiplayer]: id=multiplayer_Ruined_Passage
 #: data/multiplayer/scenarios/2p_Ruined_Passage.cfg:7
@@ -1769,26 +2031,16 @@ msgstr ""
 "kısımları aslında tamamlanmıştı."
 
 #. [multiplayer]: id=multiplayer_thousand_stings_garrison
-#: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:37
+#: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:45
 msgid "2p — Thousand Stings Garrison"
 msgstr "2p — Bin Azap Garnizonu"
 
 #. [multiplayer]: id=multiplayer_thousand_stings_garrison
-#: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:39
+#: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:47
 msgid "A strange place. Designed by Doc Paterson."
 msgstr "Tuhaf bir yer. Doc Paterson tarafından tasarlanmıştır."
 
 #. [side]
-#: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:93
-#: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:94
-#: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:95
-#: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:96
-#: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:97
-#: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:98
-#: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:99
-#: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:100
-#: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:101
-#: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:102
 #: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:103
 #: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:104
 #: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:105
@@ -1845,6 +2097,16 @@ msgstr "Tuhaf bir yer. Doc Paterson tarafından tasarlanmıştır."
 #: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:156
 #: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:157
 #: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:158
+#: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:159
+#: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:160
+#: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:161
+#: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:162
+#: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:163
+#: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:164
+#: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:165
+#: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:166
+#: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:167
+#: data/multiplayer/scenarios/2p_Thousand_Stings_Garrison.cfg:168
 msgid "Statue"
 msgstr "Heykel"
 
@@ -1869,7 +2131,7 @@ msgstr ""
 "kasvetli ortamıyla ilgilenmeyen liderleriniz, çarpışmak için burayı seçti."
 
 #. [note]
-#: data/multiplayer/scenarios/2p_Tombs_of_Kesorak.cfg:159
+#: data/multiplayer/scenarios/2p_Tombs_of_Kesorak.cfg:158
 msgid ""
 "The map contains mausoleums and campfires that shift the time of the day by "
 "one step toward night and day, respectively."
@@ -1878,7 +2140,7 @@ msgstr ""
 "mozoleler ve kamp ateşleri içeriyor."
 
 #. [note]
-#: data/multiplayer/scenarios/2p_Tombs_of_Kesorak.cfg:162
+#: data/multiplayer/scenarios/2p_Tombs_of_Kesorak.cfg:161
 msgid ""
 "The tile in the centre, which contains the casket of the titular "
 "necromancer, is always covered in pitch black fog."
@@ -1905,19 +2167,19 @@ msgstr ""
 msgid "3p — Alirok Marsh"
 msgstr "3o — Alirok Bataklığı"
 
-#. [multiplayer]: id=multiplayer_Island_of_the_Horatii
-#. [multiplayer]: id=multiplayer_Loris_River
-#. [multiplayer]: id=multiplayer_3p_Morituri
-#. [multiplayer]: id=multiplayer_4p_Underworld
-#. [multiplayer]: id=multiplayer_4p_Morituri
 #. [multiplayer]: id=multiplayer_Alirok_Marsh
-#. [multiplayer]: id=multiplayer_Ruins_of_Terra-Dwelve
+#. [multiplayer]: id=multiplayer_Island_of_the_Horatii
+#. [multiplayer]: id=multiplayer_3p_Morituri
 #. [multiplayer]: id=multiplayer_Blue_Water_Province
-#. [multiplayer]: id=multiplayer_8p_Morituri
-#. [multiplayer]: id=multiplayer_8p_Mokena_Prairie
-#. [multiplayer]: id=multiplayer_Clash
 #. [multiplayer]: id=multiplayer_Castle_Hopping_Isle
+#. [multiplayer]: id=multiplayer_Clash
 #. [multiplayer]: id=multiplayer_4p_Hamlets
+#. [multiplayer]: id=multiplayer_Loris_River
+#. [multiplayer]: id=multiplayer_4p_Morituri
+#. [multiplayer]: id=multiplayer_Ruins_of_Terra-Dwelve
+#. [multiplayer]: id=multiplayer_4p_Underworld
+#. [multiplayer]: id=multiplayer_8p_Mokena_Prairie
+#. [multiplayer]: id=multiplayer_8p_Morituri
 #: data/multiplayer/scenarios/3p_Alirok_Marsh.cfg:6
 #: data/multiplayer/scenarios/3p_Island_of_the_Horatii.cfg:6
 #: data/multiplayer/scenarios/3p_Morituri.cfg:6
@@ -2015,7 +2277,7 @@ msgstr ""
 #. [side]
 #: data/multiplayer/scenarios/4p_Blue_Water_Province.cfg:21
 #: data/multiplayer/scenarios/4p_Blue_Water_Province.cfg:54
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:71
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:73
 #: data/multiplayer/scenarios/6p_Crusaders_Field.cfg:20
 #: data/multiplayer/scenarios/6p_Crusaders_Field.cfg:42
 #: data/multiplayer/scenarios/6p_Crusaders_Field.cfg:64
@@ -2029,7 +2291,7 @@ msgstr "1. Takım"
 #. [side]
 #: data/multiplayer/scenarios/4p_Blue_Water_Province.cfg:32
 #: data/multiplayer/scenarios/4p_Blue_Water_Province.cfg:43
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:82
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:84
 #: data/multiplayer/scenarios/6p_Crusaders_Field.cfg:31
 #: data/multiplayer/scenarios/6p_Crusaders_Field.cfg:53
 #: data/multiplayer/scenarios/6p_Crusaders_Field.cfg:75
@@ -2115,7 +2377,6 @@ msgstr ""
 #. [side]
 #: data/multiplayer/scenarios/4p_Isars_Cross.cfg:20
 #: data/multiplayer/scenarios/4p_Isars_Cross.cfg:56
-#: data/multiplayer/scenarios/4p_King_of_the_Hill.cfg:20
 #: data/multiplayer/scenarios/4p_Paths_of_Daggers.cfg:20
 #: data/multiplayer/scenarios/4p_Siege_Castles.cfg:58
 #: data/multiplayer/scenarios/5p_Auction-X.cfg:45
@@ -2125,13 +2386,13 @@ msgstr ""
 #: data/multiplayer/scenarios/9p_Merkwuerdigliebe.cfg:45
 #: data/multiplayer/scenarios/9p_Merkwuerdigliebe.cfg:56
 #: data/multiplayer/scenarios/9p_Merkwuerdigliebe.cfg:100
+#: data/multiplayer/scenarios/Test_Elevation_Test.cfg:27
 msgid "teamname^Southwest"
 msgstr "Güneybatı"
 
 #. [side]
 #: data/multiplayer/scenarios/4p_Isars_Cross.cfg:32
 #: data/multiplayer/scenarios/4p_Isars_Cross.cfg:44
-#: data/multiplayer/scenarios/4p_King_of_the_Hill.cfg:44
 #: data/multiplayer/scenarios/4p_Paths_of_Daggers.cfg:31
 #: data/multiplayer/scenarios/4p_Siege_Castles.cfg:34
 #: data/multiplayer/scenarios/5p_Auction-X.cfg:21
@@ -2142,50 +2403,135 @@ msgstr "Güneybatı"
 msgid "teamname^Northeast"
 msgstr "Kuzeydoğu"
 
+#. [checkbox]: id=simple_background
+#: data/multiplayer/scenarios/4p_Isars_Cross.cfg:67
+msgid "Disable Background Image"
+msgstr "Artalan Görüntüsünü İptal Et"
+
+#. [checkbox]: id=simple_background
+#. Tooltip for the Isar's Cross map, makes the map look as it did in Wesnoth 1.14 and earlier
+#: data/multiplayer/scenarios/4p_Isars_Cross.cfg:69
+msgid ""
+"Show a blank area outside the map, instead of the floating island with "
+"cliffs."
+msgstr ""
+"Kayalıklarla dolu yüzen ada yerine haritanın dışında boş bir alan gösterir."
+
 #. [multiplayer]: id=multiplayer_King_of_the_Hill
-#: data/multiplayer/scenarios/4p_King_of_the_Hill.cfg:7
+#: data/multiplayer/scenarios/4p_King_of_the_Hill.cfg:53
 msgid "4p — King of the Hill"
 msgstr "4o — Tepenin Kralı"
 
 #. [multiplayer]: id=multiplayer_King_of_the_Hill
 #. [multiplayer]: id=multiplayer_Siege_Castles
-#: data/multiplayer/scenarios/4p_King_of_the_Hill.cfg:9
+#: data/multiplayer/scenarios/4p_King_of_the_Hill.cfg:55
 #: data/multiplayer/scenarios/4p_Siege_Castles.cfg:9
 msgid " Recommended setting of 2 gold per village and 150 starting gold."
 msgstr " Önerilen ayarlar: 150 altın ve köy başına 2 altın."
 
 #. [multiplayer]: id=multiplayer_King_of_the_Hill
-#: data/multiplayer/scenarios/4p_King_of_the_Hill.cfg:9
+#: data/multiplayer/scenarios/4p_King_of_the_Hill.cfg:55
 msgid ""
-"Controlling the area around the central keep is very lucrative in this 4 "
-"player FFA map. Works fine 2 vs. 2 as well. There are 36 villages."
+"The King is dead. Without an heir, his quarrelsome lords now vie for the "
+"hilltop throne and all the power and wealth it commands. Are you mighty "
+"enough to take this seat of power before your rivals do? Can you hold out "
+"against their many assassins? Is your arse truly great enough to fill the "
+"throne of a king? This free for all map has 38 villages and bonus income for "
+"the leader on the center keep."
 msgstr ""
-"Herkes tek, 4 rakibin karşılaştığı haritada merkezdeki hisarı denetim altına "
-"almak çok yararlıdır. 2’ye 2 olarak da oynanabilir. 36 köy vardır."
 
 #. [side]
-#: data/multiplayer/scenarios/4p_King_of_the_Hill.cfg:32
-#: data/multiplayer/scenarios/4p_Loris_River.cfg:32
-#: data/multiplayer/scenarios/4p_Loris_River.cfg:43
-#: data/multiplayer/scenarios/4p_Paths_of_Daggers.cfg:42
-#: data/multiplayer/scenarios/4p_Siege_Castles.cfg:46
-#: data/multiplayer/scenarios/5p_Auction-X.cfg:33
-#: data/multiplayer/scenarios/5p_Forest_of_Fear.cfg:42
-#: data/multiplayer/scenarios/9p_Merkwuerdigliebe.cfg:34
-#: data/multiplayer/scenarios/9p_Merkwuerdigliebe.cfg:78
-#: data/multiplayer/scenarios/9p_Merkwuerdigliebe.cfg:89
-msgid "teamname^Southeast"
+#: data/multiplayer/scenarios/4p_King_of_the_Hill.cfg:63
+#, fuzzy
+#| msgid "teamname^Southwest"
+msgid "Southwest"
+msgstr "Güneybatı"
+
+#. [side]
+#: data/multiplayer/scenarios/4p_King_of_the_Hill.cfg:73
+#, fuzzy
+#| msgid "teamname^Southeast"
+msgid "Southeast"
 msgstr "Güneydoğu"
 
 #. [side]
-#: data/multiplayer/scenarios/4p_King_of_the_Hill.cfg:56
-#: data/multiplayer/scenarios/4p_Loris_River.cfg:21
-#: data/multiplayer/scenarios/4p_Loris_River.cfg:54
-#: data/multiplayer/scenarios/4p_Paths_of_Daggers.cfg:53
-#: data/multiplayer/scenarios/4p_Siege_Castles.cfg:22
-#: data/multiplayer/scenarios/5p_Auction-X.cfg:57
-msgid "teamname^Northwest"
-msgstr "Kuzeybatı"
+#: data/multiplayer/scenarios/4p_King_of_the_Hill.cfg:83
+#, fuzzy
+#| msgid "Northerners"
+msgid "Northeast"
+msgstr "Kuzeyliler"
+
+#. [side]
+#: data/multiplayer/scenarios/4p_King_of_the_Hill.cfg:93
+#, fuzzy
+#| msgid "Northerners"
+msgid "Northwest"
+msgstr "Kuzeyliler"
+
+#. [side]
+#: data/multiplayer/scenarios/4p_King_of_the_Hill.cfg:106
+msgid "High Guard"
+msgstr ""
+
+#. [slider]: id=bonus_income
+#: data/multiplayer/scenarios/4p_King_of_the_Hill.cfg:121
+msgid "Hill Bonus Income"
+msgstr ""
+
+#. [slider]: id=bonus_income
+#: data/multiplayer/scenarios/4p_King_of_the_Hill.cfg:122
+msgid ""
+"The amount of extra gold per turn granted to the leader who occupies the "
+"hill keep."
+msgstr ""
+
+#. [slider]: id=chest_gold
+#: data/multiplayer/scenarios/4p_King_of_the_Hill.cfg:130
+msgid "Treasure Chest Gold"
+msgstr ""
+
+#. [slider]: id=chest_gold
+#: data/multiplayer/scenarios/4p_King_of_the_Hill.cfg:131
+msgid "The amount of gold stashed inside the treasure chest on the hill."
+msgstr ""
+
+#. [objective]: condition=win
+#: data/multiplayer/scenarios/4p_King_of_the_Hill.cfg:139
+#, fuzzy
+#| msgid "Defeat all enemy leaders"
+msgid "Defeat enemy leaders"
+msgstr "Tüm düşman liderlerini yen"
+
+#. [note]
+#: data/multiplayer/scenarios/4p_King_of_the_Hill.cfg:143
+msgid ""
+"The treasure chest on the hill keep can only be unlocked by a leader, for a "
+"bonus of $chest_gold gold."
+msgstr ""
+
+#. [note]
+#: data/multiplayer/scenarios/4p_King_of_the_Hill.cfg:146
+msgid ""
+"A side with a leader holding the hill keep gets +$bonus_income gold income "
+"each turn."
+msgstr ""
+
+#. [note]
+#: data/multiplayer/scenarios/4p_King_of_the_Hill.cfg:149
+msgid ""
+"Each side gets two leaders. Whenever a leader is lost then another appears "
+"on the recall list at its full cost."
+msgstr ""
+
+#. [floating_text]
+#: data/multiplayer/scenarios/4p_King_of_the_Hill.cfg:233
+msgid "<span color='gold'>+$bonus_income gold</span>"
+msgstr ""
+
+#. [floating_text]
+#: data/multiplayer/scenarios/4p_King_of_the_Hill.cfg:270
+msgid "<span color='gold'>+$chest_gold gold</span>"
+msgstr ""
 
 #. [multiplayer]: id=multiplayer_Loris_River
 #: data/multiplayer/scenarios/4p_Loris_River.cfg:7
@@ -2201,6 +2547,29 @@ msgstr ""
 "2 y 2 oynanan, içkaleleri zıt köşelerde bulunan, bir nehrin etrafında "
 "şekillenmiş bir harita. 1 &amp; 4 e 2 &amp; 3 oyuncu için tasaralmıştır. 28 "
 "köy vardır."
+
+#. [side]
+#: data/multiplayer/scenarios/4p_Loris_River.cfg:21
+#: data/multiplayer/scenarios/4p_Loris_River.cfg:54
+#: data/multiplayer/scenarios/4p_Paths_of_Daggers.cfg:53
+#: data/multiplayer/scenarios/4p_Siege_Castles.cfg:22
+#: data/multiplayer/scenarios/5p_Auction-X.cfg:57
+msgid "teamname^Northwest"
+msgstr "Kuzeybatı"
+
+#. [side]
+#: data/multiplayer/scenarios/4p_Loris_River.cfg:32
+#: data/multiplayer/scenarios/4p_Loris_River.cfg:43
+#: data/multiplayer/scenarios/4p_Paths_of_Daggers.cfg:42
+#: data/multiplayer/scenarios/4p_Siege_Castles.cfg:46
+#: data/multiplayer/scenarios/5p_Auction-X.cfg:33
+#: data/multiplayer/scenarios/5p_Forest_of_Fear.cfg:42
+#: data/multiplayer/scenarios/9p_Merkwuerdigliebe.cfg:34
+#: data/multiplayer/scenarios/9p_Merkwuerdigliebe.cfg:78
+#: data/multiplayer/scenarios/9p_Merkwuerdigliebe.cfg:89
+#: data/multiplayer/scenarios/Test_Elevation_Test.cfg:63
+msgid "teamname^Southeast"
+msgstr "Güneydoğu"
 
 #. [multiplayer]: id=multiplayer_4p_Morituri
 #: data/multiplayer/scenarios/4p_Morituri.cfg:5
@@ -2318,19 +2687,19 @@ msgid "In this mixed landscape, five armies battle for supremacy."
 msgstr "Bu karışık bölgede, beş ordu egemenlik için savaşıyor."
 
 #. [multiplayer]: id=multiplayer_The_Wilderlands
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:55
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:57
 msgid "5p — The Wilderlands"
 msgstr "5o — Vahşi Topraklar"
 
-#. [multiplayer]: id=multiplayer_Crusaders_Field
 #. [multiplayer]: id=multiplayer_The_Wilderlands
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:56
+#. [multiplayer]: id=multiplayer_Crusaders_Field
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:58
 #: data/multiplayer/scenarios/6p_Crusaders_Field.cfg:7
 msgid " Recommended setting of 1 gold per village."
 msgstr " Önerilen ayarlar: Köy başına 2 altın."
 
 #. [multiplayer]: id=multiplayer_The_Wilderlands
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:56
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:58
 msgid ""
 "A vast region of wild, untamed wilderness, its terrain dotted with forests, "
 "caves, rivers, and the ruins of ancient fortresses."
@@ -2339,44 +2708,42 @@ msgstr ""
 "dolu yabani bir bölge."
 
 #. [side]
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:93
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:95
 msgid "teamname^Team 3"
 msgstr "3. Takım"
 
 #. [side]
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:104
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:106
 msgid "teamname^Team 4"
 msgstr "4. Takım"
 
 #. [side]
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:125
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:128
 msgid "teamname^Monsters"
 msgstr "Canavarlar"
 
 #. [objective]: condition=win
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:235
-#, fuzzy
-#| msgid "Defeat the enemy leaders"
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:245
 msgid "Defeat all enemy leaders"
-msgstr "Düşman liderlerini yen"
+msgstr "Tüm düşman liderlerini yen"
 
 #. [objective]: condition=win
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:252
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:264
 msgid "Defeat all monsters"
 msgstr "Tüm canavarları yen"
 
 #. [objective]: condition=win
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:270
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:282
 msgid "Defeat the enemy leaders"
 msgstr "Düşman liderlerini yen"
 
 #. [objective]: condition=lose
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:275
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:287
 msgid "Death of all your units"
 msgstr "Birimlerinizin tamamı ölürse"
 
 #. [note]
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:280
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:292
 msgid "You cannot recruit units."
 msgstr "Birimleri askere alamazsınız."
 
@@ -2423,73 +2790,73 @@ msgstr "Saldıran"
 
 #. [side]
 #: data/multiplayer/scenarios/6p_Team_Survival.cfg:280
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:294
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:308
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:322
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:336
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:350
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:300
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:317
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:334
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:351
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:368
 msgid "Defender"
 msgstr "Savunan"
 
 #. [objective]: condition=win
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:369
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:390
 msgid "Survive all enemy attacks"
 msgstr "Tüm düşman saldırılarına dayan"
 
 #. [objective]: condition=lose
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:375
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:396
 msgid "Death of your team leaders"
 msgstr "Ekip liderlerininizin ölümü"
 
 #. [note]
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:380
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:401
 msgid "Hint: Learning the enemy spawn points and types helps a lot."
 msgstr ""
 "İpucu: Düşman akınlarının başlangıç noktalarını ve türlerini öğrenmek "
 "oldukça yardımcı olacaktır."
 
 #. [label]
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:386
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:407
 msgid "Turn 2: Loyalists"
 msgstr "2. El: Kralcılar"
 
 #. [label]
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:391
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:412
 msgid "Turn 5: Knalgans"
 msgstr "5. El: Kanalgalılar"
 
 #. [label]
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:396
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:417
 msgid "Turn 8: Rebels"
 msgstr "8. El: Asiler"
 
 #. [label]
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:401
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:422
 msgid "Turn 11: Northerners"
 msgstr "11. El: Kuzeyliler"
 
 #. [label]
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:406
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:427
 msgid "Turn 14: Drakes"
 msgstr "14. El: Ejderler"
 
 #. [label]
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:411
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:432
 msgid "Turn 17: Undead"
 msgstr "17. El: Yarı ölüler"
 
 #. [label]
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:416
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:437
 msgid "Tower of Doom"
 msgstr "Cehennem Kulesi"
 
 #. [message]: speaker=narrator
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:523
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:544
 msgid "Faery"
 msgstr "Perili"
 
 #. [message]: speaker=narrator
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:524
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:545
 msgid ""
 "Congratulations for surviving the map that so many people claim is "
 "impossible!"
@@ -2498,12 +2865,12 @@ msgstr ""
 "tebrikler!"
 
 #. [message]: speaker=narrator
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:538
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:564
 msgid "Death"
 msgstr "Ölüm"
 
 #. [message]: speaker=narrator
-#: data/multiplayer/scenarios/6p_Team_Survival.cfg:540
+#: data/multiplayer/scenarios/6p_Team_Survival.cfg:566
 msgid ""
 "You have lost this game, but fear not. You can always try again. And again. "
 "And again. *Muahahaha*"
@@ -2678,64 +3045,62 @@ msgstr ""
 "harita. Bilginize: Rastgele haritalar genellikle dengeli değillerdir, eğer "
 "zamanınız varsa, tekrar tekrar deneyerek güzel bir tane yakalayabilirsiniz."
 
-#. [multiplayer]: id=wesbench_ai
-#: data/multiplayer/scenarios/Wesbench_AI.cfg:9
-msgid "Wesnoth Benchmark: AI"
-msgstr "Vesnot Değerlendirmesi: YZ"
+#. [multiplayer]: id=multiplayer_test_Elevation_Demo
+#: data/multiplayer/scenarios/Test_Elevation_Test.cfg:5
+msgid "3p - Elevation Test"
+msgstr ""
 
-#. [multiplayer]: id=wesbench_ai
-#: data/multiplayer/scenarios/Wesbench_AI.cfg:10
+#. [multiplayer]: id=multiplayer_test_Elevation_Demo
+#: data/multiplayer/scenarios/Test_Elevation_Test.cfg:6
 msgid ""
-"A wesnoth benchmark, use --nogui --no-delay --multiplayer --"
-"scenario=wesbench_ai --exit-at-end."
-msgstr ""
-"Bir Vesnot değerlendirmesi; programı --nogui --no-delay --multiplayer --"
-"scenario=wesbench_ai --exit-at-end seçenekleri ile çalıştırarak deneyiniz."
-
-#. [multiplayer]: id=wesbench_scroll
-#: data/multiplayer/scenarios/Wesbench_Scroll.cfg:9
-msgid "Wesnoth Benchmark: Scrolling"
-msgstr "Vesnot Değerlendirmesi: Kaydırma"
-
-#. [multiplayer]: id=wesbench_scroll
-#: data/multiplayer/scenarios/Wesbench_Scroll.cfg:10
-msgid ""
-"A wesnoth benchmark, use --no-delay --multiplayer --scenario=wesbench_scroll "
-"--exit-at-end."
-msgstr ""
-"Bir Vesnot değerlendirmesi; programı --no-delay --multiplayer --"
-"scenario=wesbench_scroll --exit-at-end\n"
-"seçenekleri ile çalıştırarak deneyiniz."
-
-#. [multiplayer]: id=wesbench_shroud_walk
-#: data/multiplayer/scenarios/Wesbench_Shroud_Walk.cfg:9
-msgid "Wesnoth Benchmark: Walking through Shroud"
-msgstr "Vesnot Değerlendirmesi: Örtü içine yürüme"
-
-#. [multiplayer]: id=wesbench_shroud_walk
-#: data/multiplayer/scenarios/Wesbench_Shroud_Walk.cfg:10
-msgid ""
-"A wesnoth benchmark, use --no-delay --multiplayer --"
-"scenario=wesbench_shroud_walk --exit-at-end."
-msgstr ""
-"Bir Vesnot değerlendirmesi; programı --no-delay --multiplayer --"
-"scenario=wesbench_shroud_walk --exit-at-end seçenekleri ile çalıştırarak "
-"deneyiniz."
-
-#. [multiplayer]: id=multiplayer_test_lua_mapgen
-#: data/multiplayer/scenarios/test_lua_mapgen.cfg:16
-msgid "Lua Mapgen Maritime"
+"This map is an example of how to use the new (BfW v1.17) elevated terrain "
+"graphics. Please be advised that it is not intended for playing."
 msgstr ""
 
-#. [multiplayer]: id=multiplayer_test_lua_mapgen
-#: data/multiplayer/scenarios/test_lua_mapgen.cfg:17
-msgid "Testing new lua mapgen features"
-msgstr ""
+#~ msgid ""
+#~ "Controlling the area around the central keep is very lucrative in this 4 "
+#~ "player FFA map. Works fine 2 vs. 2 as well. There are 36 villages."
+#~ msgstr ""
+#~ "Herkes tek, 4 rakibin karşılaştığı haritada merkezdeki hisarı denetim "
+#~ "altına almak çok yararlıdır. 2’ye 2 olarak da oynanabilir. 36 köy vardır."
 
-#, fuzzy
-#~| msgid "Defeat all enemy leaders"
-#~ msgid "Defeat enemy leader(s)"
-#~ msgstr "Tüm düşman liderlerini yen"
+#~ msgid "Random"
+#~ msgstr "Rasgele"
+
+#~ msgid "Wesnoth Benchmark: AI"
+#~ msgstr "Vesnot Değerlendirmesi: YZ"
+
+#~ msgid ""
+#~ "A wesnoth benchmark, use --nogui --no-delay --multiplayer --"
+#~ "scenario=wesbench_ai --exit-at-end."
+#~ msgstr ""
+#~ "Bir Vesnot değerlendirmesi; programı --nogui --no-delay --multiplayer --"
+#~ "scenario=wesbench_ai --exit-at-end seçenekleri ile çalıştırarak deneyiniz."
+
+#~ msgid "Wesnoth Benchmark: Scrolling"
+#~ msgstr "Vesnot Değerlendirmesi: Kaydırma"
+
+#~ msgid ""
+#~ "A wesnoth benchmark, use --no-delay --multiplayer --"
+#~ "scenario=wesbench_scroll --exit-at-end."
+#~ msgstr ""
+#~ "Bir Vesnot değerlendirmesi; programı --no-delay --multiplayer --"
+#~ "scenario=wesbench_scroll --exit-at-end\n"
+#~ "seçenekleri ile çalıştırarak deneyiniz."
+
+#~ msgid "Wesnoth Benchmark: Walking through Shroud"
+#~ msgstr "Vesnot Değerlendirmesi: Örtü içine yürüme"
+
+#~ msgid ""
+#~ "A wesnoth benchmark, use --no-delay --multiplayer --"
+#~ "scenario=wesbench_shroud_walk --exit-at-end."
+#~ msgstr ""
+#~ "Bir Vesnot değerlendirmesi; programı --no-delay --multiplayer --"
+#~ "scenario=wesbench_shroud_walk --exit-at-end seçenekleri ile çalıştırarak "
+#~ "deneyiniz."
+
+#~ msgid "Grand total: <b>%d</b>"
+#~ msgstr "Genel toplam: <b>%d</b>"
 
 #, fuzzy
 #~| msgid "Age of Heroes"

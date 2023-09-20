@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2003 - 2018 by David White <dave@whitevine.net>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2003 - 2023
+	by David White <dave@whitevine.net>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 /**
@@ -31,8 +32,7 @@
 #include "sdl/point.hpp"
 #include "serialization/parser.hpp"
 #include "sound.hpp"
-#include "utils/general.hpp"
-#include "video.hpp" // non_interactive()
+#include "video.hpp"
 #include "game_config_view.hpp"
 
 #include <sys/stat.h> // for setting the permissions of the preferences file
@@ -64,15 +64,19 @@ namespace preferences {
  * Add any variables of similar type here.
  */
 const int min_window_width  = 800;
-const int min_window_height = 600;
+const int min_window_height = 540;
 
 const int def_window_width  = 1280;
 const int def_window_height = 720;
 
+const int max_window_width = 1920;
+const int max_window_height = 1080;
+
 const int min_font_scaling  = 80;
 const int max_font_scaling  = 150;
 
-const SCALING_ALGORITHM default_scaling_algorithm = SCALING_ALGORITHM::XBRZ_NN;
+const int min_pixel_scale = 1;
+const int max_pixel_scale = 4;
 
 class prefs_event_handler : public events::sdl_handler {
 public:
@@ -87,25 +91,7 @@ base_manager::base_manager()
 {
 	event_handler_.join_global();
 
-	try{
-#ifdef DEFAULT_PREFS_PATH
-		filesystem::scoped_istream stream = filesystem::istream_file(filesystem::get_default_prefs_file(),false);
-		read(prefs, *stream);
-
-		config user_prefs;
-		stream = filesystem::istream_file(filesystem::get_prefs_file());
-		read(user_prefs, *stream);
-
-		prefs.merge_with(user_prefs);
-#else
-		filesystem::scoped_istream stream = filesystem::istream_file(filesystem::get_prefs_file(),false);
-		read(prefs, *stream);
-#endif
-	} catch(const config::error& e) {
-		ERR_CFG << "Error loading preference, message: "
-				<< e.what()
-				<< std::endl;
-	}
+	preferences::load_base_prefs();
 	preferences::load_credentials();
 }
 
@@ -126,7 +112,7 @@ base_manager::~base_manager()
 /*
  * Hook for setting window state variables on window resize and maximize
  * events. Since there is no fullscreen window event, that setter is called
- * from the CVideo function instead.
+ * from the video function instead.
  */
 void prefs_event_handler::handle_window_event(const SDL_Event& event)
 {
@@ -136,7 +122,7 @@ void prefs_event_handler::handle_window_event(const SDL_Event& event)
 
 	switch(event.window.event) {
 	case SDL_WINDOWEVENT_RESIZED:
-		_set_resolution(point(event.window.data1,event.window.data2));
+		_set_resolution(video::window_size());
 
 		break;
 
@@ -155,26 +141,24 @@ void prefs_event_handler::handle_window_event(const SDL_Event& event)
 void write_preferences()
 {
 #ifndef _WIN32
-    bool prefs_file_existed = access(filesystem::get_prefs_file().c_str(), F_OK) == 0;
+	bool prefs_file_existed = access(filesystem::get_prefs_file().c_str(), F_OK) == 0;
 #endif
 
 	try {
 		filesystem::scoped_ostream prefs_file = filesystem::ostream_file(filesystem::get_prefs_file());
 		write(*prefs_file, prefs);
 	} catch(const filesystem::io_exception&) {
-		ERR_FS << "error writing to preferences file '" << filesystem::get_prefs_file() << "'" << std::endl;
+		ERR_FS << "error writing to preferences file '" << filesystem::get_prefs_file() << "'";
 	}
 
 	preferences::save_credentials();
 
 #ifndef _WIN32
-    if(!prefs_file_existed) {
-
-        if(chmod(filesystem::get_prefs_file().c_str(), 0600) == -1) {
-			ERR_FS << "error setting permissions of preferences file '" << filesystem::get_prefs_file() << "'" << std::endl;
-        }
-
-    }
+	if(!prefs_file_existed) {
+		if(chmod(filesystem::get_prefs_file().c_str(), 0600) == -1) {
+			ERR_FS << "error setting permissions of preferences file '" << filesystem::get_prefs_file() << "'";
+		}
+	}
 #endif
 }
 
@@ -213,9 +197,9 @@ void set_child(const std::string& key, const config& val) {
 	prefs.add_child(key, val);
 }
 
-const config &get_child(const std::string& key)
+optional_const_config get_child(const std::string& key)
 {
-	return prefs.child(key);
+	return prefs.optional_child(key);
 }
 
 void erase(const std::string& key) {
@@ -253,12 +237,40 @@ config* get_prefs(){
 	return pointer;
 }
 
+void load_base_prefs() {
+	try{
+#ifdef DEFAULT_PREFS_PATH
+		filesystem::scoped_istream stream = filesystem::istream_file(filesystem::get_default_prefs_file(),false);
+		read(prefs, *stream);
 
-bool show_allied_orb() {
+		config user_prefs;
+		stream = filesystem::istream_file(filesystem::get_prefs_file());
+		read(user_prefs, *stream);
+
+		prefs.merge_with(user_prefs);
+#else
+		prefs.clear();
+		filesystem::scoped_istream stream = filesystem::istream_file(filesystem::get_prefs_file(),false);
+		read(prefs, *stream);
+#endif
+	} catch(const config::error& e) {
+		ERR_CFG << "Error loading preference, message: " << e.what();
+	}
+}
+
+
+bool show_ally_orb() {
 	return get("show_ally_orb", game_config::show_ally_orb);
 }
-void set_show_allied_orb(bool show_orb) {
+void set_show_ally_orb(bool show_orb) {
 	prefs["show_ally_orb"] = show_orb;
+}
+
+bool show_status_on_ally_orb() {
+	return get("show_status_on_ally_orb", game_config::show_status_on_ally_orb);
+}
+void set_show_status_on_ally_orb(bool show_orb) {
+	prefs["show_status_on_ally_orb"] = show_orb;
 }
 
 bool show_enemy_orb() {
@@ -289,6 +301,12 @@ void set_show_partial_orb(bool show_orb) {
 	prefs["show_partial_orb"] = show_orb;
 }
 
+bool show_disengaged_orb() {
+	return get("show_disengaged_orb", game_config::show_disengaged_orb);
+}
+void set_show_disengaged_orb(bool show_orb) {
+	prefs["show_disengaged_orb"] = show_orb;
+}
 
 static std::string fix_orb_color_name(const std::string& color) {
 	if (color.substr(0,4) == "orb_") {
@@ -387,6 +405,27 @@ point resolution()
 	);
 }
 
+int pixel_scale()
+{
+	// For now this has a minimum value of 1 and a maximum of 4.
+	return std::max<int>(std::min<int>(prefs["pixel_scale"].to_int(1), max_pixel_scale), min_pixel_scale);
+}
+
+void set_pixel_scale(const int scale)
+{
+	prefs["pixel_scale"] = std::clamp(scale, min_pixel_scale, max_pixel_scale);
+}
+
+bool auto_pixel_scale()
+{
+	return get("auto_pixel_scale", true);
+}
+
+void set_auto_pixel_scale(bool choice)
+{
+	prefs["auto_pixel_scale"] = choice;
+}
+
 bool maximized()
 {
 	return get("maximized", !fullscreen());
@@ -395,6 +434,11 @@ bool maximized()
 bool fullscreen()
 {
 	return get("fullscreen", true);
+}
+
+bool vsync()
+{
+	return get("vsync", true);
 }
 
 void _set_resolution(const point& res)
@@ -413,16 +457,21 @@ void _set_fullscreen(bool ison)
 	prefs["fullscreen"] = ison;
 }
 
+void set_vsync(bool ison)
+{
+	prefs["vsync"] = ison;
+}
+
 bool turbo()
 {
-	if(CVideo::get_singleton().non_interactive()) {
+	if(video::headless()) {
 		return true;
 	}
 
 	return get("turbo", false);
 }
 
-void _set_turbo(bool ison)
+void set_turbo(bool ison)
 {
 	prefs["turbo"] = ison;
 }
@@ -432,7 +481,7 @@ double turbo_speed()
 	return prefs["turbo_speed"].to_double(2.0);
 }
 
-void save_turbo_speed(const double speed)
+void set_turbo_speed(const double speed)
 {
 	prefs["turbo_speed"] = speed;
 }
@@ -445,7 +494,7 @@ int font_scaling()
 
 void set_font_scaling(int scale)
 {
-	prefs["font_scale"] = utils::clamp(scale, min_font_scaling, max_font_scaling);
+	prefs["font_scale"] = std::clamp(scale, min_font_scaling, max_font_scaling);
 }
 
 int font_scaled(int size)
@@ -453,24 +502,34 @@ int font_scaled(int size)
 	return (size * font_scaling()) / 100;
 }
 
+int keepalive_timeout()
+{
+	return prefs["keepalive_timeout"].to_int(10);
+}
+
+void keepalive_timeout(int seconds)
+{
+	prefs["keepalive_timeout"] = std::abs(seconds);
+}
+
 bool idle_anim()
 {
 	return  get("idle_anim", true);
 }
 
-void _set_idle_anim(const bool ison)
+void set_idle_anim(const bool ison)
 {
 	prefs["idle_anim"] = ison;
 }
 
-int idle_anim_rate()
+double idle_anim_rate()
 {
-	return prefs["idle_anim_rate"];
+	return prefs["idle_anim_rate"].to_double(1.0);
 }
 
-void _set_idle_anim_rate(const int rate)
+void set_idle_anim_rate(const int rate)
 {
-	prefs["idle_anim_rate"] = rate;
+	prefs["idle_anim_rate"] = std::pow(2.0, -rate / 10.0);
 }
 
 std::string language()
@@ -508,7 +567,7 @@ bool grid()
 	return get("grid", false);
 }
 
-void _set_grid(bool ison)
+void set_grid(bool ison)
 {
 	preferences::set("grid", ison);
 }
@@ -731,7 +790,7 @@ namespace {
 
 int scroll_speed()
 {
-	const int value = utils::clamp<int>(lexical_cast_default<int>(get("scroll"), 50), 1, 100);
+	const int value = std::clamp<int>(lexical_cast_default<int>(get("scroll"), 50), 1, 100);
 	scroll = value/100.0;
 
 	return value;
@@ -865,7 +924,7 @@ void _set_color_cursors(bool value)
 
 void load_hotkeys()
 {
-	hotkey::load_hotkeys(game_config_view::wrap(prefs), false);
+	hotkey::load_custom_hotkeys(game_config_view::wrap(prefs));
 }
 
 void save_hotkeys()
@@ -886,7 +945,7 @@ void add_alias(const std::string &alias, const std::string &command)
 }
 
 
-const config &get_alias()
+optional_const_config get_alias()
 {
 	return get_child("alias");
 }
@@ -927,16 +986,6 @@ void set_disable_auto_moves(bool value)
 	preferences::set("disable_auto_moves", value);
 }
 
-bool disable_loadingscreen_animation()
-{
-	return get("disable_loadingscreen_animation", false);
-}
-
-void set_disable_loadingscreen_animation(bool value)
-{
-	set("disable_loadingscreen_animation", value);
-}
-
 bool damage_prediction_allow_monte_carlo_simulation()
 {
 	return get("damage_prediction_allow_monte_carlo_simulation", true);
@@ -945,6 +994,230 @@ bool damage_prediction_allow_monte_carlo_simulation()
 void set_damage_prediction_allow_monte_carlo_simulation(bool value)
 {
 	set("damage_prediction_allow_monte_carlo_simulation", value);
+}
+
+std::string addon_manager_saved_order_name()
+{
+	return get("addon_manager_saved_order_name");
+}
+
+void set_addon_manager_saved_order_name(const std::string& value)
+{
+	set("addon_manager_saved_order_name", value);
+}
+
+sort_order::type addon_manager_saved_order_direction()
+{
+	return sort_order::get_enum(get("addon_manager_saved_order_direction")).value_or(sort_order::type::none);
+}
+
+void set_addon_manager_saved_order_direction(sort_order::type value)
+{
+	set("addon_manager_saved_order_direction", sort_order::get_string(value));
+}
+
+std::string selected_achievement_group()
+{
+	return get("selected_achievement_group");
+}
+
+void set_selected_achievement_group(const std::string& content_for)
+{
+	set("selected_achievement_group", content_for);
+}
+
+bool achievement(const std::string& content_for, const std::string& id)
+{
+	for(config& ach : prefs.child_range("achievements"))
+	{
+		if(ach["content_for"].str() == content_for)
+		{
+			std::vector<std::string> ids = utils::split(ach["ids"]);
+			return std::find(ids.begin(), ids.end(), id) != ids.end();
+		}
+	}
+	return false;
+}
+
+void set_achievement(const std::string& content_for, const std::string& id)
+{
+	for(config& ach : prefs.child_range("achievements"))
+	{
+		// if achievements already exist for this content and the achievement has not already been set, add it
+		if(ach["content_for"].str() == content_for)
+		{
+			std::vector<std::string> ids = utils::split(ach["ids"]);
+
+			if(ids.empty())
+			{
+				ach["ids"] = id;
+			}
+			else if(std::find(ids.begin(), ids.end(), id) == ids.end())
+			{
+				ach["ids"] = ach["ids"].str() + "," + id;
+			}
+			ach.remove_children("in_progress", [&id](config cfg){return cfg["id"].str() == id;});
+			return;
+		}
+	}
+
+	// else no achievements have been set for this content yet
+	config ach;
+	ach["content_for"] = content_for;
+	ach["ids"] = id;
+	prefs.add_child("achievements", ach);
+}
+
+int progress_achievement(const std::string& content_for, const std::string& id, int limit, int max_progress, int amount)
+{
+	if(achievement(content_for, id))
+	{
+		return -1;
+	}
+
+	for(config& ach : prefs.child_range("achievements"))
+	{
+		// if achievements already exist for this content and the achievement has not already been set, add it
+		if(ach["content_for"].str() == content_for)
+		{
+			// check if this achievement has progressed before - if so then increment it
+			for(config& in_progress : ach.child_range("in_progress"))
+			{
+				if(in_progress["id"].str() == id)
+				{
+					// don't let using 'limit' decrease the achievement's current progress
+					int starting_progress = in_progress["progress_at"].to_int();
+					if(starting_progress >= limit) {
+						return starting_progress;
+					}
+
+					in_progress["progress_at"] = std::clamp(starting_progress + amount, 0, std::min(limit, max_progress));
+					return in_progress["progress_at"].to_int();
+				}
+			}
+
+			// else this is the first time this achievement is progressing
+			if(amount != 0)
+			{
+				config set_progress;
+				set_progress["id"] = id;
+				set_progress["progress_at"] = std::clamp(amount, 0, std::min(limit, max_progress));
+
+				config& child = ach.add_child("in_progress", set_progress);
+				return child["progress_at"].to_int();
+			}
+			return 0;
+		}
+	}
+
+	// else not only has this achievement not progressed before, this is the first achievement for this achievement group to be added
+	if(amount != 0)
+	{
+		config ach;
+		config set_progress;
+
+		set_progress["id"] = id;
+		set_progress["progress_at"] = std::clamp(amount, 0, std::min(limit, max_progress));
+
+		ach["content_for"] = content_for;
+		ach["ids"] = "";
+
+		config& child = ach.add_child("in_progress", set_progress);
+		prefs.add_child("achievements", ach);
+		return child["progress_at"].to_int();
+	}
+	return 0;
+}
+
+bool sub_achievement(const std::string& content_for, const std::string& id, const std::string& sub_id)
+{
+	// this achievement is already completed
+	if(achievement(content_for, id))
+	{
+		return true;
+	}
+
+	for(config& ach : prefs.child_range("achievements"))
+	{
+		if(ach["content_for"].str() == content_for)
+		{
+			// check if the specific sub-achievement has been completed but the overall achievement is not completed
+			for(const auto& in_progress : ach.child_range("in_progress"))
+			{
+				if(in_progress["id"] == id)
+				{
+					std::vector<std::string> sub_ids = utils::split(in_progress["sub_ids"]);
+					return std::find(sub_ids.begin(), sub_ids.end(), sub_id) != sub_ids.end();
+				}
+			}
+		}
+	}
+	return false;
+}
+
+void set_sub_achievement(const std::string& content_for, const std::string& id, const std::string& sub_id)
+{
+	// this achievement is already completed
+	if(achievement(content_for, id))
+	{
+		return;
+	}
+
+	for(config& ach : prefs.child_range("achievements"))
+	{
+		// if achievements already exist for this content and the achievement has not already been set, add it
+		if(ach["content_for"].str() == content_for)
+		{
+			// check if this achievement has had sub-achievements set before
+			for(config& in_progress : ach.child_range("in_progress"))
+			{
+				if(in_progress["id"].str() == id)
+				{
+					std::vector<std::string> sub_ids = utils::split(ach["ids"]);
+
+					if(std::find(sub_ids.begin(), sub_ids.end(), sub_id) == sub_ids.end())
+					{
+						in_progress["sub_ids"] = in_progress["sub_ids"].str() + "," + sub_id;
+					}
+
+					in_progress["progress_at"] = sub_ids.size()+1;
+					return;
+				}
+			}
+
+			// else if this is the first sub-achievement being set
+			config set_progress;
+			set_progress["id"] = id;
+			set_progress["sub_ids"] = sub_id;
+			set_progress["progress_at"] = 1;
+			ach.add_child("in_progress", set_progress);
+			return;
+		}
+	}
+
+	// else not only has this achievement not had a sub-achievement completed before, this is the first achievement for this achievement group to be added
+	config ach;
+	config set_progress;
+
+	set_progress["id"] = id;
+	set_progress["sub_ids"] = sub_id;
+	set_progress["progress_at"] = 1;
+
+	ach["content_for"] = content_for;
+	ach["ids"] = "";
+
+	ach.add_child("in_progress", set_progress);
+	prefs.add_child("achievements", ach);
+}
+
+void set_editor_chosen_addon(const std::string& addon_id)
+{
+	prefs["editor_chosen_addon"] = addon_id;
+}
+
+std::string editor_chosen_addon()
+{
+	return prefs["editor_chosen_addon"];
 }
 
 } // end namespace preferences

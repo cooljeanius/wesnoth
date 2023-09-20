@@ -1,20 +1,24 @@
 /*
-   Copyright (C) 2015 - 2018 by Iris Morelle <shadowm2006@gmail.com>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2015 - 2023
+	by Iris Morelle <shadowm2006@gmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #include <boost/test/unit_test.hpp>
+
+#include "config_cache.hpp"
 #include "filesystem.hpp"
 #include "game_config.hpp"
+#include "log.hpp"
 
 #if 0
 namespace {
@@ -23,14 +27,14 @@ template<typename T>
 void dump(const T& v)
 {
 	for(typename T::const_iterator k = v.begin(); k != v.end(); ++k) {
-		std::cerr << " * " << *k << '\n';
+		PLAIN_LOG << " * " << *k;
 	}
 }
 
 }
 #endif
 
-BOOST_AUTO_TEST_SUITE( filesystem ) // implicit namespace filesystem
+BOOST_AUTO_TEST_SUITE( filesystem ); // implicit namespace filesystem
 
 const std::string& gamedata = game_config::path;
 
@@ -132,7 +136,7 @@ BOOST_AUTO_TEST_CASE( test_fs_enum )
 	// FIXME: get_files_in_dir with mode == FILE_NAME_ONLY will fail to reorder
 	//        entries because the sorting code looks for forward slashes.
 	//        This affects both the BFS-based and legacy implementations.
-	get_files_in_dir(path, &files, &dirs, ENTIRE_FILE_PATH, NO_FILTER, DO_REORDER);
+	get_files_in_dir(path, &files, &dirs, name_mode::ENTIRE_FILE_PATH, filter_mode::NO_FILTER, reorder_mode::DO_REORDER);
 
 	BOOST_CHECK( files == expected_filepaths );
 	BOOST_CHECK( dirs  == expected_dirpaths  );
@@ -140,13 +144,21 @@ BOOST_AUTO_TEST_CASE( test_fs_enum )
 
 BOOST_AUTO_TEST_CASE( test_fs_binary_path )
 {
-	BOOST_CHECK_EQUAL( get_binary_dir_location("images", "."), gamedata + "/images/." );
+	config main_config;
+	game_config_view game_config_view_ = game_config_view::wrap(main_config);
+	game_config::config_cache& cache = game_config::config_cache::instance();
 
-	// This test depends on get_binary_file_location() deterministically choosing
-	// which order to search the [binary_path] entries, as there are four "images"
-	// directories that could match.
-	BOOST_CHECK_EQUAL( get_binary_file_location("images", "././././././"),
-	                   gamedata + "/images/././././././" );
+	cache.clear_defines();
+	cache.add_define("EDITOR");
+	cache.add_define("MULTIPLAYER");
+	cache.get_config(game_config::path +"/data", main_config);
+
+	const filesystem::binary_paths_manager bin_paths_manager(game_config_view_);
+
+	//load_language_list();
+	game_config::load_config(main_config.mandatory_child("game_config"));
+
+	BOOST_CHECK_EQUAL( get_binary_dir_location("images", "."), gamedata + "/images/." );
 
 	BOOST_CHECK_EQUAL( get_binary_file_location("images", "wesnoth-icon.png"),
 	                   gamedata + "/data/core/images/wesnoth-icon.png" );
@@ -157,7 +169,7 @@ BOOST_AUTO_TEST_CASE( test_fs_binary_path )
 	BOOST_CHECK_EQUAL( get_binary_file_location("sounds", "explosion.ogg"),
 	                   gamedata + "/data/core/sounds/explosion.ogg" );
 
-	BOOST_CHECK_EQUAL( get_independent_image_path("wesnoth-icon.png"),
+	BOOST_CHECK_EQUAL( get_independent_binary_file_path("images", "wesnoth-icon.png"),
 	                   "data/core/images/wesnoth-icon.png" );
 
 	// Inexistent paths are resolved empty.
@@ -167,7 +179,7 @@ BOOST_AUTO_TEST_CASE( test_fs_binary_path )
 	BOOST_CHECK( get_binary_file_location("images", "bunnies_and_ponies_and_rainbows_oh_em_gee.psd").empty() );
 	BOOST_CHECK( get_binary_file_location("music", "this_track_does_not_exist.aiff").empty() );
 	BOOST_CHECK( get_binary_file_location("sounds", "rude_noises.aiff").empty() );
-	BOOST_CHECK( get_independent_image_path("dopefish.txt").empty() );
+	BOOST_CHECK( get_independent_binary_file_path("images", "dopefish.txt").empty() );
 }
 
 BOOST_AUTO_TEST_CASE( test_fs_wml_path )

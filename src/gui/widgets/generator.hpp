@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2008 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2008 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -22,10 +23,9 @@
 
 namespace gui2
 {
-
 struct builder_grid;
-typedef std::shared_ptr<const builder_grid> builder_grid_const_ptr;
 
+class generator_base;
 class grid;
 
 /**
@@ -59,7 +59,7 @@ public:
 	 * @param has_minimum         Does one item need to be selected?
 	 * @param has_maximum         Is one the maximum number of items that can
 	 *                            be selected?
-	 * @param placement           The placement of the grids, see tplacement
+	 * @param placement           The placement of the grids, see placement
 	 *                            for more info.
 	 * @param select              If a grid is selected, what should happen?
 	 *                            If true the grid is selected, if false the
@@ -68,7 +68,7 @@ public:
 	 * @returns                   A pointer to a new object. The caller gets
 	 *                            ownership of the new object.
 	 */
-	static generator_base* build(const bool has_minimum,
+	static std::unique_ptr<generator_base>  build(const bool has_minimum,
 							  const bool has_maximum,
 							  const placement placement,
 							  const bool select);
@@ -176,8 +176,8 @@ public:
 	 * @returns                   A reference to the newly created grid.
 	 */
 	virtual grid& create_item(const int index,
-							   builder_grid_const_ptr list_builder,
-							   const string_map& item_data,
+							   const builder_grid& list_builder,
+							   const widget_item& item_data,
 							   const std::function<void(widget&)>& callback)
 			= 0;
 
@@ -200,8 +200,8 @@ public:
 	 */
 	virtual grid&
 	create_item(const int index,
-				builder_grid_const_ptr list_builder,
-				const std::map<std::string /* widget id */, string_map>& data,
+				const builder_grid& list_builder,
+				const widget_data& data,
 				const std::function<void(widget&)>& callback) = 0;
 
 	/**
@@ -220,8 +220,8 @@ public:
 	 *                            in the grid is (de)selected.
 	 */
 	virtual void create_items(const int index,
-							  builder_grid_const_ptr list_builder,
-							  const std::vector<string_map>& data,
+							  const builder_grid& list_builder,
+							  const std::vector<widget_item>& data,
 							  const std::function<void(widget&)>& callback)
 			= 0;
 
@@ -242,9 +242,8 @@ public:
 	 */
 	virtual void create_items(
 			const int index,
-			builder_grid_const_ptr list_builder,
-			const std::vector<std::map<std::string /*widget id*/, string_map>>&
-					data,
+			const builder_grid& list_builder,
+			const std::vector<widget_data>& data,
 			const std::function<void(widget&)>& callback) = 0;
 
 	typedef std::function<bool (unsigned, unsigned)> order_func;
@@ -281,16 +280,7 @@ public:
 	virtual void set_visible_rectangle(const SDL_Rect& rectangle) override = 0;
 
 	/** See @ref widget::impl_draw_children. */
-	virtual void impl_draw_children(surface& frame_buffer,
-									int x_offset,
-									int y_offset) override = 0;
-
-protected:
-	/** See @ref widget::child_populate_dirty_list. */
-	virtual void
-	child_populate_dirty_list(window& caller,
-							  const std::vector<widget*>& call_stack) override
-			= 0;
+	virtual void impl_draw_children() override = 0;
 
 public:
 	/** See @ref widget::find_at. */

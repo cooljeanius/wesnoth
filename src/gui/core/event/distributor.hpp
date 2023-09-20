@@ -1,15 +1,16 @@
 /*
-   Copyright (C) 2009 - 2018 by Mark de Wever <koraq@xs4all.nl>
-   Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+	Copyright (C) 2009 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
 
-   See the COPYING file for more details.
+	See the COPYING file for more details.
 */
 
 #pragma once
@@ -40,14 +41,12 @@
 #include "gui/core/event/dispatcher.hpp"
 #include "gui/core/event/handler.hpp"
 #include "sdl/point.hpp"
-#include "video.hpp"
 
 #include <string>
 #include <vector>
 
 namespace gui2
 {
-
 class widget;
 
 namespace event
@@ -69,8 +68,7 @@ public:
 	 *
 	 * @param capture             Set or release the capturing.
 	 */
-	void capture_mouse( // widget* widget);
-			const bool capture = true);
+	void capture_mouse(const bool capture = true);
 
 protected:
 	/** The widget that currently has the mouse focus_. */
@@ -134,62 +132,31 @@ private:
 	void show_tooltip();
 
 	bool signal_handler_sdl_mouse_motion_entered_;
-	void signal_handler_sdl_mouse_motion(const event::ui_event event,
-										 bool& handled,
-										 const point& coordinate);
+	void signal_handler_sdl_mouse_motion(const event::ui_event event, bool& handled, const point& coordinate);
 
-	void signal_handler_sdl_touch_motion(const event::ui_event event,
-										 bool& handled,
-										 const point& coordinate,
-										 const point& distance);
+	void signal_handler_sdl_touch_motion(
+		const event::ui_event event, bool& handled, const point& coordinate, const point& distance);
 
-	void signal_handler_sdl_wheel(const event::ui_event event,
-								  bool& handled,
-								  const point& coordinate);
+	void signal_handler_sdl_wheel(const event::ui_event event, bool& handled, const point& coordinate);
 
-	void signal_handler_show_helptip(const event::ui_event event,
-									 bool& handled,
-									 const point& coordinate);
+	void signal_handler_show_helptip(const event::ui_event event, bool& handled, const point& coordinate);
 };
 
 /***** ***** ***** ***** mouse_button ***** ***** ***** ***** *****/
 
-/**
- * Small helper metastruct to specialize mouse_button with and provide ui_event type
- * aliases without needing to make mouse_button take a million template types.
- */
-template<
-		ui_event sdl_button_down,
-		ui_event sdl_button_up,
-		ui_event button_down,
-		ui_event button_up,
-		ui_event button_click,
-		ui_event button_double_click>
-struct mouse_button_event_types_wrapper
-{
-	static const ui_event sdl_button_down_event     = sdl_button_down;
-	static const ui_event sdl_button_up_event       = sdl_button_up;
-	static const ui_event button_down_event         = button_down;
-	static const ui_event button_up_event           = button_up;
-	static const ui_event button_click_event        = button_click;
-	static const ui_event button_double_click_event = button_double_click;
-};
-
-template<typename T>
+template<std::size_t I>
 class mouse_button : public virtual mouse_motion
 {
 public:
-	mouse_button(const std::string& name_,
-				  widget& owner,
-				  const dispatcher::queue_position queue_position);
+	mouse_button(widget& owner, const dispatcher::queue_position queue_position);
 
 	/**
 	 * Initializes the state of the button.
 	 *
-	 * @param is_down             The initial state of the button, if true down
-	 *                            else initialized as up.
+	 * @param button_state The initial state of all buttons, in which the bit corresponding to
+	 mouse_button_event_types.mask will be set if the button is down, or unset if it is up.
 	 */
-	void initialize_state(const bool is_down);
+	void initialize_state(int32_t button_state);
 
 protected:
 	/** The time of the last click used for double clicking. */
@@ -206,60 +173,34 @@ protected:
 	widget* focus_;
 
 private:
-	/** used for debug messages. */
-	const std::string name_;
-
 	/** Is the button down? */
 	bool is_down_;
 
 	bool signal_handler_sdl_button_down_entered_;
-	void signal_handler_sdl_button_down(const event::ui_event event,
-										bool& handled,
-										const point& coordinate);
+	void signal_handler_sdl_button_down(const event::ui_event event, bool& handled, const point& coordinate);
 
 	bool signal_handler_sdl_button_up_entered_;
-	void signal_handler_sdl_button_up(const event::ui_event event,
-									  bool& handled,
-									  const point& coordinate);
-
+	void signal_handler_sdl_button_up(const event::ui_event event, bool& handled, const point& coordinate);
 
 	void mouse_button_click(widget* widget);
 };
 
 /***** ***** ***** ***** distributor ***** ***** ***** ***** *****/
 
-using mouse_button_left = mouse_button<
-	mouse_button_event_types_wrapper<
-		SDL_LEFT_BUTTON_DOWN,
-		SDL_LEFT_BUTTON_UP,
-		LEFT_BUTTON_DOWN,
-		LEFT_BUTTON_UP,
-		LEFT_BUTTON_CLICK,
-		LEFT_BUTTON_DOUBLE_CLICK>
-	>;
+using mouse_button_left    = mouse_button<0>;
+using mouse_button_middle  = mouse_button<1>;
+using mouse_button_right   = mouse_button<2>;
 
-using mouse_button_middle = mouse_button<
-	mouse_button_event_types_wrapper<
-		SDL_MIDDLE_BUTTON_DOWN,
-		SDL_MIDDLE_BUTTON_UP,
-		MIDDLE_BUTTON_DOWN,
-		MIDDLE_BUTTON_UP,
-		MIDDLE_BUTTON_CLICK,
-		MIDDLE_BUTTON_DOUBLE_CLICK>
-	>;
-
-using mouse_button_right = mouse_button<
-	mouse_button_event_types_wrapper<
-		SDL_RIGHT_BUTTON_DOWN,
-		SDL_RIGHT_BUTTON_UP,
-		RIGHT_BUTTON_DOWN,
-		RIGHT_BUTTON_UP,
-		RIGHT_BUTTON_CLICK,
-		RIGHT_BUTTON_DOUBLE_CLICK>
-	>;
-
-
-/** The event handler class for the widget library. */
+/**
+ * The event handler class for the widget library.
+ *
+ * C++ doesn't allow multiple inheritance to directly use more than one instance of a
+ * superclass.
+ *
+ * It's a diamond inheritance, as all of these have virtual base class mouse_motion;
+ * refactoring that would allow these multiple classes to be replaced with a simple
+ * (distributor has-a std::array<mouse_button, 3>) relationship.
+ */
 class distributor :
 	public mouse_button_left,
 	public mouse_button_middle,
@@ -307,35 +248,6 @@ public:
 	widget* keyboard_focus() const;
 
 private:
-	class layer : public video2::draw_layering
-	{
-	public:
-		virtual void handle_event(const SDL_Event& ) {}
-		virtual void handle_window_event(const SDL_Event& ) {}
-		layer() : video2::draw_layering(false) { }
-	};
-
-	// make sure the appropriate things happens when we close.
-	layer layer_;
-
-#if 0
-	bool hover_pending_;			   /**< Is there a hover event pending? */
-	unsigned hover_id_;                /**< Id of the pending hover event. */
-	SDL_Rect hover_box_;               /**< The area the mouse can move in,
-										*   moving outside invalidates the
-										*   pending hover event.
-										*/
-
-	bool had_hover_;                   /**< A widget only gets one hover event
-	                                    *   per enter cycle.
-										*/
-
-	/** The widget of the currently active tooltip. */
-	widget* tooltip_;
-
-	/** The widget of the currently active help popup. */
-	widget* help_popup_;
-#endif
 	/** The widget that holds the keyboard focus_. */
 	widget* keyboard_focus_;
 
