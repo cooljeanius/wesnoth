@@ -179,7 +179,7 @@ jobs:
       options: --tty --cap-add=ALL --privileged # docker create options
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: "recursive"
 
@@ -208,7 +208,7 @@ jobs:
        CLICOLOR_FORCE: 1
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: "recursive"
 
@@ -236,7 +236,7 @@ jobs:
       CFG: ${{ matrix.cfg }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: "recursive"
 
