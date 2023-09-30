@@ -331,7 +331,7 @@ jobs:
         run: |
           printf COMMIT_SUBJECT=%s "${MSG}" | head -n 1 >> "$GITHUB_ENV"
       - name: IRC Notification
-        uses: rectalogic/notify-irc@v1
+        uses: rectalogic/notify-irc@v2
         with:
           channel: ${{ vars.IRC_CHANNEL }}
           server: ${{ vars.IRC_SERVER }}
