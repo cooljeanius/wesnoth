@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 # encoding: utf-8
 
-"""A command similar to git-subtree, for exporting the history of a campaign.
-
-The history includes the translations, which are copied in to the appropriate
-subdirectory of the new tree.
+"""A command similar to git-subtree, for exporting the history of a campaign,
+or other part of the source tree.
 
 The result is a set of Git commits containing only one campaign. The script
 doesn't create branches itself, but provides the tip-of-branch commits from
@@ -12,16 +10,15 @@ which Git can find all of the history - the instructions printed at the end
 of the conversion process give the few (probably only 2) places to create
 branches from.
 
-Currently hardcoded for the export of An Orcish Incursion, but added to the
-utils/ dir to support its use on other campaigns.
+Currently hardcoded for the export of wesnoth-map-diff, but added to the
+utils/ dir to support its use on other campaigns or directories.
 """
 
 # Hardcode which campaign to export, no need to handle command-line options in
 # such a rarely-run script.
-CAMPAIGN_NAME = 'An_Orcish_Incursion'
-CAMPAIGN_TEXTDOMAIN = 'wesnoth-aoi'
-CAMPAIGN_PATHS = ['data/campaigns/' + CAMPAIGN_NAME, 'po/' + CAMPAIGN_TEXTDOMAIN]
-BRANCHES = ['origin/1.14', 'origin/master']
+CAMPAIGN_NAME = 'wesnoth-map-diff'
+CAMPAIGN_PATHS = ['utils/' + CAMPAIGN_NAME]
+BRANCHES = ['origin/master']
 
 import argparse, os, subprocess, sys
 
@@ -127,32 +124,6 @@ def create_root_tree(from_commitish):
     except subprocess.CalledProcessError:
         # This must have been a commit that deleted all of the campaign files
         campaign_tree = []
-
-    # If the source tree had data/campaigns/CAMPAIGN_NAME/translations, rename it to disambiguate from
-    # po/CAMPAIGN_TEXTDOMAIN's translations.
-    campaign_tree = rename_if_exists(campaign_tree, b'translations', b'umc_translations_dir')
-
-    # Copy the .po and .pot files from po/CAMPAIGN_TEXTDOMAIN/ to translations/CAMPAIGN_TEXTDOMAIN/
-    try:
-        original_po_id = subprocess.run(
-            ['git', 'rev-parse', from_commitish+ ':po/' + CAMPAIGN_TEXTDOMAIN],
-            check=True, capture_output=True).stdout.rstrip()
-        original_po_tree = read_tree(original_po_id)
-        new_po_tree = []
-
-        # Filter to remove recognised files of the pot-update architecture
-        for t in original_po_tree:
-            if t.get_filename() not in (b'FINDCFG', b'LINGUAS', b'Makevars'):
-                new_po_tree.append(t)
-
-        if len(new_po_tree) != 0:
-            new_po_id = create_tree(new_po_tree)
-            new_translations_tree = [format_subdir_tree_entry(new_po_id, CAMPAIGN_TEXTDOMAIN)]
-            new_translations_id = create_tree(new_translations_tree)
-            campaign_tree.append(format_subdir_tree_entry(new_translations_id, 'translations'))
-    except subprocess.CalledProcessError:
-        # Some versions didn't have the translations, or had them in a different location
-        pass
 
     # Abort if there was a license file in the campaign tree itself. Handling
     # this hasn't been implemented because it hasn't been needed.
