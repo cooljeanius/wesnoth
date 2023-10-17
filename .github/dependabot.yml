@@ -29,7 +29,3 @@ updates:
     directory: "/utils/dockerbuilds/steamrt/"
     schedule:
       interval: "weekly"
-  - package-ecosystem: "npm"
-    directory: "/utils/wesnoth-map-diff/"
-    schedule:
-      interval: "weekly"
