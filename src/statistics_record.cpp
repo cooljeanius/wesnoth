@@ -138,8 +138,8 @@ static stats_t::hitrate_map read_by_cth_map_from_battle_result_maps(
 		for(const auto& j : frequency_map) {
 			const std::string& res = j.first; // see attack_context::~attack_context()
 			const int occurrences = j.second;
-			unsigned int misses = (unsigned int)std::count(res.begin(), res.end(), '0');
-			unsigned int hits = (unsigned int)std::count(res.begin(), res.end(), '1');
+			unsigned int misses = static_cast<unsigned int>(std::count(res.begin(), res.end(), '0'));
+			unsigned int hits = static_cast<unsigned int>(std::count(res.begin(), res.end(), '1'));
 			if(misses + hits == 0) {
 				continue;
 			}

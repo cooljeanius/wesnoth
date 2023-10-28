@@ -104,7 +104,7 @@ public:
 
 private:
 	text_history(std::vector<std::string>* history, const bool enabled)
-		: history_(history), pos_(history->size()), enabled_(enabled)
+		: history_(history), pos_(static_cast<unsigned int>(history->size())), enabled_(enabled)
 	{
 	}
 
