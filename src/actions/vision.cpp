@@ -598,7 +598,7 @@ std::vector<int> get_sides_not_seeing(const unit & target)
 	for ( std::size_t i = 0; i != team_size; ++i)
 		if ( !target.is_visible_to_team(teams[i], false) )
 			// not_see contains side numbers; i is a team index, so add 1.
-			not_seeing.push_back(i+1);
+			not_seeing.push_back(static_cast<std::vector<int>::value_type>(i + 1));
 
 	return not_seeing;
 }
