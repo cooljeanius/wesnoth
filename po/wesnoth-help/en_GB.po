@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: en_GB\n"
 "Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
-"POT-Creation-Date: 2023-09-16 22:32-0500\n"
-"PO-Revision-Date: 2023-08-28 10:25+1000\n"
+"POT-Creation-Date: 2023-10-28 09:02-0500\n"
+"PO-Revision-Date: 2023-10-19 10:30+1100\n"
 "Last-Translator: Wedge009 <wedge009@wedge009.net>\n"
 "Language-Team: English (British) <http://wiki.wesnoth.org/"
 "EnglishGBTranslation>\n"
@@ -82,20 +82,28 @@ msgstr "steadfast"
 msgid "female^steadfast"
 msgstr "steadfast"
 
+#. [illuminates]: id=illumination_song_verse
+#. [illuminates]: id=illumination
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:343
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:344
+#: data/core/macros/abilities.cfg:238
+msgid "female^illuminates"
+msgstr "illuminates"
+
 #. [heals]: id=healing
-#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:593
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:638
 #: data/core/macros/abilities.cfg:9
 msgid "heals +4"
 msgstr "heals +4"
 
 #. [heals]: id=healing
-#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:594
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:639
 #: data/core/macros/abilities.cfg:10
 msgid "female^heals +4"
 msgstr "heals +4"
 
 #. [heals]: id=healing
-#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:595
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:640
 msgid ""
 "Allows the unit to heal adjacent allied units at the beginning of our turn.\n"
 "\n"
@@ -114,26 +122,26 @@ msgstr ""
 
 #. [heals]: id=healing
 #. [heals]
-#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:599
-#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:638
-#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:668
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:644
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:683
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:713
 msgid "This unit is capable of basic healing and slowing dehydration."
 msgstr "This unit is capable of basic healing and slowing dehydration."
 
 #. [heals]: id=healing
-#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:617
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:662
 #: data/core/macros/abilities.cfg:35
 msgid "heals +8"
 msgstr "heals +8"
 
 #. [heals]: id=healing
-#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:618
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:663
 #: data/core/macros/abilities.cfg:36
 msgid "female^heals +8"
 msgstr "heals +8"
 
 #. [heals]: id=healing
-#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:619
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:664
 msgid ""
 "This unit combines herbal remedies with magic to heal units more quickly "
 "than is normally possible on the battlefield.\n"
@@ -152,17 +160,17 @@ msgstr ""
 "care of a village or a unit that can cure."
 
 #. [heals]: id=healing
-#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:647
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:692
 msgid "heals +12"
 msgstr "heals +12"
 
 #. [heals]: id=healing
-#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:648
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:693
 msgid "female^heals +12"
 msgstr "heals +12"
 
 #. [heals]: id=healing
-#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:649
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:694
 msgid ""
 "This unit combines herbal remedies with magic to heal units more quickly "
 "than is normally possible on the battlefield.\n"
@@ -181,7 +189,7 @@ msgstr ""
 "care of a village or a unit that can cure."
 
 #. [heals]
-#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:674
+#: data/campaigns/Under_the_Burning_Suns/utils/abilities.cfg:719
 msgid ""
 "This unit is capable of healing those around it, slowing dehydration, and "
 "curing them of poison."
@@ -192,15 +200,15 @@ msgstr ""
 #. [artifact]
 #. [chance]
 #. [teleport]: id=teleport
-#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:656
-#: data/campaigns/World_Conquest/resources/data/training.cfg:782
-#: data/core/macros/abilities.cfg:250
+#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:659
+#: data/campaigns/World_Conquest/resources/data/training.cfg:785
+#: data/core/macros/abilities.cfg:253
 msgid "teleport"
 msgstr "teleport"
 
 #. [artifact]
 #. [regenerate]: id=regenerates
-#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:717
+#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:720
 #: data/campaigns/World_Conquest/resources/strings/mainline.cfg:54
 #: data/core/macros/abilities.cfg:94
 msgid "regenerates"
@@ -223,7 +231,7 @@ msgstr "backstab"
 #. [chance]
 #. [dummy]: id=feeding
 #: data/campaigns/World_Conquest/resources/data/training.cfg:500
-#: data/core/macros/abilities.cfg:384
+#: data/core/macros/abilities.cfg:387
 msgid "feeding"
 msgstr "feeding"
 
@@ -236,7 +244,7 @@ msgstr "leadership"
 
 #. [hides]: id=ambush
 #: data/campaigns/World_Conquest/resources/strings/mainline.cfg:12
-#: data/core/macros/abilities.cfg:282
+#: data/core/macros/abilities.cfg:285
 msgid "ambush"
 msgstr "ambush"
 
@@ -250,7 +258,7 @@ msgstr "Cave"
 
 #. [hides]: id=concealment
 #: data/campaigns/World_Conquest/resources/strings/mainline.cfg:21
-#: data/core/macros/abilities.cfg:343
+#: data/core/macros/abilities.cfg:346
 msgid "concealment"
 msgstr "concealment"
 
@@ -288,7 +296,7 @@ msgstr "Mushroom Grove"
 
 #. [hides]: id=nightstalk
 #: data/campaigns/World_Conquest/resources/strings/mainline.cfg:45
-#: data/core/macros/abilities.cfg:323 data/core/macros/abilities.cfg:324
+#: data/core/macros/abilities.cfg:326 data/core/macros/abilities.cfg:327
 msgid "nightstalk"
 msgstr "nightstalk"
 
@@ -4673,32 +4681,6 @@ msgstr "Installing Add-ons"
 
 #. [topic]: id=installing_addons
 #: data/core/help.cfg:649
-#, fuzzy
-#| msgid ""
-#| "User-made add-ons can be obtained and updated through the "
-#| "<italic>text='Add-ons'</italic> option in the main menu. After connecting "
-#| "to the add-ons server (by default <italic>text='add-ons.wesnoth.org'</"
-#| "italic>), you will be presented with a list of add-ons available on the "
-#| "server for downloading.\n"
-#| "\n"
-#| "The installation status for each add-on is shown below each entry. For "
-#| "add-ons that are <italic>text='upgradable'</italic> or "
-#| "<italic>text='outdated'</italic> on the server, their installed and "
-#| "published versions will be shown in the <italic>text='Version'</italic> "
-#| "column.\n"
-#| "\n"
-#| "To search for add-ons by keywords, type any relevant terms in any order "
-#| "in the search box, separated by spaces. You can also sort the add-on list "
-#| "by clicking the column headers. It is also possible to choose to only "
-#| "display add-ons of specific categories by clicking on the "
-#| "<bold>text='Type'</bold> dropdown.\n"
-#| "\n"
-#| "To install an add-on, select it from the list and click the "
-#| "<bold>text='+'</bold> icon, or simply double-click on the add-on’s title. "
-#| "If the window is too small to show them inline, the <bold>text='Addon "
-#| "Details'</bold> button provides you with additional details about the add-"
-#| "on, such as its full description, installation status, and available "
-#| "translations."
 msgid ""
 "User-made add-ons can be obtained and updated through the <italic>text='Add-"
 "ons'</italic> option in the main menu. After connecting to the add-ons "
@@ -4728,16 +4710,15 @@ msgstr ""
 "presented with a list of add-ons available on the server for downloading.\n"
 "\n"
 "The installation status for each add-on is shown below each entry. For add-"
-"ons that can be <italic>text='upgraded'</italic> or are "
-"<italic>text='outdated'</italic> on the server, their installed and "
-"published versions will be shown in the <italic>text='Version'</italic> "
-"column.\n"
+"ons that are <italic>text='upgradable'</italic> or <italic>text='outdated'</"
+"italic> on the server, their installed and published versions will be shown "
+"in the <italic>text='Version'</italic> column.\n"
 "\n"
 "To search for add-ons by keywords, type any relevant terms in any order in "
 "the search box, separated by spaces. You can also sort the add-on list by "
 "clicking the column headers. It is also possible to choose to only display "
 "add-ons of specific categories by clicking on the <bold>text='Type'</bold> "
-"dropdown.\n"
+"drop-down menu.\n"
 "\n"
 "To install an add-on, select it from the list and click the <bold>text='+'</"
 "bold> icon, or simply double-click on the add-on’s title. If the window is "
@@ -4782,10 +4763,16 @@ msgstr "General Commands"
 #. [topic]: id=mp_commands
 #. [topic]: id=debug_commands
 #: data/core/help.cfg:679 data/core/help.cfg:724 data/core/help.cfg:762
+#, fuzzy
+#| msgid ""
+#| "These commands can either be issued via the command line by prefixing "
+#| "them with ':' (as shown here) or via the chat by prefixing them with "
+#| "'/' (press 'm' first to open the chat line).\n"
+#| "\n"
 msgid ""
 "These commands can either be issued via the command line by prefixing them "
-"with ':' (as shown here) or via the chat by prefixing them with '/' (press "
-"'m' first to open the chat line).\n"
+"with ‘:’ (as shown here) or via the chat by prefixing them with ‘/’ (press "
+"‘m’ first to open the chat line).\n"
 "\n"
 msgstr ""
 "These commands can either be issued via the command line by prefixing them "
@@ -4795,9 +4782,15 @@ msgstr ""
 
 #. [topic]: id=general_commands
 #: data/core/help.cfg:681
+#, fuzzy
+#| msgid ""
+#| "\n"
+#| "Similar to the 'fps' command, but also forces everything to redraw "
+#| "instead of only things that have changed.\n"
+#| "\n"
 msgid ""
 "\n"
-"Similar to the 'fps' command, but also forces everything to redraw instead "
+"Similar to the ‘fps’ command, but also forces everything to redraw instead "
 "of only things that have changed.\n"
 "\n"
 msgstr ""
@@ -5321,9 +5314,14 @@ msgstr ""
 
 #. [chance_to_hit]: id=diversion
 #: data/core/macros/abilities.cfg:148
+#, fuzzy
+#| msgid ""
+#| "If there is an enemy of the target on the opposite side of the target "
+#| "while attacking it, this unit diverts the target's attention and reduces "
+#| "its chance to hit."
 msgid ""
 "If there is an enemy of the target on the opposite side of the target while "
-"attacking it, this unit diverts the target's attention and reduces its "
+"attacking it, this unit diverts the target’s attention and reduces its "
 "chance to hit."
 msgstr ""
 "If there is an enemy of the target on the opposite side of the target while "
@@ -5363,17 +5361,12 @@ msgstr ""
 "Zones of Control."
 
 #. [illuminates]: id=illumination
-#: data/core/macros/abilities.cfg:235
+#: data/core/macros/abilities.cfg:237
 msgid "illuminates"
 msgstr "illuminates"
 
 #. [illuminates]: id=illumination
-#: data/core/macros/abilities.cfg:236
-msgid "female^illuminates"
-msgstr "illuminates"
-
-#. [illuminates]: id=illumination
-#: data/core/macros/abilities.cfg:237
+#: data/core/macros/abilities.cfg:239
 msgid ""
 "This unit illuminates the surrounding area, making lawful units fight "
 "better, and chaotic units fight worse.\n"
@@ -5388,12 +5381,12 @@ msgstr ""
 "night, and as if it were day when it is dusk."
 
 #. [teleport]: id=teleport
-#: data/core/macros/abilities.cfg:251
+#: data/core/macros/abilities.cfg:254
 msgid "female^teleport"
 msgstr "teleport"
 
 #. [teleport]: id=teleport
-#: data/core/macros/abilities.cfg:252
+#: data/core/macros/abilities.cfg:255
 msgid ""
 "This unit may teleport between any two empty villages owned by its side "
 "using one of its moves."
@@ -5402,12 +5395,12 @@ msgstr ""
 "using one of its moves."
 
 #. [hides]: id=ambush
-#: data/core/macros/abilities.cfg:283
+#: data/core/macros/abilities.cfg:286
 msgid "female^ambush"
 msgstr "ambush"
 
 #. [hides]: id=ambush
-#: data/core/macros/abilities.cfg:284
+#: data/core/macros/abilities.cfg:287
 msgid ""
 "This unit can hide in forest, and remain undetected by its enemies.\n"
 "\n"
@@ -5422,17 +5415,17 @@ msgstr ""
 "loses all its remaining movement."
 
 #. [hides]: id=burrow
-#: data/core/macros/abilities.cfg:302
+#: data/core/macros/abilities.cfg:305
 msgid "burrow"
 msgstr "burrow"
 
 #. [hides]: id=burrow
-#: data/core/macros/abilities.cfg:303
+#: data/core/macros/abilities.cfg:306
 msgid "female^burrow"
 msgstr "burrow"
 
 #. [hides]: id=burrow
-#: data/core/macros/abilities.cfg:304
+#: data/core/macros/abilities.cfg:307
 msgid ""
 "This unit can hide in forest or sand if it is resting (has not moved for a "
 "turn), and remain undetected by its enemies.\n"
@@ -5449,7 +5442,7 @@ msgstr ""
 "this unit immediately loses all its remaining movement."
 
 #. [hides]: id=nightstalk
-#: data/core/macros/abilities.cfg:325
+#: data/core/macros/abilities.cfg:328
 msgid ""
 "The unit becomes invisible during night.\n"
 "\n"
@@ -5464,12 +5457,12 @@ msgstr ""
 "remaining movement."
 
 #. [hides]: id=concealment
-#: data/core/macros/abilities.cfg:344
+#: data/core/macros/abilities.cfg:347
 msgid "female^concealment"
 msgstr "concealment"
 
 #. [hides]: id=concealment
-#: data/core/macros/abilities.cfg:345
+#: data/core/macros/abilities.cfg:348
 msgid ""
 "This unit can hide in villages, and remain undetected by its enemies, except "
 "by those standing next to it.\n"
@@ -5486,17 +5479,17 @@ msgstr ""
 "immediately loses all its remaining movement."
 
 #. [hides]: id=submerge
-#: data/core/macros/abilities.cfg:363
+#: data/core/macros/abilities.cfg:366
 msgid "submerge"
 msgstr "submerge"
 
 #. [hides]: id=submerge
-#: data/core/macros/abilities.cfg:364
+#: data/core/macros/abilities.cfg:367
 msgid "female^submerge"
 msgstr "submerge"
 
 #. [hides]: id=submerge
-#: data/core/macros/abilities.cfg:365
+#: data/core/macros/abilities.cfg:368
 msgid ""
 "This unit can hide in deep water, and remain undetected by its enemies.\n"
 "\n"
@@ -5511,12 +5504,12 @@ msgstr ""
 "immediately loses all its remaining movement."
 
 #. [dummy]: id=feeding
-#: data/core/macros/abilities.cfg:385
+#: data/core/macros/abilities.cfg:388
 msgid "female^feeding"
 msgstr "feeding"
 
 #. [dummy]: id=feeding
-#: data/core/macros/abilities.cfg:386
+#: data/core/macros/abilities.cfg:389
 msgid ""
 "This unit gains 1 hitpoint added to its maximum whenever it kills a unit, "
 "except units that are immune to plague."
@@ -5859,16 +5852,12 @@ msgstr ""
 "they are standing on a village."
 
 #: data/core/macros/special-notes.cfg:73
-#, fuzzy
-#| msgid ""
-#| "Foes who lose their life to the plague will rise again in unlife, unless "
-#| "they are standing on a village."
 msgid ""
 "Foes who lose their life to certain horrors of nature become nourishment for "
 "a rapidly growing larva, unless they are standing in a village."
 msgstr ""
-"Foes who lose their life to the plague will rise again in unlife, unless "
-"they are standing on a village."
+"Foes who lose their life to certain horrors of nature become nourishment for "
+"a rapidly growing larva, unless they are standing in a village."
 
 #: data/core/macros/special-notes.cfg:76
 msgid ""
@@ -6552,8 +6541,12 @@ msgstr "deflect"
 
 #. [chance_to_hit]: id=deflect
 #: data/core/macros/weapon_specials.cfg:101
+#, fuzzy
+#| msgid ""
+#| "When used defensively, this attack reduces the opponent's chance to hit "
+#| "by 10%."
 msgid ""
-"When used defensively, this attack reduces the opponent's chance to hit by "
+"When used defensively, this attack reduces the opponent’s chance to hit by "
 "10%."
 msgstr ""
 "When used defensively, this attack reduces the opponent's chance to hit by "
@@ -6686,6 +6679,25 @@ msgstr ""
 msgid ""
 "This unit is able to stun its enemies, disrupting their zones of control."
 msgstr "This unit can stun its enemies, disrupting their zones of control."
+
+#. [damage]: id=arcane_damage
+#: data/core/macros/weapon_specials.cfg:208
+msgid "arcane"
+msgstr ""
+
+#. [damage]: id=arcane_damage
+#: data/core/macros/weapon_specials.cfg:209
+msgid ""
+"This attack combines the arcane type with the type of weapon used so that "
+"resistance to the arcane type does not penalize the user."
+msgstr ""
+
+#. [damage]: id=arcane_damage
+#: data/core/macros/weapon_specials.cfg:210
+msgid ""
+"This unit can use the arcane type when the opponent is particularly "
+"sensitive to it in relation to the weapon on which it is applied."
+msgstr ""
 
 #: data/core/units.cfg:4
 msgid ""
@@ -7182,22 +7194,22 @@ msgstr ""
 "friend and foe, making them a useful asset to aid in an army’s charge."
 
 #. [race]: id=goblin
-#: data/core/units.cfg:150
+#: data/core/units.cfg:148
 msgid "race^Goblin"
 msgstr "Goblin"
 
 #. [race]: id=goblin
-#: data/core/units.cfg:151
+#: data/core/units.cfg:149
 msgid "race+female^Goblin"
 msgstr "Goblin"
 
 #. [race]: id=goblin
-#: data/core/units.cfg:152
+#: data/core/units.cfg:150
 msgid "race^Goblins"
 msgstr "Goblins"
 
 #. [race]: id=goblin
-#: data/core/units.cfg:153
+#: data/core/units.cfg:151
 msgid ""
 "\n"
 "\n"
@@ -7226,22 +7238,22 @@ msgstr ""
 "proof of their prowess."
 
 #. [race]: id=gryphon
-#: data/core/units.cfg:170
+#: data/core/units.cfg:168
 msgid "race^Gryphon"
 msgstr "Gryphon"
 
 #. [race]: id=gryphon
-#: data/core/units.cfg:171
+#: data/core/units.cfg:169
 msgid "race+female^Gryphon"
 msgstr "Gryphon"
 
 #. [race]: id=gryphon
-#: data/core/units.cfg:172
+#: data/core/units.cfg:170
 msgid "race^Gryphons"
 msgstr "Gryphons"
 
 #. [race]: id=gryphon
-#: data/core/units.cfg:173
+#: data/core/units.cfg:171
 msgid ""
 "Gryphons are broad, powerful beasts with traits shared from both terrestrial "
 "predators and birds of prey. While occasionally tamed and ridden by the "
@@ -7262,22 +7274,22 @@ msgstr ""
 "origins."
 
 #. [race]: id=horse
-#: data/core/units.cfg:183
+#: data/core/units.cfg:181
 msgid "race^Horse"
 msgstr "Horse"
 
 #. [race]: id=horse
-#: data/core/units.cfg:184
+#: data/core/units.cfg:182
 msgid "race+female^Horse"
 msgstr "Horse"
 
 #. [race]: id=horse
-#: data/core/units.cfg:185
+#: data/core/units.cfg:183
 msgid "race^Horses"
 msgstr "Horses"
 
 #. [race]: id=horse
-#: data/core/units.cfg:186
+#: data/core/units.cfg:184
 msgid ""
 "Domesticated horses come in many shapes and sizes, from mighty war chargers, "
 "to sturdy draught horses or agile stock horses. While they are more fragile "
@@ -7300,22 +7312,22 @@ msgstr ""
 "history, though few can honestly claim to have seen such things."
 
 #. [race]: id=human
-#: data/core/units.cfg:203
+#: data/core/units.cfg:201
 msgid "race^Human"
 msgstr "Human"
 
 #. [race]: id=human
-#: data/core/units.cfg:204
+#: data/core/units.cfg:202
 msgid "race+female^Human"
 msgstr "Human"
 
 #. [race]: id=human
-#: data/core/units.cfg:205
+#: data/core/units.cfg:203
 msgid "race^Humans"
 msgstr "Humans"
 
 #. [race]: id=human
-#: data/core/units.cfg:206
+#: data/core/units.cfg:204
 msgid ""
 "The race of men is an extremely diverse one. Although they originally came "
 "from the Old Continent, men have spread all over the world and split into "
@@ -7396,22 +7408,22 @@ msgstr ""
 "and the strengths and weaknesses of these groups complement each other."
 
 #. [race]: id=dunefolk
-#: data/core/units.cfg:221
+#: data/core/units.cfg:219
 msgid "race^Dunefolk Human"
 msgstr "Dunefolk Human"
 
 #. [race]: id=dunefolk
-#: data/core/units.cfg:222
+#: data/core/units.cfg:220
 msgid "race+female^Dunefolk Human"
 msgstr "Dunefolk Human"
 
 #. [race]: id=dunefolk
-#: data/core/units.cfg:223
+#: data/core/units.cfg:221
 msgid "race+plural^Dunefolk"
 msgstr "Dunefolk"
 
 #. [race]: id=dunefolk
-#: data/core/units.cfg:225
+#: data/core/units.cfg:223
 msgid ""
 "An offshoot of a forgotten nomadic civilization, the Dunefolk lay claim to "
 "the river valleys and oases of the Sandy Wastes. How they came to inhabit "
@@ -7522,22 +7534,22 @@ msgstr ""
 "distant past in the exotic far corners of Irdya."
 
 #. [race]: id=lizard
-#: data/core/units.cfg:246
+#: data/core/units.cfg:244
 msgid "race^Saurian"
 msgstr "Saurian"
 
 #. [race]: id=lizard
-#: data/core/units.cfg:247
+#: data/core/units.cfg:245
 msgid "race+female^Saurian"
 msgstr "Saurian"
 
 #. [race]: id=lizard
-#: data/core/units.cfg:248
+#: data/core/units.cfg:246
 msgid "race^Saurians"
 msgstr "Saurians"
 
 #. [race]: id=lizard
-#: data/core/units.cfg:249
+#: data/core/units.cfg:247
 msgid ""
 "Saurians are lizard-like creatures. Smaller and more slender than humans, "
 "they rarely stand taller than a ten year old child, though from tip of snout "
@@ -7672,17 +7684,17 @@ msgstr ""
 "occurrences."
 
 #. [race]: id=mechanical
-#: data/core/units.cfg:275
+#: data/core/units.cfg:273
 msgid "race^Mechanical"
 msgstr "Mechanical"
 
 #. [race]: id=mechanical
-#: data/core/units.cfg:276
+#: data/core/units.cfg:274
 msgid "race+plural^Mechanical"
 msgstr "Mechanical"
 
 #. [race]: id=mechanical
-#: data/core/units.cfg:277
+#: data/core/units.cfg:275
 msgid ""
 "Animated neither by natural life nor by necromancy, the term "
 "<italic>text='mechanical'</italic> describes a created artifact of an "
@@ -7695,22 +7707,22 @@ msgstr ""
 "own, but some do so as a result of magical enchantment."
 
 #. [race]: id=merman
-#: data/core/units.cfg:286
+#: data/core/units.cfg:284
 msgid "race^Merman"
 msgstr "Merman"
 
 #. [race]: id=merman
-#: data/core/units.cfg:287
+#: data/core/units.cfg:285
 msgid "race^Mermaid"
 msgstr "Mermaid"
 
 #. [race]: id=merman
-#: data/core/units.cfg:288
+#: data/core/units.cfg:286
 msgid "race^Merfolk"
 msgstr "Merfolk"
 
 #. [race]: id=merman
-#: data/core/units.cfg:290
+#: data/core/units.cfg:288
 msgid ""
 "Something like a fusion between humans and fish, the merfolk are an "
 "enigmatic race with both piscine and humanoid attributes. They have strong "
@@ -7733,22 +7745,22 @@ msgstr ""
 "there and they struggle greatly to move over rough or forested terrain."
 
 #. [race]: id=monster
-#: data/core/units.cfg:298
+#: data/core/units.cfg:296
 msgid "race^Monster"
 msgstr "Monster"
 
 #. [race]: id=monster
-#: data/core/units.cfg:299
+#: data/core/units.cfg:297
 msgid "race+female^Monster"
 msgstr "Monster"
 
 #. [race]: id=monster
-#: data/core/units.cfg:300
+#: data/core/units.cfg:298
 msgid "race^Monsters"
 msgstr "Monsters"
 
 #. [race]: id=monster
-#: data/core/units.cfg:301
+#: data/core/units.cfg:299
 msgid ""
 "The term “monster” incorporates many hideous beasts that haunt the caves, "
 "wilderness, ocean depths, and other climes of the world. They figure largely "
@@ -7759,22 +7771,22 @@ msgstr ""
 "in the tales and nightmares of its denizens, as well."
 
 #. [race]: id=naga
-#: data/core/units.cfg:308
+#: data/core/units.cfg:306
 msgid "race^Naga"
 msgstr "Naga"
 
 #. [race]: id=naga
-#: data/core/units.cfg:309
+#: data/core/units.cfg:307
 msgid "race^Nagini"
 msgstr "Nagini"
 
 #. [race]: id=naga
-#: data/core/units.cfg:310
+#: data/core/units.cfg:308
 msgid "race^Nagas"
 msgstr "Nagas"
 
 #. [race]: id=naga
-#: data/core/units.cfg:311
+#: data/core/units.cfg:309
 msgid ""
 "The serpentine nagas are one of the least understood races of the Great "
 "Continent. Part of this is due to their xenophobic nature and part is due to "
@@ -7805,22 +7817,22 @@ msgstr ""
 "nagas tend to favour swamps and rivers as much as open water."
 
 #. [race]: id=ogre
-#: data/core/units.cfg:319
+#: data/core/units.cfg:317
 msgid "race^Ogre"
 msgstr "Ogre"
 
 #. [race]: id=ogre
-#: data/core/units.cfg:320
+#: data/core/units.cfg:318
 msgid "race+female^Ogre"
 msgstr "Ogre"
 
 #. [race]: id=ogre
-#: data/core/units.cfg:321
+#: data/core/units.cfg:319
 msgid "race^Ogres"
 msgstr "Ogres"
 
 #. [race]: id=ogre
-#: data/core/units.cfg:322
+#: data/core/units.cfg:320
 msgid ""
 "Ogres are a wild and uncivilized race who dwell mainly in the wilderness of "
 "the Great Continent. Physically, they resemble humans and orcs but are "
@@ -7853,22 +7865,22 @@ msgstr ""
 "not known."
 
 #. [race]: id=orc
-#: data/core/units.cfg:330
+#: data/core/units.cfg:328
 msgid "race^Orc"
 msgstr "Orc"
 
 #. [race]: id=orc
-#: data/core/units.cfg:331
+#: data/core/units.cfg:329
 msgid "race+female^Orc"
 msgstr "Orc"
 
 #. [race]: id=orc
-#: data/core/units.cfg:332
+#: data/core/units.cfg:330
 msgid "race^Orcs"
 msgstr "Orcs"
 
 #. [race]: id=orc
-#: data/core/units.cfg:333
+#: data/core/units.cfg:331
 msgid ""
 "In appearance, orcs resemble humans but with some bestial features. They are "
 "taller, sturdier and stronger than humans. They are warlike, savage, and "
@@ -7971,7 +7983,7 @@ msgstr ""
 "\n"
 
 #. [race]: id=orc
-#: data/core/units.cfg:344
+#: data/core/units.cfg:342
 msgid ""
 "\n"
 "\n"
@@ -7983,23 +7995,73 @@ msgstr ""
 "Orcs who were not the strongest of their litter tend to specialize in other "
 "skills, like archery or assassination."
 
-#. [race]: id=troll
+#. [race]: id=raven
+#: data/core/units.cfg:351
+msgid "race^Raven"
+msgstr "Raven"
+
+#. [race]: id=raven
+#: data/core/units.cfg:352
+msgid "race+female^Raven"
+msgstr "Raven"
+
+#. [race]: id=raven
 #: data/core/units.cfg:353
+msgid "race^Ravens"
+msgstr "Ravens"
+
+#. [race]: id=raven
+#: data/core/units.cfg:354
+msgid ""
+"Ravens are general scavengers, often associating with hunters or predators "
+"in the hope of sharing in the kill. They do not have the powerful beak or "
+"claws of the gryphons or raptors, but can still be a threat because of their "
+"intelligence and ability to recognize any advantage.\n"
+"\n"
+"In the aftermath of a battle, the dead and wounded are a banquet for ravens, "
+"thus ravens are a nuisance for allies of the defeated but are seen by some "
+"victors as part of martial ceremonies. The violence and large numbers that "
+"characterize both orcs and humans bring these races into constant "
+"interaction with ravens in this context. For this reason, the birds have "
+"become characters in fables, parables, and superstitions related to war.\n"
+"\n"
+"As intelligent scavengers, ravens do not need war dead to survive. Some "
+"farmers struggle to keep ravens away from freshly sown seeds, but others are "
+"happy to have them around as sentries."
+msgstr ""
+"Ravens are general scavengers, often associating with hunters or predators "
+"in the hope of sharing in the kill. They do not have the powerful beak or "
+"claws of the gryphons or raptors, but can still be a threat because of their "
+"intelligence and ability to recognize any advantage.\n"
+"\n"
+"In the aftermath of a battle, the dead and wounded are a banquet for ravens, "
+"thus ravens are a nuisance for allies of the defeated but are seen by some "
+"victors as part of martial ceremonies. The violence and large numbers that "
+"characterize both orcs and humans bring these races into constant "
+"interaction with ravens in this context. For this reason, the birds have "
+"become characters in fables, parables, and superstitions related to war.\n"
+"\n"
+"As intelligent scavengers, ravens do not need war dead to survive. Some "
+"farmers struggle to keep ravens away from freshly sown seeds, but others are "
+"happy to have them around as sentries."
+
+#. [race]: id=troll
+#: data/core/units.cfg:365
 msgid "race^Troll"
 msgstr "Troll"
 
 #. [race]: id=troll
-#: data/core/units.cfg:354
+#: data/core/units.cfg:366
 msgid "race+female^Troll"
 msgstr "Troll"
 
 #. [race]: id=troll
-#: data/core/units.cfg:355
+#: data/core/units.cfg:367
 msgid "race^Trolls"
 msgstr "Trolls"
 
 #. [race]: id=troll
-#: data/core/units.cfg:356
+#: data/core/units.cfg:368
 msgid ""
 "Trolls are ancient creatures, one of the oldest known races known to inhabit "
 "the Great Continent. They are large, slow, simple, and live extremely long "
@@ -8072,22 +8134,22 @@ msgstr ""
 "north and east of Wesnoth, and wherever Orcish hordes travel."
 
 #. [race]: id=undead
-#: data/core/units.cfg:376
+#: data/core/units.cfg:388
 msgid "race^Undead"
 msgstr "Undead"
 
 #. [race]: id=undead
-#: data/core/units.cfg:377
+#: data/core/units.cfg:389
 msgid "race+female^Undead"
 msgstr "Undead"
 
 #. [race]: id=undead
-#: data/core/units.cfg:378
+#: data/core/units.cfg:390
 msgid "race+plural^Undead"
 msgstr "Undead"
 
 #. [race]: id=undead
-#: data/core/units.cfg:379
+#: data/core/units.cfg:391
 msgid ""
 "Undead are not really a single race of creatures, although often treated as "
 "such. Most ordinary creatures can, by a sufficiently skilled necromancer, be "
@@ -8156,22 +8218,22 @@ msgstr ""
 "and dwarves before that."
 
 #. [race]: id=wolf
-#: data/core/units.cfg:392
+#: data/core/units.cfg:404
 msgid "race^Wolf"
 msgstr "Wolf"
 
 #. [race]: id=wolf
-#: data/core/units.cfg:393
+#: data/core/units.cfg:405
 msgid "race+female^Wolf"
 msgstr "Wolf"
 
 #. [race]: id=wolf
-#: data/core/units.cfg:394
+#: data/core/units.cfg:406
 msgid "race^Wolves"
 msgstr "Wolves"
 
 #. [race]: id=wolf
-#: data/core/units.cfg:395
+#: data/core/units.cfg:407
 msgid ""
 "Wolves are predatory canines encountered frequently in the wilderness. "
 "Quick, tough, and durable, a solitary wolf suffices to maim or kill "
@@ -8190,17 +8252,17 @@ msgstr ""
 "livestock."
 
 #. [race]: id=wose
-#: data/core/units.cfg:404
+#: data/core/units.cfg:416
 msgid "race^Wose"
 msgstr "Wose"
 
 #. [race]: id=wose
-#: data/core/units.cfg:405
+#: data/core/units.cfg:417
 msgid "race^Woses"
 msgstr "Woses"
 
 #. [race]: id=wose
-#: data/core/units.cfg:406
+#: data/core/units.cfg:418
 msgid ""
 "The mighty wose resides within the deepest forests of the known world. To "
 "the untrained eye, the wose appears to be nothing more than an oddly shaped, "

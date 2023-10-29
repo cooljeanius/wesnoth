@@ -1,4 +1,4 @@
-## Version 1.17.21+dev
+## Version 1.17.22+dev
  ### Add-ons client
  ### Add-ons server
  ### Campaigns
@@ -8,11 +8,49 @@
  ### Packaging
  ### Terrain
  ### Translations
-   * Updated translations: French
+   * Updated translations: British English, French, Italian, Slovak, Welsh
  ### Units
+   * Drakes:
+     * Saurian Seer - modify the unit to fix reductions in power level between level 2 and level 3.
  ### User interface
  ### WML Engine
  ### Miscellaneous and Bug Fixes
+
+## Version 1.17.22
+ ### Campaigns
+   * Under the Burning Suns
+     * More AMLAs for Kaleh and Nym.
+     * Balance changes.
+ ### Multiplayer server
+   * Record and replay chat messages when joining a game that has not started yet
+ ### Lua API
+   * New experimental Lua undo API
+   * New Lua mouse click callback
+ ### Terrain
+   * New embellishment for adding windows to impassible walls.
+ ### Translations
+   * Updated translations: Welsh
+   * Updated translations: British English, Chinese (Simplified), Czech, French, Slovak
+ ### Units
+   * Update graphics and stats of Roc
+   * New monster unit line - Ravens
+   * New Jumping Spider monster.
+   * Drakes:
+     * Saurian Oracle – xp changed from 66 to 74
+     * Saurian Soothsayer – xp changed from 100 to 66
+     * Saurian Prophet is added as an upgrade of the Saurian Oracle
+     * Saurian Seer is added as an upgrade of the Saurian Soothsayer
+ ### User interface
+   * Village ownership is shown with flag and side number in terrain info (issue #4334)
+ ### WML API
+   * New ability attributes `halo_image=` and `halo_image_self=`, to illustrate the effects of the illumination ability, HttT's initiative, etc.
+   * New ability attributes `overlay_image=` and `overlay_image_self=`.
+   * New ability tag and attribute `[overwrite]priority=`.
+   * Two new tags, `[filter_ability]` and `[filter_ability_active]`, which have a temporary exception from the API freeze.
+ ### WML Engine
+   * The implementation of `[allow_undo]` has changed, the behavior should be the same.
+ ### Miscellaneous and Bug Fixes
+   * Asset copyright tracking is now handled in a .csv file, and sanity checked during CI builds.
 
 ## Version 1.17.21
  ### Campaigns
