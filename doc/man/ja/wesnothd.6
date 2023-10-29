@@ -1,0 +1,284 @@
+.\" This program is free software; you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation; either version 2 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program; if not, write to the Free Software
+.\" Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+.\"
+.
+.\"*******************************************************************
+.\"
+.\" This file was generated with po4a. Translate the source file.
+.\"
+.\"*******************************************************************
+.TH WESNOTHD 6 2022 wesnothd "Battle for Wesnoth マルチプレイヤー・ネットワーク・デーモン"
+.
+.SH 名前
+.
+wesnothd \- Battle for \fBWesnoth\fP マルチプレイヤー・ネットワーク・デーモン
+.
+.SH 書式
+.
+\fBwesnothd\fP [\|\fB\-dv\fP\|] [\|\fB\-c\fP \fIpath\fP\|] [\|\fB\-p\fP \fIport\fP\|] [\|\fB\-t\fP
+\fInumber\fP\|] [\|\fB\-T\fP \fInumber\fP\|]
+.br
+\fBwesnothd\fP \fB\-V\fP
+.
+.SH 説明
+.
+Battle for Wesnoth のマルチプレイヤーゲームを管理する。 wesnoth クライアント(/query ...)や fifo
+を通して、サーバーがどのようなコマンドを受けつけるかについては
+https://www.wesnoth.org/wiki/ServerAdministration を参照。
+.
+.SH オプション
+.
+.TP 
+\fB\-c\ \fP\fIpath\fP\fB,\ \-\-config\fP\fI\ path\fP
+wesnothdが使用する設定ファイルがどこにあるかを伝える。文法については後述の\fBサーバー設定\fPの章を参照。サーバープロセスにSIGHUPを送ることによって設定を再読み込みすることができる。
+.TP 
+\fB\-d, \-\-daemon\fP
+wesnothd をデーモンとして実行する。
+.TP 
+\fB\-h, \-\-help\fP
+コマンドラインオプションで何が行えるかを表示する。
+.TP 
+\fB\-\-log\-\fP\fIlevel\fP\fB=\fP\fIdomain1\fP\fB,\fP\fIdomain2\fP\fB,\fP\fI...\fP
+ログ領域(domain)の厳密さのレベルを設定する。 \fBall\fP は、どのログ領域にも対応させるために利用できる。有効なレベルは以下の通り。
+\fBerror\fP、\ \fBwarning\fP、\ \fBinfo\fP、\ \fBdebug\fP。既定値では \fBerror\fP レベルが使用され、\fBserver\fP
+領域には \fBinfo\fP が使用される。
+.TP 
+\fB\-p\ \fP\fIport\fP\fB,\ \-\-port\fP\fI\ port\fP
+指定ポートにサーバーをバインドする。もしポートが指定されないなら、 \fB15000\fP番ポートが使用される。
+.TP 
+\fB\-t\ \fP\fInumber\fP\fB,\ \-\-threads\fP\fI\ number\fP
+ネットワーク I/O 用の作業スレッドの数の最大値を n に設定する。(既定値: \fB5\fP、\ 最大: \fB30\fP)
+.TP 
+\fB\-T\ \fP\fInumber\fP\fB,\ \-\-max\-threads\fP\fI\ number\fP
+作成される作業スレッドの数の最大値を設定する。 \fB0\fP が指定された場合、制限なしとなる。(既定値: \fB0\fP)
+.TP 
+\fB\-V, \-\-version\fP
+バージョン番号を表示して、終了する。
+.TP 
+\fB\-v, \-\-verbose\fP
+よりデバッグログを有効にする。
+.
+.SH サーバー設定
+.
+.SS 一般的な文法：
+.
+.P
+[\fItag\fP]
+.IP
+\fIkey\fP="\fIvalue\fP"
+.IP
+\fIkey\fP="\fIvalue\fP,\fIvalue\fP,..."
+.P
+[/\fItag\fP]
+.
+.SS グローバルキー:
+.
+.TP 
+\fBallow_remote_shutdown\fP
+\fBno\fP (既定値)に設定した場合、 fifo から来たものでない限り停止と再起動の要求は無視される。 \fByes\fP に設定した場合、管理者による
+/query での遠隔停止を許容する。
+.TP 
+\fBban_save_file\fP
+サーバーが読み書きする（gzip 圧縮の）ファイルへの完全パスまたは相対パス。 ban はこのファイルへ保存され、サーバー開始時に再度読み込まれる。
+.TP 
+\fBcompress_stored_rooms\fP
+部屋ファイルが圧縮形式で読み書きされるか決定する。既定値は \fByes\fP。
+.TP 
+\fBconnections_allowed\fP
+同じ IP から許可される接続数。 \fB0\fP は無限大を意味する。(既定値: \fB5\fP)
+.TP 
+\fBdeny_unregistered_login\fP
+\fBuser_handler\fP に登録されていないユーザーのログインを拒否する。（デフォルト：false）
+.TP 
+\fBdisallow_names\fP
+サーバーによって受けつけられない名前やニックネーム。 \fB*\fP と \fB?\fP からなるワイルドカードのパターンに対応。詳細は \fBglob\fP(7)
+を参照。既定の値(何も指定されなかった際に使用される)は
+\fB*admin*,*admln*,*server*,ai,ai?,computer,human,network,player\fP。
+.TP 
+\fBfifo_path\fP
+サーバーコマンド(wesnoth からの /query ... と同じ)をエコーする fifo
+へのパス。指定されない場合の既定値はコンパイル時に指定されたパス(既定値: \fB/var/run/wesnothd/socket\fP)。
+.TP 
+\fBmax_messages\fP
+\fBmessages_time_period\fP の時間内に許可されるメッセージ数。(既定値: \fB4\fP)
+.TP 
+\fBmessages_time_period\fP
+メッセージの殺到(flood)が検出される時間周期(秒単位)。(既定値: \fB10\fP 秒)
+.TP 
+\fBmotd\fP
+本日のメッセージ。
+.TP 
+\fBnew_room_policy\fP
+サーバー上で新しい部屋を立てられる者を決定する。使用可能な値は \fBeveryone\fP と \fBregistered\fP と \fBadmin\fP と
+\fBnobody\fP で、それぞれ全員、登録ユーザー、管理者ユーザーに権限を与えるか、新しい部屋を立てられなくする。既定値は \fBeveryone\fP。
+.TP 
+\fBpasswd\fP
+管理者権限の獲得に用いられるパスワード。(\fB/query admin \fP\fIpassword\fP で)
+.TP 
+\fBreplay_save_path\fP
+サーバーがゲームのリプレイを置くディレクトリ。(/! をつけるのを忘れないこと) 既定値の `' は wesnothd
+が開始したディレクトリを意味する。
+.TP 
+\fBrestart_command\fP
+\fBrestart\fP コマンドで新しいサーバープロセスを開始するのにサーバーが使用するコマンド。(fifo で問題があるときのみ。)
+.TP 
+\fBroom_save_file\fP
+部屋情報が置かれるファイルへのパス。このファイルはサーバー開始時に読み込まれ、後で書き出される。空欄か未設定の場合は、部屋は読み込まれず保存されない。
+.TP 
+\fBsave_replays\fP
+サーバーが自動的にゲームのリプレイを保存するか定義する。(既定値: \fBfalse\fP)
+.TP 
+\fBtls_enabled\fP
+Enable use of TLS. If true, requires 3 following options to be set too.
+.TP 
+\fBtls_fullchain\fP
+TLS full certificate chain in .pem format
+.TP 
+\fBtls_private_key\fP
+private key for TLS in .pem format
+.TP 
+\fBtls_dh\fP
+TLS DH parameters, as .pem file. Generate with \fBopenssl dhparam \-out
+filename.pem 4096\fP
+.TP 
+\fBversions_accepted\fP
+カンマで区切られた、サーバーに受けつけられるバージョン文字列のリスト。 \fB*\fP と \fB?\fP からなるワイルドカードのパターンに対応。(既定値では
+wesnoth のバージョンに一致する)
+.br
+例: \fBversions_accepted="*"\fP で、どのようなバージョン文字列も受けつける。
+.TP 
+\fBid\fP
+The ID of the server when using the database functionality to store game
+information. Generally is the major.minor version of accepted clients, such
+as 1.16 or 1.17.
+.
+.SS グローバルタグ:
+.
+.P
+\fB[redirect]\fP 特定クライアントバージョンのリダイレクト先サーバーを指定するタグ。\fBversions_accepted\fP
+が指定されていない場合には使用されない。
+.RS
+.TP 
+\fBhost\fP
+リダイレクトするサーバーのアドレス。
+.TP 
+\fBport\fP
+接続するポート。
+.TP 
+\fBversion\fP
+カンマで区切られた、リダイレクトするバージョンのリスト。ワイルドカードのパターンに関しては、 \fBversions_accepted\fP
+と同様に振る舞う。
+.RE
+.P
+\fB[ban_time]\fP 一時的な ban 時間の長さの短縮キーワードを定義するタグ。
+.RS
+.TP 
+\fBname\fP
+ban 時間の参照に使用される名前。
+.TP 
+\fBtime\fP
+時間の長さの定義。書式は %d[%s[%d%s[...]]] で %s は s (秒)、 m (分)、 h (時)、 D (日)、 M (月) または
+Y (年) で %d は数字。もし時間修飾子がない場合は分(m)が指定されたものとする。例: \fBtime="1D12h30m"\fP は ban 時間が
+1 日と 12 時間 30 分となる。
+.RE
+.P
+\fB[proxy]\fP プロキシとして振る舞い、接続クライアントのリクエストを指定したサーバーへと転送するよう指定するよう、サーバーに伝えるタグ。
+\fB[redirect]\fP と同じキーを受けつける。
+.RE
+.P
+\fB[user_handler]\fP ユーザーハンドラを設定する。\fB[user_handler]\fP
+セクションが設定に存在しなければ、サーバーはニックネーム登録サービスなしで動作する。\fBforum_user_handler\fP
+の動作に必要なすべての追加テーブルはWesnothソースリポジトリの中の table_definitions.sql
+で確認可能。mysqlのサポートが有効化されている必要があり、cmake の場合は \fBENABLE_MYSQL\fP 、scons の場合は
+\fBforum_user_handler.\fP でサポートを有効化できる。
+.RS
+.TP 
+\fBdb_host\fP
+データベースサーバーのホスト名
+.TP 
+\fBdb_name\fP
+データベース名
+.TP 
+\fBdb_user\fP
+データベースにログインするユーザーの名前
+.TP 
+\fBdb_password\fP
+ユーザーのパスワード
+.TP 
+\fBdb_users_table\fP
+The name of the table in which your phpbb forum saves its user data. Most
+likely this will be <table\-prefix>_users (e.g. phpbb3_users).
+.TP 
+\fBdb_extra_table\fP
+ユーザーに関するデータをwesnothdが保存するテーブル名。
+.TP 
+\fBdb_game_info_table\fP
+ゲームに関するデータをwesnothdが保存するテーブル名。
+.TP 
+\fBdb_game_player_info_table\fP
+ゲーム内プレイヤーに関するデータをwesnothdが保存するテーブル名。
+.TP 
+\fBdb_game_modification_info_table\fP
+ゲームで使用されるMODに関するデータをwesnothdが保存するテーブル名。
+.TP 
+\fBdb_user_group_table\fP
+The name of the table in which your phpbb forum saves its user group
+data. Most likely this will be <table\-prefix>_user_group
+(e.g. phpbb3_user_group).
+.TP 
+\fBdb_connection_history_table\fP
+The name of the table in which to store login/logout times. Also used for
+matching IPs to users and vice versa.
+.TP 
+\fBdb_topics_table\fP
+The name of the table in which your phpbb forum saves its topic (thread)
+information. Most likely this will be <table\-prefix>_topics
+(e.g. phpbb3_topics).
+.TP 
+\fBdb_banlist_table\fP
+The name of the table in which your phpbb forum saves its user bans
+data. Most likely this will be <table\-prefix>_banlist
+(e.g. phpbb3_banlist).
+.TP 
+\fBmp_mod_group\fP
+モデレーション権限を持つフォーラムグループのID。
+.RE
+.
+.SH 終了ステータス
+.
+サーバーが正常終了した場合は 0 を返す。コマンドラインオプションのエラーのときは 2 を返す。
+.
+.SH 著者
+.
+David White <davidnwhite@verizon.net> によって書かれた。 Nils Kneuper
+<crazy\-ivanovic@gmx.net> と ott <ott@gaon.net> と Soliton
+<soliton.de@gmail.com> と Thomas Baumhauer
+<thomas.baumhauer@gmail.com> によって編集された。 このマニュアルページは Cyril Bouthors
+<cyril@bouthors.org> によって最初に書かれた。 岡田信人 <okyada@gmail.com>
+によって日本語に翻訳され、いいむらなおき <amatubu@gmail.com> によって編集された。
+.br
+公式サイト: https://www.wesnoth.org/
+.
+.SH 著作権
+.
+Copyright \(co 2003\-2023 David White <davidnwhite@verizon.net>
+.br
+This is Free Software; this software is licensed under the GPL version 2, as
+published by the Free Software Foundation.  There is NO warranty; not even
+for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+.
+.SH 関連項目
+.
+\fBwesnoth\fP(6)
+

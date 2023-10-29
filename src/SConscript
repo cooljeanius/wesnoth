@@ -1,0 +1,219 @@
+# vi: syntax=python:et:ts=4
+
+import os
+from subprocess import Popen, PIPE
+from glob import glob
+
+Import("*")
+
+#
+# load list of sources from the file in source_lists/ or from a submodule
+#
+def GetSources(src_location):
+    sources = []
+    source_list = File("#/source_lists/" + src_location).rfile()
+    module_dir = Dir("#/src/modules/"+src_location+"/src/").rdir()
+
+    if source_list.rexists():
+        with open(source_list.abspath) as file:
+            for line in file.readlines():
+                sources.append(line.strip())
+    elif module_dir.rexists():
+        for cpp in module_dir.glob("*.cpp", strings=True):
+            sources.append("modules/"+src_location+"/src/"+cpp)
+    else:
+        print("Unable to find source files for: "+src_location)
+    return sources
+
+#
+# setup the FIFODIR, WESNOTH_PATH
+#
+
+for environ in [test_env, client_env, env]:
+# controls displaying git revision next to the version on the title screen
+    if environ.get("have_autorevision"):
+        environ.Append(CPPDEFINES = 'LOAD_REVISION')
+
+# if not windows, then set FIFODIR and WESNOTH_PATH defines, and configure the locale and preferences locations
+    if environ["PLATFORM"] != "win32":
+        environ.Append(CPPDEFINES = "FIFODIR='\"$fifodir\"'")
+        environ.Append(CPPDEFINES = "WESNOTH_PATH='\"$datadir\"'")
+        if env['localedirname']:
+            environ.Append(CPPDEFINES = "LOCALEDIR='\"$localedirname\"'")
+            if not os.path.isabs(env['localedirname']):
+                environ.Append(CPPDEFINES = "HAS_RELATIVE_LOCALEDIR")
+        if env['version_suffix'] and not env['prefsdir']:
+            environ['prefsdir'] = ".wesnoth$version_suffix"
+        if environ['prefsdir']:
+            environ.Append(CPPDEFINES = "PREFERENCES_DIR=\\\"$prefsdir\\\"")
+    else:
+        environ["fifodir"] = ""
+
+# if a default preference file exists, configure its location
+    if env['default_prefs_file']:
+        environ['default_prefs_file'] = env['default_prefs_file']
+        environ.Append(CPPDEFINES = "DEFAULT_PREFS_PATH='\"$default_prefs_file\"'")
+        if not os.path.isabs(env['default_prefs_file']):
+            environ.Append(CPPDEFINES = "HAS_RELATIVE_DEFPREF")
+
+for environ in [test_env, client_env, env]:
+    environ.Append(CPPDEFINES = "$EXTRA_DEFINE")
+
+#---libwesnoth_core---
+
+#color_range.cpp should be removed, but game_config depends on it.
+#game_config has very few things that are needed elsewhere, it should be
+#removed.  Requires moving path and version at least to other files.
+
+libwesnoth_core_sources = GetSources("libwesnoth_core")
+
+if env["PLATFORM"] == "win32":
+    libwesnoth_core_sources.append("log_windows.cpp")
+
+libwesnoth_core = env.Library("wesnoth-core", libwesnoth_core_sources)
+
+#---libwesnoth_game---
+libwesnoth_game_sources = GetSources("libwesnoth")
+libwesnoth_game = client_env.Library("wesnoth-game", libwesnoth_game_sources)
+
+#---libwesnoth_sdl---
+libwesnoth_sdl_sources = GetSources("libwesnoth_sdl")
+
+libwesnoth_sdl = client_env.Library("wesnoth-sdl", libwesnoth_sdl_sources)
+
+#---libwesnoth_widgets---
+libwesnoth_widgets_sources = GetSources("libwesnoth_widgets")
+libwesnoth_widgets = client_env.Library("wesnoth-widgets", libwesnoth_widgets_sources)
+
+#---wesnoth---
+# Used by both 'wesnoth' and 'boost_unit_tests' targets
+
+wesnoth_client_sources = GetSources("wesnoth")
+
+if env["PLATFORM"] == "win32":
+    wesnoth_client_sources.append("desktop/windows_tray_notification.cpp")
+    wesnoth_client_sources.append("desktop/windows_battery_info.cpp")
+
+if env["PLATFORM"] == 'darwin':
+    wesnoth_client_sources.append("desktop/apple_battery_info.mm")
+    wesnoth_client_sources.append("desktop/apple_notification.mm")
+    wesnoth_client_sources.append("desktop/apple_version.mm")
+
+if env["notifications"]:
+    wesnoth_client_sources.append("desktop/dbus_features.cpp")
+
+libwesnoth_client = client_env.Library("wesnoth-client", wesnoth_client_sources)
+
+#---lua---
+lua_sources = GetSources("lua")
+
+env_lua = env.Clone(CPPPATH = ["$CPPPATH", Dir(".").srcnode()], CPPDEFINES = ["$CPPDEFINES", env["PLATFORM"] != "win32" and "LUA_USE_POSIX" or None])
+
+env_lua.AppendUnique(CCFLAGS = Split("-Wno-old-style-cast -Wno-useless-cast -Wno-stringop-overflow"))
+# Silence some Clang-specific warnings due to extra parentheses in if statements when comparing.
+# also silence a warning for the lua code
+if "clang" in env["CXX"]:
+    env_lua.AppendUnique(CCFLAGS = Split("-Wno-parentheses-equality -Wno-string-plus-int"))
+
+if env_lua["enable_lto"] == True:
+    env_lua["AR"] = 'gcc-ar'
+    env_lua["RANLIB"] = 'gcc-ranlib'
+
+env_lua["wesnoth_lua_config"] = File("#/src/wesnoth_lua_config.h").rfile()
+env_lua.Append(CCFLAGS = Split("-include $wesnoth_lua_config"))
+env_lua.Append(CCFLAGS = Split("-x c++"))
+
+objs_lua = env_lua.Object(lua_sources)
+for obj in objs_lua:
+    env_lua.Depends(obj, env_lua["wesnoth_lua_config"])
+
+liblua = env_lua.Library("lua", objs_lua)
+
+#---mariadbpp submodule---
+mariadbpp_sources = GetSources("mariadbpp")
+libmariadbpp = env.Library("mariadbpp", mariadbpp_sources)
+
+#
+# Target declarations
+#
+
+def error_action(target, source, env):
+    from SCons.Errors import UserError
+    raise UserError("Target disabled because its prerequisites are not met")
+
+def WesnothProgram(env, target, source, can_build, **kw):
+    if env["enable_lto"] == True:
+        env["AR"] = 'gcc-ar'
+        env["RANLIB"] = 'gcc-ranlib'
+
+    if can_build:
+        if env["use_srcdir"] == True:
+            bin = env.Program(target + build_suffix, source, **kw)
+        else:
+            bin = env.Program("#/" + target + build_suffix, source, **kw)
+        env.Alias(target, bin)
+    else:
+        bin = env.Alias(target, [], error_action)
+        AlwaysBuild(bin)
+    locals()[target] = bin
+    Export(target)
+    return bin
+
+for env in [test_env, client_env, env]:
+    env.AddMethod(WesnothProgram)
+
+#---wesnoth---
+# for packaging/windows/wesnoth?.o, see packaging/windows/SConscript
+# used to set the executable icon for wesnoth and wesnothd
+libwesnoth_objects = libwesnoth_client + liblua + libwesnoth_core + libwesnoth_game + libwesnoth_sdl + libwesnoth_client
+if env["PLATFORM"] == 'darwin':
+    wesnoth = client_env.WesnothProgram("wesnoth", ["wesnoth.cpp"] + libwesnoth_objects + ["macosx/SDLMain.mm"], have_client_prereqs)
+    client_env.Append(LINKFLAGS=['-Wl,-force_load', libwesnoth_widgets])
+elif env["PLATFORM"] == 'win32':
+    wesnoth = client_env.WesnothProgram("wesnoth", ["wesnoth.cpp"] + libwesnoth_objects + ["#/packaging/windows/wesnoth.o"], have_client_prereqs)
+    client_env.Append(LINKFLAGS=['-Wl,--whole-archive', libwesnoth_widgets, '-Wl,--no-whole-archive'])
+else:
+    wesnoth = client_env.WesnothProgram("wesnoth", ["wesnoth.cpp"] + libwesnoth_objects, have_client_prereqs)
+    client_env.Append(LINKFLAGS=['-Wl,--whole-archive', libwesnoth_widgets, '-Wl,--no-whole-archive'])
+if have_client_prereqs:
+    Depends(wesnoth, libwesnoth_widgets)
+
+#---wesnothd---
+wesnothd_sources = GetSources("wesnothd")
+if env["PLATFORM"] == 'win32':
+    env.WesnothProgram("wesnothd", wesnothd_sources + libwesnoth_core + ["#/packaging/windows/wesnothd.o"], have_server_prereqs)
+elif env["forum_user_handler"]:
+    env.WesnothProgram("wesnothd", wesnothd_sources + libwesnoth_core + libmariadbpp, have_server_prereqs)
+else:
+    env.WesnothProgram("wesnothd", wesnothd_sources + libwesnoth_core, have_server_prereqs)
+
+#---campaignd---
+campaignd_sources = GetSources("campaignd")
+if env["forum_user_handler"]:
+    env.WesnothProgram("campaignd", campaignd_sources + libwesnoth_core + libmariadbpp, have_server_prereqs, OBJPREFIX = "campaignd_")
+else:
+    env.WesnothProgram("campaignd", campaignd_sources + libwesnoth_core, have_server_prereqs, OBJPREFIX = "campaignd_")
+
+#---boost_unit_tests---
+test_sources = GetSources("boost_unit_tests")
+if env["PLATFORM"] == 'darwin':
+    boost_unit_tests = test_env.WesnothProgram("boost_unit_tests", test_sources + libwesnoth_objects, have_client_prereqs)
+    test_env.Append(LINKFLAGS=['-Wl,-force_load', libwesnoth_widgets])
+elif env["PLATFORM"] == 'win32':
+    boost_unit_tests = test_env.WesnothProgram("boost_unit_tests", test_sources + libwesnoth_objects, have_client_prereqs)
+    test_env.Append(LINKFLAGS=['-Wl,--whole-archive', libwesnoth_widgets, '-Wl,--no-whole-archive'])
+else:
+    boost_unit_tests = test_env.WesnothProgram("boost_unit_tests", test_sources + libwesnoth_objects, have_client_prereqs)
+    test_env.Append(LINKFLAGS=['-Wl,--whole-archive', libwesnoth_widgets, '-Wl,--no-whole-archive'])
+Depends(boost_unit_tests, libwesnoth_widgets)
+#---end of getting sources---
+
+sources = []
+if "TAGS" in COMMAND_LINE_TARGETS:
+    sources = [ Glob(os.path.join(dir, pattern)) for dir in ["", "*", "*/*"] for pattern in ["*.cpp", "*.hpp"] ]
+
+Export("sources")
+
+# Local variables:
+# mode: python
+# end:

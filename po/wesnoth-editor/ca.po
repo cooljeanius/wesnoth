@@ -1,0 +1,721 @@
+#
+# Catalan translations for Battle for Wesnoth.
+# Copyright © 2008 Wesnoth development team
+# This file is distributed under the same license as the Battle for Wesnoth
+# package.
+#
+# Jordà Polo <jorda@ettin.org>, 2005, 2006, 2008.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.5.5+dev\n"
+"Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
+"POT-Creation-Date: 2023-10-28 09:02-0500\n"
+"PO-Revision-Date: 2021-01-07 16:14+0100\n"
+"Last-Translator: Miquel-Àngel Burgos i Fradeja <miquel.angel.burgos@gmail."
+"com>\n"
+"Language-Team: Catalan <wesnoth-ca@ettin.org>\n"
+"Language: ca\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.4.1\n"
+
+#. [brush]: id=brush-1
+#: data/core/editor/brushes.cfg:6
+msgid "Single Hex"
+msgstr "Un hexàgon"
+
+#. [brush]: id=brush-2
+#: data/core/editor/brushes.cfg:16
+msgid "Radius 1 Hex"
+msgstr "Radi d'un hexàgon"
+
+#. [brush]: id=brush-3
+#: data/core/editor/brushes.cfg:26
+msgid "Radius 2 Hex"
+msgstr "Radi de 2 hexàgons"
+
+#. [brush]: id=brush-nw-se
+#: data/core/editor/brushes.cfg:47
+msgid "Hex Line NW-SE"
+msgstr "Línia NO-SE"
+
+#. [brush]: id=brush-sw-ne
+#: data/core/editor/brushes.cfg:63
+msgid "Hex Line SW-NE"
+msgstr "Línia SO-NE"
+
+#. [editor_group]: id=all
+#: data/core/editor/terrain-groups.cfg:11
+msgid "all"
+msgstr "tots"
+
+#. [editor_group]: id=water
+#: data/core/editor/terrain-groups.cfg:17
+msgid "water"
+msgstr "aigua"
+
+#. [editor_group]: id=flat
+#: data/core/editor/terrain-groups.cfg:24
+msgid "flat"
+msgstr "pla"
+
+#. [editor_group]: id=desert
+#: data/core/editor/terrain-groups.cfg:31
+msgid "desert"
+msgstr "desert"
+
+#. [editor_group]: id=embellishments
+#: data/core/editor/terrain-groups.cfg:38
+msgid "embellishments"
+msgstr "embelliments"
+
+#. [editor_group]: id=forest
+#: data/core/editor/terrain-groups.cfg:45
+msgid "forest"
+msgstr "bosc"
+
+#. [editor_group]: id=fall
+#: data/core/editor/terrain-groups.cfg:52
+msgid "fall"
+msgstr "tardor"
+
+#. [editor_group]: id=frozen
+#: data/core/editor/terrain-groups.cfg:59
+msgid "frozen"
+msgstr "glaç"
+
+#. [editor_group]: id=rough
+#: data/core/editor/terrain-groups.cfg:66
+msgid "rough"
+msgstr "abrupte"
+
+#. [editor_group]: id=cave
+#: data/core/editor/terrain-groups.cfg:73
+msgid "cave"
+msgstr "cova"
+
+#. [editor_group]: id=obstacle
+#: data/core/editor/terrain-groups.cfg:80
+msgid "obstacle"
+msgstr "obstacle"
+
+#. [editor_group]: id=village
+#: data/core/editor/terrain-groups.cfg:87
+msgid "village"
+msgstr "llogaret"
+
+#. [editor_group]: id=castle
+#: data/core/editor/terrain-groups.cfg:94
+msgid "castle"
+msgstr "castell"
+
+#. [editor_group]: id=bridge
+#: data/core/editor/terrain-groups.cfg:101
+msgid "bridge"
+msgstr "pont"
+
+#. [editor_group]: id=special
+#: data/core/editor/terrain-groups.cfg:108
+msgid "special"
+msgstr "especial"
+
+#. [editor_group]: id=elevation
+#: data/core/editor/terrain-groups.cfg:115
+msgid "elevation"
+msgstr ""
+
+#. [editor_times]: id=empty
+#. Describes a scenario in the editor that has not set a time of day schedule
+#: data/core/editor/time-of-day.cfg:6
+msgid "time of day^None"
+msgstr "time of day^Cap"
+
+#. [editor_times]: id=test
+#: data/core/editor/time-of-day.cfg:11
+msgid "Test"
+msgstr "Prova"
+
+#. [editor_times]: id=default
+#: data/core/editor/time-of-day.cfg:22
+msgid "Default"
+msgstr "Per defecte"
+
+#. [editor_times]: id=summer
+#: data/core/editor/time-of-day.cfg:28
+msgid "Summer"
+msgstr "Estiu"
+
+#. [editor_times]: id=winter
+#: data/core/editor/time-of-day.cfg:34
+msgid "Winter"
+msgstr "Hivern"
+
+#. [editor_times]: id=24
+#: data/core/editor/time-of-day.cfg:60
+msgid "24 Hour Schedule"
+msgstr "Horari de 24 hores"
+
+#. [editor_times]: id=after_the_fall
+#: data/core/editor/time-of-day.cfg:66
+msgid "After the Fall"
+msgstr "Rere la tardor"
+
+#. [theme]: id=editor
+#: data/themes/editor.cfg:11
+msgid "theme^Editor"
+msgstr "theme^Editor"
+
+#. [menu]: id=menu-editor-file, type=turbo
+#: data/themes/editor.cfg:61
+msgid "File"
+msgstr "Fitxer"
+
+#. [menu]: id=menu-editor-recent
+#: data/themes/editor.cfg:72
+msgid "Load Recent"
+msgstr "Fitxers recents"
+
+#. [menu]: id=menu-editor-map
+#: data/themes/editor.cfg:80
+msgid "Map"
+msgstr "Mapa"
+
+#. [menu]: id=menu-unit-facing
+#: data/themes/editor.cfg:88
+msgid "Unit Facing"
+msgstr "Orientació de la unitat"
+
+#. [menu]: id=menu-editor-transitions
+#: data/themes/editor.cfg:94
+msgid "Transition Update"
+msgstr "Actualització de les transicions"
+
+#. [menu]: id=menu-editor-window
+#: data/themes/editor.cfg:101
+msgid "Window"
+msgstr "Finestra"
+
+#. [menu]: id=menu-editor-addon
+#: data/themes/editor.cfg:110
+msgid "Add-on"
+msgstr ""
+
+#. [menu]: id=menu-editor-areas
+#: data/themes/editor.cfg:119
+msgid "Areas"
+msgstr "Àrees"
+
+#. [menu]: id=menu-editor-local-time
+#: data/themes/editor.cfg:127
+msgid "Assign Local Time"
+msgstr "Assigna l'hora local"
+
+#. [menu]: id=menu-editor-local-schedule
+#: data/themes/editor.cfg:133
+msgid "Assign Local Time Schedule"
+msgstr "Assigna l'horari local"
+
+#. [menu]: id=menu-editor-side
+#: data/themes/editor.cfg:141
+msgid "Side"
+msgstr "Bàndol"
+
+#. [label]: id=villages-icon
+#: data/themes/editor.cfg:158
+msgid "villages"
+msgstr "llogarets"
+
+#. [label]: id=units-icon
+#: data/themes/editor.cfg:174
+msgid "units"
+msgstr "unitats"
+
+#. [menu]: id=switch_time
+#: data/themes/editor.cfg:453
+msgid "Time Schedule Menu"
+msgstr "Menú horari"
+
+#. [menu]: id=menu-playlist
+#: data/themes/editor.cfg:464
+msgid "Playlist"
+msgstr "Llista de reproducció"
+
+#. [menu]: id=menu-editor-schedule
+#: data/themes/editor.cfg:470
+msgid "Assign Time Schedule"
+msgstr "Assigna l'horari"
+
+#: src/editor/action/mouse/mouse_action_unit.cpp:64
+msgid "Identifier: "
+msgstr "Identificador: "
+
+#: src/editor/action/mouse/mouse_action_unit.cpp:66
+msgid "Name: "
+msgstr "Nom: "
+
+#: src/editor/action/mouse/mouse_action_unit.cpp:68
+msgid "Type: "
+msgstr "Tipus: "
+
+#: src/editor/action/mouse/mouse_action_unit.cpp:69
+msgid "Level: "
+msgstr "Nivell: "
+
+#: src/editor/action/mouse/mouse_action_unit.cpp:70
+msgid "Cost: "
+msgstr "Cost: "
+
+#: src/editor/controller/editor_controller.cpp:186
+msgid "Fatal error"
+msgstr "Error fatal"
+
+#: src/editor/controller/editor_controller.cpp:216
+msgid "Do you really want to quit?"
+msgstr "Segur que voleu sortir?"
+
+#: src/editor/controller/editor_controller.cpp:218
+msgid ""
+"Do you really want to quit? Changes to this map since the last save will be "
+"lost."
+msgstr ""
+"Segur que voleu sortir? Es perdran els canvis fets a aquest mapa des del "
+"darrer desament."
+
+#: src/editor/controller/editor_controller.cpp:220
+msgid ""
+"Do you really want to quit? The following maps were modified and all changes "
+"since the last save will be lost:"
+msgstr ""
+"Segur que voleu sortir? Els mapes següents han estat modificats i es perdran "
+"tots els canvis des del darrer desament:"
+
+#: src/editor/controller/editor_controller.cpp:229
+msgid "No editor time-of-day found."
+msgstr "No s'ha trobat cap editor de moment del dia."
+
+#: src/editor/controller/editor_controller.cpp:1197
+msgid "Change Unit ID"
+msgstr "Canvia l'ID de la unitat"
+
+#: src/editor/controller/editor_controller.cpp:1198
+msgid "ID:"
+msgstr "ID:"
+
+#: src/editor/controller/editor_controller.cpp:1214
+msgid "Rename Unit"
+msgstr "Canvia el nom de la unitat"
+
+#: src/editor/controller/editor_controller.cpp:1215
+msgid "Name:"
+msgstr "Nom:"
+
+#: src/editor/map/context_manager.cpp:219
+msgid "Load Map"
+msgstr "Carrega un mapa"
+
+#: src/editor/map/context_manager.cpp:315 src/editor/map/map_context.cpp:1049
+msgid "New Map"
+msgstr "Mapa nou"
+
+#: src/editor/map/context_manager.cpp:328 src/editor/map/map_context.cpp:1049
+msgid "New Scenario"
+msgstr "Escenari nou"
+
+#: src/editor/map/context_manager.cpp:384
+msgid "No Recent Files"
+msgstr "No hi ha cap fitxer recent"
+
+#: src/editor/map/context_manager.cpp:422
+msgid "Unnamed Area"
+msgstr "Àrea sense nom"
+
+#: src/editor/map/context_manager.cpp:453
+msgid "New Side"
+msgstr "Bàndol nou"
+
+#: src/editor/map/context_manager.cpp:509
+msgid "Apply Mask"
+msgstr "Aplica una màscara"
+
+#: src/editor/map/context_manager.cpp:518
+msgid "Error loading mask"
+msgstr "S'ha produït un error en carregar la màscara"
+
+#: src/editor/map/context_manager.cpp:538
+msgid "Identifier:"
+msgstr "Identificador:"
+
+#: src/editor/map/context_manager.cpp:538
+msgid "Rename Area"
+msgstr "Canvia el nom de l'àrea"
+
+#: src/editor/map/context_manager.cpp:552
+msgid "Choose Target Map"
+msgstr "Tria un mapa de destinació"
+
+#: src/editor/map/context_manager.cpp:561
+#: src/editor/map/context_manager.cpp:959
+msgid "Error loading map"
+msgstr "S'ha produït un error en carregar el mapa"
+
+#: src/editor/map/context_manager.cpp:689
+msgid "Save Map As"
+msgstr "Anomena i desa el mapa"
+
+#: src/editor/map/context_manager.cpp:700
+#: src/editor/map/context_manager.cpp:902
+msgid "This map is already open."
+msgstr "Aquest mapa ja és obert."
+
+#: src/editor/map/context_manager.cpp:721
+msgid "Save Scenario As"
+msgstr "Anomena i desa l'escenari"
+
+#: src/editor/map/context_manager.cpp:733
+msgid "This scenario is already open."
+msgstr "Aquest escenari ja és obert."
+
+#: src/editor/map/context_manager.cpp:767
+msgid "No random map generators found."
+msgstr "No s'ha trobat cap generador de mapes aleatoris."
+
+#: src/editor/map/context_manager.cpp:780
+#: src/editor/map/context_manager.cpp:785
+msgid "Map creation failed."
+msgstr "S'ha produït un error en la creació del mapa."
+
+#: src/editor/map/context_manager.cpp:800
+msgid "Unsaved Changes"
+msgstr "Canvis sense desar"
+
+#: src/editor/map/context_manager.cpp:801
+msgid "Do you want to discard all changes made to the map since the last save?"
+msgstr ""
+"Voleu descartar tots els canvis que heu fet al mapa des del darrer desament?"
+
+#: src/editor/map/context_manager.cpp:863
+msgid "Scenario saved."
+msgstr "S'ha desat l'escenari."
+
+#: src/editor/map/context_manager.cpp:878
+msgid "Map saved."
+msgstr "S'ha desat el mapa."
+
+#: src/editor/map/context_manager.cpp:951
+msgid "Loaded embedded map data"
+msgstr "S'han carregat les dades de mapa incrustades"
+
+#: src/editor/map/context_manager.cpp:952
+#: src/editor/map/context_manager.cpp:955
+msgid "Map loaded from scenario"
+msgstr "S'ha carregat el mapa de l'escenari"
+
+#: src/editor/map/context_manager.cpp:955
+#, fuzzy
+#| msgid ""
+#| "Loaded referenced map file:\n"
+#| "$new"
+msgid "Loaded referenced map file:"
+msgstr ""
+"S'ha carregat el fitxer de mapa referenciat:\n"
+"$new"
+
+#: src/editor/map/editor_map.cpp:146
+#: src/editor/palette/location_palette.cpp:119
+msgid "Player $side_num"
+msgstr "Jugador $side_num"
+
+#: src/editor/map/editor_map.cpp:281
+msgid "The size of the target map is different from the current map"
+msgstr "La mida del mapa de destinació és diferent de la del mapa actual"
+
+#: src/editor/map/map_context.cpp:182
+msgid "File not found"
+msgstr "No s'ha trobat el fitxer"
+
+#: src/editor/map/map_context.cpp:189
+msgid "Empty file"
+msgstr "Fitxer buit"
+
+#: src/editor/map/map_context.cpp:195
+msgid "File does not have .map or .cfg extension"
+msgstr ""
+
+#: src/editor/map/map_context.cpp:241
+msgid ""
+"The map file looks like a scenario, but the map_data value does not point to "
+"an existing file"
+msgstr ""
+"El fitxer de mapa sembla ser un escenari, però el valor de map_data no "
+"apunta a un fitxer existent"
+
+#: src/editor/map/map_context.cpp:260
+msgid "Found the characters '<<' indicating inline lua is present - aborting"
+msgstr ""
+
+#: src/editor/map/map_context.cpp:265
+#: src/editor/palette/location_palette.cpp:265
+msgid "Error"
+msgstr "Error"
+
+#: src/editor/map/map_context.cpp:265
+msgid "Failed to load the scenario, attempting to load only the map."
+msgstr ""
+
+#: src/editor/map/map_context.cpp:272
+#, fuzzy
+#| msgid ""
+#| "The map file looks like a scenario, but the map_data value does not point "
+#| "to an existing file"
+msgid ""
+"The map file looks like a scenario, but the map_file value does not point to "
+"an existing file"
+msgstr ""
+"El fitxer de mapa sembla ser un escenari, però el valor de map_data no "
+"apunta a un fitxer existent"
+
+#: src/editor/map/map_context.cpp:287
+msgid "Unable to parse file to find map data"
+msgstr ""
+
+#: src/editor/map/map_context.cpp:815
+msgid "Could not save the scenario: $msg"
+msgstr "No s'ha pogut desar l'escenari: $msg"
+
+#: src/editor/map/map_context.cpp:850
+msgid "Could not save into scenario"
+msgstr "No s'ha pogut desar a l'escenari"
+
+#: src/editor/map/map_context.cpp:860
+msgid "Could not save the map: $msg"
+msgstr "No s'ha pogut desar el mapa: $msg"
+
+#: src/editor/palette/editor_palettes.cpp:52
+msgid "(Unknown Group)"
+msgstr "(Grup desconegut)"
+
+#: src/editor/palette/editor_palettes.cpp:314
+msgid "(non-core)"
+msgstr "(no core)"
+
+#: src/editor/palette/editor_palettes.cpp:315
+msgid "Will not work in game without extra care."
+msgstr "No funcionarà al joc sense assistència addicional."
+
+#: src/editor/palette/location_palette.cpp:249
+msgid "Go To"
+msgstr "Ves a"
+
+#: src/editor/palette/location_palette.cpp:256
+msgid "Add"
+msgstr "Afegeix"
+
+#: src/editor/palette/location_palette.cpp:258
+msgid "New Location Identifier"
+msgstr "Identificador d'ubicació nou"
+
+#: src/editor/palette/location_palette.cpp:266
+msgid "Invalid location id"
+msgstr "Identificador d'ubicació no vàlid"
+
+#: src/editor/palette/location_palette.cpp:273
+msgid "Delete"
+msgstr "Suprimeix"
+
+#: src/editor/palette/terrain_palettes.cpp:224
+msgid "Left-click: "
+msgstr ""
+
+#: src/editor/palette/terrain_palettes.cpp:225
+msgid "Right-click: "
+msgstr ""
+
+#. TRANSLATORS: Similar behavior applies to shift + right-click. This message specifies left-click
+#. because the logic of whether to show the "overlay only" or "base only" version depends on the
+#. terrain currently selected for the left button.
+#: src/editor/palette/terrain_palettes.cpp:230
+msgid "Shift + left-click: paint overlay layer only"
+msgstr ""
+
+#: src/editor/palette/terrain_palettes.cpp:232
+msgid "Shift + left-click: paint base layer only"
+msgstr ""
+
+#: src/editor/palette/terrain_palettes.cpp:235
+msgid "Cmd + click: copy terrain"
+msgstr ""
+
+#: src/editor/palette/terrain_palettes.cpp:237
+msgid "Ctrl + click: copy terrain"
+msgstr ""
+
+#: src/gui/dialogs/editor/custom_tod.cpp:94
+msgid "Clipboard support not found, contact your packager"
+msgstr ""
+"No s'ha trobat cap porta-retalls compatible. Contacteu el vostre empaquetador"
+
+#: src/gui/dialogs/editor/custom_tod.cpp:158
+msgid "Choose File"
+msgstr "Tria un fitxer"
+
+#: src/gui/dialogs/editor/custom_tod.cpp:159
+msgid "Select"
+msgstr "Selecciona"
+
+#~ msgid "player^None"
+#~ msgstr "player^Cap"
+
+#~ msgid "Player $player_number"
+#~ msgstr "Jugador $player_number"
+
+#~ msgid "(Unknown unit type: $type)"
+#~ msgstr "(Tipus d'unitat desconegut: $type)"
+
+#~ msgid "Recruit: "
+#~ msgstr "Recluta: "
+
+#~ msgid "FG: "
+#~ msgstr "PP: "
+
+#~ msgid "BG: "
+#~ msgstr "SP: "
+
+#~ msgid "None"
+#~ msgstr "Cap"
+
+#, fuzzy
+#~ msgid "Choose a File to Open"
+#~ msgstr "Trieu el mapa que voleu carregar"
+
+#, fuzzy
+#~ msgid "Choose a Mask to Apply"
+#~ msgstr "Trieu el mapa que voleu carregar"
+
+#, fuzzy
+#~ msgid "The file already exists. Do you want to overwrite it?"
+#~ msgstr "Ja existeix un mapa amb aquest nom. Voleu sobreescriure'l? "
+
+#~ msgid "Player"
+#~ msgstr "Jugador"
+
+#~ msgid "Quit"
+#~ msgstr "Surt"
+
+#, fuzzy
+#~| msgid "Battle for Wesnoth Map Editor"
+#~ msgid "The Battle for Wesnoth"
+#~ msgstr "Editor de mapes de Batalla per Wesnoth"
+
+#~ msgid "Custom setting"
+#~ msgstr "Paràmetre personalitzat"
+
+#~ msgid "Edit"
+#~ msgstr "Edita"
+
+#~ msgid "Undo"
+#~ msgstr "Desfés"
+
+#~ msgid "Can’t Undo"
+#~ msgstr "No es pot desfer"
+
+#~ msgid "Redo"
+#~ msgstr "Refés"
+
+#~ msgid "Can’t Redo"
+#~ msgstr "No es pot refer"
+
+#, fuzzy
+#~ msgid "Auto-update Terrain Transitions: Yes"
+#~ msgstr "Actualitza transicions"
+
+#, fuzzy
+#~ msgid "Auto-update Terrain Transitions: Partial"
+#~ msgstr "Actualitza transicions"
+
+#, fuzzy
+#~ msgid "Auto-update Terrain Transitions: No"
+#~ msgstr "Actualitza transicions"
+
+#~ msgid "FG"
+#~ msgstr "PP"
+
+#~ msgid "BG"
+#~ msgstr "SP"
+
+#~ msgid "Click to paste."
+#~ msgstr "Cliqueu per enganxar."
+
+#~ msgid "There are unsaved changes in the map."
+#~ msgstr "Hi ha canvis al mapa que no heu desat."
+
+#~ msgid "There are unsaved changes in the map"
+#~ msgstr "Hi ha canvis al mapa que no heu desat."
+
+#~ msgid "Settings"
+#~ msgstr "Preferències"
+
+#~ msgid "Draw tiles"
+#~ msgstr "Dibuixa"
+
+#~ msgid "Fill"
+#~ msgstr "Emplena"
+
+#~ msgid "Set player's starting position"
+#~ msgstr "Defineix la posició d'inici del jugador"
+
+#~ msgid "Zoom in"
+#~ msgstr "Apropa"
+
+#~ msgid "Zoom out"
+#~ msgstr "Allunya"
+
+#~ msgid "Zoom to default view"
+#~ msgstr "Escala per defecte"
+
+#~ msgid "Toggle grid"
+#~ msgstr "Activa graella"
+
+#~ msgid "Resize the map"
+#~ msgstr "Redimensiona el mapa"
+
+#~ msgid "Flip map"
+#~ msgstr "Inverteix el mapa"
+
+#~ msgid "Language"
+#~ msgstr "Idioma"
+
+#~ msgid "Choose your preferred language:"
+#~ msgstr "Trieu el vostre idioma:"
+
+#~ msgid "Which Player?"
+#~ msgstr "Quin jugador?"
+
+#~ msgid "Which player should start here?"
+#~ msgstr "Quin jugador hauria de començar aquí?"
+
+#~ msgid ""
+#~ "Warning: Illegal characters found in the map name. Please save under a "
+#~ "different name."
+#~ msgstr ""
+#~ "Avís: s'han trobat caràcters invàlids en el nom del mapa. Si us plau, "
+#~ "deseu el mapa amb un nom diferent."
+
+#~ msgid "The file does not contain a valid map."
+#~ msgstr "Aquest fitxer no conté un mapa vàlid."
+
+#~ msgid "Do you want to save the map before quitting?"
+#~ msgstr "Voleu desar el mapa abans de sortir?"
+
+#~ msgid "Error: Illegal character in filename."
+#~ msgstr "Error: caràcters invàlids al nom del fitxer."
+
+#~ msgid ""
+#~ "Can't resize the map, the requested size is bigger than the maximum, size="
+#~ msgstr ""
+#~ "No es pot redimensionar el mapa, la mida sol·licitada és més gran del "
+#~ "permès. Mida: "
+
+#~ msgid " maximum="
+#~ msgstr " Màxim: "

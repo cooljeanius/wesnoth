@@ -1,0 +1,786 @@
+# #-#-#-#-#  wesnoth-editor.cpp1.po (Battle for Wesnoth VERSION)  #-#-#-#-#
+# Indonesian translations for Battle for Wesnoth package.
+# Copyright (C) 2007 Wesnoth development team
+# This file is distributed under the same license as the Battle for Wesnoth package.
+# Automatically generated, 2007.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Battle for Wesnoth 1.2.2\n"
+"Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
+"POT-Creation-Date: 2023-10-28 09:02-0500\n"
+"PO-Revision-Date: 2011-11-24 17:32+0700\n"
+"Last-Translator: Yuris <yuris_wicaksana@yahoo.com>\n"
+"Language-Team: none\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. [brush]: id=brush-1
+#: data/core/editor/brushes.cfg:6
+msgid "Single Hex"
+msgstr "Satu Heks"
+
+#. [brush]: id=brush-2
+#: data/core/editor/brushes.cfg:16
+msgid "Radius 1 Hex"
+msgstr "Radius 1 Heks"
+
+#. [brush]: id=brush-3
+#: data/core/editor/brushes.cfg:26
+msgid "Radius 2 Hex"
+msgstr "Radius 2 Heks"
+
+#. [brush]: id=brush-nw-se
+#: data/core/editor/brushes.cfg:47
+msgid "Hex Line NW-SE"
+msgstr "Garis Heks BL-T"
+
+#. [brush]: id=brush-sw-ne
+#: data/core/editor/brushes.cfg:63
+#, fuzzy
+#| msgid "Hex Line NW-SE"
+msgid "Hex Line SW-NE"
+msgstr "Garis Heks BL-T"
+
+#. [editor_group]: id=all
+#: data/core/editor/terrain-groups.cfg:11
+msgid "all"
+msgstr "semua"
+
+#. [editor_group]: id=water
+#: data/core/editor/terrain-groups.cfg:17
+msgid "water"
+msgstr "air"
+
+#. [editor_group]: id=flat
+#: data/core/editor/terrain-groups.cfg:24
+msgid "flat"
+msgstr "datar"
+
+#. [editor_group]: id=desert
+#: data/core/editor/terrain-groups.cfg:31
+msgid "desert"
+msgstr "gurun"
+
+#. [editor_group]: id=embellishments
+#: data/core/editor/terrain-groups.cfg:38
+msgid "embellishments"
+msgstr "hiasan-hiasan"
+
+#. [editor_group]: id=forest
+#: data/core/editor/terrain-groups.cfg:45
+msgid "forest"
+msgstr "hutan"
+
+#. [editor_group]: id=fall
+#: data/core/editor/terrain-groups.cfg:52
+msgid "fall"
+msgstr ""
+
+#. [editor_group]: id=frozen
+#: data/core/editor/terrain-groups.cfg:59
+msgid "frozen"
+msgstr "beku"
+
+#. [editor_group]: id=rough
+#: data/core/editor/terrain-groups.cfg:66
+msgid "rough"
+msgstr "kasar"
+
+#. [editor_group]: id=cave
+#: data/core/editor/terrain-groups.cfg:73
+msgid "cave"
+msgstr "gua"
+
+#. [editor_group]: id=obstacle
+#: data/core/editor/terrain-groups.cfg:80
+msgid "obstacle"
+msgstr "hambatan"
+
+#. [editor_group]: id=village
+#: data/core/editor/terrain-groups.cfg:87
+msgid "village"
+msgstr "desa"
+
+#. [editor_group]: id=castle
+#: data/core/editor/terrain-groups.cfg:94
+msgid "castle"
+msgstr "istana"
+
+#. [editor_group]: id=bridge
+#: data/core/editor/terrain-groups.cfg:101
+msgid "bridge"
+msgstr "jembatan"
+
+#. [editor_group]: id=special
+#: data/core/editor/terrain-groups.cfg:108
+msgid "special"
+msgstr "spesial"
+
+#. [editor_group]: id=elevation
+#: data/core/editor/terrain-groups.cfg:115
+msgid "elevation"
+msgstr ""
+
+#. [editor_times]: id=empty
+#. Describes a scenario in the editor that has not set a time of day schedule
+#: data/core/editor/time-of-day.cfg:6
+msgid "time of day^None"
+msgstr ""
+
+#. [editor_times]: id=test
+#: data/core/editor/time-of-day.cfg:11
+msgid "Test"
+msgstr ""
+
+#. [editor_times]: id=default
+#: data/core/editor/time-of-day.cfg:22
+msgid "Default"
+msgstr ""
+
+#. [editor_times]: id=summer
+#: data/core/editor/time-of-day.cfg:28
+msgid "Summer"
+msgstr ""
+
+#. [editor_times]: id=winter
+#: data/core/editor/time-of-day.cfg:34
+msgid "Winter"
+msgstr ""
+
+#. [editor_times]: id=24
+#: data/core/editor/time-of-day.cfg:60
+msgid "24 Hour Schedule"
+msgstr ""
+
+#. [editor_times]: id=after_the_fall
+#: data/core/editor/time-of-day.cfg:66
+msgid "After the Fall"
+msgstr ""
+
+#. [theme]: id=editor
+#: data/themes/editor.cfg:11
+#, fuzzy
+#| msgid "Quit Editor"
+msgid "theme^Editor"
+msgstr "Tutup Redaktur"
+
+#. [menu]: id=menu-editor-file, type=turbo
+#: data/themes/editor.cfg:61
+msgid "File"
+msgstr "File"
+
+#. [menu]: id=menu-editor-recent
+#: data/themes/editor.cfg:72
+msgid "Load Recent"
+msgstr ""
+
+#. [menu]: id=menu-editor-map
+#: data/themes/editor.cfg:80
+msgid "Map"
+msgstr "Peta"
+
+#. [menu]: id=menu-unit-facing
+#: data/themes/editor.cfg:88
+msgid "Unit Facing"
+msgstr ""
+
+#. [menu]: id=menu-editor-transitions
+#: data/themes/editor.cfg:94
+msgid "Transition Update"
+msgstr ""
+
+#. [menu]: id=menu-editor-window
+#: data/themes/editor.cfg:101
+msgid "Window"
+msgstr "Jendela"
+
+#. [menu]: id=menu-editor-addon
+#: data/themes/editor.cfg:110
+msgid "Add-on"
+msgstr ""
+
+#. [menu]: id=menu-editor-areas
+#: data/themes/editor.cfg:119
+msgid "Areas"
+msgstr ""
+
+#. [menu]: id=menu-editor-local-time
+#: data/themes/editor.cfg:127
+msgid "Assign Local Time"
+msgstr ""
+
+#. [menu]: id=menu-editor-local-schedule
+#: data/themes/editor.cfg:133
+msgid "Assign Local Time Schedule"
+msgstr ""
+
+#. [menu]: id=menu-editor-side
+#: data/themes/editor.cfg:141
+msgid "Side"
+msgstr ""
+
+#. [label]: id=villages-icon
+#: data/themes/editor.cfg:158
+msgid "villages"
+msgstr "desa"
+
+#. [label]: id=units-icon
+#: data/themes/editor.cfg:174
+msgid "units"
+msgstr ""
+
+#. [menu]: id=switch_time
+#: data/themes/editor.cfg:453
+msgid "Time Schedule Menu"
+msgstr ""
+
+#. [menu]: id=menu-playlist
+#: data/themes/editor.cfg:464
+msgid "Playlist"
+msgstr ""
+
+#. [menu]: id=menu-editor-schedule
+#: data/themes/editor.cfg:470
+msgid "Assign Time Schedule"
+msgstr ""
+
+#: src/editor/action/mouse/mouse_action_unit.cpp:64
+msgid "Identifier: "
+msgstr ""
+
+#: src/editor/action/mouse/mouse_action_unit.cpp:66
+msgid "Name: "
+msgstr ""
+
+#: src/editor/action/mouse/mouse_action_unit.cpp:68
+msgid "Type: "
+msgstr ""
+
+#: src/editor/action/mouse/mouse_action_unit.cpp:69
+msgid "Level: "
+msgstr ""
+
+#: src/editor/action/mouse/mouse_action_unit.cpp:70
+msgid "Cost: "
+msgstr ""
+
+#: src/editor/controller/editor_controller.cpp:186
+msgid "Fatal error"
+msgstr "Kesalahan fatal"
+
+#: src/editor/controller/editor_controller.cpp:216
+msgid "Do you really want to quit?"
+msgstr "Apakah anda benar-benar mau keluar?"
+
+#: src/editor/controller/editor_controller.cpp:218
+#, fuzzy
+#| msgid ""
+#| "Do you really want to quit? Changes in the map since the last save will "
+#| "be lost."
+msgid ""
+"Do you really want to quit? Changes to this map since the last save will be "
+"lost."
+msgstr ""
+"Apakah anda benar-benar mau keluar? Perubahan di peta ini sejak simpanan "
+"terakhir akan hilang."
+
+#: src/editor/controller/editor_controller.cpp:220
+msgid ""
+"Do you really want to quit? The following maps were modified and all changes "
+"since the last save will be lost:"
+msgstr ""
+"Apakah anda benar-benar mau keluar? Peta-peta berikut sudah dirubah dan "
+"semua perubahan sejak simpanan terakhir akan hilang:"
+
+#: src/editor/controller/editor_controller.cpp:229
+msgid "No editor time-of-day found."
+msgstr "Tidak ada redaktur jam hari yang ditemukan."
+
+#: src/editor/controller/editor_controller.cpp:1197
+msgid "Change Unit ID"
+msgstr ""
+
+#: src/editor/controller/editor_controller.cpp:1198
+msgid "ID:"
+msgstr ""
+
+#: src/editor/controller/editor_controller.cpp:1214
+msgid "Rename Unit"
+msgstr ""
+
+#: src/editor/controller/editor_controller.cpp:1215
+msgid "Name:"
+msgstr ""
+
+#: src/editor/map/context_manager.cpp:219
+msgid "Load Map"
+msgstr ""
+
+#: src/editor/map/context_manager.cpp:315 src/editor/map/map_context.cpp:1049
+#, fuzzy
+#| msgid "(New Map)"
+msgid "New Map"
+msgstr "(Peta Baru)"
+
+#: src/editor/map/context_manager.cpp:328 src/editor/map/map_context.cpp:1049
+#, fuzzy
+#| msgid "(New Map)"
+msgid "New Scenario"
+msgstr "(Peta Baru)"
+
+#: src/editor/map/context_manager.cpp:384
+msgid "No Recent Files"
+msgstr ""
+
+#: src/editor/map/context_manager.cpp:422
+#, fuzzy
+#| msgid "(New Map)"
+msgid "Unnamed Area"
+msgstr "(Peta Baru)"
+
+#: src/editor/map/context_manager.cpp:453
+#, fuzzy
+#| msgid "(New Map)"
+msgid "New Side"
+msgstr "(Peta Baru)"
+
+#: src/editor/map/context_manager.cpp:509
+msgid "Apply Mask"
+msgstr ""
+
+#: src/editor/map/context_manager.cpp:518
+msgid "Error loading mask"
+msgstr "Error meload samaran"
+
+#: src/editor/map/context_manager.cpp:538
+msgid "Identifier:"
+msgstr ""
+
+#: src/editor/map/context_manager.cpp:538
+msgid "Rename Area"
+msgstr ""
+
+#: src/editor/map/context_manager.cpp:552
+msgid "Choose Target Map"
+msgstr "Pilih target peta"
+
+#: src/editor/map/context_manager.cpp:561
+#: src/editor/map/context_manager.cpp:959
+msgid "Error loading map"
+msgstr "Error meload peta"
+
+#: src/editor/map/context_manager.cpp:689
+#, fuzzy
+#| msgid "Save the Map As"
+msgid "Save Map As"
+msgstr "Simpan Peta Sebagai"
+
+#: src/editor/map/context_manager.cpp:700
+#: src/editor/map/context_manager.cpp:902
+msgid "This map is already open."
+msgstr "Peta ini sudah terbuka."
+
+#: src/editor/map/context_manager.cpp:721
+#, fuzzy
+#| msgid "Save the Map As"
+msgid "Save Scenario As"
+msgstr "Simpan Peta Sebagai"
+
+#: src/editor/map/context_manager.cpp:733
+#, fuzzy
+#| msgid "This map is already open."
+msgid "This scenario is already open."
+msgstr "Peta ini sudah terbuka."
+
+#: src/editor/map/context_manager.cpp:767
+msgid "No random map generators found."
+msgstr "Tidak ada generator peta acak ditemukan."
+
+#: src/editor/map/context_manager.cpp:780
+#: src/editor/map/context_manager.cpp:785
+msgid "Map creation failed."
+msgstr "Penciptaan peta gagal."
+
+#: src/editor/map/context_manager.cpp:800
+msgid "Unsaved Changes"
+msgstr "Perubahan Tidak Tersimpan"
+
+#: src/editor/map/context_manager.cpp:801
+#, fuzzy
+#| msgid ""
+#| "Do you want to discard all changes you made to the map since the last "
+#| "save?"
+msgid "Do you want to discard all changes made to the map since the last save?"
+msgstr ""
+"Apakah anda mau batalkan semua perubahan yang anda lakukan ke peta ini sejak "
+"simpanan terakhir?"
+
+#: src/editor/map/context_manager.cpp:863
+#, fuzzy
+#| msgid "Map saved."
+msgid "Scenario saved."
+msgstr "Peta tersimpan."
+
+#: src/editor/map/context_manager.cpp:878
+msgid "Map saved."
+msgstr "Peta tersimpan."
+
+#: src/editor/map/context_manager.cpp:951
+msgid "Loaded embedded map data"
+msgstr "Data peta termasuk diload"
+
+#: src/editor/map/context_manager.cpp:952
+#: src/editor/map/context_manager.cpp:955
+msgid "Map loaded from scenario"
+msgstr "Peta diload dari skenario"
+
+#: src/editor/map/context_manager.cpp:955
+#, fuzzy
+#| msgid ""
+#| "Loaded referenced map file:\n"
+#| "$new"
+msgid "Loaded referenced map file:"
+msgstr ""
+"File peta referensi diload:\n"
+"$new"
+
+#: src/editor/map/editor_map.cpp:146
+#: src/editor/palette/location_palette.cpp:119
+#, fuzzy
+#| msgid "Player $player_number"
+msgid "Player $side_num"
+msgstr "Pemain $player_number"
+
+#: src/editor/map/editor_map.cpp:281
+msgid "The size of the target map is different from the current map"
+msgstr "Ukuran target peta berbeda dengan peta yang dipakai sekarang"
+
+#: src/editor/map/map_context.cpp:182
+msgid "File not found"
+msgstr "File tidak ditemukan"
+
+#: src/editor/map/map_context.cpp:189
+#, fuzzy
+#| msgid "Empty map file"
+msgid "Empty file"
+msgstr "File peta kosong"
+
+#: src/editor/map/map_context.cpp:195
+msgid "File does not have .map or .cfg extension"
+msgstr ""
+
+#: src/editor/map/map_context.cpp:241
+msgid ""
+"The map file looks like a scenario, but the map_data value does not point to "
+"an existing file"
+msgstr ""
+"File peta mirip seperti skenario, tetapi nomor map_data tidak menunjukkan ke "
+"file yang sudah ada"
+
+#: src/editor/map/map_context.cpp:260
+msgid "Found the characters '<<' indicating inline lua is present - aborting"
+msgstr ""
+
+#: src/editor/map/map_context.cpp:265
+#: src/editor/palette/location_palette.cpp:265
+msgid "Error"
+msgstr "Error"
+
+#: src/editor/map/map_context.cpp:265
+msgid "Failed to load the scenario, attempting to load only the map."
+msgstr ""
+
+#: src/editor/map/map_context.cpp:272
+#, fuzzy
+#| msgid ""
+#| "The map file looks like a scenario, but the map_data value does not point "
+#| "to an existing file"
+msgid ""
+"The map file looks like a scenario, but the map_file value does not point to "
+"an existing file"
+msgstr ""
+"File peta mirip seperti skenario, tetapi nomor map_data tidak menunjukkan ke "
+"file yang sudah ada"
+
+#: src/editor/map/map_context.cpp:287
+msgid "Unable to parse file to find map data"
+msgstr ""
+
+#: src/editor/map/map_context.cpp:815
+#, fuzzy
+#| msgid "Could not save the map: $msg"
+msgid "Could not save the scenario: $msg"
+msgstr "Tidak bisa menyimpan peta: $msg"
+
+#: src/editor/map/map_context.cpp:850
+msgid "Could not save into scenario"
+msgstr "Tidak bisa menyimpan ke dalam skenario"
+
+#: src/editor/map/map_context.cpp:860
+msgid "Could not save the map: $msg"
+msgstr "Tidak bisa menyimpan peta: $msg"
+
+#: src/editor/palette/editor_palettes.cpp:52
+msgid "(Unknown Group)"
+msgstr ""
+
+#: src/editor/palette/editor_palettes.cpp:314
+msgid "(non-core)"
+msgstr "(bukan-inti)"
+
+#: src/editor/palette/editor_palettes.cpp:315
+msgid "Will not work in game without extra care."
+msgstr "Tidak akan bekerja pada game tanpa kepedulian ekstra."
+
+#: src/editor/palette/location_palette.cpp:249
+msgid "Go To"
+msgstr ""
+
+#: src/editor/palette/location_palette.cpp:256
+msgid "Add"
+msgstr ""
+
+#: src/editor/palette/location_palette.cpp:258
+msgid "New Location Identifier"
+msgstr ""
+
+#: src/editor/palette/location_palette.cpp:266
+msgid "Invalid location id"
+msgstr ""
+
+#: src/editor/palette/location_palette.cpp:273
+msgid "Delete"
+msgstr ""
+
+#: src/editor/palette/terrain_palettes.cpp:224
+msgid "Left-click: "
+msgstr ""
+
+#: src/editor/palette/terrain_palettes.cpp:225
+msgid "Right-click: "
+msgstr ""
+
+#. TRANSLATORS: Similar behavior applies to shift + right-click. This message specifies left-click
+#. because the logic of whether to show the "overlay only" or "base only" version depends on the
+#. terrain currently selected for the left button.
+#: src/editor/palette/terrain_palettes.cpp:230
+msgid "Shift + left-click: paint overlay layer only"
+msgstr ""
+
+#: src/editor/palette/terrain_palettes.cpp:232
+msgid "Shift + left-click: paint base layer only"
+msgstr ""
+
+#: src/editor/palette/terrain_palettes.cpp:235
+msgid "Cmd + click: copy terrain"
+msgstr ""
+
+#: src/editor/palette/terrain_palettes.cpp:237
+msgid "Ctrl + click: copy terrain"
+msgstr ""
+
+#: src/gui/dialogs/editor/custom_tod.cpp:94
+msgid "Clipboard support not found, contact your packager"
+msgstr ""
+
+#: src/gui/dialogs/editor/custom_tod.cpp:158
+#, fuzzy
+#| msgid "Choose player"
+msgid "Choose File"
+msgstr "Pilih pemain"
+
+#: src/gui/dialogs/editor/custom_tod.cpp:159
+msgid "Select"
+msgstr ""
+
+#~ msgid "player^None"
+#~ msgstr "Tidak ada pemain"
+
+#~ msgid "Player $player_number"
+#~ msgstr "Pemain $player_number"
+
+#~ msgid "FG: "
+#~ msgstr "FG: "
+
+#~ msgid "BG: "
+#~ msgstr "BG: "
+
+#~ msgid "(New Map)"
+#~ msgstr "(Peta Baru)"
+
+#, fuzzy
+#~| msgid "(New Map)"
+#~ msgid "(New Scenario)"
+#~ msgstr "(Peta Baru)"
+
+#, fuzzy
+#~| msgid "Choose a Map to Open"
+#~ msgid "Choose a File to Open"
+#~ msgstr "Pilih Peta untuk Dibuka"
+
+#~ msgid "Choose a Mask to Apply"
+#~ msgstr "Pilih samaran untuk dipakai"
+
+#~ msgid "The file already exists. Do you want to overwrite it?"
+#~ msgstr "Peta ini sudah ada. Apakah anda mau menulisnya ulang?"
+
+#~ msgid "Player"
+#~ msgstr "Pemain"
+
+#~ msgid "Quit"
+#~ msgstr "Keluar"
+
+#, fuzzy
+#~| msgid "Battle for Wesnoth Map Editor"
+#~ msgid "The Battle for Wesnoth"
+#~ msgstr "Battle for Wesnoth Redaktur Peta"
+
+#~ msgid ""
+#~ "Use left/right mouse button to draw fore-/background terrain. Hold Shift "
+#~ "to paint base layer only. Ctrl+click to sample terrain under cursor."
+#~ msgstr ""
+#~ "Gunakan tombol tetikus kiri/kanan untuk menggambar daerah latar depan/"
+#~ "latar belakang. Pegang Shift untuk hanya mengecat lapisan dasar. "
+#~ "Ctrl+klik untuk mengecek daerah di bawah tetikus."
+
+#~ msgid ""
+#~ "Left mouse button selects, right deselects. Hold Shift for magic-wand "
+#~ "selection of tiles with same terrain."
+#~ msgstr ""
+#~ "Tombol tetikus kiri memilih, tombol kanan merubah pilihan. Pegang Shift "
+#~ "untuk pilihan ubin tongkat-ajaib dengan daerah yang sama."
+
+#~ msgid ""
+#~ "Left mouse button displays player selection, right clears. Number keys "
+#~ "scroll to the starting position, alt+number sets respective starting "
+#~ "position under cursor, delete clears."
+#~ msgstr ""
+#~ "Tombol tetikus kiri menunjukkan pilihan pemain, tombol kanan "
+#~ "menyingkirkannya. Tombol nomor menggulung ke posisi permulaan, alt+nomor "
+#~ "memasang posisi permulaan masing-masing di bawah tetikus, delete "
+#~ "menghapusnya."
+
+#~ msgid ""
+#~ "Click to paste, zoom out for more accuracy when pasting large areas. Use "
+#~ "the edit menu to transform the clipboard (rotate, mirror)."
+#~ msgstr ""
+#~ "Klik untuk menyalin, mengecilkan untuk membantu akurasi ketika menyalin "
+#~ "daerah-daerah besar. Gunakan menu edit untuk merubah papan tulis kecil "
+#~ "(memutar, mencermin)."
+
+#, fuzzy
+#~| msgid "Action not implemented"
+#~ msgid "Not implemented yet."
+#~ msgstr "Aksi tidak diterapkan"
+
+#~ msgid "Empty map file"
+#~ msgstr "File peta kosong"
+
+#~ msgid "Custom setting"
+#~ msgstr "Setting kustom"
+
+#~ msgid "Edit"
+#~ msgstr "Edit"
+
+#~ msgid "Undo"
+#~ msgstr "Batalkan aksi terakhir"
+
+#~ msgid "Can’t Undo"
+#~ msgstr "Tidak Bisa Membatalkan"
+
+#~ msgid "Redo"
+#~ msgstr "Ulangi aksi terakhir"
+
+#~ msgid "Can’t Redo"
+#~ msgstr "Tidak Bisa Mengulang"
+
+#~ msgid "Auto-update Terrain Transitions: Yes"
+#~ msgstr "Otomatis-memperbarui peralihan daerah: Ya"
+
+#~ msgid "Auto-update Terrain Transitions: Partial"
+#~ msgstr "Otomatis-memperbarui peralihan daerah: Sebagian"
+
+#~ msgid "Auto-update Terrain Transitions: No"
+#~ msgstr "Otomatis-memperbarui peralihan daerah: Tidak"
+
+#~ msgid ""
+#~ "Which player should start here? You can use alt and a number key to set "
+#~ "the starting position for a player, and del to clear the starting "
+#~ "position under the cursor. Pressing a number key by itself will scroll to "
+#~ "that player’s starting position."
+#~ msgstr ""
+#~ "Pemain mana yang harus memulai di sini? Anda bisa menggunakan alt dan "
+#~ "sebuah tombol nomor untuk memasang posisi permulaan untuk seorang pemain, "
+#~ "dan del untuk mennyingkirkan posisi permulaan tersebut dengan tetikus. "
+#~ "Menekan tombol nomor dengan sendirinya akan menggulung ke posisi "
+#~ "permulaan pemain itu."
+
+#~ msgid "FG"
+#~ msgstr "FG"
+
+#~ msgid "BG"
+#~ msgstr "BG"
+
+#~ msgid "Error creating action object"
+#~ msgstr "Error membuat obyek aksi"
+
+#~ msgid "Settings"
+#~ msgstr "Settings"
+
+#~ msgid "Draw tiles"
+#~ msgstr "Gambar tile"
+
+#~ msgid "Fill"
+#~ msgstr "Isi"
+
+#~ msgid "Set player's starting position"
+#~ msgstr "Pilih tempat mulai pemain"
+
+#~ msgid "Zoom in"
+#~ msgstr "Besarkan gambar"
+
+#~ msgid "Zoom out"
+#~ msgstr "Kecilkan gambar"
+
+#~ msgid "Zoom to default view"
+#~ msgstr "Besarkan gambar ke default"
+
+#~ msgid "Toggle grid"
+#~ msgstr "Nyalakan grid"
+
+#~ msgid "Resize the map"
+#~ msgstr "Ukur ulang peta"
+
+#~ msgid "Flip map"
+#~ msgstr "Putar peta"
+
+#~ msgid "Language"
+#~ msgstr "Bahasa"
+
+#~ msgid "Choose your preferred language:"
+#~ msgstr "Pilih bahasa favorit anda:"
+
+#~ msgid "Which Player?"
+#~ msgstr "Pemain yang mana?"
+
+#~ msgid "Which player should start here?"
+#~ msgstr "Pemain yang mana harus memulai di sini?"
+
+#~ msgid ""
+#~ "Warning: Illegal characters found in the map name. Please save under a "
+#~ "different name."
+#~ msgstr ""
+#~ "Bahaya: Ada karakter ilegal yang ditemukan di nama peta. Harap disimpan "
+#~ "dengan nama yang lain."
+
+#~ msgid "The file does not contain a valid map."
+#~ msgstr "File ini tidak memiliki peta yang benar."
+
+#~ msgid "Do you want to save the map before quitting?"
+#~ msgstr "Apakah anda hendak menyimpan peta ini sebelum menutupnya?"
+
+#~ msgid "Error: Illegal character in filename."
+#~ msgstr "Eror: Ada karakter ilegal di nama filenya."

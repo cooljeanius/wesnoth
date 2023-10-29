@@ -1,0 +1,13 @@
+server/common/dbconn.cpp
+server/common/forum_user_handler.cpp
+server/common/resultsets/ban_check.cpp
+server/common/resultsets/tournaments.cpp
+server/common/resultsets/game_history.cpp
+server/common/server_base.cpp
+server/wesnothd/ban.cpp
+server/wesnothd/game.cpp
+server/wesnothd/metrics.cpp
+server/wesnothd/player.cpp
+server/wesnothd/player_connection.cpp
+server/wesnothd/player_network.cpp
+server/wesnothd/server.cpp

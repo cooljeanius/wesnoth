@@ -1,0 +1,175 @@
+# vi: syntax=python:et:ts=4
+from glob import glob
+from subprocess import Popen, PIPE
+import os, shutil
+import re
+from fnmatch import fnmatch
+from os.path import join, relpath
+Import("env")
+
+def remove_pot_cdate(path):
+    return "".join([line for line in open(path).readlines() if "POT-Creation-Date: " not in line])
+def update_pot(target, source, env):
+    pot = target[0].path
+    new_pot = source[0].path
+    if not os.path.exists(new_pot): return
+    if remove_pot_cdate(new_pot) != remove_pot_cdate(pot):
+        shutil.copy2(new_pot, pot)
+        print(pot + " updated.")
+    os.remove(new_pot)
+
+#
+# Gettext message catalog generation
+#
+
+textdomains = glob("wesnoth*")
+po4a_domains = Split("wesnoth-manpages wesnoth-manual")
+textdomains = [domain for domain in textdomains if os.path.isdir(domain) and os.path.exists(domain+"/"+domain+".pot")]
+linguas = Split(open("LINGUAS").read())
+intermediate_exts = {
+    "cpp": "C++",
+    "py": "Python",
+}
+
+if "pot-update" in COMMAND_LINE_TARGETS:
+    from collections import defaultdict
+    domain_sources = {ext: defaultdict(list) for ext in intermediate_exts}
+    for root, dirs, files in os.walk("../src"):
+        for file in files:
+            if fnmatch(file, "*.[hc]pp"):
+                match = re.search(r'^#define\s+GETTEXT_DOMAIN\s+"(wesnoth(?:-.*)?)"', Dir(root).File(file).get_contents().decode("utf-8"), re.MULTILINE)
+                if match:
+                    source_domain = match.group(1)
+                else:
+                    # Default to wesnoth textdomain
+                    source_domain = "wesnoth"
+                domain_sources["cpp"][source_domain].append(Dir(root).File(file).path)
+    for root, dirs, files in os.walk("../data/tools"):
+        for file in files:
+            is_python = fnmatch(file, "*.py*")
+            file_content = None
+            if not is_python and not os.path.isdir(os.path.join(root, file)):
+                file_content = Dir(root).File(file).get_contents()
+                first_line = file_content.split(b"\n")[0]
+                is_python = first_line[0:3] == b'^#!' and b'python' in first_line
+            if is_python:
+                if file_content is None:
+                    file_content = Dir(root).File(file).get_contents()
+                try:
+                    match = re.search(r'^\s*_\s*=\s*gettext\.translation\(\s*([\'"])(wesnoth(?:-.*)?)\1', file_content.decode("utf-8"), re.MULTILINE)
+                    if match:
+                        source_domain = match.group(2)
+                        domain_sources["py"][source_domain].append(Dir(root).File(file).path)
+                    # In contrast to CPP, there is no default.
+                except UnicodeDecodeError as ex:
+                    pass
+                finally:
+                    file_content = None
+                
+
+    for domain in textdomains:
+        pot = File(join(domain, domain + ".pot"))
+        env.Precious(pot)
+        NoClean(pot)
+        env.Alias("pot-update", pot)
+        if domain in po4a_domains:
+            continue
+
+        intermediate_files = []
+        for ext, language in intermediate_exts.items():
+            files_from = join("po", domain, "POTFILES_{}.in".format(ext.upper()))
+            with open(relpath(files_from, "po"), "w") as potfiles:
+                potfiles.writelines([line + "\n" for line in sorted(domain_sources[ext][domain])])
+            file_list = [Dir("#").File(x) for x in domain_sources[ext][domain]]
+            if file_list:
+                target_path = env.Command(
+                    join(domain, "{}.{}.pot".format(domain, ext)),
+                    file_list,
+                    """xgettext --force-po --default-domain={default_domain} --directory=. --add-comments=TRANSLATORS: \
+                    --from-code=UTF-8 --language={language} --sort-by-file \
+                    --keyword=_ --keyword=N_ --keyword=sgettext --keyword=vgettext --keyword=VGETTEXT \
+                    --keyword=_n:1,2 --keyword=N_n:1,2 --keyword=sngettext:1,2 --keyword=vngettext:1,2 --keyword=VNGETTEXT:1,2 \
+                    --files-from={files_from} --copyright-holder='Wesnoth development team' --msgid-bugs-address=https://bugs.wesnoth.org/ \
+                    --output=$TARGET \
+                    ; sed -i s/charset=CHARSET/charset=UTF-8/ $TARGET \
+                    """.format(default_domain=domain, language=language, files_from=files_from)
+                )
+                intermediate_files.append(target_path)
+
+        # wml/lua
+        cfgs = []
+        FINDCFG = join(domain, "FINDCFG")
+        if os.path.exists(FINDCFG):
+            cfgs = Split(Popen(["sh", join("po", FINDCFG)], stdout = PIPE, cwd = "..").communicate()[0].decode("utf-8"))
+        cfgs = [File(x, Dir("..")) for x in cfgs]
+        if cfgs:
+            wml_pot = env.Command(
+                join(domain, domain + ".wml.pot"),
+                cfgs,
+                "data/tools/wmlxgettext --force-po --directory=. --domain=%s $SOURCES -o $TARGET" % domain
+                )
+            intermediate_files.append(wml_pot)
+
+        new_pot = str(pot) + ".new"
+
+        env.Command(new_pot, intermediate_files,
+                [
+                    "msgcat --sort-by-file $SOURCES -o $TARGET",
+                ] + list(map(Delete, intermediate_files))
+            )
+        env.Command(pot, new_pot, Action(update_pot))
+
+    env.Alias("pot-update", "../translations", "python3 utils/po_stat.py --update-cfg --textdomains=wesnoth,wesnoth-editor,wesnoth-help,wesnoth-lib,wesnoth-multiplayer,wesnoth-tutorial,wesnoth-units")
+
+if "update-po" in COMMAND_LINE_TARGETS or "pot-update" in COMMAND_LINE_TARGETS or "update-po4a" in COMMAND_LINE_TARGETS:
+    for domain in textdomains:
+        for lingua in linguas:
+            update_po = env.MsgInitMerge(
+                os.path.join(domain, lingua),
+                os.path.join(domain, domain),
+                MSGINIT_LINGUA = lingua
+                )
+            env.Precious(update_po)
+            NoClean(update_po)
+
+            env.Alias(lingua, [update_po, join("../translations", lingua)])
+            if lingua in COMMAND_LINE_TARGETS:
+                env.AlwaysBuild(update_po)
+
+    env.Alias("update-po", [])
+
+#
+# Manual and man pages translation
+#
+
+if "update-po4a" in COMMAND_LINE_TARGETS or "pot-update" in COMMAND_LINE_TARGETS:
+    env.Po4aUpdatePo("wesnoth-manual/wesnoth-manual.pot", "../doc/manual/manual.en.xml", PO4A_FORMAT = "docbook")
+    for lingua in linguas:
+        env.Po4aTranslate("../doc/manual/manual." + lingua + ".xml",
+            ["../doc/manual/manual.en.xml", join("wesnoth-manual", lingua + ".po")],
+            PO4A_CHARSET = "utf8", PO4A_FORMAT = "docbook")
+    Alias("update-po4a", Alias("manual"))
+
+    manpages = Split("wesnoth.6 wesnothd.6")
+    env.Po4aUpdatePo("wesnoth-manpages/wesnoth-manpages.pot",
+        [join("../doc/man", man) for man in manpages], PO4A_FORMAT = "man")
+    for lingua in linguas:
+        for man in manpages:
+            env.Po4aTranslate(join("../doc/man", lingua, man),
+            [join("../doc/man", man), join("wesnoth-manpages", lingua + ".po")],
+            PO4A_CHARSET = "utf8", PO4A_FORMAT = "man")
+    Alias("update-po4a", "../doc/man")
+
+#
+# If we have the right tool in place, create targets to invoke msgfmt to
+# compile message catalogs to binary format at installation time.
+# Without this step, the i18n support won't work.  Note, the actions
+# this generates should fire only when installing data.
+#
+if env["nls"]:
+    for domain in textdomains:
+        for lingua in linguas:
+            env.Msgfmt(
+                join("../translations", lingua, "LC_MESSAGES", domain),
+                join(domain, lingua)
+                )

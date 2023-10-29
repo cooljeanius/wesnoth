@@ -1,0 +1,221 @@
+# stderr.txt output + copies
+stderr*.txt
+stdout*.txt
+
+# project files
+.*project
+Project.*
+
+# Makefiles
+Makefile
+Makefile.in
+
+# cmake
+CMakeFiles
+CMakeLists.txt.user*
+cmake_install.cmake
+CPack*Config.cmake
+uninstall.cmake
+CMakeCache.txt
+install_manifest.txt
+out/**/*
+CTestTestfile.cmake
+DartConfiguration.tcl
+Testing/*
+doc/CTestTestfile.cmake
+doc/design/CTestTestfile.cmake
+doc/man/CTestTestfile.cmake
+doc/manual/CTestTestfile.cmake
+src/CTestTestfile.cmake
+src/Testing/
+
+# scons
+.scons-option-cache
+*sconsign.dblite
+.sconf_temp
+buildlog.txt
+
+# XCode
+projectfiles/Xcode/**/build
+projectfiles/Xcode/**/DerivedData
+projectfiles/Xcode/**/Headers
+projectfiles/Xcode/**/temp
+projectfiles/Xcode/**/Index
+projectfiles/Xcode/**/Wesnoth.dmgCanvas
+projectfiles/Xcode/**/*.mode1v3
+projectfiles/Xcode/**/*.pbxuser
+projectfiles/Xcode/**/xcuserdata
+projectfiles/Xcode/**/*.xcworkspace
+!projectfiles/Xcode/**/project.pbxproj
+
+# CodeBlocks
+projectfiles/**/.clang
+projectfiles/**/cb
+projectfiles/**/wesnoth.tags
+projectfiles/**/wesnoth.workspace.*
+projectfiles/**/*.depend
+projectfiles/**/*.layout
+projectfiles/**/*_build_log.html
+projectfiles/**/*objs*
+
+# Visual Studio
+.vscode
+/.vs
+vcpkg_installed/
+*.vcxproj
+*.vcxproj.filters
+doc/**/*.vcxproj
+doc/**/*.vcxproj.filters
+src/**/*.vcxproj
+src/**/*.vcxproj.filters
+vcpkg-manifest-install.log
+
+# CLion
+/.idea
+cmake-build-debug
+cmake-build-release
+
+# eclipse
+.settings
+!utils/umc_dev/org.wesnoth*/.settings/
+!utils/umc_dev/org.wesnoth*/.project
+
+# KDevelop caches (KDevelop 4.3.1, KDE Development Platform 4.8.4).
+*.kate-swp
+
+# autotools
+config.h
+config.h.in
+config.log
+config.status
+configure
+configure.lineno
+aclocal.m4
+autom4te.cache
+stamp-h1
+
+# build directories
+/wesnoth*
+/wesnothd*
+/campaignd*
+/cutter*
+cutter/
+/exploder*
+/build/
+Release
+Debug
+ReleaseDEBUG
+Test_Debug
+Test_Release
+Debug (fast)
+tags
+/schema_generator*
+/schema_validator*
+/create_images*
+/wesmage*
+pgo_data/
+
+# build results etc.
+wesnoth_zip
+wesnoth.exp
+wesnoth.ilk
+wesnoth.lib
+wesnoth.ncb
+wesnoth.suo
+wesnoth.opt
+wesnoth.plg
+*.exe
+*.dll
+*.so
+
+# library files
+.libs
+[Ll]ib
+!data/ai/formula/lib/
+!src/gui/lib/
+
+# release-only directories
+translations
+userdata
+
+# testing
+/test*
+/boost_unit_tests*
+!/test_wrapper.sh
+src/test
+error*.log
+boost_test_result.xml
+*build*.sh
+boost_tests.log
+
+# translations
+locales
+make_translation
+merge_translations
+*.gmo
+po/wesnoth*/POTFILES*
+po/**/pot-update.sh
+po/**/stamp-po
+po/**/remove-potcdate.s*
+po/**/Makefile*
+!po/wesnoth-manpages/Makefile
+!po/wesnoth-manual/Makefile
+
+# tools
+data/tools/unit_tree/**/files
+data/tools/unit_tree/**/reports
+data/tools/unit_tree/**/Locale
+
+# doc
+doc/doxygen/html
+doc/manual/**/*.xml
+
+# keep src clean from tools
+src/**/wesnoth/
+src/**/exploder
+src/**/wesnoth_addon_manager
+src/**/wmllint
+src/**/wmlscope
+src/**/wmlindent
+
+# file for loading lua from within test scenario on-the-fly
+data/lua/**/code.lua
+
+# previous .gitignore files
+po/**/.gitignore
+images/**/.gitignore
+data/core/images/**/.gitignore
+data/campaigns/**/images/**/.gitignore
+
+# OS created files
+.DS_Store
+[Tt]humbs.db
+*Neuer Ordner*
+.directory
+fonts/.uuid
+
+# extensions
+*.pyc
+*.sw[po]
+*.pbl
+*.xhtml
+*.[ao]
+*.out
+*~
+.deps
+.dirstamp
+*.cfg-bak
+*.orig
+
+# might be good to have, but not in data
+data/**/*.xcf
+data/**/*.psd
+
+# uncategorized
+revision*
+config.h
+6not
+.kdev*
+callgrind.out.*
+data/dist
+clean.sh

@@ -1,0 +1,9 @@
+# Exclude project-internal files from releases
+/attic         export-ignore
+.gitattributes export-ignore
+.gitignore     export-ignore
+/.github       export-ignore
+/changelog_entries export-ignore
+
+# help github's language detection and syntax highlighting
+*.cfg linguist-language=INI

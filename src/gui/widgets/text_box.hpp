@@ -1,0 +1,360 @@
+/*
+	Copyright (C) 2008 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
+
+	See the COPYING file for more details.
+*/
+
+#pragma once
+
+#include "gui/widgets/text_box_base.hpp"
+
+namespace gui2
+{
+namespace implementation
+{
+struct builder_text_box;
+}
+
+// ------------ WIDGET -----------{
+
+/**
+ * Class for text input history.
+ *
+ * The history of text items can be stored in the preferences. This class
+ * handles that. Every item needs an id by which the history is loaded and
+ * saved.
+ */
+class text_history
+{
+public:
+	/**
+	 * Gets history that matches id.
+	 *
+	 * @param id                  The id of the history to look for.
+	 * @param enabled             The enabled state of the history.
+	 *
+	 * @returns                   The history object.
+	 */
+	static text_history get_history(const std::string& id, const bool enabled);
+
+	text_history() : history_(0), pos_(0), enabled_(false)
+	{
+	}
+
+	/**
+	 * Push string into the history.
+	 *
+	 * If the string is empty or the same as the last item in the history this
+	 * function is a nop.
+	 *
+	 * @param text                   The text to push in the history.
+	 */
+	void push(const std::string& text);
+
+	/**
+	 * One step up in the history.
+	 *
+	 * Pushes text to the history if at the end.
+	 *
+	 * @param text                The text to push in the history.
+	 *
+	 * @returns                   The current value of the history.
+	 */
+	std::string up(const std::string& text = "");
+
+	/**
+	 * One step down in the history.
+	 *
+	 * Pushes text to the history if at the end.
+	 *
+	 * @param text                The text to push in the history.
+	 *
+	 * @returns                   The current value of the history.
+	 */
+	std::string down(const std::string& text = "");
+
+	/**
+	 * Gets the current history value.
+	 *
+	 * @returns                   If enabled return the current history
+	 *                            position, otherwise an empty string is
+	 *                            returned.
+	 */
+	std::string get_value() const;
+
+	/***** ***** ***** setters / getters for members ***** ****** *****/
+
+	void set_enabled(bool enabled = true)
+	{
+		enabled_ = enabled;
+	}
+	bool get_enabled() const
+	{
+		return enabled_;
+	}
+
+private:
+	text_history(std::vector<std::string>* history, const bool enabled)
+		: history_(history), pos_(history->size()), enabled_(enabled)
+	{
+	}
+
+	/** The items in the history. */
+	std::vector<std::string>* history_;
+
+	/** The current position in the history. */
+	unsigned pos_;
+
+	/** Is the history enabled. */
+	bool enabled_;
+};
+
+/**
+ * @ingroup GUIWidgetWML
+ *
+ * Class for a single line text area.
+ *
+ * The resolution for a text box also contains the following keys:
+ * Key          |Type                                    |Default  |Description
+ * -------------|----------------------------------------|---------|-----------
+ * text_x_offset| @ref guivartype_f_unsigned "f_unsigned"|""       |The x offset of the text in the text box. This is needed for the code to determine where in the text the mouse clicks, so it can set the cursor properly.
+ * text_y_offset| @ref guivartype_f_unsigned "f_unsigned"|""       |The y offset of the text in the text box.
+ * The following states exist:
+ * * state_enabled - the text box is enabled.
+ * * state_disabled - the text box is disabled.
+ * * state_focussed - the text box has the focus of the keyboard.
+ * The following variables exist:
+ * Key          |Type                                |Default  |Description
+ * -------------|------------------------------------|---------|-----------
+ * label        | @ref guivartype_t_string "t_string"|""       |The initial text of the text box.
+ * history      | @ref guivartype_string "string"    |""       |The name of the history for the text box. A history saves the data entered in a text box between the games. With the up and down arrow it can be accessed. To create a new history item just add a new unique name for this field and the engine will handle the rest.
+ */
+class text_box : public text_box_base
+{
+	friend struct implementation::builder_text_box;
+
+public:
+	explicit text_box(const implementation::builder_styled_widget& builder);
+
+	/** Saves the text in the widget to the history. */
+	void save_to_history()
+	{
+		history_.push(get_value());
+	}
+
+	/***** ***** ***** setters / getters for members ***** ****** *****/
+
+	void set_history(const std::string& id)
+	{
+		history_ = text_history::get_history(id, true);
+	}
+
+	void set_max_input_length(const std::size_t length)
+	{
+		max_input_length_ = length;
+	}
+
+	void set_hint_data(const std::string& text, const std::string& image)
+	{
+		hint_text_ = text;
+		hint_image_ = image;
+
+		update_canvas();
+	}
+
+	void clear()
+	{
+		set_value("");
+	}
+
+protected:
+	/***** ***** ***** ***** layout functions ***** ***** ***** *****/
+
+	/** See @ref widget::place. */
+	virtual void place(const point& origin, const point& size) override;
+
+	/***** ***** ***** ***** Inherited ***** ***** ***** *****/
+
+	/** See @ref styled_widget::update_canvas. */
+	virtual void update_canvas() override;
+
+	/** Inherited from text_box_base. */
+	void goto_end_of_line(const bool select = false) override
+	{
+		goto_end_of_data(select);
+	}
+
+	/** Inherited from text_box_base. */
+	void goto_start_of_line(const bool select = false) override
+	{
+		goto_start_of_data(select);
+	}
+
+	/** Inherited from text_box_base. */
+	void delete_char(const bool before_cursor) override;
+
+	/** Inherited from text_box_base. */
+	void delete_selection() override;
+
+	void handle_mouse_selection(point mouse, const bool start_selection);
+
+private:
+	/** The history text for this widget. */
+	text_history history_;
+
+	/** The maximum length of the text input. */
+	std::size_t max_input_length_;
+
+	/**
+	 * The x offset in the widget where the text starts.
+	 *
+	 * This value is needed to translate a location in the widget to a location
+	 * in the text.
+	 */
+	unsigned text_x_offset_;
+
+	/**
+	 * The y offset in the widget where the text starts.
+	 *
+	 * Needed to determine whether a click is on the text.
+	 */
+	unsigned text_y_offset_;
+
+	/**
+	 * The height of the text itself.
+	 *
+	 * Needed to determine whether a click is on the text.
+	 */
+	unsigned text_height_;
+
+	/** Updates text_x_offset_ and text_y_offset_. */
+	void update_offsets();
+
+	/** Is the mouse in dragging mode, this affects selection in mouse move */
+	bool dragging_;
+
+	/** Helper text to display (such as "Search") if the text box is empty. */
+	std::string hint_text_;
+
+	/** Image (such as a magnifying glass) that accompanies the help text. */
+	std::string hint_image_;
+
+	/**
+	 * Inherited from text_box_base.
+	 *
+	 * Unmodified                 Unhandled.
+	 * Control                    Ignored.
+	 * Shift                      Ignored.
+	 * Alt                        Ignored.
+	 */
+	void handle_key_up_arrow(SDL_Keymod /*modifier*/, bool& /*handled*/) override
+	{
+	}
+
+	/**
+	 * Inherited from text_box_base.
+	 *
+	 * Unmodified                 Unhandled.
+	 * Control                    Ignored.
+	 * Shift                      Ignored.
+	 * Alt                        Ignored.
+	 */
+	void handle_key_down_arrow(SDL_Keymod /*modifier*/, bool& /*handled*/) override
+	{
+	}
+
+	/**
+	 * Goes one item up in the history.
+	 *
+	 * @returns                   True if there's a history, false otherwise.
+	 */
+	bool history_up();
+
+	/**
+	 * Goes one item down in the history.
+	 *
+	 * @returns                   True if there's a history, false otherwise.
+	 */
+	bool history_down();
+
+	/** Inherited from text_box_base. */
+	void handle_key_tab(SDL_Keymod modifier, bool& handled) override;
+
+	/** Inherited from text_box_base. */
+	void handle_key_clear_line(SDL_Keymod modifier, bool& handled) override;
+
+public:
+	/** Static type getter that does not rely on the widget being constructed. */
+	static const std::string& type();
+
+private:
+	/** Inherited from styled_widget, implemented by REGISTER_WIDGET. */
+	virtual const std::string& get_control_type() const override;
+
+	/***** ***** ***** signal handlers ***** ****** *****/
+
+	void signal_handler_mouse_motion(const event::ui_event event,
+									 bool& handled,
+									 const point& coordinate);
+
+	void signal_handler_left_button_down(const event::ui_event event,
+										 bool& handled);
+
+	void signal_handler_left_button_up(const event::ui_event event,
+									   bool& handled);
+
+	void signal_handler_left_button_double_click(const event::ui_event event,
+												 bool& handled);
+};
+
+// }---------- DEFINITION ---------{
+
+struct text_box_definition : public styled_widget_definition
+{
+	explicit text_box_definition(const config& cfg);
+
+	struct resolution : public resolution_definition
+	{
+		explicit resolution(const config& cfg);
+
+		typed_formula<unsigned> text_x_offset;
+		typed_formula<unsigned> text_y_offset;
+	};
+};
+
+// }---------- BUILDER -----------{
+
+namespace implementation
+{
+
+struct builder_text_box : public builder_styled_widget
+{
+public:
+	explicit builder_text_box(const config& cfg);
+
+	using builder_styled_widget::build;
+
+	virtual std::unique_ptr<widget> build() const override;
+
+	std::string history;
+
+	std::size_t max_input_length;
+
+	t_string hint_text;
+	std::string hint_image;
+};
+
+} // namespace implementation
+
+// }------------ END --------------
+
+} // namespace gui2
