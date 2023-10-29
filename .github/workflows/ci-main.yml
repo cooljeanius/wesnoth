@@ -17,23 +17,34 @@ jobs:
         CLICOLOR_FORCE: 1
 
     steps:
-      - { uses: actions/checkout@v3, with: { submodules: "recursive" } }
+      - uses: actions/checkout@v4
 
+      - name: Set git safe directory
+        if: success() || failure()
+        run: |
+          git config --global --add safe.directory '*'
       - name: Check for invalid characters
+        if: success() || failure()
         run: |
           ./utils/CI/check_utf8.sh
           ./utils/CI/utf8_bom_dog.sh
       - name: Whitespace and WML indentation check
         if: success() || failure()
-        run: |
-          git config --global --add safe.directory '*'
-          ./utils/CI/fix_whitespace.sh; git status; [ "$(git status --short | wc -l)" = 0 ]
+        run: ./utils/CI/fix_whitespace.sh; git status; git diff --exit-code
       - name: Run luacheck
         if: success() || failure()
         run: luacheck .
       - name: Doxygen check
         if: success() || failure()
         run: doxygen doc/doxygen/Doxyfile
+
+  copyright: # check takes a bit longer and does not need to run in docker
+    runs-on: ubuntu-latest
+    steps:
+      - { uses: actions/checkout@v4, with: { fetch-depth: 50 } }
+
+      - name: Copyright check
+        run: ./update_copyrights --output=
 
   ubuntu:
     strategy:

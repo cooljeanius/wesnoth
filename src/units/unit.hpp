@@ -94,6 +94,7 @@ public:
 	const unit_ability& front() const  { return cfgs_.front(); }
 	unit_ability&       back()         { return cfgs_.back();  }
 	const unit_ability& back()  const  { return cfgs_.back();  }
+	std::size_t         size()         { return cfgs_.size();  }
 
 	iterator erase(const iterator& erase_it)  { return cfgs_.erase(erase_it); }
 	iterator erase(const iterator& first, const iterator& last)  { return cfgs_.erase(first, last); }
@@ -1559,6 +1560,14 @@ public:
 		return halo_.value_or("");
 	}
 
+	const std::vector<std::string> halo_or_icon_abilities(const std::string& image_type) const;
+
+	/** Get the [halo] abilities halo image(s). */
+	const std::vector<std::string> halo_abilities() const
+	{
+		return halo_or_icon_abilities("halo");
+	}
+
 	/** Set the unit's halo image. */
 	void set_image_halo(const std::string& halo);
 
@@ -1602,6 +1611,11 @@ public:
 		return overlays_;
 	}
 
+	/** Get the [overlay] ability overlay images. */
+	const std::vector<std::string> overlays_abilities() const
+	{
+		return halo_or_icon_abilities("overlay");
+	}
 	/**
 	 * Color for this unit's *current* hitpoints.
 	 *
