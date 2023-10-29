@@ -1,0 +1,585 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17701"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="NSApplication"/>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject">
+            <connections>
+                <outlet property="delegate" destination="194" id="515"/>
+            </connections>
+        </customObject>
+        <menu title="SDLMain" systemMenu="main" id="29" userLabel="MainMenu">
+            <items>
+                <menuItem title="The Battle for Wesnoth" id="56">
+                    <menu key="submenu" title="The Battle for Wesnoth" systemMenu="apple" id="57">
+                        <items>
+                            <menuItem title="About The Battle for Wesnoth" id="58">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="orderFrontStandardAboutPanel:" target="-2" id="142"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="196">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="The Battle for Wesnoth Homepage" id="493">
+                                <connections>
+                                    <action selector="openHomepage:" target="194" id="497"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Changelog" id="499">
+                                <connections>
+                                    <action selector="openChangelog:" target="194" id="JUe-Ce-ykr"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="License" id="494">
+                                <connections>
+                                    <action selector="makeKeyAndOrderFront:" target="485" id="496"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="495">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Hide The Battle for Wesnoth" keyEquivalent="h" id="134">
+                                <connections>
+                                    <action selector="hide:" target="-2" id="152"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Hide Others" keyEquivalent="h" id="145">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="hideOtherApplications:" target="-2" id="146"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Show All" id="150">
+                                <connections>
+                                    <action selector="unhideAllApplications:" target="-2" id="153"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="149">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Quit The Battle for Wesnoth" keyEquivalent="q" id="136">
+                                <connections>
+                                    <action selector="terminate:" target="-1" id="292"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="File" id="438">
+                    <menu key="submenu" title="File" id="439">
+                        <items>
+                            <menuItem title="Close" id="441">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="performClose:" target="-1" id="459"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Edit" id="381">
+                    <menu key="submenu" title="Edit" id="382">
+                        <items>
+                            <menuItem title="Cut" keyEquivalent="x" id="402">
+                                <connections>
+                                    <action selector="cut:" target="-1" id="420"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Copy" keyEquivalent="c" id="403">
+                                <connections>
+                                    <action selector="copy:" target="-1" id="409"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Paste" keyEquivalent="v" id="408">
+                                <connections>
+                                    <action selector="paste:" target="-1" id="414"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Delete" id="384">
+                                <connections>
+                                    <action selector="delete:" target="-1" id="415"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Select All" keyEquivalent="a" id="385">
+                                <connections>
+                                    <action selector="selectAll:" target="-1" id="421"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Window" id="284">
+                    <menu key="submenu" title="Window" systemMenu="window" id="285">
+                        <items>
+                            <menuItem title="Minimize" keyEquivalent="m" id="283">
+                                <connections>
+                                    <action selector="performMiniaturize:" target="-1" id="288"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+            </items>
+            <point key="canvasLocation" x="139" y="154"/>
+        </menu>
+        <customObject id="194" userLabel="SDLMain" customClass="SDLMain"/>
+        <customObject id="253" userLabel="Font Manager" customClass="NSFontManager"/>
+        <window title="License" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="485" userLabel="Window (License)">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="471" y="210" width="475" height="420"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1440"/>
+            <view key="contentView" id="486">
+                <rect key="frame" x="0.0" y="0.0" width="475" height="420"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <scrollView fixedFrame="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="489">
+                        <rect key="frame" x="20" y="20" width="435" height="380"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <clipView key="contentView" drawsBackground="NO" id="e1k-1y-EyP">
+                            <rect key="frame" x="1" y="1" width="433" height="378"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                            <subviews>
+                                <textView editable="NO" importsGraphics="NO" verticallyResizable="YES" usesFontPanel="YES" findStyle="panel" continuousSpellChecking="YES" usesRuler="YES" spellingCorrection="YES" smartInsertDelete="YES" id="492">
+                                    <rect key="frame" x="0.0" y="-12" width="433" height="4272"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    <size key="minSize" width="433" height="378"/>
+                                    <size key="maxSize" width="853" height="10000000"/>
+                                    <attributedString key="textStorage">
+                                        <fragment>
+                                            <mutableString key="content" base64-UTF8="YES">
+CQkgICAgR05VIEdFTkVSQUwgUFVCTElDIExJQ0VOU0UKCQkgICAgICAgVmVyc2lvbiAyLCBKdW5lIDE5
+OTEKCiBDb3B5cmlnaHQgKEMpIDE5ODksIDE5OTEgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uLCBJbmMu
+CiAgICAgICAgICAgICAgICAgICAgICAgNTEgRnJhbmtsaW4gU3QsIEZpZnRoIEZsb29yLCBCb3N0b24s
+IE1BICAwMjExMC0xMzAxICBVU0EKIEV2ZXJ5b25lIGlzIHBlcm1pdHRlZCB0byBjb3B5IGFuZCBkaXN0
+cmlidXRlIHZlcmJhdGltIGNvcGllcwogb2YgdGhpcyBsaWNlbnNlIGRvY3VtZW50LCBidXQgY2hhbmdp
+bmcgaXQgaXMgbm90IGFsbG93ZWQuCgoJCQkgICAgUHJlYW1ibGUKCiAgVGhlIGxpY2Vuc2VzIGZvciBt
+b3N0IHNvZnR3YXJlIGFyZSBkZXNpZ25lZCB0byB0YWtlIGF3YXkgeW91cgpmcmVlZG9tIHRvIHNoYXJl
+IGFuZCBjaGFuZ2UgaXQuICBCeSBjb250cmFzdCwgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYwpMaWNlbnNl
+IGlzIGludGVuZGVkIHRvIGd1YXJhbnRlZSB5b3VyIGZyZWVkb20gdG8gc2hhcmUgYW5kIGNoYW5nZSBm
+cmVlCnNvZnR3YXJlLS10byBtYWtlIHN1cmUgdGhlIHNvZnR3YXJlIGlzIGZyZWUgZm9yIGFsbCBpdHMg
+dXNlcnMuICBUaGlzCkdlbmVyYWwgUHVibGljIExpY2Vuc2UgYXBwbGllcyB0byBtb3N0IG9mIHRoZSBG
+cmVlIFNvZnR3YXJlCkZvdW5kYXRpb24ncyBzb2Z0d2FyZSBhbmQgdG8gYW55IG90aGVyIHByb2dyYW0g
+d2hvc2UgYXV0aG9ycyBjb21taXQgdG8KdXNpbmcgaXQuICAoU29tZSBvdGhlciBGcmVlIFNvZnR3YXJl
+IEZvdW5kYXRpb24gc29mdHdhcmUgaXMgY292ZXJlZCBieQp0aGUgR05VIExpYnJhcnkgR2VuZXJhbCBQ
+dWJsaWMgTGljZW5zZSBpbnN0ZWFkLikgIFlvdSBjYW4gYXBwbHkgaXQgdG8KeW91ciBwcm9ncmFtcywg
+dG9vLgoKICBXaGVuIHdlIHNwZWFrIG9mIGZyZWUgc29mdHdhcmUsIHdlIGFyZSByZWZlcnJpbmcgdG8g
+ZnJlZWRvbSwgbm90CnByaWNlLiAgT3VyIEdlbmVyYWwgUHVibGljIExpY2Vuc2VzIGFyZSBkZXNpZ25l
+ZCB0byBtYWtlIHN1cmUgdGhhdCB5b3UKaGF2ZSB0aGUgZnJlZWRvbSB0byBkaXN0cmlidXRlIGNvcGll
+cyBvZiBmcmVlIHNvZnR3YXJlIChhbmQgY2hhcmdlIGZvcgp0aGlzIHNlcnZpY2UgaWYgeW91IHdpc2gp
+LCB0aGF0IHlvdSByZWNlaXZlIHNvdXJjZSBjb2RlIG9yIGNhbiBnZXQgaXQKaWYgeW91IHdhbnQgaXQs
+IHRoYXQgeW91IGNhbiBjaGFuZ2UgdGhlIHNvZnR3YXJlIG9yIHVzZSBwaWVjZXMgb2YgaXQKaW4gbmV3
+IGZyZWUgcHJvZ3JhbXM7IGFuZCB0aGF0IHlvdSBrbm93IHlvdSBjYW4gZG8gdGhlc2UgdGhpbmdzLgoK
+ICBUbyBwcm90ZWN0IHlvdXIgcmlnaHRzLCB3ZSBuZWVkIHRvIG1ha2UgcmVzdHJpY3Rpb25zIHRoYXQg
+Zm9yYmlkCmFueW9uZSB0byBkZW55IHlvdSB0aGVzZSByaWdodHMgb3IgdG8gYXNrIHlvdSB0byBzdXJy
+ZW5kZXIgdGhlIHJpZ2h0cy4KVGhlc2UgcmVzdHJpY3Rpb25zIHRyYW5zbGF0ZSB0byBjZXJ0YWluIHJl
+c3BvbnNpYmlsaXRpZXMgZm9yIHlvdSBpZiB5b3UKZGlzdHJpYnV0ZSBjb3BpZXMgb2YgdGhlIHNvZnR3
+YXJlLCBvciBpZiB5b3UgbW9kaWZ5IGl0LgoKICBGb3IgZXhhbXBsZSwgaWYgeW91IGRpc3RyaWJ1dGUg
+Y29waWVzIG9mIHN1Y2ggYSBwcm9ncmFtLCB3aGV0aGVyCmdyYXRpcyBvciBmb3IgYSBmZWUsIHlvdSBt
+dXN0IGdpdmUgdGhlIHJlY2lwaWVudHMgYWxsIHRoZSByaWdodHMgdGhhdAp5b3UgaGF2ZS4gIFlvdSBt
+dXN0IG1ha2Ugc3VyZSB0aGF0IHRoZXksIHRvbywgcmVjZWl2ZSBvciBjYW4gZ2V0IHRoZQpzb3VyY2Ug
+Y29kZS4gIEFuZCB5b3UgbXVzdCBzaG93IHRoZW0gdGhlc2UgdGVybXMgc28gdGhleSBrbm93IHRoZWly
+CnJpZ2h0cy4KCiAgV2UgcHJvdGVjdCB5b3VyIHJpZ2h0cyB3aXRoIHR3byBzdGVwczogKDEpIGNvcHly
+aWdodCB0aGUgc29mdHdhcmUsIGFuZAooMikgb2ZmZXIgeW91IHRoaXMgbGljZW5zZSB3aGljaCBnaXZl
+cyB5b3UgbGVnYWwgcGVybWlzc2lvbiB0byBjb3B5LApkaXN0cmlidXRlIGFuZC9vciBtb2RpZnkgdGhl
+IHNvZnR3YXJlLgoKICBBbHNvLCBmb3IgZWFjaCBhdXRob3IncyBwcm90ZWN0aW9uIGFuZCBvdXJzLCB3
+ZSB3YW50IHRvIG1ha2UgY2VydGFpbgp0aGF0IGV2ZXJ5b25lIHVuZGVyc3RhbmRzIHRoYXQgdGhlcmUg
+aXMgbm8gd2FycmFudHkgZm9yIHRoaXMgZnJlZQpzb2Z0d2FyZS4gIElmIHRoZSBzb2Z0d2FyZSBpcyBt
+b2RpZmllZCBieSBzb21lb25lIGVsc2UgYW5kIHBhc3NlZCBvbiwgd2UKd2FudCBpdHMgcmVjaXBpZW50
+cyB0byBrbm93IHRoYXQgd2hhdCB0aGV5IGhhdmUgaXMgbm90IHRoZSBvcmlnaW5hbCwgc28KdGhhdCBh
+bnkgcHJvYmxlbXMgaW50cm9kdWNlZCBieSBvdGhlcnMgd2lsbCBub3QgcmVmbGVjdCBvbiB0aGUgb3Jp
+Z2luYWwKYXV0aG9ycycgcmVwdXRhdGlvbnMuCgogIEZpbmFsbHksIGFueSBmcmVlIHByb2dyYW0gaXMg
+dGhyZWF0ZW5lZCBjb25zdGFudGx5IGJ5IHNvZnR3YXJlCnBhdGVudHMuICBXZSB3aXNoIHRvIGF2b2lk
+IHRoZSBkYW5nZXIgdGhhdCByZWRpc3RyaWJ1dG9ycyBvZiBhIGZyZWUKcHJvZ3JhbSB3aWxsIGluZGl2
+aWR1YWxseSBvYnRhaW4gcGF0ZW50IGxpY2Vuc2VzLCBpbiBlZmZlY3QgbWFraW5nIHRoZQpwcm9ncmFt
+IHByb3ByaWV0YXJ5LiAgVG8gcHJldmVudCB0aGlzLCB3ZSBoYXZlIG1hZGUgaXQgY2xlYXIgdGhhdCBh
+bnkKcGF0ZW50IG11c3QgYmUgbGljZW5zZWQgZm9yIGV2ZXJ5b25lJ3MgZnJlZSB1c2Ugb3Igbm90IGxp
+Y2Vuc2VkIGF0IGFsbC4KCiAgVGhlIHByZWNpc2UgdGVybXMgYW5kIGNvbmRpdGlvbnMgZm9yIGNvcHlp
+bmcsIGRpc3RyaWJ1dGlvbiBhbmQKbW9kaWZpY2F0aW9uIGZvbGxvdy4KDAoJCSAgICBHTlUgR0VORVJB
+TCBQVUJMSUMgTElDRU5TRQogICBURVJNUyBBTkQgQ09ORElUSU9OUyBGT1IgQ09QWUlORywgRElTVFJJ
+QlVUSU9OIEFORCBNT0RJRklDQVRJT04KCiAgMC4gVGhpcyBMaWNlbnNlIGFwcGxpZXMgdG8gYW55IHBy
+b2dyYW0gb3Igb3RoZXIgd29yayB3aGljaCBjb250YWlucwphIG5vdGljZSBwbGFjZWQgYnkgdGhlIGNv
+cHlyaWdodCBob2xkZXIgc2F5aW5nIGl0IG1heSBiZSBkaXN0cmlidXRlZAp1bmRlciB0aGUgdGVybXMg
+b2YgdGhpcyBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlLiAgVGhlICJQcm9ncmFtIiwgYmVsb3csCnJlZmVy
+cyB0byBhbnkgc3VjaCBwcm9ncmFtIG9yIHdvcmssIGFuZCBhICJ3b3JrIGJhc2VkIG9uIHRoZSBQcm9n
+cmFtIgptZWFucyBlaXRoZXIgdGhlIFByb2dyYW0gb3IgYW55IGRlcml2YXRpdmUgd29yayB1bmRlciBj
+b3B5cmlnaHQgbGF3Ogp0aGF0IGlzIHRvIHNheSwgYSB3b3JrIGNvbnRhaW5pbmcgdGhlIFByb2dyYW0g
+b3IgYSBwb3J0aW9uIG9mIGl0LAplaXRoZXIgdmVyYmF0aW0gb3Igd2l0aCBtb2RpZmljYXRpb25zIGFu
+ZC9vciB0cmFuc2xhdGVkIGludG8gYW5vdGhlcgpsYW5ndWFnZS4gIChIZXJlaW5hZnRlciwgdHJhbnNs
+YXRpb24gaXMgaW5jbHVkZWQgd2l0aG91dCBsaW1pdGF0aW9uIGluCnRoZSB0ZXJtICJtb2RpZmljYXRp
+b24iLikgIEVhY2ggbGljZW5zZWUgaXMgYWRkcmVzc2VkIGFzICJ5b3UiLgoKQWN0aXZpdGllcyBvdGhl
+ciB0aGFuIGNvcHlpbmcsIGRpc3RyaWJ1dGlvbiBhbmQgbW9kaWZpY2F0aW9uIGFyZSBub3QKY292ZXJl
+ZCBieSB0aGlzIExpY2Vuc2U7IHRoZXkgYXJlIG91dHNpZGUgaXRzIHNjb3BlLiAgVGhlIGFjdCBvZgpy
+dW5uaW5nIHRoZSBQcm9ncmFtIGlzIG5vdCByZXN0cmljdGVkLCBhbmQgdGhlIG91dHB1dCBmcm9tIHRo
+ZSBQcm9ncmFtCmlzIGNvdmVyZWQgb25seSBpZiBpdHMgY29udGVudHMgY29uc3RpdHV0ZSBhIHdvcmsg
+YmFzZWQgb24gdGhlClByb2dyYW0gKGluZGVwZW5kZW50IG9mIGhhdmluZyBiZWVuIG1hZGUgYnkgcnVu
+bmluZyB0aGUgUHJvZ3JhbSkuCldoZXRoZXIgdGhhdCBpcyB0cnVlIGRlcGVuZHMgb24gd2hhdCB0aGUg
+UHJvZ3JhbSBkb2VzLgoKICAxLiBZb3UgbWF5IGNvcHkgYW5kIGRpc3RyaWJ1dGUgdmVyYmF0aW0gY29w
+aWVzIG9mIHRoZSBQcm9ncmFtJ3MKc291cmNlIGNvZGUgYXMgeW91IHJlY2VpdmUgaXQsIGluIGFueSBt
+ZWRpdW0sIHByb3ZpZGVkIHRoYXQgeW91CmNvbnNwaWN1b3VzbHkgYW5kIGFwcHJvcHJpYXRlbHkgcHVi
+bGlzaCBvbiBlYWNoIGNvcHkgYW4gYXBwcm9wcmlhdGUKY29weXJpZ2h0IG5vdGljZSBhbmQgZGlzY2xh
+aW1lciBvZiB3YXJyYW50eTsga2VlcCBpbnRhY3QgYWxsIHRoZQpub3RpY2VzIHRoYXQgcmVmZXIgdG8g
+dGhpcyBMaWNlbnNlIGFuZCB0byB0aGUgYWJzZW5jZSBvZiBhbnkgd2FycmFudHk7CmFuZCBnaXZlIGFu
+eSBvdGhlciByZWNpcGllbnRzIG9mIHRoZSBQcm9ncmFtIGEgY29weSBvZiB0aGlzIExpY2Vuc2UKYWxv
+bmcgd2l0aCB0aGUgUHJvZ3JhbS4KCllvdSBtYXkgY2hhcmdlIGEgZmVlIGZvciB0aGUgcGh5c2ljYWwg
+YWN0IG9mIHRyYW5zZmVycmluZyBhIGNvcHksIGFuZAp5b3UgbWF5IGF0IHlvdXIgb3B0aW9uIG9mZmVy
+IHdhcnJhbnR5IHByb3RlY3Rpb24gaW4gZXhjaGFuZ2UgZm9yIGEgZmVlLgoKICAyLiBZb3UgbWF5IG1v
+ZGlmeSB5b3VyIGNvcHkgb3IgY29waWVzIG9mIHRoZSBQcm9ncmFtIG9yIGFueSBwb3J0aW9uCm9mIGl0
+LCB0aHVzIGZvcm1pbmcgYSB3b3JrIGJhc2VkIG9uIHRoZSBQcm9ncmFtLCBhbmQgY29weSBhbmQKZGlz
+dHJpYnV0ZSBzdWNoIG1vZGlmaWNhdGlvbnMgb3Igd29yayB1bmRlciB0aGUgdGVybXMgb2YgU2VjdGlv
+biAxCmFib3ZlLCBwcm92aWRlZCB0aGF0IHlvdSBhbHNvIG1lZXQgYWxsIG9mIHRoZXNlIGNvbmRpdGlv
+bnM6CgogICAgYSkgWW91IG11c3QgY2F1c2UgdGhlIG1vZGlmaWVkIGZpbGVzIHRvIGNhcnJ5IHByb21p
+bmVudCBub3RpY2VzCiAgICBzdGF0aW5nIHRoYXQgeW91IGNoYW5nZWQgdGhlIGZpbGVzIGFuZCB0aGUg
+ZGF0ZSBvZiBhbnkgY2hhbmdlLgoKICAgIGIpIFlvdSBtdXN0IGNhdXNlIGFueSB3b3JrIHRoYXQgeW91
+IGRpc3RyaWJ1dGUgb3IgcHVibGlzaCwgdGhhdCBpbgogICAgd2hvbGUgb3IgaW4gcGFydCBjb250YWlu
+cyBvciBpcyBkZXJpdmVkIGZyb20gdGhlIFByb2dyYW0gb3IgYW55CiAgICBwYXJ0IHRoZXJlb2YsIHRv
+IGJlIGxpY2Vuc2VkIGFzIGEgd2hvbGUgYXQgbm8gY2hhcmdlIHRvIGFsbCB0aGlyZAogICAgcGFydGll
+cyB1bmRlciB0aGUgdGVybXMgb2YgdGhpcyBMaWNlbnNlLgoKICAgIGMpIElmIHRoZSBtb2RpZmllZCBw
+cm9ncmFtIG5vcm1hbGx5IHJlYWRzIGNvbW1hbmRzIGludGVyYWN0aXZlbHkKICAgIHdoZW4gcnVuLCB5
+b3UgbXVzdCBjYXVzZSBpdCwgd2hlbiBzdGFydGVkIHJ1bm5pbmcgZm9yIHN1Y2gKICAgIGludGVyYWN0
+aXZlIHVzZSBpbiB0aGUgbW9zdCBvcmRpbmFyeSB3YXksIHRvIHByaW50IG9yIGRpc3BsYXkgYW4KICAg
+IGFubm91bmNlbWVudCBpbmNsdWRpbmcgYW4gYXBwcm9wcmlhdGUgY29weXJpZ2h0IG5vdGljZSBhbmQg
+YQogICAgbm90aWNlIHRoYXQgdGhlcmUgaXMgbm8gd2FycmFudHkgKG9yIGVsc2UsIHNheWluZyB0aGF0
+IHlvdSBwcm92aWRlCiAgICBhIHdhcnJhbnR5KSBhbmQgdGhhdCB1c2VycyBtYXkgcmVkaXN0cmlidXRl
+IHRoZSBwcm9ncmFtIHVuZGVyCiAgICB0aGVzZSBjb25kaXRpb25zLCBhbmQgdGVsbGluZyB0aGUgdXNl
+ciBob3cgdG8gdmlldyBhIGNvcHkgb2YgdGhpcwogICAgTGljZW5zZS4gIChFeGNlcHRpb246IGlmIHRo
+ZSBQcm9ncmFtIGl0c2VsZiBpcyBpbnRlcmFjdGl2ZSBidXQKICAgIGRvZXMgbm90IG5vcm1hbGx5IHBy
+aW50IHN1Y2ggYW4gYW5ub3VuY2VtZW50LCB5b3VyIHdvcmsgYmFzZWQgb24KICAgIHRoZSBQcm9ncmFt
+IGlzIG5vdCByZXF1aXJlZCB0byBwcmludCBhbiBhbm5vdW5jZW1lbnQuKQoMClRoZXNlIHJlcXVpcmVt
+ZW50cyBhcHBseSB0byB0aGUgbW9kaWZpZWQgd29yayBhcyBhIHdob2xlLiAgSWYKaWRlbnRpZmlhYmxl
+IHNlY3Rpb25zIG9mIHRoYXQgd29yayBhcmUgbm90IGRlcml2ZWQgZnJvbSB0aGUgUHJvZ3JhbSwKYW5k
+IGNhbiBiZSByZWFzb25hYmx5IGNvbnNpZGVyZWQgaW5kZXBlbmRlbnQgYW5kIHNlcGFyYXRlIHdvcmtz
+IGluCnRoZW1zZWx2ZXMsIHRoZW4gdGhpcyBMaWNlbnNlLCBhbmQgaXRzIHRlcm1zLCBkbyBub3QgYXBw
+bHkgdG8gdGhvc2UKc2VjdGlvbnMgd2hlbiB5b3UgZGlzdHJpYnV0ZSB0aGVtIGFzIHNlcGFyYXRlIHdv
+cmtzLiAgQnV0IHdoZW4geW91CmRpc3RyaWJ1dGUgdGhlIHNhbWUgc2VjdGlvbnMgYXMgcGFydCBvZiBh
+IHdob2xlIHdoaWNoIGlzIGEgd29yayBiYXNlZApvbiB0aGUgUHJvZ3JhbSwgdGhlIGRpc3RyaWJ1dGlv
+biBvZiB0aGUgd2hvbGUgbXVzdCBiZSBvbiB0aGUgdGVybXMgb2YKdGhpcyBMaWNlbnNlLCB3aG9zZSBw
+ZXJtaXNzaW9ucyBmb3Igb3RoZXIgbGljZW5zZWVzIGV4dGVuZCB0byB0aGUKZW50aXJlIHdob2xlLCBh
+bmQgdGh1cyB0byBlYWNoIGFuZCBldmVyeSBwYXJ0IHJlZ2FyZGxlc3Mgb2Ygd2hvIHdyb3RlIGl0LgoK
+VGh1cywgaXQgaXMgbm90IHRoZSBpbnRlbnQgb2YgdGhpcyBzZWN0aW9uIHRvIGNsYWltIHJpZ2h0cyBv
+ciBjb250ZXN0CnlvdXIgcmlnaHRzIHRvIHdvcmsgd3JpdHRlbiBlbnRpcmVseSBieSB5b3U7IHJhdGhl
+ciwgdGhlIGludGVudCBpcyB0bwpleGVyY2lzZSB0aGUgcmlnaHQgdG8gY29udHJvbCB0aGUgZGlzdHJp
+YnV0aW9uIG9mIGRlcml2YXRpdmUgb3IKY29sbGVjdGl2ZSB3b3JrcyBiYXNlZCBvbiB0aGUgUHJvZ3Jh
+bS4KCkluIGFkZGl0aW9uLCBtZXJlIGFnZ3JlZ2F0aW9uIG9mIGFub3RoZXIgd29yayBub3QgYmFzZWQg
+b24gdGhlIFByb2dyYW0Kd2l0aCB0aGUgUHJvZ3JhbSAob3Igd2l0aCBhIHdvcmsgYmFzZWQgb24gdGhl
+IFByb2dyYW0pIG9uIGEgdm9sdW1lIG9mCmEgc3RvcmFnZSBvciBkaXN0cmlidXRpb24gbWVkaXVtIGRv
+ZXMgbm90IGJyaW5nIHRoZSBvdGhlciB3b3JrIHVuZGVyCnRoZSBzY29wZSBvZiB0aGlzIExpY2Vuc2Uu
+CgogIDMuIFlvdSBtYXkgY29weSBhbmQgZGlzdHJpYnV0ZSB0aGUgUHJvZ3JhbSAob3IgYSB3b3JrIGJh
+c2VkIG9uIGl0LAp1bmRlciBTZWN0aW9uIDIpIGluIG9iamVjdCBjb2RlIG9yIGV4ZWN1dGFibGUgZm9y
+bSB1bmRlciB0aGUgdGVybXMgb2YKU2VjdGlvbnMgMSBhbmQgMiBhYm92ZSBwcm92aWRlZCB0aGF0IHlv
+dSBhbHNvIGRvIG9uZSBvZiB0aGUgZm9sbG93aW5nOgoKICAgIGEpIEFjY29tcGFueSBpdCB3aXRoIHRo
+ZSBjb21wbGV0ZSBjb3JyZXNwb25kaW5nIG1hY2hpbmUtcmVhZGFibGUKICAgIHNvdXJjZSBjb2RlLCB3
+aGljaCBtdXN0IGJlIGRpc3RyaWJ1dGVkIHVuZGVyIHRoZSB0ZXJtcyBvZiBTZWN0aW9ucwogICAgMSBh
+bmQgMiBhYm92ZSBvbiBhIG1lZGl1bSBjdXN0b21hcmlseSB1c2VkIGZvciBzb2Z0d2FyZSBpbnRlcmNo
+YW5nZTsgb3IsCgogICAgYikgQWNjb21wYW55IGl0IHdpdGggYSB3cml0dGVuIG9mZmVyLCB2YWxpZCBm
+b3IgYXQgbGVhc3QgdGhyZWUKICAgIHllYXJzLCB0byBnaXZlIGFueSB0aGlyZCBwYXJ0eSwgZm9yIGEg
+Y2hhcmdlIG5vIG1vcmUgdGhhbiB5b3VyCiAgICBjb3N0IG9mIHBoeXNpY2FsbHkgcGVyZm9ybWluZyBz
+b3VyY2UgZGlzdHJpYnV0aW9uLCBhIGNvbXBsZXRlCiAgICBtYWNoaW5lLXJlYWRhYmxlIGNvcHkgb2Yg
+dGhlIGNvcnJlc3BvbmRpbmcgc291cmNlIGNvZGUsIHRvIGJlCiAgICBkaXN0cmlidXRlZCB1bmRlciB0
+aGUgdGVybXMgb2YgU2VjdGlvbnMgMSBhbmQgMiBhYm92ZSBvbiBhIG1lZGl1bQogICAgY3VzdG9tYXJp
+bHkgdXNlZCBmb3Igc29mdHdhcmUgaW50ZXJjaGFuZ2U7IG9yLAoKICAgIGMpIEFjY29tcGFueSBpdCB3
+aXRoIHRoZSBpbmZvcm1hdGlvbiB5b3UgcmVjZWl2ZWQgYXMgdG8gdGhlIG9mZmVyCiAgICB0byBkaXN0
+cmlidXRlIGNvcnJlc3BvbmRpbmcgc291cmNlIGNvZGUuICAoVGhpcyBhbHRlcm5hdGl2ZSBpcwogICAg
+YWxsb3dlZCBvbmx5IGZvciBub25jb21tZXJjaWFsIGRpc3RyaWJ1dGlvbiBhbmQgb25seSBpZiB5b3UK
+ICAgIHJlY2VpdmVkIHRoZSBwcm9ncmFtIGluIG9iamVjdCBjb2RlIG9yIGV4ZWN1dGFibGUgZm9ybSB3
+aXRoIHN1Y2gKICAgIGFuIG9mZmVyLCBpbiBhY2NvcmQgd2l0aCBTdWJzZWN0aW9uIGIgYWJvdmUuKQoK
+VGhlIHNvdXJjZSBjb2RlIGZvciBhIHdvcmsgbWVhbnMgdGhlIHByZWZlcnJlZCBmb3JtIG9mIHRoZSB3
+b3JrIGZvcgptYWtpbmcgbW9kaWZpY2F0aW9ucyB0byBpdC4gIEZvciBhbiBleGVjdXRhYmxlIHdvcmss
+IGNvbXBsZXRlIHNvdXJjZQpjb2RlIG1lYW5zIGFsbCB0aGUgc291cmNlIGNvZGUgZm9yIGFsbCBtb2R1
+bGVzIGl0IGNvbnRhaW5zLCBwbHVzIGFueQphc3NvY2lhdGVkIGludGVyZmFjZSBkZWZpbml0aW9uIGZp
+bGVzLCBwbHVzIHRoZSBzY3JpcHRzIHVzZWQgdG8KY29udHJvbCBjb21waWxhdGlvbiBhbmQgaW5zdGFs
+bGF0aW9uIG9mIHRoZSBleGVjdXRhYmxlLiAgSG93ZXZlciwgYXMgYQpzcGVjaWFsIGV4Y2VwdGlvbiwg
+dGhlIHNvdXJjZSBjb2RlIGRpc3RyaWJ1dGVkIG5lZWQgbm90IGluY2x1ZGUKYW55dGhpbmcgdGhhdCBp
+cyBub3JtYWxseSBkaXN0cmlidXRlZCAoaW4gZWl0aGVyIHNvdXJjZSBvciBiaW5hcnkKZm9ybSkgd2l0
+aCB0aGUgbWFqb3IgY29tcG9uZW50cyAoY29tcGlsZXIsIGtlcm5lbCwgYW5kIHNvIG9uKSBvZiB0aGUK
+b3BlcmF0aW5nIHN5c3RlbSBvbiB3aGljaCB0aGUgZXhlY3V0YWJsZSBydW5zLCB1bmxlc3MgdGhhdCBj
+b21wb25lbnQKaXRzZWxmIGFjY29tcGFuaWVzIHRoZSBleGVjdXRhYmxlLgoKSWYgZGlzdHJpYnV0aW9u
+IG9mIGV4ZWN1dGFibGUgb3Igb2JqZWN0IGNvZGUgaXMgbWFkZSBieSBvZmZlcmluZwphY2Nlc3MgdG8g
+Y29weSBmcm9tIGEgZGVzaWduYXRlZCBwbGFjZSwgdGhlbiBvZmZlcmluZyBlcXVpdmFsZW50CmFjY2Vz
+cyB0byBjb3B5IHRoZSBzb3VyY2UgY29kZSBmcm9tIHRoZSBzYW1lIHBsYWNlIGNvdW50cyBhcwpkaXN0
+cmlidXRpb24gb2YgdGhlIHNvdXJjZSBjb2RlLCBldmVuIHRob3VnaCB0aGlyZCBwYXJ0aWVzIGFyZSBu
+b3QKY29tcGVsbGVkIHRvIGNvcHkgdGhlIHNvdXJjZSBhbG9uZyB3aXRoIHRoZSBvYmplY3QgY29kZS4K
+DAogIDQuIFlvdSBtYXkgbm90IGNvcHksIG1vZGlmeSwgc3VibGljZW5zZSwgb3IgZGlzdHJpYnV0ZSB0
+aGUgUHJvZ3JhbQpleGNlcHQgYXMgZXhwcmVzc2x5IHByb3ZpZGVkIHVuZGVyIHRoaXMgTGljZW5zZS4g
+IEFueSBhdHRlbXB0Cm90aGVyd2lzZSB0byBjb3B5LCBtb2RpZnksIHN1YmxpY2Vuc2Ugb3IgZGlzdHJp
+YnV0ZSB0aGUgUHJvZ3JhbSBpcwp2b2lkLCBhbmQgd2lsbCBhdXRvbWF0aWNhbGx5IHRlcm1pbmF0ZSB5
+b3VyIHJpZ2h0cyB1bmRlciB0aGlzIExpY2Vuc2UuCkhvd2V2ZXIsIHBhcnRpZXMgd2hvIGhhdmUgcmVj
+ZWl2ZWQgY29waWVzLCBvciByaWdodHMsIGZyb20geW91IHVuZGVyCnRoaXMgTGljZW5zZSB3aWxsIG5v
+dCBoYXZlIHRoZWlyIGxpY2Vuc2VzIHRlcm1pbmF0ZWQgc28gbG9uZyBhcyBzdWNoCnBhcnRpZXMgcmVt
+YWluIGluIGZ1bGwgY29tcGxpYW5jZS4KCiAgNS4gWW91IGFyZSBub3QgcmVxdWlyZWQgdG8gYWNjZXB0
+IHRoaXMgTGljZW5zZSwgc2luY2UgeW91IGhhdmUgbm90CnNpZ25lZCBpdC4gIEhvd2V2ZXIsIG5vdGhp
+bmcgZWxzZSBncmFudHMgeW91IHBlcm1pc3Npb24gdG8gbW9kaWZ5IG9yCmRpc3RyaWJ1dGUgdGhlIFBy
+b2dyYW0gb3IgaXRzIGRlcml2YXRpdmUgd29ya3MuICBUaGVzZSBhY3Rpb25zIGFyZQpwcm9oaWJpdGVk
+IGJ5IGxhdyBpZiB5b3UgZG8gbm90IGFjY2VwdCB0aGlzIExpY2Vuc2UuICBUaGVyZWZvcmUsIGJ5Cm1v
+ZGlmeWluZyBvciBkaXN0cmlidXRpbmcgdGhlIFByb2dyYW0gKG9yIGFueSB3b3JrIGJhc2VkIG9uIHRo
+ZQpQcm9ncmFtKSwgeW91IGluZGljYXRlIHlvdXIgYWNjZXB0YW5jZSBvZiB0aGlzIExpY2Vuc2UgdG8g
+ZG8gc28sIGFuZAphbGwgaXRzIHRlcm1zIGFuZCBjb25kaXRpb25zIGZvciBjb3B5aW5nLCBkaXN0cmli
+dXRpbmcgb3IgbW9kaWZ5aW5nCnRoZSBQcm9ncmFtIG9yIHdvcmtzIGJhc2VkIG9uIGl0LgoKICA2LiBF
+YWNoIHRpbWUgeW91IHJlZGlzdHJpYnV0ZSB0aGUgUHJvZ3JhbSAob3IgYW55IHdvcmsgYmFzZWQgb24g
+dGhlClByb2dyYW0pLCB0aGUgcmVjaXBpZW50IGF1dG9tYXRpY2FsbHkgcmVjZWl2ZXMgYSBsaWNlbnNl
+IGZyb20gdGhlCm9yaWdpbmFsIGxpY2Vuc29yIHRvIGNvcHksIGRpc3RyaWJ1dGUgb3IgbW9kaWZ5IHRo
+ZSBQcm9ncmFtIHN1YmplY3QgdG8KdGhlc2UgdGVybXMgYW5kIGNvbmRpdGlvbnMuICBZb3UgbWF5IG5v
+dCBpbXBvc2UgYW55IGZ1cnRoZXIKcmVzdHJpY3Rpb25zIG9uIHRoZSByZWNpcGllbnRzJyBleGVyY2lz
+ZSBvZiB0aGUgcmlnaHRzIGdyYW50ZWQgaGVyZWluLgpZb3UgYXJlIG5vdCByZXNwb25zaWJsZSBmb3Ig
+ZW5mb3JjaW5nIGNvbXBsaWFuY2UgYnkgdGhpcmQgcGFydGllcyB0bwp0aGlzIExpY2Vuc2UuCgogIDcu
+IElmLCBhcyBhIGNvbnNlcXVlbmNlIG9mIGEgY291cnQganVkZ21lbnQgb3IgYWxsZWdhdGlvbiBvZiBw
+YXRlbnQKaW5mcmluZ2VtZW50IG9yIGZvciBhbnkgb3RoZXIgcmVhc29uIChub3QgbGltaXRlZCB0byBw
+YXRlbnQgaXNzdWVzKSwKY29uZGl0aW9ucyBhcmUgaW1wb3NlZCBvbiB5b3UgKHdoZXRoZXIgYnkgY291
+cnQgb3JkZXIsIGFncmVlbWVudCBvcgpvdGhlcndpc2UpIHRoYXQgY29udHJhZGljdCB0aGUgY29uZGl0
+aW9ucyBvZiB0aGlzIExpY2Vuc2UsIHRoZXkgZG8gbm90CmV4Y3VzZSB5b3UgZnJvbSB0aGUgY29uZGl0
+aW9ucyBvZiB0aGlzIExpY2Vuc2UuICBJZiB5b3UgY2Fubm90CmRpc3RyaWJ1dGUgc28gYXMgdG8gc2F0
+aXNmeSBzaW11bHRhbmVvdXNseSB5b3VyIG9ibGlnYXRpb25zIHVuZGVyIHRoaXMKTGljZW5zZSBhbmQg
+YW55IG90aGVyIHBlcnRpbmVudCBvYmxpZ2F0aW9ucywgdGhlbiBhcyBhIGNvbnNlcXVlbmNlIHlvdQpt
+YXkgbm90IGRpc3RyaWJ1dGUgdGhlIFByb2dyYW0gYXQgYWxsLiAgRm9yIGV4YW1wbGUsIGlmIGEgcGF0
+ZW50CmxpY2Vuc2Ugd291bGQgbm90IHBlcm1pdCByb3lhbHR5LWZyZWUgcmVkaXN0cmlidXRpb24gb2Yg
+dGhlIFByb2dyYW0gYnkKYWxsIHRob3NlIHdobyByZWNlaXZlIGNvcGllcyBkaXJlY3RseSBvciBpbmRp
+cmVjdGx5IHRocm91Z2ggeW91LCB0aGVuCnRoZSBvbmx5IHdheSB5b3UgY291bGQgc2F0aXNmeSBib3Ro
+IGl0IGFuZCB0aGlzIExpY2Vuc2Ugd291bGQgYmUgdG8KcmVmcmFpbiBlbnRpcmVseSBmcm9tIGRpc3Ry
+aWJ1dGlvbiBvZiB0aGUgUHJvZ3JhbS4KCklmIGFueSBwb3J0aW9uIG9mIHRoaXMgc2VjdGlvbiBpcyBo
+ZWxkIGludmFsaWQgb3IgdW5lbmZvcmNlYWJsZSB1bmRlcgphbnkgcGFydGljdWxhciBjaXJjdW1zdGFu
+Y2UsIHRoZSBiYWxhbmNlIG9mIHRoZSBzZWN0aW9uIGlzIGludGVuZGVkIHRvCmFwcGx5IGFuZCB0aGUg
+c2VjdGlvbiBhcyBhIHdob2xlIGlzIGludGVuZGVkIHRvIGFwcGx5IGluIG90aGVyCmNpcmN1bXN0YW5j
+ZXMuCgpJdCBpcyBub3QgdGhlIHB1cnBvc2Ugb2YgdGhpcyBzZWN0aW9uIHRvIGluZHVjZSB5b3UgdG8g
+aW5mcmluZ2UgYW55CnBhdGVudHMgb3Igb3RoZXIgcHJvcGVydHkgcmlnaHQgY2xhaW1zIG9yIHRvIGNv
+bnRlc3QgdmFsaWRpdHkgb2YgYW55CnN1Y2ggY2xhaW1zOyB0aGlzIHNlY3Rpb24gaGFzIHRoZSBzb2xl
+IHB1cnBvc2Ugb2YgcHJvdGVjdGluZyB0aGUKaW50ZWdyaXR5IG9mIHRoZSBmcmVlIHNvZnR3YXJlIGRp
+c3RyaWJ1dGlvbiBzeXN0ZW0sIHdoaWNoIGlzCmltcGxlbWVudGVkIGJ5IHB1YmxpYyBsaWNlbnNlIHBy
+YWN0aWNlcy4gIE1hbnkgcGVvcGxlIGhhdmUgbWFkZQpnZW5lcm91cyBjb250cmlidXRpb25zIHRvIHRo
+ZSB3aWRlIHJhbmdlIG9mIHNvZnR3YXJlIGRpc3RyaWJ1dGVkCnRocm91Z2ggdGhhdCBzeXN0ZW0gaW4g
+cmVsaWFuY2Ugb24gY29uc2lzdGVudCBhcHBsaWNhdGlvbiBvZiB0aGF0CnN5c3RlbTsgaXQgaXMgdXAg
+dG8gdGhlIGF1dGhvci9kb25vciB0byBkZWNpZGUgaWYgaGUgb3Igc2hlIGlzIHdpbGxpbmcKdG8gZGlz
+dHJpYnV0ZSBzb2Z0d2FyZSB0aHJvdWdoIGFueSBvdGhlciBzeXN0ZW0gYW5kIGEgbGljZW5zZWUgY2Fu
+bm90CmltcG9zZSB0aGF0IGNob2ljZS4KClRoaXMgc2VjdGlvbiBpcyBpbnRlbmRlZCB0byBtYWtlIHRo
+b3JvdWdobHkgY2xlYXIgd2hhdCBpcyBiZWxpZXZlZCB0bwpiZSBhIGNvbnNlcXVlbmNlIG9mIHRoZSBy
+ZXN0IG9mIHRoaXMgTGljZW5zZS4KDAogIDguIElmIHRoZSBkaXN0cmlidXRpb24gYW5kL29yIHVzZSBv
+ZiB0aGUgUHJvZ3JhbSBpcyByZXN0cmljdGVkIGluCmNlcnRhaW4gY291bnRyaWVzIGVpdGhlciBieSBw
+YXRlbnRzIG9yIGJ5IGNvcHlyaWdodGVkIGludGVyZmFjZXMsIHRoZQpvcmlnaW5hbCBjb3B5cmlnaHQg
+aG9sZGVyIHdobyBwbGFjZXMgdGhlIFByb2dyYW0gdW5kZXIgdGhpcyBMaWNlbnNlCm1heSBhZGQgYW4g
+ZXhwbGljaXQgZ2VvZ3JhcGhpY2FsIGRpc3RyaWJ1dGlvbiBsaW1pdGF0aW9uIGV4Y2x1ZGluZwp0aG9z
+ZSBjb3VudHJpZXMsIHNvIHRoYXQgZGlzdHJpYnV0aW9uIGlzIHBlcm1pdHRlZCBvbmx5IGluIG9yIGFt
+b25nCmNvdW50cmllcyBub3QgdGh1cyBleGNsdWRlZC4gIEluIHN1Y2ggY2FzZSwgdGhpcyBMaWNlbnNl
+IGluY29ycG9yYXRlcwp0aGUgbGltaXRhdGlvbiBhcyBpZiB3cml0dGVuIGluIHRoZSBib2R5IG9mIHRo
+aXMgTGljZW5zZS4KCiAgOS4gVGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlvbiBtYXkgcHVibGlzaCBy
+ZXZpc2VkIGFuZC9vciBuZXcgdmVyc2lvbnMKb2YgdGhlIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgZnJv
+bSB0aW1lIHRvIHRpbWUuICBTdWNoIG5ldyB2ZXJzaW9ucyB3aWxsCmJlIHNpbWlsYXIgaW4gc3Bpcml0
+IHRvIHRoZSBwcmVzZW50IHZlcnNpb24sIGJ1dCBtYXkgZGlmZmVyIGluIGRldGFpbCB0bwphZGRyZXNz
+IG5ldyBwcm9ibGVtcyBvciBjb25jZXJucy4KCkVhY2ggdmVyc2lvbiBpcyBnaXZlbiBhIGRpc3Rpbmd1
+aXNoaW5nIHZlcnNpb24gbnVtYmVyLiAgSWYgdGhlIFByb2dyYW0Kc3BlY2lmaWVzIGEgdmVyc2lvbiBu
+dW1iZXIgb2YgdGhpcyBMaWNlbnNlIHdoaWNoIGFwcGxpZXMgdG8gaXQgYW5kICJhbnkKbGF0ZXIgdmVy
+c2lvbiIsIHlvdSBoYXZlIHRoZSBvcHRpb24gb2YgZm9sbG93aW5nIHRoZSB0ZXJtcyBhbmQgY29uZGl0
+aW9ucwplaXRoZXIgb2YgdGhhdCB2ZXJzaW9uIG9yIG9mIGFueSBsYXRlciB2ZXJzaW9uIHB1Ymxpc2hl
+ZCBieSB0aGUgRnJlZQpTb2Z0d2FyZSBGb3VuZGF0aW9uLiAgSWYgdGhlIFByb2dyYW0gZG9lcyBub3Qg
+c3BlY2lmeSBhIHZlcnNpb24gbnVtYmVyIG9mCnRoaXMgTGljZW5zZSwgeW91IG1heSBjaG9vc2UgYW55
+IHZlcnNpb24gZXZlciBwdWJsaXNoZWQgYnkgdGhlIEZyZWUgU29mdHdhcmUKRm91bmRhdGlvbi4KCiAg
+MTAuIElmIHlvdSB3aXNoIHRvIGluY29ycG9yYXRlIHBhcnRzIG9mIHRoZSBQcm9ncmFtIGludG8gb3Ro
+ZXIgZnJlZQpwcm9ncmFtcyB3aG9zZSBkaXN0cmlidXRpb24gY29uZGl0aW9ucyBhcmUgZGlmZmVyZW50
+LCB3cml0ZSB0byB0aGUgYXV0aG9yCnRvIGFzayBmb3IgcGVybWlzc2lvbi4gIEZvciBzb2Z0d2FyZSB3
+aGljaCBpcyBjb3B5cmlnaHRlZCBieSB0aGUgRnJlZQpTb2Z0d2FyZSBGb3VuZGF0aW9uLCB3cml0ZSB0
+byB0aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uOyB3ZSBzb21ldGltZXMKbWFrZSBleGNlcHRpb25z
+IGZvciB0aGlzLiAgT3VyIGRlY2lzaW9uIHdpbGwgYmUgZ3VpZGVkIGJ5IHRoZSB0d28gZ29hbHMKb2Yg
+cHJlc2VydmluZyB0aGUgZnJlZSBzdGF0dXMgb2YgYWxsIGRlcml2YXRpdmVzIG9mIG91ciBmcmVlIHNv
+ZnR3YXJlIGFuZApvZiBwcm9tb3RpbmcgdGhlIHNoYXJpbmcgYW5kIHJldXNlIG9mIHNvZnR3YXJlIGdl
+bmVyYWxseS4KCgkJCSAgICBOTyBXQVJSQU5UWQoKICAxMS4gQkVDQVVTRSBUSEUgUFJPR1JBTSBJUyBM
+SUNFTlNFRCBGUkVFIE9GIENIQVJHRSwgVEhFUkUgSVMgTk8gV0FSUkFOVFkKRk9SIFRIRSBQUk9HUkFN
+LCBUTyBUSEUgRVhURU5UIFBFUk1JVFRFRCBCWSBBUFBMSUNBQkxFIExBVy4gIEVYQ0VQVCBXSEVOCk9U
+SEVSV0lTRSBTVEFURUQgSU4gV1JJVElORyBUSEUgQ09QWVJJR0hUIEhPTERFUlMgQU5EL09SIE9USEVS
+IFBBUlRJRVMKUFJPVklERSBUSEUgUFJPR1JBTSAiQVMgSVMiIFdJVEhPVVQgV0FSUkFOVFkgT0YgQU5Z
+IEtJTkQsIEVJVEhFUiBFWFBSRVNTRUQKT1IgSU1QTElFRCwgSU5DTFVESU5HLCBCVVQgTk9UIExJTUlU
+RUQgVE8sIFRIRSBJTVBMSUVEIFdBUlJBTlRJRVMgT0YKTUVSQ0hBTlRBQklMSVRZIEFORCBGSVRORVNT
+IEZPUiBBIFBBUlRJQ1VMQVIgUFVSUE9TRS4gIFRIRSBFTlRJUkUgUklTSyBBUwpUTyBUSEUgUVVBTElU
+WSBBTkQgUEVSRk9STUFOQ0UgT0YgVEhFIFBST0dSQU0gSVMgV0lUSCBZT1UuICBTSE9VTEQgVEhFClBS
+T0dSQU0gUFJPVkUgREVGRUNUSVZFLCBZT1UgQVNTVU1FIFRIRSBDT1NUIE9GIEFMTCBORUNFU1NBUlkg
+U0VSVklDSU5HLApSRVBBSVIgT1IgQ09SUkVDVElPTi4KCiAgMTIuIElOIE5PIEVWRU5UIFVOTEVTUyBS
+RVFVSVJFRCBCWSBBUFBMSUNBQkxFIExBVyBPUiBBR1JFRUQgVE8gSU4gV1JJVElORwpXSUxMIEFOWSBD
+T1BZUklHSFQgSE9MREVSLCBPUiBBTlkgT1RIRVIgUEFSVFkgV0hPIE1BWSBNT0RJRlkgQU5EL09SClJF
+RElTVFJJQlVURSBUSEUgUFJPR1JBTSBBUyBQRVJNSVRURUQgQUJPVkUsIEJFIExJQUJMRSBUTyBZT1Ug
+Rk9SIERBTUFHRVMsCklOQ0xVRElORyBBTlkgR0VORVJBTCwgU1BFQ0lBTCwgSU5DSURFTlRBTCBPUiBD
+T05TRVFVRU5USUFMIERBTUFHRVMgQVJJU0lORwpPVVQgT0YgVEhFIFVTRSBPUiBJTkFCSUxJVFkgVE8g
+VVNFIFRIRSBQUk9HUkFNIChJTkNMVURJTkcgQlVUIE5PVCBMSU1JVEVEClRPIExPU1MgT0YgREFUQSBP
+UiBEQVRBIEJFSU5HIFJFTkRFUkVEIElOQUNDVVJBVEUgT1IgTE9TU0VTIFNVU1RBSU5FRCBCWQpZT1Ug
+T1IgVEhJUkQgUEFSVElFUyBPUiBBIEZBSUxVUkUgT0YgVEhFIFBST0dSQU0gVE8gT1BFUkFURSBXSVRI
+IEFOWSBPVEhFUgpQUk9HUkFNUyksIEVWRU4gSUYgU1VDSCBIT0xERVIgT1IgT1RIRVIgUEFSVFkgSEFT
+IEJFRU4gQURWSVNFRCBPRiBUSEUKUE9TU0lCSUxJVFkgT0YgU1VDSCBEQU1BR0VTLgoKCQkgICAgIEVO
+RCBPRiBURVJNUyBBTkQgQ09ORElUSU9OUwoMCgkgICAgSG93IHRvIEFwcGx5IFRoZXNlIFRlcm1zIHRv
+IFlvdXIgTmV3IFByb2dyYW1zCgogIElmIHlvdSBkZXZlbG9wIGEgbmV3IHByb2dyYW0sIGFuZCB5b3Ug
+d2FudCBpdCB0byBiZSBvZiB0aGUgZ3JlYXRlc3QKcG9zc2libGUgdXNlIHRvIHRoZSBwdWJsaWMsIHRo
+ZSBiZXN0IHdheSB0byBhY2hpZXZlIHRoaXMgaXMgdG8gbWFrZSBpdApmcmVlIHNvZnR3YXJlIHdoaWNo
+IGV2ZXJ5b25lIGNhbiByZWRpc3RyaWJ1dGUgYW5kIGNoYW5nZSB1bmRlciB0aGVzZSB0ZXJtcy4KCiAg
+VG8gZG8gc28sIGF0dGFjaCB0aGUgZm9sbG93aW5nIG5vdGljZXMgdG8gdGhlIHByb2dyYW0uICBJdCBp
+cyBzYWZlc3QKdG8gYXR0YWNoIHRoZW0gdG8gdGhlIHN0YXJ0IG9mIGVhY2ggc291cmNlIGZpbGUgdG8g
+bW9zdCBlZmZlY3RpdmVseQpjb252ZXkgdGhlIGV4Y2x1c2lvbiBvZiB3YXJyYW50eTsgYW5kIGVhY2gg
+ZmlsZSBzaG91bGQgaGF2ZSBhdCBsZWFzdAp0aGUgImNvcHlyaWdodCIgbGluZSBhbmQgYSBwb2ludGVy
+IHRvIHdoZXJlIHRoZSBmdWxsIG5vdGljZSBpcyBmb3VuZC4KCiAgICA8b25lIGxpbmUgdG8gZ2l2ZSB0
+aGUgcHJvZ3JhbSdzIG5hbWUgYW5kIGEgYnJpZWYgaWRlYSBvZiB3aGF0IGl0IGRvZXMuPgogICAgQ29w
+eXJpZ2h0IChDKSA8eWVhcj4gIDxuYW1lIG9mIGF1dGhvcj4KCiAgICBUaGlzIHByb2dyYW0gaXMgZnJl
+ZSBzb2Z0d2FyZTsgeW91IGNhbiByZWRpc3RyaWJ1dGUgaXQgYW5kL29yIG1vZGlmeQogICAgaXQgdW5k
+ZXIgdGhlIHRlcm1zIG9mIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSBhcyBwdWJsaXNoZWQg
+YnkKICAgIHRoZSBGcmVlIFNvZnR3YXJlIEZvdW5kYXRpb247IGVpdGhlciB2ZXJzaW9uIDIgb2YgdGhl
+IExpY2Vuc2UsIG9yCiAgICAoYXQgeW91ciBvcHRpb24pIGFueSBsYXRlciB2ZXJzaW9uLgoKICAgIFRo
+aXMgcHJvZ3JhbSBpcyBkaXN0cmlidXRlZCBpbiB0aGUgaG9wZSB0aGF0IGl0IHdpbGwgYmUgdXNlZnVs
+LAogICAgYnV0IFdJVEhPVVQgQU5ZIFdBUlJBTlRZOyB3aXRob3V0IGV2ZW4gdGhlIGltcGxpZWQgd2Fy
+cmFudHkgb2YKICAgIE1FUkNIQU5UQUJJTElUWSBvciBGSVRORVNTIEZPUiBBIFBBUlRJQ1VMQVIgUFVS
+UE9TRS4gIFNlZSB0aGUKICAgIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGZvciBtb3JlIGRldGFp
+bHMuCgogICAgWW91IHNob3VsZCBoYXZlIHJlY2VpdmVkIGEgY29weSBvZiB0aGUgR05VIEdlbmVyYWwg
+UHVibGljIExpY2Vuc2UKICAgIGFsb25nIHdpdGggdGhpcyBwcm9ncmFtOyBpZiBub3QsIHdyaXRlIHRv
+IHRoZSBGcmVlIFNvZnR3YXJlCiAgICBGb3VuZGF0aW9uLCBJbmMuLCA1MSBGcmFua2xpbiBTdCwgRmlm
+dGggRmxvb3IsIEJvc3RvbiwgTUEgIDAyMTEwLTEzMDEgIFVTQQoKCkFsc28gYWRkIGluZm9ybWF0aW9u
+IG9uIGhvdyB0byBjb250YWN0IHlvdSBieSBlbGVjdHJvbmljIGFuZCBwYXBlciBtYWlsLgoKSWYgdGhl
+IHByb2dyYW0gaXMgaW50ZXJhY3RpdmUsIG1ha2UgaXQgb3V0cHV0IGEgc2hvcnQgbm90aWNlIGxpa2Ug
+dGhpcwp3aGVuIGl0IHN0YXJ0cyBpbiBhbiBpbnRlcmFjdGl2ZSBtb2RlOgoKICAgIEdub21vdmlzaW9u
+IHZlcnNpb24gNjksIENvcHlyaWdodCAoQykgeWVhciBuYW1lIG9mIGF1dGhvcgogICAgR25vbW92aXNp
+b24gY29tZXMgd2l0aCBBQlNPTFVURUxZIE5PIFdBUlJBTlRZOyBmb3IgZGV0YWlscyB0eXBlIGBzaG93
+IHcnLgogICAgVGhpcyBpcyBmcmVlIHNvZnR3YXJlLCBhbmQgeW91IGFyZSB3ZWxjb21lIHRvIHJlZGlz
+dHJpYnV0ZSBpdAogICAgdW5kZXIgY2VydGFpbiBjb25kaXRpb25zOyB0eXBlIGBzaG93IGMnIGZvciBk
+ZXRhaWxzLgoKVGhlIGh5cG90aGV0aWNhbCBjb21tYW5kcyBgc2hvdyB3JyBhbmQgYHNob3cgYycgc2hv
+dWxkIHNob3cgdGhlIGFwcHJvcHJpYXRlCnBhcnRzIG9mIHRoZSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNl
+LiAgT2YgY291cnNlLCB0aGUgY29tbWFuZHMgeW91IHVzZSBtYXkKYmUgY2FsbGVkIHNvbWV0aGluZyBv
+dGhlciB0aGFuIGBzaG93IHcnIGFuZCBgc2hvdyBjJzsgdGhleSBjb3VsZCBldmVuIGJlCm1vdXNlLWNs
+aWNrcyBvciBtZW51IGl0ZW1zLS13aGF0ZXZlciBzdWl0cyB5b3VyIHByb2dyYW0uCgpZb3Ugc2hvdWxk
+IGFsc28gZ2V0IHlvdXIgZW1wbG95ZXIgKGlmIHlvdSB3b3JrIGFzIGEgcHJvZ3JhbW1lcikgb3IgeW91
+cgpzY2hvb2wsIGlmIGFueSwgdG8gc2lnbiBhICJjb3B5cmlnaHQgZGlzY2xhaW1lciIgZm9yIHRoZSBw
+cm9ncmFtLCBpZgpuZWNlc3NhcnkuICBIZXJlIGlzIGEgc2FtcGxlOyBhbHRlciB0aGUgbmFtZXM6Cgog
+IFlveW9keW5lLCBJbmMuLCBoZXJlYnkgZGlzY2xhaW1zIGFsbCBjb3B5cmlnaHQgaW50ZXJlc3QgaW4g
+dGhlIHByb2dyYW0KICBgR25vbW92aXNpb24nICh3aGljaCBtYWtlcyBwYXNzZXMgYXQgY29tcGlsZXJz
+KSB3cml0dGVuIGJ5IEphbWVzIEhhY2tlci4KCiAgPHNpZ25hdHVyZSBvZiBUeSBDb29uPiwgMSBBcHJp
+bCAxOTg5CiAgVHkgQ29vbiwgUHJlc2lkZW50IG9mIFZpY2UKClRoaXMgR2VuZXJhbCBQdWJsaWMgTGlj
+ZW5zZSBkb2VzIG5vdCBwZXJtaXQgaW5jb3Jwb3JhdGluZyB5b3VyIHByb2dyYW0gaW50bwpwcm9wcmll
+dGFyeSBwcm9ncmFtcy4gIElmIHlvdXIgcHJvZ3JhbSBpcyBhIHN1YnJvdXRpbmUgbGlicmFyeSwgeW91
+IG1heQpjb25zaWRlciBpdCBtb3JlIHVzZWZ1bCB0byBwZXJtaXQgbGlua2luZyBwcm9wcmlldGFyeSBh
+cHBsaWNhdGlvbnMgd2l0aCB0aGUKbGlicmFyeS4gIElmIHRoaXMgaXMgd2hhdCB5b3Ugd2FudCB0byBk
+bywgdXNlIHRoZSBHTlUgTGlicmFyeSBHZW5lcmFsClB1YmxpYyBMaWNlbnNlIGluc3RlYWQgb2YgdGhp
+cyBMaWNlbnNlLgo
+</mutableString>
+                                            <attributes>
+                                                <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                                <font key="NSFont" metaFont="system" size="10"/>
+                                                <paragraphStyle key="NSParagraphStyle" alignment="justified" lineBreakMode="wordWrapping" baseWritingDirection="natural">
+                                                    <tabStops>
+                                                        <textTab alignment="left" location="0.0">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="56">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="112">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="168">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="224">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="280">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="336">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="392">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="448">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="504">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="560">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="616">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="672">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="728">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="784">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="840">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="896">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="952">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="1008">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="1064">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="1120">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="1176">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="1232">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="1288">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="1344">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="1400">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="1456">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="1512">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="1568">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="1624">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="1680">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="1736">
+                                                            <options/>
+                                                        </textTab>
+                                                    </tabStops>
+                                                </paragraphStyle>
+                                            </attributes>
+                                        </fragment>
+                                    </attributedString>
+                                    <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                </textView>
+                            </subviews>
+                        </clipView>
+                        <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="510">
+                            <rect key="frame" x="-100" y="-100" width="87" height="18"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                        <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="509">
+                            <rect key="frame" x="418" y="1" width="16" height="378"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                    </scrollView>
+                </subviews>
+            </view>
+        </window>
+    </objects>
+</document>

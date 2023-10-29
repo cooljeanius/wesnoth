@@ -1,0 +1,227 @@
+/*
+	Copyright (C) 2009 - 2023
+	by Mark de Wever <koraq@xs4all.nl>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
+
+	See the COPYING file for more details.
+*/
+
+#pragma once
+
+#include "gui/widgets/container_base.hpp"
+
+#include "gui/core/widget_definition.hpp"
+#include "gui/core/window_builder.hpp"
+
+#include <boost/dynamic_bitset.hpp>
+
+namespace gui2
+{
+
+// ------------ WIDGET -----------{
+
+namespace implementation
+{
+struct builder_stacked_widget;
+}
+
+class generator_base;
+
+/**
+ * @ingroup GUIWidgetWML
+ *
+ * A stacked widget holds several widgets on top of each other.
+ * This can be used for various effects; add an optional overlay to an image, stack it with a spacer to force a minimum size of a widget.
+ * The latter is handy to avoid making a separate definition for a single instance with a fixed size.
+ *
+ * A stacked widget has no states.
+ */
+class stacked_widget : public container_base
+{
+	friend struct stacked_widget_implementation;
+	friend struct implementation::builder_stacked_widget;
+	friend class debug_layout_graph;
+
+public:
+	explicit stacked_widget(const implementation::builder_stacked_widget& builder);
+
+	/***** ***** ***** inherited ***** ****** *****/
+
+	/** See @ref styled_widget::get_active. */
+	virtual bool get_active() const override;
+
+	/** See @ref styled_widget::get_state. */
+	virtual unsigned get_state() const override;
+
+	/** See @ref widget::layout_children. */
+	virtual void layout_children() override;
+
+	/**
+	 * Gets the current visible layer number.
+	 *
+	 * The current layer number will be -1 if all layers are currently visible.
+	 * In this case, only the topmost (highest-numbered) layer will receive
+	 * events.
+	 *
+	 * If more than one but not all layers are visible, this will be the number of
+	 * the last one made visible.
+	 *
+	 * @returns       The most recently shown layer
+	 */
+	int current_layer() const { return selected_layer_; }
+
+	/**
+	 * Tests if the specified layer is selected (ie, visible).
+	 *
+	 * @param layer    The layer to test
+	 * @returns        True if the specified layer is selected
+	 */
+	bool layer_selected(const unsigned layer);
+
+	/**
+	 * Selects and displays a particular layer.
+	 *
+	 * If layer -1 is selected, all layers will be displayed but only the
+	 * topmost (highest-numbered) layer will receive events.
+	 *
+	 * @param layer     The layer to select
+	 */
+	void select_layer(const int layer);
+
+	/**
+	 * Selects and displays multiple layers based on the state of the provided dynamic_bitset.
+	 *
+	 * @param mask      A mask specifying which layers to select and deselect
+	 */
+	void select_layers(const boost::dynamic_bitset<>& mask);
+
+	/**
+	 * Gets the total number of layers.
+	 *
+	 * @returns         The total number of layers
+	 */
+	unsigned int get_layer_count() const;
+
+	/**
+	 * Gets the grid for a specified layer.
+	 * This can be used to search for widgets in a hidden layer.
+	 *
+	 * @param i         The layer to retrieve
+	 * @returns         The grid for the specified layer.
+	 */
+	grid* get_layer_grid(unsigned int i);
+
+	/** Const overload for @ref get_layer_grid. */
+	const grid* get_layer_grid(unsigned int i) const;
+
+	void set_find_in_all_layers(const bool do_find)
+	{
+		find_in_all_layers_ = do_find;
+	}
+
+private:
+	/**
+	 * Finishes the building initialization of the widget.
+	 *
+	 * @param generator           Generator for the list
+	 * @param widget_builders     The builder to build the contents of the widget.
+	 */
+	void finalize(std::unique_ptr<generator_base> generator, const std::vector<builder_grid>& widget_builders);
+
+	/**
+	 * Contains a pointer to the generator.
+	 *
+	 * The pointer is not owned by this class, it's stored in the content_grid_
+	 * of the scrollbar_container super class and freed when its grid is freed.
+	 *
+	 * NOTE: the generator is initialized with has_minimum (first arg) as false,
+	 * which seems a little counter-intuitive at first. After all, shouldn't the
+	 * stack always have at least one layer visible? However, this allows select_layer
+	 * to function correctly.
+	 *
+	 * If has_minimum is true, the generator policy selected (one_item) can leave
+	 * multiple layers selected when selecting a new one. This is most likely due to
+	 * cases where the new chosen layer comes *after* the currently selected one.
+	 * In that case, the generator would not allow the interim state where no layer
+	 * before the new chosen layer is reached in the loop.
+	 */
+	generator_base* generator_;
+
+	/**
+	 * The number of the current selected layer.
+	 */
+	int selected_layer_;
+
+	/**
+	 * If true, @ref find will search all layers for widgets regardless of which
+	 * one is visible.
+	 */
+	bool find_in_all_layers_;
+
+	void update_selected_layer_index(const int i);
+
+	/** Internal implementation detail for selecting layers. */
+	void select_layer_impl(std::function<bool(unsigned int i)> display_condition);
+
+public:
+	/** Static type getter that does not rely on the widget being constructed. */
+	static const std::string& type();
+
+private:
+	/** Inherited from styled_widget, implemented by REGISTER_WIDGET. */
+	virtual const std::string& get_control_type() const override;
+
+	/** See @ref container_base::set_self_active. */
+	virtual void set_self_active(const bool active) override;
+
+public:
+	/** See @ref widget::find. */
+	virtual widget* find(const std::string& id, const bool must_be_active) override;
+
+	/** See @ref widget::find. */
+	virtual const widget* find(const std::string& id, const bool must_be_active) const override;
+};
+
+// }---------- DEFINITION ---------{
+
+struct stacked_widget_definition : public styled_widget_definition
+{
+	explicit stacked_widget_definition(const config& cfg);
+
+	struct resolution : public resolution_definition
+	{
+		explicit resolution(const config& cfg);
+
+		builder_grid_ptr grid;
+	};
+};
+
+// }---------- BUILDER -----------{
+
+namespace implementation
+{
+
+struct builder_stacked_widget : public builder_styled_widget
+{
+	explicit builder_stacked_widget(const config& cfg);
+
+	using builder_styled_widget::build;
+
+	virtual std::unique_ptr<widget> build() const override;
+
+	/** The builders for all layers of the stack .*/
+	std::vector<builder_grid> stack;
+};
+
+} // namespace implementation
+
+// }------------ END --------------
+
+} // namespace gui2

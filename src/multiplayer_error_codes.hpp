@@ -1,0 +1,38 @@
+/*
+	Copyright (C) 2009 - 2023
+	by Thomas Baumhauer <thomas.baumhauer@NOSPAMgmail.com>
+	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
+
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY.
+
+	See the COPYING file for more details.
+*/
+
+/**
+ * @file
+ * Define the errors the server may send during the login procedure
+ */
+
+#pragma once
+
+#define MP_MUST_LOGIN                  "100"
+#define MP_NAME_TAKEN_ERROR            "101"
+#define MP_INVALID_CHARS_IN_NAME_ERROR "102"
+#define MP_NAME_TOO_LONG_ERROR         "103"
+#define MP_NAME_RESERVED_ERROR         "104"
+#define MP_NAME_UNREGISTERED_ERROR     "105"
+#define MP_NAME_INACTIVE_WARNING       "106"
+#define MP_NAME_AUTH_BAN_USER_ERROR    "107"
+#define MP_NAME_AUTH_BAN_IP_ERROR      "108"
+#define MP_NAME_AUTH_BAN_EMAIL_ERROR   "109"
+
+#define MP_PASSWORD_REQUEST                     "200"
+#define MP_PASSWORD_REQUEST_FOR_LOGGED_IN_NAME  "201"
+#define MP_INCORRECT_PASSWORD_ERROR             "203"
+#define MP_TOO_MANY_ATTEMPTS_ERROR              "204"
+#define MP_HASHING_PASSWORD_FAILED              "205"

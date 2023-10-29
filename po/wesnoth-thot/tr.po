@@ -1,0 +1,2673 @@
+# Turkish translations for Battle for Wesnoth package.
+# Copyright (C) 2022 Wesnoth development team
+# This file is distributed under the same license as the Battle for Wesnoth package.
+#
+# Nilgün Belma Bugüner <nilgun@belgeler.gen.tr>, 2008, ...,2022.
+msgid ""
+msgstr ""
+"Project-Id-Version: wesnoth-thot\n"
+"Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
+"POT-Creation-Date: 2023-10-28 14:02 UTC\n"
+"PO-Revision-Date: 2022-01-06 02:49+0300\n"
+"Last-Translator: Nilgün Belma Bugüner <nilgun@belgeler.gen.tr>\n"
+"Language-Team: Turkish\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.4.2\n"
+
+#. [campaign]: id=The_Hammer_of_Thursagan
+#: data/campaigns/The_Hammer_of_Thursagan/_main.cfg:10
+msgid "The Hammer of Thursagan"
+msgstr "Tursagan’ın Çekici"
+
+#. [campaign]: id=The_Hammer_of_Thursagan
+#: data/campaigns/The_Hammer_of_Thursagan/_main.cfg:12
+msgid "THoT"
+msgstr "TÇ"
+
+#. [campaign]: id=The_Hammer_of_Thursagan
+#: data/campaigns/The_Hammer_of_Thursagan/_main.cfg:19
+msgid "Easy"
+msgstr "Kolay"
+
+#. [campaign]: id=The_Hammer_of_Thursagan
+#: data/campaigns/The_Hammer_of_Thursagan/_main.cfg:19
+msgid "Fighter"
+msgstr "Savaşçı"
+
+#. [campaign]: id=The_Hammer_of_Thursagan
+#: data/campaigns/The_Hammer_of_Thursagan/_main.cfg:20
+msgid "Normal"
+msgstr "Normal"
+
+#. [campaign]: id=The_Hammer_of_Thursagan
+#: data/campaigns/The_Hammer_of_Thursagan/_main.cfg:20
+msgid "Steelclad"
+msgstr "Çelik Zırhlı"
+
+#. [campaign]: id=The_Hammer_of_Thursagan
+#: data/campaigns/The_Hammer_of_Thursagan/_main.cfg:21
+msgid "Challenging"
+msgstr "Meydan Okuma"
+
+#. [campaign]: id=The_Hammer_of_Thursagan
+#: data/campaigns/The_Hammer_of_Thursagan/_main.cfg:21
+msgid "Lord"
+msgstr "Lider"
+
+#. [campaign]: id=The_Hammer_of_Thursagan
+#: data/campaigns/The_Hammer_of_Thursagan/_main.cfg:24
+msgid ""
+"In the first years of the Northern Alliance, an expedition from Knalga seeks "
+"out their kin at Kal Kartha and to learn the fate of the legendary Hammer of "
+"Thursagan. The perils of their journey through the wild Northern Lands, "
+"though great, pale beside the evil they will face at its end.\n"
+"\n"
+msgstr ""
+"Kuzey İttifakının ilk yıllarında, Kanalga’dan bir keşif seferi Kal "
+"Karta’daki ırkdaşlarını aramaya ve Tursagan’ın efsanevî çekicinin kaderini "
+"öğrenmeye gider. Vahşi Kuzey Toprakları boyunca yolculukları esnasında büyük "
+"tehlikelere maruz kalırlar. Fakat yolculuklarının sonunda karşılaşacakları "
+"kötülüğün yanında bu tehlikeler sönük kalacaktı.\n"
+"\n"
+
+#. [campaign]: id=The_Hammer_of_Thursagan
+#: data/campaigns/The_Hammer_of_Thursagan/_main.cfg:26
+msgid "(Intermediate level, 8 scenarios.)"
+msgstr "(Orta seviye, 8 senaryo.)"
+
+#. [about]
+#: data/campaigns/The_Hammer_of_Thursagan/_main.cfg:29
+msgid "Author"
+msgstr "Yazar"
+
+#. [about]
+#: data/campaigns/The_Hammer_of_Thursagan/_main.cfg:35
+msgid "Special Guest Designer"
+msgstr "Konuk Tasarımcı"
+
+#. [about]
+#: data/campaigns/The_Hammer_of_Thursagan/_main.cfg:41
+msgid "Art"
+msgstr "Sanat"
+
+#. [about]
+#: data/campaigns/The_Hammer_of_Thursagan/_main.cfg:54
+msgid "Brainstorming, playtesting, and spousal support"
+msgstr "Beyin Fırtınası, deneme ve birleştirme desteği"
+
+#. [about]
+#: data/campaigns/The_Hammer_of_Thursagan/_main.cfg:60
+msgid "Campaign Maintenance"
+msgstr "Seferberlik Sürdürücüsü"
+
+#. [scenario]: id=01_At_the_East_Gate
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/01_At_the_East_Gate.cfg:5
+msgid "At the East Gate"
+msgstr "Doğu Kapısında"
+
+#. [part]
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/01_At_the_East_Gate.cfg:26
+msgid ""
+"In the first few years after the founding of the Northern Alliance, the "
+"dwarves of Knalga and the human population of Dwarven Doors were fully "
+"preoccupied with rebuilding what had been broken by the long orcish "
+"occupation. But soon enough they prospered once again. The dwarves began "
+"mining their past for inspiration to rebuild Knalga even greater than "
+"before, and began also reaching out for contact with their scattered kinfolk."
+msgstr ""
+"Kuzey İttifakı kurulduktan sonraki ilk bir kaç yılı Kanalga cüceleri ve Cüce "
+"Kapılarının insan nüfusu uzun ork işgali sırasında yıkılanları yeniden inşa "
+"etmekle geçirdi. Fakat tekrar zengin olmaları uzun sürmedi. Cüceler "
+"Kanalga’yı yeniden inşa ederken öncekinden daha ihtişamlı olması için ilham "
+"almak üzere geçmişlerini eşelemeye ve etrafa dağılmış ırkdaşlarıyla temasa "
+"geçme yollarını araştırmaya başladılar."
+
+#. [part]
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/01_At_the_East_Gate.cfg:30
+msgid ""
+"But the threat from hostile orcs, wild men, and remnant undead was not yet "
+"ended. The dwarves kept strong guards on the approaches to Knalga. In the "
+"year 550 after the founding of Wesnoth, the captain of the East Gate "
+"received a warning that a small band of rogue orcs had been sighted."
+msgstr ""
+"Fakat düşman orklardan, vahşi insanlardan ve yarı ölü artıklarından "
+"kaynaklanan tehditler henüz bitmemişti. Cüceler Kanalga yakınlarını güçlü "
+"muhafızlarla koruyordu. Vesnot’un kuruluşunun 550. yılında Doğu Kapısının "
+"yüzbaşısı, başıboş orklardan oluşan küçük bir çetenin görüldüğüne dair bir "
+"uyarı aldı."
+
+#. [side]
+#. [side]: type=Dwarvish Lord, id=Hamel
+#. [side]: type=Orcish Warrior, id=Marth-Tak
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/01_At_the_East_Gate.cfg:43
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/02_Reclaiming_the_Past.cfg:34
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/02_Reclaiming_the_Past.cfg:48
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/03_Strange_Allies.cfg:36
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/03_Strange_Allies.cfg:52
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/04_High_Pass.cfg:34
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:32
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/06_Forbidden_Forest.cfg:27
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:32
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:47
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/08_The_Court_of_Karrag.cfg:36
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:22
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/10_Epilogue.cfg:20
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/10_Epilogue.cfg:70
+msgid "Alliance"
+msgstr "İttifak"
+
+#. [unit]: type=Gryphon Rider, id=Pelmathidrol
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/01_At_the_East_Gate.cfg:54
+msgid "Pelmathidrol"
+msgstr "Pelmatidrol"
+
+#. [side]: type=Orcish Warrior, id=Bashnark
+#. [side]: type=Orcish Warlord, id=Tan-Morgh
+#. [side]: type=Orcish Warlord, id=Tan-Garukh
+#. [side]: type=Orcish Warlord, id=Tan-Wagran
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/01_At_the_East_Gate.cfg:70
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:82
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:127
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:169
+msgid "Orcs"
+msgstr "Orklar"
+
+#. [side]: type=Orcish Warrior, id=Bashnark
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/01_At_the_East_Gate.cfg:75
+msgid "Bashnark"
+msgstr "Başnark"
+
+#. [label]
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/01_At_the_East_Gate.cfg:87
+msgid "East Gate"
+msgstr "Doğu Kapısı"
+
+#. [objective]: condition=win
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/01_At_the_East_Gate.cfg:96
+msgid "Defeat Bashnark"
+msgstr "Başnark’ı yen"
+
+#. [objective]: condition=lose
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/01_At_the_East_Gate.cfg:100
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/03_Strange_Allies.cfg:125
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/04_High_Pass.cfg:106
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:121
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:362
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/06_Forbidden_Forest.cfg:136
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:221
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/08_The_Court_of_Karrag.cfg:135
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:215
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:760
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:926
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1094
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1147
+msgid "Death of Aiglondur"
+msgstr "Aglondur’un ölümü"
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/01_At_the_East_Gate.cfg:118
+msgid ""
+"<i>Up axes!</i> We will be the Northern Alliance’s arm today, and kill or "
+"scatter these invaders."
+msgstr ""
+"<i>Baltalar yukarı!</i> Bugün Kuzey İttifakının ordusu biziz ve bu davetsiz "
+"konukları ya öldüreceğiz ya da öldüreceğiz."
+
+#. [message]: speaker=Bashnark
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/01_At_the_East_Gate.cfg:123
+msgid ""
+"We are the true orcs, not the weaklings who ally with human-worms and stinky-"
+"midgets like you. You will be meat for our wolves."
+msgstr ""
+"Biz gerçek orklarız, insan solucanlarla ve sizin gibi pis kokan ufaklıklarla "
+"ittifak yapan zavallılardan değiliz. Sizi kurtlarımıza yedireceğiz."
+
+#. [message]: speaker=second_unit
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/01_At_the_East_Gate.cfg:135
+msgid ""
+"What is this? Their vanquished leader wears a cloak-pin of dwarvish make. "
+"And it bears a loremaster’s emblem. Why would an orc be carrying metalwork "
+"of dwarvish make?"
+msgstr ""
+"Bu ne? Liderleri cüce işi bir çivili yelek giyiyor ve yeleğinde bir üstadın "
+"amblemi var. Bir ork neden cüce yapımı metal işleri taşısın ki?"
+
+#. [unit]: id=Movrur, type=Dwarvish Masked Steelclad
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/01_At_the_East_Gate.cfg:145
+msgid "Movrur"
+msgstr "Movrur"
+
+#. [message]: speaker=Movrur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/01_At_the_East_Gate.cfg:158
+msgid ""
+"Hail, kinsmen of Knalga. I have been tracking that orc for several days. He "
+"be part of a band of raiders that attacked us a few weeks ago and stole many "
+"arms from our forges."
+msgstr ""
+"Selam, Kanalga'lı kardeşlerim. Birkaç gündür o orku takip ediyorum. Birkaç "
+"hafta önce bize saldıran ve demirhanelerimizden birçok silah çalan yağmacı "
+"çetesinden olabilir."
+
+#. [message]: speaker=Movrur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/01_At_the_East_Gate.cfg:168
+msgid "Yes, this cloak-pin be of our work."
+msgstr "Evet, bu pelerin iğnesi bizim işimiz."
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/01_At_the_East_Gate.cfg:173
+msgid "Hold... kinsman. Who are you and from where do you hail?"
+msgstr "Orada dur... kardeşim. Sen kimsin ve nereden geliyorsun?"
+
+#. [message]: speaker=Movrur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/01_At_the_East_Gate.cfg:178
+msgid "I be Movrur, of the ancient stronghold of Kal Kartha."
+msgstr "Ben Kal Karta'nın eski kalesinden Movrur."
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/01_At_the_East_Gate.cfg:183
+msgid ""
+"Kal Kartha, the hold of the forges and the olden birthplace of our kind? "
+"That Kal Kartha? We have not heard from you in years! It was thought that "
+"your hold was lost to the orcs long ago."
+msgstr ""
+"Kal Karta, demirhanelerin ambarı ve türümüzün eski doğum yeri olan? Hani şu "
+"Kal Karta mı? Yıllardır sizden haber alamıyoruz! Uzun zaman önce orklar ele "
+"geçirdiği için kaybedildiği düşünülüyordu."
+
+#. [message]: speaker=Movrur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/01_At_the_East_Gate.cfg:188
+msgid ""
+"Aye, our hold was once overrun by orcs, but in recent times, we have begun "
+"to clear them out and reclaim the lands that were once ours. However, as you "
+"saw here, our troubles with the orcs are far from over."
+msgstr ""
+"Evet, ambarımız bir zamanlar orklar tarafından istila edilmişti ama son "
+"zamanlarda onları temizlemeye ve bir zamanlar bizim olan toprakları geri "
+"almaya başladık. Ancak, burada gördüğünüz gibi, orklarla olan sorunlarımız "
+"hala bitmedi."
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/01_At_the_East_Gate.cfg:193
+msgid ""
+"In that case, we had best consult Lord Hamel. We may yet be able to send you "
+"some aid against these orcish marauders."
+msgstr ""
+"Bu durumda Lord Hamel'e danışsak iyi olur. Bu ork yağmacılarına karşı size "
+"biraz yardım göndermemiz mümkün olabilir."
+
+#. [message]: speaker=Movrur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/01_At_the_East_Gate.cfg:198
+msgid "If you wish it. Let us see what you can offer."
+msgstr "Nasıl isterseniz. Neler sunabileceğinizi görelim."
+
+#. [scenario]: id=02_Reclaiming_the_Past
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/02_Reclaiming_the_Past.cfg:5
+msgid "Reclaiming the Past"
+msgstr "Geçmişi Yadetmek"
+
+#. [part]
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/02_Reclaiming_the_Past.cfg:23
+msgid ""
+"Following the victory against the orcs, Aiglondur was summoned to the "
+"audience hall of Hamel, lord of Knalga and Lord Companion of the Northern "
+"Alliance. Beside the dais stood a stranger in the robes of the Order of "
+"Loremasters..."
+msgstr ""
+"Orklara karşı zaferin ardından, Aglondur, Kanalga Lordu ve Kuzey İttifakının "
+"Kurucu Lordu Hamel’in kabul salonuna davet edildi. Kürsünün yanında "
+"Oymacılar Loncasının cübbesini giymiş bir yabancı ayakta duruyordu..."
+
+#. [side]: type=Dwarvish Lord, id=Hamel
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/02_Reclaiming_the_Past.cfg:53
+msgid "Hamel"
+msgstr "Hamel"
+
+#. [message]: speaker=Hamel
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/02_Reclaiming_the_Past.cfg:98
+msgid ""
+"Aiglondur, the news ye bring is disturbing, for all it seems a small thing. "
+"I make known to ye Angarthing, loremaster in training."
+msgstr ""
+"Aglondur, bulduğun neticede küçük bir şey ama kafa karıştırıyor. "
+"Angarting’le tanışmanı istedim, üstatlık eğitimi veriyor."
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/02_Reclaiming_the_Past.cfg:103
+msgid ""
+"As you know, the mark on this cloak-pin is that of our ancient kin at Kal "
+"Kartha in the high mountains. That an orc should come to possess this is "
+"troubling, for no orc should know even that loremasters exist, let alone "
+"come near enough to one to get this."
+msgstr ""
+"Çivili yelekteki marka, doğu tepelerinde Kal Karta’daki ırkdaşlarımıza ait. "
+"Talin’in Kanalga’yı ork işgalinden kurtarmasına kadar onlar hakkında bir şey "
+"duymamıştık. Bir orkun buna sahip olması bizi tedirgin etti. Bu üstadın "
+"varlığını hiçbir orkun bilmemesi, bunu alacak kadar yaklaşmalarına izin "
+"verilmemesi gerekirdi."
+
+#. [message]: speaker=Hamel
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/02_Reclaiming_the_Past.cfg:108
+msgid "Has some grave ill become of Kal Kartha?"
+msgstr "Kal Karta’da ciddi bir sorun mu var?"
+
+#. [message]: speaker=Movrur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/02_Reclaiming_the_Past.cfg:113
+msgid ""
+"Nay, it was merely... bad luck. We had just uncovered a magma bed for a new "
+"forge, one hot enough to reforge the ruined Hammer of Thursagan. We brought "
+"a loremaster to survey the site, but orcs ambushed us not long after he "
+"arrived."
+msgstr ""
+"Hayır, sadece... kötü şanstı. Yeni demir ocağı için bir magma yatağı ortaya "
+"çıkarmıştık, harap durumdaki Thursagan'ın Çekici'ni yeniden dövecek kadar "
+"sıcaktı. Bölgeyi incelemesi için bir üstat getirdik ama o geldikten kısa "
+"süre sonra orklar bizi pusuya düşürdü."
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/02_Reclaiming_the_Past.cfg:118
+msgid "The Hammer of Thursagan?"
+msgstr "Tursagan’ın Çekici mi?"
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/02_Reclaiming_the_Past.cfg:123
+msgid ""
+"Aye. The very tool with which our greatest runesmith made the Sceptre of "
+"Fire. But it is ancient, far older than Thursagan; he was but the last to "
+"wield it, and our oldest histories hint that this very hammer was used to "
+"forge the dwarves themselves in the heart of the deepest forges beneath Kal "
+"Kartha."
+msgstr ""
+"Evet. Ateş Asasını yapan en büyük oyma ustamızın özel çekici. O Tursagan’dan "
+"da eski bir antikadır; fakat Tursagan onu kullanan son kişiydi. Çok eski "
+"tarihlerde Kal Karta'nın altındaki en derin demirhanelerde cücelerin bu özel "
+"çekici kullandıklarına dair ipuçları var."
+
+#. [message]: speaker=Movrur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/02_Reclaiming_the_Past.cfg:128
+msgid ""
+"We recovered the pieces from the Caverns of Flame long ago, but were unable "
+"to repair the artifact. The consequences of the Hammer’s ruination have thus "
+"been irreparable."
+msgstr ""
+"Alev Mağaralarından parçaları uzun zaman önce kurtardık ama eseri tamir "
+"edemedik. Çekiç'in harabiyetinin sonuçları bu nedenle onarılamaz olmuştur."
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/02_Reclaiming_the_Past.cfg:133
+msgid "What consequences?"
+msgstr "Ne gibi sonuçlar?"
+
+#. [message]: speaker=Hamel
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/02_Reclaiming_the_Past.cfg:138
+#, fuzzy
+#| msgid ""
+#| "When Thursagan burned to death with his hand on the Hammer, all the "
+#| "runemasters and arcanisters then living — all those who had sworn to the "
+#| "craft and bound themselves to the power o’ the Hammer — dropped dead "
+#| "without a mark on them, all struck down at the same moment. Their craft "
+#| "secrets died with them. That is why there are nae runesmiths among the "
+#| "dwarves today, and sorely we miss them."
+msgid ""
+"When Thursagan burned to death with his hand on the Hammer, all the "
+"runemasters and arcanisters then living — all those who had sworn to the "
+"craft and bound themselves to the power o’ the Hammer — dropped dead without "
+"a mark on them, all struck down at the same moment. Their craft secrets died "
+"with them. That is why there are nae runesmiths among the dwarves today, and "
+"sorely we miss them."
+msgstr ""
+"Tursagan elinde malum Çekiçle yanarak öldüğü zaman yaşayan tüm oyma ustaları "
+"ve gizemciler — hepsi Çekicin gücüne bağlılık yemini etmişlerdi — "
+"arkalarında bir iz bırakmadan kendilerini ölüme bıraktılar ve hepsini aynı "
+"anda kaybettik. Sırlarını da beraberlerinde götürdüler. Cüceler arasında "
+"bugün oyma ustalarının bulunmayışının sebebi budur, onları fena şekilde "
+"kaybettik."
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/02_Reclaiming_the_Past.cfg:143
+msgid ""
+"That is what is said, my lord Hamel, and it is true. Except this; the Order "
+"of Loremasters has given me leave to reveal that the craft secrets were not, "
+"actually, quite as lost as we believed."
+msgstr ""
+"Lord Hamel’in söyledikleri biri dışında doğrudur. İnanıldığı gibi Oymacılar "
+"Loncasının meslek sırları kaybolmadı."
+
+#. [message]: speaker=Hamel
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/02_Reclaiming_the_Past.cfg:148
+msgid "What is this ye say? Nae lost?"
+msgstr "Ne diyorsun? Kaybolmadı mı?"
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/02_Reclaiming_the_Past.cfg:153
+msgid ""
+"Aye. Ye’ll recall that in repairing the western galleries we cleared a small "
+"cave-in hard by where Thursagan himself once had a workshop here, before he "
+"left to study in solitude in the further North."
+msgstr ""
+"Evet. Siz batı galerilerinin temizlenmesini istediğinizde, Tursagan’ın "
+"kuzeyde inzivaya çekilmeden önce atölye olarak kullandığı küçük bir mağarayı "
+"da temizlemiştik."
+
+#. [message]: speaker=Hamel
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/02_Reclaiming_the_Past.cfg:158
+msgid "And ye found something?"
+msgstr "Ve orada bir şeyler buldunuz, öyle mi?"
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/02_Reclaiming_the_Past.cfg:163
+msgid ""
+"A book. Thursagan’s book, in a secret and locked compartment he must have "
+"dug from the living rock himself by unaided runecraft. The cave-in breached "
+"it. It has taken us great effort to puzzle out his code. But it might be "
+"that, with the book and the Hammer to hand, we could train and initiate "
+"runesmiths once more."
+msgstr ""
+"Bir defter. Gizli bir bölmedeki yarıklardan birinin içinde Tursagan’ın "
+"defterini bulmuştuk. Defteri yazarken kullandığı şifreyi çözmek için büyük "
+"çaba harcadık. Fakat defterle birlikte çekiç de elimizde olsaydı belki "
+"yapardık ve ilk oymacıları bir an önce eğitmeye başlayabilirdik."
+
+#. [message]: speaker=Hamel
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/02_Reclaiming_the_Past.cfg:168
+msgid "And for what cause ha’ I heard naught o’ this?"
+msgstr "Bundan niye benim haberim yok?"
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/02_Reclaiming_the_Past.cfg:173
+msgid ""
+"My lord, the find was very recent. We are still deciphering the book. And "
+"there is this: with the Hammer at Kal Kartha and the book here, the question "
+"of which holding shall have the training of the new runesmiths in its hands "
+"would be... delicate."
+msgstr ""
+"Lordum, defteri bulalı çok olmadı. Biz hala defterin şifresini çözmeye "
+"çalışıyoruz. Sorun şu: Çekiç Kal Karta’da, defter burada.  Yeni oymacıların "
+"nasıl bir eğitim alacağı konusu... hala hassas olacaktır."
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/02_Reclaiming_the_Past.cfg:178
+msgid ""
+"We feared stirring up a controversy before the book was even properly "
+"understood."
+msgstr "Kitap tamamen anlaşılmadan bir tartışmanın alevlenmesinden korktuk."
+
+#. [message]: speaker=Hamel
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/02_Reclaiming_the_Past.cfg:183
+msgid ""
+"I’ll grant that was well thought, even if I am nae entirely pleased to have "
+"been kept in the dark. But ye came to me with a request, and I think I ken "
+"what it will be."
+msgstr ""
+"Bana bilgi vermemenizden hoşnut olmasam bile iyi niyetinizden dolayı sizi "
+"bağışlayacağım. Fakat bana bir istekle geldiniz ve bunun olabileceğini "
+"düşünüyorum."
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/02_Reclaiming_the_Past.cfg:188
+msgid ""
+"That is obvious; the Order of Loremasters wants to send an expedition to Kal "
+"Kartha to examine the possibility of restoring the order of Runemasters."
+msgstr ""
+"Açıkçası, Oymacılar Loncası Kal Karta’ya ırkdaşlarımızın ve Çekicin "
+"akıbetini öğrenmek için bir keşif heyeti göndermek istiyor."
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/02_Reclaiming_the_Past.cfg:193
+msgid "Indeed, Lord Hamel, that is what we came to ask."
+msgstr "Aslında, Lord Hamel, bunu istemeye geldik."
+
+#. [message]: speaker=Hamel
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/02_Reclaiming_the_Past.cfg:198
+msgid "And you spoke my guess, Aiglondur. Are you nae kin of mine?"
+msgstr "Beklediğim de buydu, Aglondur. Neticede benim akrabam değil misin?"
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/02_Reclaiming_the_Past.cfg:203
+msgid "Your great-nephew, my lord."
+msgstr "Sizin büyük yeğeninizim, lordum."
+
+#. [message]: speaker=Hamel
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/02_Reclaiming_the_Past.cfg:208
+msgid ""
+"Ye’re young and not tested... but ye have the rank, and ye’ve shown the wits "
+"to use it well. Movrur? What think ye?"
+msgstr ""
+"Sen genç ve tecrübesizsin... Fakat bir rütben var ve zekanı iyi kullandığını "
+"gösterdin. Movrur? Sen ne düşünüyorsun?"
+
+#. [message]: speaker=Movrur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/02_Reclaiming_the_Past.cfg:213
+msgid ""
+"As the orcs recently slew one of our invaluable loremasters, we would "
+"welcome the wisdom of one of our kin from Knalga."
+msgstr ""
+"Orklar yakın zamanda paha biçilmez üstatlarımızdan birini öldürdüğünden, "
+"Kanalgalı kardeşlerimizden birinin bilgeliğini memnuniyetle karşılayacağız."
+
+#. [message]: speaker=Hamel
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/02_Reclaiming_the_Past.cfg:218
+msgid ""
+"Then I have decided. Aiglondur, you and Angarthing will fare to Kal Kartha "
+"together, as soon as may be, with the best men of your guard."
+msgstr ""
+"Ben kararımı verdim. Sen ve Angarting, Kal Karta’ya birlikte seyahat "
+"edeceksiniz. Muhafız olarak en iyi adamlarımla birlikte bir an önce yola "
+"çıkın."
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/02_Reclaiming_the_Past.cfg:235
+msgid "Aye, my Lord Hamel."
+msgstr "Peki, Lord Hamel."
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/02_Reclaiming_the_Past.cfg:240
+msgid "The Order thanks you, Lord Hamel."
+msgstr "Üstatlar size teşekkür ediyor, Lord Hamel."
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/02_Reclaiming_the_Past.cfg:245
+msgid ""
+"We must make haste; winter approaches, and travel over the mountains will "
+"soon grow dangerous."
+msgstr ""
+"Acele etmeliyiz, kış yaklaşıyor. Kışın dağların üzerinde seyahat çok "
+"tehlikeli olur."
+
+#. [scenario]: id=03_Strange_Allies
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/03_Strange_Allies.cfg:5
+msgid "Strange Allies"
+msgstr "Tuhaf Müttefik"
+
+#. [part]
+#. 'march' is *not* a typo for 'marsh' here. In archaic English, 'march' means 'border'.
+#. The same word, as '-mark', is in the name of 'the Estmarks': the hills of the eastern border.
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/03_Strange_Allies.cfg:23
+msgid ""
+"Angarthing, Aiglondur, Movrur, and the dwarvish troop traveled swiftly to "
+"the east through the settled lands of the Northern Alliance. Soon enough "
+"they came to the wilder march country, where raids by large bands of hostile "
+"orcs and men were all too common."
+msgstr ""
+"Angarting, Aglondur ve Movrur, cüce askerlerle birlikte Kuzey İttifakının "
+"yerleşime açık bölgelerinden hızlıca geçtiler. Kısa zamanda, düşman orkların "
+"ve haydutların büyük gruplar halinde dolaştıkları vahşi hudut bölgesine "
+"vardılar."
+
+#. [side]: type=Orcish Warrior, id=Marth-Tak
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/03_Strange_Allies.cfg:57
+msgid "Marth-Tak"
+msgstr "Mart Tak"
+
+#. [side]: type=Orcish Slayer, id=Gorthas
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/03_Strange_Allies.cfg:82
+msgid "Invaders"
+msgstr "Davetsiz Konuklar"
+
+#. [side]: type=Orcish Slayer, id=Gorthas
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/03_Strange_Allies.cfg:88
+msgid "Gorthas"
+msgstr "Gortas"
+
+#. [objective]: condition=win
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/03_Strange_Allies.cfg:121
+msgid "Help Marth-Tak defeat Gorthas"
+msgstr "Mart Tak’ın Gortas’ı yenmesine yardım et"
+
+#. [objective]: condition=lose
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/03_Strange_Allies.cfg:129
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/04_High_Pass.cfg:110
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:125
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:366
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/06_Forbidden_Forest.cfg:140
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:225
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/08_The_Court_of_Karrag.cfg:139
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:219
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:764
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:930
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1098
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1151
+msgid "Death of Angarthing"
+msgstr "Angarting’in ölümü"
+
+#. [objective]: condition=lose
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/03_Strange_Allies.cfg:133
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/04_High_Pass.cfg:114
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:129
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:370
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/06_Forbidden_Forest.cfg:144
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:229
+msgid "Death of Movrur"
+msgstr "Movrur’un ölümü"
+
+#. [objective]: condition=lose
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/03_Strange_Allies.cfg:137
+msgid "Death of Marth-Tak"
+msgstr "Mart Tak’ın ölümü"
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/03_Strange_Allies.cfg:167
+msgid "Movrur, I had meant to ask you this before, but why do you wear a mask?"
+msgstr "Movrur, bunu sana daha önce soracaktım ama neden maske takıyorsun?"
+
+#. [message]: speaker=Movrur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/03_Strange_Allies.cfg:173
+msgid ""
+"Kal Kartha is the stronghold of numerous, ancient forges. We are at home in "
+"deep firepits, as smiths and craftsmen. The mask is a sign of our mastery of "
+"the forge."
+msgstr ""
+"Kal Karta, sayısız antik demirhanenin kalesidir. Orası demirciler ve "
+"zanaatkarlar olarak derin ateş çukurlarındaki yurdumuzdur. Maske ise, "
+"demirhanedeki ustalığımızın bir işaretidir."
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/03_Strange_Allies.cfg:178
+msgid ""
+"And more practically, it shields the face from flying sparks and molten "
+"steel. Even the forgemasters of Knalga don the mask, though perhaps not as "
+"continuously as our friend Movrur does. But we have no time to discuss this "
+"further right now; I see trouble brewing down the road!"
+msgstr ""
+"Ve daha pratik olarak, yüzü uçuşan kıvılcımlardan ve erimiş çelikten korur. "
+"Belki arkadaşımız Movrur'un yaptığı kadar sürekli olmasa da, Kanalga'nın "
+"demirci ustaları bile maske takıyor. Ancak şu anda bunu daha fazla "
+"tartışacak vaktimiz yok. Yolun aşağısında bir sorun olduğunu görüyorum!"
+
+#. [message]: speaker=Marth-Tak
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/03_Strange_Allies.cfg:183
+msgid "In the name of the Alliance, quit these lands now!"
+msgstr "İttifak adına, hemen bu toprakları terkedin!"
+
+#. [message]: speaker=Gorthas
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/03_Strange_Allies.cfg:188
+msgid ""
+"Stinkin’ weakling! No true orc would fight for somethin’ as stupid as the "
+"Alliance."
+msgstr ""
+"Kokuşmuş biçare! Hiçbir gerçek ork, İttifak kadar aptalca bir şey için "
+"savaşmaz."
+
+#. [message]: speaker=Marth-Tak
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/03_Strange_Allies.cfg:193
+msgid ""
+"You underestimate our strength. We shall see who the true orc is after this "
+"battle is over!"
+msgstr ""
+"Gücümüzü hafife alıyorsun. Bu savaş bittikten sonra gerçek orkun kim "
+"olduğunu göreceğiz!"
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/03_Strange_Allies.cfg:198
+msgid ""
+"Now that is a sight still strange to my eyes — an orc fighting for the "
+"Northern Alliance."
+msgstr ""
+"Siz de benim gördüğümü görüyor musunuz? Bir ork — Kuzey İttifakı için "
+"dövüşüyor."
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/03_Strange_Allies.cfg:203
+msgid ""
+"I’m surprised myself that so many of the orcish tribes came over to the "
+"Alliance."
+msgstr ""
+"İttifaka bir sürü ork çetesi katıldığı için bu benim için sürpriz olmadı."
+
+#. [message]: speaker=Marth-Tak
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/03_Strange_Allies.cfg:210
+msgid "You, on the road! Are you of the Northern Alliance or not?"
+msgstr "Sen! Yoldaki! Kuzey İttifakından mısın?"
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/03_Strange_Allies.cfg:215
+msgid "We are."
+msgstr "Evet."
+
+#. [message]: speaker=Marth-Tak
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/03_Strange_Allies.cfg:220
+msgid "Well, then, honor the treaty as I have."
+msgstr "İyi o zaman, anlaşmaya uygun davranın."
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/03_Strange_Allies.cfg:225
+msgid "That is our duty. For the Alliance!"
+msgstr "Bu bizim görevimiz. İttifak adına!"
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/03_Strange_Allies.cfg:237
+msgid "We have failed our duty to the Alliance."
+msgstr "İttifaka karşı görevimizi yerine getiremedik."
+
+#. [message]: speaker=Marth-Tak
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/03_Strange_Allies.cfg:253
+msgid ""
+"My thanks, dwarves. There have been many attacks on the border tribes of "
+"late, and though we have repelled them thus far, the assaults have gotten "
+"only more fierce with each passing day."
+msgstr ""
+"Teşekkürler cüceler. Son zamanlarda sınır kabilelerine çok sayıda saldırı "
+"oldu ve şimdiye kadar onları püskürttüysek de saldırılar her geçen gün daha "
+"da şiddetlendi."
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/03_Strange_Allies.cfg:258
+msgid ""
+"Indeed? What disturbs me is that these orcs bear arms and coins of dwarvish "
+"make. It intimates that this war-band was hired for this purpose."
+msgstr ""
+"Aslında? Beni rahatsız eden şey, bu orkların cüce yapımı silahlar ve madeni "
+"paralar taşıması. Bu savaş çetesinin bu amaç için tutulduğunu ima ediyor."
+
+#. [message]: speaker=Movrur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/03_Strange_Allies.cfg:263
+msgid ""
+"Nonsense. It may very well be that these orcs defeated a garrison of dwarves "
+"and raided their supplies. You need not draw such drastic conclusions from "
+"such an insignificant encounter."
+msgstr ""
+"Saçmalık. Bu orklar bir cüce garnizonuna baskın yapmış ve erzaklarını "
+"yağmalamış olabilir. Bu kadar önemsiz bir karşılaşmadan bu kadar sert "
+"sonuçlar çıkarmanıza gerek yok."
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/03_Strange_Allies.cfg:268
+msgid ""
+"And what of the orcs that Aiglondur fended off at the East Gate of Knalga? "
+"Their leader’s cloak-pin bore the emblem of Kal Kartha—"
+msgstr ""
+"Peki ya Aglondur'un Kanalga'nın Doğu Kapısı'nda savuşturduğu orklar? "
+"Liderlerinin pelerininde Kal Kartha amblemi vardı—"
+
+#. [message]: speaker=Movrur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/03_Strange_Allies.cfg:273
+msgid ""
+"Several of our scouting bands were ambushed recently. These orcs must have "
+"been among those who slew our kinsmen. It is all the better we slaughtered "
+"them here!"
+msgstr ""
+"Birkaç keşif grubumuz yakın zamanda pusuya düşürüldü. Bu orklar, "
+"kardeşlerimizi katledenler arasında olmalı. Onları burada gebertsek daha iyi "
+"olur!"
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/03_Strange_Allies.cfg:278
+msgid "Indeed..."
+msgstr "Aslında..."
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/03_Strange_Allies.cfg:283
+msgid ""
+"What matters is that these raiders are defeated now. My thanks to you, Marth-"
+"Tak, for proving there are orcs I can fight alongside rather than against. "
+"But we cannot linger here to celebrate; we are journeying east."
+msgstr ""
+"Önemli olan bu yağmacıların artık kovulmasıdır. Karşı değil de yanlarında "
+"savaşabileceğim orkların olduğunu kanıtladığın için sana teşekkür ederim, "
+"Mart-Tak. Ama burada kutlamak için oyalanamayız; doğuya yolculuk ediyoruz."
+
+#. [message]: speaker=Marth-Tak
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/03_Strange_Allies.cfg:288
+msgid "East, eh? You won’t find many friends in that direction. Travel safely."
+msgstr ""
+"Doğuya ha? O taraflarda çok fazla dost bulamayacaksınız. Yolculuğunuzun "
+"güvenli geçmesini dilerim."
+
+#. [scenario]: id=04_High_Pass
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/04_High_Pass.cfg:5
+msgid "High Pass"
+msgstr "Yüksek Geçit"
+
+#. [side]: type=Gryphon, id=Kaara
+#. [side]
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/04_High_Pass.cfg:51
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/04_High_Pass.cfg:67
+msgid "Monsters"
+msgstr "Yaratıklar"
+
+#. [side]: type=Gryphon, id=Kaara
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/04_High_Pass.cfg:55
+msgid "Kaara"
+msgstr "Kaara"
+
+#. [objective]: condition=win
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/04_High_Pass.cfg:102
+msgid "Move Aiglondur to the signpost at the east end of the pass"
+msgstr "Aglondur’u geçidin doğu ucundaki yol işaretine götür"
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/04_High_Pass.cfg:142
+msgid ""
+"Behold, the High Pass. By the old maps, we are halfway to Kal Kartha here."
+msgstr "İşte, Yüksek Geçit. Eski haritalara göre Kal Karta yolunu yarıladık."
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/04_High_Pass.cfg:147
+msgid ""
+"We must push through quickly; there is a vicious storm coming in behind us. "
+"Being caught in a blizzard on those heights would be no laughing matter."
+msgstr ""
+"Burayı çabucak geçmeliyiz. Arkamızdan şiddetli bir fırtına yaklaşıyor. Bu "
+"yükseklikte tipiye yakalanırsak hayrımıza olmaz."
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/04_High_Pass.cfg:239
+msgid ""
+"It has begun to snow. Move, everyone! To be trapped here would be death."
+msgstr "Kar başladı. Herkes canlansın! Burada tuzağa düşüp öleceğiz."
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/04_High_Pass.cfg:248
+msgid ""
+"We’re snowed in. Our mission has failed, even if we live until the spring."
+msgstr ""
+"Kara yakalandık. Bahar gelene kadar yaşasak bile görevimizi başaramadık."
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/04_High_Pass.cfg:262
+msgid "We’re through the pass!"
+msgstr "Geçidi aştık!"
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/04_High_Pass.cfg:267
+msgid ""
+"That may not be a blessing. Something has been driving these orcish raiders "
+"to push into Alliance territory. Don’t you wonder what it is?"
+msgstr ""
+"Bu bir lütuf olmayabilir. Bu ork yağmacılarını İttifak topraklarına girmeye "
+"iten bir şey var. Ne olduğunu merak etmiyor musun?"
+
+#. [message]: speaker=Movrur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/04_High_Pass.cfg:272
+msgid ""
+"The same that has been driving them to attack us at Kal Kartha. But, no "
+"matter the reason for their aggression, we shall slaughter them all the same."
+msgstr ""
+"Onları Kal Karta'da bize saldırmaya iten şeyle aynı. Ama saldırganlıklarının "
+"sebebi ne olursa olsun, hepsini aynı şekilde katledeceğiz."
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/04_High_Pass.cfg:277
+msgid ""
+"We are coming to Kal Kartha to study the Hammer of Thursagan, not mindlessly "
+"slay orcs."
+msgstr ""
+"Kal Karta'ya Thursagan'ın Çekici'ni incelemek için geliyoruz, akılsızca "
+"orkları öldürmek için değil."
+
+#. [message]: speaker=Movrur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/04_High_Pass.cfg:282
+msgid ""
+"Indeed, you are, but you musn’t lose sight of the end goal. Restoring the "
+"Hammer will revive the ancient art of runecraft and bring dwarven-kind back "
+"to glory. With the Hammer restored, no orc shall ever be a threat to us ever "
+"again."
+msgstr ""
+"Gerçekten öyle, ama nihai hedefi gözden kaçırmamalısın. Çekiç'i tamir etmek "
+"kadim oymacılık sanatını canlandıracak ve cüce türünü ihtişamına geri "
+"getirecek. Çekiç tamir edildiğinde, hiçbir ork bizim için asla bir daha "
+"tehdit olmayacak."
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/04_High_Pass.cfg:287
+msgid ""
+"I hope so, for the sake of peace and the safety of our people. For now, "
+"however, we must content ourselves with pressing onward toward Kal Kartha."
+msgstr ""
+"Barış ve halkımızın güvenliği adına, öyle umuyorum. Ancak şimdilik, Kal "
+"Karta'ya doğru ilerlemekle yetinmeliyiz."
+
+#. [scenario]: id=05_Fear
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:5
+msgid "Fear"
+msgstr "Korku"
+
+#. [side]
+#. [side]: type=Dwarvish Masked Lord, id=Dufon
+#. [side]: type=Dwarvish Masked Lord, id=Aragoth
+#. [side]: type=Dwarvish Masked Lord, id=Dranath
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:52
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:58
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:101
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:134
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:163
+msgid "Masked Dwarves"
+msgstr "Maskeli Cüceler"
+
+#. [side]
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:78
+msgid "Peasants"
+msgstr "Köylüler"
+
+#. [side]
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:106
+msgid "Raiders"
+msgstr "Yağmacılar"
+
+#. [objective]: condition=win
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:117
+msgid "Find the inhabitants"
+msgstr "Bölge sakinlerini bul"
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:182
+msgid ""
+"We should be on the outskirts of the settled country around Kal Kartha, but "
+"something doesn’t feel right here."
+msgstr ""
+"Kal Karta’yı kuşatan dış mahallelerde olmamız gerekir, fakat burada yolunda "
+"gitmeyen bir şeyler olduğunu hissediyorum."
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:187
+msgid "It’s too quiet... and I think I smell traces of smoke on the wind."
+msgstr "Çok sessiz... ve rüzgarda duman kokusu var."
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:192
+msgid "There has been fire near here recently, and not a clean one."
+msgstr "Yakınlarda bir yerde ateş yakılmış ama temiz bir ateş gibi kokmuyor."
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:197
+msgid ""
+"Look sharp for the inhabitants here. They might have something to tell us."
+msgstr ""
+"Dikkatli bakarsanız, burada oturanlar var. Onlar belki bize birşeyler "
+"söyleyebilir."
+
+#. [message]: role=peasantry
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:234
+msgid "Help! Someone please help!"
+msgstr "İmdat! Biri yardım etsin lütfen!"
+
+#. [message]: role=peasantry
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:244
+msgid "Help!"
+msgstr "İmdat!"
+
+#. [message]: role=slaver
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:254
+msgid ""
+"<i>Quiet, dirtgrubber. Ye’ll not cry for help from these newcomers, else "
+"I’ll torture yer family ta death bef’re yer eyes.</i>"
+msgstr ""
+"<i>Sessiz ol pislik. Bu yeni gelenlerden yardım istemek için "
+"yalvarmayacaksın, yoksa ailene işkence edip gözlerinin önünde öldürürüm. </i>"
+
+#. [message]: role=peasantry
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:259
+msgid "They’ll stop you!"
+msgstr "Onlar seni durdurur!"
+
+#. [message]: role=slaver
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:264
+msgid "<i>Look again, slave. We march among their ranks too!</i>"
+msgstr "<i>Tekrar bak, köle. Biz de onların safları arasında yürüyoruz! </i>"
+
+#. [message]: role=peasantry
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:277
+msgid "<i>It can’t be...</i>"
+msgstr "<i>Bu olamaz...</i>"
+
+#. [message]: speaker=slaver
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:282
+msgid "<i>Now, be silent while the master speaks.</i>"
+msgstr "<i>Şimdi, efendi konuşurken sessiz olun.</i>"
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:287
+msgid "What in the world is going on here?"
+msgstr "Burada neler oluyor?"
+
+#. [message]: speaker=Masked Dwarf Leader
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:292
+msgid ""
+"Fellow dwarves, hail! Kinsman Movrur, are ye back so soon from your journey "
+"to Knalga?"
+msgstr ""
+"Dost cüceler, selamlar! Kardeş Movrur, Kanalga yolculuğundan bu kadar çabuk "
+"mu döndün?"
+
+#. [message]: speaker=Movrur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:297
+msgid ""
+"Aye. I’ve brought some of our brethren from the Dwarven Doors; we make for "
+"the forges of Kal Kartha to examine the Hammer."
+msgstr ""
+"Evet. Kardeşlerimizden bazılarını Cüce Kapılarından getirdim; Çekiç'i "
+"incelemek için Kal Karta demirhanelerine gidiyoruz."
+
+#. [message]: speaker=Masked Dwarf Leader
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:302
+msgid "Excellent. As for the current project, we—"
+msgstr "Mükemmel. Mevcut projeye gelince, biz—"
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:307
+msgid ""
+"You two haven’t answered my question. Burnt homes? The peasants in a panic? "
+"Something is very wrong here."
+msgstr ""
+"Siz ikiniz, soruma cevap vermediniz. Yanmış evler mi? Köylüler panik içinde "
+"mi? Burada bir şey çok yanlış."
+
+#. [message]: speaker=Masked Dwarf Leader
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:312
+msgid ""
+"... aye. We’ve been under attack by some marauding orcs, who’re hidin’ out "
+"in some of the villages. I put some guards out in the fields to... protect "
+"the peasants, but we haven’t the forces to root out all of them orcs."
+msgstr ""
+"...evet. Bazı köylerde saklanan yağmacı orklar tarafından saldırıya uğradık. "
+"Köylüleri korumak için tarlalara bazı muhafızlar yerleştirdim ama orkların "
+"hepsini kökünden söküp atacak gücümüz yok."
+
+#. [message]: role=peasantry
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:317
+msgid "<i>That’s not what the guards are for...</i>"
+msgstr "<i>Muhafızların amacı bu değil...</i>"
+
+#. [message]: role=slaver
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:322
+msgid "<i>Did I not tell you to be silent?</i>"
+msgstr "<i>Sana sessiz ol demedim mi?</i>"
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:327
+msgid "Orcs, you say?"
+msgstr "Orklar mı dedin?"
+
+#. [message]: speaker=Movrur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:332
+msgid ""
+"Yes, orcs. The outskirts of Kal Kartha are a dangerous place. We’ve been "
+"forced to dedicate more of our forces here just to protect the peasants "
+"while they... go about their business."
+msgstr ""
+"Evet, orklar. Kal Karta'nın etekleri tehlikeli bir yer. Köylüler işlerine "
+"devam ederken onları korumak için gücümüzün çoğunu buraya aktarmak zorunda "
+"kaldık."
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:337
+msgid ""
+"Well, then. Since we are already here, why don’t we... help you root out "
+"these orcs? It will help the peasants get back to their lives."
+msgstr ""
+"İyi o zaman. Madem buradayız, neden bu orkların kökünü kazımana yardım "
+"etmiyoruz? Köylülerin hayatlarına geri dönmelerine yardımcı olacak."
+
+#. [message]: speaker=Masked Dwarf Leader
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:342
+msgid "Certainly..."
+msgstr "Kesinlikle..."
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:347
+msgid "<i>Angarthing, is something wrong?</i>"
+msgstr "<i>Angarting, birşeyler yanlış mı?</i>"
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:352
+msgid ""
+"<i>Something is suspicious here. Stay alert and keep an eye on what those "
+"masked dwarves do. Movrur, too.</i>"
+msgstr ""
+"<i>Burada bir şey şüpheli. Tetikte olun ve o maskeli cücelerin yaptıklarına "
+"dikkat edin. Movrur'a da. </i>"
+
+#. [objective]: condition=win
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:358
+msgid "Find and defeat the orcish intruders"
+msgstr "Ork işgalcileri bul ve yen"
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:423
+msgid "The orcs are here! Up axes!"
+msgstr "Orklar burada! Baltalar havaya!"
+
+#. [unit]: type=Orcish Slayer, type=Orcish Nightblade, id=Maluk
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:569
+msgid "Maluk"
+msgstr "Maluk"
+
+#. [message]: speaker=Movrur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:583
+msgid ""
+"So, the filth shows its face at last. You may think yourself mighty for "
+"preying on weak humans, but you stand no chance against us dwarves."
+msgstr ""
+"Böylece pislik en sonunda yüzünü gösteriyor. Zayıf insanları avladığınız "
+"için güçlü olduğunuzu düşünebilirsiniz ama biz cücelere karşı hiç şansınız "
+"yok."
+
+#. [message]: speaker=Maluk
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:588
+msgid "We shall see, masked one."
+msgstr "Göreceğiz, maskeli."
+
+#. [message]: speaker=Maluk
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:600
+msgid "They are too powerful! Retreat!"
+msgstr "Çok güçlüler! Geri çekilin!"
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:613
+msgid "Their leader has fled! We have won!"
+msgstr "Liderleri kaçtı! Biz kazandık!"
+
+#. [message]: speaker=Movrur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:624
+msgid "In his haste to escape, it seems like the orc dropped some coins."
+msgstr ""
+"Kaçmak için acele ederken, ork biraz bozuk para düşürmüş gibi görünüyor."
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:629
+msgid "Let me see those."
+msgstr "Şunlara bir bakayım."
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:638
+msgid ""
+"These look as if they are of dwarven make! Movrur, what is the meaning of "
+"this?"
+msgstr "Bunlar sanki cüce yapımı gibi görünüyor! Movrur, bunun anlamı nedir?"
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:649
+msgid ""
+"In his haste to escape, it seems like the orc dropped some coins. It looks "
+"as if they are of dwarven make! Movrur, what is the meaning of this?"
+msgstr ""
+"Kaçmak için acele ederken, ork biraz bozuk para düşürmüş gibi görünüyor. "
+"Cüce yapımı gibi görünüyorlar! Movrur, bunun anlamı nedir?"
+
+#. [message]: speaker=second_unit
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:656
+msgid ""
+"In his haste to escape, it seems like the orc dropped some coins. It looks "
+"as if they are of dwarven make!"
+msgstr ""
+"Kaçmak için acele ederken, ork biraz bozuk para düşürmüş gibi görünüyor. "
+"Cüce yapımı gibi görünüyorlar!"
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:661
+msgid "What, are you sure? Movrur, what is the meaning of this?"
+msgstr "Ne, emin misin? Movrur, bunun anlamı nedir?"
+
+#. [message]: speaker=Movrur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:668
+msgid ""
+"Thieves and raiders, that be what these orcs are. They oft steal our gold "
+"and weapons in their raids, for such beasts have little ability to create "
+"either on their own."
+msgstr ""
+"Hırsızlar ve yağmacılar, işte bu orklar. Baskınlarında sık sık altınlarımızı "
+"ve silahlarımızı çalanlar, bu tür canavarların kendi başlarına çaldıkları "
+"şeyleri yapacak yetenekleri çok azdır."
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:673
+msgid "So you say."
+msgstr "Yani diyorsun ki."
+
+#. [message]: speaker=Movrur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:678
+msgid ""
+"We of Kal Kartha have no reason to give these foul orcs any of our hard-"
+"earned gold, if that is what you are insinuating, <i>loremaster</i>."
+msgstr ""
+"Kal Karta'lı olarak, ima ettiğiniz şey buysa, <i>üstadım</i>, zor kazanılmış "
+"altınlarımızı bu şapşal orklara vermek için hiçbir nedenimiz yok."
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:683
+msgid ""
+"Indeed. Although I find it odd that the orcs would have found such a sum of "
+"dwarven currency from raiding human villages..."
+msgstr ""
+"Aslında. Orkların insan köylerini yağmalayarak bu kadar çok miktarda cüce "
+"parası bulmasını tuhaf bulsam da..."
+
+#. [message]: speaker=Movrur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:688
+msgid ""
+"If it pleases you, I will distribute this gold to these... poor... humans. "
+"That way, they can return to their fields with their money returned to them, "
+"and we can be on our way to Kal Kartha."
+msgstr ""
+"Eğer sizi menun edecekse, bu altını bu... zavallı... insanlara dağıtacağım. "
+"Böylece paraları kendilerine iade edilerek tarlalarına dönebilirler ve biz "
+"de Kal Karta'ya doğru yola çıkabiliriz."
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:693
+msgid ""
+"<i>That did not really answer your concern.</i> Very well, that sounds "
+"reasonable to me."
+msgstr ""
+"<i>Bu aslında endişelerimizin yanıtı olmadı.</i> Pekala, yine de bu bana "
+"kabul edilebilir göründü."
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/05_Fear.cfg:698
+msgid ""
+"<i>Aye, we shall have to watch him more closely. Something is strange about "
+"him and the rest of these masked ones.</i> Lead the way, Movrur."
+msgstr ""
+"<i>Evet, onu daha yakından izlememiz gerekecek. Onda ve bu maskelilerin geri "
+"kalanında bir tuhaflık var.</i> Yolu göster, Movrur."
+
+#. [scenario]: id=06_Forbidden_Forest
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/06_Forbidden_Forest.cfg:5
+msgid "Forbidden Forest"
+msgstr "Yasak Orman"
+
+#. [side]: type=Elvish High Lord, id=Telcherion
+#. [side]: type=Elvish Enchantress, id=Iluvarda
+#. [side]: type=Ancient Wose, id=Burumardir-Athelorand
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/06_Forbidden_Forest.cfg:54
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/06_Forbidden_Forest.cfg:79
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/06_Forbidden_Forest.cfg:104
+msgid "Forest"
+msgstr "Orman"
+
+#. [side]: type=Elvish High Lord, id=Telcherion
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/06_Forbidden_Forest.cfg:59
+msgid "Telcherion"
+msgstr "Telçeryon"
+
+#. [side]: type=Elvish Enchantress, id=Iluvarda
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/06_Forbidden_Forest.cfg:84
+msgid "Iluvarda"
+msgstr "İluvarda"
+
+#. [side]: type=Ancient Wose, id=Burumardir-Athelorand
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/06_Forbidden_Forest.cfg:108
+msgid "Burumardir-Athelorand"
+msgstr "Burumardir-Atelorand"
+
+#. [objective]: condition=win
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/06_Forbidden_Forest.cfg:132
+msgid "Move both Aiglondur and Angarthing to the eastern signpost"
+msgstr ""
+"Angarting ve Aglondur'u doğudaki yol işaretine (diğerinin yanına) götür"
+
+#. [note]
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/06_Forbidden_Forest.cfg:151
+msgid ""
+"To win, either move Aiglondur to the signpost and Angarthing next to him, or "
+"move Angarthing to the signpost and Aiglondur next to him."
+msgstr ""
+"Kazanmak için Angarting ve Aglondur'u (ikisini de) yol işaretine diğerinin "
+"yanına götürün."
+
+#. [unit]: type=Elvish Scout, id=Elurin
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/06_Forbidden_Forest.cfg:192
+msgid "Elurin"
+msgstr "Elurin"
+
+#. [message]: speaker=Elurin
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/06_Forbidden_Forest.cfg:201
+msgid "Who disturbs our forest?"
+msgstr "Ormanımıza giren kim?"
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/06_Forbidden_Forest.cfg:206
+msgid ""
+"A delegation of the Northern Alliance, seeking the road through to Kal "
+"Kartha."
+msgstr "Kuzey İttifakının delegeleriyiz. Kal Karta’ya giden yolu arıyoruz."
+
+#. [message]: speaker=Elurin
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/06_Forbidden_Forest.cfg:211
+msgid ""
+"We allow few outsiders in our forest paths, and no dwarves since the masked "
+"ones began to trouble our eastern margins. No axe-bearers shall come near "
+"our trees. Return whence you came!"
+msgstr ""
+"Orman yolumuzu kullanmak isteyenlere izin veriyoruz ama maskeli birileri "
+"doğu sınırlarımızda sorun çıkarmaya başladığından beri cücelere izin "
+"vermiyoruz. Balta taşıyan hiç kimse ağaçlarımızın yanına yaklaşamaz. "
+"Geldiğiniz yere geri dönün!"
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/06_Forbidden_Forest.cfg:216
+msgid "No. We have our duty. We must pass."
+msgstr "Hayır. Bizim bir görevimiz var. Bizim geçmemiz lazım."
+
+#. [message]: speaker=Elurin
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/06_Forbidden_Forest.cfg:221
+msgid "You shall not pass here."
+msgstr "Buradan geçemezsiniz."
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/06_Forbidden_Forest.cfg:226
+msgid ""
+"Winter comes on our heels, and your forest straddles the only gap in these "
+"mountains. You leave us no choice but to fight you."
+msgstr ""
+"Kış burnumuzun dibine kadar geldi ve ormanınız bu dağlardan geçilecek tek "
+"yer. Bize sizinle dövüşmekten başka seçenek bırakmadınız."
+
+#. [message]: speaker=Elurin
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/06_Forbidden_Forest.cfg:231
+msgid ""
+"So be it, then. Yours will not be the first bones to nourish the earth of "
+"our forest."
+msgstr ""
+"Öyle olsun, o halde. Sizinkiler, ormanımızın toprağına karışacak ilk "
+"kemikler olmayacak."
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/06_Forbidden_Forest.cfg:282
+msgid ""
+"Rally on me, everyone. We have better things to do than brawl with elves."
+msgstr ""
+"Herkes yanıma toplansın. Elflerle dövüşmekten daha önemli işlerimiz var."
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/06_Forbidden_Forest.cfg:291
+msgid "Kal Kartha should be only another day’s march north of here."
+msgstr "Kal Karta, kuzeyde bir günlük uzaklıkta olmalı."
+
+#. [scenario]: id=07_The_Siege_of_Kal_Kartha
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:5
+msgid "The Siege of Kal Kartha"
+msgstr "Kal Karta Kuşatması"
+
+#. [side]: type=Orcish Warlord, id=Tan-Morgh
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:87
+msgid "Tan-Morgh"
+msgstr "Tan-Morg"
+
+#. [side]: type=Orcish Warlord, id=Tan-Garukh
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:132
+msgid "Tan-Garukh"
+msgstr "Tan-Garuk"
+
+#. [side]: type=Orcish Warlord, id=Tan-Wagran
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:174
+msgid "Tan-Wagran"
+msgstr "Tan-Fagran"
+
+#. [label]
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:208
+msgid "West Gate"
+msgstr "Batı Kapısı"
+
+#. [objective]: condition=win
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:217
+msgid "Defeat the orcish leaders"
+msgstr "Ork liderlerini yen"
+
+#. [objective]: condition=lose
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:233
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/08_The_Court_of_Karrag.cfg:143
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:223
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:768
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:934
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1102
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1155
+msgid "Death of Dulcatulos"
+msgstr "Dulkatul’un ölümü"
+
+#. [message]: speaker=Movrur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:261
+msgid "Behold! The West Gate of Kal Kartha!"
+msgstr "İşte! Kal Karta’nın Batı Kapısı!"
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:266
+msgid ""
+"And under siege, I see. There is a mighty host of orcs between us and that "
+"gate."
+msgstr "Ve kuşatma altında. Kapıyla aramızda güçlü bir ork ordusu var."
+
+#. [message]: speaker=Tan-Morgh
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:271
+msgid ""
+"Ahhh... more stinky-midgets, come to get killed just like these cowards in "
+"their den."
+msgstr ""
+"Ahhh... şu ufaklıklardan biraz daha gelmiş. Bu korkaklar gibi siz de ölmeye "
+"geldiniz, herhalde."
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:276
+msgid "Let us bring our kin that orc’s head as a guesting-gift."
+msgstr "Irkdaşlarımıza şu orkun kellesini hediye olarak götürelim."
+
+#. [message]: speaker=Dulcatulos
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:292
+msgid "Kal Kartha shall not fall!"
+msgstr "Kal Karta düşmemeli!"
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:304
+msgid "Kal Kartha is taken. Our mission has failed."
+msgstr "Kal Karta alındı. Görevimizi yerine getiremedik."
+
+#. [message]: speaker=Dulcatulos
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:317
+msgid ""
+"Well fought, and our thanks; we were sore pressed. You are our honored "
+"guests, and I will show you to the best quarters we have myself. Our lord, "
+"the runemaster Karrag, will want to have speech with you on the morrow."
+msgstr ""
+"İyi dövüştü, teşekkürler. Konukluğunuzdan onur duyarız ve size en iyi "
+"odalarımızı vereceğiz. Liderimiz oyma ustası Karrag yarın sizinle konuşmak "
+"istiyor."
+
+#. [message]: speaker=Movrur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:322
+msgid "<i>Dulcatulos, you dunce...</i>"
+msgstr "<i>Dulkatul, seni aptal...</i>"
+
+#. [message]: speaker=Dulcatulos
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:327
+msgid "<i>Did I say something I should have not?</i>"
+msgstr "<i>Söylememem gereken bir şey mi söyledim?</i>"
+
+#. [message]: speaker=Movrur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:332
+msgid "<i>Never mind. I shall deal with you later.</i>"
+msgstr "<i>Boşver. Seninle sonra ilgileneceğim.</i>"
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:337
+msgid ""
+"A runemaster? There have been none such since Thursagan’s day. And for one "
+"to lead a holding was unheard-of; they tended towards the solitary life."
+msgstr ""
+"Bir oyma ustası mı? Tursagan öldüğünden beri hiç oymacı kalmamıştı. Hele, "
+"münzevi bir yaşam sürmeye eğilimli birinin bir topluluğa liderlik etmesi... "
+"duyulmuş şey değil."
+
+#. [message]: speaker=Dulcatulos
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:342
+msgid ""
+"Aye? Well, you’d know such things better than I, loremaster. Lord Karrag "
+"toiled for long years to recover the craft lore. He was elevated when our "
+"old lord fell in battle against the besieging orcs. Karrag himself was "
+"wounded near to death; none thought he would recover."
+msgstr ""
+"Öyle mi? Siz böyle şeyleri elbette benden daha iyi bilirsiniz üstat. Karrag "
+"beyimiz meslek ilmini kurtarmak için yıllarını harcadı. Ork kuşatmasına "
+"karşı savaşta kaybettiğimiz eski liderimizin yerine geçti. Karrag şimdi "
+"yaralı, ölmek üzere; onu kurtaracak kimse yok."
+
+#. [message]: speaker=Movrur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:347
+msgid ""
+"But he revived himself and stands with us now. That is all that matters."
+msgstr ""
+"Ama kendini canlandırdı ve şimdi bizimle birlikte duruyor. Yani önemli olan "
+"bu."
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:352
+msgid ""
+"He has grasped the Hammer of Thursagan, then? Else I know not how he "
+"recovered the runelore of old."
+msgstr ""
+"Yani, Thursagan'ın Çekici'nin ne olduğunu anladı mı? Yoksa eski rünleri "
+"nasıl kurtardığını bilmiyorum."
+
+#. [message]: speaker=Movrur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:357
+msgid ""
+"Aye. Shattered though the Hammer may be, it still retains some of its old "
+"power. With your knowledge and help, loremaster, we can reforge the hammer "
+"and use its power to smash all enemies that oppose us."
+msgstr ""
+"Evet. Çekiç parçalanmış olsa da eski gücünün bir kısmını hala koruyor. "
+"Bilgin ve yardımınla üstadım, çekici yeniden dövebilir ve gücünü bize karşı "
+"çıkan tüm düşmanları ezmek için kullanabiliriz."
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:362
+msgid "The Hammer is a tool of crafting and making, not a weapon."
+msgstr ""
+"Çekiç metale şekil vermekte kullanılan bir el aletidir, bir silah değildir."
+
+#. [message]: speaker=Dulcatulos
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:367
+msgid ""
+"Is it not? Lord Karrag has wielded it in battle to great effect, even broken "
+"as it is."
+msgstr ""
+"Değil mi? Lord Karrag onu büyük bir etki için savaşta kullandı, hatta kırık "
+"olduğu halde."
+
+#. [message]: speaker=Movrur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:372
+msgid ""
+"<i>Stop speaking, you imbecile.</i> That would be the power of runecraft you "
+"witness. No fool would take a broken weapon into battle, much less a "
+"precious artifact like the Hammer. Karrag holds it as a symbol of his "
+"knowledge and mastery of lore, no more than that."
+msgstr ""
+"<i>Kes sesini, seni embesil.</i> Bu, tanık olduğun rün oymacılığının gücü "
+"olurdu. Çekiç gibi değerli bir eser bir yana, hiçbir aptal savaşa kırık bir "
+"silah almaz. Karrag onu bilgisinin ve irfan ustalığının bir sembolü olarak "
+"görüyor, bundan daha fazlası değil."
+
+#. [message]: speaker=Dulcatulos
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/07_The_Siege_of_Kal_Kartha.cfg:377
+msgid ""
+"As you say. These things are for lords and loremasters to worry about, not "
+"the likes of me. I must see to my troop’s care. Food will be brought to you; "
+"rest well. We will speak again."
+msgstr ""
+"Dediğin gibi. Bunlar benim gibiler için değil, lordlar ve bilginler için "
+"endişelenilecek şeyler. Birliğimin bakımıyla ilgilenmeliyim. Size yiyecek "
+"getirilecek; iyice dinlenin sonra tekrar konuşuruz."
+
+#. [scenario]: id=08_The_Court_of_Karrag
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/08_The_Court_of_Karrag.cfg:5
+msgid "The Court of Karrag"
+msgstr "Karrag Mahkemesi"
+
+#. [side]
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/08_The_Court_of_Karrag.cfg:50
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/08_The_Court_of_Karrag.cfg:100
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/10_Epilogue.cfg:46
+msgid "Kal Karthans"
+msgstr "Kal Kartanus"
+
+#. [unit]: type=Dwarvish Masked Steelclad, id=Magog
+#. [unit]: type=Dwarvish Masked Ulfserker, id=Hekyll
+#. [unit]: type=Dwarvish Masked Ulfserker, id=Jekyll
+#. [unit]: type={TYPE}
+#. [side]: type=Dwarvish Masked Lord, id=Dufon
+#. [side]: type=Dwarvish Masked Lord, id=Aragoth
+#. [side]: type=Dwarvish Masked Lord, id=Dranath
+#. [event]
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/08_The_Court_of_Karrag.cfg:64
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/08_The_Court_of_Karrag.cfg:72
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/08_The_Court_of_Karrag.cfg:80
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:47
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:106
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:139
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:168
+#: data/campaigns/The_Hammer_of_Thursagan/utils/macros.cfg:25
+msgid "Masked Dwarf"
+msgstr "Maskeli Cüce"
+
+#. [objective]: condition=win
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/08_The_Court_of_Karrag.cfg:131
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1090
+msgid "Defeat Karrag"
+msgstr "Karrag’ı yen"
+
+#. [message]: speaker=Movrur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/08_The_Court_of_Karrag.cfg:178
+msgid ""
+"I shall go take my place by Lord Karrag. See to it that you offer him the "
+"respect that he is due."
+msgstr ""
+"Gidip Lord Karrag'ın yanında yerimi alacağım. Ona hak ettiği saygıyı "
+"göstermeye dikkat et."
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/08_The_Court_of_Karrag.cfg:190
+msgid "Angarthing... I have a bad feeling about this."
+msgstr "Angarting... İçimde kötü bir his var."
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/08_The_Court_of_Karrag.cfg:195
+msgid "Indeed. There is something very wrong here."
+msgstr "Gerçekten. Burada yanlış giden şeyler var."
+
+#. [message]: speaker=Karrag
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/08_The_Court_of_Karrag.cfg:200
+msgid "Hail, fellow dwarves. All Kal Kartha thanks you for your timely rescue."
+msgstr ""
+"Selam, cüce arkadaşlar. Tüm Kal Karta bizi zamanında kurtardığınız için size "
+"teşekkür eder."
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/08_The_Court_of_Karrag.cfg:205
+msgid ""
+"We are from Knalga; your clans are kin to ours of old. We but did our duty "
+"to kin."
+msgstr ""
+"Biz Kanalga’danız; kabileniz bizimle eskiden akrabaydı. Fakat görevimizi "
+"akrabalık için yapmadık."
+
+#. [message]: speaker=Karrag
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/08_The_Court_of_Karrag.cfg:210
+msgid ""
+"All dwarves are kin, and must prevail against orcs and humans and other "
+"dirtgrubbers. You can be part of the fist that smites them through the power "
+"of our ancient heirloom, the Hammer of Thursagan."
+msgstr ""
+"Tüm cüceler kardeştir ve orklardan, insanlardan ve diğer yaratıklardan "
+"üstünlerdir. Kadim yadigârımız Thursagan'ın Çekici'nin gücüyle onları vuran "
+"yumruğun bir parçası olabilirsiniz."
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/08_The_Court_of_Karrag.cfg:215
+msgid ""
+"We did not come to smite anyone, especially not using the most prized "
+"artifact of our heritage as a mere weapon."
+msgstr ""
+"Kimseyi cezalandırmaya gelmedik, özellikle de mirasımızın en değerli eserini "
+"bir silah olarak kullanmadık."
+
+#. [message]: speaker=Karrag
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/08_The_Court_of_Karrag.cfg:220
+msgid ""
+"Weapon? No, no, loremaster... you mistake my intentions. You know, as well "
+"as I do, that the Hammer is hardly a paltry weapon. The Hammer holds the "
+"soul of the dwarves, the true people. It is that which forged our flesh and "
+"blood, that which binds our will and forges our resolve. It is a symbol of "
+"our superiority as the true people of Irdya, an image that the other races "
+"shall respect and fear!"
+msgstr ""
+"Silah mı? Hayır, hayır, üstadım... niyetimi yanlış anlıyorsun. Sen de benim "
+"kadar biliyorsun ki Çekiç pek de önemsiz bir silah değil. Çekiç, gerçek halk "
+"olan cücelerin ruhunu taşır. Etimizi ve kanımızı şekillendiren, irademizi "
+"bağlayan ve kararlılığımızı güçlendiren şeydir. İrdiya'nın gerçek halkı "
+"olarak üstünlüğümüzün simgesi, diğer ırkların saygı duyacağı ve korkacağı "
+"bir imge!"
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/08_The_Court_of_Karrag.cfg:225
+msgid "... so... what are you suggesting?"
+msgstr "... yani... ne öneriyorsun?"
+
+#. [message]: speaker=Karrag
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/08_The_Court_of_Karrag.cfg:230
+msgid ""
+"The Hammer is still incomplete; we need the knowledge of a loremaster to "
+"reforge the remaining shards and restore the artifact to its most powerful "
+"state. Once that is done, none will be able to stand before me! Join us, "
+"loremaster. We can put your talent to good use."
+msgstr ""
+"Çekiç hala tamamlanmadı; kalan parçaları yeniden dövebilmek ve eseri en "
+"güçlü durumuna getirmek için bir üstadın bilgisine ihtiyacımız var. Bu "
+"yapıldıktan sonra, kimse önümde duramayacak! Bize katılın, üstadım. "
+"Yeteneğinizi en iyi şekilde kullanabiliriz."
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/08_The_Court_of_Karrag.cfg:235
+msgid ""
+"On one condition. You must take off that mask and show your true face. I am "
+"a witness."
+msgstr ""
+"Tek bir şartla. Maskeni çıkarıp bize gerçek yüzünü göstereceksin. Ben bir "
+"gözlemciyim."
+
+#. [message]: speaker=Movrur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/08_The_Court_of_Karrag.cfg:240
+msgid "Impertinent cur! You dare—"
+msgstr "Küstah it! Bu ne cüret—"
+
+#. [message]: speaker=Karrag
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/08_The_Court_of_Karrag.cfg:245
+msgid ""
+"Quiet, Movrur. Loremaster, you... do not wish to see what is beneath this "
+"mask. I was terribly wounded in an orcish attack. Disfigured."
+msgstr ""
+"Kes sesini Movrur. Üstat, sen... bu maskenin altındakini görmek istemezsin. "
+"Bir ork saldırısında çok kötü yaralandım. Şekli bozuldu."
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/08_The_Court_of_Karrag.cfg:250
+msgid ""
+"But the Law must see. A dwarf must put his name and his face behind his "
+"deeds. I am a witness."
+msgstr ""
+"Fakat kanun görmemi emrediyor. Bir cüce ismini ve yüzünü gözlemcilerden "
+"saklayamaz. Ben bir gözlemciyim."
+
+#. [message]: speaker=Movrur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/08_The_Court_of_Karrag.cfg:255
+msgid ""
+"Master, you need not answer to this fool. Even for a loremaster, to dictate "
+"to a lord in his own holding... and one who holds the very soul of the "
+"dwarves in his hand. It is unthinkable!"
+msgstr ""
+"Usta, bu aptala cevap vermene gerek yok. Bir üstat için bile bir lorda ne "
+"yapacağını söylemek... üstelik bir çok cücenin ruhunu ve seni elinde tutan "
+"birine... Bu kabul edilemez!"
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/08_The_Court_of_Karrag.cfg:260
+msgid ""
+"The Law speaks. Against him with the eyes to see, no deception can hold. I "
+"AM A WITNESS!"
+msgstr ""
+"Kanun konuşuyor! Düzenbazlıkla hiçbir şey onun gözlerinden saklanamaz. BEN "
+"BİR GÖZLEMCİYİM!"
+
+#. [message]: speaker=Movrur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/08_The_Court_of_Karrag.cfg:265
+msgid "Master—"
+msgstr "Usta—"
+
+#. [message]: speaker=Dulcatulos
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/08_The_Court_of_Karrag.cfg:296
+msgid "No... no... it is horrible! My lord, how did you come to this?"
+msgstr "Hayır... hayır... bu korkunç! Lordum nasıl bu hale geldiniz?"
+
+#. [message]: speaker=Karrag
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/08_The_Court_of_Karrag.cfg:301
+msgid ""
+"I lingered for weeks in agony. Only my hatred and the runelore of old "
+"sustained me, until I became as I am. I will have revenge; I will destroy "
+"the orcs, and the humans, and the elves, and all but the true people!"
+msgstr ""
+"Haftalardır acı içinde kıvranıyorum. Kendime gelene kadar sadece kinim ve "
+"eski oymacı bilgeliğim dayanmamı sağlayabiliyor. Bunun intikamını alacağım; "
+"gerçek halktan olmayan tüm elfleri, insanları ve orkları yok edeceğim!"
+
+#. [message]: speaker=Karrag
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/08_The_Court_of_Karrag.cfg:306
+msgid ""
+"And you have sealed your doom. Hundreds of dirtgrubbers have already died to "
+"weave a web of blood around the Hammer and the soul of the dwarves. You and "
+"your new friends will be the last sacrifices I require to bind the entire "
+"dwarvish race to my purpose. TAKE THEM!"
+msgstr ""
+"Ve siz kaderinizi tayin ettiniz. Cücelerin ruhları ve Çekicin çevresinde bir "
+"kan ağı örmek için bu pisliklerin yüzlercesi zaten öldürüldü. Tüm cüce "
+"ırkınının amacım doğrultusunda hizmet etmelerini sağlamak için sen ve "
+"arkadaşların son kurbanlarım olacaklar. YAKALAYIN ŞUNLARI!"
+
+#. [message]: speaker=narrator
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/08_The_Court_of_Karrag.cfg:319
+msgid ""
+"Neither side can recruit or recall. You must win with the troops you have."
+msgstr ""
+"Hiçbir taraf asker alamaz ve çağıramaz. Mevcut askerlerinizle kazanmak "
+"zorundasınız."
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/08_The_Court_of_Karrag.cfg:336
+msgid ""
+"Wait... the lich’s apparent death was another illusion. In truth he ran "
+"through that doorway behind the throne."
+msgstr ""
+"Dur biraz... Umacının ölmüş görünmesi başka bir aldatmaca. Aslında tahtın "
+"arkasındaki kapıdan kaçtı."
+
+#. [message]: speaker=Dulcatulos
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/08_The_Court_of_Karrag.cfg:341
+msgid ""
+"Then Karrag has fled to the underlevels. None but his masked ones go there "
+"any more."
+msgstr ""
+"O halde Karrag alt katlara kaçtı. Hiçbir maskeli burayı sağ terketmemeli."
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/08_The_Court_of_Karrag.cfg:346
+msgid ""
+"We must follow. Quickly! It may be his talk of perverting the Hammer was "
+"merely mad raving, but we cannot allow the risk that his foul spell might "
+"succeed."
+msgstr ""
+"Onu takip etmeliyiz, çabuk olun! Çekiç hakkında söyledikleri yanıltıcı  "
+"olabilir. Söylediklerini gerçekleştirmesine izin veremeyiz."
+
+#. [scenario]: id=09_The_Underlevels
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:5
+msgid "The Underlevels"
+msgstr "Alt Katlar"
+
+#. [objective]: condition=win
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:211
+msgid "Find and defeat Karrag"
+msgstr "Karrag’ı bul ve yen"
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:273
+msgid "This place reeks of death."
+msgstr "Burası ölüm kokuyor."
+
+#. [message]: speaker=Dulcatulos
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:278
+#, fuzzy
+#| msgid ""
+#| "It has been... so many years since I’ve been down here. Only Karrag and "
+#| "his personal followers used this level. I can’t believe I never wondered "
+#| "about that before."
+msgid ""
+"It has been... so many years since I’ve been down here. Only Karrag and his "
+"personal followers used this level. I can’t believe I never wondered about "
+"that before."
+msgstr ""
+"Yıllardır... aşağılara inmemiştim. Sadece Karrag ve kişisel yardımcıları bu "
+"katı kullanır. Neden bunu daha önce merak etmedim ki."
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:284
+#, fuzzy
+#| msgid ""
+#| "It is Karrag’s doing—his will, and his dark magic. I think he has been "
+#| "casting glamours on all of you ever since he passed over."
+msgid ""
+"It is Karrag’s doing—his will, and his dark magic. I think he has been "
+"casting glamours on all of you ever since he passed over."
+msgstr ""
+"Bu Karrag'ın işi - onun iradesi ve onun kara büyüsü olmalı. Buraya "
+"geldiğinden beri hepinize büyü yaptığını düşünüyorum."
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:289
+msgid ""
+"Where <i>is</i> Karrag? We can’t have been more than seconds behind him."
+msgstr "Karrag <i>nerede</i>? Hemen arkasından girdik halbuki."
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:294
+msgid ""
+"Most likely he has cloaked himself, thinking to run ahead to gather his "
+"followers. He could be within a spear-cast of us now and we wouldn’t know it "
+"in this gloom."
+msgstr ""
+"Karanlıkta gizleniyor olmalı. Bence gidip takipçilerini toplayacak. Bizden "
+"bir mızrak menzili mesafede olması lazım ama bu karanlıkta yerini "
+"bilemiyoruz."
+
+#. [message]: speaker=Dulcatulos
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:303
+msgid "Those are war-drums!"
+msgstr "Bunlar savaş davulları!"
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:308
+msgid ""
+"Aye. Karrag, calling his troops to battle. Only the Dark Gods know what "
+"hellspawn the lich will summon. AXES UP!"
+msgstr ""
+"Evet. Karrag askerlerini savaşa çağırıyor. Umacı neler yumurtladı kimbilir. "
+"BALTALAR HAZIR!"
+
+#. [message]: speaker=unit
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:331
+msgid "Someone died here."
+msgstr "Burada biri ölmüş."
+
+#. [message]: speaker=unit
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:360
+#, fuzzy
+#| msgid "Poor guy didn’t make it."
+msgid "Poor guy didn’t make it."
+msgstr "Zavallı adam başaramadı."
+
+#. [message]: speaker=unit
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:391
+#, fuzzy
+#| msgid "There’s some gold in here!"
+msgid "There’s some gold in here!"
+msgstr "Burada biraz altın var!"
+
+#. [message]: speaker=unit
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:411
+msgid "I found some gold!"
+msgstr "Biraz altın buldum!"
+
+#. [message]: speaker=unit
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:445
+msgid "The gates are locked. I will have to break them open by force!"
+msgstr "Kapılar kilitli. Zorla açmam gerekecek!"
+
+#. [message]: speaker=unit
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:451
+msgid "The gates are locked!"
+msgstr "Kapılar kilitli!"
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:456
+msgid "Force them open!"
+msgstr "Açmak için zorla!"
+
+#. [message]: speaker=unit
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:461
+msgid "Yes, sir!"
+msgstr "Peki, efendim!"
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:494
+msgid "Let us proceed onward."
+msgstr "Devam edelim."
+
+#. [message]: speaker=unit
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:520
+#, fuzzy
+#| msgid "There’s something behind this door. I shall break it down!"
+msgid "There’s something behind this door. I shall break it down!"
+msgstr "Bu kapının arkasında bir şey var. Kıracağım!"
+
+#. [message]: speaker=unit
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:526
+#, fuzzy
+#| msgid "There’s something behind this door."
+msgid "There’s something behind this door."
+msgstr "Bu kapının arkasında bir şey var."
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:531
+msgid "Break it down!"
+msgstr "Kırıp gir!"
+
+#. [message]: speaker=unit
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:568
+msgid "It looks like there is a rune behind this gate!"
+msgstr "Bu kapının arkasında bir rûn var gibi görünüyor!"
+
+#. [message]: speaker=unit
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:606
+msgid "The dirtgrubber-friends have come! Slay them all!"
+msgstr "Çöp karıştıran dostlarımız geldi! Hepsini katledin!"
+
+#. [message]: speaker=second_unit
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:611
+#, fuzzy
+#| msgid "You could not stop us before and you won’t be stopping us now!"
+msgid "You could not stop us before and you won’t be stopping us now!"
+msgstr "Bizi daha önce durduramadınız ve şimdi de durduramayacaksınız!"
+
+#. [message]: speaker=Dufon
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:632
+msgid ""
+"You shall never pass through here! The doors I guard are sealed by the power "
+"of the Hammer itself."
+msgstr "Geçemezsiniz ahmaklar! Kapıları Çekicin gücü ile mühürledim."
+
+#. [message]: speaker=second_unit
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:637
+#, fuzzy
+#| msgid "You won’t stop us!"
+msgid "You won’t stop us!"
+msgstr "Bizi durdurmayacaksın!"
+
+#. [message]: speaker=Dufon
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:642
+#, fuzzy
+#| msgid ""
+#| "Fools! Even should you defeat me, the master’s ritual will soon be "
+#| "complete and you shall all become his slaves!"
+msgid ""
+"Fools! Even should you defeat me, the master’s ritual will soon be complete "
+"and you shall all become his slaves!"
+msgstr ""
+"Aptallar! Beni yenseniz bile, ustanın ayini yakında tamamlanacak ve hepiniz "
+"onun kölesi olacaksınız!"
+
+#. [message]: speaker=Aragoth
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:662
+#, fuzzy
+#| msgid ""
+#| "Your path forward ends here! Once the lord’s spell is complete, your "
+#| "souls will soon be chained to his will!"
+msgid ""
+"Your path forward ends here! Once the lord’s spell is complete, your souls "
+"will soon be chained to his will!"
+msgstr ""
+"Yolun burada bitiyor! Efendimin büyüsü tamamlandığında, ruhlarınızı o "
+"yönetecek!"
+
+#. [message]: speaker=Dranath
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:683
+msgid "The dirtgrubbers have come! Stop their advance!"
+msgstr "Çöp karıştıranlar geldi! İlerlemelerini durdurun!"
+
+#. [message]: speaker=unit
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:710
+msgid "This must be one of the runic keys!"
+msgstr "Bu runik tuşlardan biri olmalı!"
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:750
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:916
+msgid "We still need to find the other one!"
+msgstr "Bir tane daha bulmamız gerek!"
+
+#. [objective]: condition=win
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:756
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:922
+msgid "Find and activate the runic keys (one remaining)"
+msgstr "Runik tuşları bulun ve etkinleştirin (bir tanesi kaldı)"
+
+#. [note]
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:772
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:938
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1106
+msgid ""
+"You may teleport units between matching runes (the destination must be clear)"
+msgstr ""
+"Birimleri iki aynı rûn arasında ışınlayabilirsiniz (varış yeri boş olmalıdır)"
+
+#. [message]: speaker=unit
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:876
+#, fuzzy
+#| msgid "We’ve found a runic key!"
+msgid "We’ve found a runic key!"
+msgstr "Bir runik tuş bulduk!"
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1032
+msgid "The keys have been found. The door should open..."
+msgstr "Tuşlar bulundu.  Kapı açılmış olmalı.."
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1084
+msgid "The lich surely awaits us within. We must be on guard."
+msgstr "Umacı içeride bizi bekliyor olmalı. Hazırlıklı olmalıyız."
+
+#. [message]: speaker=unit
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1132
+msgid ""
+"It seems that the guard spoke the truth. These doors will not open to us!"
+msgstr "Muhafız doğru söylüyormuş. Bu kapıları zor kullanarak açamayız!"
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1137
+#, fuzzy
+#| msgid ""
+#| "They are sealed by the ancient runelore of the Hammer. No amount of force "
+#| "can open these doors - we will need to find the keys to the seals here."
+msgid ""
+"They are sealed by the ancient runelore of the Hammer. No amount of force "
+"can open these doors — we will need to find the keys to the seals here."
+msgstr ""
+"Onlar çekicin antik rûn bilgisiyle mühürlendi. Bu kapıları hiçbir kuvvet "
+"açamaz - kapıyı mühürleyen tuşları bulmamız gerekiyor."
+
+#. [objective]: condition=win
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1143
+msgid "Find and activate the runic keys to the sealed door"
+msgstr "Mühürlü kapıyı açacak rûn tuşlarını bul ve etkinleştir"
+
+#. [message]: speaker=unit
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1175
+msgid "My lord, the dirtgrubbers have entered our sanctuary!"
+msgstr "Efendim, çöp karıştıranlar kutsal alanımıza girdi!"
+
+#. [message]: speaker=Karrag
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1180
+msgid "Excellent! Their blood will provide plenty of fuel for my ritual!"
+msgstr "Mükemmel! Kanları ayinim için bol miktarda yakıt sağlayacak!"
+
+#. [message]: speaker=Karrag
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1201
+msgid "So, the usurpers have arrived at last."
+msgstr "Yani, gaspçılar sonunda geldi."
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1206
+msgid ""
+"We are not the usurpers but the liberators of Kal Kartha! We are here to "
+"free our kin from your dark sorcery!"
+msgstr ""
+"Bizler gaspçı değiliz, Kal Karta'nın kurtarıcılarıyız! Kardeşlerimizi kara "
+"büyü lanetinden kurtarmak için buradayız!"
+
+#. [message]: speaker=Karrag
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1211
+msgid ""
+"You insolent fool! It is I who have led Kal Kartha to glory and I who have "
+"cleansed the lands of the true people from all unworthy scum! Kal Kartha "
+"owes me everything!"
+msgstr ""
+"Seni küstah aptal! Kal Karta'yı şereflendiren benim ve gerçek halkın "
+"toprağını sizin gibi değersiz pisliklerden temizledim! Kal Karta herşeyi "
+"bana borçlu!"
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1216
+msgid ""
+"No! You are the one who owes our brethren their freedom! You have ensnared "
+"their minds with your foul magic and now we are here to put an end to your "
+"tyrannical rule!"
+msgstr ""
+"Yok hayır! Sen kardeşlerimize özgürlüklerini borçlu olansın! Akıllarını "
+"aldatıcı sihrinle karıştırdın. Zorba yönetimine burada son vereceğiz!"
+
+#. [message]: speaker=Karrag
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1221
+msgid ""
+"Any enemy of my rule is no better than the filthiest of dirtgrubbers. You no "
+"longer belong to the true people. You will become my slaves!"
+msgstr ""
+"Sen kim oluyorsun da benim yönetimimi sorguluyorsun çöp torbası! Kölem "
+"haline gelince sesiniz kesilir!"
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1226
+msgid "Not if we stop you here. AXES UP!"
+msgstr "Asıl biz senin işini bitireceğiz. Baltalar yukarı!"
+
+#. [message]: speaker=Karrag
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1244
+msgid "No! No! No! Dirtgrubbers must die! The true people must rule all!"
+msgstr "Hayır! Pislikler ölmeli! Herşeyi gerçek halk yönetmeli!"
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1249
+msgid "The ‘true people’ speak through our axes. Die, foul lich."
+msgstr "’Gerçek halkı’ baltalarımıza anlat. Geber şapşal umacı."
+
+#. [message]: speaker=Karrag
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1254
+msgid "Nooo! My power... it wanes..."
+msgstr "Haaayıııır! Gücüm... azalıyor..."
+
+#. [message]: speaker=Dulcatulos
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1264
+msgid "And your rule is at an end, Karrag, once the brave lord of Kal Kartha."
+msgstr ""
+"Ve yönetimin sona ermiştir, Karrag, Kal Karta'nın bir zamanlar cesur "
+"efendisi."
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1269
+msgid ""
+"Do not mourn his passing, Dulcatulos. The Karrag you knew died many years "
+"ago when his lust for power consumed him. It is now time to put the past "
+"behind and right the wrongs that have been wrought here."
+msgstr ""
+"Yasını tutmayın, Dulkatul. Tanıdığınız Karrag, güç arzusu benliğini "
+"tükettiğinde, yıllar önce öldü. Şimdi, geçmişi geride bırakıp yapılan "
+"yanlışları düzeltmenin zamanıdır."
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1274
+msgid ""
+"Aiglondur speaks the truth. The deed is done. Though the heart of the "
+"darkness is gone, there is still much to do. Much will have to be done to "
+"amend the desecration of the Hammer and the evil that has been done here."
+msgstr ""
+"Aglondur gerçeği söylüyor. Olan oldu. Karanlığın kalbi sökülmüş olmasına "
+"rağmen, hala yapacak çok şey var. Çekicin ve burada yapılan kötülüğün "
+"yıktığını düzeltmek için yapılacak çok şey var."
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1279
+msgid ""
+"But first, we must bring this news to the rest of Kal Kartha. A new Lord "
+"must be chosen."
+msgstr ""
+"Ama önce bu haberi Kal Karta'lılar duymalı ve yeni bir yönetici seçilmeli."
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1284
+msgid "Aye, let us go."
+msgstr "Evet, gidelim."
+
+#. [message]: speaker=Dufon
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1306
+#, fuzzy
+#| msgid "The master’s ritual... must not be... interrupted..."
+msgid "The master’s ritual... must not be... interrupted..."
+msgstr "Efendimizin... töreni... kesilmemeli..."
+
+#. [message]: speaker=Dranath
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1318
+#, fuzzy
+#| msgid ""
+#| "Imbeciles! Once the master’s dark rite is complete, I will return to slay "
+#| "you myself!"
+msgid ""
+"Imbeciles! Once the master’s dark rite is complete, I will return to slay "
+"you myself!"
+msgstr ""
+"Geri zekalılar! Efendinin karanlık ayini tamamlandığında, sizi kendim "
+"öldürmek için geri geleceğim!"
+
+#. [message]: speaker=Aragoth
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1330
+msgid "The heathens... have slain me-"
+msgstr "Kafirler... beni öldürdüğü-"
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1341
+msgid "The air is cold with the stench of death."
+msgstr "Hava soğudukça ölüm kokuyor."
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1346
+msgid ""
+"No doubt it is this ritual that the masked ones spoke of. We must hurry and "
+"stop Karrag!"
+msgstr ""
+"Hiç şüphesiz, maskelilerin bahsettiği ayin bu! Acele etmeli ve Karrag'ı "
+"durdurmalıyız!"
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1365
+msgid "I feel as if the life is being sapped out of my body!"
+msgstr "Canın bedenimden çekilişini hissediyorum!"
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1370
+#, fuzzy
+#| msgid ""
+#| "Karrag’s spell grows more powerful with every passing moment. If we do "
+#| "not defeat him now, we will all turn into his thralls!"
+msgid ""
+"Karrag’s spell grows more powerful with every passing moment. If we do not "
+"defeat him now, we will all turn into his thralls!"
+msgstr ""
+"Karrag'ın büyüsü her an daha da güçleniyor. Onu şimdi yenmezsek, hepimiz "
+"onun kuklalarına dönüşeceğiz!"
+
+#. [message]: speaker=Karrag
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/09_The_Underlevels.cfg:1379
+msgid ""
+"HAHAHAHA! Yes, yes, YES! The rite of death is complete at last! Die, you "
+"filthy dirtgrubbers, die so that I may raise you again as my mindless slaves!"
+msgstr ""
+"HAHAHAHA! Evet evet EVET! Ölüm ayini sonunda tamamlandı! Geberin, sizi "
+"şapşal pislikler, geberin de sizi akılsız kölelerim haline getirebileyim!"
+
+#. [scenario]: id=10_Epilogue
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/10_Epilogue.cfg:5
+msgid "Epilogue"
+msgstr "Sonsöz"
+
+#. [side]
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/10_Epilogue.cfg:51
+msgid "Glamcatsil"
+msgstr "Glamkatsil"
+
+#. [side]
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/10_Epilogue.cfg:52
+msgid "Trithdurus"
+msgstr "Tridurus"
+
+#. [side]
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/10_Epilogue.cfg:53
+msgid "Althasol"
+msgstr "Altasol"
+
+#. [side]
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/10_Epilogue.cfg:54
+msgid "Dulalas"
+msgstr "Dulalas"
+
+#. [side]
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/10_Epilogue.cfg:55
+msgid "Pelalsol"
+msgstr "Pelalsol"
+
+#. [side]
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/10_Epilogue.cfg:56
+msgid "Aigthaing"
+msgstr "Aytanig"
+
+#. [side]
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/10_Epilogue.cfg:57
+msgid "Pelcatol"
+msgstr "Pelkatol"
+
+#. [side]
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/10_Epilogue.cfg:58
+msgid "Narithil"
+msgstr "Naritil"
+
+#. [side]
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/10_Epilogue.cfg:59
+msgid "Glamdrsol"
+msgstr "Glamdırsol"
+
+#. [side]
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/10_Epilogue.cfg:60
+msgid "Pelaithil"
+msgstr "Pelatil"
+
+#. [side]
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/10_Epilogue.cfg:61
+msgid "Alaithus"
+msgstr "Alaytus"
+
+#. [unit]: type=Lancer, id=Pelias
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/10_Epilogue.cfg:76
+msgid "Pelias"
+msgstr "Pelas"
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/10_Epilogue.cfg:122
+msgid ""
+"Dwarves of Kal Kartha, I speak the Law. Your house is cast down; you have "
+"harbored a great evil. Who now will take the burden of cleansing this "
+"holding of its taint?"
+msgstr ""
+"Kal Karta cüceleri, yasa adına konuşuyorum. Yurdunuz ele geçirildi; büyük "
+"bir şeytana esir düştünüz. Bunun sorumluluğunu kim üstlenecek?"
+
+#. [message]: speaker=narrator
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/10_Epilogue.cfg:127
+msgid ""
+"The dwarves of Kal Kartha muttered among themselves and looked at one "
+"another uneasily. None stepped forward."
+msgstr ""
+"Kal Karta cücelerinin hepsi birbirlerine baktılar. Hiçbiri öne çıkmadı."
+
+#. [message]: speaker=Dulcatulos
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/10_Epilogue.cfg:133
+msgid ""
+"Loremaster... None of us is fit to take up the lordship. Karrag fooled us "
+"all, made us the tools of his foul scheme."
+msgstr ""
+"Üstat... aramızda lordluğu almaya uygun biri yok. Karrag hepimizi aldattı, "
+"bizi alçakça planlarına alet etti."
+
+#. [message]: speaker=Pelias
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/10_Epilogue.cfg:158
+msgid ""
+"I was told I’d find Aiglondur of Knalga here. I bear a message from Tallin, "
+"the Lord Protector of the Alliance."
+msgstr ""
+"Kanalga’lı Aglondur’u bulmak için buraya yollandım. İttifakın Hamisi "
+"Talin’den bir haber getirdim."
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/10_Epilogue.cfg:163
+msgid "I am he. Speak your message."
+msgstr "O benim. Getirdiğin haberden bahset."
+
+#. [message]: speaker=Pelias
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/10_Epilogue.cfg:169
+msgid ""
+"I have been on your track for weeks. Word of your rout of Tan-Morgh and his "
+"allies spread, and reached Tallin. You did the Alliance better service than "
+"you knew that day; Tan-Morgh had exchanged messages with certain orcish "
+"chieftains within the Alliance, and your victory prevented a dangerous "
+"revolt."
+msgstr ""
+"Haftalardır peşinizdeydim. Tan-Malgar’ı ve müttefiklerinin kökünü "
+"kazıdığınız haberi Talin’e ulaşmış. İttifaka büyük bir hizmette bulundunuz; "
+"Tan-Malgar İttifaka dahil olan bazı ork şeflerle iletişim halindeymiş. "
+"Zaferinizle tehlikeli bir isyanı önlemiş oldunuz."
+
+#. [message]: speaker=Pelias
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/10_Epilogue.cfg:174
+msgid ""
+"Aiglondur, the Protector dubs you a Lord Companion of the Alliance. He bids "
+"you return to Knalga as soon as convenient, for your investiture."
+msgstr ""
+"Aglondur, Talin size şövalyelik ünvanı vererek İttifakın Eş Lideri ilan "
+"etti. Resmen tayin edilmeniz için en uygun zamanda Kanalga’ya dönmeniz "
+"gerektiğini söyledi."
+
+#. [message]: speaker=Dulcatulos
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/10_Epilogue.cfg:179
+msgid "(<i>Wonderingly</i>) A Lord Companion? And kin of ours..."
+msgstr "(<i>Merakla</i>) Eş Lider, öyle mi? Hem de bizden biri..."
+
+#. [message]: speaker=Narithil
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/10_Epilogue.cfg:184
+msgid ""
+"It would be no shame for a Lord Companion to rule this holding, as Hamel "
+"does at Knalga."
+msgstr ""
+"Hamel’in Kanalga‘da yaptığı gibi bir Eş Liderin bu bölgeyi yönetmesi yakışık "
+"almaz."
+
+#. [message]: speaker=narrator
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/10_Epilogue.cfg:189
+msgid ""
+"The Kal Karthans looked at each other, and Aiglondur, with dawning hope."
+msgstr ""
+"Kal Kartalılar farkedilme umuduyla birbirlerine ve Aglondur’a baktılar."
+
+#. [message]: speaker=Angarthing
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/10_Epilogue.cfg:195
+msgid "It would be fitting. The Loremasters will approve."
+msgstr "Uygundur. Üstatlar onaylayacaktır."
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/scenarios/10_Epilogue.cfg:200
+msgid ""
+"Pelias, my thanks to the Lord Protector; I will attend him in the spring. "
+"But it seems that I have some work to do here first."
+msgstr ""
+"Pelas, Talin’e teşekkürlerimi ilet. Baharda yanında olmaya çalışacağım. "
+"Fakat önce burada bitirmem gereken bazı işler var."
+
+#. [unit_type]: id=Dwarvish Annalist, race=dwarf
+#: data/campaigns/The_Hammer_of_Thursagan/units/Dwarvish_Annalist.cfg:4
+msgid "Dwarvish Annalist"
+msgstr "Cüce Tarihçi"
+
+#. [unit_type]: id=Dwarvish Annalist, race=dwarf
+#: data/campaigns/The_Hammer_of_Thursagan/units/Dwarvish_Annalist.cfg:21
+msgid ""
+"Dwarvish Annalists are the historians of this ancient and proud race. They "
+"are few in number, and their very existence is not generally known to the "
+"other peoples of the Great Continent. To the abilities of the Witness they "
+"add, through the study of herb and mineral lore, the ability to cure poison."
+msgstr ""
+"Cüce Tarihçiler bu eki ve mağrur ırkın tarihçileridir. Sayıları çok azdır ve "
+"Büyük Kıtanın diğer halklarının onların varlığından haberleri bile yoktur. "
+"Gözlemcilik yeteneklerine ek olarak bitkiler ve mineraller konusundaki "
+"uzmanlıkları sayesinde zehirlermeleri tedavi edebilirler."
+
+#. [attack]: type=impact
+#: data/campaigns/The_Hammer_of_Thursagan/units/Dwarvish_Annalist.cfg:61
+#: data/campaigns/The_Hammer_of_Thursagan/units/Dwarvish_Loremaster.cfg:64
+#: data/campaigns/The_Hammer_of_Thursagan/units/Dwarvish_Witness.cfg:66
+msgid "bolas"
+msgstr "bola"
+
+#. [unit_type]: id=Dwarvish Loremaster, race=dwarf
+#: data/campaigns/The_Hammer_of_Thursagan/units/Dwarvish_Loremaster.cfg:4
+msgid "Dwarvish Loremaster"
+msgstr "Cüce Üstat"
+
+#. [unit_type]: id=Dwarvish Loremaster, race=dwarf
+#: data/campaigns/The_Hammer_of_Thursagan/units/Dwarvish_Loremaster.cfg:23
+msgid ""
+"Loremasters are the sages of the dwarvish race. Their counsel is greatly "
+"valued by war-leaders and chieftains, and they are viewed with awe by "
+"ordinary dwarves, for they alone have plumbed the deepest and most closely-"
+"held secrets of dwarven knowledge. It is said that where a loremaster "
+"stands, there is the soul of the dwarves. To the abilities of the Annalist "
+"they add a limited ability to heal."
+msgstr ""
+"Cüce Üstatlar cüce ırkının bilgeleridir. Onların oluşturduğu meclise savaş "
+"liderleri ve şefler çok değer verir. Sınırlı da olsa tedavici bir yanları da "
+"vardır."
+
+#. [unit_type]: id=Dwarvish Masked Berserker, race=dwarf
+#: data/campaigns/The_Hammer_of_Thursagan/units/Dwarvish_Masked_Berserker.cfg:4
+msgid "Dwarvish Masked Berserker"
+msgstr "Maskeli Çılgın Cüce"
+
+#. [unit_type]: id=Dwarvish Masked Dragonguard, race=dwarf
+#: data/campaigns/The_Hammer_of_Thursagan/units/Dwarvish_Masked_Dragonguard.cfg:4
+msgid "Dwarvish Masked Dragonguard"
+msgstr "Maskeli Cüce Ejder Muhafızı"
+
+#. [unit_type]: id=Dwarvish Masked Fighter, race=dwarf
+#: data/campaigns/The_Hammer_of_Thursagan/units/Dwarvish_Masked_Fighter.cfg:4
+msgid "Dwarvish Masked Fighter"
+msgstr "Maskeli Cüce Savaşçı"
+
+#. [unit_type]: id=Dwarvish Masked Guardsman, race=dwarf
+#: data/campaigns/The_Hammer_of_Thursagan/units/Dwarvish_Masked_Guardsman.cfg:4
+msgid "Dwarvish Masked Guardsman"
+msgstr "Maskeli Cüce Muhafız"
+
+#. [unit_type]: id=Dwarvish Masked Lord, race=dwarf
+#: data/campaigns/The_Hammer_of_Thursagan/units/Dwarvish_Masked_Lord.cfg:4
+msgid "Dwarvish Masked Lord"
+msgstr "Maskeli Cüce Lord"
+
+#. [unit_type]: id=Dwarvish Masked Lord, race=dwarf
+#: data/campaigns/The_Hammer_of_Thursagan/units/Dwarvish_Masked_Lord.cfg:17
+#, fuzzy
+#| msgid ""
+#| "Feared in dwarven legend is the Dwarf Lord who masks his face, using the "
+#| "formidable fighting powers of his kind without accounting to his peers "
+#| "and to the loremasters of dwarven-kind for the dark and bloody uses to "
+#| "which he puts his weapons. Like his barefaced kin, the Dwarf Lord wields "
+#| "axe and hammer with masterful skill, and can hit a target with a thrown "
+#| "hand axe at several paces. Though slow on their feet, these dwarves are a "
+#| "testament to the prowess of their kind."
+msgid ""
+"Feared in dwarven legend is the Dwarf Lord who masks his face, using the "
+"formidable fighting powers of his kind without accounting to his peers and "
+"to the loremasters of dwarven-kind for the dark and bloody uses to which he "
+"puts his weapons. Like his barefaced kin, the Dwarf Lord wields axe and "
+"hammer with masterful skill, and can hit a target with a thrown hand axe at "
+"several paces. Though slow on their feet, these dwarves are a testament to "
+"the prowess of their kind."
+msgstr ""
+"Cüce efsanesinde korkulan, akranlarına ve cüce türünün bilginlerine hesap "
+"vermeden türünün çetin savaş güçlerini karanlık ve kanlı amaçları için silah "
+"olarak kullanan, yüzünü maskeleyen bir Cüce Lord'dur. Yüzünü gizlemeyen "
+"ırkdaşı gibi, Maskeli Cüce Lord baltayı ve çekici ustaca kullanır ve "
+"fırlattığı el baltasıyla hedefi birkaç adımdan vurabilir. Ayakları üzerinde "
+"yavaş olmalarına rağmen bu cüceler, türlerinin hünerlerinin bir kanıtıdır."
+
+#. [unit_type]: id=Dwarvish Masked Sentinel, race=dwarf
+#: data/campaigns/The_Hammer_of_Thursagan/units/Dwarvish_Masked_Sentinel.cfg:4
+msgid "Dwarvish Masked Sentinel"
+msgstr "Maskeli Cüce Nöbetçi"
+
+#. [unit_type]: id=Dwarvish Masked Stalwart, race=dwarf
+#: data/campaigns/The_Hammer_of_Thursagan/units/Dwarvish_Masked_Stalwart.cfg:4
+msgid "Dwarvish Masked Stalwart"
+msgstr "Maskeli Cüce Toraman"
+
+#. [unit_type]: id=Dwarvish Masked Steelclad, race=dwarf
+#: data/campaigns/The_Hammer_of_Thursagan/units/Dwarvish_Masked_Steelclad.cfg:4
+msgid "Dwarvish Masked Steelclad"
+msgstr "Maskeli Cüce Çelik Zırhlı"
+
+#. [unit_type]: id=Dwarvish Masked Steelclad, race=dwarf
+#: data/campaigns/The_Hammer_of_Thursagan/units/Dwarvish_Masked_Steelclad.cfg:17
+#, fuzzy
+#| msgid ""
+#| "More experienced dwarvish fighters wear heavy chain mail and plate armor, "
+#| "for which they are rightly famous. In the dark dreams of dwarvenkind, "
+#| "some conceal their faces behind riveted masks."
+msgid ""
+"More experienced dwarvish fighters wear heavy chain mail and plate armor, "
+"for which they are rightly famous. In the dark dreams of dwarvenkind, some "
+"conceal their faces behind riveted masks."
+msgstr ""
+"En tecrübeli Cüce savaşçılar kendileriyle meşhur ettikleri çelik örgülü bir "
+"zırh giyer ve uzuvlarını çelik plakalarla korurlar. Bazı kötü cüceler "
+"yüzlerine yansıyan kötülüklerini gizlemek istercesine yüzlerini bir maskenin "
+"altında gizlerler."
+
+#. [unit_type]: id=Dwarvish Masked Thunderer, race=dwarf
+#: data/campaigns/The_Hammer_of_Thursagan/units/Dwarvish_Masked_Thunderer.cfg:4
+msgid "Dwarvish Masked Thunderer"
+msgstr "Maskeli Cüce Gürleyici"
+
+#. [unit_type]: id=Dwarvish Masked Thunderguard, race=dwarf
+#: data/campaigns/The_Hammer_of_Thursagan/units/Dwarvish_Masked_Thunderguard.cfg:4
+msgid "Dwarvish Masked Thunderguard"
+msgstr "Maskeli Cüce Gümbürtücü"
+
+#. [unit_type]: id=Dwarvish Masked Ulfserker, race=dwarf
+#: data/campaigns/The_Hammer_of_Thursagan/units/Dwarvish_Masked_Ulfserker.cfg:4
+msgid "Dwarvish Masked Ulfserker"
+msgstr "Maskeli Deli Cüce"
+
+#. [unit_type]: id=Dwarvish Witness, race=dwarf
+#: data/campaigns/The_Hammer_of_Thursagan/units/Dwarvish_Witness.cfg:10
+msgid "Dwarvish Witness"
+msgstr "Cüce Gözlemci"
+
+#. [unit_type]: id=Dwarvish Witness, race=dwarf
+#: data/campaigns/The_Hammer_of_Thursagan/units/Dwarvish_Witness.cfg:27
+msgid ""
+"A Witness functions as the eyes of the dwarves’ history, a deep lore that "
+"they never share with outsiders. The presence of a Witness inspires dwarvish "
+"warriors with the knowledge that their deeds (and their deaths) will not go "
+"unrecorded. They learn a fighting style deliberately unlike that of their "
+"fellows, one designed to turn the vaunted strength of the dwarves against "
+"itself. The person of a Witness is considered sacred, and Witnesses are "
+"often used as envoys between dwarvish clans."
+msgstr "Bir gözlemcinin işlevi cüce tarihine tanıklık etmektir."
+
+#. [leadership]: id=inspire
+#: data/campaigns/The_Hammer_of_Thursagan/utils/abilities.cfg:10
+msgid "inspire"
+msgstr "telkin"
+
+#. [leadership]: id=inspire
+#: data/campaigns/The_Hammer_of_Thursagan/utils/abilities.cfg:11
+msgid "female^inspire"
+msgstr "telkin"
+
+#. [leadership]: id=inspire
+#: data/campaigns/The_Hammer_of_Thursagan/utils/abilities.cfg:12
+msgid ""
+"This unit can inspire own units that are next to it, making them fight "
+"better. Adjacent own units of lower or equal level will deal 25% more damage "
+"plus 25% for each level they are below the inspiring unit."
+msgstr ""
+"Bu birim etki alanındaki birimlere daha iyi dövüşmeleri için telkinde "
+"bulunur. Düşük ve denk seviyeli birimler, telkinde bulunan birimle "
+"aralarındaki seviye farkı çarpı %25 artı %25 daha fazla hasar verirler."
+
+#. [leadership]: id=inspire
+#: data/campaigns/The_Hammer_of_Thursagan/utils/abilities.cfg:13
+msgid ""
+"The presence of this unit inspires own units next to it to deal more damage "
+"in combat, though this only applies to units of lower or equal level."
+msgstr ""
+"Bu birim çevresindeki dost birimlere daha iyi dövüşmeleri için telkinde "
+"bulunur. Ancak sadece kendi seviyesindeki ve daha alt seviyeden birimlere "
+"telkinde bulunabilir."
+
+#: data/campaigns/The_Hammer_of_Thursagan/utils/characters.cfg:6
+msgid "Aiglondur"
+msgstr "Aglondur"
+
+#: data/campaigns/The_Hammer_of_Thursagan/utils/characters.cfg:19
+msgid "Angarthing"
+msgstr "Angarting"
+
+#: data/campaigns/The_Hammer_of_Thursagan/utils/characters.cfg:31
+#: data/campaigns/The_Hammer_of_Thursagan/utils/characters.cfg:44
+msgid "Dulcatulos"
+msgstr "Dulkatul"
+
+#: data/campaigns/The_Hammer_of_Thursagan/utils/characters.cfg:57
+#: data/campaigns/The_Hammer_of_Thursagan/utils/characters.cfg:66
+msgid "Karrag"
+msgstr "Karrag"
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/utils/herodeaths.cfg:12
+msgid "I fall!"
+msgstr "Yenildim!"
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/utils/herodeaths.cfg:30
+msgid "Oh no! Without a loremaster we cannot complete our mission!"
+msgstr "Oh hayır! Üstadımız olmadan görevimizi tamamlayamayız!"
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/utils/herodeaths.cfg:48
+msgid "We needed Movrur to accompany us to Kal Kartha!"
+msgstr "Movrur'un bize Kal Kartha'ya kadar eşlik etmesi gerekiyordu!"
+
+#. [message]: speaker=Aiglondur
+#: data/campaigns/The_Hammer_of_Thursagan/utils/herodeaths.cfg:66
+msgid ""
+"Without Dulcatulos to explain our actions to the Kal Karthans we’ll have to "
+"fight them, too. Our mission has failed."
+msgstr ""
+"Dulkatul olmaksızın yaptıklarımızı Kal Kartalılara açıklayamayız. Onlarla da "
+"dövüşmek zorunda kalırız. Görevi yerine getiremedik."
+
+#~ msgid "Ratheln"
+#~ msgstr "Ratelin"

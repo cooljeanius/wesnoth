@@ -1,0 +1,4591 @@
+# Translation of wesnoth-l.po into Serbian.
+# Copyright (C) 2008 Wesnoth development team
+# This file is distributed under the same license as the Battle for Wesnoth package.
+# Chusslove Illich <caslav.ilic@gmx.net>, 2008, 2009, 2010, 2011, 2012.
+# Dalibor Djuric <dalibor.djuric@mozilla-srbija.org>, 2010, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: wesnoth-l\n"
+"Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
+"POT-Creation-Date: 2023-10-17 04:13 UTC\n"
+"PO-Revision-Date: 2012-01-07 13:20+0100\n"
+"Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
+"Language-Team: Serbian\n"
+"Language: sr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : "
+"n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Environment: wesnoth, wesnoth/noent\n"
+"X-Wrapping: fine\n"
+
+#. [campaign]: id=Liberty
+#. [achievement_group]
+#: data/campaigns/Liberty/_main.cfg:10 data/campaigns/Liberty/_main.cfg:11
+#: data/campaigns/Liberty/achievements.cfg:3
+msgid "Liberty"
+msgstr "Sloboda"
+
+#. [campaign]: id=Liberty
+#: data/campaigns/Liberty/_main.cfg:19
+#, fuzzy
+#| msgid "(Easy)"
+msgid "Easy"
+msgstr "(lako)"
+
+#. [campaign]: id=Liberty
+#: data/campaigns/Liberty/_main.cfg:19
+msgid "Peasant"
+msgstr "seljak"
+
+#. [campaign]: id=Liberty
+#: data/campaigns/Liberty/_main.cfg:20
+#, fuzzy
+#| msgid "(Normal)"
+msgid "Normal"
+msgstr "(normalno)"
+
+#. [campaign]: id=Liberty
+#: data/campaigns/Liberty/_main.cfg:20
+msgid "Outlaw"
+msgstr "odmetnik"
+
+#. [campaign]: id=Liberty
+#: data/campaigns/Liberty/_main.cfg:21
+msgid "Challenging"
+msgstr ""
+
+#. [campaign]: id=Liberty
+#: data/campaigns/Liberty/_main.cfg:21
+msgid "Fugitive"
+msgstr "begunac"
+
+#. [campaign]: id=Liberty
+#. "marchlander" is archaic English for an inhabitant of a border region, not to be confused with "marshlander"
+#: data/campaigns/Liberty/_main.cfg:25
+#, fuzzy
+#| msgid ""
+#| "As the shadow of civil war lengthens across Wesnoth, a band of hardy "
+#| "marchlanders revolts against the tyranny of Queen Asheviere. To win their "
+#| "way to freedom, they must defeat not just the trained blades of "
+#| "Wesnothian troops but darker foes including orcs and undead.\n"
+#| "\n"
+msgid ""
+"As the shadow of civil war deepens across Wesnoth, a band of hardy "
+"marchlanders revolts against the governance of the new queen. To win their "
+"way to freedom, they must learn to use shadows and deception to rout the "
+"trained blades of the Wesnothian army.\n"
+"\n"
+msgstr ""
+"Dok se senka građanskog rata nadvija nad Vesnotom, družina srčanih "
+"krajišnika ustade protiv tiranstva kraljice Aševire. Za proboj do slobode, "
+"moraće da nadvladaju ne samo izvežbana sečiva vesnoćanskih vojski, već i "
+"mračnije protivnike u koje spadaju i orkovi i nemrtvi.\n"
+"\n"
+
+#. [campaign]: id=Liberty
+#: data/campaigns/Liberty/_main.cfg:27
+#, fuzzy
+#| msgid "(Intermediate level, 8 scenarios.)"
+msgid "(Novice level, 7 scenarios.)"
+msgstr "(Srednji nivo, 8 scenarija.)"
+
+#. [about]
+#: data/campaigns/Liberty/_main.cfg:30
+#, fuzzy
+#| msgid "Campaign Design"
+msgid "Original Campaign Design"
+msgstr "Dizajn pohoda"
+
+#. [about]
+#: data/campaigns/Liberty/_main.cfg:36
+msgid "Latest Rewrite"
+msgstr ""
+
+#. [about]
+#: data/campaigns/Liberty/_main.cfg:42
+msgid "Campaign Maintenance"
+msgstr "Održavanje pohoda"
+
+#. [about]
+#: data/campaigns/Liberty/_main.cfg:52
+msgid "Artwork and Graphics Design"
+msgstr "Crteži i grafički dizajn"
+
+#. [achievement]: id=liberty_or_death
+#: data/campaigns/Liberty/achievements.cfg:7
+msgid "Give Me Liberty or Give Me Death!"
+msgstr ""
+
+#. [achievement]: id=liberty_or_death
+#: data/campaigns/Liberty/achievements.cfg:8
+msgid "Complete Civil Disobedience with at least 3 peasants remaining."
+msgstr ""
+
+#. [achievement]: id=liberty_nameless
+#: data/campaigns/Liberty/achievements.cfg:14
+msgid "The Nameless General"
+msgstr ""
+
+#. [achievement]: id=liberty_nameless
+#: data/campaigns/Liberty/achievements.cfg:15
+msgid "Find out the name of the general in Unlawful Orders."
+msgstr ""
+
+#. [achievement]: id=liberty_iron
+#: data/campaigns/Liberty/achievements.cfg:21
+msgid "Harper vs. Goliath"
+msgstr ""
+
+#. [achievement]: id=liberty_iron
+#: data/campaigns/Liberty/achievements.cfg:22
+msgid "Defeat an Iron Mauler with Harper in Hide and Seek."
+msgstr ""
+
+#. [achievement]: id=liberty_hunter
+#. this is the achievement for the scenario The Hunters
+#: data/campaigns/Liberty/achievements.cfg:29
+#, fuzzy
+#| msgid "Peasant Hunter"
+msgid "Perfect Hunter"
+msgstr "seljački lovac"
+
+#. [achievement]: id=liberty_hunter
+#: data/campaigns/Liberty/achievements.cfg:30
+msgid "Complete The Hunters with no losses"
+msgstr ""
+
+#. [achievement]: id=liberty_army
+#: data/campaigns/Liberty/achievements.cfg:36
+msgid "Force of Arms is Pointless Without Strategy"
+msgstr ""
+
+#. [achievement]: id=liberty_army
+#: data/campaigns/Liberty/achievements.cfg:37
+msgid "On Challenging difficulty, defeat Dommel in Glory."
+msgstr ""
+
+#. [scenario]: id=01_The_Raid
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:4
+msgid "The Raid"
+msgstr "Prepad"
+
+#. [label]
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:15
+msgid "Dallben"
+msgstr "Dalben"
+
+#. [part]
+#. Baldras is an old man from the country and both speaks and writes with many grammatical errors due to his relative lack of education
+#. He is also a little bit rude and grumpy, so languages with ruder or more informal variants of words should use those where appropriate
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:22
+msgid ""
+"From the journal of Baldras, 21 Scatterseed, 501 YW\n"
+"\n"
+"Months... seven months it’s been since the Crown did send a single guard "
+"here to help us. This Garard II be a pompous stinker, even worser than his "
+"pa! Us of these border towns Delwyn and Dallben already be poor and needy, "
+"yet alls ‘His Majesty’ can think of is tax, tax, tax, takin’ all our hard "
+"earned gold from us. Then he uses our gold to provoke more wars with more "
+"orcs just for personal glory and more land for them grubby nobles to lord "
+"over."
+msgstr ""
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:28
+msgid ""
+"To abbadon with the Crown! We got no armies and we don’t even got real "
+"weapons, but we of the Western Marches make do just fine with our slings and "
+"clubs. In all Annuvin Province, there won’t be nobody besting us in these "
+"swamps. We’re self-reliant out here. We gots our own trade routes and pacts "
+"of mutual defense. No need for them Wesnothians. Not a single bit."
+msgstr ""
+
+#. [part]
+#. Some languages, including Norwegian and Old English, don't have a single word for "uncle", dividing it into
+#. mother's-brother vs. father's-brother. Baldras is Harper's mother's brother.
+#. Erwen is Baldras' younger sister, so languages with a special word for that should use it
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:35
+msgid ""
+"The sun were out today, but it were raining too. Weird mix of brightness and "
+"woe. Reminds me of the day Harper’s pa died in that orc raid. Since my sis "
+"Erwen passed when she were young, poor lass had nobody but me. Never wanted "
+"no kid of my own but... she’s mine to take care of now. Fine lass, that one, "
+"just a bit careless like her pa. I needs to keep a good eye on her now, with "
+"all them orcs running round here of late."
+msgstr ""
+
+#. [side]: type=Bandit_Peasant, id=Baldras
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:47
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:37
+msgid "Baldras"
+msgstr "Baldras"
+
+#. [side]: type=Goblin Pillager, id=Fal Khag
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:78
+msgid "Fal Khag"
+msgstr "Fal Kag"
+
+#. [side]: type=Goblin Pillager, id=Fal Khag
+#. [side]: type=Orcish Warrior, id=Urk Delek
+#. [side]: type=Saurian Oracle, id=Thhsthss
+#. [side]: type=Orcish Warlord, id=Vashna
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:85
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:106
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:131
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:119
+msgid "Orcs"
+msgstr "Orkovi"
+
+#. [objective]: condition=win
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:108
+msgid "Defeat all of the Goblin marauders"
+msgstr "Poraziš li sve goblinske pljačkaše"
+
+#. [objective]: condition=lose
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:112
+msgid "Goblins reach the village of Dallben"
+msgstr "Dosegnu li goblini selo Dalben"
+
+#. [objective]: condition=lose
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:116
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:100
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:161
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:129
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:155
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:186
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:156
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:225
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:420
+msgid "Death of Baldras"
+msgstr "Nastrada li Baldras"
+
+#. [objective]: condition=lose
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:120
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:104
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:165
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:133
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:159
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:190
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:160
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:229
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:424
+msgid "Death of Harper"
+msgstr "Nastrada li Harper"
+
+# |, no-check-spell
+#. [event]
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:166
+msgid "Gatrakh"
+msgstr "Gatrak"
+
+# |, no-check-spell
+#. [event]
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:167
+msgid "Thurg"
+msgstr "Turg"
+
+# |, no-check-spell
+#. [event]
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:170
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:175
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:180
+msgid "Krung"
+msgstr "Krung"
+
+# |, no-check-spell
+#. [event]
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:171
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:176
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:181
+msgid "Gorokh"
+msgstr "Gorok"
+
+#. [message]: speaker=Fal Khag
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:203
+msgid ""
+"I long to burn human cities, but that weaselly witch thinks we’re only good "
+"enough for these puny villages. These hapless clods barely have anything, "
+"but at least the witch’s gold is good."
+msgstr ""
+
+#. [message]: speaker=Fal Khag
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:207
+#, fuzzy
+#| msgid ""
+#| "Ride, you worms, I want to finish our raid before the hunting party "
+#| "returns to the human village."
+msgid "Ride, you worms! Let’s finish our raid before their hunters return."
+msgstr ""
+"Jašite, crvi, želim da okončamo pohod pre nego što se lovačka družina vrati "
+"u ljudsko selo."
+
+# |, no-check-spell
+#. [event]
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:216
+msgid "Jalak"
+msgstr "Džalak"
+
+# |, no-check-spell
+#. [unit]: type=Footpad_Peasant, id=Delurin
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:220
+msgid "Delurin"
+msgstr "Delurin"
+
+# |, no-check-spell
+#. [event]
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:228
+msgid "Red"
+msgstr "Red"
+
+# |, no-check-spell
+#. [event]
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:229
+msgid "Ordo"
+msgstr "Ordo"
+
+# |, no-check-spell
+#. [event]
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:230
+msgid "Novus"
+msgstr "Novus"
+
+# |, no-check-spell
+#. [event]
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:231
+msgid "Teneor"
+msgstr "Teneor"
+
+# |, no-check-spell
+#. [event]
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:232
+msgid "Kembe"
+msgstr "Kembe"
+
+# |, no-check-spell
+#. [event]
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:233
+msgid "Treagh"
+msgstr "Treag"
+
+#. [unit]: type=Footpad_Peasant, id=Harper
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:240
+msgid "Harper"
+msgstr "Harper"
+
+#. [message]: speaker=Red
+#. Other country folk also have accents
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:268
+#, fuzzy
+#| msgid ""
+#| "Look, goblin riders approach! You were right, they were going to raid "
+#| "Dallben while we were gone."
+msgid ""
+"Look, goblin riders approach! You was right, they was going to raid Dallben "
+"while we was gone."
+msgstr ""
+"Pazite, pristižu gobli-jahači! Bio si u pravu, nameriše da poharaju Dalben "
+"dok bismo bili odsutni."
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:272
+msgid ""
+"We gots to stop them or they’ll burn down the whole village. Damn these "
+"goblins and damn the Crown. We always be havin’ to fight for ourselves."
+msgstr ""
+
+#. [message]: speaker=Harper
+#. Harper has a bit of an accent, but not as much as Baldras. She's a bit reckless as Baldras alludes to, but is more polite.
+#. Harper is quite the tomboy and her personality should reflect that, she should use words that are exciting and high spirited
+#. She's also pretty young (teenagerish) so her dialogue should reflect some lack of experience or immaturity
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:279
+#, fuzzy
+#| msgid ""
+#| "That goblin leader is heading full-speed straight for Dallben. But we’ll "
+#| "need to chase them all down if we’re going to stop them."
+msgid ""
+"Uncle, we got no time to talk! Them riders are heading full speed straight "
+"for Dallben. We’ll need to chase them down through those woods, and fast, or "
+"we won’t be able to catch up."
+msgstr ""
+"Taj gobli-vođ napreduje punom parom pravo ka Dalbenu. Moraćemo pojuriti ako "
+"mislimo da ih zaustavimo."
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:283
+#, fuzzy
+#| msgid ""
+#| "Do it. Try to hold them back until us old-timers can get there and finish "
+#| "them off."
+msgid ""
+"Do it. Hold them beasts back till us old-timers get there to finish ‘em off."
+msgstr ""
+"Krenite. Pokušajte da ih zadržite dok mi starudije ne pristignemo da ih "
+"dovršimo."
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:287
+msgid ""
+"And Harper... don’t be getting reckless on me today. Your old man died like "
+"that, charging into a pack of goblins by ‘imself. I won’t lose ya the same "
+"way."
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:291
+msgid "I know, I know, no need to worry so much. All right, let’s go!"
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:305
+msgid ""
+"These orc raids keep getting harder and harder to hold off. Feels like every "
+"new day’s just another chance for us to lose everything..."
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:309
+msgid ""
+"That Garard II stopped sendin’ patrols out here a while back. Stinker "
+"probably sent his troops on some new war against them orcs. Don’t really "
+"matter. Technically Annuvin be under the charge of Elensefar, but you don’t "
+"see ‘em coming to help us either."
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:313
+msgid ""
+"Then why do we got to pay taxes to the King? Maybe Elensefar doesn’t help "
+"us, but at least they don’t take our gold."
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:317
+msgid ""
+"We don’t got no choice, lass. If I don’t gives them what they want, they’ll "
+"make trouble for everyone in Dallben."
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:321
+msgid ""
+"But we can’t keep doing this forever, Uncle. If we stay like this, those "
+"orcs will eventually overrun us. What should we do?"
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:325
+msgid ""
+"I don’t know, Harper. I just don’t know. Alls I can say is we’re on our own "
+"out here."
+msgstr ""
+
+#. [message]: speaker=Harper
+#. Harper has a scar from a fire burn on the right side of her face
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:347
+msgid "My face kinda itches... I gotta be careful around these big ones."
+msgstr ""
+
+#. [message]: speaker=Fal Khag
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:364
+msgid "Time to feast on these puny pinkskins."
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:369
+msgid "Hey! Who ya calling puny?"
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:384
+msgid "Ahh! I <i>really</i> don’t like fire..."
+msgstr ""
+
+#. [message]: speaker=Fal Khag
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:396
+msgid "I was... too weak..?"
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:401
+msgid "Silly goblin."
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:416
+msgid ""
+"Hey, someone left their pack here. I could use it to carry some more rocks."
+msgstr ""
+
+#. [message]: speaker=unit
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:449
+msgid "Spooky."
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:489
+#, fuzzy
+#| msgid ""
+#| "They’re getting closer to our village! What about the town guards, can "
+#| "they help us?"
+msgid "They’re getting close to Dallben! What should we do?"
+msgstr ""
+"Približavaju se selu! Šta je sa mesnim stražarima, mogu li nam oni pomoći?"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:493
+msgid ""
+"There be a couple guards in the village. Might be able to slow them wolves "
+"down if they gets closer."
+msgstr ""
+
+# |, no-check-spell
+#. [event]
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:506
+msgid "Remald"
+msgstr "Remald"
+
+# |, no-check-spell
+#. [event]
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:507
+msgid "Wolmas"
+msgstr "Volmas"
+
+# |, no-check-spell
+#. [event]
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:512
+msgid "Jasken"
+msgstr "Džasken"
+
+#. [message]: speaker=Wolmas
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:519
+#, fuzzy
+#| msgid "What’s happening here? Why are you running like mad, $unit.name|?"
+msgid "What’s happening here? Why be you running like mad, $unit.name|?"
+msgstr "Šta se to događa? Zašto jurcaš tako bezglavo, $unit.name|?"
+
+#. [message]: speaker=unit
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:523
+#, fuzzy
+#| msgid "Look! Goblin riders are on the hunt — and heading right for Dallben!"
+msgid ""
+"Goblin riders be on the hunt, headed right for Dallben. We gots to stop them!"
+msgstr "Gle! Gobli-jahači kreću u lov — i to pravo ka Dalbenu!"
+
+#. [message]: speaker=Wolmas
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:530
+#, fuzzy
+#| msgid "Look! Goblin riders are on the hunt — and heading right for Dallben!"
+msgid "Look! Goblin riders be on the hunt, headed right for Dallben!"
+msgstr "Gle! Gobli-jahači kreću u lov — i to pravo ka Dalbenu!"
+
+#. [message]: speaker=Remald
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:534
+msgid "We gots to stop them!"
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:554
+#, fuzzy
+#| msgid ""
+#| "The goblins reached the village! There will surely be nothing left when "
+#| "they are done pillaging it."
+msgid ""
+"The goblins reached the village! Now there’ll be nothing left after they "
+"raid our homes..."
+msgstr ""
+"Goblini stigoše do sela! Zasigurno ništa od njega ostati neće kad dovrše "
+"svoje pustošenje."
+
+#. [scenario]: id=02_Civil_Disobedience
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:4
+msgid "Civil Disobedience"
+msgstr "Građanska neposlušnost"
+
+#. [label]
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:16
+#, fuzzy
+#| msgid "Baldras"
+msgid "Baldras’ farm"
+msgstr "Baldras"
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:21
+msgid ""
+"Baldras’ journal, 6 Deeproot, 501 YW:\n"
+"\n"
+"Me and Harper visited Erwen’s grave today. I helped the lass pick her a "
+"bunch of flowers — we even found some of her favorite, blue lilies. Harper "
+"don’t remember her much, but still thinks lots about her. Lass reminds me so "
+"much of her ma often times, real bright and brassy, even if she don’t got "
+"the same sense or wits. I’m just hoping she be learning more with time."
+msgstr ""
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:27
+msgid ""
+"Speaking of sense, I gots me a bad feeling in my gut about today. I’d better "
+"ready our hunting troop when I get back to the village, just in case..."
+msgstr ""
+
+#. [side]: type=Bandit_Peasant, id=Baldras
+#. [side]
+#. [side]: type=Bandit, id=Baldras
+#. [side]: type=Highwayman_Peasant, id=Relana
+#. [side]: type=General, id=Lord Maddock
+#. [side]: type=Rogue, id=Hans
+#. [side]: type=Highwayman, id=Baldras
+#. [side]: type=Shadow Lord, id=Helicrom
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:44
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:83
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:48
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:78
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:38
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:59
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:71
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:128
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:82
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:103
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:46
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:132
+msgid "Rebels"
+msgstr "Pobunjenici"
+
+#. [side]: type=Cavalier, id=Tarwen
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:53
+msgid "Tarwen"
+msgstr "Tarven"
+
+#. [side]: type=Cavalier, id=Tarwen
+#. [side]: type=General, id=Kestrel
+#. [side]: type=Master Bowman, id=Quentin
+#. [side]
+#. [side]: type=Shock Trooper, id=Linneus
+#. [side]: type=Lieutenant, id=Archarel
+#. [side]: type=General, id=Dommel
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:60
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:82
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:85
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:101
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:121
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:140
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:88
+msgid "Weldyn"
+msgstr ""
+
+#. [objective]: condition=win
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:96
+msgid "Kill the Wesnoth army captain, Tarwen"
+msgstr "Ubiješ li kapetana vesnotske vojske, Tarvena"
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:152
+msgid "Look, riders approach."
+msgstr "Gledajte, pristižu jahači."
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:156
+#, fuzzy
+#| msgid "Stand fast, nephew."
+msgid "Stand fast, Harper."
+msgstr "Bez uzmaka, sinovče."
+
+#. [message]: speaker=Tarwen
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:169
+#, fuzzy
+#| msgid ""
+#| "By order of the Queen, the magistrate of this town is ordered to travel "
+#| "with us to Elensefar for vetting."
+msgid ""
+"By order of the Queen, the magistrate of this town is to travel with us to "
+"Elensefar for vetting."
+msgstr ""
+"Po naređenju kraljice, sudiji ovog gradića zapoveda se da pođe sa nama u "
+"Elensefar, na uverodostojavanje."
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:173
+msgid ""
+"The Crown did long since abandon our village. You Wesnothians be too busy "
+"countin’ the gold from our taxes to be sending aid against them orcs. Nobody "
+"here be leaving to nowhere."
+msgstr ""
+
+#. [message]: speaker=Tarwen
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:177
+msgid ""
+"Insolent peasant. Try not my patience, else I shall be forced to drag thy "
+"deceased corpse back with me to the city."
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:181
+msgid "Try it then, stinker."
+msgstr ""
+
+#. [message]: speaker=Tarwen
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:185
+msgid "As you wish."
+msgstr ""
+
+#. [message]: speaker=Tarwen
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:219
+msgid "Guard the gate."
+msgstr "Straže na kapiju."
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:232
+msgid "<i>Uncle, since when did we have a queen?</i>"
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:236
+msgid ""
+"<i>Since a few years back, I thinks, but weren’t never her giving out no "
+"orders...</i>"
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:240
+msgid ""
+"<i>It don’t really matter right now. Harper, get yerself out o’ here. This "
+"be no kind of battle for you.</i>"
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:244
+msgid "I can fight!"
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:248
+msgid "<i>Harper, do what I says to ya.</i>"
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:252
+msgid "We’re in this together. Death to the Wesnothians!"
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:256
+msgid "Impulsive lass..."
+msgstr ""
+
+#. [message]: speaker=second_unit
+#. this is from Monty Python and the Holy Grail :)
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:269
+msgid "Help, help! I’m being repressed!"
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:281
+msgid "They just killed an innocent man! Murderers!"
+msgstr ""
+
+#. [message]: speaker=Tarwen
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:286
+msgid "Cry thine eyes out for me, peasant."
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:299
+msgid "I oughta bring out the good mace to fight off these thugs."
+msgstr ""
+
+#. [message]: speaker=Tarwen
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:345
+#, fuzzy
+#| msgid "Get back, you cur!"
+msgid "Back, back ye curs!"
+msgstr "Odbij, pseto!"
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:357
+msgid "Take that, you bullies!"
+msgstr ""
+
+#. [message]: speaker=second_unit
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:371
+msgid "Get out of my village!"
+msgstr "Napolje iz mog sela!"
+
+#. [message]: role=Advisor
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:405
+msgid ""
+"We beat their leader, but a couple of them riders escaped. What should we do?"
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:410
+msgid ""
+"Somethin’ be very wrong here. That Garard weren’t never no hero or nothing, "
+"but his men never would’ve attacked us. The Queen must’ve did something to "
+"him."
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:416
+#, fuzzy
+#| msgid "We must tell the people of Delwyn about this."
+msgid ""
+"We’ve got to tell the people of Delwyn about this. Ol’ magistrate Relana "
+"will have some ideas."
+msgstr "Moramo i ovome ispričati Delvinjanima."
+
+#. [message]: role=Advisor
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:421
+msgid ""
+"That’s true. Whenever there’s been troubles, we’ve always looked to her for "
+"help."
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:426
+msgid ""
+"Fine. We’ll go to Delwyn, see what Relana gots to say. With them riders so "
+"eagerly attackin’ us today, I’m thinking Delwyn will be under threat too."
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:431
+msgid "So we’ll have to fight them Wesnothians again?"
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:436
+msgid ""
+"Alls I can say for certain is we’ve made ourselves enemies of the Crown. "
+"They’ll be hunting us now."
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:441
+msgid "Then we’re outlaws."
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:446
+msgid "Aye, outlaws."
+msgstr ""
+
+#. [message]: speaker=Reinforcement Knight
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:539
+msgid "At your order, Captain."
+msgstr ""
+
+#. [message]: speaker=Tarwen
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:543
+msgid "Slay them all."
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/02_Civil_Disobedience.cfg:547
+msgid ""
+"Curses! Their reinforcements has arrived. We gots no chance to fight ‘em off "
+"now..."
+msgstr ""
+
+#. [scenario]: id=03_A_Strategy_of_Hope
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:4
+msgid "A Strategy of Hope"
+msgstr "Strategija nade"
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:17
+msgid ""
+"Baldras’ journal, 10 Deeproot, 501 YW:\n"
+"\n"
+"Been a strange few days. Had to leave Dallben real quick. We grabbed "
+"whatever we could in just a day, some food, some clothes, sis’s lucky "
+"bracelet... and made off for Delwyn as quick as these old bones would let "
+"me. It be a three day journey there for me, but I sended Harper ahead for "
+"Relana first. Said we’d meet her in the usual hiding spot in the swamp."
+msgstr ""
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:23
+msgid ""
+"This whole mess be utter stupidness. Of all the things to be driving us from "
+"our home, how did it ended up being those accursed Wesnothians? Blasted "
+"Crown. Don’t matter whoever’s the one giving out them orders, those stinkers "
+"in Weldyn always be making trouble for us countryfolk."
+msgstr ""
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:27
+msgid ""
+"I’m too old for all this. Them orc raids already be plenty for me to deal "
+"with. I don’t be keen on fighting no war with Wesnoth. But... I guess, I "
+"don’t really got no choice either. Harper’s still too young to be leading "
+"anyone, and it don’t seem like anyone else in the village be suitable."
+msgstr ""
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:31
+msgid ""
+"In times like these... I still wish Erwen was here with us. Little sis were "
+"always the better of us two. She always knew how to keep her temper and her "
+"wits about her. What would she say to me now? Probably something like, “Quit "
+"yapping ya old dog and focus on what you’re doing. What’s done is done. Just "
+"look at what’s ahead of ya and get them people to safety.” Cheeky, that one. "
+"But, she’d be right, I has me a responsibility to our people. Got a lot of "
+"trouble ahead of us..."
+msgstr ""
+
+#. [side]: type=Highwayman_Peasant, id=Relana
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:57
+msgid "Relana"
+msgstr "Relana"
+
+# |, no-check-spell
+#. [side]: type=Orcish Warrior, id=Urk Delek
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:86
+msgid "Urk Delek"
+msgstr "Urk Delek"
+
+# |, no-check-spell
+#. [side]: type=Saurian Oracle, id=Thhsthss
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:115
+msgid "Thhsthss"
+msgstr "Tsts"
+
+#. [objective]: condition=win
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:157
+msgid "Defeat both enemy leaders"
+msgstr "Poraziš li oba neprijateljska vođa"
+
+#. [objective]: condition=lose
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:169
+msgid "Death of Relana"
+msgstr "Nastrada li Relana"
+
+#. [message]: speaker=Relana
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:203
+msgid "Baldras! Ya made it! Lil Harper here told me all about what happened."
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:207
+msgid ""
+"Aye, Relana. It were one o’ the Queen’s patrol, strange as it do sound. "
+"Turns out they was itchin’ to attack us soon as I wasn’t willing to leave "
+"with ‘em."
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:211
+msgid "But we fought those ugly scoundrels off!"
+msgstr ""
+
+#. [message]: speaker=Relana
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:215
+msgid ""
+"Queen’s patrol, ya say? They sent them a messenger our way a couple days "
+"ago, demanding our allegiance to some ‘Asheviere’. Weren’t that Garard’s "
+"young bride or something? Why’s she the one in charge now?"
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:219
+msgid ""
+"I don’t know, but some of them riders escaped us. Bet they’ll report back to "
+"their local garrison, tell them we’re a bunch o’ traitors."
+msgstr ""
+
+#. [message]: role=Advisor
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:223
+#, fuzzy
+#| msgid "Then they’ll be back in force."
+msgid "Then they’ll be comin’ back in force."
+msgstr "A onda će se vratiti sa silom."
+
+#. [message]: speaker=Relana
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:227
+msgid ""
+"We needs more information. We should consult ourselves with Elensefar. Lord "
+"Maddock surely gots to know more than us."
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:231
+#, fuzzy
+#| msgid "Elensefar"
+msgid "Elensefar? Why him?"
+msgstr "Elensefar"
+
+#. [message]: speaker=Relana
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:235
+msgid ""
+"Well all Annuvin be ruled by Elensefar, right? We don’t gots to heed "
+"anything Wesnoth says. Lord Maddock’s technically the one we answer to."
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:239
+msgid ""
+"It don’t matter. Weldyn be doing whatever it likes while Maddock says "
+"nothing. He knows, but he don’t care."
+msgstr ""
+
+#. [message]: speaker=Relana
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:243
+msgid ""
+"But we still need that knowledge, Baldras. We can’t be coming up with any "
+"great plan without no information. We both knows that if Weldyn brings one "
+"o’ their armies here, there be no way we can fight them off."
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:247
+msgid ""
+"Perhaps, but — hold there. Did ya hear that? Sounded like some wolf howl."
+msgstr ""
+
+#. [message]: speaker=Relana
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:251
+msgid "Somethin’ smells like lizard too. We’re not alone here."
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:255
+msgid "Finally, some action!"
+msgstr ""
+
+#. [message]: speaker=Urk Delek
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:263
+msgid ""
+"Blasted humans and blasted Fal Khag! Stupid goblin was only supposed to "
+"scout that puny village, not fight it by himself. Then those damned humans "
+"rejected our help and look where that got them."
+msgstr ""
+
+#. [message]: speaker=Urk Delek
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:267
+msgid ""
+"“Don’t know why the Queen hired some stinkin’ orcs, we don’t need you here.” "
+"Yeah, well now they’re dead like a bunch of beasts."
+msgstr ""
+
+# well-spelled: нишшшта, сси, Ссјајно
+#. [message]: speaker=Thhsthss
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:273
+#, fuzzy
+#| msgid ""
+#| "Fal Khag is nothing to usss, orc. You promissed uss gold. Bright gold."
+msgid "Your ordersss mean nothing to usss, orc. You promissed uss gold."
+msgstr ""
+"Fal Kag nam nišššta ne znači, orče. Obećao ssi nam zlato. Ssjajno zlato."
+
+#. [message]: speaker=Urk Delek
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:277
+msgid ""
+"Shut your trap, lizard. You’ll get your gold as soon as my wolves get their "
+"meat."
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:286
+msgid ""
+"We gots to be headin’ for Elensefar soon before them Wesnothians come back."
+msgstr ""
+
+#. [message]: speaker=unit
+#. fishperson is the same as merfolk
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:300
+msgid "Looks like some fishperson used to live here."
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:318
+msgid "Looks like they still do. Ick."
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:330
+msgid "Ewww, I think it be smelling even worse now. Least it’s stopped moving."
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:358
+msgid "I don’t likes me the look of that water."
+msgstr ""
+
+#. [message]: speaker=unit
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:391
+msgid "Ahh! Help, it’s a tentacle monster!"
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:404
+msgid "That’s some fresh tasty water. Mmm!"
+msgstr ""
+
+#. [message]: speaker=Urk Delek
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:435
+msgid "Blasted pinkskins..."
+msgstr ""
+
+#. [message]: speaker=Thhsthss
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:448
+msgid "Thissss was not part of the deal..."
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:457
+#, fuzzy
+#| msgid ""
+#| "Something is very wrong here. Those orcs were carrying weapons with Army "
+#| "forge-markings."
+msgid ""
+"Something be very wrong here. These orcs has weapons with army forge-"
+"markings."
+msgstr ""
+"Nešto je ovde strašno pogrešno. Ti orkovi nose oružje sa obeležjima "
+"kovačnice Vojske."
+
+#. [message]: speaker=Relana
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:461
+#, fuzzy
+#| msgid "Aye. And the gold in their pouches looked new from the mint."
+msgid ""
+"Aye, and the gold in their pouches looks new from mint. Could just be "
+"plunder, but..."
+msgstr "Tako je. A i zlato u njihovim torbicama izgleda sveže izliveno."
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:465
+msgid ""
+"Don’t seem like it. I be thinking these orcs were hired to scout us. But for "
+"what? Of all the alliances to be making, why would Weldyn be hiring orcs?"
+msgstr ""
+
+#. [message]: speaker=Relana
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:469
+#, fuzzy
+#| msgid ""
+#| "I think your mission to Lord Maddock just became more urgent than we "
+#| "knew, Baldras. I must remain here to see to the defense of Delwyn and "
+#| "Dallben, but you should fly to Elensefar with all speed."
+msgid ""
+"I thinks your mission to Lord Maddock just became even more urgent. We needs "
+"to know the Queen’s motives."
+msgstr ""
+"Mislim da je tvoje poslanstvo gospodaru Madoku upravo postalo preče nego što "
+"znadosmo, Baldrase. Ja moram ostati ovde da spremim odbranu Delvina i "
+"Dalbena, a na tebi je da što brže pohitaš k Elensefaru."
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:473
+msgid ""
+"I don’t like leaving our people here alone, but I sees your point. If we "
+"wait, more will be coming."
+msgstr ""
+
+#. [message]: speaker=Relana
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:477
+msgid ""
+"For now, I can stay here and perhaps talk them Wesnothians out of attacking "
+"us directly, but I don’t thinks it will work forever. To survive this, we "
+"needs to act quick, Baldras."
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:481
+msgid "Then we’ll go to Elensefar as fast as we can. Luck be with ya, Relana."
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:499
+msgid ""
+"We gots no more time to be spending here nor to be traveling to Elensefar... "
+"them Wesnothians probably already be mobilizing against us. We’ve got to "
+"head back to Dallben!"
+msgstr ""
+
+#. [message]: speaker=narrator
+#: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:505
+#, fuzzy
+#| msgid ""
+#| "Baldras and Relana returned to their villages to find them destroyed, "
+#| "with those who fought left dead and the few survivors born away to "
+#| "unguessable fates. It was a bitter doom, and as Wesnoth descended into "
+#| "darkness they would live to see worse."
+msgid ""
+"Baldras and Relana returned to their villages to find them destroyed, with "
+"any survivors borne away to unknown fates. It was a bitter doom, and as "
+"Wesnoth descended into chaos, they would live to see worse."
+msgstr ""
+"Baldras i Relana vratiše se u svoja sela da bi ih zatekli razrušena, sa "
+"svima koji se boriše mrtvim, a malobrojnim preživelima odvedenim u "
+"nezamislive sudbine. Beše to gorka kletva, i dok Vesnot bude ponirao u tamu, "
+"doživeće da vide još gore."
+
+#. [scenario]: id=04_Unlawful_Orders
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:4
+msgid "Unlawful Orders"
+msgstr "Nezakonita naređenja"
+
+#. [label]
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:18
+msgid "Elensefar"
+msgstr "Elensefar"
+
+#. [label]
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:23
+msgid "Port of Elensefar"
+msgstr "Luka Elensefar"
+
+#. [side]: type=General, id=Lord Maddock
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:45
+msgid "Lord Maddock"
+msgstr "gospodar Madok"
+
+#. [objective]: condition=win
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:125
+msgid "Defeat the enemy general"
+msgstr "Poraziš li neprijateljskog generala"
+
+#. [objective]: condition=lose
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:137
+msgid "Death of Maddock"
+msgstr "Nastrada li Madok"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:212
+msgid "Maddock, I be coming to report—"
+msgstr ""
+
+#. [message]: speaker=Lord Maddock
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:216
+msgid ""
+"I am already aware of your altercation in Dallben, Baldras. Your dissent was "
+"not wise."
+msgstr ""
+
+#. [message]: speaker=Baldras
+#. pigdirt is slang for bullshit or hogwash
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:221
+msgid ""
+"Dissent? Maddock, I’m not trusting no strange riders who show up out of "
+"nowhere claimin’ to be from the Queen. Seems like a bunch of pigdirt to me."
+msgstr ""
+
+#. [message]: speaker=Lord Maddock
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:225
+msgid ""
+"That was partially my fault, since I was not able to send a messenger to you "
+"in time. I shall have to inform you now. Five weeks ago, at the Ford of "
+"Abez, Queen Asheviere’s men allied themselves with the northern orcs and "
+"betrayed King Garard II."
+msgstr ""
+
+#. [message]: speaker=Lord Maddock
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:229
+msgid ""
+"Since Prince Eldred died in the battle, the Queen took the throne and has "
+"been consolidating her power. Part of that has been bringing the elders from "
+"the local villages here, forcing them to swear allegiance to her. That was "
+"the purpose of that patrol."
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:233
+msgid "Annuvin province be ruled by Elensefar! We has no duty to Weldyn."
+msgstr ""
+
+#. [message]: speaker=Lord Maddock
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:237
+msgid ""
+"You do now. I do not really need to tell you what will happen should you "
+"refuse Her Majesty’s offer."
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:241
+msgid ""
+"Grow a spine, Maddock. If they come to ya and make you swear fealty to this "
+"Asheviere, would ya really give up that easy?"
+msgstr ""
+
+#. [message]: speaker=Lord Maddock
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:245
+msgid ""
+"Well, they do not come within the walls of my city. There is a large "
+"garrison south at the great fortress of Halstead, but even should they "
+"mobilize all their troops, I doubt they could take Elensefar. It is true "
+"that for now, the majority of my forces are still returning from the battle "
+"of Abez, but unless we are attacked within the next few days, I shall be "
+"able to hold the city."
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:249
+msgid "And what abouts us? Throw us like dogs to those Wesnothians?"
+msgstr ""
+
+#. [message]: speaker=Lord Maddock
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:253
+msgid ""
+"We have an uneasy peace to maintain. The treaty between Elensefar and "
+"Wesnoth is ancient, and I do not think Her Majesty means to break it. At the "
+"same time, I have some concessions that I shall have to make. I cannot "
+"afford a war with Weldyn, as you can surely understand."
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:257
+msgid ""
+"But we can’t do nothing! The Queen even be sending them beast orcs against "
+"us, that’s how evil she is! Surely you can’t stand for this..."
+msgstr ""
+
+#. [message]: speaker=Lord Maddock
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:261
+msgid ""
+"Yes, I am aware of Queen Asheviere’s propensity for hiring orcs to "
+"supplement her forces. That does not mean I could do anything about it, even "
+"if I were so inclined. The best advice I can give you is to just apologize. "
+"Even if they may want your head, Baldras, you still have the chance to "
+"preserve your village. Think of the bigger picture."
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:265
+msgid ""
+"The bigger picture of you idly sittin’ here waiting till them Wesnothians "
+"come to take the city right from your hands."
+msgstr ""
+
+#. [message]: speaker=Lord Maddock
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:269
+msgid "I very much doubt they would be bold enough to attack us outright—"
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:273
+msgid ""
+"Head out of your behind, Maddock. Open your eyes! Look south and tell me "
+"that again!"
+msgstr ""
+
+#. [message]: speaker=Lord Maddock
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:286
+msgid ""
+"An invading army? No, something is not right with those soldiers... but I "
+"presume we have no time to ponder that. To arms!"
+msgstr ""
+
+#. [message]: speaker=unit
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:309
+msgid "Hey, look! Some buried treasure!"
+msgstr ""
+
+#. [message]: speaker=unit
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:334
+msgid "Looks like someone left some supplies here."
+msgstr ""
+
+#. [message]: speaker=unit
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:359
+msgid ""
+"It says, “Here lies Daneth, child of the Light, loyal defender of Lord and "
+"Land.” Whoever that was."
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:363
+msgid "Maddock’s firstborn son."
+msgstr ""
+
+#. [message]: speaker=unit
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:367
+msgid "Oh."
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:380
+msgid ""
+"That’s a deep well! Wonder how far down it goes. Guess I’ll chuck a rock "
+"down and find out."
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:384
+msgid ""
+"...\n"
+"...\n"
+"..."
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:390
+msgid "Plunk!"
+msgstr ""
+
+#. [message]: speaker=Lord Maddock
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:423
+msgid "Hold there, soldier! Can we not come to terms without bloodshed?"
+msgstr ""
+
+#. [message]: speaker=unit
+#. [message]: speaker=Lord Maddock
+#. [message]: type=Spearman
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:427
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:871
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:885
+msgid "..."
+msgstr ""
+
+#. [message]: speaker=Lord Maddock
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:431
+msgid "Hmm. Something is quite wrong indeed..."
+msgstr ""
+
+#. [message]: speaker=narrator
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:444
+msgid "<i>The sun sets...</i>"
+msgstr ""
+
+#. [message]: speaker=narrator
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:449
+msgid ""
+"Baldras and Harper watch, petrified, as the skin and flesh of their "
+"adversaries begin to rot away."
+msgstr ""
+
+#. [wml_message]
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:530
+msgid "Could not convert a $stored_changers[$i].type, please report!"
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:793
+msgid ""
+"Them things look like evil spirits! Are they those undead you told me about, "
+"Uncle?"
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:797
+msgid ""
+"They bears some likeness, but these men almost seem half alive. This be some "
+"kind of truly dreadful sorcery."
+msgstr ""
+
+#. [message]: speaker=Lord Maddock
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:806
+msgid ""
+"So, their human aspect returns. Whatever these creatures are, we shall crush "
+"them all under the light of the sun."
+msgstr ""
+
+# |, no-check-spell
+#. [modify_unit]
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:828
+#, fuzzy
+#| msgid "Kestrel"
+msgid "General Kestrel"
+msgstr "Kestrel"
+
+#. [message]: speaker=second_unit
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:835
+msgid "Who are you? What are you?"
+msgstr "Ko ste vi? Ko ste vi?"
+
+#. [message]: speaker=Kestrel
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:839
+#, fuzzy
+#| msgid ""
+#| "We are accursed. We were once under the command of Prince Eldred, the "
+#| "King’s son and betrayer. The price for our treason is this hellish "
+#| "existence. We know not who or what inflicted this curse upon us, but our "
+#| "mortal deaths may be only the beginning of the penance we are doomed to "
+#| "pay."
+msgid ""
+"We... are accursed. We were the soldiers of Prince Eldred, the King’s son "
+"and betrayer... when the Prince was slain at the hands of the mage Delfador, "
+"those of us who bore witness to it were warped into these twisted forms. "
+"Now, our mortal bodies pass... into another plane of hellish existence..."
+msgstr ""
+"Mi smo prokleti. Bejasmo nekad pod zapovedništvom princa Eldreda, kraljevog "
+"sina i izdajnika. Cena naše izdaje ovo je pakleno postojanje. Ne znamo ko "
+"ili šta baci kletvu na nas, ali naš smrtnički kraj može biti tek početak "
+"pokajanja koje smo prinuđeni da podnesemo."
+
+#. [message]: speaker=Lord Maddock
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:862
+msgid "Such is the price for treachery."
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:866
+#, fuzzy
+#| msgid "Lord Maddock, now that we are victorious, will you help us?"
+msgid "Maddock, we helped you defend your city. Will you help us now?"
+msgstr "Gospodaru Madoče, sada kad pobedismo, hoćeš li nam pomoći?"
+
+#. [message]: speaker=Lord Maddock
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:876
+msgid ""
+"<i>Listen carefully. I shall not openly speak against Asheviere seeing as "
+"some of her spies are in the city... however, rest assured, I certainly do "
+"not trust the Queen and her questionable tactics.</i>"
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:880
+msgid "<i>What can ya offer us then?</i>"
+msgstr ""
+
+#. [message]: speaker=Lord Maddock
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:884
+msgid ""
+"<i>Well, I do not normally make my relationship with them known, but I can "
+"make an exception. Southeast of here, in Carcyn, you may find assistance "
+"from one of my... contacts. Their methods should be better suited to your "
+"needs. As for your homes, I cannot offer you protection against Weldyn, but "
+"I can arrange for some roads to be closed to delay their patrols. That is "
+"the most I can do for you.</i>"
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:888
+msgid ""
+"<i>Hmph. Clear that you won’t help us fight, but I gots no more time to be "
+"stayin’ here. If we is going to resist the Crown a second time, we needs "
+"ourselves a good plan. Hope that you’re not sending us to our deaths, "
+"Maddock.</i>"
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:908
+msgid ""
+"More troops be coming from the south! With all them reinforcements, we gots "
+"no chance to defend Elensefar!"
+msgstr ""
+
+#. [message]: speaker=narrator
+#: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:921
+#, fuzzy
+#| msgid ""
+#| "Indeed, Asheviere’s armies had mustered and struck before the nascent "
+#| "rebellion could even be planned. Her power and ruthlessness — and their "
+#| "toll of death — would only grow greater with time."
+msgid ""
+"Asheviere’s armies assembled and struck before the nascent rebellion could "
+"even be planned. Without the necessary forces, Annuvin soon fell under "
+"Weldyn’s absolute control."
+msgstr ""
+"Zaista, Aševirine vojske se okupiše i udariše pre nego što se mlada buna "
+"mogla imalo razraditi. Njena moć i okrutnost — i smrtni danak za njima — "
+"samo će rasti vremenom."
+
+#. [scenario]: id=05_Hide_and_Seek
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:6
+msgid "Hide and Seek"
+msgstr "Žmurke"
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:46
+msgid ""
+"22 Deeproot, 501 YW\n"
+"\n"
+"Been a tough few days since we left Elensefar with all them patrols running "
+"around. Going by boat along the Great River, we has been managing to avoid "
+"them Wesnothians, but being constantly on the lookout be real taxing. I "
+"truly be starting to feel that tiredness in my bones... old men like me "
+"should be sitting back at home, resting our grey bodies and watchin’ over "
+"them younger folk growing up. I don’t got no business here, running around "
+"as some outlaw. Maybe if I was ten years younger..."
+msgstr ""
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:52
+msgid ""
+"Anyway, the messenger I sent back to Relana should be in Delwyn already. We "
+"should be arriving to Carcyn soon too, to where that coward Maddock said his "
+"‘contact’ be. Truths be told, I don’t know how this’ll be turning out, "
+"especially since I don’t be no social butterfly like sis were. Don’t like me "
+"no city folk really. But I’ll deal with them if I gots to."
+msgstr ""
+
+# |, no-check-spell
+#. [side]: type=Master Bowman, id=Quentin
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:80
+msgid "Quentin"
+msgstr "Kventin"
+
+#. [side]: type=Rogue, id=Hans
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:118
+msgid "Hans"
+msgstr "Hans"
+
+#. [objective]: condition=win
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:151
+#, fuzzy
+#| msgid "The Grey Woods"
+msgid "Enter the Grey Woods with Hans"
+msgstr "Sedošumlje"
+
+#. [objective]: condition=lose
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:163
+#, fuzzy
+#| msgid "Death of Harper"
+msgid "Death of Hans"
+msgstr "Nastrada li Harper"
+
+#. [note]
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:168
+msgid "In fog, units always see one hex further than they can move."
+msgstr ""
+
+#. [message]: speaker=narrator
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:349
+#, fuzzy
+#| msgid ""
+#| "Relentlessly pursued by riders patrolling the road to Elensefar, Baldras "
+#| "and his men traveled unseen along the swampy banks of the Great River to "
+#| "the city of Carcyn."
+msgid ""
+"Relentlessly pursued by riders patrolling the road to Elensefar, Baldras and "
+"the villagers traveled unseen along the swampy banks of the Great River to "
+"the city of Carcyn. They hid until nightfall, then crept out to find the "
+"help Lord Maddock hinted was here."
+msgstr ""
+"Neumorno proganjani jahačima što izviđaše drum ka Elensefaru, Baldras i "
+"njegovi ljudi provukoše se neprimećeni duž močvarnih obala Velike reke, sve "
+"do grada Karsina."
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:397
+msgid ""
+"Wow, is that Carcyn in the distance? Look at how grand some of them spires "
+"be!"
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:402
+msgid ""
+"Not since I were a young lad did I come this far south. Maybe it looks "
+"impressive now, but city life weren’t never something real nice. Them city "
+"folk be real impatient and mean. Always wantin’ some price for their help, "
+"too."
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:407
+msgid ""
+"Well, we need their help now, don’t we? So we got to figure out a way to get "
+"to Lord Maddock’s friend. But he didn’t say anything about who that was."
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:412
+msgid ""
+"Harper, when a noble lord says he don’t want some kind of relationship "
+"known, it means some kind o’ connection with the black market. We be looking "
+"for criminals, probably some thieves’ den. Or, maybe they be looking for us."
+msgstr ""
+
+#. [unit]: type=Thief, id=Link
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:428
+msgid "Link"
+msgstr "Karika"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:433
+msgid "Right on time."
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:438
+msgid "How do we know we can trust him?"
+msgstr ""
+
+#. [message]: speaker=Link
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:443
+msgid ""
+"If you were one of my quarries, your throat would be slit by now. As it is, "
+"you two are still in imminent danger. Just a week ago, the Crown sent a "
+"contingent of heavy infantry here to supervise the city. They’re patrolling "
+"the streets and forests for us."
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:448
+msgid "I be assuming they’ll also try to stop us if they see us."
+msgstr ""
+
+#. [message]: speaker=Link
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:453
+#, fuzzy
+#| msgid ""
+#| "Well, good thing I found you first. Now hurry, you must make it past the "
+#| "city into the Grey Woods. There is a small path in the southeast that "
+#| "leads into the forest; look for the signpost. My brother Hans is waiting "
+#| "for you there and will take you to our master. Try to avoid the soldiers "
+#| "if you can."
+msgid ""
+"Very likely. Now hurry, you must make it past the city into the Grey Woods. "
+"There is a small path in the southeast that leads into the forest. Look for "
+"the signpost. My brother Hans will guide you from there. Avoid the soldiers "
+"if you can."
+msgstr ""
+"Valja onda što sam vas ja našao prvi. Sad požurite, morate se provući pokraj "
+"grada, u Sedošumlje. Jugoistočno prolazi uska staza koja vodi u šumu; "
+"potražite putokaz. Tamo će vas čekati moj brat Hans, da vas povede k našem "
+"gospodaru. Pokušajte da izbegnete vojnike ako uzmognete."
+
+#. [message]: speaker=second_unit
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:491
+#, fuzzy
+#| msgid ""
+#| "Looks like these guards hold stationary posts, so if we’re careful enough "
+#| "we should be able to slip our way around them unnoticed."
+msgid ""
+"Looks like these guards be holding stationary posts. If we’re careful, we "
+"can get ourselves around them unnoticed."
+msgstr ""
+"Deluje da ove straže ne mrdaju sa svojih stanki, tako da ako budemo dovoljno "
+"oprezni trebalo bi da uspemo da ih zaobiđemo neprimećeni."
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:495
+#, fuzzy
+#| msgid ""
+#| "Harper, you younger and faster folks need to be our eyes now. Scout ahead "
+#| "and try to find a way for us to get past the guards, but make sure to not "
+#| "stay where they can see you or we’re all in big trouble..."
+msgid ""
+"Harper, you younger and faster folks needs to be our eyes. Scout ahead and "
+"find a way past them guards, but make sure ya don’t get yourselves spotted..."
+msgstr ""
+"Harpere, vi mlađi i brži sada nam morate biti oči. Izviđajte ispred i "
+"pokušajte da pronađete put između straža, ali pazite da se ne zadržavate gde "
+"vas mogu spaziti, ili smo svi zajedno nadrljali..."
+
+#. [message]: speaker=unit
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:566
+msgid "Who goes there? Halt!"
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:570
+msgid "They’ve seen us! <i>Run</i>!"
+msgstr "Videše nas, <i>bež’</i>!"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:587
+#, fuzzy
+#| msgid "Fall back, quickly! Maybe we can yet lose them!"
+msgid "Quick, back into the shadows! Maybe we can still lose them!"
+msgstr "Odstupite, brzo! Možda ih još možemo otresti!"
+
+#. [message]: speaker=Harper
+#. Harper defeats an Iron Mauler
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:605
+msgid "Uncle, we did it! We beat one of them iron monsters!"
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:609
+msgid "A fine job lass, but more sure gots to be coming. Let’s keep movin’."
+msgstr ""
+
+#. [message]: speaker=unit
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:628
+#, fuzzy
+#| msgid "Fly, and we may yet evade them in the Grey Woods."
+msgid ""
+"This way, into the forest! We’ll be able to lose them in the Grey Woods."
+msgstr "Pohitajmo, i još im možemo izbeći u Sedošumlju."
+
+#. [message]: speaker=Hans
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:653
+#, fuzzy
+#| msgid ""
+#| "You can come if you wish, but the leader is only interested in speaking "
+#| "to Baldras."
+msgid ""
+"You can come if you wish, but we are mostly interested in speaking to "
+"Baldras."
+msgstr ""
+"Možete i vi poći ako želite, ali vođ želi da razgovara samo sa Baldrasom."
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:673
+#, fuzzy
+#| msgid ""
+#| "I haven’t run this much in years. If you were to ask me to infiltrate a "
+#| "heavily guarded city relying on nothing but the cover of darkness and my "
+#| "wits, I would say you were crazy."
+msgid ""
+"I haven’t run so much in years. Feels like I be a real outlaw now, "
+"infiltrating a heavily guarded city relyin’ on nothing but the cover of "
+"darkness and my wits."
+msgstr ""
+"Ne trčah ovoliko već godinama. Ako bi me pitao da se ubacim u teško čuvani "
+"grad oslanjajući se samo na pokrov mraka i sopstvenu dosetljivost, rekao bih "
+"da si lud."
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:678
+msgid "It was fun, wasn’t it?"
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:683
+msgid "Perhaps a little."
+msgstr ""
+
+#. [message]: speaker=Hans
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:688
+msgid ""
+"Enough chatter, you still have some guards on your tail. We need to head "
+"deeper into the Grey Woods to lose them."
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:693
+msgid "Lead the way."
+msgstr "Povedi onda."
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:717
+msgid ""
+"Blast it, we was too slow! With the sun rising already, them guards will "
+"have no trouble spotting us now..."
+msgstr ""
+
+#. [message]: speaker=Hans
+#: data/campaigns/Liberty/scenarios/05_Hide_and_Seek.cfg:734
+msgid "You fools! You weren’t supposed to lead them to me..."
+msgstr ""
+
+#. [scenario]: id=06_The_Hunters
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:4
+msgid "The Hunters"
+msgstr "Lovci"
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:45
+msgid ""
+"24 Deeproot, 501 YW\n"
+"\n"
+"The sun don’t really shine at all in these Grey Woods, but truth be told, I "
+"has been getting used to it more and more. Lounging out in the warm "
+"daylight, talkin’ with Erwen while watching them kids play out in the "
+"fields... those times were so long ago. Our lives weren’t never real "
+"peaceful, but back then, we had our homes and our friends and our family... "
+"now we be creatures of the dark."
+msgstr ""
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:51
+msgid ""
+"It be real lonesome like this. I still has me Harper, and I be grateful for "
+"the lass, but she don’t really understand an old man like me. I know the "
+"past be the past, but I just can’t help but think of sis in times like "
+"these. How she used to be dragging me out on some silly little romp, a "
+"little job here and there for some gold or lil trinket, or sometimes just "
+"for fun... I never wanted to go, of course. I were always real lazy. Still "
+"am, even now."
+msgstr ""
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:55
+msgid ""
+"Then, Harper tells me, “Come on Uncle, we’re on an adventure! Don’t be so "
+"mopey, live a little!” I know she be trying to be cheery, but she really "
+"don’t know how much she be reminding me of Erwen sometimes..."
+msgstr ""
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:59
+msgid ""
+"I must be strong. That’s what I tells myself. I should be strong, but... I "
+"don’t know what be keeping me going, if it be this misguided sense of pride, "
+"or my duties to the village, or Harper, or even just remembering the past, "
+"making some futile attempts to go back to better times."
+msgstr ""
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:63
+msgid "Either way, I be here now, on this adventure."
+msgstr ""
+
+#. [side]: type=Shadow Lord, id=Helicrom
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:90
+msgid "Helicrom"
+msgstr "Helikrom"
+
+#. [side]: type=Shock Trooper, id=Linneus
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:111
+msgid "Linneus"
+msgstr "Linije"
+
+# |, no-check-spell
+#. [side]: type=Lieutenant, id=Archarel
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:130
+msgid "Archarel"
+msgstr "Arharel"
+
+#. [objective]: condition=win
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:182
+msgid "Kill all enemy patrols before they reach the outpost"
+msgstr ""
+
+#. [objective]: condition=lose
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:194
+#, fuzzy
+#| msgid "Death of Harper"
+msgid "Death of Helicrom"
+msgstr "Nastrada li Harper"
+
+#. [objective]: condition=lose
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:198
+msgid "Any patrol units survive when turns run out"
+msgstr ""
+
+#. [objective]: condition=lose
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:202
+msgid "Any allied unit is sighted by the outpost guards"
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:255
+#, fuzzy
+#| msgid "The leader, I presume."
+msgid "The leader, I presumes."
+msgstr "Vođ, pretpostavljam."
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:259
+msgid ""
+"Indeed, I am Lord Helicrom, the Crow of the Grey Woods. We are acquaintances "
+"of Lord Maddock, who sent word to us of your predicament. I believe we can "
+"work something out for your situation."
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:263
+#, fuzzy
+#| msgid "Your pursuits?"
+msgid "What be your pursuits?"
+msgstr "Vaša zanimanja?"
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:267
+#, fuzzy
+#| msgid ""
+#| "The former King’s magic ministry kept a tight control on the training and "
+#| "employment of mages in Wesnoth. Those of us who dared to... depart from "
+#| "the curriculum, you might say, were dealt with harshly. We are outcasts "
+#| "because we seek to master shadow magic. Our secrecy and security are not "
+#| "cheap."
+msgid ""
+"The former king’s magic ministry kept a tight control on the training and "
+"employment of mages in Wesnoth. Those of us who dared to... depart from the "
+"curriculum were dealt with harshly. Many of us were forced to escape here to "
+"continue our study of our brand of magic. Our security and secrecy are not "
+"cheap."
+msgstr ""
+"Prikaz za magiju bivšeg kralja održavalo je čvrst stisak nad uvežbavanjem i "
+"upošljavanjem magova u Vesnotu. S onima među nama koji su se usudili da... "
+"zađu izvan nastavnog plana, takoreći, surovo se obračunavalo. Izgnani smo "
+"jer iskamo vladanje magijom iz senke. Naša potaja i bezbednost ne dolaze "
+"jeftino."
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:271
+msgid "Then you be fellow outlaws. But why do you wants to help us?"
+msgstr ""
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:275
+msgid ""
+"<i>Quid pro quo.</i> Our aid is never given freely. You have something that "
+"may be useful to us."
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:279
+msgid "Manpower. Mages be no good at fighting, I knows. But what for?"
+msgstr ""
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:283
+msgid ""
+"Understand this. Any weakening of the Throne of Wesnoth, whether it be "
+"occupied by king or queen, aids us. To accomplish that, we must destabilize "
+"their forces in this region. The key is Halstead."
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:287
+msgid "That big ol’ fort between Aldril and Elensefar?"
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:291
+msgid ""
+"Aye, Harper. What the mage says be no surprise. It be a bastion of central "
+"importance, rivalin’ Elensefar even. Maddock said the Queen’s troops were "
+"gathering there. But we gots no way to fight a war with them, not since "
+"Maddock won’t send his soldiers to battle."
+msgstr ""
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:295
+msgid ""
+"Know this, Baldras. During the past week, several patrols have again "
+"ventured across the Great River into Annuvin. A woman named Relana opposed "
+"them with a small militia and was victorious, but with heavy losses. The "
+"Crown, however, has begun to take notice of this rebellion and is massing "
+"forces within Halstead. When its armies are raised, none of your little "
+"villages will be able to resist them. Your only choice would be to flee "
+"farther north into orcish territory."
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:299
+msgid ""
+"We’d never survive there. But would it be so bad if we just swore fealty to "
+"the Queen?"
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:303
+msgid "Only if we gots no other choice. Let’s hear the mage’s plan first."
+msgstr ""
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:307
+msgid ""
+"I’m not asking you to fight a war. A direct fight against Weldyn’s armies "
+"would be undoubtedly foolish. However, we have other means within our grasp. "
+"From Dan’Tonk to Halstead, the fastest path lies through the pass between "
+"the Brown Hills and the Gryphon Mountains followed by the trek through these "
+"Grey Woods. We are in prime position to gnaw away at their troops, crippling "
+"their forces before they ever arrive at their destination."
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:311
+msgid "Then what?"
+msgstr ""
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:315
+msgid "I am sure you can guess, magistrate."
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:319
+msgid "You means to sack Halstead itself."
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:323
+msgid "There’s no way we can fight them all... can we?"
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:327
+msgid ""
+"I don’t know. But, for now, ambushing them patrols be easy enough. That’ll "
+"slow them Wesnothians down enough for us to figure out the next step."
+msgstr ""
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:331
+msgid ""
+"In the last day, my scouts have counted five platoons of troops marching "
+"towards the garrison. We must eliminate them all before they reach the "
+"outpost at the end of the woods. The outpost also must not be alerted to our "
+"presence, or we will have the bulk of their forces upon us."
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:342
+#, fuzzy
+#| msgid "Another platoon approaches..."
+msgid "The first platoon approaches..."
+msgstr "Približava se još jedan odred..."
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:386
+#, fuzzy
+#| msgid ""
+#| "When we are done, no one will fear the open roads and night sky more than "
+#| "the army of the usurper. Strike fast, strike silently... and leave no one "
+#| "alive."
+msgid ""
+"We shall pincer them from the other side of this path. When we are done, no "
+"one shall fear the open roads and night sky more than the armies of Weldyn. "
+"Strike quickly, strike silently... and leave no one alive."
+msgstr ""
+"Kad završimo ovde, niko se neće plašiti otvorenih drumova i noćnog neba više "
+"od vojski samozvanke. Udarajte brzo, udarajte nečujno... i ne ostavljajte "
+"nikoga živog."
+
+#. [message]: speaker=Linneus
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:508
+#, fuzzy
+#| msgid "It’s an ambush! Hold your ground!"
+msgid "It’s an ambush! Run!"
+msgstr "Zaseda! Držite položaje!"
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:523
+msgid ""
+"Ah, here it is. I was wondering where I had misplaced my favorite blade."
+msgstr ""
+
+#. [message]: speaker=unit
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:557
+msgid "Hey, I found some old coins in this shack."
+msgstr ""
+
+#. [message]: speaker=unit
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:593
+msgid "Bleagh, a slimy tentacle. Why’s it so big?"
+msgstr ""
+
+#. [message]: speaker=unit
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:606
+msgid "There’s a rusty key here. I wonder if it could be useful?"
+msgstr ""
+
+#. [message]: speaker=unit
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:633
+msgid "There is a waterlogged coffin here."
+msgstr ""
+
+#. [message]: speaker=unit
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:646
+msgid "Hey, that key fits in this coffin. Should I open it?"
+msgstr ""
+
+#. [option]
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:651
+msgid "No, that be a terrible idea."
+msgstr ""
+
+#. [option]
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:658
+msgid "Fine, do it."
+msgstr ""
+
+#. [message]: speaker=unit
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:673
+msgid "What is this disgusting monster?"
+msgstr ""
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:678
+msgid ""
+"A ghoul, a creature of disease and pestilence. Kill the putrid thing. Its "
+"stench is making me sick."
+msgstr ""
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:703
+msgid ""
+"Disgusting though it may be, perhaps that creature’s corpse could be useful."
+msgstr ""
+
+#. [message]: speaker=unit
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:718
+msgid "Should I use this potion?"
+msgstr ""
+
+#. [option]
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:720
+msgid "Yes, I’ll use it."
+msgstr ""
+
+#. [object]: id=poison_weapon
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:728
+msgid "Vile Concoction"
+msgstr ""
+
+#. [object]: id=poison_weapon
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:730
+msgid ""
+"This unit’s melee weapons gain the poison special and this unit gains a "
+"small number of hitpoints."
+msgstr ""
+
+#. [option]
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:764
+msgid "No, I’ll leave it for someone else."
+msgstr ""
+
+#. [message]: type=Spearman
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:877
+msgid "Doesn’t something about these woods feel weird to you, sir?"
+msgstr ""
+
+#. [message]: type=Pikeman
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:881
+msgid "Afraid of ghosts, soldier?"
+msgstr ""
+
+#. [message]: type=Master at Arms
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:991
+msgid ""
+"Woods, woods, woods and more woods! Bah, that general had better have a good "
+"reason for dragging me out to Halstead with all these oafs."
+msgstr ""
+
+#. [message]: type=Duelist
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:995
+msgid "But cap’n, we’re your loyal troops..."
+msgstr ""
+
+#. [message]: type=Master at Arms
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:999
+msgid "Shut it and keep moving."
+msgstr ""
+
+#. [message]: speaker=Archarel
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1020
+msgid ""
+"Several platoons of troops were supposed to arrive today. I wonder if "
+"something happened to them."
+msgstr ""
+
+#. [message]: speaker=Archarel
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1037
+msgid ""
+"Something about these woods seems quite unnatural. Perhaps we should stop "
+"sending our soldiers this way."
+msgstr ""
+
+#. [message]: speaker=Archarel
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1053
+#, fuzzy
+#| msgid ""
+#| "Troops, to arms! These peasant scum think they are above the law. We will "
+#| "show them the law!"
+msgid ""
+"Troops, to arms! Show these fugitive scum the meaning of the Queen’s law!"
+msgstr ""
+"Vojsko, na oružje! Ovaj seljački šljam misli da je iznad zakona. Pokazaćemo "
+"im mi zakon!"
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1057
+msgid ""
+"With the outpost aware of our presence, we can no longer harry their "
+"reinforcements. Their forces will soon grow too powerful for us to resist."
+msgstr ""
+
+#. [message]: speaker=narrator
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1073
+msgid ""
+"The next morning, the local night patrol returned to the nearby outpost. "
+"They were surprised to see their fellow soldiers engaged in combat with the "
+"band of thugs of which they had heard so much."
+msgstr ""
+"Sledeće jutro, lokalna noćna izvidnica vrati u obližnju ispostavu. "
+"Iznenadiše se kad zatekoše svoje saborce upuštene u borbu protiv razbojničke "
+"skupine o kojoj su toliko čuli."
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1133
+msgid "It be done. Their patrols be shattered and broken."
+msgstr ""
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1138
+msgid ""
+"Well done, but the fight is far from over. We will not be able to employ "
+"these tactics when more platoons arrive. You must make your choice. Will you "
+"fight? Or will you return to your village and beg for amnesty?"
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1143
+msgid ""
+"Amnesty? Knowing these Wesnothians, they’ll have my head. Then again, if I "
+"could gives my life to save my whole village, I would."
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1148
+msgid "We need you! Uncle..."
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1153
+msgid ""
+"I know what you is going to say, Harper. That we should be fighting for our "
+"homes, just like we do against them orcs. But we be risking everything on "
+"this, lass."
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1158
+msgid ""
+"If we go back like this, that means we’ll surrender to them Wesnothians and "
+"live our whole lives in oppression. You saw how they were sending so many "
+"soldiers and even orcs against us."
+msgstr ""
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1163
+msgid ""
+"The girl is naive, but her spirit is in the right place. You risk your homes "
+"and the lives of your people, yes, but what good will they be if you live in "
+"tyranny? Believe me, I have been there. I would rather die than go back."
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1168
+msgid ""
+"Yes... Erwen would’ve said the same. If we march on Halstead, we gots to "
+"burn it to the ground before the Queen’s forces rally. If we does that, "
+"Weldyn won’t have no foothold in Annuvin no more."
+msgstr ""
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1173
+msgid ""
+"It would be months before they could reassemble their forces here. Enough "
+"time for you to secure your homes, or relocate."
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1178
+msgid "Then it be decided. We’ll attack the fort together. Luck be with us."
+msgstr ""
+
+#. [message]: speaker=unit
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1219
+msgid ""
+"Lieutenant, we were assaulted by a band of outlaws en route to the outpost. "
+"We were barely able to evade them and make it here!"
+msgstr ""
+
+#. [message]: speaker=second_unit
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1239
+msgid "Look there! Outlaws and bandits roam these woods, harrying our patrols!"
+msgstr ""
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/06_The_Hunters.cfg:1256
+msgid "This is the end for me..."
+msgstr ""
+
+#. [scenario]: id=07_Glory
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:4
+msgid "Glory"
+msgstr "Slava"
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:20
+msgid ""
+"From the Annals of Alduin, 98 YW\n"
+"\n"
+"One score and eight years ago, in 70 YW, the King of Wesnoth and the Lord of "
+"Elensefar signed a treaty of trade and alliance in order to further the "
+"security of humankind. The realization of this treaty required the creation "
+"of a safe path between Weldyn and Elensefar, with all manner of hostile "
+"creature or beast scoured from these civilized lands. From Dan’Tonk, the "
+"establishment of Aldril and Carcyn secured the once hazardous passage "
+"alongside the Grey Woods, completing the way between the two cities. With "
+"this, the alliance can truly be deemed a coalition of men."
+msgstr ""
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:26
+msgid ""
+"To commemorate the concordat, six years ago, the Lords of Weldyn and "
+"Elensefar decreed that a monument be erected in the heart of these once "
+"wildlands. We, the magi of Alduin, lent our services to demonstrate the full "
+"prowess and might of human magic. Above a series of old catacombs in a scant "
+"hill, we spent these years raising an immense stronghold from the earth’s "
+"living rock."
+msgstr ""
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:30
+msgid ""
+"Completed, as it is on this day, this sentinel of the west now towers "
+"hundreds of paces tall, a great monolith looming sheer above the plains. The "
+"sight of these colossal walls, to even us magi, is both awe-inspiring and "
+"terrifying. So tall these towers peak and so mighty these walls arise that "
+"such a feat seems more like a force of nature than a work of man. That we "
+"have fashioned this mountain as insignificant humans is almost "
+"inconceivable. Halstead, as we have named it, is impenetrable. No one shall "
+"ever overcome these tidal waves of stone."
+msgstr ""
+
+# |, no-check-spell
+#. [side]: type=General, id=Dommel
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:56
+msgid "Dommel"
+msgstr "Domel"
+
+# |, no-check-spell
+#. [side]: type=Orcish Warlord, id=Vashna
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:99
+msgid "Vashna"
+msgstr "Vašna"
+
+#. [objective]: condition=win
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:152
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:221
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:416
+msgid "Destroy the stronghold of Halstead"
+msgstr "Uništiš li uporište Halsted"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:252
+#, fuzzy
+#| msgid "There it is. The stronghold of Halstead."
+msgid "There be it. The stronghold of Halstead."
+msgstr "Eto ga. Tvrđava Halsted."
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:265
+#, fuzzy
+#| msgid ""
+#| "Look at how tall it is! Those towers rise sheer out of the ground, as if "
+#| "called forth out of the earth."
+msgid ""
+"Look at how tall it is! Those towers be so sheer and smooth, it almost looks "
+"like magic called them up out of the earth!"
+msgstr ""
+"Gledaj samo kako je visok! One kule se uzdižu iz pravo iz tla, kao da su "
+"sazvane iz srca zemlje."
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:270
+msgid ""
+"Aye, there may be some truths in that. Old stories tells us that in times "
+"past, Elensefar and Weldyn had some real strong mages, much more adept than "
+"them ones who only be politicking nowadays. They helped tame the lands "
+"between the cities and forged the walls of Halstead itself to honor the "
+"alliance."
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:275
+#, fuzzy
+#| msgid ""
+#| "I don’t see how we can bring it down. They are already invincible in "
+#| "there!"
+msgid "I don’t see how we can bring it down. They seem invincible in there!"
+msgstr "Ne vidim kako ga možemo svaliti. Oni unutra, već su nepobedivi!"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:279
+msgid "Indeed..."
+msgstr ""
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:283
+msgid ""
+"Worry not, Halstead has a weakness. What Baldras spoke was partly true. "
+"Previous orders of magi did help erect the fortress. What is not made known "
+"to most is that the original construction of the castle was flawed."
+msgstr ""
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:287
+msgid ""
+"These walls were raised over a system of catacombs, which connect the four "
+"towers to the central keep. Though they appear impressive, the tunnels were "
+"never meant to hold up such a tremendous weight. Supports were added later "
+"to hold up the middle, which eventually began to collapse without them. "
+"Naturally, this was made secret by the magi, who did not want others to "
+"learn of their error."
+msgstr ""
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:291
+#, fuzzy
+#| msgid ""
+#| "So... we can knock out the supports and bring down the stronghold of "
+#| "Halstead. Would it really work?"
+msgid ""
+"So... we can knock out the supports and bring down the main keep. Would it "
+"really work?"
+msgstr ""
+"Onda... možemo izbiti potpore i tako urušiti Halsted. Da li bi to zaista "
+"uspelo?"
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:295
+#, fuzzy
+#| msgid ""
+#| "I believe it will. Each tower has a passage down to the catacombs. If we "
+#| "can reach the center of each tower, one of our men can escape down to the "
+#| "bowels of the mountain and destroy its support. I am sure we will need to "
+#| "demolish no less than all four supports to raze the fortress."
+msgid ""
+"I believe it will. Each tower has a passage down to the catacombs. We must "
+"enter the tunnels and demolish all four supports, then the fortress should "
+"crumble."
+msgstr ""
+"Verujem da bi. Svaka kula ima prolaz do katakombi. Ako dosegnemo do središte "
+"svake od njih, možemo poslati jednog od naših u grotlo planine da uništi "
+"njenu potporu. Siguran sam da ćemo morati da uništimo sve četiri potpore "
+"kako bismo sravnili tvrđavu."
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:299
+msgid "Let’s hope you be right. Everything be hinging on this battle."
+msgstr ""
+
+#. [message]: speaker=Vashna
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:308
+msgid ""
+"Dommel! The Queen has sent me and my warriors to support your forces. We "
+"come to squash the puny peasant rebellion."
+msgstr ""
+
+#. [message]: speaker=Dommel
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:312
+msgid "I received no word from Her Majesty of your arrival, orc."
+msgstr ""
+
+#. [message]: speaker=Vashna
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:316
+msgid "I have the orders right here."
+msgstr ""
+
+#. [message]: speaker=Dommel
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:320
+msgid ""
+"As if those could possibly be real. I would be a fool and an oaf to let a "
+"band of stinky raider orcs into Halstead without a fight."
+msgstr ""
+
+#. [message]: speaker=Vashna
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:324
+msgid ""
+"What? Now look here, you coddled pinkskin. Your helpless ‘soldiers’ have "
+"been getting bested by a filthy bunch of vagrant bandits. Your army is as "
+"useless as you are pink. The Queen sent us here to clean up the mess that "
+"you are clearly too stupid to fix on your own."
+msgstr ""
+
+#. [message]: speaker=Dommel
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:328
+msgid ""
+"A fine story. Most likely, this is a pitiful excuse for you to enter our "
+"fortress to plunder our armory. Even if Her Majesty did order you here, we "
+"have no need for the help of you uncouth orcs. We have always managed just "
+"fine without you."
+msgstr ""
+
+#. [message]: speaker=Vashna
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:332
+msgid ""
+"Yeah? Well, we will see how fine you manage <i>against</i> us. I’ll show you "
+"just how weak you pinkskins are."
+msgstr ""
+
+#. [message]: speaker=Dommel
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:336
+msgid "Come try it, cretin."
+msgstr ""
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:340
+msgid ""
+"Infighting among the forces of Weldyn does not bode well for the new queen, "
+"but is awfully convenient for us..."
+msgstr ""
+
+#. [message]: role=farseer
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:358
+msgid "Look in the distance... riders approach!"
+msgstr "Gledajte, u daljini... približavaju se konjanici!"
+
+#. [unit]: type=Paladin, id=Sir Gwydion
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:365
+msgid "Sir Gwydion"
+msgstr "ser Gvidion"
+
+#. [message]: type=Lancer
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:380
+msgid "Sound the advance!"
+msgstr "Oglasi nastupanje!"
+
+#. [message]: type=Lancer
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:384
+msgid "At your order, my liege."
+msgstr ""
+
+#. [message]: speaker=Sir Gwydion
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:388
+msgid ""
+"Lo, Knights of Elensefar, the battle hath begun ere our arrival. Though I "
+"disobey my father in this endeavor, our presence surely is much needed."
+msgstr ""
+
+#. [message]: speaker=Sir Gwydion
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:392
+msgid ""
+"Ready thy lances! Let us trample the armies of Weldyn beneath our steeds!"
+msgstr ""
+
+#. [message]: role=farseer
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:405
+msgid ""
+"A horde of knights, bearing the emblem of Elensefar! Amazing. I’ve never "
+"seen me so many riders in one place."
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:410
+#, fuzzy
+#| msgid ""
+#| "Baldras, Gwydion is Lord Maddock’s son. This battle isn’t just about "
+#| "Annuvin anymore."
+msgid ""
+"Gwydion be Lord Maddock’s son... more be hinging on victory than I thought. "
+"This battle don’t just be about our little villages no more."
+msgstr ""
+"Baldrase, Gvidion je sin gospodara Madoka. Ovde se više ne bije bitka samo "
+"za Anuvin."
+
+#. [message]: speaker=narrator
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:447
+msgid ""
+"Not even a full day had passed before the first advance elements of "
+"Wesnoth’s main army began to arrive..."
+msgstr ""
+
+#. [message]: speaker=narrator
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:454
+#, fuzzy
+#| msgid ""
+#| "That afternoon, another advance element of the main Wesnoth army "
+#| "arrived..."
+msgid ""
+"That morning, another advance element of the main Wesnoth army arrived..."
+msgstr ""
+"Tog popodneva, pristiže još jedno istureno odeljenje glavne vojske Vesnota..."
+
+#. [message]: speaker=Dommel
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:519
+msgid ""
+"I think... I think they’re trying to storm Halstead itself... the fools!"
+msgstr "Čini mi se... nameravaju li oni to u prepad na sam Halsted? Budale!"
+
+#. [message]: speaker=Dommel
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:538
+msgid "They have breached the fortress gate! Repulse them!"
+msgstr "Probiše se kroz opsadne kapije! Odbijte ih!"
+
+#. [message]: speaker=unit
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:560
+#, fuzzy
+#| msgid "I’m inside the tower! I’m going down to the catacombs — cover me."
+msgid "I’m inside! I’m heading down to the catacombs."
+msgstr "U kuli sam! Spuštam se u katakombe, čuvajte mi leđa."
+
+#. [message]: speaker=narrator
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:578
+msgid "After some time..."
+msgstr ""
+
+#. [message]: speaker=unit
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:598
+msgid "It’s done."
+msgstr "Učinjeno je."
+
+#. [message]: speaker=narrator
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:625
+msgid "The stronghold of Halstead began to shake..."
+msgstr "Uporište Halsted poče da podrhtava..."
+
+#. [message]: speaker=unit
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:631
+#, fuzzy
+#| msgid "We cannot stay here. The fortress has started to collapse!"
+msgid "We can’t stay here. The fortress is starting to collapse!"
+msgstr "Ne možemo ostati ovde. Tvrđava samo što se nije obrušila!"
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:666
+#, fuzzy
+#| msgid "I think it’s working! Everybody get clear <i>now</i>!"
+msgid "I think it be working! Everybody get clear!"
+msgstr "Mislim da radi! Svi na čistac, <i>odmah</i>!"
+
+#. [message]: speaker=narrator
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:707
+#, fuzzy
+#| msgid ""
+#| "With a thunderous roar and a vast billowing of dust, thousands of tons of "
+#| "stone and wood crashed in on itself. Some of it tumbled down the steep "
+#| "sides, while the remainder came to rest several hundred feet below "
+#| "ground, in the bowels of the hollowed-out mountain."
+msgid ""
+"With a thunderous roar and a vast billowing of dust, thousands of tons of "
+"stone and wood crashed in on itself. Some of the wreckage tumbled down the "
+"steep sides, while the remainder came to rest several hundred feet below "
+"ground, in the bowels of the hollowed-out mountain."
+msgstr ""
+"Uz gromoglasnu riku i neizmerne klobuke prašine, hiljade tona kamena i "
+"drveta uruši se samo u sebe. Nešto se preli preko obronaka, a ostatak se "
+"surva nekoliko stotina stopa pod zemlju, u grotlo izdubljene planine."
+
+#. [message]: speaker=narrator
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:715
+msgid "No one inside the fortress would make it out alive."
+msgstr "Niko ko je ostao u tvrđavi neće se živ izvući."
+
+#. [message]: speaker=narrator
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:800
+#, fuzzy
+#| msgid ""
+#| "After more than a week of fierce fighting, the main body of Asheviere’s "
+#| "host arrived from Weldyn. The battle was soon finished. Every last man "
+#| "from the province of Annuvin was executed."
+msgid ""
+"After several days of fierce fighting, the main body of Weldyn’s host "
+"arrived. The battle was soon finished. Every last man from the rebellion was "
+"executed."
+msgstr ""
+"Posle više od sedmice ljutih borbi, glavnina Aševirinih snaga pristiže iz "
+"Veldina. Bici je ubrzo došao kraj, i svaki do poslednjeg iz pokrajine Anuvin "
+"pogubljen."
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:829
+msgid "The fort be done with... but I be crushed... under this rubble..."
+msgstr ""
+
+#. [message]: speaker=narrator
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:833
+msgid ""
+"No one was able to get to Baldras in time. He and many of his companions "
+"died that day beneath the stronghold of Halstead."
+msgstr ""
+"Ne smogaše da izbave Baldrasa na vreme. On i mnogi njegovi saborci pogiboše "
+"tog dana, podno uporišta Halsted."
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:840
+msgid "I knew... this wouldn’t work..."
+msgstr ""
+
+#. [message]: speaker=narrator
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:845
+#, fuzzy
+#| msgid ""
+#| "The rebellion had staked its all on victory at Halstead, but win or lose, "
+#| "there would be no help for the villagers, ground beneath the wheels of "
+#| "Asheviere’s wrath."
+msgid ""
+"The rebellion had staked its all on victory at Halstead, but win or lose, "
+"there would be no help for the doomed villagers."
+msgstr ""
+"Bundžije sve položiše na pobedu kod Halsteda, ali dobiju li ili izgube, neće "
+"biti spasa seljanima, samlevenim pod točkovima Aševirinog besa."
+
+#. [message]: speaker=Harper
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:864
+#: data/campaigns/Liberty/utils/utils.cfg:34
+msgid "Unngh..."
+msgstr ""
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:868
+#: data/campaigns/Liberty/utils/utils.cfg:38
+#, fuzzy
+#| msgid "Harper"
+msgid "Harper, no!"
+msgstr "Harper"
+
+#. [message]: speaker=Helicrom
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:884
+msgid "Ended... like this? Fight on without me..."
+msgstr ""
+
+#. [message]: speaker=second_unit
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:931
+#, fuzzy
+#| msgid "Your reign of terror is over, General."
+msgid "Your time is over, General."
+msgstr "Tvojoj strahovladi je kraj, generale."
+
+#. [message]: speaker=Dommel
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:936
+msgid ""
+"I may be done... but my death shall only bring the full wrath of the Crown "
+"upon you... relish your small victory, peasants, while you still can..."
+msgstr ""
+
+#. [message]: speaker=Vashna
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:956
+msgid "Grrarrghh... you... fools..."
+msgstr ""
+
+#. [message]: speaker=Dommel
+#: data/campaigns/Liberty/scenarios/07_Glory.cfg:961
+msgid "Idiot orc. Know your place."
+msgstr ""
+
+#. [scenario]: id=08_Epilogue
+#: data/campaigns/Liberty/scenarios/08_Epilogue.cfg:4
+msgid "Liberty — Epilogue"
+msgstr "Sloboda — epilog"
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/08_Epilogue.cfg:14
+msgid ""
+"03 Scryer’s Bloom, 501 YW\n"
+"\n"
+"It were a real shock. I were so stunned, I barely even remember what "
+"happened after."
+msgstr ""
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/08_Epilogue.cfg:19
+msgid ""
+"Helicrom, I don’t know what happened to him, didn’t see what happened to "
+"Maddock’s son either. Me and Harper and the few of us who survived got up "
+"and ran. We be heading back north now, toward Carcyn and Elensefar. Them "
+"patrols seems to be in real disarray, mostly seeming to be riding back south "
+"to regroup. It be looking like we really did disrupt Weldyn’s chain of "
+"command."
+msgstr ""
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/08_Epilogue.cfg:22
+msgid ""
+"I’m sure them Wesnothians will come back in time and with Maddock holed up "
+"in his stupid tower, they’ll eventually siege Elensefar and take the city... "
+"but that don’t be my problem anymore. I has me a village to worry about. I "
+"need to get back, consult myself with Relana and figure out what to do next. "
+"We gots some more time now, but we can’t wait forever."
+msgstr ""
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/08_Epilogue.cfg:25
+msgid ""
+"10 Scryer’s Bloom, 501 YW\n"
+"\n"
+"We got back to Dallben today, but the village were empty. There were a few "
+"bodies and some burned houses, but it weren’t raided or nothing. Must’ve "
+"been one of them Wesnoth patrols, curse those damned stinkers! When I first "
+"saw the scene with my eyes, I thoughts that we failed, that we was too "
+"late... but now that I thinks of it, it be real weird that so few died. The "
+"others must’ve escaped to somewhere. But I didn’t see any clues here."
+msgstr ""
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/08_Epilogue.cfg:31
+msgid ""
+"I sended Harper off to Delwyn. Hope she’ll find something there. In the "
+"meantimes, I’ll rest this tired body for a little and go see sis, maybe pick "
+"her up some lilies. Seems like this’ll probably be the last time I gets to "
+"see her..."
+msgstr ""
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/08_Epilogue.cfg:34
+msgid ""
+"She’ll tell me not to be sad, of course. That life just be a big adventure "
+"and filled with fun, that I shouldn’t think about stuffs I can’t change. The "
+"world be huge and vast, much bigger than small little people like me. I "
+"don’t got the power to change it, so why not try to live as best I can? "
+"Besides, she’ll say that I still gots me a little piece of her in Harper, so "
+"I should cherish the lass."
+msgstr ""
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/08_Epilogue.cfg:37
+msgid ""
+"I do, Erwen, I really do. This all be real hard. I don’t be no brave soul, "
+"nor some great warrior, but I does my best. And I haven’t forgotten about "
+"all them good times we had together ― somehow, some way, they keeps me "
+"going. Me and Harper, we won’t give up till the very end."
+msgstr ""
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/08_Epilogue.cfg:40
+msgid ""
+"14 Scryer’s Bloom, 501 YW\n"
+"\n"
+"Harper got back today from Delwyn. Said she didn’t find no one alive there, "
+"but she did bring back a note she found. Let’s see what it says."
+msgstr ""
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/08_Epilogue.cfg:47
+msgid ""
+"<i>“Baldras, you would’ve been proud. We fought them soldiers off twice, "
+"gave them a good ol’ thrashing they won’t ever forget. But in the end, it "
+"weren’t enough. We had to run like criminals before they killed us all.”</i>"
+msgstr ""
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/08_Epilogue.cfg:51
+msgid ""
+"<i>“I don’t know if you and Harper will see this note, but if you do, I’m "
+"expecting ya to come find us. Remember them ol’ pirate islands we used to "
+"hear some of them Elensefar sailors talk about? We be heading there, "
+"southwest of the city and past the land’s end. See you in the Three Sisters, "
+"old friend. ― Relana”</i>"
+msgstr ""
+
+#. [part]
+#: data/campaigns/Liberty/scenarios/08_Epilogue.cfg:55
+msgid ""
+"So they survived! Them islands be a bit far, but I suppose this sack of old "
+"bones has one more adventure left in it..."
+msgstr ""
+
+#. [unit_type]: id=Rogue Mage, race=human
+#: data/campaigns/Liberty/units/Rogue_Mage.cfg:5
+msgid "Rogue Mage"
+msgstr "odmetnuti mag"
+
+#. [unit_type]: id=Rogue Mage, race=human
+#: data/campaigns/Liberty/units/Rogue_Mage.cfg:17
+#, fuzzy
+#| msgid ""
+#| "Some mages are thrown out of the mage’s guild for attempting to practice "
+#| "forbidden arts. Now completely outside the law, these rogue mages do "
+#| "whatever necessary to support their study of black magic. Although not as "
+#| "skilled as mages with more formal training, their magic can be quite "
+#| "lethal, while their banditry has resulted in moderate skill with the "
+#| "short sword."
+msgid ""
+"Some mages are thrown out of the mages’ guild for attempting to practice "
+"forbidden arts. Now completely outside the law, these rogue mages do "
+"whatever is necessary to support their study of black magic. Although not as "
+"skilled as mages with more formal training, their magic can be quite lethal, "
+"while their banditry has resulted in moderate skill with the short sword."
+msgstr ""
+"Neke magove izbacuju iz esnafa zbog pokušaja da se upuste u zabranjene "
+"veštine. Sada sasvim van zakona, ovi odmetnuti magovi čine što god je "
+"potrebno da podrže svoje izučavanje crne magije. Iako ne tako umešni kao "
+"magovi sa propisnijom obukom, njihova magija može biti sasvim smrtonosna, a "
+"odmetničko okruženje donosi im i umereno vladanje kratkim mačem."
+
+#. [attack]: type=cold
+#: data/campaigns/Liberty/units/Rogue_Mage.cfg:33
+msgid "ice blast"
+msgstr "ledeni prasak"
+
+#. [unit_type]: id=Shadow Lord, race=human
+#: data/campaigns/Liberty/units/Shadow_Lord.cfg:5
+msgid "Shadow Lord"
+msgstr "gospodar senke"
+
+#. [unit_type]: id=Shadow Lord, race=human
+#: data/campaigns/Liberty/units/Shadow_Lord.cfg:21
+msgid ""
+"Few humans fathom the secrets of light and dark magic and retain their "
+"sanity. Those that can master that balance become Shadow Lords, fully "
+"existing neither in the world of light nor the world of darkness. No longer "
+"needing physical weapons, they are fearsome to both their enemies and those "
+"they lord over."
+msgstr ""
+"Malobrojni ljudi spoznaju tajne svetle i mračne magije, a da pritom očuvaju "
+"razum. Oni koji postignu tu ravnotežu postaju gospodari senke, ne stojeći s "
+"obe noge ni u svetu svetla ni u svetu tame. Bez dalje potrebe za fizičkim "
+"oružjem, strahopoštuju ih kako neprijatelji tako i oni kojima gospodare."
+
+#. [attack]: type=blade
+#: data/campaigns/Liberty/units/Shadow_Lord.cfg:33
+msgid "astral blade"
+msgstr "zvezdano sečivo"
+
+#. [attack]: type=cold
+#: data/campaigns/Liberty/units/Shadow_Lord.cfg:44
+#: data/campaigns/Liberty/units/Shadow_Mage.cfg:45
+msgid "shadow bolt"
+msgstr "strela senke"
+
+#. [attack]: type=impact
+#: data/campaigns/Liberty/units/Shadow_Lord.cfg:56
+msgid "shadow blast"
+msgstr "prasak senke"
+
+#. [unit_type]: id=Shadow Mage, race=human
+#: data/campaigns/Liberty/units/Shadow_Mage.cfg:5
+msgid "Shadow Mage"
+msgstr "mag senke"
+
+#. [unit_type]: id=Shadow Mage, race=human
+#: data/campaigns/Liberty/units/Shadow_Mage.cfg:20
+msgid ""
+"Years of violence and brutality to support the study of forbidden magical "
+"arts have turned the shadow mages into feared fighters. Now completely "
+"enthralled with power, they have been known to command small followings of "
+"henchmen. They are outmatched in direct magical combat with their magic-"
+"using peers, instead channeling their energies into devastating melee "
+"attacks. Despite their offensive power, the corruption in their souls has "
+"begun to adversely affect their health."
+msgstr ""
+"Godine nasilja i okrutnosti kako bi istrajali u izučavanju zabranjenih "
+"magijskih veština pretvorile su magove senke u zastrašujuće borce. Sada "
+"potpuno obdareni moći, zna se da zapovedaju malim grupama najamnika. Kako ih "
+"u neposrednoj magijskog borbi njihovi čisto-magijski parnjaci mogu ih "
+"nadmašiti, često usredsređuju svoj napor u razarajuće napade prsa u prsa. "
+"Uprkos svoj jurišnoj moći, iskvarenost u njihovim dušama počela je da im "
+"nagriza zdravlje."
+
+#. [unit_type]: id=Thug_Peasant
+#: data/campaigns/Liberty/units/Villagers.cfg:20
+msgid "Villager"
+msgstr "seljanin"
+
+#. [unit_type]: id=Thug_Peasant
+#: data/campaigns/Liberty/units/Villagers.cfg:23
+msgid ""
+"Peasants live in the small hamlets and villages scattered across the Wesnoth "
+"countryside."
+msgstr "Seljaci žive u zaseocima i selima raštrkanim širom Vesnotovih pejzaža."
+
+#. [unit_type]: id=Bandit_Peasant
+#: data/campaigns/Liberty/units/Villagers.cfg:36
+msgid "Village Elder"
+msgstr "seoski starešina"
+
+#. [unit_type]: id=Bandit_Peasant
+#: data/campaigns/Liberty/units/Villagers.cfg:39
+msgid ""
+"Each of the villages scattered across the Wesnoth countryside is normally "
+"guided by a group of elders, who are the village’s wisest and most "
+"experienced residents."
+msgstr ""
+"Svako od sela raštrkanih širom vesnotske prirode obično vodi zbor starešina, "
+"koji čine najmudriji i najiskusniji njegovi stanovnici."
+
+#. [unit_type]: id=Highwayman_Peasant
+#: data/campaigns/Liberty/units/Villagers.cfg:53
+msgid "Senior Village Elder"
+msgstr "viši seoski starešina"
+
+#. [unit_type]: id=Highwayman_Peasant
+#: data/campaigns/Liberty/units/Villagers.cfg:57
+msgid ""
+"The entire village looks to the senior elder for guidance. Strong and wise, "
+"the senior elders take responsibility for the community’s well-being on "
+"their shoulders. Provincial officials tend to choose senior village elders "
+"as magistrates so that legal and customary authority will coincide."
+msgstr ""
+"Celo se selo obraća višem starešini za vodilje. Jaki i mudri, više starešine "
+"preuzimaju na svoja pleća odgovornost za dobrostanje zajednice. Pokrajinski "
+"zvaničnici obično biraju više seoske starešine za lokalne sudije, kako bi "
+"zakonski autoritet bio usklađen sa običajnim."
+
+#. [female]
+#: data/campaigns/Liberty/units/Villagers.cfg:59
+msgid "female^Senior Village Elder"
+msgstr "viša seoska starešinica"
+
+#. [unit_type]: id=Footpad_Peasant
+#: data/campaigns/Liberty/units/Villagers.cfg:92
+msgid "Peasant Youth"
+msgstr "seljački omladinac"
+
+#. [unit_type]: id=Footpad_Peasant
+#: data/campaigns/Liberty/units/Villagers.cfg:96
+msgid ""
+"The scruffy-haired peasant youth are much like the young people living "
+"elsewhere in Wesnoth: reckless, cocky, and eager to explore."
+msgstr ""
+"Razbarušeni mladi seljani sasvim su nalik drugoj omladini širom Vesnota: "
+"nepromišljeni, drski, željni istraživanja."
+
+#. [female]
+#: data/campaigns/Liberty/units/Villagers.cfg:102
+msgid "female^Peasant Youth"
+msgstr "seljačka omladinka"
+
+#. [unit_type]: id=Outlaw_Peasant
+#: data/campaigns/Liberty/units/Villagers.cfg:116
+msgid "Watchman"
+msgstr "nadzornik"
+
+#. [unit_type]: id=Outlaw_Peasant
+#: data/campaigns/Liberty/units/Villagers.cfg:121
+msgid ""
+"The watchmen are men and women who protect the villages from marauders, both "
+"human and otherwise, that prowl the Wesnoth countryside at night."
+msgstr ""
+"Nadzornici i nadzornice štite selo od pljačkaša, ljudskih ili kojih drugih, "
+"što se noću šunjaju vesnotskom divljinom."
+
+#. [female]
+#: data/campaigns/Liberty/units/Villagers.cfg:123
+msgid "female^Watchwoman"
+msgstr "nadzornica"
+
+#. [unit_type]: id=Fugitive_Peasant
+#: data/campaigns/Liberty/units/Villagers.cfg:137
+msgid "Borderer"
+msgstr "graničar"
+
+#. [unit_type]: id=Fugitive_Peasant
+#: data/campaigns/Liberty/units/Villagers.cfg:142
+msgid ""
+"Border villages maintain militias dedicated to fending off hostiles. While "
+"these borderers are not trained and armed to up to military standards, their "
+"native toughness and knowledge of local conditions make them formidable on "
+"their home ground."
+msgstr ""
+"Pogranična sela održavaju milicije posvećene odbijanju zlonamernika. Iako "
+"ovi graničari nisu ni uvežbani ni naoružani po vojnim merilima, urođena "
+"žilavost i poznavanje okruženja čini ih nezgodnim borcima na domaćem terenu."
+
+#. [female]
+#: data/campaigns/Liberty/units/Villagers.cfg:144
+msgid "female^Borderer"
+msgstr "graničarka"
+
+#. [unit_type]: id=Poacher_Peasant
+#: data/campaigns/Liberty/units/Villagers.cfg:163
+msgid "Peasant Hunter"
+msgstr "seljački lovac"
+
+#. [unit_type]: id=Poacher_Peasant
+#: data/campaigns/Liberty/units/Villagers.cfg:166
+msgid ""
+"Villages, especially in wilder areas near frontiers, rely on hunters to "
+"bring in much of their food supply. Their stealth and intimate knowledge of "
+"local terrain can be valuable assets in combat."
+msgstr ""
+"Sela, posebno u divljijim krajevima pograničja, oslanjaju se na lovce za "
+"veliki udeo u snabdevanju hranom. Pritajenost i izvrsno poznavanje okolnog "
+"terena može im biti vredan imetak u borbi."
+
+#. [unit_type]: id=Trapper_Peasant
+#: data/campaigns/Liberty/units/Villagers.cfg:179
+msgid "Peasant Trapper"
+msgstr "seljački traper"
+
+#. [unit_type]: id=Trapper_Peasant
+#: data/campaigns/Liberty/units/Villagers.cfg:183
+msgid ""
+"Trappers are skilled hunters who supply food and furs for several villages. "
+"Their hunting experience makes them most valuable at night and in forests "
+"and swamps."
+msgstr ""
+"Traperi su umešni lovci koji snabdevaju hranom i krznom i po nekoliko sela. "
+"Lovačko iskustvo čini ih najvrednijim noću i u šumama i močvarama."
+
+#. [unit_type]: id=Huntsman_Peasant
+#: data/campaigns/Liberty/units/Villagers.cfg:196
+msgid "Peasant Huntsman"
+msgstr "seljački lovodar"
+
+#. [unit_type]: id=Huntsman_Peasant
+#: data/campaigns/Liberty/units/Villagers.cfg:201
+msgid ""
+"Huntsmen have spent their lives in the backwoods and swamps of their "
+"wilderness homes. They can bullseye ferocious swamp rats and track anything "
+"that moves in their territory."
+msgstr ""
+"Lovodari su proveli ceo vek u šumama i močvarama svojih domova u divljini. "
+"Mogu ustreliti pobesnelog močvarnog pacova i pratiti sve što se mrda po "
+"njihovoj teritoriji."
+
+#. [message]: speaker=Baldras
+#: data/campaigns/Liberty/utils/utils.cfg:19
+msgid "I’m coming... Erwen..."
+msgstr ""
+
+#. [message]: speaker=Relana
+#: data/campaigns/Liberty/utils/utils.cfg:52
+msgid "I’m finished..."
+msgstr ""
+
+#. [message]: speaker=Lord Maddock
+#: data/campaigns/Liberty/utils/utils.cfg:66
+#, fuzzy
+#| msgid "How can this be? We have lost."
+msgid "How can this be?"
+msgstr "Kako dođe dovde? Izgubismo."
+
+# |, no-check-spell
+#~ msgid "Rothel"
+#~ msgstr "Rotel"
+
+#~ msgid "Bone Knight"
+#~ msgstr "koskovitez"
+
+#~ msgid ""
+#~ "Once great warriors across the plains, these mounted riders atop their "
+#~ "skeletal horses were raised from the ground by unholy magic to spread "
+#~ "fear and destruction."
+#~ msgstr ""
+#~ "Nekada veliki ratnici širom ravnica, ovi jahači sa svojim skeletnim "
+#~ "konjima bejahu izdignuti iz zemlje nesvetom magijom, da šire strah i "
+#~ "uništenje."
+
+#~ msgid "trample"
+#~ msgstr "topot"
+
+#~ msgid "Death Squire"
+#~ msgstr "mrtvi štitonoša"
+
+#~ msgid ""
+#~ "Sometimes the mightiest warriors and generals, cursed with hate and "
+#~ "angst, came back to this world as Death Knights. Death Squires serve them "
+#~ "whilst accruing enough unholy power to become Death Knights. In the "
+#~ "process they pick up a good deal of the Knight’s power, including the "
+#~ "ability to command underlings."
+#~ msgstr ""
+#~ "Nekada veliki ratnici i generali, prokleti mržnjom i strahom, vratiše se "
+#~ "na ovaj svet kao mrtvi vitezovi. Mrtve štitonoše služe im dok ne sakupe "
+#~ "dovoljno nesvete moći da sami postanu mrtvi vitezovi. U tom procesu "
+#~ "preuzeli su dobar deo vitezove moći, uključujući i sposobnost zapovedanja "
+#~ "nižnjima."
+
+#~ msgid "Skeleton Rider"
+#~ msgstr "ćele-jahač"
+
+#~ msgid ""
+#~ "Once great warriors thundering across the plains, these mounted riders "
+#~ "atop their skeletal horses were raised from the grave by unholy magic to "
+#~ "spread fear and destruction."
+#~ msgstr ""
+#~ "Nekada veliki ratnici što jezdiše preko ravnica, ovi jahači sa svojim "
+#~ "skeletnim konjima bejahu izdignuti iz groba nesvetom magijom, da šire "
+#~ "strah i uništenje."
+
+#, fuzzy
+#~| msgid "(Difficult)"
+#~ msgid "Difficult"
+#~ msgstr "(teško)"
+
+#~ msgid ""
+#~ "They hid until nightfall, then crept out to find the help Lord Maddock "
+#~ "hinted was here."
+#~ msgstr ""
+#~ "Skrivaše se do prvog mraka, pa se iskradoše se da pronađu pomoć na koju "
+#~ "je gospodar Madok ukazao."
+
+#~ msgid "Prose-doctoring and preparation for mainline"
+#~ msgstr "Popravke proze i opremanje za glavni tok"
+
+#, fuzzy
+#~| msgid ""
+#~| "In the Era of Turmoil, during the reign of King Garard II, the border "
+#~| "towns of Delwyn and Dallben in the province of Annuvin grew increasingly "
+#~| "dissatisfied with the King’s rule. Being preoccupied with the great "
+#~| "wars, the King was unable to send adequate forces to protect the "
+#~| "frontier."
+#~ msgid ""
+#~ "In the Era of Turmoil, during the reign of King Garard II, the border "
+#~ "towns of Delwyn and Dallben in the Province of Annuvin grew increasingly "
+#~ "dissatisfied with the King’s rule. Being preoccupied with the great wars, "
+#~ "the King was unable to send adequate forces to protect the frontier."
+#~ msgstr ""
+#~ "U Doba previranja, za vladavine kralja Gararda Drugog, u pograničnim "
+#~ "gradovima Delvinu i Dalbenu narastalo je razočarenje kraljevom vlašću. "
+#~ "Kako je bio zaokupljen velikim ratovima, kralj nije imao dovoljno vojske "
+#~ "da valjano štiti sve granice."
+
+#~ msgid ""
+#~ "I long to burn human cities, but until our great chieftains provide us "
+#~ "with sufficient forces we must look to these villagers to feed our wolves "
+#~ "and slake the thirst of our blades."
+#~ msgstr ""
+#~ "Žudim za paljenjem gradova ljudskih, ali dok nas naše velike poglavice ne "
+#~ "snabdeju dovoljnim snagama, moramo se okrenuti ovim seljanima za ishranu "
+#~ "svojih vukova i utoljavanje žeđi naših sečiva."
+
+#~ msgid ""
+#~ "We must stop them before they reach the village. Damn the crown, they "
+#~ "have long since forgotten about us out here."
+#~ msgstr ""
+#~ "Moramo ih zaustaviti pre nego stignu do sela. Prokleta kruno, davno si "
+#~ "zaboravila na nas i ove krajeve."
+
+#~ msgid ""
+#~ "And Harper... don’t get yourself killed. I’m responsible for you now that "
+#~ "your father is gone, and I won’t dishonor his memory by breaking my "
+#~ "promise to keep you safe."
+#~ msgstr ""
+#~ "I Harpere... pazi na sebe. U mojoj si odgovornosti otkako tvog oca više "
+#~ "nema, i ne želim da obeščastim sećanje na njega prekršivši obećanje da ću "
+#~ "te čuvati od zala."
+
+#~ msgid "... I know... All right now, let’s stop these goblins!"
+#~ msgstr "...Znam... U redu onda, zaustavimo te gobline!"
+
+#~ msgid ""
+#~ "We are barely able to survive these orc raids. We lost two men last week, "
+#~ "more today... yet Weldyn does nothing!"
+#~ msgstr ""
+#~ "Jedva preživljamo ove orkovske upade. Izgubismo dva čoveka prošle "
+#~ "sedmice, još danas... pa opet Veldin ništa ne čini!"
+
+#~ msgid ""
+#~ "We are barely able to survive these orc raids. We lost two men last week, "
+#~ "more could have died today... yet Weldyn does nothing!"
+#~ msgstr ""
+#~ "Jedva preživljamo ove orkovske upade. Izgubismo dva čoveka prošle "
+#~ "sedmice, još je moglo stradati danas... pa opet Veldin ništa ne čini!"
+
+#~ msgid ""
+#~ "The King stopped sending patrols out here once the war started. Once that "
+#~ "happened, the burden fell to us. We are citizens of Wesnoth, and as long "
+#~ "as her banner flies we will resist the horde."
+#~ msgstr ""
+#~ "Kralj je prestao da šalje izvidnice ovamo kako je rat počeo. Pošto je "
+#~ "tako, teret pada na nas. Mi smo građani Vesnota, i dok se njegov barjak "
+#~ "vijori, odolevaćemo hordi."
+
+#~ msgid "The banner will fly over a ghost town if help does not come soon."
+#~ msgstr "Barjak će se vijoriti nad gradom duhova, ne stigne li pomoć uskoro."
+
+#~ msgid ""
+#~ "They’ll come out when they see those riders, or us, approaching, but "
+#~ "there aren’t many of them... I wouldn’t count on them being able to "
+#~ "protect the village alone for long."
+#~ msgstr ""
+#~ "Pojaviće se čim spaze pljačkaše, ili nas, kako se približavamo, ali ih "
+#~ "nema toliko mnogo... Ne bih računao da sami mogu dugo sačuvati selo."
+
+#~ msgid ""
+#~ "Goblin riders on the hunt. We must not let any of them to the village!"
+#~ msgstr "Gobli-jahači u lovu. Ne smemo propustiti nijednog do sela!"
+
+#~ msgid "Halt!"
+#~ msgstr "Stoj!"
+
+#~ msgid ""
+#~ "None remarked on the passing of the tiny, isolated frontier town. It was "
+#~ "but a harbinger of the evil to come under the tyranny of Asheviere."
+#~ msgstr ""
+#~ "Niko ne zapazi nedaću malenog, skrajnutog pograničnog grada. Beše to tek "
+#~ "vesnik zla koje će pristići pod Aševirinom tiranstvom."
+
+#~ msgid "Asheviere"
+#~ msgstr "Aševira"
+
+#, fuzzy
+#~| msgid "Garard is the King of Wesnoth. We are ruled by no queen."
+#~ msgid "Besides, Garard is the King of Wesnoth. We are ruled by no queen."
+#~ msgstr "Garard je kralj Vesnota. Ne vlada nad nama nikakva kraljica."
+
+#, fuzzy
+#~| msgid ""
+#~| "Insolent peasants, you will kneel before your betters! Asheviere is the "
+#~| "queen of Wesnoth. The King fell three weeks ago at Abez. I shall not "
+#~| "bandy words with you. Your magistrate will be coming with us, and we do "
+#~| "not care if it is dead or alive."
+#~ msgid ""
+#~ "Insolent peasants, you will kneel before your betters! Asheviere is the "
+#~ "Queen of Wesnoth. The King fell three weeks ago at Abez. I shall not "
+#~ "bandy words with you. Your magistrate will be coming with us, and we do "
+#~ "not care if it is dead or alive."
+#~ msgstr ""
+#~ "Bezočne seljačine, vaše je da kleknete pred nadređenima! Aševira je "
+#~ "kraljica Vesnota, kralj pogibe pre tri sedmice kod Abeza. Neću dalje "
+#~ "traćiti reči — vaš sudija će poći s nama, a da li živ ili mrtav, nama je "
+#~ "svejedno."
+
+#~ msgid "Harper, get out of here. This is no battle for you."
+#~ msgstr "Harpere, beži odavde. Ovo nije boj za tebe."
+
+#~ msgid ""
+#~ "I am the magistrate of Dallben, and it is <i>you</i> who will be leaving "
+#~ "Dallben, be it dead or alive."
+#~ msgstr ""
+#~ "Ja sam sudija u Dalbenu, i <i>ti</i> si taj koji će ga napustiti, živ ili "
+#~ "mrtav, kako izvoliš."
+
+#~ msgid ""
+#~ "Our lives were hard enough when we were beneath the attention of the "
+#~ "Crown. But now I fear things will be worse."
+#~ msgstr ""
+#~ "Životi nam bejahu dovoljno teški i dok smo izmicali pažnji krune. Ali se "
+#~ "bojim da će sada biti još gore."
+
+#~ msgid ""
+#~ "That is true. We have always flown to their aid, and they to ours. This "
+#~ "is something we should face together."
+#~ msgstr ""
+#~ "Istina. Uvek smo im hitali u pomoć, i oni nama. Ovo je nešto s čime se "
+#~ "zajedno moramo suočiti."
+
+#~ msgid ""
+#~ "Very well. We will go to Delwyn and share counsel with them. I never "
+#~ "thought Wesnoth would fall into darkness. Now, not only do the orcs "
+#~ "threaten our lands, but some sinister thing is happening with the ascent "
+#~ "of the Queen to the throne."
+#~ msgstr ""
+#~ "Vrlo dobro. Poći ćemo u Delvin i posavetovati se s njima. I ne pomišljah "
+#~ "da bi Vesnot tako potonuo u tamu. Sada, ne samo što orkovi prete našim "
+#~ "zemljama, već otpočinje i nešto zloslutno s kraljičinim usponom na presto."
+
+#~ msgid ""
+#~ "Today we may no longer be citizens of Wesnoth. I wish it could be "
+#~ "otherwise, but we are now outlaws."
+#~ msgstr ""
+#~ "Danas više ne možemo biti građani Vesnota. Voleo bih da se moglo "
+#~ "drugačije, ali smo od sada odmetnici."
+
+#~ msgid ""
+#~ "Oh, no! We have run out of time, they have arrived with reinforcements..."
+#~ msgstr "O, ne! Vreme nam je isteklo, stižu im pojačanja..."
+
+#, fuzzy
+#~| msgid ""
+#~| "They would be remembered only traitors rightly put down by the Queen’s "
+#~| "lances. And in the dark years to come, woe betide any who questioned it."
+#~ msgid ""
+#~ "They would be remembered only as traitors rightly put down by the Queen’s "
+#~ "lances. And in the dark years to come, woe betide any who questioned it."
+#~ msgstr ""
+#~ "Pamtiće ih samo koliko izdajnike što padoše pod kraljičinim bojnim "
+#~ "kopljima. U mračnim godinama što dolaze, zlo onome ko iskaže sumnju u to."
+
+#~ msgid "Evil"
+#~ msgstr "Zlo"
+
+#~ msgid ""
+#~ "Relana, thank you for welcoming our messenger and agreeing to meet with "
+#~ "us. In your many years as Delwyn’s magistrate I have never known your "
+#~ "judgment to err."
+#~ msgstr ""
+#~ "Relana, hvala ti što si primila našeg glasnika i pristala na susret. Za "
+#~ "sve tvoje godine službovanja u Delvinu, ne poznah da si jednom krivo "
+#~ "postupila."
+
+#, fuzzy
+#~| msgid ""
+#~| "It has been a long time, old friend. Your news worries us. Yet, there is "
+#~| "no problem we have not worked out here at our secret meeting place."
+#~ msgid ""
+#~ "It has been a long time, old friend. Your news worries us. Yet, there is "
+#~ "no problem we have not worked out together."
+#~ msgstr ""
+#~ "Dugo se ne videsmo, prijatelju stari. Tvoje nas vesti brinu. Pa ipak, još "
+#~ "ne bi tog problema koji ne razrešismo ovde, u našem skrovitom "
+#~ "sastajalištu."
+
+#, fuzzy
+#~| msgid ""
+#~| "You do not understand. We attacked a Wesnoth army patrol. Not only that, "
+#~| "the leader was no man I had ever seen in Annuvin province before. Never "
+#~| "has one been sent out here as a patrol captain who was so ruthless and "
+#~| "cruel."
+#~ msgid ""
+#~ "You do not understand. We attacked a Wesnoth army patrol. Not only that, "
+#~ "the leader was no man I had ever seen in Annuvin Province before. Never "
+#~ "has one been sent out here as a patrol captain who was so ruthless and "
+#~ "cruel."
+#~ msgstr ""
+#~ "Nisi razumela. Udarismo na izvidnicu vesnotske vojske. Ne samo to, već im "
+#~ "je vođ bio čovek kojeg nikada pre ne videh u pokrajini Anuvin. Još ne "
+#~ "beše poslat ovamo kao kapetan izvidnice neko tako nemilosrdan i okrutan."
+
+#~ msgid ""
+#~ "Had they taken my uncle, they would have surely shown up in Delwyn today "
+#~ "with the same ultimatum. As it is, several riders escaped."
+#~ msgstr ""
+#~ "Da su poveli mog strica, zasigurno bi se danas pojavili u Delvinu sa "
+#~ "istim ultimatumom. Ovako, nekoliko jahača nam je umaklo."
+
+#~ msgid ""
+#~ "Well, it won’t be long until they report back to the local garrison with "
+#~ "the details of your encounter."
+#~ msgstr ""
+#~ "Onda, neće dugo proći dok ne izveste prvi usputni garnizon o detaljima "
+#~ "vašeg susreta."
+
+#~ msgid ""
+#~ "An offense to decency, this is! Since when has Wesnoth been ruled by fear "
+#~ "and treachery? We should consult with Lord Maddock of Elensefar. We have "
+#~ "known him for years to be noble in deed as well as in name."
+#~ msgstr ""
+#~ "Uvreda za pristojnost, ova je! Otkada se u Vesnotu vlada strahom i "
+#~ "izdajništvom? Treba da se posavetujemo s gospodarom Madokom od "
+#~ "Elensefara. Već godinama ga znamo kao plemenitog po delu koliko i po "
+#~ "imenu."
+
+#~ msgid ""
+#~ "I agree. But, Baldras, what will you tell him? We know something has been "
+#~ "going badly wrong in Wesnoth of late, that more than ordinary corruption "
+#~ "and incompetence is afoot. But when the effects fall on mere peasants, "
+#~ "the wrong of it may not seem so obvious from a noble’s chair."
+#~ msgstr ""
+#~ "Slažem se. Ali, Baldrase, šta ćeš mu zboriti? Znamo da je u Vesnotu "
+#~ "odskora nešto jako pošlo po zlu, da se komeša nešto više od uobičajene "
+#~ "iskvarenosti i nesposobnosti. Ali kada posledice pogode obične seljane, "
+#~ "nepravda njihova ne mora biti očigledna na dvoru plemićkom."
+
+#~ msgid ""
+#~ "We need evidence. Hard evidence... but wait— Are those orcish war drums I "
+#~ "hear?"
+#~ msgstr ""
+#~ "Potrebni su nam dokazi. Čvrsti dokazi... Ček, čujem li ja to orkovske "
+#~ "ratne bubnjeve?"
+
+#, fuzzy
+#~| msgid ""
+#~| "I think they are, old friend. And that rank smell on the wind tells "
+#~| "another tale; saurians approach. To arms!"
+#~ msgid ""
+#~ "I think they are, old friend. And that rank smell on the wind tells "
+#~ "another tale: saurians approach. To arms!"
+#~ msgstr ""
+#~ "U pravu si, prijatelju stari. A zadah što nam vetar donosi kaže još "
+#~ "nešto: stižu saurijanci. Na oružje!"
+
+#~ msgid ""
+#~ "By the sound of the wolves, the scent trail of Fal Khag’s killers ends "
+#~ "here."
+#~ msgstr ""
+#~ "Reklo bi se po vučjem cviljenju da trag zadaha Fal Kagovih ubica ovde "
+#~ "prestaje."
+
+#~ msgid "You will get gold. And our wolves will get meat."
+#~ msgstr "Dobićete zlato. A naši vuci mesnati obrok."
+
+#~ msgid ""
+#~ "Can the darkest rumors be true, then? Does the Kingdom— Does Queen "
+#~ "Asheviere... send orcs against her own people?"
+#~ msgstr ""
+#~ "Mogu li najmračnije glasine biti istinite? Da li kraljevstvo... da li to "
+#~ "kraljica Aševira... šalje orke protiv sopstvenog naroda?"
+
+#~ msgid ""
+#~ "We have tarried here for far too long... There is no way we can reach "
+#~ "Elensefar and return with help before the Wesnoth army destroys our "
+#~ "homes. Retreat!"
+#~ msgstr ""
+#~ "Previše smo odugovlačili... Nema nam više izgleda da dosegnemo Elensefar "
+#~ "i dovedemo pomoć pre nego što nam vesnotska vojska uništi domove. "
+#~ "Povlačenje!"
+
+#~ msgid ""
+#~ "Baldras, your trip here was not wise. The Queen’s patrols have been "
+#~ "visiting the local villages and bringing the elders here. Those that "
+#~ "swear allegiance to the Queen are allowed to return home. Those that do "
+#~ "not—"
+#~ msgstr ""
+#~ "Baldrase, nije ti bilo mudro zaputiti se ovamo. Kraljičine izvidnice "
+#~ "svraćaju po selima i dovode ovamo njihove starešine. One koji se zakunu "
+#~ "kraljici na odanost puštaju da se vrate kućama. One koji to ne učine..."
+
+#~ msgid ""
+#~ "— Are dispatched on the spot. I know the price of dissent. But what of "
+#~ "you?"
+#~ msgstr ""
+#~ "...likvidiraju na licu mesta. Poznata mi je cena neposlušnosti. Ali šta "
+#~ "je s tobom?"
+
+#~ msgid ""
+#~ "Well, they do not come within the walls of my city. They are actually "
+#~ "camped nearby, and the main garrison is further south at Halstead. I know "
+#~ "my time will soon come to swear allegiance, but they do not press me. "
+#~ "They are afraid I will refuse."
+#~ msgstr ""
+#~ "Pa, ne zalaze unutar zidina moga grada. Zapravo su ulogoreni u blizini, a "
+#~ "glavni garnizon je podalje na jugu, kod Halsteda. Znam da će uskoro i "
+#~ "meni doći vreme da se zakunem na odanost, ali me ne pritiskaju. Plaše se "
+#~ "da ću odbiti."
+
+#~ msgid "Will you?"
+#~ msgstr "Hoćeš li?"
+
+#~ msgid ""
+#~ "Yes. The Queen ascended to the throne through the vilest of treachery. "
+#~ "However, while most of my forces were sent with the King to fight the "
+#~ "orcs, we have a strong enough contingent here to make the Queen’s forces "
+#~ "think twice about attacking Elensefar outright."
+#~ msgstr ""
+#~ "Hoću. Kraljica se domogla prestola kroz najgrđe od izdajstava. Međutim, "
+#~ "iako je glavnina mojih snaga otposlata s kraljem u boj protiv orkova, još "
+#~ "uvek ovde imamo dovoljno jaku posadu da kraljičine snage dvaput razmisle "
+#~ "smeju li izravno udariti na Elensefar."
+
+#~ msgid ""
+#~ "We have an uneasy peace until they are done with the smaller villages and "
+#~ "finally come around to obtaining my oath. The treaty between Elensefar "
+#~ "and Wesnoth is ancient, but I am not so naïve as to place my full trust "
+#~ "in it. Not in these wicked times."
+#~ msgstr ""
+#~ "U mučnom smo miru dok ne svrše sa manjim naseobinama te konačno dođu "
+#~ "ovamo zatražiti moju zakletvu. Sporazum između Elensefara i Vesnota "
+#~ "drevan je, ali nisam toliko naivan da se potpuno pouzdam u nj. Ne u ova "
+#~ "izopačena vremena."
+
+#, fuzzy
+#~| msgid ""
+#~| "What can we do then? We have brought with us many from Annuvin province "
+#~| "who are willing to fight, but our families are still at home. They will "
+#~| "not last long if the Queen’s patrols return."
+#~ msgid ""
+#~ "What can we do then? We have brought with us many from Annuvin Province "
+#~ "who are willing to fight, but our families are still at home. They will "
+#~ "not last long if the Queen’s patrols return."
+#~ msgstr ""
+#~ "Šta onda možemo učiniti? Poveli smo mnoge voljne za borbu iz anuvinske "
+#~ "pokrajine, ali su nam porodice još uvek tamo. Neće dugo opstati vrate li "
+#~ "kraljičine snage."
+
+#~ msgid ""
+#~ "I am unwilling to start a civil war. I believe the Queen will remain "
+#~ "preoccupied with order throughout the kingdom and, more importantly, with "
+#~ "quelling the Northerner threat. We are a matter she will choose to deal "
+#~ "with later rather than sooner, if she can."
+#~ msgstr ""
+#~ "Nisam rad otpočinjanju građanskog rata. Verujem da će kraljica ostati "
+#~ "prezauzeta održavanjem reda širom kraljevstva, i, još važnije, "
+#~ "suzbijanjem pretnje Severnjaka. S nama će odlučiti da se pozabavi pre "
+#~ "kasnije nego ranije, ako uzmogne."
+
+#~ msgid ""
+#~ "A foolish miscalculation, Lord Maddock. These men with which you consort "
+#~ "are outlaws and fugitives. They are a well-organized gang of criminals "
+#~ "and murderers. We will kill them and then expect your oath of allegiance "
+#~ "to Queen Asheviere."
+#~ msgstr ""
+#~ "Nesmotrena greška u računu, gospodaru Madoče. Ovi ljudi s kojima "
+#~ "družbujete odmetnici su i begunci. Dobro organizovana banda razbojnika i "
+#~ "ubica. Prvo ćemo ih pobiti, a onda očekujemo vašu zakletvu odanosti "
+#~ "kraljici Aševiri."
+
+#~ msgid "Men, to arms! The defense of Elensefar has begun!"
+#~ msgstr "Ljudi, na oružje! Počinje odbrana Elensefara!"
+
+#~ msgid ""
+#~ "As the sun set, a horrific change began to take place to the human "
+#~ "adversaries of Baldras and his allies..."
+#~ msgstr ""
+#~ "Dok sunce zalazi, počinje da se odigrava jeziva promena među ljudskim "
+#~ "suparnicima Baldrasa i njegovih saveznika..."
+
+#~ msgid ""
+#~ "I cannot believe what my eyes are seeing! The flesh runs from their "
+#~ "bones... these are not human warriors we fight. They are evil spirits "
+#~ "masquerading as human!"
+#~ msgstr ""
+#~ "Ne mogu da verujem šta mi oči govore! Meso im se odvaja od kostiju... Ovo "
+#~ "nisu ljudski ratnici nasuprot nas, već zlodusi što se izdaju za ljude!"
+
+#~ msgid ""
+#~ "Their human aspect is returning! This is an evil manner of sorcery we "
+#~ "face, but one that we may yet overcome. CHARGE!"
+#~ msgstr ""
+#~ "Vraća im se ljudsko obličje! Sa zlim smo čarobnjaštvom suočeni, ali "
+#~ "takvim koje još možemo nadvladati. Juriš!"
+
+#~ msgid ""
+#~ "I will not. Unless you want me to round up the city’s thieves to fight "
+#~ "for you, I do not have the troops to spare. However, I am not the only "
+#~ "one who commands men in this corner of Wesnoth."
+#~ msgstr ""
+#~ "Neću. Osim ako ne želiš da sakupim gradske lopove da se bore za vas, "
+#~ "nemam druge vojske koju bih izdvojio. Međutim, nisam ja jedni koji "
+#~ "zapoveda snagama u ovom kutku Vesnota."
+
+#~ msgid "I don’t understand. There are no other noble lords in this area."
+#~ msgstr "Ne razumem. U ovom području nema drugih velmoža."
+
+#~ msgid ""
+#~ "Southeast of here there is a town, and there you may find assistance of "
+#~ "the type I cannot give."
+#~ msgstr ""
+#~ "Jugoistočno odavde nalazi se grad, u njemu možeš naći pomoć od vrste "
+#~ "kakvu ja ne mogu pružiti."
+
+#~ msgid ""
+#~ "Wish us well. If we are to resist the Wesnoth army a second time, we’re "
+#~ "going to need more than clubs and slings against steel."
+#~ msgstr ""
+#~ "Poželi nam dobro. Ako ćemo se po drugi put odupreti vesnotskoj vojsci, "
+#~ "trebaće nam više od batina i praćki naspram čelika."
+
+#~ msgid ""
+#~ "Look, more riders come from the southeast. We cannot survive another "
+#~ "assault. We are finished!"
+#~ msgstr ""
+#~ "Gledajte, stiže još jahača sa jugoistoka. Ne možemo preživeti još jedan "
+#~ "juriš. S nama je svršeno!"
+
+#~ msgid "Midnight"
+#~ msgstr "ponoć"
+
+#~ msgid "Take Baldras to meet the leader of the insurgency"
+#~ msgstr "Susretne li se Baldras sa vođem ustanika"
+
+#~ msgid ""
+#~ "I’m not sure where we’re supposed to go now. If we go into town we can "
+#~ "start asking around for information."
+#~ msgstr ""
+#~ "Nisam siguran kuda nam je sada poći. Ako uđemo u grad, možemo se "
+#~ "raspitati okolo."
+
+#~ msgid "Who are you?"
+#~ msgstr "Ko si ti?"
+
+#~ msgid ""
+#~ "I have come to find you. You must make it through the city without being "
+#~ "seen. The soldiers are normally out hunting for my kind, but a company of "
+#~ "heavy infantry arrived three days ago and took over the patrols."
+#~ msgstr ""
+#~ "Dođoh da vas pronađem. Morate se probiti kroz grad tako da vas ne opaze. "
+#~ "Vojnici su obično napolju, u potrazi za meni sličnima, ali pre tri dana "
+#~ "pristiže četa teške pešadije i preuze straže."
+
+#~ msgid "They’re looking for us."
+#~ msgstr "Nas traže."
+
+#~ msgid ""
+#~ "Gentlemen, please come this way and follow the path into the forest. Our "
+#~ "leader is anxious to meet you."
+#~ msgstr ""
+#~ "Gospodo, molim pođite ovim putem i ispratite stazu u šumu. Naš je vođ "
+#~ "željan da vas primi."
+
+#~ msgid ""
+#~ "As soon as we escape the Wesnoth death squad, we will be happy to oblige."
+#~ msgstr "Čim umaknemo vesnotskim odredima smrti, rado ćemo postupiti tako."
+
+#~ msgid "As it turns out, I’m the crazy one. Let’s finish this folly."
+#~ msgstr "A kako ispade, ja sam taj koji je lud. Okončajmo ovu ludoriju."
+
+#~ msgid ""
+#~ "We have spent too much time here. Surely the Queen’s forces have returned "
+#~ "to Dallben. Our mission is unfinished, but we must return to fight a "
+#~ "suicide battle."
+#~ msgstr ""
+#~ "Predugo se zadržasmo ovde. Kraljičine snage zasigurno su se vratile put "
+#~ "Dalbena. Naše poslanstvo je nedovršeno, ali moramo nazad u beznadežni boj."
+
+#~ msgid ""
+#~ "I am Helicrom, and you should not be so glib. I control dangerous men. My "
+#~ "henchmen can slip unseen through any city, rob a man while he sleeps, or "
+#~ "attack a caravan head-on. It’s not noble work, but our pursuits require "
+#~ "plenty of gold."
+#~ msgstr ""
+#~ "Ja sam Helikrom, a tebi je bolje da ne budeš tako slatkorečiv. Zapovedam "
+#~ "opasnim ljudima. Moji najamnici umeju kliznuti neprimećeni kroz svaki "
+#~ "grad, opljačkati čoveka na spavanju, ili napasti karavan s čela. Dela ne "
+#~ "baš plemenita, ali naša zanimanja zahtevaju obilje zlata."
+
+#, fuzzy
+#~| msgid "I... see, I think. Why do you want to help us?"
+#~ msgid "Why do you want to help us?"
+#~ msgstr "A tako... čini mi se. Zašto želite da nam pomognete?"
+
+#, fuzzy
+#~| msgid ""
+#~| "We don’t. You have sought us out. But, I do know of your situation and "
+#~| "am willing to help. Any weakening of the Throne of Wesnoth, whether it "
+#~| "be occupied by King or Queen, aids us."
+#~ msgid ""
+#~ "You are the ones who have sought us out. But, I do know of your situation "
+#~ "and am willing to help. Any weakening of the Throne of Wesnoth, whether "
+#~ "it be occupied by King or Queen, aids us. Do you know of Halstead?"
+#~ msgstr ""
+#~ "Ne želimo. Vi ste potražili nas. Ali, poznate su mi vaše prilike i voljan "
+#~ "sam da pomognem. Svako slabljenje prestola Vesnota, bilo da na njemu sedi "
+#~ "kralj ili kraljica, služi našoj svrsi."
+
+#, fuzzy
+#~| msgid ""
+#~| "The words of Lord Maddock have weighed heavy on me these past few days. "
+#~| "It has dawned on me that we can never win. We will never defeat the "
+#~| "entire army of Wesnoth. Idiocy! If the noble lord of Elensefar is "
+#~| "unwilling to resist the Queen, how should I ever expect to?"
+#~ msgid ""
+#~ "Well, what can we do? It seems to me that we can never win. It is "
+#~ "impossible for us to face the entire forces of Weldyn by ourselves. "
+#~ "Idiocy! If the noble lord of Elensefar is unwilling to resist the Queen, "
+#~ "how can we expect to?"
+#~ msgstr ""
+#~ "Reči gospodara Madoka teško me pritiskaju poslednjih dana. Shvatio sam da "
+#~ "nikako ne možemo pobediti, da ne možemo nadjačati čitavu vojsku Vesnota. "
+#~ "Budalaština! Ako plemeniti gospodar Elensefara nije voljan da se odupre "
+#~ "kraljici, kako se to može očekivati od mene?"
+
+#, fuzzy
+#~| msgid ""
+#~| "Do you propose surrender? It’s this or nothing. All we can do is see it "
+#~| "through to the end."
+#~ msgid ""
+#~ "We... cannot just surrender either. Helicrom is right. It’s this or "
+#~ "nothing. All we can do is see it through to the end."
+#~ msgstr ""
+#~ "Predlažeš li predaju? Ili ovako ili nikako. Na nama je samo da ispratimo "
+#~ "to do kraja."
+
+#, fuzzy
+#~| msgid ""
+#~| "What a bloody mess. We must attack Halstead next. If we wait, they will "
+#~| "become invincible. If we can burn it to the ground before that happens, "
+#~| "our people may have a chance. Rest well tonight, because tomorrow’s "
+#~| "battle will decide the fate of our homes, our families, and our freedom."
+#~ msgid ""
+#~ "It seems to me that our only choice is to attack Halstead itself. If we "
+#~ "wait, their armies will become invincible. If we can burn it to the "
+#~ "ground before the Queen’s forces rally, we may yet be able to break their "
+#~ "foothold in this province."
+#~ msgstr ""
+#~ "Kakav krvavi nered. Sad odmah moramo udariti na Halsted. Oklevamo li, "
+#~ "postaće nepobedivi. Ako ga spalimo do temelja pre nego što dotle dođe, "
+#~ "naš narod još može imati izgleda. Dobro se večeras odmorite, jer će "
+#~ "sutrašnji boj odlučiti sudbine naših domova, porodica, i naše slobode."
+
+#~ msgid ""
+#~ "In the Year of Wesnoth 161, the newly crowned king sought to tame the "
+#~ "wildlands that separated the human cities surrounding Weldyn and the "
+#~ "coastal regions of Elensefar once and for all."
+#~ msgstr ""
+#~ "Godine Vesnota 161, novokrunisani kralj požele da ukroti divljinu koja "
+#~ "razdvajaše ljudske gradove oko Veldina i priobalna područja Elensefara, "
+#~ "jednom za svagda."
+
+#~ msgid ""
+#~ "The grand army of Wesnoth, personally led by the High Council of "
+#~ "Archmagi, scoured the plains of all manner of hostile creature, be it "
+#~ "beast, orc, or elf. The city-state of Elensefar was formally united to "
+#~ "the kingdom and settlements rapidly spread. The country of Wesnoth had "
+#~ "been carved in deed as well as in name."
+#~ msgstr ""
+#~ "Velika vojska Vesnota, predvođena Visokim većem arhimagova lično, trebila "
+#~ "je ravnice od svakakvih ratobornih stvorenja, bile one zveri, orkovi, ili "
+#~ "vilenjaci. Grad-država Elensefar zvanično se pripojila kraljevstvu i "
+#~ "naseobine se hitro raširiše. Vesnotska država bila je uklesana kako "
+#~ "imenom tako i delom."
+
+#~ msgid ""
+#~ "A monument to this achievement was erected in the very heart of the "
+#~ "wildlands. In a twelve-year ritual, the High Council demonstrated the "
+#~ "height to which human magic had grown over the years by drawing the "
+#~ "monument directly from the earth’s living rock."
+#~ msgstr ""
+#~ "Podigoše spomenik ovom dostignuću u samom srcu divljine. U "
+#~ "dvanaestogodišnjem obredu, Visoko veće iskaza visine koje je dosegla "
+#~ "magija ljudi za proteklih godina, oblikujući spomenik iz žive stene u "
+#~ "zemlji."
+
+#~ msgid ""
+#~ "Hundreds of feet tall, the mountain towered high above the plains, its "
+#~ "sheer walls both inspiring and terrifying. Men from all over the "
+#~ "countryside labored there, building the most formidable fortress ever "
+#~ "conceived. It became the Stronghold of Halstead."
+#~ msgstr ""
+#~ "Stotinama stopa visoka, planina se uzdizala visoko nad ravnicom, "
+#~ "neizmernih bedema i nadahnjujućih i užasavajućih. Ljudi iz svih krajeva "
+#~ "radiše tamo, gradeći najzahtevniju tvrđavu ikada zamišljenu. Postade ona "
+#~ "uporište Halsted."
+
+#, fuzzy
+#~| msgid ""
+#~| "This sentinel of the western plains stood watch as Wesnoth prospered for "
+#~| "many centuries under the protection it provided. No war has overcome it, "
+#~| "and its walls have never been overrun. The blood of invaders stains its "
+#~| "parapets and the bones of the defeated crumble at the base of Halstead’s "
+#~| "frozen waves of stone."
+#~ msgid ""
+#~ "This sentinel of the western plains stood watch as Wesnoth prospered for "
+#~ "many centuries under its protection. No war has overcome it, and its "
+#~ "walls have never been overrun. The blood of invaders stains its parapets "
+#~ "and the bones of the defeated crumble at the base of Halstead’s frozen "
+#~ "waves of stone."
+#~ msgstr ""
+#~ "Ovaj stražar zapadnih ravnica bdio je dok se Vesnot mnogo stoleća "
+#~ "razvijao pod njegovim okriljem. Ne bi rata koji bi ga nadmašio, nikoga ko "
+#~ "bi pregazio zidine njegove. Grudobrani su mu umrljani krvlju opsadnikâ, a "
+#~ "prahom njihovih kostiju zasuta su podnožja Halstedovih zaleđenih talasa "
+#~ "od kamena."
+
+#~ msgid ""
+#~ "That may not be too far from the truth. During the time of the Great "
+#~ "Kings of Wesnoth, this land was tamed with powerful magic. Wizards of an "
+#~ "ancient era forged the walls of Halstead from the rock below."
+#~ msgstr ""
+#~ "To i ne mora biti daleko od istine. U vreme velikih kraljeva Vesnota, ova "
+#~ "zemlja beše ukroćena moćnom magijom. Čarobnjaci iz davnine sačiniše "
+#~ "bedeme Halsteda od stene pod njim."
+
+#~ msgid ""
+#~ "No, my young friend. Halstead indeed has a weakness. Among my many assets "
+#~ "is access to a wealth of secrets few in Wesnoth are privy to."
+#~ msgstr ""
+#~ "Ne, mladi prijatelju. Halsted zbilja ima jednu slabost. Jedan od mojih "
+#~ "mnogih imetaka je i pristup bogatstvu tajni kakve se poveravaju "
+#~ "malobrojnima u Vesnotu."
+
+#~ msgid ""
+#~ "You see, the mountain on which the fort was built is solid, but the "
+#~ "castle on top has been built and rebuilt many times over the ages. It is "
+#~ "not as indestructible as you might think."
+#~ msgstr ""
+#~ "Vidiš, planini na kojoj je utvrda izgrađena nema mane, ali je tokom "
+#~ "vremena zamak na vrhu građen i pregrađivan mnogo puta. Nije tako "
+#~ "neuništiv kao što bi se moglo pomisliti."
+
+#~ msgid ""
+#~ "Beneath the structure is a system of catacombs that connects all four "
+#~ "towers to the central keep. Over time, after many wars, supports were "
+#~ "required to hold up the middle."
+#~ msgstr ""
+#~ "Podno gradnje se prostire splet katakombi koji povezuje sve četiri kule "
+#~ "sa središnjim konačištem. S vremena na vreme, posle mnogih ratova, "
+#~ "dodavane su potpore da bi se središte ojačalo."
+
+#~ msgid ""
+#~ "I hope you’re right. In a few hours, night will fall, and we will find "
+#~ "out."
+#~ msgstr ""
+#~ "Nadam se da si u pravu. Mrak će pasti za nekoliko sati, i onda ćemo se "
+#~ "uveriti."
+
+#~ msgid ""
+#~ "We must be cautious. Look there, a substantial orc force is also "
+#~ "advancing on Halstead. They must think Wesnoth’s army is spread out right "
+#~ "now."
+#~ msgstr ""
+#~ "Moramo biti oprezni. Gledaj onamo, i značajna orkovska sila napreduje ka "
+#~ "Halstedu. Biće da misle da je vesnotska vojska trenutno isuviše raširena."
+
+#~ msgid "Heh. They’re in for a surprise. This may work to our advantage."
+#~ msgstr "Ha. Onda ih čeka iznenađenje. Ovo nam još može poslužiti."
+
+#~ msgid "Who is it?"
+#~ msgstr "Ko je to?"
+
+#~ msgid "Help, I hope. Circumstances cannot afford to get much more dire."
+#~ msgstr ""
+#~ "Pomoć, nadam se. Ne možemo si priuštiti okolnosti gore od sadašnjih."
+
+#~ msgid "Riders approach from the northwest! Stand fast, men."
+#~ msgstr "Stižu konjanici sa severozapada! Držite položaje, ljudi."
+
+#~ msgid ""
+#~ "Knights of Elensefar, behold: the battle has already begun! Make camp "
+#~ "here. Then, we charge!"
+#~ msgstr ""
+#~ "Vitezovi Elensefara, počujte: boj je već otpočeo! Ulogorimo se ovde, a "
+#~ "onda... na juriš!"
+
+#~ msgid ""
+#~ "Amazing. Lord Maddock sent his house guards... his finest troops! "
+#~ "Elensefar must be defenseless now. More hinges on this battle than I "
+#~ "thought."
+#~ msgstr ""
+#~ "Zapanjujuće. Gospodar Madok posla svoju dvorsku stražu, njegove najbolje "
+#~ "snage! Elensefar sada mora biti bez odbrane. Od ove bitke zavisi više "
+#~ "nego što mislih."
+
+#~ msgid "After about an hour..."
+#~ msgstr "Oko sat kasnije..."
+
+#~ msgid "Men, help me out of here! I am trapped under this rubble."
+#~ msgstr "Ljudi, vadite me odavde! Zarobljen sam pod ruševinom."
+
+#~ msgid "I hope this sacrifice is not in vain... but we will never know."
+#~ msgstr "Nadam se da ova žrtva nije uzaludna... ali nikad nećemo saznati."
+
+# well-spelled: уухх
+#~ msgid "Our dream of freedom... gone... Unngh."
+#~ msgstr "Naš san o slobodi... kraj mu... uuhh."
+
+#~ msgid "Uncle!"
+#~ msgstr "Striče!"
+
+#~ msgid "NO!"
+#~ msgstr "Ne!"
+
+#~ msgid "I promised your father I would watch after you... and I failed."
+#~ msgstr "Obećah tvom ocu da ću te čuvati... i ne ispunih obećanje."
+
+#~ msgid ""
+#~ "But we are so close to the end. We must finish this. I am sorry you will "
+#~ "not be able to enjoy our freedom. Goodbye, Harper."
+#~ msgstr ""
+#~ "Ali smo tako blizu kraju. Moramo okončati ovo. Žao mi je što nećeš moći "
+#~ "da uživaš u našoj slobodi. Zbogom, Harpere."
+
+#~ msgid ""
+#~ "Carry on, my friends. Fighting by your side is the most honorable thing I "
+#~ "have done..."
+#~ msgstr ""
+#~ "Ne posustajte, prijatelji. Borba uz vašu stranu beše najčasnije moje "
+#~ "delo..."
+
+#~ msgid ""
+#~ "You will never successfully oppose Asheviere. Her power is too great... "
+#~ "This small victory today is but a reprieve from the unimaginable pain you "
+#~ "will suffer when the full force of her wrath descends upon you."
+#~ msgstr ""
+#~ "Nema vam odupiranja Aševiri. Moć njena neizmerna je... Ova mala pobeda "
+#~ "danas tek nakratko odlaže nezamislivi bol koji ćete iskusiti kada se sva "
+#~ "sila njenog besa obruši na vas."
+
+#~ msgid ""
+#~ "This was no small victory. You underestimate the power of love for "
+#~ "freedom."
+#~ msgstr ""
+#~ "Nije ovo ni slučajno mala pobeda. Potcenjuješ moć težnje ka slobodi."
+
+# well-spelled: ууррх
+#~ msgid ""
+#~ "You... underestimate the... cruelty and ambition of your Queen... Uungh..."
+#~ msgstr ""
+#~ "Ti... potcenjuješ... okrutnost i slavoljublje svoje kraljice... uurrh..."
+
+#~ msgid ""
+#~ "Small victory? Bah! Now we will raze this fortress and bury it in the "
+#~ "earth from whence it came."
+#~ msgstr ""
+#~ "Mala pobeda? Ha! Sada ćemo sravniti ovu tvrđavu i pokopati je u zemlju iz "
+#~ "koje je prizvana."
+
+#~ msgid ""
+#~ "The rest of the battle was a blur. The shock of what had happened stunned "
+#~ "everybody."
+#~ msgstr ""
+#~ "Ostatak boja prođe u metežu. Zapanjenost onim što se dogodilo omamila je "
+#~ "svakoga."
+
+#, fuzzy
+#~| msgid ""
+#~| "Baldras and his men fled the plains of western Wesnoth under the cover "
+#~| "of night. The spectacle of Halstead’s destruction stunned them into a "
+#~| "daze that only slowly wore off as they made their way north to and past "
+#~| "Elensefar."
+#~ msgid ""
+#~ "Baldras and his men fled the plains of western Wesnoth under the cover of "
+#~ "night. The spectacle of Halstead’s destruction held them in a daze that "
+#~ "only slowly wore off as they made their way north to and past Elensefar."
+#~ msgstr ""
+#~ "Baldras i njegovi pod okriljem noći utekoše u ravnice zapadnog Vesnota. "
+#~ "Prizor uništenja Halsteda omamio ih je do vrtoglavice, koja se tek "
+#~ "postepeno povlačila dok su napredovali na sever do i preko Elensefara."
+
+#, fuzzy
+#~| msgid ""
+#~| "The Elense riders routed the orcish army, small as it was, and sent them "
+#~| "back across the Great River. They then scattered to the countryside and "
+#~| "were not heard from again. Baldras thought this odd behavior when he "
+#~| "heard about it."
+#~ msgid ""
+#~ "The Elense riders routed the orcish army, small as it was, and sent them "
+#~ "back across the Great River. They then scattered to the countryside and "
+#~ "were not heard from again. Baldras thought this behavior odd when word of "
+#~ "this first reached him."
+#~ msgstr ""
+#~ "Konjanici Elensa opkolili su orkovsku vojsku, malu kakva je bila, i "
+#~ "otpravili je preko Velike reke. Zatim se rasuše širom pokrajine, da se o "
+#~ "njima više ništa ne ču. Kad je to doznao, Baldrasu se njihov postupak "
+#~ "učini čudnim."
+
+#~ msgid ""
+#~ "As the main body of Asheviere’s army neared the ruins of Halstead, "
+#~ "strange things began to happen. Every night, men would disappear. Others "
+#~ "were found hacked to bloody pieces. Unexplained misfortune plagued the "
+#~ "marching columns. Soldiers dropped dead where they stood, slain by unseen "
+#~ "assassins. Fear of an undead menace spread through the ranks."
+#~ msgstr ""
+#~ "Kako se glavnina Aševirine vojske bližila ruševinama Halsteda, počeše da "
+#~ "im se dešavaju čudne stvari. Svake noći, poneko bi nestao. Druge su "
+#~ "nalazili iseckane u krvave komadiće. Neobjašnjivi udesi morili su "
+#~ "napredujuće kolone. Vojnici su padali mrtvi na mestu, posečeni "
+#~ "nevidljivim ubicama. Strah od nemrtvog užasa raširi se proširi se kroz "
+#~ "redove."
+
+#, fuzzy
+#~| msgid ""
+#~| "When the army of Wesnoth found the ruins of the mighty fortress "
+#~| "Halstead, it was too much. Their shock that such a thing could happen "
+#~| "combined with the invisible terror stalking them convinced Asheviere’s "
+#~| "second in command the entire countryside was cursed. He quickly "
+#~| "retreated to the traditional border and set up strong defenses against "
+#~| "the west."
+#~ msgid ""
+#~ "When the army of Wesnoth found the ruins of the mighty fortress Halstead, "
+#~ "it was too much. Their shock that such a thing could happen, combined "
+#~ "with the invisible terror stalking them, convinced Asheviere’s second in "
+#~ "command the entire countryside was cursed. He quickly retreated to the "
+#~ "traditional border and set up strong defenses against the west."
+#~ msgstr ""
+#~ "Kada vesnotska vojska otkri ruševine moćne utvrde Halsted, beše to "
+#~ "previše za njih. Zapanjenost činjenicom da se tako nešto uopšte moglo "
+#~ "dogoditi, u sadejstvu sa nevidljivom grozom koja ih je pratila, ubedi "
+#~ "Aševirinog drugozapovedajućeg da je cela pokrajina ukleta. Brzo povuče "
+#~ "vojsku iza tradicionalnih granica, gde podiže jaku odbranu prema zapadu."
+
+#~ msgid ""
+#~ "Baldras had just crossed the Great River when rumors of night-stalkers "
+#~ "filtered through his ranks. With bitter humor he realized that Lord "
+#~ "Maddock’s men were successfully using tactics Baldras had mastered and "
+#~ "used during his resistance."
+#~ msgstr ""
+#~ "Baldras tek što je prešao Veliku reku kada glasine o noćovrebačima "
+#~ "prožeše njegove redove. Uz gorak osmeh, uvide da su ljudi gospodara "
+#~ "Madoka uspešno primenjivali taktike kojima je on ovladao i upotrebio za "
+#~ "sopstveni otpor."
+
+#~ msgid ""
+#~ "The peasants-turned-outlaws finally reached Dallben. It was burnt to the "
+#~ "ground. In a panic, they raced through the forest to Delwyn. It was "
+#~ "likewise devastated. However, they did find one clue as to what "
+#~ "happened..."
+#~ msgstr ""
+#~ "Seljaci preobraćeni u odmetnike napokon stigoše u Dalben. Zatekoše ga "
+#~ "spaljenog do temelja. U panici jurnuše kroz šumu ka Delvinu, koji nađoše "
+#~ "jednako razoren. Ipak, nađoše jedan trag tome šta se moglo dogoditi..."
+
+#~ msgid ""
+#~ "... a grimy note nailed to a charred post that read, <i>“Baldras, You "
+#~ "would have been proud. We gave ’em hell. But in the end, it wasn’t "
+#~ "enough.”</i>"
+#~ msgstr ""
+#~ "...sumornu poruku prikucanu na ugarak stuba, koja je glasila: „Baldrase, "
+#~ "bio bi ponosan. Uvukli smo ih u pakao. Ali na kraju, nije bilo dovoljno.“"
+
+#~ msgid ""
+#~ "<i>“We fled like criminals in the night, but we made sure that no one "
+#~ "would harass us anymore.”</i>"
+#~ msgstr ""
+#~ "„Utekli smo kao razbojnici u noć, ali smo se pobrinuli da nas niko više "
+#~ "ne uznemirava.“"
+
+#~ msgid ""
+#~ "<i>“If you wish to find us, head southwest. When you reach the land’s "
+#~ "end, just keep going. See you in the Three Sisters, old friend. ― "
+#~ "Relana”</i>"
+#~ msgstr ""
+#~ "„Ako želiš da nas pronađeš, pođi na jugozapad. Kad dostigneš kraj zemlje, "
+#~ "nastavi dalje. Vidimo se u Tri sestre, stari prijatelju. — Relana“"
+
+#~ msgid "Tell my wife... that I loved her!"
+#~ msgstr "Reci mojoj ženi... koliko je voleh!"
+
+# well-spelled: Ууух
+#~ msgid "Unngh... Now our people may never be free..."
+#~ msgstr "Uuuh... Našem narodu više nema slobode..."
+
+#~ msgid "I am finished... will we ever be free?"
+#~ msgstr "Sa mnom je svršeno... Hoćemo li se ikad osloboditi?"
+
+#, fuzzy
+#~| msgid ""
+#~| "They returned to their village to find it destroyed, with those who "
+#~| "fought left dead and the few survivors born away to unguessable fates. "
+#~| "It was a bitter doom, but as Asheviere’s grip tightened they would live "
+#~| "to see worse."
+#~ msgid ""
+#~ "They returned to their village to find it destroyed, with those who "
+#~ "fought left dead and the few survivors borne away to unknown fates. It "
+#~ "was a bitter doom, but as Asheviere’s grip tightened they would live to "
+#~ "see worse."
+#~ msgstr ""
+#~ "Vratiše se u svoje selo da bi ga zatekli razrušenim, sa svima koji se "
+#~ "boriše mrtvim, a malobrojnim preživelima odvedenim u nezamislive sudbine. "
+#~ "Beše to gorka kletva, ali dok Aševirin stisak bude jačao, doživeće da "
+#~ "vide još gore."
+
+#~ msgid ""
+#~ "The hardy people of these marches learned self-reliance and survival "
+#~ "skills against the raiding orc hordes and savage saurians. They "
+#~ "established their own trading routes and pacts of mutual defense."
+#~ msgstr ""
+#~ "Srčani narod ovih krajina nauči se samodovoljnosti i veštinama opstanka "
+#~ "pod strepnjom od orkovskih prepada i divljih saurijanaca. Uspostaviše "
+#~ "sopstvene trgovačke puteve i sporazume o uzajamnoj odbrani."
+
+#~ msgid ""
+#~ "Although not permitted to train with proper military weapons, these "
+#~ "woodsmen were at home in the forests and swamps of the Western Marches, "
+#~ "and became very effective with their simple slings and clubs."
+#~ msgstr ""
+#~ "Iako im nije bilo dozvoljeno vežbanje s podesnim vojničkim oružjem, ovi "
+#~ "šumljaci bejahu svoji na svome u šumama i močvarama Zapadne Krajine, i "
+#~ "postadoše vrlo umešni sa svojim jednostavnim praćkama i batinama."
+
+#~ msgid ""
+#~ "After the betrayal of the King by Queen Asheviere, the new regent of "
+#~ "Wesnoth sought to consolidate her ill-gotten power. She sent her armies "
+#~ "across Wesnoth to intimidate the provincial rulers and secure her "
+#~ "continued reign."
+#~ msgstr ""
+#~ "Pošto kraljica Aševira izdade kralja, kao novi regent Vesnota požele ona "
+#~ "da učvrsti svoju rđavo stečenu moć. Otposla svoje vojske širom Vesnota, "
+#~ "da zastrašuju pokrajinske vladare i učvrste joj trajnu vladavinu."
+
+#~ msgid ""
+#~ "The people of Annuvin were unwilling to relinquish their hard-earned self-"
+#~ "rule, especially not to this pretender..."
+#~ msgstr ""
+#~ "Narod Anuvina, međutim, ne beše voljan odreći se svoje mukom stečene "
+#~ "samouprave, posebno ne radi te samozvanke..."
+
+# |, no-check-spell
+#~ msgid "Mal-Jarrof"
+#~ msgstr "mal Džarof"
+
+# |, no-check-spell
+#~ msgid "Mal-Jerod"
+#~ msgstr "mal Džerod"
+
+# |, no-check-spell
+#~ msgid "Sel-Mana"
+#~ msgstr "Sel-Mana"
+
+#~ msgid "Defeat the lich and its minions"
+#~ msgstr "Poraziš li kosca i njegove sledbenike"
+
+#~ msgid "I have heard of you. Necromancers. Barely-human scum, I say."
+#~ msgstr "Čuo sam o vama. Nekromanti. Jedva-ljudski ološ, kažem ja."
+
+#~ msgid ""
+#~ "Wrong. Necromancers become slaves to their lich masters and eventually "
+#~ "lose their humanity. We have proven that practicing the dark arts need "
+#~ "not lead down that path to damnation. We remain human, and seek the "
+#~ "mystical secret of balance between the ways of light and darkness. We "
+#~ "dance between both ways, adhering to neither."
+#~ msgstr ""
+#~ "Netačno. Nekromanti postaju robovi svojih gospodara-kosaca i na koncu "
+#~ "gube čovečnost. Mi smo pokazali da bavljenje mračnim veštinama ne mora "
+#~ "voditi niz tu stranputicu, ukletosti. I dalje smo ljudi, koji tragaju za "
+#~ "tajnom ravnoteže između puteva svetla i tame. Kročimo po oba, ali se ne "
+#~ "držimo nijednoga."
+
+#, fuzzy
+#~| msgid ""
+#~| "Carcyn is always foggy as of late because these woods have recently "
+#~| "become home to a lich and two of its underling necromancers. Our "
+#~| "experiments may have actually aroused it from sleep... We’re not exactly "
+#~| "sure."
+#~ msgid ""
+#~ "Carcyn is always foggy as of late because these woods have recently "
+#~ "become home to a lich and two of its underling necromancers. Our "
+#~ "experiments may have actually aroused it from sleep... We’re not sure."
+#~ msgstr ""
+#~ "U poslednje vreme Karsin je neprekidno maglovit, jer ove šume nedavno "
+#~ "postadoše dom jednom koscu i dvojici njegovih podaničkih nekromanata. "
+#~ "Možda su ga baš naši eksperimenti razbudili... Nismo sasvim sigurni."
+
+#~ msgid ""
+#~ "So now you need to defend your rear as well as your front... I see your "
+#~ "predicament. My men will wipe this land clean if you can help us defend "
+#~ "our homeland."
+#~ msgstr ""
+#~ "Tako da sada morate braniti i svoju pozadinu, pored čela... Jasna mi je "
+#~ "vaša teškoća. Moji će ljudi očistiti ovu zemlju ako nam možete pomoći u "
+#~ "odbrani naše domovine."
+
+#~ msgid "Finally, that creature is dead, yet its foolish minions resist."
+#~ msgstr ""
+#~ "Napokon je to stvorenje mrtvo, pa ipak se njegovi budalasti podanici "
+#~ "opiru."
+
+#~ msgid "The lich is destroyed and its minions dead."
+#~ msgstr "Kosac je uništen, a njegovi sledbenici mrtvi."
+
+#~ msgid ""
+#~ "The defeat of the evil lich infesting the Grey Woods was a bittersweet "
+#~ "victory. With Helicrom dead, the guild of shadow magic was thrown into "
+#~ "disarray."
+#~ msgstr ""
+#~ "Poraz zlog kosca što uznemiri Sedošumlje beše gorka pobeda. Po smrti "
+#~ "Helikroma, esnaf magije iz senke zapade u metež."
+
+#~ msgid ""
+#~ "The remaining members were very grateful and offered Baldras a sizable "
+#~ "sum of gold for his help. It was not the help he was hoping for, but he "
+#~ "knew it would have to be enough for the coming conflict."
+#~ msgstr ""
+#~ "Preostali članovi behu zahvalni i ponudiše Baldrasu pozamašnu količinu "
+#~ "zlata za njegovu pomoć. Ne beše to pomoć kakvoj se nadao, ali je znao de "
+#~ "će i takva morati da bude dovoljna za predstojeći sukob."
+
+#~ msgid ""
+#~ "With the undead driven out, we may live here in relative peace and pursue "
+#~ "our studies. For this, Baldras, I am grateful."
+#~ msgstr ""
+#~ "Pošto su nemrtvi proterani, možemo živeti u izvesnom miru i posvetiti se "
+#~ "našim izučavanjima. Za to, Baldrase, zahvalan sam."
+
+#~ msgid ""
+#~ "Studies? Peace? You mean to continue feeding on the lawful citizens of "
+#~ "Wesnoth. There will be no peace for them."
+#~ msgstr ""
+#~ "Izučavanja? Mir? Misliš da nastavite da se hranite na račun zakonitih "
+#~ "stanovnika Vesnota. Za njih neće biti mira."
+
+#~ msgid ""
+#~ "No one here is in a position to be dispensing moral judgments. "
+#~ "Regardless, you have done great service to us today, and we owe you a "
+#~ "debt. I will help you to the utmost of my ability."
+#~ msgstr ""
+#~ "Niko ovde nije u položaju da izriče moralne osude. Svejedno, veliku ste "
+#~ "nam uslugu učinili danas, vaši smo dužnici. Pomoći ću vam koliko je to u "
+#~ "mojoj moći."
+
+#~ msgid ""
+#~ "I was planning on giving you gold. Any good army is well financed, and "
+#~ "with the lich gone we can now spare it."
+#~ msgstr ""
+#~ "Namera mi je bila da vas darujem zlatom. Valjana vojska mora biti dobro "
+#~ "opremljena, a kako kosca više nema, možemo to priuštiti."
+
+#~ msgid ""
+#~ "But, I think it would help you more if I lent you some of my men to join "
+#~ "you on your adventures. The Queen has been sending mages out here, and my "
+#~ "men are itching for some payback."
+#~ msgstr ""
+#~ "Ali, mislim da će vam više pomoći ako vam pozajmim nešto svojih ljudi, da "
+#~ "vas prate u pustolovinama. Kraljica je slala magove sve do ovamo, i moji "
+#~ "su ljudi orni da uzvrate."
+
+#~ msgid ""
+#~ "On the other hand, if I keep the full force of my organization here, we "
+#~ "might be able to regroup and join you on the battlefield when the time "
+#~ "comes."
+#~ msgstr ""
+#~ "S druge strane, ako zadržim ovde svu silu našeg udruženja, možda se "
+#~ "možemo preraspodeliti i pridružiti vam se na bojnom polju kada za to dođe "
+#~ "vreme."
+
+#~ msgid "I leave it to you to decide."
+#~ msgstr "Biće kako ti odlučiš."
+
+#~ msgid "I will take the gold. How does 500 sound?"
+#~ msgstr "Uzeću zlato. Kako zvuči pet stotina?"
+
+#~ msgid "Agreed. Good luck and farewell to you, Master Baldras."
+#~ msgstr "Dogovoreno. Sa srećom i zbogom, gospodaru Baldrase."
+
+#~ msgid ""
+#~ "Send your men with us. They will be valuable help as we prepare for the "
+#~ "assault from the Wesnoth army garrison."
+#~ msgstr ""
+#~ "Daj nam svoje ljude u službu. Biće od velike pomoći kad se budemo "
+#~ "pripremali na juriš garnizona vesnotske vojske."
+
+#~ msgid ""
+#~ "Done. My finest mages and thieves are at your disposal. Use them well."
+#~ msgstr ""
+#~ "Učinjeno. Na raspolaganju su ti moji najbolji magovi i lopovi. Koristi ih "
+#~ "mudro."
+
+#~ msgid "I wish you to join us in battle against the Queen’s forces."
+#~ msgstr "Rad sam da nam se pridružiš u borbi protiv kraljičinih snaga."
+
+#~ msgid ""
+#~ "All right. I need time to clean up this forest and recall my men from the "
+#~ "countryside. We will be ready to march in seven days. All now hinges on "
+#~ "you! Until then..."
+#~ msgstr ""
+#~ "Neka bude. Trebaće nešto vremena da počistimo šumu i sazovemo ljude iz "
+#~ "obližnjih krajeva. Za sedam dana bićemo spremni za pokret. Sada sve "
+#~ "zavisi od tebe! Do tada..."
+
+#~ msgid "My men... have failed to protect me! I perish..."
+#~ msgstr "Moji... ne uspeše da me zaštite! Propadoh..."
+
+#~ msgid ""
+#~ "Baldras and his men quickly left the Grey Woods, not entirely convinced "
+#~ "of their safety even after eradicating the lich."
+#~ msgstr ""
+#~ "Baldras i njegova družina brzo napustiše Sedošumlje, ne sasma ubeđeni u "
+#~ "sopstvenu bezbednost pošto su istrebili kosca."
+
+#~ msgid ""
+#~ "As they marched, many men and women from the small hamlets peppering the "
+#~ "area around Carcyn and the Grey Woods approached the group, asking to "
+#~ "join them. The ascent of the Queen had cast an uneasy pall over the "
+#~ "citizens of Wesnoth, and some of them were willing to resist it."
+#~ msgstr ""
+#~ "Dok su napredovali, mnogi muškarci i žene iz seocadi razbacanih oko "
+#~ "Karsina i Sedošumlja približiše se družini, s namerom da se pridruže. "
+#~ "Uspon kraljičin baci mučan pokrov nad stanovnike Vesnota, neki od kojih "
+#~ "behu voljni da pruže otpor."
+
+#~ msgid ""
+#~ "Knowing they too would be labeled criminals, he reluctantly accepted "
+#~ "their help.\n"
+#~ "<b>Note:</b> Baldras is now able to recruit Outlaws."
+#~ msgstr ""
+#~ "Znajući da će i sami biti prokazani kao razbojnici, Baldras s oklevanjem "
+#~ "prihvati njihovu pomoć.\n"
+#~ "<b>Napomena:</b> Baldras sada može da najmi odmetnike."
+
+#~ msgid ""
+#~ "Camped at the edge of the forest, they quietly observed substantial troop "
+#~ "movements coming from the direction of Aldril, a nearby city, and "
+#~ "marching to the northwest. Unsure what to make of it, they debated their "
+#~ "next course of action..."
+#~ msgstr ""
+#~ "Ulogoreni na rubu šume, tiho su posmatrali zamašne pokrete snaga iz "
+#~ "pravca Aldrila, obližnjeg grada, gde polaze na severozapad. Nesigurni šta "
+#~ "to znači, raspravljaše o svojim narednim koracima..."
+
+#~ msgid "Kill all enemy forces"
+#~ msgstr "Uništiš li sve neprijateljske snage"
+
+# |, no-check-spell
+#~ msgid "Jingo"
+#~ msgstr "Džingo"
+
+# |, no-check-spell
+#~ msgid "Majel"
+#~ msgstr "Madžel"
+
+#~ msgid ""
+#~ "What’s worse is that she appears to have taken notice. We have counted "
+#~ "five platoons of heavy infantry marching towards the garrison in just the "
+#~ "last two hours."
+#~ msgstr ""
+#~ "Što je još gore, čini se da je počela da obraća pažnju. Izbrojasmo pet "
+#~ "odreda teške pešadije u pokretu ka garnizonu, samo za protekla dva sata."
+
+#~ msgid ""
+#~ "The garrison. The towers of Halstead are more than a garrison, nephew, "
+#~ "they are a fortress. They used to protect this area from the enemies of "
+#~ "Wesnoth; I never imagined they would house its enemies."
+#~ msgstr ""
+#~ "Garnizon. Kule Halsteda su više od garnizona, nećače, tvrđava je to. "
+#~ "Nekada su štitile ovu oblast od neprijatelja Vesnota; ne pomišljah da će "
+#~ "jednom biti konačište njegovim neprijateljima."
+
+# |, no-check-spell
+#~ msgid "Pitcher"
+#~ msgstr "Pičer"
+
+#~ msgid "whisper^<i>Baldras!</i>"
+#~ msgstr "<i>Baldrase!</i>"
+
+#~ msgid "Uncle, he wears the crest of the Elense. We should answer."
+#~ msgstr "Ujače, on nosi znamenja Elensa. Trebalo bi da se odazovemo."
+
+#~ msgid "Rider, hush before we are discovered! Come to us, but quietly!"
+#~ msgstr "Konjaniče, umukni pre nego što na otkriju! Priđi, tiho!"
+
+#~ msgid ""
+#~ "Master Baldras, I bring news from the north. During the past week, "
+#~ "several patrols have again ventured across the Great River into Annuvin. "
+#~ "A woman named Relana opposed them with a small militia. She was "
+#~ "victorious."
+#~ msgstr ""
+#~ "Gospodaru Baldrase, dolazim s vestima sa severa. Tokom protekle sedmice, "
+#~ "nekoliko izvidnica je ponovo zašlo preko Velike reke, u Anuvin. "
+#~ "Suprotstavila im se jedna po imenu Relana, s nešto milicije. I nadvladala "
+#~ "ih."
+
+#~ msgid "This is surely good news!"
+#~ msgstr "To su zaista dobre vesti!"
+
+#~ msgid ""
+#~ "I am afraid it is not. The Queen is sending a branch of her main field "
+#~ "army directly from Weldyn. As soon as they arrive, they will burn every "
+#~ "village to the ground. No one will live."
+#~ msgstr ""
+#~ "Plašim se da nisu. Kraljica šalje ogranak svoje glavne stajaće vojske "
+#~ "izravno iz Veldina. Čim pristignu, spaliće svako selo do temelja. Niko to "
+#~ "preživeti neće."
+
+#~ msgid ""
+#~ "The troop movements all make sense now. We must stop this army from "
+#~ "reaching the garrison. We cannot swallow them whole, but we can gnaw away "
+#~ "at them. They mustn’t take one step without us being there to harass and "
+#~ "delay them. When they reach Halstead they must be exhausted or dying."
+#~ msgstr ""
+#~ "Sada su pokreti snaga sasvim jasni. Moramo sprečiti tu vojsku da dosegne "
+#~ "garnizon. Ne možemo ih progutati odjednom, ali ih možemo nagrizati. Ne "
+#~ "smeju načiniti koraka a da mi nismo u blizini da im ga zagorčamo i "
+#~ "usporimo. Dok stignu do Halsteda, moraju biti što iscrpljeni što na "
+#~ "samrti."
+
+#~ msgid "You just said we can’t beat their entire army!"
+#~ msgstr "Zar ne reče upravo da ne možemo pobediti celu vojsku!"
+
+#~ msgid ""
+#~ "May you prevail in peace and war. I must depart before I am seen so far "
+#~ "from my Lord’s borders."
+#~ msgstr ""
+#~ "Da prevladate u miru i u ratu. Moram vas napustiti, pre nego što me uoče "
+#~ "tako daleko izvan zabrana mog gospodara."
+
+#~ msgid "Ow! Fire hot! No step in fire!"
+#~ msgstr "Au! Vrelo! Ne gazi po vatri!"
+
+#~ msgid ""
+#~ "Send word to Helicrom that we are ready. It is time for him to repay his "
+#~ "debt."
+#~ msgstr "Obavestite Helikroma da smo spremni. Vreme mu je da vrati dug."
+
+#~ msgid ""
+#~ "We have spent too much time here. Surely the entire Wesnoth army marches "
+#~ "on our position. We are done for!"
+#~ msgstr ""
+#~ "Bacismo ovde previše vremena. Do sada zasigurno cela vesnotska vojska "
+#~ "napreduje k našem položaju. Gotovo je s nama!"
+
+#~ msgid "No, young one. Halstead indeed has a weakness."
+#~ msgstr "Ne, mladiću. Halsted ima jednu slabost."
+
+#~ msgid "How do you know?"
+#~ msgstr "Otkud znaš?"
+
+#, fuzzy
+#~| msgid ""
+#~| "When I was a boy, my father — your grandfather — brought your dad and me "
+#~| "to live in Aldril after orcs massacred many in our village. We grew up "
+#~| "around here, and we learned many things."
+#~ msgid ""
+#~ "When I was a boy, my father — your grandfather — brought your mother and "
+#~ "me to live in Aldril after orcs massacred many in our village. We grew up "
+#~ "around here, and we learned many things."
+#~ msgstr ""
+#~ "Dok sam bio dete, moj otac — tvoj deda — povede tvog oca i mene da živimo "
+#~ "u Aldrilu pošto su orkovi pobili mnoge iz našeg sela. Odrastavši u ovoj "
+#~ "okolini, saznali smo mnoge stvari."
+
+#~ msgid ""
+#~ "Beneath the structure is a system of catacombs that connects all four "
+#~ "towers to the central keep. The catacombs growing over time, combined "
+#~ "with centuries of war, made it necessary to install supports to hold up "
+#~ "the middle."
+#~ msgstr ""
+#~ "Ispod gradnje leži splet katakombi koji povezuje sve četiri kule sa "
+#~ "središnjim konačištem. Širenje katakombi, kako su prolazila ratna "
+#~ "stoleća, iskalo je dodavanje potpora kako bi se održalo središte."
+
+#~ msgid "axe"
+#~ msgstr "sekira"
+
+#~ msgid "sword"
+#~ msgstr "mač"
+
+#~ msgid "short sword"
+#~ msgstr "kratki mač"
+
+#~ msgid "Holy Ankh"
+#~ msgstr "sveti ank"
+
+#~ msgid ""
+#~ "You find a hefty pendant on a strange and ominous looking altar. It glows "
+#~ "brightly when you pick it up!"
+#~ msgstr ""
+#~ "Nađe poteži visak obešen o čudan i zlokoban oltar. Čim ga pokupi, poče "
+#~ "sjajno da svetli!"
+
+#~ msgid ""
+#~ "There is a strange altar here and a pendant on it. I don’t want to touch "
+#~ "it."
+#~ msgstr "Ovde nekakav čudan oltar i visak o njemu. Ne bih da ga diram."
+
+#~ msgid "holy ankh"
+#~ msgstr "sveti ank"

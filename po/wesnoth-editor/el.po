@@ -1,0 +1,761 @@
+# #-#-#-#-#  wesnoth-editor.cpp.po (Battle for Wesnoth VERSION)  #-#-#-#-#
+# Greek translations for Battle for Wesnoth package
+# Traduction anglaise du package Battle for Wesnoth.
+# Copyright (C) 2004 Wesnoth development team
+# This file is distributed under the same license as the Battle for Wesnoth package.
+# Automatically generated, 2004.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Battle for Wesnoth 0.8.5-CVS\n"
+"Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
+"POT-Creation-Date: 2023-10-28 09:02-0500\n"
+"PO-Revision-Date: 2014-03-12 10:36+0100\n"
+"Last-Translator: galicae <nikolaspapadop@yahoo.com>\n"
+"Language-Team: none\n"
+"Language: el\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.6.4\n"
+
+#. [brush]: id=brush-1
+#: data/core/editor/brushes.cfg:6
+msgid "Single Hex"
+msgstr "Σκέτο Εξάγωνο"
+
+#. [brush]: id=brush-2
+#: data/core/editor/brushes.cfg:16
+msgid "Radius 1 Hex"
+msgstr "Εξαγωνική Ακτίνα 1"
+
+#. [brush]: id=brush-3
+#: data/core/editor/brushes.cfg:26
+msgid "Radius 2 Hex"
+msgstr "Εξαγωνική Ακτίνα 2"
+
+#. [brush]: id=brush-nw-se
+#: data/core/editor/brushes.cfg:47
+msgid "Hex Line NW-SE"
+msgstr "Σειρά Εξαγώνων ΒΔ με ΝΑ"
+
+#. [brush]: id=brush-sw-ne
+#: data/core/editor/brushes.cfg:63
+#, fuzzy
+#| msgid "Hex Line SE-NW"
+msgid "Hex Line SW-NE"
+msgstr "Σειρά Εξαγώνων ΝΑ με ΒΔ"
+
+#. [editor_group]: id=all
+#: data/core/editor/terrain-groups.cfg:11
+msgid "all"
+msgstr "όλα"
+
+#. [editor_group]: id=water
+#: data/core/editor/terrain-groups.cfg:17
+msgid "water"
+msgstr "νερό"
+
+#. [editor_group]: id=flat
+#: data/core/editor/terrain-groups.cfg:24
+msgid "flat"
+msgstr "πεδιάδα"
+
+#. [editor_group]: id=desert
+#: data/core/editor/terrain-groups.cfg:31
+msgid "desert"
+msgstr "έρημος"
+
+#. [editor_group]: id=embellishments
+#: data/core/editor/terrain-groups.cfg:38
+msgid "embellishments"
+msgstr "διακοσμητικά στοιχεία"
+
+#. [editor_group]: id=forest
+#: data/core/editor/terrain-groups.cfg:45
+msgid "forest"
+msgstr "δάσος"
+
+#. [editor_group]: id=fall
+#: data/core/editor/terrain-groups.cfg:52
+msgid "fall"
+msgstr "ρήγμα"
+
+#. [editor_group]: id=frozen
+#: data/core/editor/terrain-groups.cfg:59
+msgid "frozen"
+msgstr "παγωμένο πεδίο"
+
+#. [editor_group]: id=rough
+#: data/core/editor/terrain-groups.cfg:66
+msgid "rough"
+msgstr "τραχύ πεδίο"
+
+#. [editor_group]: id=cave
+#: data/core/editor/terrain-groups.cfg:73
+msgid "cave"
+msgstr "σπηλιά"
+
+#. [editor_group]: id=obstacle
+#: data/core/editor/terrain-groups.cfg:80
+msgid "obstacle"
+msgstr "εμπόδιο"
+
+#. [editor_group]: id=village
+#: data/core/editor/terrain-groups.cfg:87
+msgid "village"
+msgstr "χωριό"
+
+#. [editor_group]: id=castle
+#: data/core/editor/terrain-groups.cfg:94
+msgid "castle"
+msgstr "κάστρο"
+
+#. [editor_group]: id=bridge
+#: data/core/editor/terrain-groups.cfg:101
+msgid "bridge"
+msgstr "γεφύρι"
+
+#. [editor_group]: id=special
+#: data/core/editor/terrain-groups.cfg:108
+msgid "special"
+msgstr "ειδικό"
+
+#. [editor_group]: id=elevation
+#: data/core/editor/terrain-groups.cfg:115
+msgid "elevation"
+msgstr ""
+
+#. [editor_times]: id=empty
+#. Describes a scenario in the editor that has not set a time of day schedule
+#: data/core/editor/time-of-day.cfg:6
+msgid "time of day^None"
+msgstr ""
+
+#. [editor_times]: id=test
+#: data/core/editor/time-of-day.cfg:11
+msgid "Test"
+msgstr ""
+
+#. [editor_times]: id=default
+#: data/core/editor/time-of-day.cfg:22
+msgid "Default"
+msgstr ""
+
+#. [editor_times]: id=summer
+#: data/core/editor/time-of-day.cfg:28
+msgid "Summer"
+msgstr ""
+
+#. [editor_times]: id=winter
+#: data/core/editor/time-of-day.cfg:34
+msgid "Winter"
+msgstr ""
+
+#. [editor_times]: id=24
+#: data/core/editor/time-of-day.cfg:60
+msgid "24 Hour Schedule"
+msgstr ""
+
+#. [editor_times]: id=after_the_fall
+#: data/core/editor/time-of-day.cfg:66
+msgid "After the Fall"
+msgstr ""
+
+#. [theme]: id=editor
+#: data/themes/editor.cfg:11
+#, fuzzy
+#| msgid "Quit Editor"
+msgid "theme^Editor"
+msgstr "Έξοδος από Επεξεργαστή"
+
+#. [menu]: id=menu-editor-file, type=turbo
+#: data/themes/editor.cfg:61
+msgid "File"
+msgstr "Αρχείο"
+
+#. [menu]: id=menu-editor-recent
+#: data/themes/editor.cfg:72
+msgid "Load Recent"
+msgstr ""
+
+#. [menu]: id=menu-editor-map
+#: data/themes/editor.cfg:80
+msgid "Map"
+msgstr "Χάρτης"
+
+#. [menu]: id=menu-unit-facing
+#: data/themes/editor.cfg:88
+msgid "Unit Facing"
+msgstr ""
+
+#. [menu]: id=menu-editor-transitions
+#: data/themes/editor.cfg:94
+#, fuzzy
+#| msgid "Delay transition updates"
+msgid "Transition Update"
+msgstr "Καθυστέρηση αναβάθμησης αλλαγών"
+
+#. [menu]: id=menu-editor-window
+#: data/themes/editor.cfg:101
+msgid "Window"
+msgstr "Άνοιγμα σε Παράθυρο"
+
+#. [menu]: id=menu-editor-addon
+#: data/themes/editor.cfg:110
+msgid "Add-on"
+msgstr ""
+
+#. [menu]: id=menu-editor-areas
+#: data/themes/editor.cfg:119
+msgid "Areas"
+msgstr ""
+
+#. [menu]: id=menu-editor-local-time
+#: data/themes/editor.cfg:127
+msgid "Assign Local Time"
+msgstr ""
+
+#. [menu]: id=menu-editor-local-schedule
+#: data/themes/editor.cfg:133
+msgid "Assign Local Time Schedule"
+msgstr ""
+
+#. [menu]: id=menu-editor-side
+#: data/themes/editor.cfg:141
+msgid "Side"
+msgstr ""
+
+#. [label]: id=villages-icon
+#: data/themes/editor.cfg:158
+msgid "villages"
+msgstr "χωριά"
+
+#. [label]: id=units-icon
+#: data/themes/editor.cfg:174
+msgid "units"
+msgstr ""
+
+#. [menu]: id=switch_time
+#: data/themes/editor.cfg:453
+msgid "Time Schedule Menu"
+msgstr ""
+
+#. [menu]: id=menu-playlist
+#: data/themes/editor.cfg:464
+msgid "Playlist"
+msgstr ""
+
+#. [menu]: id=menu-editor-schedule
+#: data/themes/editor.cfg:470
+msgid "Assign Time Schedule"
+msgstr ""
+
+#: src/editor/action/mouse/mouse_action_unit.cpp:64
+msgid "Identifier: "
+msgstr ""
+
+#: src/editor/action/mouse/mouse_action_unit.cpp:66
+msgid "Name: "
+msgstr ""
+
+#: src/editor/action/mouse/mouse_action_unit.cpp:68
+msgid "Type: "
+msgstr ""
+
+#: src/editor/action/mouse/mouse_action_unit.cpp:69
+msgid "Level: "
+msgstr ""
+
+#: src/editor/action/mouse/mouse_action_unit.cpp:70
+msgid "Cost: "
+msgstr ""
+
+#: src/editor/controller/editor_controller.cpp:186
+msgid "Fatal error"
+msgstr "Σοβαρό σφάλμα"
+
+#: src/editor/controller/editor_controller.cpp:216
+msgid "Do you really want to quit?"
+msgstr "Θελετα πραγματικά να αποχωρήσετε;"
+
+#: src/editor/controller/editor_controller.cpp:218
+#, fuzzy
+#| msgid ""
+#| "Do you really want to quit? Changes in the map since the last save will "
+#| "be lost."
+msgid ""
+"Do you really want to quit? Changes to this map since the last save will be "
+"lost."
+msgstr ""
+"Θελετα πραγματικά να αποχωρήσετε; Τροποποιήσεις στον χάρτη μετά την "
+"τελευταία αποθήκευση δεν θα αποθηκευτούν!"
+
+#: src/editor/controller/editor_controller.cpp:220
+msgid ""
+"Do you really want to quit? The following maps were modified and all changes "
+"since the last save will be lost:"
+msgstr ""
+"Θελετα πραγματικά να αποχωρήσετε; Οι ακόλουθοι χάρτες ειχαν τροποποιηθεί και "
+"όλες οι τροποποιήσεις στον χάρτη μετά την τελευταία αποθήκευση θα χαθούν!"
+
+#: src/editor/controller/editor_controller.cpp:229
+msgid "No editor time-of-day found."
+msgstr "Δεν βρέθηκε επεξεργαστής ωρας."
+
+#: src/editor/controller/editor_controller.cpp:1197
+msgid "Change Unit ID"
+msgstr ""
+
+#: src/editor/controller/editor_controller.cpp:1198
+msgid "ID:"
+msgstr ""
+
+#: src/editor/controller/editor_controller.cpp:1214
+msgid "Rename Unit"
+msgstr ""
+
+#: src/editor/controller/editor_controller.cpp:1215
+msgid "Name:"
+msgstr ""
+
+#: src/editor/map/context_manager.cpp:219
+msgid "Load Map"
+msgstr ""
+
+#: src/editor/map/context_manager.cpp:315 src/editor/map/map_context.cpp:1049
+#, fuzzy
+#| msgid "(New Map)"
+msgid "New Map"
+msgstr "(Νέος Χάρτης)"
+
+#: src/editor/map/context_manager.cpp:328 src/editor/map/map_context.cpp:1049
+#, fuzzy
+#| msgid "(New Map)"
+msgid "New Scenario"
+msgstr "(Νέος Χάρτης)"
+
+#: src/editor/map/context_manager.cpp:384
+msgid "No Recent Files"
+msgstr ""
+
+#: src/editor/map/context_manager.cpp:422
+msgid "Unnamed Area"
+msgstr ""
+
+#: src/editor/map/context_manager.cpp:453
+#, fuzzy
+#| msgid "(New Map)"
+msgid "New Side"
+msgstr "(Νέος Χάρτης)"
+
+#: src/editor/map/context_manager.cpp:509
+msgid "Apply Mask"
+msgstr ""
+
+#: src/editor/map/context_manager.cpp:518
+msgid "Error loading mask"
+msgstr "Σφάλμα κατά την φόρτωση συγκάλυψης"
+
+#: src/editor/map/context_manager.cpp:538
+msgid "Identifier:"
+msgstr ""
+
+#: src/editor/map/context_manager.cpp:538
+msgid "Rename Area"
+msgstr ""
+
+#: src/editor/map/context_manager.cpp:552
+msgid "Choose Target Map"
+msgstr "Επιλέξτε χάρτη για φόρτωση"
+
+#: src/editor/map/context_manager.cpp:561
+#: src/editor/map/context_manager.cpp:959
+msgid "Error loading map"
+msgstr "Σφάλμα κατά την φόρτωση χάρτη"
+
+#: src/editor/map/context_manager.cpp:689
+#, fuzzy
+#| msgid "Save the Map As"
+msgid "Save Map As"
+msgstr "Αποθήκευση χάρτη ως"
+
+#: src/editor/map/context_manager.cpp:700
+#: src/editor/map/context_manager.cpp:902
+msgid "This map is already open."
+msgstr "Ο χάρτης ειναι ίδη ανοικτός."
+
+#: src/editor/map/context_manager.cpp:721
+#, fuzzy
+#| msgid "Save the Map As"
+msgid "Save Scenario As"
+msgstr "Αποθήκευση χάρτη ως"
+
+#: src/editor/map/context_manager.cpp:733
+#, fuzzy
+#| msgid "This map is already open."
+msgid "This scenario is already open."
+msgstr "Ο χάρτης ειναι ίδη ανοικτός."
+
+#: src/editor/map/context_manager.cpp:767
+msgid "No random map generators found."
+msgstr "Δεν βρέθηκαν τυχαίοι παραγωγοί χαρτών"
+
+#: src/editor/map/context_manager.cpp:780
+#: src/editor/map/context_manager.cpp:785
+msgid "Map creation failed."
+msgstr "Η δημειουργία χάρτη ηταν αποτυχημένη."
+
+#: src/editor/map/context_manager.cpp:800
+msgid "Unsaved Changes"
+msgstr "Μη αποθηκευμένες τροποποιήσεις"
+
+#: src/editor/map/context_manager.cpp:801
+#, fuzzy
+#| msgid ""
+#| "Do you want to discard all changes you made to the map since the last "
+#| "save?"
+msgid "Do you want to discard all changes made to the map since the last save?"
+msgstr ""
+"Θέλετε να παραμερίσετε όλες τις τροποποιήσεις μετά την τελευταία αποθήκευση;"
+
+#: src/editor/map/context_manager.cpp:863
+#, fuzzy
+#| msgid "Map saved."
+msgid "Scenario saved."
+msgstr "Ο χάρτης αποθηκεύτηκε."
+
+#: src/editor/map/context_manager.cpp:878
+msgid "Map saved."
+msgstr "Ο χάρτης αποθηκεύτηκε."
+
+#: src/editor/map/context_manager.cpp:951
+msgid "Loaded embedded map data"
+msgstr "Φόρτωση ενσωματωμένων δεδομένων του χάρτη"
+
+#: src/editor/map/context_manager.cpp:952
+#: src/editor/map/context_manager.cpp:955
+msgid "Map loaded from scenario"
+msgstr "Φόρτωση χάρτη απο τους χάρτες με σενάριο"
+
+#: src/editor/map/context_manager.cpp:955
+#, fuzzy
+#| msgid ""
+#| "Loaded referenced map file:\n"
+#| "$new"
+msgid "Loaded referenced map file:"
+msgstr ""
+"Φὀρτωση αρχείου χάρτη που παραπέμπεται:\n"
+"$new"
+
+#: src/editor/map/editor_map.cpp:146
+#: src/editor/palette/location_palette.cpp:119
+#, fuzzy
+#| msgid "Player $player_number"
+msgid "Player $side_num"
+msgstr "Παίκτης $player_number"
+
+#: src/editor/map/editor_map.cpp:281
+msgid "The size of the target map is different from the current map"
+msgstr ""
+"To μέγεθος του επιλεγμένου χάρτη είναι διαφορετικό απο αυτό του τρέχοντος "
+"χαρτη"
+
+#: src/editor/map/map_context.cpp:182
+msgid "File not found"
+msgstr "Αρχείο δεν βρέθηκε"
+
+#: src/editor/map/map_context.cpp:189
+#, fuzzy
+#| msgid "Empty map file"
+msgid "Empty file"
+msgstr "Άδειο αρχείο χάρτη"
+
+#: src/editor/map/map_context.cpp:195
+msgid "File does not have .map or .cfg extension"
+msgstr ""
+
+#: src/editor/map/map_context.cpp:241
+msgid ""
+"The map file looks like a scenario, but the map_data value does not point to "
+"an existing file"
+msgstr ""
+"Ο χάρτης μοιάζει σε χάρτη με σενάριο, αλλά η τιμή map_data δεν παραπέμπει σε "
+"ένα υπάρχον αρχείο"
+
+#: src/editor/map/map_context.cpp:260
+msgid "Found the characters '<<' indicating inline lua is present - aborting"
+msgstr ""
+
+#: src/editor/map/map_context.cpp:265
+#: src/editor/palette/location_palette.cpp:265
+msgid "Error"
+msgstr ""
+
+#: src/editor/map/map_context.cpp:265
+msgid "Failed to load the scenario, attempting to load only the map."
+msgstr ""
+
+#: src/editor/map/map_context.cpp:272
+#, fuzzy
+#| msgid ""
+#| "The map file looks like a scenario, but the map_data value does not point "
+#| "to an existing file"
+msgid ""
+"The map file looks like a scenario, but the map_file value does not point to "
+"an existing file"
+msgstr ""
+"Ο χάρτης μοιάζει σε χάρτη με σενάριο, αλλά η τιμή map_data δεν παραπέμπει σε "
+"ένα υπάρχον αρχείο"
+
+#: src/editor/map/map_context.cpp:287
+msgid "Unable to parse file to find map data"
+msgstr ""
+
+#: src/editor/map/map_context.cpp:815
+#, fuzzy
+#| msgid "Could not save the map: $msg"
+msgid "Could not save the scenario: $msg"
+msgstr "Δεν ήταν δυνατό να αποθηκευτεί ο χάρτης: $msg"
+
+#: src/editor/map/map_context.cpp:850
+msgid "Could not save into scenario"
+msgstr "Δεν ήταν δυνατό να αποθηκευτεί ο χάρτης ως χάρτης με σενάριο"
+
+#: src/editor/map/map_context.cpp:860
+msgid "Could not save the map: $msg"
+msgstr "Δεν ήταν δυνατό να αποθηκευτεί ο χάρτης: $msg"
+
+#: src/editor/palette/editor_palettes.cpp:52
+msgid "(Unknown Group)"
+msgstr "(Άγνωστη Ομάδα)"
+
+#: src/editor/palette/editor_palettes.cpp:314
+msgid "(non-core)"
+msgstr "(μη-βασικό)"
+
+#: src/editor/palette/editor_palettes.cpp:315
+msgid "Will not work in game without extra care."
+msgstr "Δεν θα λειτουργήσει εντός παιχνιδιού χωρις περισσότερο μεράκι."
+
+#: src/editor/palette/location_palette.cpp:249
+msgid "Go To"
+msgstr ""
+
+#: src/editor/palette/location_palette.cpp:256
+msgid "Add"
+msgstr ""
+
+#: src/editor/palette/location_palette.cpp:258
+msgid "New Location Identifier"
+msgstr ""
+
+#: src/editor/palette/location_palette.cpp:266
+msgid "Invalid location id"
+msgstr ""
+
+#: src/editor/palette/location_palette.cpp:273
+msgid "Delete"
+msgstr ""
+
+#: src/editor/palette/terrain_palettes.cpp:224
+msgid "Left-click: "
+msgstr ""
+
+#: src/editor/palette/terrain_palettes.cpp:225
+msgid "Right-click: "
+msgstr ""
+
+#. TRANSLATORS: Similar behavior applies to shift + right-click. This message specifies left-click
+#. because the logic of whether to show the "overlay only" or "base only" version depends on the
+#. terrain currently selected for the left button.
+#: src/editor/palette/terrain_palettes.cpp:230
+msgid "Shift + left-click: paint overlay layer only"
+msgstr ""
+
+#: src/editor/palette/terrain_palettes.cpp:232
+msgid "Shift + left-click: paint base layer only"
+msgstr ""
+
+#: src/editor/palette/terrain_palettes.cpp:235
+msgid "Cmd + click: copy terrain"
+msgstr ""
+
+#: src/editor/palette/terrain_palettes.cpp:237
+msgid "Ctrl + click: copy terrain"
+msgstr ""
+
+#: src/gui/dialogs/editor/custom_tod.cpp:94
+msgid "Clipboard support not found, contact your packager"
+msgstr ""
+
+#: src/gui/dialogs/editor/custom_tod.cpp:158
+msgid "Choose File"
+msgstr ""
+
+#: src/gui/dialogs/editor/custom_tod.cpp:159
+msgid "Select"
+msgstr ""
+
+#~ msgid "Player $player_number"
+#~ msgstr "Παίκτης $player_number"
+
+#~ msgid "FG: "
+#~ msgstr "FG: "
+
+#~ msgid "BG: "
+#~ msgstr "BG: "
+
+#~ msgid "None"
+#~ msgstr "Τίποτα"
+
+#~ msgid "(New Map)"
+#~ msgstr "(Νέος Χάρτης)"
+
+#, fuzzy
+#~| msgid "(New Map)"
+#~ msgid "(New Scenario)"
+#~ msgstr "(Νέος Χάρτης)"
+
+#, fuzzy
+#~| msgid "Choose a Map to Open"
+#~ msgid "Choose a File to Open"
+#~ msgstr "Επιλέξτε χάρτη για άνοιγμα"
+
+#~ msgid "Choose a Mask to Apply"
+#~ msgstr "Επιλέξτε συγκάλυψη για να εφαρμοστεί"
+
+#~ msgid "The file already exists. Do you want to overwrite it?"
+#~ msgstr "Ο χάρτης υπάρχει ήδη. Θέλετε να αντικατασταθεί ο παλιός;"
+
+#~ msgid "Player"
+#~ msgstr "Παίκτης"
+
+#~ msgid "Quit"
+#~ msgstr "Έξοδος"
+
+#, fuzzy
+#~| msgid "Battle for Wesnoth Map Editor"
+#~ msgid "The Battle for Wesnoth"
+#~ msgstr "Επεξεργαστής Χάρτων του Battle for Wesnoth"
+
+#~ msgid ""
+#~ "Use left/right mouse button to draw fore-/background terrain. Hold Shift "
+#~ "to paint base layer only. Ctrl+click to sample terrain under cursor."
+#~ msgstr ""
+#~ "Χρησιμοποιήστε το αριστερό ήδεξί κουμπί του ποντικιού για να σχεδιάσετε "
+#~ "το προσκήνιο ή το βάθος του εδάφους. Πατήστε και κρατήστε πατημένο το "
+#~ "Shift για να ζωγραφίσετε μόνο την επικάλυψη της βάσης. Πατήστε το "
+#~ "Ctrl+click για να δοκιμάσετε τους τύπους εδάφους υπό τον κέρσορα."
+
+#~ msgid ""
+#~ "Left mouse button selects, right deselects. Hold Shift for magic-wand "
+#~ "selection of tiles with same terrain."
+#~ msgstr ""
+#~ "Με αριστερό κουμπί του ποντικιού γίνεται η επιλογή, με δεξί η αποεπιλογή. "
+#~ "Πατήστε και κρατήστε πατημένο το Shift για την μαγική επιλογή για τα "
+#~ "πλακάκια με το ίδιο τύπο εδάφους."
+
+#~ msgid ""
+#~ "Left mouse button displays player selection, right clears. Number keys "
+#~ "scroll to the starting position, alt+number sets respective starting "
+#~ "position under cursor, delete clears."
+#~ msgstr ""
+#~ "Το αριστερό κουμπί του ποντικιού εμφανίζει την επιλογή παικτών, το δεξί "
+#~ "διαγράφει. Οι χαρακτήρες των αριθμών αλλάζουν της αρχικές θέσης "
+#~ "αφετιρίας, alt+αριθμός ορίζουν την θέση αφετηρίας υπο τον κέρσορα, το "
+#~ "κουμπι διαγραφης (delete) διαγράφει."
+
+#~ msgid ""
+#~ "Click to paste, zoom out for more accuracy when pasting large areas. Use "
+#~ "the edit menu to transform the clipboard (rotate, mirror)."
+#~ msgstr ""
+#~ "Κάντε κλικ για επικόλληση και σμικρύνετε για περισσότερη ακρίβεια στην "
+#~ "επικόλληση μεγάλων περιοχών. Χρησιμοποιήστε το μενού επεξεργασίας για να "
+#~ "μετασχηματίσετε τον πρόχειρο χώρο αποθήκευσης (περιστροφή, μενού "
+#~ "μεταφοράς και αρχειοθέτησης)."
+
+#~ msgid "Edit"
+#~ msgstr "Επεξεργασία"
+
+#~ msgid "Group"
+#~ msgstr "Ομάδα"
+
+#~ msgid "Custom setting"
+#~ msgstr "Προσαρμοσμένη επιλογή"
+
+#~ msgid "Undo"
+#~ msgstr "Αναίρεση"
+
+#~ msgid "Redo"
+#~ msgstr "Ακύρωση αναίρεσης"
+
+#, fuzzy
+#~ msgid "Auto-update Terrain Transitions: Yes"
+#~ msgstr "Ανανέωση αλλαγών"
+
+#, fuzzy
+#~ msgid "Auto-update Terrain Transitions: Partial"
+#~ msgstr "Ανανέωση αλλαγών"
+
+#, fuzzy
+#~ msgid "Auto-update Terrain Transitions: No"
+#~ msgstr "Ανανέωση αλλαγών"
+
+#~ msgid "Settings"
+#~ msgstr "Ρυθμίσεις"
+
+#~ msgid "Draw tiles"
+#~ msgstr "Σχεδίαση εδαφών"
+
+#~ msgid "Fill"
+#~ msgstr "Γέμισμα"
+
+#~ msgid "Set player's starting position"
+#~ msgstr "Θέστε αρχική θέση παίκτη"
+
+#~ msgid "Zoom in"
+#~ msgstr "Μεγέθυνση"
+
+#~ msgid "Zoom out"
+#~ msgstr "Σμίκρυνση"
+
+#~ msgid "Zoom to default view"
+#~ msgstr "Προεπιλεγμένη εστίαση"
+
+#~ msgid "Toggle grid"
+#~ msgstr "Εμφάνιση/εξαφάνιση πλέγματος"
+
+#~ msgid "Resize the map"
+#~ msgstr "Αυξομειώστε το μέγεθος του χάρτη"
+
+#~ msgid "Flip map"
+#~ msgstr "Αναποδογύρισμα χάρτη"
+
+#~ msgid "Language"
+#~ msgstr "Γλώσσα"
+
+#~ msgid "Choose your preferred language:"
+#~ msgstr "Επιλέξτε τη γλώσσα που προτιμάτε:"
+
+#~ msgid "Which Player?"
+#~ msgstr "Ποιός παίκτης;"
+
+#~ msgid "Which player should start here?"
+#~ msgstr "Ποιός παίκτης θα ξεκινάει από εδώ;"
+
+#~ msgid ""
+#~ "Warning: Illegal characters found in the map name. Please save under a "
+#~ "different name."
+#~ msgstr ""
+#~ "Προειδοποίηση: Μη έγκυροι χαρακτήρες βρέθηκαν στο όνομα του χάρτη. "
+#~ "Παρακαλώ αποθηκεύστε με άλλο όνομα"
+
+#~ msgid "The file does not contain a valid map."
+#~ msgstr "Αυτό το αρχείο δεν περιέχει έγκυρο χάρτη"
+
+#~ msgid "Do you want to save the map before quitting?"
+#~ msgstr "Θέλετε να αποθηκεύσετε το χάρτη πριν την έξοδο;"
+
+#~ msgid "Error: Illegal character in filename."
+#~ msgstr "Σφάλμα: Μη έγκυρος χαρακτήρας στο όνομα του αρχείου"
