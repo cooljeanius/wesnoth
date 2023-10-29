@@ -1421,28 +1421,6 @@ void unit::remove_ability_by_id(const std::string& ability)
 	}
 }
 
-static bool type_value_if_present(const config& filter, const config& cfg)
-{
-	if(filter["type_value"].empty()) {
-		return true;
-	}
-
-	std::string cfg_type_value;
-	const std::vector<std::string> filter_attribute = utils::split(filter["type_value"]);
-	if(!cfg["value"].empty()){
-		cfg_type_value ="value";
-	} else if(!cfg["add"].empty()){
-		cfg_type_value ="add";
-	} else if(!cfg["sub"].empty()){
-		cfg_type_value ="sub";
-	} else if(!cfg["multiply"].empty()){
-		cfg_type_value ="multiply";
-	} else if(!cfg["divide"].empty()){
-		cfg_type_value ="divide";
-	}
-	return ( std::find(filter_attribute.begin(), filter_attribute.end(), cfg_type_value) != filter_attribute.end() );
-}
-
 static bool matches_ability_filter(const config & cfg, const std::string& tag_name, const config & filter)
 {
 	using namespace utils::config_filters;
@@ -1457,7 +1435,7 @@ static bool matches_ability_filter(const config & cfg, const std::string& tag_na
 	if(!bool_matches_if_present(filter, cfg, "affect_self", true))
 		return false;
 
-	if(!bool_matches_if_present(filter, cfg, "affect_allies", true))
+	if(!bool_or_empty(filter, cfg, "affect_allies"))
 		return false;
 
 	if(!bool_matches_if_present(filter, cfg, "affect_enemies", false))
@@ -1482,8 +1460,28 @@ static bool matches_ability_filter(const config & cfg, const std::string& tag_na
 	if(!string_matches_if_present(filter, cfg, "active_on", "both"))
 		return false;
 
-	if(!int_matches_if_present(filter, cfg, "value"))
-		return false;
+	if(!filter["value"].empty()){
+		bool has_other_key = (!cfg["add"].empty() || !cfg["sub"].empty() || !cfg["multiply"].empty() || !cfg["divide"].empty());
+		if(!has_other_key){
+			if(tag_name == "drains"){
+				if(!int_matches_if_present(filter, cfg, "value", 50)){
+					return false;
+				}
+			} else if(tag_name == "berserk"){
+				if(!int_matches_if_present(filter, cfg, "value", 1)){
+					return false;
+				}
+			} else if(tag_name == "heal_on_hit" || tag_name == "heals" || tag_name == "regenerate" || tag_name == "leadership"){
+				if(!int_matches_if_present(filter, cfg, "value" , 0)){
+					return false;
+				}
+			}
+		} else {
+			if(!int_matches_if_present(filter, cfg, "value")){
+				return false;
+			}
+		}
+	}
 
 	if(!int_matches_if_present_or_negative(filter, cfg, "add", "sub"))
 		return false;
@@ -1495,9 +1493,6 @@ static bool matches_ability_filter(const config & cfg, const std::string& tag_na
 		return false;
 
 	if(!double_matches_if_present(filter, cfg, "divide"))
-		return false;
-
-	if(!type_value_if_present(filter, cfg))
 		return false;
 
 	// Passed all tests.
@@ -1785,7 +1780,7 @@ bool unit::resistance_filter_matches(const config& cfg, bool attacker, const std
 
 int unit::resistance_against(const std::string& damage_name,bool attacker,const map_location& loc, const_attack_ptr weapon, const_attack_ptr opp_weapon) const
 {
-	int res = movement_type_.resistance_against(damage_name);
+	int res = opp_weapon ? movement_type_.resistance_against(*opp_weapon) : movement_type_.resistance_against(damage_name);
 
 	unit_ability_list resistance_abilities = get_abilities_weapons("resistance",loc, weapon, opp_weapon);
 	utils::erase_if(resistance_abilities, [&](const unit_ability& i) {
