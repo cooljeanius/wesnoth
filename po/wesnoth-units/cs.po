@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Battle for Wesnoth\n"
 "Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
-"POT-Creation-Date: 2023-10-28 14:02 UTC\n"
-"PO-Revision-Date: 2023-10-03 20:51+0200\n"
+"POT-Creation-Date: 2023-11-20 17:23 UTC\n"
+"PO-Revision-Date: 2023-11-10 23:37+0100\n"
 "Last-Translator: Michal Žejdl <lachim@emer.cz>\n"
 "Language-Team: Czech https://wiki.wesnoth.org/CzechTranslation\n"
 "Language: cs\n"
@@ -427,7 +427,7 @@ msgstr "luk"
 #: data/campaigns/Secrets_of_the_Ancients/units/SotA_Corpses.cfg:160
 #: data/campaigns/Secrets_of_the_Ancients/units/SotA_Soulless.cfg:132
 #: data/campaigns/Under_the_Burning_Suns/units/monsters/Crab_Man.cfg:23
-#: data/core/units/drakes/Burner.cfg:28
+#: data/core/units/drakes/Burner.cfg:29
 #: data/core/units/goblins/Direwolf_Rider.cfg:41
 #: data/core/units/gryphons/Gryphon.cfg:28
 #: data/core/units/gryphons/Gryphon_Master.cfg:28
@@ -767,7 +767,7 @@ msgstr ""
 #: data/campaigns/The_South_Guard/units/Junior_Commander.cfg:30
 #: data/campaigns/Under_the_Burning_Suns/units/quenoth/Fighter.cfg:29
 #: data/campaigns/Under_the_Burning_Suns/units/quenoth/Fighter.cfg:45
-#: data/core/units/drakes/Clasher.cfg:33 data/core/units/drakes/Thrasher.cfg:31
+#: data/core/units/drakes/Clasher.cfg:34 data/core/units/drakes/Thrasher.cfg:32
 #: data/core/units/dunefolk/Harrier.cfg:31
 #: data/core/units/dunefolk/Skirmisher.cfg:32
 #: data/core/units/dunefolk/Spearguard.cfg:30
@@ -1011,8 +1011,8 @@ msgstr "ostny"
 #: data/campaigns/Under_the_Burning_Suns/units/quenoth/Dustbok.cfg:23
 #: data/campaigns/Under_the_Burning_Suns/units/quenoth/Tauroch_Flagbearer.cfg:39
 #: data/campaigns/Under_the_Burning_Suns/units/quenoth/Tauroch_Vanguard.cfg:38
-#: data/core/units/drakes/Enforcer.cfg:43
-#: data/core/units/drakes/Thrasher.cfg:40
+#: data/core/units/drakes/Enforcer.cfg:44
+#: data/core/units/drakes/Thrasher.cfg:41
 msgid "ram"
 msgstr "náraz"
 
@@ -1188,7 +1188,7 @@ msgid "Drake Arbiter"
 msgstr "Drakonid soudce"
 
 #. [unit_type]: id=Drake Arbiter, race=drake
-#: data/core/units/drakes/Arbiter.cfg:17
+#: data/core/units/drakes/Arbiter.cfg:18
 msgid ""
 "Arbiters take their caste duty of enforcing order very seriously. In order "
 "to better execute their duties, they have abandoned the drakes’ traditional "
@@ -1205,7 +1205,7 @@ msgstr ""
 "šupiny."
 
 #. [special_note]
-#: data/core/units/drakes/Arbiter.cfg:19
+#: data/core/units/drakes/Arbiter.cfg:20
 msgid ""
 "Compared to other drakes, Drake Arbiters have a higher resistance to "
 "‘pierce’ attacks."
@@ -1215,12 +1215,19 @@ msgstr ""
 
 #. [attack]: type=blade
 #. [attack]: type=pierce
-#: data/core/units/drakes/Arbiter.cfg:36 data/core/units/drakes/Arbiter.cfg:45
-#: data/core/units/drakes/Warden.cfg:37 data/core/units/drakes/Warden.cfg:46
+#: data/core/units/drakes/Arbiter.cfg:37 data/core/units/drakes/Arbiter.cfg:46
+#: data/core/units/drakes/Warden.cfg:38 data/core/units/drakes/Warden.cfg:47
 #: data/core/units/humans/Loyalist_Halberdier.cfg:31
 #: data/core/units/humans/Loyalist_Halberdier.cfg:43
 msgid "halberd"
 msgstr "halapartna"
+
+#. [female]
+#: data/core/units/drakes/Arbiter.cfg:174
+#, fuzzy
+#| msgid "Drake Arbiter"
+msgid "female^Drake Arbiter"
+msgstr "Drakonid soudce"
 
 #. [unit_type]: id=Armageddon Drake, race=drake
 #: data/core/units/drakes/Armageddon.cfg:4
@@ -1228,7 +1235,7 @@ msgid "Armageddon Drake"
 msgstr "Drakonid zkázonoš"
 
 #. [unit_type]: id=Armageddon Drake, race=drake
-#: data/core/units/drakes/Armageddon.cfg:19
+#: data/core/units/drakes/Armageddon.cfg:20
 msgid ""
 "Were it not for the armor they wear, certain drakes might be "
 "indistinguishable from true dragons, at least to the lesser races for whom "
@@ -1242,25 +1249,32 @@ msgstr ""
 "ublížit ani zvnějšku."
 
 #. [attack]: type=blade
-#: data/core/units/drakes/Armageddon.cfg:36 data/core/units/drakes/Fire.cfg:29
-#: data/core/units/drakes/Inferno.cfg:31
+#: data/core/units/drakes/Armageddon.cfg:37 data/core/units/drakes/Fire.cfg:30
+#: data/core/units/drakes/Inferno.cfg:32
 msgid "battle claws"
 msgstr "válečné drápy"
 
 #. [attack]: type=fire
-#: data/core/units/drakes/Armageddon.cfg:45
-#: data/core/units/drakes/Blademaster.cfg:36
-#: data/core/units/drakes/Burner.cfg:37 data/core/units/drakes/Fighter.cfg:33
-#: data/core/units/drakes/Fire.cfg:38 data/core/units/drakes/Flameheart.cfg:39
-#: data/core/units/drakes/Flare.cfg:38 data/core/units/drakes/Glider.cfg:38
-#: data/core/units/drakes/Hurricane.cfg:60
-#: data/core/units/drakes/Inferno.cfg:40 data/core/units/drakes/Sky.cfg:59
-#: data/core/units/drakes/Warrior.cfg:34
+#: data/core/units/drakes/Armageddon.cfg:46
+#: data/core/units/drakes/Blademaster.cfg:37
+#: data/core/units/drakes/Burner.cfg:38 data/core/units/drakes/Fighter.cfg:34
+#: data/core/units/drakes/Fire.cfg:39 data/core/units/drakes/Flameheart.cfg:40
+#: data/core/units/drakes/Flare.cfg:39 data/core/units/drakes/Glider.cfg:39
+#: data/core/units/drakes/Hurricane.cfg:61
+#: data/core/units/drakes/Inferno.cfg:41 data/core/units/drakes/Sky.cfg:60
+#: data/core/units/drakes/Warrior.cfg:35
 #: data/core/units/monsters/Fire_Dragon.cfg:51
 #: data/core/units/monsters/Fire_Guardian.cfg:37
 #: data/core/units/monsters/Fire_Wraith.cfg:59
 msgid "fire breath"
 msgstr "ohnivý dech"
+
+#. [female]
+#: data/core/units/drakes/Armageddon.cfg:65
+#, fuzzy
+#| msgid "Armageddon Drake"
+msgid "female^Armageddon Drake"
+msgstr "Drakonid zkázonoš"
 
 #. [unit_type]: id=Drake Blademaster, race=drake
 #: data/core/units/drakes/Blademaster.cfg:4
@@ -1268,7 +1282,7 @@ msgid "Drake Blademaster"
 msgstr "Drakonidský mistr meče"
 
 #. [unit_type]: id=Drake Blademaster, race=drake
-#: data/core/units/drakes/Blademaster.cfg:19
+#: data/core/units/drakes/Blademaster.cfg:20
 msgid ""
 "Black armor marks the elite order of the Fighter caste: the Blademasters. "
 "Only a few manage to gain the skill and power necessary to be admitted to "
@@ -1284,11 +1298,18 @@ msgstr ""
 "žárlivě brání čest kolegů a nikdo by si netroufl s nimi nesouhlasit."
 
 #. [attack]: type=blade
-#: data/core/units/drakes/Blademaster.cfg:27
-#: data/core/units/drakes/Clasher.cfg:24 data/core/units/drakes/Enforcer.cfg:34
-#: data/core/units/drakes/Thrasher.cfg:22
+#: data/core/units/drakes/Blademaster.cfg:28
+#: data/core/units/drakes/Clasher.cfg:25 data/core/units/drakes/Enforcer.cfg:35
+#: data/core/units/drakes/Thrasher.cfg:23
 msgid "war talon"
 msgstr "válečný pařát"
+
+#. [female]
+#: data/core/units/drakes/Blademaster.cfg:61
+#, fuzzy
+#| msgid "Drake Blademaster"
+msgid "female^Drake Blademaster"
+msgstr "Drakonidský mistr meče"
 
 #. [unit_type]: id=Drake Burner, race=drake
 #: data/core/units/drakes/Burner.cfg:4
@@ -1296,7 +1317,7 @@ msgid "Drake Burner"
 msgstr "Drakonid spalovač"
 
 #. [unit_type]: id=Drake Burner, race=drake
-#: data/core/units/drakes/Burner.cfg:17
+#: data/core/units/drakes/Burner.cfg:18
 msgid ""
 "Drake Burners are the proud few in whom the blood and strength of their "
 "remote ancestors runs truest, giving them the ability to breathe fire. This, "
@@ -1308,13 +1329,20 @@ msgstr ""
 "oheň. To, spojeno s jejich velikostí a pazoury opatřenými drápy, z nich v "
 "boji dělá nebezpečné nepřátele."
 
+#. [female]
+#: data/core/units/drakes/Burner.cfg:67
+#, fuzzy
+#| msgid "female^Dune Burner"
+msgid "female^Drake Burner"
+msgstr "Pouštní podpalovačka"
+
 #. [unit_type]: id=Drake Clasher, race=drake
 #: data/core/units/drakes/Clasher.cfg:4
 msgid "Drake Clasher"
 msgstr "Drakonid rváč"
 
 #. [unit_type]: id=Drake Clasher, race=drake
-#: data/core/units/drakes/Clasher.cfg:18
+#: data/core/units/drakes/Clasher.cfg:19
 msgid ""
 "The Clashers are members of a unique caste among the drakes. Their thick "
 "armor, while compensating for the drakes’ natural weakness against spears "
@@ -1339,13 +1367,20 @@ msgstr ""
 "kovových drápů bojovat i kopím. Regionální potyčky s ostatními kmeny pak "
 "mohou řešit vskutku rychle, stejně jako vynutit pořádek ve vlastním kmeni."
 
+#. [female]
+#: data/core/units/drakes/Clasher.cfg:111
+#, fuzzy
+#| msgid "Drake Clasher"
+msgid "female^Drake Clasher"
+msgstr "Drakonid rváč"
+
 #. [unit_type]: id=Drake Enforcer, race=drake
 #: data/core/units/drakes/Enforcer.cfg:4
 msgid "Drake Enforcer"
 msgstr "Drakonid vykonavatel"
 
 #. [unit_type]: id=Drake Enforcer, race=drake
-#: data/core/units/drakes/Enforcer.cfg:19
+#: data/core/units/drakes/Enforcer.cfg:20
 msgid ""
 "Not for Enforcers are the tactics of maneuver and deception; rather, they "
 "charge in wherever the melee is the fiercest. At close range, it matters "
@@ -1362,11 +1397,18 @@ msgstr ""
 
 #. [attack]: type=pierce
 #. [attack]: type=blade
-#: data/core/units/drakes/Enforcer.cfg:52
+#: data/core/units/drakes/Enforcer.cfg:53
 #: data/core/units/merfolk/Fighter.cfg:22 data/core/units/merfolk/Triton.cfg:24
 #: data/core/units/merfolk/Triton.cfg:33 data/core/units/merfolk/Warrior.cfg:22
 msgid "trident"
 msgstr "trojzubec"
+
+#. [female]
+#: data/core/units/drakes/Enforcer.cfg:119
+#, fuzzy
+#| msgid "Drake Enforcer"
+msgid "female^Drake Enforcer"
+msgstr "Drakonid vykonavatel"
 
 #. [unit_type]: id=Drake Fighter, race=drake
 #: data/core/units/drakes/Fighter.cfg:4
@@ -1374,7 +1416,7 @@ msgid "Drake Fighter"
 msgstr "Drakonidský bojovník"
 
 #. [unit_type]: id=Drake Fighter, race=drake
-#: data/core/units/drakes/Fighter.cfg:17
+#: data/core/units/drakes/Fighter.cfg:18
 msgid ""
 "Drake Fighters wield curved war blades, and possess the fire-breathing "
 "skills of their ancestors. They can also fly, which is troubling to any foe. "
@@ -1387,11 +1429,18 @@ msgstr ""
 "pancíře je odstrašující pro bojovníky všech ras bez rozdílu."
 
 #. [attack]: type=blade
-#: data/core/units/drakes/Fighter.cfg:24
-#: data/core/units/drakes/Flameheart.cfg:30 data/core/units/drakes/Flare.cfg:29
-#: data/core/units/drakes/Warrior.cfg:25
+#: data/core/units/drakes/Fighter.cfg:25
+#: data/core/units/drakes/Flameheart.cfg:31 data/core/units/drakes/Flare.cfg:30
+#: data/core/units/drakes/Warrior.cfg:26
 msgid "war blade"
 msgstr "válečná čepel"
+
+#. [female]
+#: data/core/units/drakes/Fighter.cfg:64
+#, fuzzy
+#| msgid "Drake Fighter"
+msgid "female^Drake Fighter"
+msgstr "Drakonidský bojovník"
 
 #. [unit_type]: id=Fire Drake, race=drake
 #: data/core/units/drakes/Fire.cfg:4
@@ -1399,7 +1448,7 @@ msgid "Fire Drake"
 msgstr "Ohnivý drakonid"
 
 #. [unit_type]: id=Fire Drake, race=drake
-#: data/core/units/drakes/Fire.cfg:17
+#: data/core/units/drakes/Fire.cfg:18
 msgid ""
 "Not yet permitted to wear the red-gold reserved for the highest ranks of the "
 "Burners, the Fire Drakes trim their armor with silver. Though they have only "
@@ -1413,13 +1462,20 @@ msgstr ""
 "tušit i navenek z jejich těl a zabarvuje jejich šupiny do rudošedého "
 "zbarvení."
 
+#. [female]
+#: data/core/units/drakes/Fire.cfg:62
+#, fuzzy
+#| msgid "Fire Drake"
+msgid "female^Fire Drake"
+msgstr "Ohnivý drakonid"
+
 #. [unit_type]: id=Drake Flameheart, race=drake
 #: data/core/units/drakes/Flameheart.cfg:4
 msgid "Drake Flameheart"
 msgstr "Drakonid ohnivého srdce"
 
 #. [unit_type]: id=Drake Flameheart, race=drake
-#: data/core/units/drakes/Flameheart.cfg:18
+#: data/core/units/drakes/Flameheart.cfg:19
 msgid ""
 "Flamehearts lack the strength to defeat other high-ranking drakes in single "
 "combat, but prefer in any case to avoid confrontation within the tribe. "
@@ -1436,13 +1492,20 @@ msgstr ""
 "však, když jsou si jisti podporou ostatních, napadnou stávajícího vůdce "
 "kmene aby sami získali nadvládu."
 
+#. [female]
+#: data/core/units/drakes/Flameheart.cfg:66
+#, fuzzy
+#| msgid "Drake Flameheart"
+msgid "female^Drake Flameheart"
+msgstr "Drakonid ohnivého srdce"
+
 #. [unit_type]: id=Drake Flare, race=drake
 #: data/core/units/drakes/Flare.cfg:4
 msgid "Drake Flare"
 msgstr "Planoucí drakonid"
 
 #. [unit_type]: id=Drake Flare, race=drake
-#: data/core/units/drakes/Flare.cfg:17
+#: data/core/units/drakes/Flare.cfg:18
 msgid ""
 "Respected for the heat of their flame and revered for their charisma, Flares "
 "aspire to become great leaders of their people, both in war and in peace. "
@@ -1455,13 +1518,20 @@ msgstr ""
 "charisma. Menší odloučené kmeny někdy přijmou planoucí drakonidy jako "
 "náčelníky, ale častěji vedou do boje menší skupinky či urovnávají rozepře."
 
+#. [female]
+#: data/core/units/drakes/Flare.cfg:65
+#, fuzzy
+#| msgid "Drake Flare"
+msgid "female^Drake Flare"
+msgstr "Planoucí drakonid"
+
 #. [unit_type]: id=Drake Glider, race=drake
 #: data/core/units/drakes/Glider.cfg:4
 msgid "Drake Glider"
 msgstr "Plachtící drakonid"
 
 #. [unit_type]: id=Drake Glider, race=drake
-#: data/core/units/drakes/Glider.cfg:18
+#: data/core/units/drakes/Glider.cfg:19
 msgid ""
 "Many drakes enjoy the flow of air over scales, leading them to don the light "
 "robes of the Glider caste. The long forays to the far reaches of the tribal "
@@ -1488,11 +1558,18 @@ msgstr ""
 "není možné, bojuje nohama ve snaze udržet křídla co nejdále od protivníka."
 
 #. [attack]: type=impact
-#: data/core/units/drakes/Glider.cfg:29 data/core/units/drakes/Hurricane.cfg:51
-#: data/core/units/drakes/Sky.cfg:50
+#: data/core/units/drakes/Glider.cfg:30 data/core/units/drakes/Hurricane.cfg:52
+#: data/core/units/drakes/Sky.cfg:51
 #: data/core/units/monsters/Wild_Wyvern.cfg:88
 msgid "slam"
 msgstr "úder"
+
+#. [female]
+#: data/core/units/drakes/Glider.cfg:66
+#, fuzzy
+#| msgid "Drake Glider"
+msgid "female^Drake Glider"
+msgstr "Plachtící drakonid"
 
 #. [unit_type]: id=Hurricane Drake, race=drake
 #: data/core/units/drakes/Hurricane.cfg:4
@@ -1500,7 +1577,7 @@ msgid "Hurricane Drake"
 msgstr "Drakonid hurikán"
 
 #. [unit_type]: id=Hurricane Drake, race=drake
-#: data/core/units/drakes/Hurricane.cfg:18
+#: data/core/units/drakes/Hurricane.cfg:19
 msgid ""
 "Hurricane Drakes have moved above the menial hunting and gathering to which "
 "the lower members of their caste are relegated. They are an integral part of "
@@ -1517,13 +1594,20 @@ msgstr ""
 "jiných kast zlepšuje jejich bojovou hodnotu, ale hlavní přínos pro válečné "
 "účely stejně spočívá v rychlosti a letu."
 
+#. [female]
+#: data/core/units/drakes/Hurricane.cfg:101
+#, fuzzy
+#| msgid "Hurricane Drake"
+msgid "female^Hurricane Drake"
+msgstr "Drakonid hurikán"
+
 #. [unit_type]: id=Inferno Drake, race=drake
 #: data/core/units/drakes/Inferno.cfg:4
 msgid "Inferno Drake"
 msgstr "Pekelný drakonid"
 
 #. [unit_type]: id=Inferno Drake, race=drake
-#: data/core/units/drakes/Inferno.cfg:19
+#: data/core/units/drakes/Inferno.cfg:20
 msgid ""
 "Inferno Drakes are masters of the fire they breathe, respected and feared in "
 "their tribes nearly as much as the draconic ancestors themselves. They can "
@@ -1538,13 +1622,20 @@ msgstr ""
 "úhony vytváří iluzi, která je ještě více přiblíží obrazu jejich mocných "
 "předků. Tomu dále napomáhá rudozlatý pancíř, který nosí."
 
+#. [female]
+#: data/core/units/drakes/Inferno.cfg:64
+#, fuzzy
+#| msgid "Inferno Drake"
+msgid "female^Inferno Drake"
+msgstr "Pekelný drakonid"
+
 #. [unit_type]: id=Sky Drake, race=drake
 #: data/core/units/drakes/Sky.cfg:4
 msgid "Sky Drake"
 msgstr "Nebeský drakonid"
 
 #. [unit_type]: id=Sky Drake, race=drake
-#: data/core/units/drakes/Sky.cfg:17
+#: data/core/units/drakes/Sky.cfg:18
 msgid ""
 "The lightweight ceramic armor that the Sky Drakes wear is a symbol of their "
 "rank, glazed silver to honor their connection to the air. As leaders of the "
@@ -1557,13 +1648,20 @@ msgstr ""
 "Jakožto lovci se často nacházejí po delší dobu mimo domovy. Jejich cílem je "
 "donést zpět co nejvíce zvěře, v čemž soupeří o respekt svého kmene."
 
+#. [female]
+#: data/core/units/drakes/Sky.cfg:98
+#, fuzzy
+#| msgid "Sky Drake"
+msgid "female^Sky Drake"
+msgstr "Nebeský drakonid"
+
 #. [unit_type]: id=Drake Thrasher, race=drake
 #: data/core/units/drakes/Thrasher.cfg:4
 msgid "Drake Thrasher"
 msgstr "Drakonid bijec"
 
 #. [unit_type]: id=Drake Thrasher, race=drake
-#: data/core/units/drakes/Thrasher.cfg:18
+#: data/core/units/drakes/Thrasher.cfg:19
 msgid ""
 "Instead of letting themselves be bound by their armor, Thrashers have "
 "learned to redirect its weight to supplement their bodies’ momentum, adding "
@@ -1579,13 +1677,20 @@ msgstr ""
 "zbraněmi. Bijci nadšeně plní povinnosti jejich kasty, jakmile je to na "
 "bojišti."
 
+#. [female]
+#: data/core/units/drakes/Thrasher.cfg:118
+#, fuzzy
+#| msgid "Drake Thrasher"
+msgid "female^Drake Thrasher"
+msgstr "Drakonid bijec"
+
 #. [unit_type]: id=Drake Warden, race=drake
 #: data/core/units/drakes/Warden.cfg:4
 msgid "Drake Warden"
 msgstr "Drakonidský strážce"
 
 #. [unit_type]: id=Drake Warden, race=drake
-#: data/core/units/drakes/Warden.cfg:18
+#: data/core/units/drakes/Warden.cfg:19
 msgid ""
 "Wardens are set apart from the rest of the Clasher caste by two things: "
 "their ornate helms, modeled after their dragon ancestors, and the care with "
@@ -1605,7 +1710,7 @@ msgstr ""
 "člověka."
 
 #. [special_note]
-#: data/core/units/drakes/Warden.cfg:20
+#: data/core/units/drakes/Warden.cfg:21
 msgid ""
 "Compared to other drakes, Drake Wardens have a higher resistance to ‘pierce’ "
 "attacks."
@@ -1613,13 +1718,20 @@ msgstr ""
 "Oproti ostatním drakonidům mají drakonidští strážci vyšší odolnost vůči "
 "útokům „bodnutím“."
 
+#. [female]
+#: data/core/units/drakes/Warden.cfg:175
+#, fuzzy
+#| msgid "Drake Warden"
+msgid "female^Drake Warden"
+msgstr "Drakonidský strážce"
+
 #. [unit_type]: id=Drake Warrior, race=drake
 #: data/core/units/drakes/Warrior.cfg:4
 msgid "Drake Warrior"
 msgstr "Drakonidský válečník"
 
 #. [unit_type]: id=Drake Warrior, race=drake
-#: data/core/units/drakes/Warrior.cfg:17
+#: data/core/units/drakes/Warrior.cfg:18
 msgid ""
 "Drakes of the Fighter caste, like the Warrior, are the foundation of any "
 "tribe’s army. No special abilities or skills set them apart; only their "
@@ -1634,6 +1746,13 @@ msgstr ""
 "a základního bojového výcviku. Bojují již po staletí stejně – v brnění z "
 "keramických plátků na koženém podkladě a s tradičními čepelemi připevněnými "
 "na hřbetu rukou."
+
+#. [female]
+#: data/core/units/drakes/Warrior.cfg:58
+#, fuzzy
+#| msgid "Drake Warrior"
+msgid "female^Drake Warrior"
+msgstr "Drakonidský válečník"
 
 #. [unit_type]: id=Dune Alchemist, race=dunefolk
 #: data/core/units/dunefolk/Alchemist.cfg:8
@@ -3759,7 +3878,7 @@ msgstr "pavučinka reality"
 #. [unit_type]: id=Fog Clearer, race=monster
 #: data/core/units/fake/Fog_Clearer.cfg:13
 msgid "dummy_unit^Fog Clearer"
-msgstr "fiktivní Vymazávač mlhy"
+msgstr "Odmlžovač"
 
 #. [unit_type]: id=Direwolf Rider, race=wolf
 #: data/core/units/goblins/Direwolf_Rider.cfg:4
@@ -3768,18 +3887,6 @@ msgstr "Jezdec na pravlku"
 
 #. [unit_type]: id=Direwolf Rider, race=wolf
 #: data/core/units/goblins/Direwolf_Rider.cfg:19
-#, fuzzy
-#| msgid ""
-#| "‘Dire wolves’ differ from the common variety only in size and color. They "
-#| "typically stand taller than a horse at the shoulder, and have an appetite "
-#| "to match. Only a madman would willingly encounter them; but goblins, at "
-#| "great cost to themselves, have managed to tame and ride them.\n"
-#| "\n"
-#| "The claws of a wolf are not generally regarded as being the more "
-#| "dangerous parts, but on a beast this large, they are thicker and longer "
-#| "than iron nails. Their riders smear a poison on the front set, not unlike "
-#| "that used by the orcish assassins, making a swipe from these beasts’ paws "
-#| "into a most deadly stroke."
 msgid ""
 "While the ferocity and danger of direwolves makes them somewhat of an omen "
 "to most, the diminutive goblins have an unusual bond with these savage "
@@ -3795,16 +3902,17 @@ msgid ""
 "the orcish assassins, making a swipe from these beasts’ paws into a most "
 "deadly stroke."
 msgstr ""
-"„Pravlci“ se od normálních vlků liší pouze ve velikosti a barvě. Obvykle "
-"jsou vyšší než plec koně a také mají odpovídající chuť k jídlu. Pouze blázen "
-"by se s nimi chtěl setkat; goblinům se je za obrovskou cenu podařilo "
-"ochočit, pokud se to tak vůbec dá říci, a jezdí na nich.\n"
+"Zatímco dravost a nebezpečnost pravlků je pro většinu spíše osudná, drobní "
+"goblini mají s těmito divokými tvory neobvyklé pouto. Ačkoli není v silách "
+"goblinů tyto šelmy zkrotit, je možné dosáhnout jistého vzájemného respektu, "
+"pokud se odvážný goblin rozhodne žít mezi vlky a starat se o štěně od útlého "
+"věku. Poté, co pravlk uzná, že takový goblin je jedním z nich, může mu "
+"dovolit, aby na něm jezdil.\n"
 "\n"
-"Drápy vlka nejsou obecně považovány za tu nejnebezpečnější věc, u bestie "
-"této velikosti však jsou její drápy silnější a delší než železné hřeby. "
-"Jejich jezdci jim drápy na předních tlapách mažou jedem, stejným jako "
-"používají skřetí vrazi. Tento jed pak činí z úderu jejich pracky úder "
-"smrtící."
+"Drápy vlka nejsou obecně považovány za ty nebezpečnější části těla, ale "
+"u takto velké šelmy jsou silnější a delší než železné hřeby. Jejich jezdci "
+"je na předních bězích potírají jedem, ne nepodobným tomu, jaký používají "
+"skřetí vrazi, což ze švihnutí tlapou těchto šelem dělá nanejvýš smrtící úder."
 
 #. [unit_type]: id=Goblin Impaler, race=goblin
 #: data/core/units/goblins/Impaler.cfg:4
@@ -3906,15 +4014,6 @@ msgstr "Gobliní kopiník"
 
 #. [unit_type]: id=Goblin Spearman, race=goblin
 #: data/core/units/goblins/Spearman.cfg:17
-#, fuzzy
-#| msgid ""
-#| "In any race, there are always those rare individuals who, by stroke of "
-#| "bad luck, are born much smaller and weaker than the rest of their kind. "
-#| "For Orcs, however, such occurrences are extraordinarily common, with "
-#| "there usually being several runts born in each litter. Known as "
-#| "‘Goblins’, these sickly creatures nearly always live short, brutal lives, "
-#| "most used merely as fodder against an enemy of their larger siblings' "
-#| "choosing while equipped with only the crudest of spears."
 msgid ""
 "In any race, there are always those rare individuals who, by stroke of bad "
 "luck, are born much smaller and weaker than the rest of their kind. For "
@@ -5493,13 +5592,13 @@ msgid ""
 "Their skill at hunting is very useful in combat, and also leaves them "
 "unusually competent at night, and in forests and swamps."
 msgstr ""
-"Zálesáci jsou užitečnými spojenci pro každou armádu a nepostradatelní pro "
-"jakoukoli pořádnou skupinu banditů žijících v divočině. Dokáží vystopovat "
-"lidi i zvěř, všímají si věcí, které by jiní přehlédli, a často jsou jediní, "
-"kteří dokáží sehnat něco k snědku, ať už zeleninu nebo maso.\n"
+"Zálesáci jsou užitečnými spojenci pro každou armádu a nepostradatelní pro "
+"jakoukoli pořádnou skupinu banditů žijících v divočině. Dokáží vystopovat "
+"lidi i zvěř, všímají si věcí, které by jiní přehlédli, a často jsou jediní, "
+"kteří dokáží sehnat něco k snědku, ať už zeleninu nebo maso.\n"
 "\n"
-"To co se naučili při lovu dokáží plně zužitkovat i v boji, obzvláště v noci "
-"a v lesích a bažinách."
+"To, co se naučili při lovu, dokáží plně zužitkovat i v boji, obzvláště "
+"v noci a v lesích a bažinách."
 
 #. [unit_type]: id=Merman Brawler, race=merman
 #: data/core/units/merfolk/Brawler.cfg:4
@@ -5918,23 +6017,16 @@ msgstr "Vejce ohnivého mravence"
 
 #. [unit_type]: id=Fire Ant Egg
 #: data/core/units/monsters/Ant_Egg.cfg:174
-#, fuzzy
-#| msgid ""
-#| "In large numbers, Fire Ants can be a real menace to other races and those "
-#| "threatening numbers start with their eggs. Most Fire Ant eggs come from "
-#| "one of the colony queens, but the workers transport them to any suitable "
-#| "location.\n"
-#| "\n"
 msgid ""
 "In large numbers, Fire Ants can be a real menace, and those threatening "
 "numbers start with their eggs. Most Fire Ant eggs come from one of the "
 "colony queens, but the workers transport them to any suitable location.\n"
 "\n"
 msgstr ""
-"Ve velkém množství mohou být ohniví mravenci pro ostatní rasy skutečným "
-"nebezpečím a jejich hrozivé počty začínají jejich vajíčky. Většina vajíček "
-"ohnivých mravenců pochází od jedné z královen kolonie, ale dělnice je "
-"přenášejí na libovolné vhodné místo.\n"
+"Ve velkém množství mohou být ohniví mravenci skutečným nebezpečím a jejich "
+"hrozivé počty začínají jejich vajíčky. Většina vajíček ohnivých mravenců "
+"pochází od jedné z královen kolonie, ale dělnice je přenášejí na libovolné "
+"vhodné místo.\n"
 "\n"
 
 #. [unit_type]: id=Fire Ant, race=monster
@@ -6011,16 +6103,6 @@ msgstr "Královna obřích mravenců"
 
 #. [unit_type]: id=Giant Ant Queen, race=monster
 #: data/core/units/monsters/Ant_Queen.cfg:19
-#, fuzzy
-#| msgid ""
-#| "Giant Ants are common in almost any environment, from caverns deep under "
-#| "the earth to the tops of tall mountains. The queens are not royalty as "
-#| "many other races would understand, but they are the heart of any "
-#| "functioning nest and will be defended at all costs.  As the nest core, "
-#| "they must be capable tacticians, and as a target of rival nests, they "
-#| "must also be deft warriors.  The typical human or orc that finds an "
-#| "audience with an Ant Queen can expect a very short continued existence - "
-#| "and if their flesh is warm and nourishing, they can host an ant egg."
 msgid ""
 "Giant Ants are common in almost any environment, from caverns deep under the "
 "earth to the tops of tall mountains. The queens are not royalty as many "
@@ -6838,7 +6920,7 @@ msgstr ""
 #. [unit_type]: id=Raven, race=raven
 #: data/core/units/monsters/Raven.cfg:4
 msgid "Raven"
-msgstr ""
+msgstr "Krkavec"
 
 #. [unit_type]: id=Raven, race=raven
 #: data/core/units/monsters/Raven.cfg:18
@@ -6853,7 +6935,7 @@ msgstr ""
 #. [unit_type]: id=War Harbinger, race=raven
 #: data/core/units/monsters/Raven_Harbinger.cfg:4
 msgid "War Harbinger"
-msgstr ""
+msgstr "Posel války"
 
 #. [unit_type]: id=War Harbinger, race=raven
 #: data/core/units/monsters/Raven_Harbinger.cfg:19
@@ -6867,10 +6949,8 @@ msgstr ""
 
 #. [unit_type]: id=Dark Omen, race=raven
 #: data/core/units/monsters/Raven_Omen.cfg:4
-#, fuzzy
-#| msgid "Dark Horse"
 msgid "Dark Omen"
-msgstr "Šedohřívák"
+msgstr "Temná zvěst"
 
 #. [unit_type]: id=Dark Omen, race=raven
 #: data/core/units/monsters/Raven_Omen.cfg:18
@@ -7179,6 +7259,10 @@ msgid ""
 "match. Posing a considerable threat to even experienced soldiers, direwolves "
 "are avoided by all but madmen."
 msgstr ""
+"„Diví vlci“ se od obecného druhu liší pouze velikostí a barvou. V kohoutku "
+"jsou obvykle vyšší než kůň a mají tomu odpovídající hlad. Představují "
+"značnou hrozbu i pro zkušené vojáky, a proto se jim všichni, kromě šílenců, "
+"vyhýbají."
 
 #. [unit_type]: id=Great Wolf, race=wolf
 #: data/core/units/monsters/Wolf_Great.cfg:4
@@ -8080,7 +8164,6 @@ msgstr ""
 "nejzdatnější v umění vrhu kopím, povýšit do hodnosti oštěpařek. Díky lepšímu "
 "vybavení a výjimečné mušce není radno ještěráčské oštěpařky podceňovat."
 
-# bylo vrhač ledu - nesedí s popisem
 #. [unit_type]: id=Saurian Oracle, race=lizard
 #: data/core/units/saurians/Oracle.cfg:4
 msgid "Saurian Oracle"
@@ -8096,31 +8179,20 @@ msgid ""
 "the strange magics their kind possess, and are beings to be wary of if ever "
 "seen."
 msgstr ""
-"Některé ještěráky můžeme vidět oděné v obřadní roucha a od hlavy k patě "
-"pokryté děsivými, záhadnými tvary a symboly; některé jsou namalované, jiné "
+"Některé ještěráky můžeme vidět oděné v obřadní roucha a od hlavy k patě "
+"pokryté děsivými, záhadnými tvary a symboly; některé jsou namalované, jiné "
 "vytetované. Někteří se domnívají, že svému druhu slouží jako vizionáři nebo "
 "věštci. Ale ať už mají jakoukoli „společenskou“ roli, jsou to nepochybně "
-"mocní uživatelé podivné magie jejich druhu, a ti, kdo se s nimi setkají, by "
+"mocní uživatelé podivné magie svého druhu, a ti, kdo se s nimi setkají, by "
 "si měli dát pozor."
 
-# bylo vrhač ledu - nesedí s popisem
 #. [unit_type]: id=Saurian Prophet, race=lizard
 #: data/core/units/saurians/Prophet.cfg:4
-#, fuzzy
-#| msgid "Saurian Oracle"
 msgid "Saurian Prophet"
-msgstr "Ještěrácký věštec"
+msgstr "Ještěrácký prorok"
 
 #. [unit_type]: id=Saurian Prophet, race=lizard
 #: data/core/units/saurians/Prophet.cfg:19
-#, fuzzy
-#| msgid ""
-#| "Certain saurians are seen dressed in arcane regalia and covered head to "
-#| "toe in horrifying, esoteric shapes and markings, both with paint and "
-#| "tattoo. Some suspect them to be visionaries, or oracles amongst their "
-#| "ilk. But whatever ‘societal’ function they may have, they are undeniably "
-#| "powerful in the strange magics their kind possess, and are beings to be "
-#| "wary of if ever seen."
 msgid ""
 "Certain saurians are seen dressed in arcane regalia and covered head to toe "
 "in horrifying, esoteric shapes and markings, both with paint and tattoo. "
@@ -8128,20 +8200,16 @@ msgid ""
 "whatever ‘societal’ function they may have, they are undeniably powerful in "
 "the strange magics their kind possess."
 msgstr ""
-"Některé ještěráky můžeme vidět oděné v obřadní roucha a od hlavy k patě "
-"pokryté děsivými, záhadnými tvary a symboly; některé jsou namalované, jiné "
+"Některé ještěráky můžeme vidět oděné v obřadní roucha a od hlavy k patě "
+"pokryté děsivými, záhadnými tvary a symboly; některé jsou namalované, jiné "
 "vytetované. Někteří se domnívají, že svému druhu slouží jako vizionáři nebo "
-"věštci. Ale ať už mají jakoukoli „společenskou“ roli, jsou to nepochybně "
-"mocní uživatelé podivné magie jejich druhu, a ti, kdo se s nimi setkají, by "
-"si měli dát pozor."
+"proroci. Ale ať už mají jakoukoli „společenskou“ roli, jsou to nepochybně "
+"mocní uživatelé podivné magie svého druhu."
 
-# bylo věštec kolize s Oracle
 #. [unit_type]: id=Saurian Seer, race=lizard
 #: data/core/units/saurians/Seer.cfg:4
-#, fuzzy
-#| msgid "Saurian Soothsayer"
 msgid "Saurian Seer"
-msgstr "Ještěrácký prorok"
+msgstr "Ještěrácký vidoucí"
 
 #. [unit_type]: id=Saurian Seer, race=lizard
 #. [unit_type]: id=Saurian Soothsayer, race=lizard
@@ -8153,8 +8221,8 @@ msgid ""
 "skilled at a sort of medicine, which is of great benefit whenever battle is "
 "brought against them."
 msgstr ""
-"Ví se, že ještěráci ovládají podivné umění na hranicích magie a záhadna. Je "
-"také zřejmé, že někteří z nich jsou zruční v něčem jako léčitelství, které "
+"Ví se, že ještěráci ovládají podivné umění na hranicích magie a záhadna. Je "
+"také zřejmé, že někteří z nich jsou zruční v něčem jako léčitelství, které "
 "tvoří obrovskou výhodu, kdykoliv proti nim někdo vytáhne do boje."
 
 #. [unit_type]: id=Saurian Skirmisher, race=lizard
@@ -8182,11 +8250,10 @@ msgstr ""
 "dodat potřebnou sílu, aby způsobili závažná zranění, a to jak nablízko, tak "
 "i při hodu."
 
-# bylo věštec kolize s Oracle
 #. [unit_type]: id=Saurian Soothsayer, race=lizard
 #: data/core/units/saurians/Soothsayer.cfg:4
 msgid "Saurian Soothsayer"
-msgstr "Ještěrácký prorok"
+msgstr "Ještěrácký jasnovidec"
 
 #. [unit_type]: id=Saurian Spearthrower, race=lizard
 #: data/core/units/saurians/Spearthrower.cfg:4
