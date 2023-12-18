@@ -142,7 +142,7 @@ jobs:
           tar -cf "steambuild-$version.tar" steambuild
 
       - name: Upload
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Steam-Linux
           path: utils/dockerbuilds/steambuild-*.tar
@@ -164,13 +164,13 @@ jobs:
           mv mingwbuild/wesnoth*-win64.exe "wesnoth-$version-win64.exe"
 
       - name: Upload Source
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Source
           path: wesnoth-*.tar.bz2
 
       - name: Upload Windows-Installer
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Windows-Installer
           path: utils/dockerbuilds/wesnoth-*-win64.exe
@@ -195,7 +195,7 @@ jobs:
           flatpak build-bundle export wesnoth.flatpak org.wesnoth.Wesnoth ci --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
 
       - name: Upload flatpak bundle
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Flatpak-Bundle
           path: wesnoth.flatpak
@@ -256,7 +256,7 @@ jobs:
         working-directory: projectfiles/Xcode
         run: hdiutil create -volname "Wesnoth_$CFG" -fs 'HFS+' -srcfolder "build/$CFG" -ov -format UDBZ "Wesnoth_${CFG}.dmg"
       - name: Upload disk image
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: MacOS ${{ matrix.cfg }} disk image
           path: projectfiles/Xcode/Wesnoth_${{ matrix.cfg }}.dmg
