@@ -82,21 +82,21 @@ jobs:
               build() {
                 ldconfig
                 scons "$@" build="$CFG" ctool="$CC" cxxtool="$CXX" cxx_std="$CXX_STD" \
-                  extra_flags_config="-pipe" strict=false forum_user_handler=true \
+                  extra_flags_config="-pipe" forum_user_handler=true \
                   nls=false enable_lto="$LTO" force_color=true jobs=2 --debug=time \
                   glibcxx_debug=true glibcxx_assertions=true
               }
-              build wesnoth boost_unit_tests
+              build strict=true wesnoth boost_unit_tests
 
               apt remove -y -qq libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev
 
-              build wesnothd campaignd
+              build strict=false wesnothd campaignd
               ;;
             cmake)
               build() {
                 ldconfig
                 cmake "$@" -DCMAKE_BUILD_TYPE="$CFG" -DCXX_STD="$CXX_STD" \
-                  -DEXTRA_FLAGS_CONFIG="-pipe" -DENABLE_STRICT_COMPILATION=false -DENABLE_MYSQL=true \
+                  -DEXTRA_FLAGS_CONFIG="-pipe" -DENABLE_MYSQL=true \
                   -DENABLE_NLS=false -DENABLE_LTO="$LTO" -DFORCE_COLOR_OUTPUT=true -DLTO_JOBS=2 .
               }
               rm -R /usr/local/lib/cmake
@@ -108,7 +108,7 @@ jobs:
 
               apt remove -y -qq libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev
 
-              build -DENABLE_GAME=false -DENABLE_SERVER=true -DENABLE_CAMPAIGN_SERVER=true -DENABLE_TESTS=false
+              build -DENABLE_GAME=false -DENABLE_SERVER=true -DENABLE_CAMPAIGN_SERVER=true -DENABLE_TESTS=false -DENABLE_STRICT_COMPILATION=false
               make VERBOSE=1 -j2
               ;;
           esac
