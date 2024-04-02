@@ -6,7 +6,7 @@ env:
   WESNOTH_VERSION: 1.17.25
 
 jobs:
-  lint:
+  woptipng:
     runs-on: ubuntu-latest
 
     steps:
@@ -16,5 +16,6 @@ jobs:
       uses: czyzby/wesnoth-png-optimizer@v1
       if: always()
       with:
+        path: data/
         wesnoth-version: ${{ env.WESNOTH_VERSION }}
-        threshold: 50
+        threshold: 99
