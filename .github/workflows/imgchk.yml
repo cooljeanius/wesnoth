@@ -16,6 +16,6 @@ jobs:
       uses: czyzby/wesnoth-png-optimizer@v1
       if: always()
       with:
-        path: data/
+        path: data/test/
         wesnoth-version: ${{ env.WESNOTH_VERSION }}
         threshold: 99
