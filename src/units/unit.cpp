@@ -34,7 +34,7 @@
 #include "lexical_cast.hpp"
 #include "log.hpp"                       // for LOG_STREAM, logger, etc
 #include "map/map.hpp"                   // for gamemap
-#include "preferences/game.hpp"          // for encountered_units
+#include "preferences/preferences.hpp"          // for encountered_units
 #include "random.hpp"                    // for generator, rng
 #include "resources.hpp"                 // for units, gameboard, teams, etc
 #include "scripting/game_lua_kernel.hpp" // for game_lua_kernel
@@ -1472,8 +1472,15 @@ static bool matches_ability_filter(const config & cfg, const std::string& tag_na
 	if(!string_matches_if_present(filter, cfg, "id", ""))
 		return false;
 
-	if(!string_matches_if_present(filter, cfg, "apply_to", "self"))
-		return false;
+	if(tag_name == "resistance"){
+		if(!set_includes_if_present(filter, cfg, "apply_to")){
+			return false;
+		}
+	} else {
+		if(!string_matches_if_present(filter, cfg, "apply_to", "self")){
+			return false;
+		}
+	}
 
 	if(!string_matches_if_present(filter, cfg, "overwrite_specials", "none"))
 		return false;
@@ -1523,6 +1530,16 @@ static bool matches_ability_filter(const config & cfg, const std::string& tag_na
 
 	if(!double_matches_if_present(filter, cfg, "divide"))
 		return false;
+
+	//the wml_filter is used in cases where the attribute we are looking for is not
+	//previously listed or to check the contents of the sub_tags ([filter_adjacent],[filter_self],[filter_opponent] etc.
+	//If the checked set does not exactly match the content of the capability, the function returns a false response.
+	auto fwml = filter.optional_child("filter_wml");
+	if (fwml){
+		if(!cfg.matches(*fwml)){
+			return false;
+		}
+	}
 
 	// Passed all tests.
 	return true;
@@ -1575,6 +1592,7 @@ bool unit::get_attacks_changed() const
 	}
 	return false;
 }
+
 void unit::write(config& cfg, bool write_all) const
 {
 	config back;
@@ -1764,6 +1782,17 @@ bool unit::loyal() const
 	return utils::holds_alternative<upkeep_loyal>(upkeep_);
 }
 
+void unit::set_loyal(bool loyal)
+{
+	if (loyal) {
+		upkeep_ = upkeep_loyal{};
+		overlays_.push_back("misc/loyal-icon.png");
+	} else {
+		upkeep_ = upkeep_full{};
+		overlays_.erase(std::remove(overlays_.begin(), overlays_.end(), "misc/loyal-icon.png"), overlays_.end());
+	}
+}
+
 int unit::defense_modifier(const t_translation::terrain_code & terrain) const
 {
 	int def = movement_type_.defense_modifier(terrain);
@@ -1811,7 +1840,7 @@ int unit::resistance_value(unit_ability_list resistance_list, const std::string&
 	});
 
 	if(!resistance_list.empty()) {
-		unit_abilities::effect resist_effect(resistance_list, 100-res, nullptr, unit_abilities::EFFECT_CLAMP_MIN_MAX);
+		unit_abilities::effect resist_effect(resistance_list, 100-res);
 
 		res = 100 - resist_effect.get_composite_value();
 	}
@@ -2439,7 +2468,7 @@ void unit::apply_builtin_effect(std::string apply_to, const config& effect)
 		const unit_type* new_type = unit_types.find(new_type_id);
 		if(new_type) {
 			advance_to(*new_type);
-			preferences::encountered_units().insert(new_type_id);
+			prefs::get().encountered_units().insert(new_type_id);
 			if(effect["heal_full"].to_bool(false)) {
 				heal_fully();
 			}
