@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wesnoth-1.16\n"
 "Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
-"POT-Creation-Date: 2023-01-15 00:21 UTC\n"
-"PO-Revision-Date: 2022-09-03 09:05+0800\n"
+"POT-Creation-Date: 2023-06-18 04:20 UTC\n"
+"PO-Revision-Date: 2023-09-10 08:38+0800\n"
 "Last-Translator: CloudiDust <cloudidust@gmail.com>\n"
 "Language-Team: Wesnoth Simplified Chinese Team\n"
 "Language: zh_CN\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n>1;\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.3.2\n"
 
 #. [campaign]: id=Heir_To_The_Throne
 #: data/campaigns/Heir_To_The_Throne/_main.cfg:9
@@ -852,7 +852,7 @@ msgstr "奥渡因岛"
 #. a hint that the player has 3 scenarios before the first main test of their XP management
 #: data/campaigns/Heir_To_The_Throne/scenarios/03_The_Isle_of_Alduin.cfg:45
 msgid "You’ll need experienced troops at Elensefar."
-msgstr ""
+msgstr "你得带经验丰富的部队去埃仁撒伐。"
 
 #. [side]: type=Orcish Warrior, id=Usadar Q'kai
 #: data/campaigns/Heir_To_The_Throne/scenarios/03_The_Isle_of_Alduin.cfg:72
@@ -887,7 +887,7 @@ msgstr "什么人？哦，有一群精灵登陆了。让我们把他们赶回海
 msgid ""
 "If the orcs have come here, their forces at Elensefar must be even more "
 "numerous than I feared."
-msgstr ""
+msgstr "既然兽人都来到这儿了，那他们在埃仁撒伐的军力怕是比我所担心的还要多。"
 
 #. [message]: speaker=Delfador
 #. a hint for players who are expecting campaigns to have a steadily-rising difficulty curve.
@@ -897,19 +897,17 @@ msgid ""
 "reach Elensefar, then our journey is likely to end in sight of the city’s "
 "gates."
 msgstr ""
+"科纳德，训练很重要。要是到达埃仁撒伐时只有缺乏经验的部队，那我们的旅程在看到"
+"城门时就很可能会结束。"
 
 #. [message]: speaker=Delfador
 #: data/campaigns/Heir_To_The_Throne/scenarios/03_The_Isle_of_Alduin.cfg:216
-#, fuzzy
-#| msgid ""
-#| "I did not think the orcs would have come here. This island used to be so "
-#| "beautiful. We must recapture it! To arms!"
 msgid ""
 "This island is the place where I was born, and where I learned magic; it "
 "used to be so beautiful. We must recapture it! To arms!"
 msgstr ""
-"我没有料到兽人们会来这里。这个岛曾经是多么美丽啊。我们必须把它夺回来！全军战"
-"备！"
+"这个岛是我出生之地，也是我学习魔法之地。它曾经是多么美丽啊。我们必须把它夺回"
+"来！拿起武器！"
 
 #. [unit]: id=Elrian, type=Mage
 #: data/campaigns/Heir_To_The_Throne/scenarios/03_The_Isle_of_Alduin.cfg:229
@@ -5668,7 +5666,9 @@ msgstr "移动科纳德至洞穴"
 
 #. [objective]: condition=win
 #: data/campaigns/Heir_To_The_Throne/scenarios/19c_Cliffs_of_Thoria.cfg:92
-msgid "Rescue the sergeant"
+#, fuzzy
+#| msgid "Rescue the sergeant"
+msgid "Rescue the lieutenant"
 msgstr "拯救军士"
 
 #. [side]
@@ -5676,8 +5676,8 @@ msgstr "拯救军士"
 msgid "Drakes"
 msgstr "龙人"
 
-#. [unit]: type=Injured Sergeant, id=Warven
-#. [unit]: type=Sergeant, id=Warven
+#. [unit]: type=Injured Lieutenant, id=Warven
+#. [unit]: type=Lieutenant, id=Warven
 #: data/campaigns/Heir_To_The_Throne/scenarios/19c_Cliffs_of_Thoria.cfg:222
 #: data/campaigns/Heir_To_The_Throne/scenarios/19c_Cliffs_of_Thoria.cfg:824
 msgid "Warven"
@@ -5969,8 +5969,12 @@ msgstr "我看见最远方的山崖上有人！"
 
 #. [message]: speaker=unit
 #: data/campaigns/Heir_To_The_Throne/scenarios/19c_Cliffs_of_Thoria.cfg:719
+#, fuzzy
+#| msgid ""
+#| "It is a young human sergeant, barely more than a boy. He appears badly "
+#| "hurt but still alive."
 msgid ""
-"It is a young human sergeant, barely more than a boy. He appears badly hurt "
+"It is a young human officer, barely more than a boy. He appears badly hurt "
 "but still alive."
 msgstr "是一位年轻的人类军士，只比小男孩大一点。他看上去受了重伤，但仍然活着。"
 
@@ -6035,15 +6039,21 @@ msgstr ""
 #: data/campaigns/Heir_To_The_Throne/scenarios/19c_Cliffs_of_Thoria.cfg:778
 msgid ""
 "Very well. If you convince him not to raise his sword against us, the "
-"Lintair elves shall grant him safe passage."
-msgstr "很好。如果你说服他不要举起剑来对付我们，林塔尼尔精灵们将让他安全通过。"
+"Lintanir elves shall grant him safe passage."
+msgstr ""
+"很好。如果你能说服他，别举起剑来对付我们，那林塔尼尔精灵将准许他安全通过。"
 
 #. [message]: speaker=Konrad
 #: data/campaigns/Heir_To_The_Throne/scenarios/19c_Cliffs_of_Thoria.cfg:782
+#, fuzzy
+#| msgid ""
+#| "Our main goal remains to survive ourselves, but if we can spare the "
+#| "troops, we might try to rescue the sergeant stranded on the cliff. "
+#| "However, I make no promises."
 msgid ""
 "Our main goal remains to survive ourselves, but if we can spare the troops, "
-"we might try to rescue the sergeant stranded on the cliff. However, I make "
-"no promises."
+"we might try to rescue the officer stranded on the cliff. However, I make no "
+"promises."
 msgstr ""
 "我们的主要目标仍然是确保自己活着，但如果我们可以分出一部分部队的话，也许就可"
 "以试着把被困在山崖上的军士救回来了。不过，我可什么都不能保证。"
@@ -6081,9 +6091,13 @@ msgstr "我们是朋友。不用担心，也别试图和我们战斗——你这
 
 #. [message]: speaker=Li'sar
 #: data/campaigns/Heir_To_The_Throne/scenarios/19c_Cliffs_of_Thoria.cfg:846
+#, fuzzy
+#| msgid ""
+#| "I am the Princess, Li’sar, and we are friends. Join us and wait for the "
+#| "healers to help you, young sergeant."
 msgid ""
 "I am the Princess, Li’sar, and we are friends. Join us and wait for the "
-"healers to help you, young sergeant."
+"healers to help you, young lieutenant."
 msgstr "我是莉莎公主，我们是朋友。加入我们吧，让治疗师们来帮助你，年轻的军士。"
 
 #. [message]: speaker=Warven
@@ -6640,7 +6654,8 @@ msgstr "蜥蜴人"
 msgid "Muff Argulak"
 msgstr "玛夫·阿古拉克"
 
-#. ['Haralamdum is ancient, and his mind does not work well any more. He takes things very slowly and carefully, even for a Wose. He halts and pauses, often searching for something in his memory, using meaningless syllables to fill the gap. The syllables of his name come from the phrase he uses to mean "that is all" or "I am done" which he says often, usually out of frustration with how hasty everyone seems. Nobody alive knows his real name, and he has likely forgotten as well. Feel free to add, move, or remove pauses to break up, or even scatter, his train of thought. For inspiration, think of Asperger Syndrome.']
+#. [side]: type=Ancient Wose, id=Haralamdum
+#. Haralamdum is ancient, and his mind does not work well any more. He takes things very slowly and carefully, even for a Wose. He halts and pauses, often searching for something in his memory, using meaningless syllables to fill the gap. The syllables of his name come from the phrase he uses to mean "that is all" or "I am done" which he says often, usually out of frustration with how hasty everyone seems. Nobody alive knows his real name, and he has likely forgotten as well. Feel free to add, move, or remove pauses to break up, or even scatter, his train of thought. For inspiration, think of Asperger Syndrome.
 #: data/campaigns/Heir_To_The_Throne/scenarios/20b_Underground_Channels.cfg:128
 msgid "Haralamdum"
 msgstr "哈拉兰杜姆"
@@ -6990,26 +7005,39 @@ msgstr ""
 
 #. [message]: speaker=$unit.id|
 #: data/campaigns/Heir_To_The_Throne/scenarios/20b_Underground_Channels.cfg:639
+#, fuzzy
+#| msgid ""
+#| "Upon finishing the book, $unit.name| has a much greater understanding of "
+#| "the forest, its nature and ways, and all the creatures within it. "
+#| "Unfortunately, as the last page was turned, the book crumbled to dust."
 msgid ""
-"Upon finishing the book, $unit.name| has a much greater understanding of the "
-"forest, its nature and ways, and all the creatures within it. Unfortunately, "
-"as the last page was turned, the book crumbled to dust."
+"$unit.name| becomes entranced and greatly gains affinity with the forest, "
+"its nature and ways, and all the creatures within it. He feels he will "
+"quickly become more experienced once reaching the surface. Unfortunately, as "
+"the last page was turned, the book crumbled to dust."
 msgstr ""
 "读完这本书后，$unit.name|对于森林的本质和生存之道，以及林中的所有生物，都有了"
 "深刻得多的理解。不幸的是，当翻过最后一页时，书便化为了尘土。"
 
 #. [message]: speaker=$unit.id|
 #: data/campaigns/Heir_To_The_Throne/scenarios/20b_Underground_Channels.cfg:640
+#, fuzzy
+#| msgid ""
+#| "female^Upon finishing the book, $unit.name| has a much greater "
+#| "understanding of the forest, its nature and ways, and all the creatures "
+#| "within it. Unfortunately, as the last page was turned, the book crumbled "
+#| "to dust."
 msgid ""
-"female^Upon finishing the book, $unit.name| has a much greater understanding "
-"of the forest, its nature and ways, and all the creatures within it. "
+"female^$unit.name| becomes entranced and greatly gains affinity with the "
+"forest, its nature and ways, and all the creatures within it. She feels she "
+"will quickly become more experienced once reaching the surface. "
 "Unfortunately, as the last page was turned, the book crumbled to dust."
 msgstr ""
 "读完这本书后，$unit.name|对于森林的本质和生存之道，以及林中的所有生物，都有了"
 "深刻得多的理解。不幸的是，当翻过最后一页时，书便化为了尘土。"
 
 #. [option]
-#: data/campaigns/Heir_To_The_Throne/scenarios/20b_Underground_Channels.cfg:667
+#: data/campaigns/Heir_To_The_Throne/scenarios/20b_Underground_Channels.cfg:671
 #: data/campaigns/Heir_To_The_Throne/utils/httt_utils.cfg:166
 #: data/campaigns/Heir_To_The_Throne/utils/httt_utils.cfg:276
 msgid "No"
@@ -8405,9 +8433,11 @@ msgstr ""
 "战士年轻而又性急，他们使用剑来攻击，很容易受到更有经验的敌人的伤害。尽管如"
 "此，他们仍然拥有在未来某天成为伟大武士的潜力。"
 
-#. [unit_type]: id=Injured Sergeant
-#: data/campaigns/Heir_To_The_Throne/units/Injured_Sergeant.cfg:7
-msgid "Injured Sergeant"
+#. [unit_type]: id=Injured Lieutenant
+#: data/campaigns/Heir_To_The_Throne/units/Injured_Lieutenant.cfg:7
+#, fuzzy
+#| msgid "Injured Sergeant"
+msgid "Injured Lieutenant"
 msgstr "负伤军士"
 
 #. [variation]
@@ -8858,10 +8888,3 @@ msgid ""
 msgstr ""
 "德法多逃到了艾森丛林，远在韦诺的西南边境之外。在精灵们的保护下，他将科纳德抚"
 "养长大。而与此同时，他只能悲哀地看着艾什薇尔的恐怖统治开始在这片土地上蔓延……"
-
-#~ msgid ""
-#~ "I fear so, Konrad. It seems that the orcs have come even here. Here to "
-#~ "the place where I was born, where I was trained."
-#~ msgstr ""
-#~ "恐怕是的，科纳德。似乎兽人们甚至已经到了这里。这里，他们入侵了我出生的地"
-#~ "方，我接受训练的地方。"

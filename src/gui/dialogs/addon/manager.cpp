@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008 - 2022
+	Copyright (C) 2008 - 2023
 	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -544,8 +544,8 @@ void addon_manager::toggle_details(button& btn, stacked_widget& stk)
 
 void addon_manager::fetch_addons_list()
 {
-	client_.request_addons_list(cfg_);
-	if(!cfg_) {
+	bool success = client_.request_addons_list(cfg_);
+	if(!success) {
 		gui2::show_error_message(_("An error occurred while downloading the add-ons list from the server."));
 		get_window()->close();
 	}
@@ -568,16 +568,18 @@ void addon_manager::load_addon_list()
 			// to match add-ons in the config list. It also fills in addon_info's id field. It's also
 			// neccessay to set local_only here so that flag can be properly set after addons_ is cleared
 			// and recreated by read_addons_list.
-			config pbl_cfg = get_addon_pbl_info(id);
-			pbl_cfg["name"] = id;
-			pbl_cfg["local_only"] = true;
+			try {
+				config pbl_cfg = get_addon_pbl_info(id, false);
+				pbl_cfg["name"] = id;
+				pbl_cfg["local_only"] = true;
 
-			// Add the add-on to the list.
-			addon_info addon(pbl_cfg);
-			addons_[id] = addon;
+				// Add the add-on to the list.
+				addon_info addon(pbl_cfg);
+				addons_[id] = addon;
 
-			// Add the addon to the config entry
-			cfg_.add_child("campaign", std::move(pbl_cfg));
+				// Add the addon to the config entry
+				cfg_.add_child("campaign", std::move(pbl_cfg));
+			} catch(invalid_pbl_exception&) {}
 		}
 	}
 
@@ -907,7 +909,8 @@ void addon_manager::publish_addon(const addon_info& addon)
 	std::string server_msg;
 
 	const std::string addon_id = addon.id;
-	config cfg = get_addon_pbl_info(addon_id);
+	// Since the user is planning to upload an addon, this is the right time to validate the .pbl.
+	config cfg = get_addon_pbl_info(addon_id, true);
 
 	const version_info& version_to_publish = cfg["version"].str();
 
@@ -929,6 +932,10 @@ void addon_manager::publish_addon(const addon_info& addon)
 		} else {
 			preferences::set_password(preferences::campaign_server(), cfg["author"], cfg["passphrase"]);
 		}
+	} else if(cfg["forum_auth"].to_bool()) {
+		// if the uploader's forum password is present in the _server.pbl
+		gui2::show_error_message(_("The passphrase attribute cannot be present when forum_auth is used."));
+		return;
 	}
 
 	if(!::image::exists(cfg["icon"].str())) {
@@ -1092,6 +1099,7 @@ void addon_manager::on_addon_select()
 
 	const std::string& feedback_url = info->feedback_url;
 	find_widget<label>(parent, "url", false).set_label(!feedback_url.empty() ? feedback_url : _("url^None"));
+	find_widget<label>(parent, "id", false).set_label(info->id);
 
 	bool installed = is_installed_addon_status(tracking_info_[info->id].state);
 	bool updatable = tracking_info_[info->id].state == ADDON_INSTALLED_UPGRADABLE;

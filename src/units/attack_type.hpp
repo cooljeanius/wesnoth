@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2022
+	Copyright (C) 2003 - 2023
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -90,6 +90,12 @@ public:
 	                      unsigned & max_attacks) const;
 	/** Returns the damage per attack of this weapon, considering specials. */
 	int modified_damage() const;
+
+	/** Return the special weapon value, considering specials.
+	 * @param abil_list The list of special checked.
+	 * @param base_value The value modified or not by function.
+	 */
+	int composite_value(const unit_ability_list& abil_list, int base_value) const;
 	/** Returns list for weapon like abilities for each ability type. */
 	unit_ability_list get_weapon_ability(const std::string& ability) const;
 	/** Returns list who contains get_weapon_ability and get_specials list for each ability type */
@@ -117,6 +123,8 @@ public:
 
 	int movement_used() const { return movement_used_; }
 	void set_movement_used(int value) { movement_used_ = value; }
+	int attacks_used() const { return attacks_used_; }
+	void set_attacks_used(int value) { attacks_used_ = value; }
 
 	void write(config& cfg) const;
 	inline config to_config() const { config c; write(c); return c; }
@@ -131,13 +139,11 @@ private:
 	 * Filter a list of abilities or weapon specials, removing any entries that are overridden by
 	 * the overwrite_specials attributes of a second list.
 	 *
-	 * @param ability The special ability type who is being checked.
 	 * @param input list to check, a filtered copy of this list is returned by the function.
 	 * @param overwriters list that may have overwrite_specials attributes.
-	 * @param filter_self name of [filter_"self/student"] if is abilities or specials who are checked.
 	 * @param is_special if true, input contains weapon specials; if false, it contains abilities.
 	 */
-	unit_ability_list overwrite_special_checking(const std::string& ability, unit_ability_list input, unit_ability_list overwriters, const std::string& filter_self, bool is_special) const;
+	unit_ability_list overwrite_special_checking(unit_ability_list input, unit_ability_list overwriters, bool is_special) const;
 	/** check_self_abilities : return an boolean value for checking of activities of abilities used like weapon
 	 * @return True if the special @a special is active.
 	 * @param cfg the config to one special ability checked.
@@ -318,6 +324,7 @@ private:
 
 	int accuracy_;
 	int movement_used_;
+	int attacks_used_;
 	int parry_;
 	config specials_;
 	bool changed_;

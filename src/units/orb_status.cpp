@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2020 - 2022
+	Copyright (C) 2020 - 2023
 	by Steve Cotton <steve@octalot.co.uk>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -45,7 +45,7 @@ std::string orb_status_helper::get_orb_color(orb_status os)
 	case orb_status::moved:
 		return preferences::moved_color();
 	case orb_status::disengaged:
-		return preferences::disengaged_color();
+		[[fallthrough]]; // use partial_color() for any context that wants a single color
 	case orb_status::partial:
 		return preferences::partial_color();
 	case orb_status::allied:

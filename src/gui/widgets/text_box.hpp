@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008 - 2022
+	Copyright (C) 2008 - 2023
 	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -104,7 +104,7 @@ public:
 
 private:
 	text_history(std::vector<std::string>* history, const bool enabled)
-		: history_(history), pos_(history->size()), enabled_(enabled)
+		: history_(history), pos_(static_cast<unsigned int>(history->size())), enabled_(enabled)
 	{
 	}
 

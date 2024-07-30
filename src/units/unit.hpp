@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2022
+	Copyright (C) 2003 - 2023
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -225,8 +225,6 @@ public:
 	}
 
 	virtual ~unit();
-
-	void swap(unit&);
 
 	unit& operator=(const unit&) = delete;
 
@@ -860,14 +858,16 @@ public:
 	 * Built-in status effects known to the engine
 	 */
 	enum state_t {
-		STATE_SLOWED = 0, /** The unit is slowed - it moves slower and does less damage */
-		STATE_POISONED,   /** The unit is poisoned - it loses health each turn */
-		STATE_PETRIFIED,  /** The unit is petrified - it cannot move or be attacked */
-		STATE_UNCOVERED,  /** The unit is uncovered - it was hiding but has been spotted */
-		STATE_NOT_MOVED,  /** The unit has not moved @todo Explain better */
-		STATE_UNHEALABLE, /** The unit cannot be healed */
-		STATE_GUARDIAN,   /** The unit is a guardian - it won't move unless a target is sighted */
-		STATE_UNKNOWN = -1/** A status effect not known to the engine */
+		STATE_SLOWED = 0,   /** The unit is slowed - it moves slower and does less damage */
+		STATE_POISONED,     /** The unit is poisoned - it loses health each turn */
+		STATE_PETRIFIED,    /** The unit is petrified - it cannot move or be attacked */
+		STATE_UNCOVERED,    /** The unit is uncovered - it was hiding but has been spotted */
+		STATE_NOT_MOVED,    /** The unit has not moved @todo Explain better */
+		STATE_UNHEALABLE,   /** The unit cannot be healed */
+		STATE_GUARDIAN,     /** The unit is a guardian - it won't move unless a target is sighted */
+		STATE_INVULNERABLE, /** The unit is invulnerable - it cannot be hit by any attack */
+		NUMBER_OF_STATES,   /** To set the size of known_boolean_states_ */
+		STATE_UNKNOWN = -1  /** A status effect not known to the engine */
 	};
 
 	/**
@@ -1559,6 +1559,14 @@ public:
 		return halo_.value_or("");
 	}
 
+	const std::vector<std::string> halo_or_icon_abilities(const std::string& image_type) const;
+
+	/** Get the [halo] abilities halo image(s). */
+	const std::vector<std::string> halo_abilities() const
+	{
+		return halo_or_icon_abilities("halo");
+	}
+
 	/** Set the unit's halo image. */
 	void set_image_halo(const std::string& halo);
 
@@ -1602,6 +1610,11 @@ public:
 		return overlays_;
 	}
 
+	/** Get the [overlay] ability overlay images. */
+	const std::vector<std::string> overlays_abilities() const
+	{
+		return halo_or_icon_abilities("overlay");
+	}
 	/**
 	 * Color for this unit's *current* hitpoints.
 	 *
@@ -1772,6 +1785,20 @@ public:
 	 */
 	void remove_ability_by_id(const std::string& ability);
 
+	/**
+	 * Removes a unit's abilities with a specific ID or other attribute.
+	 * @param filter the config of ability to remove.
+	 */
+	void remove_ability_by_attribute(const config& filter);
+
+	/**
+	 * Verify what abilities attributes match with filter.
+	 * @param cfg the config of ability to check.
+	 * @param tag_name the tag name of ability to check.
+	 * @param filter the filter used for checking.
+	 */
+	bool ability_matches_filter(const config & cfg, const std::string& tag_name, const config & filter) const;
+
 
 private:
 
@@ -1907,7 +1934,7 @@ private:
 
 	std::set<std::string> states_;
 
-	static const std::size_t num_bool_states = 7;
+	static const std::size_t num_bool_states = state_t::NUMBER_OF_STATES;
 
 	std::bitset<num_bool_states> known_boolean_states_;
 	static std::map<std::string, state_t> known_boolean_state_names_;
@@ -1991,9 +2018,6 @@ private:
 		invisibility_cache_.clear();
 	}
 };
-
-/** Implement non-member swap function for std::swap (calls @ref unit::swap). */
-void swap(unit& lhs, unit& rhs);
 
 /**
  * Object which temporarily resets a unit's movement.
