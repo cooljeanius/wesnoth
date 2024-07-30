@@ -1,18 +1,20 @@
+---
+
 name: CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
   workflow_dispatch:
 
 jobs:
-  checks: # checks that don't need a wesnoth binary
+  checks:  # checks that don't need a wesnoth binary
     runs-on: ubuntu-latest
     container:
       image: wesnoth/wesnoth:2204-master
-      options: --tty # docker create options
+      options: --tty  # docker create options
       env:
         CLICOLOR_FORCE: 1
 
@@ -38,10 +40,10 @@ jobs:
         if: success() || failure()
         run: doxygen doc/doxygen/Doxyfile
 
-  copyright: # check takes a bit longer and does not need to run in docker
+  copyright:  # check takes a bit longer and does not need to run in docker
     runs-on: ubuntu-latest
     steps:
-      - { uses: actions/checkout@v4, with: { fetch-depth: 0 } }
+      - {uses: actions/checkout@v4, with: {fetch-depth: 0}}
 
       - name: Copyright check
         run: ./update_copyrights --output=
@@ -51,39 +53,43 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { tool: scons, cc: gcc,   cxx: g++,     cfg: debug,   lto: false }
-          - { tool: cmake, cc: clang, cxx: clang++, cfg: release, lto: true  }
+          - {tool: scons, cc: gcc, cxx: g++, cfg: debug, lto: false}
+          - {tool: cmake, cc: clang, cxx: clang++, cfg: release, lto: true}
     runs-on: ubuntu-latest
     container:
       image: wesnoth/wesnoth:2204-master
-      options: --tty # docker create options
+      options: --tty  # docker create options
       env:
-        TOOL: ${{ matrix.tool }}
-        CFG: ${{ matrix.cfg }}
-        CC: ${{ matrix.cc }}
-        CXX: ${{ matrix.cxx }}
+        TOOL: ${{matrix.tool}}
+        CFG: ${{matrix.cfg}}
+        CC: ${{matrix.cc}}
+        CXX: ${{matrix.cxx}}
         CXX_STD: 17
-        LTO: ${{ matrix.lto }}
+        LTO: ${{matrix.lto}}
         CLICOLOR_FORCE: 1
         SDL_VIDEODRIVER: dummy
 
     steps:
-      - { uses: actions/checkout@v3, with: { submodules: "recursive" } }
+      - {uses: actions/checkout@v3, with: {submodules: "recursive"}}
 
-# 1) wesnothd and campaignd should be buildable without SDL2 being present
-# 2) boost is installed via apt as well as built and installed into /usr/local (for _GLIBCXX_DEBUG support in boost program options)
-# 3) mariadbpp currently has a deprecation warning that causes strict builds to fail
-#    scons doesn't build it for the wesnoth client and the boost tests, but cmake apparently does
+      # 1) wesnothd and campaignd should be buildable without SDL2 being present
+      # 2) boost is installed via apt as well as built and installed into
+      #    /usr/local (for _GLIBCXX_DEBUG support in boost program options)
+      # 3) mariadbpp currently has a deprecation warning that causes strict
+      #    builds to fail
+      #    scons doesn't build it for the wesnoth client and the boost tests,
+      #    but cmake apparently does
       - name: Build wesnoth, wesnothd, campaignd and unit tests
-        id: build # needed to check step outcome
+        id: build  # needed to check step outcome
         run: |
           case $TOOL in
             scons)
               build() {
                 ldconfig
-                scons "$@" build="$CFG" ctool="$CC" cxxtool="$CXX" cxx_std="$CXX_STD" \
-                  extra_flags_config="-pipe" forum_user_handler=true \
-                  nls=false enable_lto="$LTO" force_color=true jobs=2 --debug=time \
+                scons "$@" build="$CFG" ctool="$CC" cxxtool="$CXX" \
+                  cxx_std="$CXX_STD" extra_flags_config="-pipe" \
+                  forum_user_handler=true nls=false enable_lto="$LTO" \
+                  force_color=true jobs=2 --debug=time \
                   glibcxx_debug=true glibcxx_assertions=true
               }
               build strict=true wesnoth boost_unit_tests
@@ -97,18 +103,23 @@ jobs:
                 ldconfig
                 cmake "$@" -DCMAKE_BUILD_TYPE="$CFG" -DCXX_STD="$CXX_STD" \
                   -DEXTRA_FLAGS_CONFIG="-pipe" -DENABLE_MYSQL=true \
-                  -DENABLE_NLS=false -DENABLE_LTO="$LTO" -DFORCE_COLOR_OUTPUT=true -DLTO_JOBS=2 .
+                  -DENABLE_NLS=false -DENABLE_LTO="$LTO" \
+                  -DFORCE_COLOR_OUTPUT=true -DLTO_JOBS=2 .
               }
               rm -R /usr/local/lib/cmake
               rm /usr/local/lib/libboost*
               rm -R /usr/local/include/boost
-              build -DENABLE_GAME=true -DENABLE_SERVER=false -DENABLE_CAMPAIGN_SERVER=false -DENABLE_TESTS=true -DENABLE_STRICT_COMPILATION=false
+              build -DENABLE_GAME=true -DENABLE_SERVER=false \
+                -DENABLE_CAMPAIGN_SERVER=false -DENABLE_TESTS=true \
+                -DENABLE_STRICT_COMPILATION=false
               make conftests
               make VERBOSE=1 -j2
 
               apt remove -y -qq libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev
 
-              build -DENABLE_GAME=false -DENABLE_SERVER=true -DENABLE_CAMPAIGN_SERVER=true -DENABLE_TESTS=false -DENABLE_STRICT_COMPILATION=false
+              build -DENABLE_GAME=false -DENABLE_SERVER=true \
+                -DENABLE_CAMPAIGN_SERVER=true -DENABLE_TESTS=false \
+                -DENABLE_STRICT_COMPILATION=false
               make VERBOSE=1 -j2
               ;;
           esac
@@ -119,7 +130,10 @@ jobs:
           for opt in config data userconfig userdata
           do
             output=$(./wesnoth --nobanner --"$opt"-path)
-            if [ "$output" = "" ]; then printf 'option --%s-path prints nothing to stdout!' "$opt" >&2; exit 1; fi
+            if [ "$output" = "" ]; then \
+              printf 'option --%s-path prints nothing to stdout!' "$opt" >&2; \
+              exit 1; \
+            fi
             printf '%s-path: %s\n' "$opt" "$output"
           done
       - name: WML validation
@@ -142,7 +156,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - { uses: actions/checkout@v3, with: { submodules: "recursive" } }
+      - {uses: actions/checkout@v3, with: {submodules: "recursive"}}
 
       - name: Steam Runtime
         run: |
@@ -160,7 +174,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - { uses: actions/checkout@v3, with: { submodules: "recursive" } }
+      - {uses: actions/checkout@v3, with: {submodules: "recursive"}}
 
       - name: MinGW Crosscompile
         run: |
@@ -188,7 +202,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: wesnoth/wesnoth:flatpak-master
-      options: --tty --cap-add=ALL --privileged # docker create options
+      options: --tty --cap-add=ALL --privileged  # docker create options
 
     steps:
       - uses: actions/checkout@v4
@@ -198,10 +212,13 @@ jobs:
       - name: Flatpak
         run: |
           # write to an ignored filename so the build is not marked as modified
-          jq '.modules |= map(select(.name == "wesnoth").sources[0]={"type":"dir","path":"."}) | ."build-options".env.FLATPAK_BUILDER_N_JOBS="2"' packaging/flatpak/org.wesnoth.Wesnoth.json > wesnoth-manifest.json
-          flatpak-builder --force-clean --default-branch=ci --disable-rofiles-fuse wesnoth-app wesnoth-manifest.json
+          jq '.modules |= map(select(.name == "wesnoth").sources[0]={"type":"dir","path":"."}) | ."build-options".env.FLATPAK_BUILDER_N_JOBS="2"' \
+            packaging/flatpak/org.wesnoth.Wesnoth.json > wesnoth-manifest.json
+          flatpak-builder --force-clean --default-branch=ci \
+            --disable-rofiles-fuse wesnoth-app wesnoth-manifest.json
           flatpak build-export export wesnoth-app ci
-          flatpak build-bundle export wesnoth.flatpak org.wesnoth.Wesnoth ci --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
+          flatpak build-bundle export wesnoth.flatpak org.wesnoth.Wesnoth ci \
+            --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
 
       - name: Upload flatpak bundle
         uses: actions/upload-artifact@v4
@@ -214,10 +231,10 @@ jobs:
     container:
       image: wesnoth/wesnoth:2204-master
       env:
-       LANGUAGE: en_US.UTF-8
-       LANG: en_US.UTF-8
-       LC_ALL: en_US.UTF-8
-       CLICOLOR_FORCE: 1
+        LANGUAGE: en_US.UTF-8
+        LANG: en_US.UTF-8
+        LC_ALL: en_US.UTF-8
+        CLICOLOR_FORCE: 1
 
     steps:
       - uses: actions/checkout@v4
@@ -226,14 +243,17 @@ jobs:
 
       - name: Translations
         run: |
-          cmake -DENABLE_NLS=true -DENABLE_GAME=false -DENABLE_SERVER=false -DENABLE_CAMPAIGN_SERVER=false -DENABLE_TESTS=false -DENABLE_POT_UPDATE_TARGET=TRUE .
+          cmake -DENABLE_NLS=true -DENABLE_GAME=false -DENABLE_SERVER=false \
+            -DENABLE_CAMPAIGN_SERVER=false -DENABLE_TESTS=false \
+            -DENABLE_POT_UPDATE_TARGET=TRUE .
           make update-po4a-man; echo "Ran make update-po4a-man"
           make update-po4a-manual; echo "Ran make update-po4a-manual"
           make pot-update; echo "Ran make pot-update"
           make mo-update; echo "Ran make mo-update"
           make clean
-          
-          scons translations build=release --debug=time nls=true jobs=2; echo "Ran scons translations"
+
+          scons translations build=release --debug=time nls=true jobs=2; \
+          echo "Ran scons translations"
           scons pot-update; echo "Ran scons pot-update"
           scons update-po4a; echo "Ran scons update-po4a"
           scons manual
@@ -242,10 +262,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        cfg: [ Debug, Release ]
+        cfg: [Debug, Release]
     runs-on: macos-12
     env:
-      CFG: ${{ matrix.cfg }}
+      CFG: ${{matrix.cfg}}
       DEVELOPER_DIR: /Applications/Xcode_13.1.app/Contents/Developer
 
     steps:
@@ -262,13 +282,20 @@ jobs:
       - name: Build wesnoth and unit tests
         working-directory: projectfiles/Xcode
         run: |
-          xcodebuild ARCHS=x86_64 -project "The Battle for Wesnoth.xcodeproj" -target "The Battle for Wesnoth" -target "unit_tests" -configuration "$CFG"
-          # xcodebuild or maybe clang do not appear to fail properly when input files cannot be found; double check executables were produced
-          [ -x "build/$CFG/The Battle for Wesnoth.app" ] || { printf 'Failed to build wesnoth executable!\n' >&2; exit 1; }
-          [ -x "build/$CFG/unit_tests" ] || { printf 'Failed to build unit test executable!\n' >&2; exit 1; }
+          xcodebuild ARCHS=x86_64 -project "The Battle for Wesnoth.xcodeproj" \
+            -target "The Battle for Wesnoth" -target "unit_tests" \
+            -configuration "$CFG"
+          # xcodebuild or maybe clang do not appear to fail properly when input
+          # files cannot be found; double check executables were produced
+          [ -x "build/$CFG/The Battle for Wesnoth.app" ] || \
+            { printf 'Failed to build wesnoth executable!\n' >&2; exit 1; }
+          [ -x "build/$CFG/unit_tests" ] || \
+            { printf 'Failed to build unit test executable!\n' >&2; exit 1; }
       - name: Create disk image
         working-directory: projectfiles/Xcode
-        run: hdiutil create -volname "Wesnoth_$CFG" -fs 'HFS+' -srcfolder "build/$CFG" -ov -format UDBZ "Wesnoth_${CFG}.dmg"
+        run: >
+          hdiutil create -volname "Wesnoth_$CFG" -fs 'HFS+' -srcfolder \
+            "build/$CFG" -ov -format UDBZ "Wesnoth_${CFG}.dmg"
       - name: Upload disk image
         uses: actions/upload-artifact@v4
         with:
@@ -276,9 +303,13 @@ jobs:
           path: projectfiles/Xcode/Wesnoth_${{ matrix.cfg }}.dmg
       - name: Run WML tests
         if: matrix.cfg == 'Release'
-        run: ./run_wml_tests -g -c -t 30 -p "projectfiles/Xcode/build/$CFG/The Battle for Wesnoth.app/Contents/MacOS/The Battle for Wesnoth"
+        run: >
+          ./run_wml_tests -g -c -t 30 -p \
+            "projectfiles/Xcode/build/$CFG/The Battle for Wesnoth.app/Contents/MacOS/The Battle for Wesnoth"
       - name: Run unit tests
-        run: ./run_boost_tests --path=projectfiles/Xcode/build/"$CFG" --executable=unit_tests
+        run: >
+          ./run_boost_tests --path=projectfiles/Xcode/build/"$CFG" \
+            --executable=unit_tests
 
   windows:
     strategy:
@@ -286,17 +317,17 @@ jobs:
       matrix:
         cfg: [Debug, Release]
     env:
-      CFG: ${{ matrix.cfg }}
+      CFG: ${{matrix.cfg}}
       VCPKG_FEATURE_FLAGS: dependencygraph
     permissions:
-      contents: write # for dependency graph
+      contents: write  # for dependency graph
     defaults:
       run:
         shell: cmd
     runs-on: windows-2019
 
     steps:
-      - { uses: actions/checkout@v3, with: { submodules: "recursive" } }
+      - {uses: actions/checkout@v3, with: {submodules: "recursive"}}
 
       - name: Make version of the runner image (https://github.com/actions/runner-images/releases) accessible to expression
         run: echo IMAGE_VERSION=%ImageVersion%>> %GITHUB_ENV%
@@ -306,17 +337,22 @@ jobs:
         uses: actions/cache@v4
         with:
           path: vcpkg_installed  # vcpkg generates this dir next to vcpkg.json
-          # the final key part needs to be changed if anything in the build process changes that is not already included here
+          # the final key part needs to be changed if anything in the build
+          # process changes that is not already included here
           key: win-cache-master-${{ matrix.cfg }}-${{ env.IMAGE_VERSION }}-${{ hashFiles('vcpkg.json') }}-0001
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v2.0.0
 
       - name: Run cmake
-        run: cmake -DCMAKE_BUILD_TYPE=%CFG% -DENABLE_GAME=true -DENABLE_SERVER=true -DENABLE_CAMPAIGN_SERVER=true
-          -DENABLE_TESTS=true -DENABLE_MYSQL=false -DENABLE_NLS=false
-          -DCMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.cmake -DVCPKG_INSTALL_OPTIONS=--debug
-          -DVCPKG_TARGET_TRIPLET=x64-windows -DCMAKE_GENERATOR_PLATFORM=x64 -G "Visual Studio 16 2019" .
+        run: >
+          cmake -DCMAKE_BUILD_TYPE=%CFG% -DENABLE_GAME=true \
+            -DENABLE_SERVER=true -DENABLE_CAMPAIGN_SERVER=true \
+            -DENABLE_TESTS=true -DENABLE_MYSQL=false -DENABLE_NLS=false \
+            -DCMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.cmake \
+            -DVCPKG_INSTALL_OPTIONS=--debug \
+            -DVCPKG_TARGET_TRIPLET=x64-windows -DCMAKE_GENERATOR_PLATFORM=x64 \
+            -G "Visual Studio 16 2019" .
 
       - name: Build wesnoth, wesnothd, campaignd and unit tests
         run: MSBuild.exe wesnoth.sln -p:Configuration=%CFG%
@@ -325,7 +361,7 @@ jobs:
         if: matrix.cfg == 'Release'
         run: python run_wml_tests -v -g -c -t 20 -p %CFG%/wesnoth.exe
 
-# run after all other jobs have completed to check overall build status
+  # run after all other jobs have completed to check overall build status
   notification:
     runs-on: ubuntu-latest
     needs: [checks, ubuntu, steam-runtime, mingw, flatpak, translations, macos-intel, windows]
@@ -352,6 +388,6 @@ jobs:
         with:
           channel: ${{ vars.IRC_CHANNEL }}
           server: ${{ vars.IRC_SERVER }}
-          nickname: ${{ vars.IRC_NICK }} # is also used for sasl username
+          nickname: ${{ vars.IRC_NICK }}  # is also used for sasl username
           sasl_password: ${{ secrets.IRC_SASL_PASSWORD }}
-          message: "❌ ${{ github.workflow }} workflow run ${{ github.run_number }} failed on \x0306${{ github.ref_name }}\x0F: ${{ env.COMMIT_SUBJECT }} by \x0315${{ github.actor }}\x0F: \x0302${{ github.event.head_commit.url }}\x0F"
+          message: "${{github.workflow}} workflow run ${{github.run_number}} failed on \x0306${{github.ref_name}}\x0F: ${{env.COMMIT_SUBJECT}} by \x0315${{github.actor}}\x0F: \x0302${{github.event.head_commit.url}}\x0F"

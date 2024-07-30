@@ -1,3 +1,5 @@
+---
+
 name: Bug Report
 description: Create a report to help us improve the game,
 labels: ['Bug']
@@ -9,8 +11,10 @@ body:
       label: Game and System Information
       description: |
         - What version of the game are you running?
-        - Where did you download it from? (Steam, Mac App Store, our website, built from source, etc.)
-        - If you're using a custom build, what compiler did you use, and what commit did you build at?
+        - Where did you download it from? (Steam, Mac App Store, our website,
+          built from source, etc.)
+        - If you are using a custom build, what compiler did you use, and what
+          commit did you build at?
         - What OS are you running?
       value: |
         - **Version:**
@@ -42,11 +46,15 @@ body:
     attributes:
       label: Expected behavior
       description: |
-        A clear and concise description of what you expected to happen. If applicable, add screenshots or savefiles to help explain your problem.
-        To find savefiles, start Wesnoth, click on the `i` button at the bottom left corner of the title screen, and open the `Saved games` directory.
+        A clear and concise description of what you expected to happen. If
+        applicable, add screenshots or savefiles to help explain your problem.
+        To find savefiles, start Wesnoth, click on the `i` button at the bottom
+        left corner of the title screen, and open the `Saved games` directory.
 
   - type: textarea
     id: more_info
     attributes:
       label: Additional context
-      description: Add any other context (compiler logs, console output, etc) about the problem here.
+      description: >
+        Add any other context (compiler logs, console output, etc) about the
+        problem here.
