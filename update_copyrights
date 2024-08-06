@@ -2,7 +2,9 @@
 # encoding: utf-8
 
 ##
-# This script checks all media files in the repository for whether they've been modified or added without updating the file tracking image, sound, and music copyright
+# This script checks all media files in the repository for whether they have
+# been modified or added without updating the file tracking image, sound, and
+# music copyright
 ##
 
 import argparse
@@ -91,9 +93,11 @@ extra_fields = []
 added = []
 # Changed images
 changed = []
-# Already mentioned in the CSV file, but lacking something in either the license or author fields
+# Already mentioned in the CSV file, but lacking something in either the
+# license or author fields
 incomplete = []
-# Already mentioned in the CSV file, but have something in the needs update field
+# Already mentioned in the CSV file, but have something in the needs update
+# field
 update = []
 unchanged = []
 removed = []
@@ -131,11 +135,12 @@ for root, _, files in os.walk(options.repo):
         ):
             file_path = os.path.normpath(os.path.join(root, filename))
             if os.path.sep != "/":
-                # Always use slashes for the file path irrespective of OS used to run the update
+                # Always use slashes for the file path irrespective of OS used
+                # to run the update
                 file_path = file_path.replace(os.path.sep, "/")
             file_hash = do_hash(file_path)
 
-            if not file_path in csv_data:
+            if file_path not in csv_data:
                 added.append(["", file_path, "", "", "", do_git(file_path), file_hash])
             elif len(csv_data[file_path]) < 7:
                 missing_fields.append(csv_data[file_path])
@@ -152,7 +157,7 @@ for root, _, files in os.walk(options.repo):
                 or csv_data[file_path][3].strip() == ""
             ):
                 incomplete.append(csv_data[file_path])
-            elif not csv_data[file_path][2] in known_licenses:
+            elif csv_data[file_path][2] not in known_licenses:
                 unknown_licenses.append(csv_data[file_path][2])
                 incomplete.append(csv_data[file_path])
             else:
@@ -185,7 +190,9 @@ else:
 any_check_failed = False
 if len(removed) > 0:
     any_check_failed = True
-    print("There are " + str(len(removed)) + " removed images")
+    print("There are " + str(len(removed)) + " removed images.\n")
+else:
+    print("No images were removed.\n")
 
 count_missing_fields = len(missing_fields)
 count_extra_fields = len(extra_fields)
@@ -206,44 +213,49 @@ if (
     print(
         "\nThere are "
         + str(count_missing_fields)
-        + " rows with too few fields\n"
+        + " rows with too few fields: \n"
         + "\n".join(",".join(a) for a in missing_fields)
     )
     print(
         "\nThere are "
         + str(count_extra_fields)
-        + " rows with too many fields, possibly due to an unquoted comma\n"
+        + " rows with too many fields, possibly due to an unquoted comma: \n"
         + "\n".join(",".join(a) for a in extra_fields)
     )
     print(
         "\nThere are "
         + str(count_added)
-        + " new images:\n"
+        + " new images: \n"
         + "\n".join(a[1] for a in added)
     )
     print(
         "\nThere are "
         + str(count_changed)
-        + " changed images"
+        + " changed images: \n"
         + "\n".join(a[1] for a in changed)
     )
     print(
         "\nThere are "
         + str(count_incomplete)
-        + " images that lack license or author information"
+        + " images that lack license or author information: \n"
         + "\n".join(a[1] for a in incomplete)
     )
     print(
         "\nThere are "
         + str(count_update)
-        + " images that need updated information"
+        + " images that need updated information: \n"
         + "\n".join(a[1] for a in update)
     )
+else:
+    print("Count of problems was zero.\n")
 
 if len(unknown_licenses) > 0:
     any_check_failed = True
-    print("Unknown licenses:")
+    print("Unknown licenses: \n")
     print("    " + "\n    ".join(unknown_licenses))
+else:
+    print("all licenses were known.\n")
 
 if any_check_failed:
+    print("A check failed!\n")
     sys.exit(1)
