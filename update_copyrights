@@ -259,3 +259,5 @@ else:
 if any_check_failed:
     print("A check failed!\n")
     sys.exit(1)
+else:
+    print("All checks successful!\n")
