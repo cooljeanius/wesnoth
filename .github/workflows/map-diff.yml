@@ -1,9 +1,10 @@
+---
 name: Map Diff
 
 on:
   pull_request_target:
     paths:
-    - '**.map'
+      - '**.map'
 
 jobs:
   comment-map-diff:
@@ -52,13 +53,15 @@ jobs:
           identify diff_image.png
 
           log 'Uploading diff_image.png...'
-          json=$(curl -s -F image=@diff_image.png https://api.imgur.com/3/upload | tee /dev/stderr) || continue
+          json=$(curl -s -F image=@diff_image.png https://api.imgur.com/3/upload | tee /dev/stderr) \
+            || continue
 
           log 'Generating HTML comment...'
           html=$(jq -r --arg path "$map_path" 'if .data.link != null
             then @html "<h3>\($path)</h3><img src=\"\(.data.link)\" /> <br />"
             elif has("errors") then .errors[].status | halt_error
-            else "Unexpected JSON structure!\n" | halt_error end' <<< "$json") || continue
+            else "Unexpected JSON structure!\n" | halt_error end' <<< "$json") \
+              || continue
           comment_body+=$html
         done
 

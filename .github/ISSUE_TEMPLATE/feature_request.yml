@@ -1,3 +1,4 @@
+---
 name: Feature Request
 description: Request a new feature to enhance the game.
 labels: ['Enhancement']
@@ -8,7 +9,8 @@ body:
     attributes:
       label: Describe the desired feature
       description: |
-        Try to explain the desired end result, rather than speculating about how the feature could be implemented.
+        Try to explain the desired end result, rather than speculating about how
+        the feature could be implemented.
         If applicable, add screenshots or mockups to help explain your request.
     validations:
       required: true
