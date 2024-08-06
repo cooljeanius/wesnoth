@@ -94,6 +94,7 @@ extra_fields = []
 added = []
 # Changed images
 changed = []
+wrong_size = []
 # Already mentioned in the CSV file, but lacking something in either the
 # license or author fields
 incomplete = []
@@ -139,22 +140,28 @@ for root, _, files in os.walk(options.repo):
                 # Always use slashes for the file path irrespective of OS used
                 # to run the update
                 file_path = file_path.replace(os.path.sep, "/")
-            file_size = str(os.path.getsize(file))
+            file_size = str(os.path.getsize(file_path))
             file_hash = do_hash(file_path)
 
             if file_path not in csv_data:
                 added.append(
                     ["", file_path, "", "", "", do_git(file_path), file_size, file_hash]
                 )
-            elif len(csv_data[file_path]) < 7:
+            elif len(csv_data[file_path]) < 8:
                 missing_fields.append(csv_data[file_path])
-            elif len(csv_data[file_path]) > 7:
+            elif len(csv_data[file_path]) > 8:
                 extra_fields.append(csv_data[file_path])
             elif csv_data[file_path][5] != "":
                 update.append(csv_data[file_path])
-            elif csv_data[file][6] != file_size or csv_data[file_path][6] != file_hash:
+            elif csv_data[file_path][6] != file_size:
                 csv_data[file_path][5] = do_git(file_path)
-                csv_data[file_path][6] = file_hash
+                csv_data[file_path][6] = file_size
+                csv_data[file_path][7] = file_hash
+                wrong_size.append(csv_data[file_path])
+            elif csv_data[file_path][7] != file_hash:
+                csv_data[file_path][5] = do_git(file_path)
+                csv_data[file_path][6] = file_size
+                csv_data[file_path][7] = file_hash
                 changed.append(csv_data[file_path])
             elif (
                 csv_data[file_path][2].strip() == ""
@@ -203,6 +210,7 @@ count_missing_fields = len(missing_fields)
 count_extra_fields = len(extra_fields)
 count_added = len(added)
 count_changed = len(changed)
+count_wrong_size = len(wrong_size)
 count_incomplete = len(incomplete)
 count_update = len(update)
 
@@ -211,6 +219,7 @@ if (
     or count_extra_fields > 0
     or count_added > 0
     or count_changed > 0
+    or count_wrong_size > 0
     or count_incomplete > 0
     or count_update > 0
 ):
@@ -241,6 +250,12 @@ if (
     )
     print(
         "\nThere are "
+        + str(count_wrong_size)
+        + " images with the wrong size: \n"
+        + "\n".join(a[1] for a in wrong_size)
+    )
+    print(
+        "\nThere are "
         + str(count_incomplete)
         + " images that lack license or author information: \n"
         + "\n".join(a[1] for a in incomplete)
@@ -262,7 +277,7 @@ else:
     print("All licenses were known.\n")
 
 if any_check_failed:
-    print("A check failed!\n")
+    print("At least one check failed!\n")
     sys.exit(1)
 else:
     print("All checks successful!\n")
