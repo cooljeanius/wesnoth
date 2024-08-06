@@ -47,9 +47,12 @@ jobs:
       - name: Copyright check
         run: |
           ./update_copyrights --output= || \
-            (if test -x "$(which pylint)"; then pylint ./update_copyrights; \
-             elif test -x "$(which flake8)"; then flake8 ./update_copyrights; \
-             elif test -x "$(which ruff)"; then ruff ./update_copyrights; \
+            (if test -x "$(which pylint)"; then \
+               which pylint && pylint ./update_copyrights; \
+             elif test -x "$(which flake8)"; then \
+               which flake8 && flake8 ./update_copyrights; \
+             elif test -x "$(which ruff)"; then \
+               which ruff && ruff check ./update_copyrights; \
              else \
                echo "error: unable to lint ./update_copyrights script!" >&2; \
                exit 1; \

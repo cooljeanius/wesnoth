@@ -25,7 +25,8 @@ import sys
 # [3] = authorship information
 # [4] = notes
 # [5] = new git commit date, if different from the value in [0]
-# [6] = current md5 hash
+# [6] = current file size
+# [7] = current md5 hash
 ##
 
 ##
@@ -138,17 +139,20 @@ for root, _, files in os.walk(options.repo):
                 # Always use slashes for the file path irrespective of OS used
                 # to run the update
                 file_path = file_path.replace(os.path.sep, "/")
+            file_size = str(os.path.getsize(file))
             file_hash = do_hash(file_path)
 
             if file_path not in csv_data:
-                added.append(["", file_path, "", "", "", do_git(file_path), file_hash])
+                added.append(
+                    ["", file_path, "", "", "", do_git(file_path), file_size, file_hash]
+                )
             elif len(csv_data[file_path]) < 7:
                 missing_fields.append(csv_data[file_path])
             elif len(csv_data[file_path]) > 7:
                 extra_fields.append(csv_data[file_path])
             elif csv_data[file_path][5] != "":
                 update.append(csv_data[file_path])
-            elif csv_data[file_path][6] != file_hash:
+            elif csv_data[file][6] != file_size or csv_data[file_path][6] != file_hash:
                 csv_data[file_path][5] = do_git(file_path)
                 csv_data[file_path][6] = file_hash
                 changed.append(csv_data[file_path])
@@ -179,6 +183,7 @@ if options.output != "":
                 "Author - Real Name(other name);Real Name(other name);etc",
                 "Notes",
                 "Needs Update",
+                "Size",
                 "MD5",
             ]
         )
@@ -254,7 +259,7 @@ if len(unknown_licenses) > 0:
     print("Unknown licenses: \n")
     print("    " + "\n    ".join(unknown_licenses))
 else:
-    print("all licenses were known.\n")
+    print("All licenses were known.\n")
 
 if any_check_failed:
     print("A check failed!\n")
