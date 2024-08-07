@@ -212,7 +212,7 @@ if len(removed) > 0:
         "\nThere are "
         + str(len(removed))
         + " removed images: \n"
-        + "\n".join(",".join(a[1]) for a in removed)
+        + "\n".join(",".join(a) for a in removed)
     )
 else:
     print("No images were removed.\n")
