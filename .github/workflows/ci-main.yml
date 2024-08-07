@@ -79,12 +79,12 @@ jobs:
       image: wesnoth/wesnoth:2204-master
       options: --tty  # docker create options
       env:
-        TOOL: ${{ matrix.tool }}
-        CFG: ${{ matrix.cfg }}
-        CC: ${{ matrix.cc }}
-        CXX: ${{ matrix.cxx }}
+        TOOL: ${{matrix.tool}}
+        CFG: ${{matrix.cfg}}
+        CC: ${{matrix.cc}}
+        CXX: ${{matrix.cxx}}
         CXX_STD: 17
-        LTO: ${{ matrix.lto }}
+        LTO: ${{matrix.lto}}
         CLICOLOR_FORCE: 1
         SDL_VIDEODRIVER: dummy
 
@@ -108,8 +108,8 @@ jobs:
                 scons "$@" build="$CFG" ctool="$CC" cxxtool="$CXX" \
                   cxx_std="$CXX_STD" extra_flags_config="-pipe" \
                   forum_user_handler=true nls=false enable_lto="$LTO" \
-                  force_color=true jobs=2 --debug=time glibcxx_debug=true \
-                  glibcxx_assertions=true
+                  force_color=true jobs=2 --debug=time \
+                  glibcxx_debug=true glibcxx_assertions=true
               }
               build strict=true wesnoth boost_unit_tests
 
@@ -284,7 +284,7 @@ jobs:
         cfg: [Debug, Release]
     runs-on: macos-12
     env:
-      CFG: ${{ matrix.cfg }}
+      CFG: ${{matrix.cfg}}
       DEVELOPER_DIR: /Applications/Xcode_13.1.app/Contents/Developer
 
     steps:
@@ -312,7 +312,7 @@ jobs:
             { printf 'Failed to build unit test executable!\n' >&2; exit 1; }
       - name: Create disk image
         working-directory: projectfiles/Xcode
-        run: |
+        run: >
           hdiutil create -volname "Wesnoth_$CFG" -fs 'HFS+' -srcfolder \
             "build/$CFG" -ov -format UDBZ "Wesnoth_${CFG}.dmg"
       - name: Upload disk image
@@ -322,11 +322,11 @@ jobs:
           path: projectfiles/Xcode/Wesnoth_${{ matrix.cfg }}.dmg
       - name: Run WML tests
         if: matrix.cfg == 'Release'
-        run: |
+        run: >
           ./run_wml_tests -g -c -t 30 -p \
             "projectfiles/Xcode/build/$CFG/The Battle for Wesnoth.app/Contents/MacOS/The Battle for Wesnoth"
       - name: Run unit tests
-        run: |
+        run: >
           ./run_boost_tests --path=projectfiles/Xcode/build/"$CFG" \
             --executable=unit_tests
 
@@ -336,7 +336,7 @@ jobs:
       matrix:
         cfg: [Debug, Release]
     env:
-      CFG: ${{ matrix.cfg }}
+      CFG: ${{matrix.cfg}}
       VCPKG_FEATURE_FLAGS: dependencygraph
     permissions:
       contents: write  # for dependency graph
@@ -364,10 +364,8 @@ jobs:
         uses: microsoft/setup-msbuild@v2.0.0
 
       - name: Run cmake
-        run: cmake -DCMAKE_BUILD_TYPE=%CFG% -DENABLE_GAME=true -DENABLE_SERVER=true -DENABLE_CAMPAIGN_SERVER=true
-          -DENABLE_TESTS=true -DENABLE_MYSQL=false -DENABLE_NLS=false
-          -DCMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.cmake -DVCPKG_INSTALL_OPTIONS=--debug
-          -DVCPKG_TARGET_TRIPLET=x64-windows -DCMAKE_GENERATOR_PLATFORM=x64 -G "Visual Studio 16 2019" .
+        run: >
+          cmake -DCMAKE_BUILD_TYPE=%CFG% -DENABLE_GAME=true -DENABLE_SERVER=true -DENABLE_CAMPAIGN_SERVER=true -DENABLE_TESTS=true -DENABLE_MYSQL=false -DENABLE_NLS=false -DCMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.cmake -DVCPKG_INSTALL_OPTIONS=--debug -DVCPKG_TARGET_TRIPLET=x64-windows -DCMAKE_GENERATOR_PLATFORM=x64 -G "Visual Studio 16 2019" .
 
       - name: Build wesnoth, wesnothd, campaignd and unit tests
         run: MSBuild.exe wesnoth.sln -p:Configuration=%CFG%
@@ -405,4 +403,4 @@ jobs:
           server: ${{ vars.IRC_SERVER }}
           nickname: ${{ vars.IRC_NICK }}  # is also used for sasl username
           sasl_password: ${{ secrets.IRC_SASL_PASSWORD }}
-          message: "❌ ${{ github.workflow }} workflow run ${{ github.run_number }} failed on \x0306${{ github.ref_name }}\x0F: ${{ env.COMMIT_SUBJECT }} by \x0315${{ github.actor }}\x0F: \x0302${{ github.event.head_commit.url }}\x0F"
+          message: "${{github.workflow}} workflow run ${{github.run_number}} failed on \x0306${{github.ref_name}}\x0F: ${{env.COMMIT_SUBJECT}} by \x0315${{github.actor}}\x0F: \x0302${{github.event.head_commit.url}}\x0F"
