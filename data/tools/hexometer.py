@@ -6,14 +6,19 @@ from io import BytesIO
 try:
     from PIL import Image
 except ImportError:
-    print("""Please install the Python Pillow Library to run this script.
+    print(
+        """Please install the Python Pillow Library to run this script.
 You can download it from https://pypi.python.org/pypi/Pillow
 On Debian and Ubuntu you can also type in a Terminal
-sudo apt-get install python-pil""", file=sys.stderr)
+sudo apt-get install python-pil""",
+        file=sys.stderr,
+    )
     sys.exit(1)
 
 suffix_re = re.compile(".*-(n|s|w|e|ne|nw|sw|se|[0-9]+)([-.]).*")
-anim_re = re.compile(".*-(attack|defend|melee|ranged|magic|idle|die|dying|death|flying|leading|healing).*")
+anim_re = re.compile(
+    ".*-(attack|defend|melee|ranged|magic|idle|die|dying|death|flying|leading|healing).*"
+)
 # the default mask is a png RGBA file encoded in base64
 default_mask = b"""
 iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAYAAABV7bNHAAAA/UlEQVR42u3cWwoCMRBFQfe/6Tg/
@@ -27,45 +32,49 @@ parser = argparse.ArgumentParser(
     formatter_class=argparse.RawTextHelpFormatter,
     description="Search png images not fitting in a hex",
     epilog="""return numbers of pixels out of the hex for each filename
-(-1 if the image is not a standard 72x72 image and -f was not used)"""
-    )
-parser.add_argument("-m", "--mask",
-                    action="store",
-                    metavar="file",
-                    help="""choose which image use as mask
-(default is a mask embedded in the script)"""
-                    )
-parser.add_argument("-a", "--anim",
-                    action="store_true",
-                    help="""skip most animations images (containing:
+(-1 if the image is not a standard 72x72 image and -f was not used)""",
+)
+parser.add_argument(
+    "-m",
+    "--mask",
+    action="store",
+    metavar="file",
+    help="""choose which image use as mask
+(default is a mask embedded in the script)""",
+)
+parser.add_argument(
+    "-a",
+    "--anim",
+    action="store_true",
+    help="""skip most animations images (containing:
 -attack -defend -melee -ranged -magic -idle
--die -dying -death -healing -flying -leading)"""
-                    )
-parser.add_argument("-s", "--suffix",
-                    action="store_true",
-                    help="skip images with directional or numerical suffix"
-                    )
-parser.add_argument("-r", "--regex",
-                    action="store",
-                    metavar="REG",
-                    help="""skip images matching the case-insensitive
-regular expression REG (Python)"""
-                    )
-parser.add_argument("-f", "--format",
-                    action="store_true",
-                    help="skip images which are not in 72x72 format"
-                    )
-parser.add_argument("-q", "--quiet",
-                    action="store_true",
-                    help="only display results"
-                    )
-parser.add_argument("dirs",
-                    action="store",
-                    nargs="*",
-                    help="directories to check",
-                    default=os.getcwd()
-                    )
-args=parser.parse_args()
+-die -dying -death -healing -flying -leading)""",
+)
+parser.add_argument(
+    "-s",
+    "--suffix",
+    action="store_true",
+    help="skip images with directional or numerical suffix",
+)
+parser.add_argument(
+    "-r",
+    "--regex",
+    action="store",
+    metavar="REG",
+    help="""skip images matching the case-insensitive
+regular expression REG (Python)""",
+)
+parser.add_argument(
+    "-f",
+    "--format",
+    action="store_true",
+    help="skip images which are not in 72x72 format",
+)
+parser.add_argument("-q", "--quiet", action="store_true", help="only display results")
+parser.add_argument(
+    "dirs", action="store", nargs="*", help="directories to check", default=os.getcwd()
+)
+args = parser.parse_args()
 
 # get all the PNG images
 images = []
@@ -86,13 +95,17 @@ if args.regex:
 images.sort()
 
 if not args.quiet:
-    print("""Search 72x72 images not fitting in a hex
+    print(
+        """Search 72x72 images not fitting in a hex
 in directories: {}
 Using alphamask image: {}
 Skipping files matching regex: {}
-Pixels out of hex : filename""".format(", ".join(args.dirs),
-                                       args.mask if args.mask else "",
-                                       args.regex if args.regex else ""))
+Pixels out of hex : filename""".format(
+            ", ".join(args.dirs),
+            args.mask if args.mask else "",
+            args.regex if args.regex else "",
+        )
+    )
 
 # open the mask
 if args.mask:
@@ -103,7 +116,7 @@ if args.mask:
         sys.exit(1)
 else:
     mask = Image.open(BytesIO(base64.b64decode(default_mask)))
-mask_data = mask.getdata(3) # get alpha channel values
+mask_data = mask.getdata(3)  # get alpha channel values
 
 for fn in images:
     try:

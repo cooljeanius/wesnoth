@@ -47,7 +47,8 @@ jobs:
       - name: Copyright check
         run: |
           ./update_copyrights --output= || \
-            (if test -x "$(which pylint)"; then \
+            (ret="$?"; sync && echo "./update_copyrights returned '${ret}'"; \
+             if test -x "$(which pylint)"; then \
                sync && which pylint && pylint ./update_copyrights; \
              elif test -x "$(which flake8)"; then \
                sync && which flake8 && flake8 ./update_copyrights; \
@@ -55,10 +56,12 @@ jobs:
                sync && which ruff && ruff check ./update_copyrights; \
              elif test -x "$(which black)"; then \
                sync && which black && black ./update_copyrights; \
+             elif test -x "$(which pyupgrade)"; then \
+               sync && which pyupgrade && pyupgrade ./update_copyrights; \
              else \
                sync && echo "No python code quality tools found!" && sleep 1; \
-               echo "error: unable to lint ./update_copyrights script!" >&2; \
-               exit 1; \
+               echo "warning: unable to lint ./update_copyrights script!" >&2; \
+               if test -n "${ret}"; then exit "${ret}"; else exit 1; fi; \
              fi)
 
   ubuntu:

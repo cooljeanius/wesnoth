@@ -18,24 +18,35 @@ not allow composed strings like above.
 import re, sys
 import codecs
 
+
 class Data:
     """Common subclass."""
+
     def __init__(self, name):
         self.name = name
         self.file = "(None)"
         self.line = -1
 
-    def __str__( self ):
-        return self.debug(show_contents = True, write = False)
+    def __str__(self):
+        return self.debug(show_contents=True, write=False)
 
-    def debug(self, show_contents = False, use_color = False, indent=0, write=True):
+    def debug(self, show_contents=False, use_color=False, indent=0, write=True):
         if use_color:
             magenta = "\x1b[35;1m"
             off = "\x1b[0m"
         else:
             magenta = off = ""
         pos = indent * "  "
-        result = pos + "\ " + magenta + self.name + off + " (" + self.__class__.__name__ + ")"
+        result = (
+            pos
+            + "\ "
+            + magenta
+            + self.name
+            + off
+            + " ("
+            + self.__class__.__name__
+            + ")"
+        )
         if show_contents:
             if self.is_translatable() == True:
                 result += " _"
@@ -49,10 +60,13 @@ class Data:
             else:
                 text = result
             print(text)
-        else: return result
+        else:
+            return result
 
     def copy(self):
-        c = self.__class__(self.name, self.data) # this makes a new instance or so I was told
+        c = self.__class__(
+            self.name, self.data
+        )  # this makes a new instance or so I was told
         return c
 
     def compare(self, other):
@@ -72,11 +86,16 @@ class Data:
         self.line = line
 
     def get_meta(self):
-        return (self.file, self.line,)
+        return (
+            self.file,
+            self.line,
+        )
+
 
 class DataText(Data):
     """Represents any text strings."""
-    def __init__(self, name, text, translatable = False):
+
+    def __init__(self, name, text, translatable=False):
         Data.__init__(self, name)
         self.data = text
         self.translatable = translatable
@@ -93,8 +112,10 @@ class DataText(Data):
     def is_translatable(self):
         return self.translatable
 
+
 class DataBinary(Data):
     """A binary chunk of WML."""
+
     def __init__(self, name, binary):
         Data.__init__(self, name)
         self.data = binary
@@ -105,8 +126,10 @@ class DataBinary(Data):
     def set_value(self, data):
         self.data = data
 
+
 class DataMacro(Data):
     """A macro."""
+
     def __init__(self, name, macro):
         Data.__init__(self, name)
         self.data = macro
@@ -117,8 +140,10 @@ class DataMacro(Data):
     def set_value(self, data):
         self.data = data
 
+
 class DataDefine(Data):
     """A definition."""
+
     def __init__(self, name, params, define):
         Data.__init__(self, name)
         self.params = params
@@ -133,8 +158,10 @@ class DataDefine(Data):
     def set_value(self, data):
         self.data = data
 
+
 class DataComment(Data):
     """A comment (normally discarded)."""
+
     def __init__(self, name, comment):
         Data.__init__(self, name)
         self.data = comment
@@ -145,22 +172,27 @@ class DataComment(Data):
     def set_value(self, data):
         self.data = data
 
+
 class DataClosingTag(Data):
     """Yes, those are kept."""
+
     def __init__(self, name):
         Data.__init__(self, name)
         self.data = None
 
+
 class WMLException(Exception):
     def __init__(self, text):
-        super( WMLException, self ).__init__()
+        super(WMLException, self).__init__()
         self.text = text
         print(text)
+
     def __str__(self):
         return self.text
 
+
 class DataSub(Data):
-    def __init__(self, name, sub = [], textdomain=None):
+    def __init__(self, name, sub=[], textdomain=None):
         """The sub parameter is a list of sub-elements."""
         Data.__init__(self, name)
         self.data = []
@@ -184,9 +216,9 @@ class DataSub(Data):
             self.remove(item)
 
     def write_file(self, f, indent=0, textdomain=""):
-        f.write(self.make_string( indent, textdomain))
+        f.write(self.make_string(indent, textdomain))
 
-    def make_string(self, indent = 0, textdomain = ""):
+    def make_string(self, indent=0, textdomain=""):
         """Write the data object to the given file object."""
         ifdef = 0
         result = []
@@ -204,7 +236,7 @@ class DataSub(Data):
                     result.append("#else\n")
                 else:
                     result.append("#ifdef %s\n" % item.name)
-                result.append( item.make_string(indent + 4, textdomain) )
+                result.append(item.make_string(indent + 4, textdomain))
                 ifdef = 1
 
             elif isinstance(item, DataSub):
@@ -213,7 +245,8 @@ class DataSub(Data):
                 result.append(item.make_string(indent + 4, textdomain))
                 result.append(" " * indent)
                 close = item.name
-                if close[0] == "+": close = close[1:]
+                if close[0] == "+":
+                    close = close[1:]
                 result.append("[/%s]\n" % close)
 
             elif isinstance(item, DataText):
@@ -230,11 +263,12 @@ class DataSub(Data):
                 # FIXME: don't compile regex's if they are one shots
                 if item.translatable:
                     if "=" in text:
-                        text = re.compile("=(.*?)(?=[=;]|$)"
-                            ).sub("=\" + _\"\\1\" + \"", text)
+                        text = re.compile("=(.*?)(?=[=;]|$)").sub(
+                            '=" + _"\\1" + "', text
+                        )
                         text = '"' + text + '"'
                         text = re.compile(r'\+ _""').sub("", text)
-                        result.append('%s=%s\n' % (item.name, text))
+                        result.append("%s=%s\n" % (item.name, text))
                     else:
                         result.append('%s=_"%s"\n' % (item.name, text))
 
@@ -253,16 +287,16 @@ class DataSub(Data):
                 result.append("%s\n" % item.data)
 
             elif isinstance(item, DataDefine):
-                result.append("#define %s %s\n%s#enddef\n" % (item.name, item.params,
-                    item.data))
+                result.append(
+                    "#define %s %s\n%s#enddef\n" % (item.name, item.params, item.data)
+                )
 
             elif isinstance(item, DataClosingTag):
                 result.append("[/%s]\n" % item.name)
 
             elif isinstance(item, DataBinary):
                 data = item.data.replace('"', r'""')
-                result.append("%s=\"%s\"\n" % (
-                    item.name, data))
+                result.append('%s="%s"\n' % (item.name, data))
 
             else:
                 raise WMLException("Unknown item: %s" % item.__class__.__name__)
@@ -274,7 +308,8 @@ class DataSub(Data):
         for r in result:
             if r is not None:
                 # For networking, we need actual bytestream here, not unicode.
-                if type(r) is str: r = r.encode("utf8")
+                if type(r) is str:
+                    r = r.encode("utf8")
                 output += bytes(r)
 
         return output
@@ -310,7 +345,8 @@ class DataSub(Data):
 
     def insert_after(self, previous, data):
         """Insert after given node, or else insert as first."""
-        if not previous in self.data: return self.insert_first(data)
+        if not previous in self.data:
+            return self.insert_first(data)
         # completely rebuild list and dict
         new_childs = []
         self.dict = {}
@@ -324,7 +360,8 @@ class DataSub(Data):
 
     def insert_at(self, pos, data):
         """Insert at given index (or as last)."""
-        if pos >= len(self.data): return self.insert(data)
+        if pos >= len(self.data):
+            return self.insert(data)
         # completely rebuild list and dict
         new_childs = []
         self.dict = {}
@@ -341,7 +378,8 @@ class DataSub(Data):
 
     def insert_as_nth(self, pos, data):
         """Insert as nth child of same name."""
-        if pos == 0: return self.insert_first(data)
+        if pos == 0:
+            return self.insert_first(data)
         already = self.get_all(data.name)
         before = already[pos - 1]
         self.insert_after(before, data)
@@ -365,16 +403,19 @@ class DataSub(Data):
         return copy
 
     def compare(self, other):
-        if len(self.data) != len(other.data): return False
+        if len(self.data) != len(other.data):
+            return False
         for i in range(self.data):
-            if not self.data[i].compare(other.data[i]): return False
+            if not self.data[i].compare(other.data[i]):
+                return False
         return True
 
     def rename_child(self, child, name):
         self.dict[child.name].remove(child)
         child.name = name
         # rebuild complete mapping for this name
-        if name in self.dict: del self.dict[name]
+        if name in self.dict:
+            del self.dict[name]
         for item in self.data:
             if item.name == name:
                 if name in self.dict:
@@ -382,22 +423,23 @@ class DataSub(Data):
                 else:
                     self.dict[name] = [item]
 
-    def insert_text(self, name, data, translatable = False,
-            textdomain = ""):
-        data = DataText(name, data, translatable = translatable)
+    def insert_text(self, name, data, translatable=False, textdomain=""):
+        data = DataText(name, data, translatable=translatable)
         data.textdomain = textdomain
         self.insert(data)
 
-    def insert_macro(self, name, args = None):
+    def insert_macro(self, name, args=None):
         macrodata = "{" + name
-        if args: macrodata += " " + str(args)
+        if args:
+            macrodata += " " + str(args)
         macrodata += "}"
         data = DataMacro(name, macrodata)
         self.insert(data)
 
-    def get_first(self, name, default = None):
+    def get_first(self, name, default=None):
         """Return first of given tag, or default"""
-        if not name in self.dict or not self.dict[name]: return default
+        if not name in self.dict or not self.dict[name]:
+            return default
         return self.dict[name][0]
 
     def get_all_with_attributes(self, attr_name, **kw):
@@ -414,7 +456,8 @@ class DataSub(Data):
 
     def get_or_create_sub(self, name):
         for data in self.get_all(name):
-            if isinstance(data, DataSub): return data
+            if isinstance(data, DataSub):
+                return data
 
         sub = DataSub(name, [])
         self.insert(sub)
@@ -428,10 +471,10 @@ class DataSub(Data):
     def get_or_create_sub_with_attributes(self, name, **kw):
         """For the uber lazy. Example:
 
-            event = scenario.get_or_create_sub_with_attribute("event", name = "prestart")
+        event = scenario.get_or_create_sub_with_attribute("event", name = "prestart")
 
-            That should find the first prestart event and return it, or else
-            create and insert a new prestart event and return it.
+        That should find the first prestart event and return it, or else
+        create and insert a new prestart event and return it.
         """
         for data in self.get_all(name):
             if isinstance(data, DataSub):
@@ -449,7 +492,8 @@ class DataSub(Data):
 
     def get_or_create_ifdef(self, name):
         for data in self.get_all(name):
-            if isinstance(data, DataIfDef): return data
+            if isinstance(data, DataIfDef):
+                return data
 
         ifdef = DataIfDef(name, [], "then")
         self.insert(ifdef)
@@ -458,7 +502,8 @@ class DataSub(Data):
     def delete_all(self, name):
         while 1:
             data = self.get_first(name)
-            if not data: break
+            if not data:
+                break
             self.remove(data)
 
     def remove_all(self, name):
@@ -470,78 +515,78 @@ class DataSub(Data):
 
     def get_all(self, name):
         """Return a list of all sub-items matching the given name."""
-        if not name in self.dict: return []
+        if not name in self.dict:
+            return []
         return self.dict[name]
 
     def get_text(self, name):
         """Return a text element"""
         for data in self.get_all(name):
-            if isinstance(data, DataText): return data
+            if isinstance(data, DataText):
+                return data
         return None
 
     def get_texts(self, name):
         """Gets all text elements matching the name"""
-        return [text for text in self.get_all(name)
-            if isinstance(text, DataText)]
+        return [text for text in self.get_all(name) if isinstance(text, DataText)]
 
     def get_all_text(self):
         """Gets all text elements"""
-        return [text for text in self.data
-            if isinstance(text, DataText)]
+        return [text for text in self.data if isinstance(text, DataText)]
 
     def get_binary(self, name):
         """Return a binary element"""
         for data in self.get_all(name):
-            if isinstance(data, DataBinary): return data
+            if isinstance(data, DataBinary):
+                return data
         return None
 
     def remove_text(self, name):
         text = self.get_text(name)
-        if text: self.remove(text)
+        if text:
+            self.remove(text)
 
     def get_macros(self, name):
         """Gets all macros matching the name"""
-        return [macro for macro in self.get_all(name)
-            if isinstance(macro, DataMacro)]
+        return [macro for macro in self.get_all(name) if isinstance(macro, DataMacro)]
 
     def get_all_macros(self):
         """Gets all macros"""
-        return [macro for macro in self.data
-            if isinstance(macro, DataMacro)]
+        return [macro for macro in self.data if isinstance(macro, DataMacro)]
 
     def get_ifdefs(self, name):
         """Gets all ifdefs matching the name"""
-        return [ifdef for ifdef in self.get_all(name)
-            if isinstance(ifdef, DataIfDef)]
+        return [ifdef for ifdef in self.get_all(name) if isinstance(ifdef, DataIfDef)]
 
     def get_subs(self, name):
         """Gets all elements matching the name"""
-        return [sub for sub in self.get_all(name)
-            if isinstance(sub, DataSub)]
+        return [sub for sub in self.get_all(name) if isinstance(sub, DataSub)]
 
     def get_all_subs(self):
         """Gets all elements"""
-        return [sub for sub in self.data
-            if isinstance(sub, DataSub)]
+        return [sub for sub in self.data if isinstance(sub, DataSub)]
 
     def remove_macros(self, name):
         for macro in self.get_macros(name):
             self.remove(macro)
 
-    def get_binary_val(self, name, default = None):
+    def get_binary_val(self, name, default=None):
         """For the lazy."""
         binary = self.get_binary(name)
-        if binary: return binary.data
+        if binary:
+            return binary.data
         return default
 
-    def get_text_val(self, name, default = None):
+    def get_text_val(self, name, default=None):
         """For the lazy."""
         text = self.get_text(name)
-        if text: return text.data
+        if text:
+            return text.data
         return default
 
-    def set_text_val(self, name, value, delete_if = None, translatable = False,
-        textdomain = ""):
+    def set_text_val(
+        self, name, value, delete_if=None, translatable=False, textdomain=""
+    ):
         """For the lazy."""
         text = self.get_text(name)
         if text:
@@ -553,32 +598,36 @@ class DataSub(Data):
                 text.translatable = translatable
         else:
             if value != delete_if:
-                self.insert_text(name, value, translatable = translatable,
-                    textdomain = textdomain)
+                self.insert_text(
+                    name, value, translatable=translatable, textdomain=textdomain
+                )
 
     def get_comment(self, start):
         for item in self.get_all("comment"):
             if isinstance(item, DataComment):
-                if item.data.startswith(start): return item
+                if item.data.startswith(start):
+                    return item
         return None
 
     def set_comment_first(self, comment):
         """For the lazy."""
         for item in self.get_all("comment"):
             if isinstance(item, DataComment):
-                if item.data == comment: return
+                if item.data == comment:
+                    return
 
         self.insert_first(DataComment("comment", comment))
 
-    def get_quantity(self, tag, difficulty, default = None):
-        """For the even lazier, looks for a value inside a difficulty ifdef.
-        """
+    def get_quantity(self, tag, difficulty, default=None):
+        """For the even lazier, looks for a value inside a difficulty ifdef."""
         v = self.get_text_val(tag)
-        if v is not None: return v
+        if v is not None:
+            return v
 
         for ifdef in self.get_ifdefs(["EASY", "NORMAL", "HARD"][difficulty]):
             v = ifdef.get_text_val(tag)
-            if v is not None: return v
+            if v is not None:
+                return v
 
         return default
 
@@ -595,7 +644,11 @@ class DataSub(Data):
 
         # remove current tags
         self.remove_text(name)
-        for ifdef in self.get_ifdefs("EASY") + self.get_ifdefs("NORMAL") + self.get_ifdefs("HARD"):
+        for ifdef in (
+            self.get_ifdefs("EASY")
+            + self.get_ifdefs("NORMAL")
+            + self.get_ifdefs("HARD")
+        ):
             ifdef.remove_text(name)
 
         # insert updated item
@@ -606,16 +659,18 @@ class DataSub(Data):
                 ifdef = self.get_or_create_ifdef(["EASY", "NORMAL", "HARD"][d])
                 ifdef.set_text_val(name, q[d])
 
-    def debug(self, show_contents = False, use_color = False, indent=0, write=True):
+    def debug(self, show_contents=False, use_color=False, indent=0, write=True):
         if use_color:
             red = "\x1b[31;1m"
             off = "\x1b[0m"
         else:
             red = off = ""
         pos = indent * "  "
-        result = pos + "\ " + red + self.name + off + " (" + self.__class__.__name__ + ")\n"
+        result = (
+            pos + "\ " + red + self.name + off + " (" + self.__class__.__name__ + ")\n"
+        )
         if write:
-            sys.stdout.write( result )
+            sys.stdout.write(result)
         indent += 1
         for child in self.data:
             cresult = child.debug(show_contents, use_color, indent, write=write)
@@ -631,6 +686,7 @@ class DataIfDef(DataSub):
     """
     An #ifdef section in WML.
     """
+
     def __init__(self, name, sub, type):
         DataSub.__init__(self, name, sub)
         self.type = type

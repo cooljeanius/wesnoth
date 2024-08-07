@@ -8,22 +8,29 @@ import wesnoth.wmlparser3 as wmlparser
 # src/addon/*
 # src/network.cpp
 
+
 def append_attributes(tag, **attributes):
     for k, v in list(attributes.items()):
-        if isinstance(k, str): k = k.encode("utf8")
-        if isinstance(v, str): v = v.encode("utf8")
+        if isinstance(k, str):
+            k = k.encode("utf8")
+        if isinstance(v, str):
+            v = v.encode("utf8")
         kn = wmlparser.AttributeNode(k)
         vn = wmlparser.StringNode(v)
         kn.value.append(vn)
         tag.append(kn)
 
-def append_tag(tag : wmlparser.TagNode, sub : str) -> wmlparser.TagNode:
+
+def append_tag(tag: wmlparser.TagNode, sub: str) -> wmlparser.TagNode:
     subtag = wmlparser.TagNode(sub.encode("utf8"))
     if tag:
         tag.append(subtag)
     return subtag
 
+
 dumpi = 0
+
+
 class CampaignClient:
     # First port listed will be used as default.
     portmap = (
@@ -31,7 +38,7 @@ class CampaignClient:
         ("15016", "1.16.x"),
         ("15014", "1.14.x"),
         ("15004", "trunk"),
-        )
+    )
 
     # Deactivated servers.
     deactivated = (
@@ -44,19 +51,19 @@ class CampaignClient:
         ("15001", "1.8.x"),
         ("15003", "1.6.x"),
         ("15005", "1.4.x"),
-        )
+    )
 
-    def __init__(self, address = None, quiet=False, secure=False, ipv6=False):
+    def __init__(self, address=None, quiet=False, secure=False, ipv6=False):
         """
         Return a new connection to the campaign server at the given address.
         """
 
-        self.length = 0 # length of last processed packet
-        self.counter = 0 # position inside above packet
-        self.words = {} # dictionary for WML decoder
-        self.wordcount = 4 # codewords in above dictionary
-        self.codes = {} # dictionary for WML encoder
-        self.codescount = 4 # codewords in above dictionary
+        self.length = 0  # length of last processed packet
+        self.counter = 0  # position inside above packet
+        self.words = {}  # dictionary for WML decoder
+        self.wordcount = 4  # codewords in above dictionary
+        self.codes = {}  # dictionary for WML encoder
+        self.codescount = 4  # codewords in above dictionary
         self.event = None
         self.name = None
         self.args = None
@@ -67,16 +74,14 @@ class CampaignClient:
         self.ipv6 = ipv6
 
         if self.secure:
-            print("Attempting to connect to the server using SSL/TLS",
-                  file=sys.stderr)
+            print("Attempting to connect to the server using SSL/TLS", file=sys.stderr)
             self.context = ssl.create_default_context()
             self.context.minimum_version = ssl.TLSVersion.TLSv1_2
         else:
             self.context = None
 
         if self.ipv6:
-            print("Attempting to connect to the server using IPv6",
-                  file=sys.stderr)
+            print("Attempting to connect to the server using IPv6", file=sys.stderr)
 
         if address is not None:
             self.canceled = False
@@ -91,9 +96,13 @@ class CampaignClient:
                 self.port = self.portmap[0][0]
             self.port = int(self.port)
 
-            addr = socket.getaddrinfo(self.host, self.port,
-                    socket.AF_INET6 if self.ipv6 else socket.AF_INET,
-                    socket.SOCK_STREAM, socket.IPPROTO_TCP)[0]
+            addr = socket.getaddrinfo(
+                self.host,
+                self.port,
+                socket.AF_INET6 if self.ipv6 else socket.AF_INET,
+                socket.SOCK_STREAM,
+                socket.IPPROTO_TCP,
+            )[0]
             if not self.quiet:
                 sys.stderr.write("Opening socket to %s" % address)
             bfwv = dict(self.portmap).get(str(self.port))
@@ -122,7 +131,7 @@ class CampaignClient:
                 self.sock.send(struct.pack("!I", 1))
             else:
                 self.sock.send(struct.pack("!I", 0))
-                
+
             try:
                 if self.secure:
                     result = self.sock.recv(4)
@@ -130,12 +139,13 @@ class CampaignClient:
                     # 0x00000000 if it supports encrypted connections
                     # 0xFFFFFFFF if it doesn't support them
                     # in this last case we exit the script
-                    if result == b'\x00\x00\x00\x00':
+                    if result == b"\x00\x00\x00\x00":
                         # now we can encrypt the socket
-                        self.ssl_sock = self.context.wrap_socket(self.sock,
-                                                                 server_hostname=self.host)
+                        self.ssl_sock = self.context.wrap_socket(
+                            self.sock, server_hostname=self.host
+                        )
                         sys.stderr.write("Connected with SSL/TLS\n")
-                    elif result == b'\xff\xff\xff\xff':
+                    elif result == b"\xff\xff\xff\xff":
                         self.ssl_unsupported = True
                     else:
                         # just in case, but the server should never return anything else
@@ -161,8 +171,12 @@ class CampaignClient:
                 # 10 is the width of the field (instead of the usual 8 for 32-bit numbers,
                 # because this includes the prefix)
                 # x requires formatting as a hex number
-                sys.stderr.write("Server returned value {0:d} \
-(hex: {0:#010x}).\n".format(result_num))
+                sys.stderr.write(
+                    "Server returned value {0:d} \
+(hex: {0:#010x}).\n".format(
+                        result_num
+                    )
+                )
 
     def async_cancel(self):
         """
@@ -188,22 +202,21 @@ class CampaignClient:
             else:
                 self.sock.shutdown(2)
         except socket.error:
-            pass # Well, what can we do?
+            pass  # Well, what can we do?
         except AttributeError:
-            pass # Socket not yet created
-
+            pass  # Socket not yet created
 
     def make_packet(self, doc):
-
         # The Wesnoth campaign server only accepts "simple WML", which
         # requires all attributes to be sorted alphabetically.
         def sorter(tag):
             if isinstance(tag, wmlparser.TagNode):
-                tag.data.sort(key = lambda node: node.name)
+                tag.data.sort(key=lambda node: node.name)
                 for tag2 in tag.data:
                     sorter(tag2)
+
         sorter(doc)
-        
+
         return doc.wml()
 
     def send_packet(self, packet):
@@ -215,7 +228,7 @@ class CampaignClient:
 
         # Compress the packet before we send it
         fio = io.BytesIO()
-        z = gzip.GzipFile(mode = "wb", fileobj = fio)
+        z = gzip.GzipFile(mode="wb", fileobj=fio)
         z.write(packet)
         z.close()
         zdata = fio.getvalue()
@@ -270,22 +283,22 @@ class CampaignClient:
             if self.verbose:
                 sys.stderr.write("GZIP compression found...\n")
             bio = io.BytesIO(packet)
-            z = gzip.GzipFile("rb", fileobj = bio)
+            z = gzip.GzipFile("rb", fileobj=bio)
             unzip = z.read()
             z.close()
             packet = unzip
 
-        elif packet.startswith(b'\x78\x9C' ):
+        elif packet.startswith(b"\x78\x9C"):
             if self.verbose:
                 sys.stderr.write("ZLIB compression found...\n")
-            packet = zlib.decompres( packet )
+            packet = zlib.decompres(packet)
 
         return packet
 
-    def decode( self, data ):
+    def decode(self, data):
         if self.verbose:
             sys.stderr.write("Decoding text WML...\n")
-        data = self.decode_WML( data )
+        data = self.decode_WML(data)
 
         return data
 
@@ -310,13 +323,13 @@ class CampaignClient:
         p.parse_binary(data)
         return p.root
 
-    def encode_WML( self, data ):
+    def encode_WML(self, data):
         """
         Not needed - not sure this method should even be here.
         """
         pass
 
-    def encode( self, data ):
+    def encode(self, data):
         """
         Always encode GZIP compressed - future use ZLIB
         """
@@ -330,7 +343,7 @@ class CampaignClient:
             return None
         request = append_tag(None, "request_campaign_list")
         if addon:
-            append_attributes(request, name = addon)
+            append_attributes(request, name=addon)
         self.send_packet(self.make_packet(request))
 
         return self.decode(self.read_packet())
@@ -340,8 +353,7 @@ class CampaignClient:
         Deletes the named campaign on the server.
         """
         request = append_tag(None, "delete")
-        append_attributes(request, name = name,
-            passphrase = passphrase)
+        append_attributes(request, name=name, passphrase=passphrase)
 
         self.send_packet(self.make_packet(request))
 
@@ -353,8 +365,7 @@ class CampaignClient:
         Changes the passphrase of a campaign on the server.
         """
         request = append_tag(None, "change_passphrase")
-        append_attributes(request, name = name,
-            passphrase = old, new_passphrase = new)
+        append_attributes(request, name=name, passphrase=old, new_passphrase=new)
 
         self.send_packet(self.make_packet(request))
         return self.decode(self.read_packet())
@@ -364,7 +375,7 @@ class CampaignClient:
         Downloads the named campaign and returns it as a raw binary WML packet.
         """
         request = append_tag(None, "request_campaign")
-        append_attributes(request, name = name)
+        append_attributes(request, name=name)
         self.send_packet(self.make_packet(request))
         raw_packet = self.read_packet()
 
@@ -393,7 +404,7 @@ class CampaignClient:
         """
         request = pbl
         request.name = b"upload"
-        append_attributes(request, name = name)
+        append_attributes(request, name=name)
         data = append_tag(request, "data")
 
         def put_file(name, f):
@@ -405,13 +416,13 @@ class CampaignClient:
 
             # Order in which we apply escape sequences matters.
             contents = f.read()
-            contents = contents.replace(b"\x01", b"\x01\x02" )
+            contents = contents.replace(b"\x01", b"\x01\x02")
             contents = contents.replace(b"\x00", b"\x01\x01")
             contents = contents.replace(b"\x0d", b"\x01\x0e")
             contents = contents.replace(b"\xfe", b"\x01\xff")
 
-            append_attributes(fileNode, name = name)
-            append_attributes(fileNode, contents = contents)
+            append_attributes(fileNode, name=name)
+            append_attributes(fileNode, contents=contents)
 
             return fileNode
 
@@ -422,12 +433,12 @@ class CampaignClient:
                     return None
 
             dataNode = append_tag(None, "dir")
-            append_attributes(dataNode, name = name)
+            append_attributes(dataNode, name=name)
             for fn in glob.glob(path + "/*"):
                 if os.path.isdir(fn):
                     sub = put_dir(os.path.basename(fn), fn)
                 else:
-                    sub = put_file(os.path.basename(fn), open(fn, 'rb'))
+                    sub = put_file(os.path.basename(fn), open(fn, "rb"))
                 if sub:
                     dataNode.append(sub)
             return dataNode
@@ -449,9 +460,10 @@ class CampaignClient:
         This is like get_campaign_raw, but returns immediately,
         doing server communications in a background thread.
         """
+
         class MyThread(threading.Thread):
             def __init__(self, name, client):
-                threading.Thread.__init__( self, name=name )
+                threading.Thread.__init__(self, name=name)
                 self.name = name
                 self.cs = client
 
@@ -468,7 +480,7 @@ class CampaignClient:
                 self.event.set()
                 self.cs.async_cancel()
 
-        mythread = MyThread( name, self )
+        mythread = MyThread(name, self)
         mythread.start()
 
         return mythread
@@ -478,9 +490,10 @@ class CampaignClient:
         This is like put_campaign, but returns immediately,
         doing server communications in a background thread.
         """
+
         class MyThread(threading.Thread):
             def __init__(self, name, cs, args):
-                threading.Thread.__init__( self, name=name )
+                threading.Thread.__init__(self, name=name)
                 self.name = name
                 self.cs = cs
                 self.args = args
@@ -502,7 +515,7 @@ class CampaignClient:
 
         return mythread
 
-    def unpackdir(self, data, path, i = 0, verbose = False):
+    def unpackdir(self, data, path, i=0, verbose=False):
         """
         Call this to unpack a campaign contained in a WML object
         to the filesystem. The data parameter is the WML object,
@@ -513,7 +526,7 @@ class CampaignClient:
             os.mkdir(path)
         except OSError:
             pass
-        for f in data.get_all(tag = "file"):
+        for f in data.get_all(tag="file"):
             name = f.get_text_val("name", "?")
             contents = f.get_binary("contents")
             if not contents:
@@ -522,9 +535,8 @@ class CampaignClient:
                     sys.stderr.write("File %s is empty.\n" % name)
                     sys.stderr.write(f.debug() + "\n")
             if verbose:
-                sys.stderr.write(i * " " + name + " (" +
-                      str(len(contents)) + ")\n")
-            save = open( os.path.join(path, name), "wb")
+                sys.stderr.write(i * " " + name + " (" + str(len(contents)) + ")\n")
+            save = open(os.path.join(path, name), "wb")
 
             # We MUST un-escape our data
             # Order we apply escape sequences matter here
@@ -532,7 +544,7 @@ class CampaignClient:
             save.write(contents)
             save.close()
 
-        for dir in data.get_all(tag = "dir"):
+        for dir in data.get_all(tag="dir"):
             name = dir.get_text_val("name", "?")
             shutil.rmtree(os.path.join(path, name), True)
             os.mkdir(os.path.join(path, name))
@@ -544,5 +556,6 @@ class CampaignClient:
         request = append_tag(None, "request_terms")
         self.send_packet(self.make_packet(request))
         return self.decode(self.read_packet())
+
 
 # vim: tabstop=4: shiftwidth=4: expandtab: softtabstop=4: autoindent:

@@ -13,20 +13,42 @@ import subprocess
 import sys
 import time
 
+
 def signal_handler(signal, func):
     print("\nProcessing interrupted.")
     shutil.rmtree(options.tempdir)
     sys.exit(1)
 
+
 signal.signal(signal.SIGINT, signal_handler)
 
 args = argparse.ArgumentParser()
 
-args.add_argument("--minpercent", default=90, help="The new file size must be reduced by to least this percentage compared to the original. Default 90%% (10%% reduction).")
-args.add_argument("--nodryrun", action="store_true", help="Whether to replace the original file with the converted one if its size is reduced enough. Does not replace by default.")
-args.add_argument("--quality", default="90", help="The quality to use for lossy compression. Defaults to 90.")
-args.add_argument("--repo", default=os.getcwd(), help="The root of the Wesnoth repository. Defaults to the current directory.")
-args.add_argument("--tempdir", default=os.path.join(os.getcwd(), "temp_webp"), help="The root of the Wesnoth repository. Defaults to 'temp_webp/' in the current directory.")
+args.add_argument(
+    "--minpercent",
+    default=90,
+    help="The new file size must be reduced by to least this percentage compared to the original. Default 90%% (10%% reduction).",
+)
+args.add_argument(
+    "--nodryrun",
+    action="store_true",
+    help="Whether to replace the original file with the converted one if its size is reduced enough. Does not replace by default.",
+)
+args.add_argument(
+    "--quality",
+    default="90",
+    help="The quality to use for lossy compression. Defaults to 90.",
+)
+args.add_argument(
+    "--repo",
+    default=os.getcwd(),
+    help="The root of the Wesnoth repository. Defaults to the current directory.",
+)
+args.add_argument(
+    "--tempdir",
+    default=os.path.join(os.getcwd(), "temp_webp"),
+    help="The root of the Wesnoth repository. Defaults to 'temp_webp/' in the current directory.",
+)
 
 options = args.parse_args()
 
@@ -85,7 +107,7 @@ image_dirs = [
     os.path.join("data", "campaigns", "Winds_of_Fate", "images", "story"),
     os.path.join("data", "core", "images", "maps"),
     os.path.join("data", "core", "images", "story"),
-    os.path.join("data", "core", "images", "portraits")
+    os.path.join("data", "core", "images", "portraits"),
 ]
 
 results_dict = {}
@@ -98,7 +120,7 @@ start = time.time()
 count = 0
 
 for image_dir in image_dirs:
-    print("Processing "+image_dir)
+    print("Processing " + image_dir)
     for image_root, _, files in os.walk(os.path.join(options.repo, image_dir)):
         for filename in files:
             count += 1
@@ -133,20 +155,24 @@ for image_dir in image_dirs:
             initial_file = os.path.join(image_root, filename)
             webp_file = ""
             if filetype in (".jpg", ".png"):
-                webp_file = os.path.join(options.tempdir, filename)[:-3]+"webp"
+                webp_file = os.path.join(options.tempdir, filename)[:-3] + "webp"
             elif filetype == ".jpeg":
-                webp_file = os.path.join(options.tempdir, filename)[:-4]+"webp"
+                webp_file = os.path.join(options.tempdir, filename)[:-4] + "webp"
             else:
                 webp_file = os.path.join(options.tempdir, filename)
 
-            result = subprocess.run(subprocess_args + [initial_file, "-o", webp_file], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            result = subprocess.run(
+                subprocess_args + [initial_file, "-o", webp_file],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
             if result.returncode != 0:
-                print(initial_file+" failed conversion to webp.")
+                print(initial_file + " failed conversion to webp.")
                 continue
 
             initial_size = os.path.getsize(initial_file)
             converted_size = os.path.getsize(webp_file)
-            percentage_change = round((converted_size/initial_size)*100, 2)
+            percentage_change = round((converted_size / initial_size) * 100, 2)
             absolute_change = initial_size - converted_size
 
             results_dict[initial_file] = {
@@ -155,7 +181,7 @@ for image_dir in image_dirs:
                 "old_size": initial_size,
                 "new_size": converted_size,
                 "change_in_bytes": absolute_change,
-                "change_in_percent": percentage_change
+                "change_in_percent": percentage_change,
             }
 
             if options.nodryrun and percentage_change < options.minpercent:
@@ -168,12 +194,24 @@ initial_total_size = 0
 final_total_size = 0
 
 try:
-    with open("conversion-good.tsv", "w") as good_f, open("conversion-bad.tsv", "w") as bad_f:
-        good_f.write("filename\told_size\tnew_size\tchange_in_percent\tchange_in_bytes\n")
-        bad_f.write("filename\told_size\tnew_size\tchange_in_percent\tchange_in_bytes\n")
+    with open("conversion-good.tsv", "w") as good_f, open(
+        "conversion-bad.tsv", "w"
+    ) as bad_f:
+        good_f.write(
+            "filename\told_size\tnew_size\tchange_in_percent\tchange_in_bytes\n"
+        )
+        bad_f.write(
+            "filename\told_size\tnew_size\tchange_in_percent\tchange_in_bytes\n"
+        )
 
         for filename, data in results_dict.items():
-            line = "{filename}\t{old_size}\t{new_size}\t{change_in_percent}\t{change_in_bytes}\n".format(filename=filename, old_size=data["old_size"], new_size=data["new_size"], change_in_percent=data["change_in_percent"], change_in_bytes=data["change_in_bytes"])
+            line = "{filename}\t{old_size}\t{new_size}\t{change_in_percent}\t{change_in_bytes}\n".format(
+                filename=filename,
+                old_size=data["old_size"],
+                new_size=data["new_size"],
+                change_in_percent=data["change_in_percent"],
+                change_in_bytes=data["change_in_bytes"],
+            )
 
             if data["change_in_percent"] < options.minpercent:
                 initial_total_size = initial_total_size + data["old_size"]
@@ -186,7 +224,7 @@ except OSError:
     print("Error writing summary output files!")
     sys.exit(1)
 
-total_percentage_change = round((final_total_size/initial_total_size)*100, 2)
+total_percentage_change = round((final_total_size / initial_total_size) * 100, 2)
 duration = time.time() - start
 
 hours_duration = int(duration / 3600)
@@ -194,5 +232,18 @@ minutes_duration = int((duration - (hours_duration * 3600)) / 60)
 seconds_duration = int(duration % 60)
 
 os.rmdir(options.tempdir)
-print("Total size for converted images changed from {initial} to {final} ({percentage}%)".format(initial=initial_total_size, final=final_total_size, percentage=total_percentage_change))
-print("Took {hours:02d}:{minutes:02d}:{seconds:02d} to process {count} files.".format(hours=hours_duration, minutes=minutes_duration, seconds=seconds_duration, count=len(results_dict)))
+print(
+    "Total size for converted images changed from {initial} to {final} ({percentage}%)".format(
+        initial=initial_total_size,
+        final=final_total_size,
+        percentage=total_percentage_change,
+    )
+)
+print(
+    "Took {hours:02d}:{minutes:02d}:{seconds:02d} to process {count} files.".format(
+        hours=hours_duration,
+        minutes=minutes_duration,
+        seconds=seconds_duration,
+        count=len(results_dict),
+    )
+)

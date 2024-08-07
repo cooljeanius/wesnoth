@@ -3,8 +3,8 @@
 import pefile, pathlib, shutil
 
 dlls = set()
-dllpath = pathlib.Path('/windows/mingw64/bin')
-pe_modules = set([pefile.PE('wesnoth.exe'), pefile.PE('wesnothd.exe')])
+dllpath = pathlib.Path("/windows/mingw64/bin")
+pe_modules = set([pefile.PE("wesnoth.exe"), pefile.PE("wesnothd.exe")])
 
 while pe_modules:
     pe = pe_modules.pop()

@@ -15,23 +15,32 @@ Symbols not in any executable likely are unused.
 
 import os, glob
 
+
 def nm(filename):
     return os.popen("nm -C %s" % filename).read()
 
+
 output1 = []
-for o in glob.glob("build/release/*.o") + glob.glob("build/release/*/*.o") + \
-         glob.glob("build/release/*/*/*.o") + glob.glob("build/release/*/*/*/*.o"):
+for o in (
+    glob.glob("build/release/*.o")
+    + glob.glob("build/release/*/*.o")
+    + glob.glob("build/release/*/*/*.o")
+    + glob.glob("build/release/*/*/*/*.o")
+):
     output1.append((o, nm(o)))
 
 output2 = nm("wesnoth")
 output2 += nm("campaignd")
 output2 += nm("wesnothd")
 
+
 def extract(line):
-    return line[line.find(" T ") + 3:]
+    return line[line.find(" T ") + 3 :]
+
 
 def symbols(lines):
     return [extract(x) for x in lines.splitlines() if " T " in x]
+
 
 symbols2 = symbols(output2)
 
@@ -47,4 +56,3 @@ for o in output1:
         print("%s:" % o[0])
         print("\n".join(found))
         print()
-
