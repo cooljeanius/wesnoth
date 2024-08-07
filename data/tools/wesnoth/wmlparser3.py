@@ -43,11 +43,17 @@ The get_name method can be used to get the name and the get_text_val
 method can be used to query the value of an attribute.
 """
 
-import os, glob, sys, re, subprocess, argparse, tempfile, shutil
+import os
+import sys
+import subprocess
+import argparse
+import tempfile
+import shutil
 import atexit
 
 tempdirs_to_clean = []
 tmpfiles_to_clean = []
+
 
 @atexit.register
 def cleaner():
@@ -75,7 +81,12 @@ class WMLError(Exception):
     %s %s
     %s
     %s
-""" % (str(self.line), self.preprocessed, self.wml_line, self.message)
+""" % (
+            str(self.line),
+            self.preprocessed,
+            self.wml_line,
+            self.message,
+        )
 
 
 class StringNode:
@@ -96,8 +107,7 @@ class StringNode:
 
     def debug(self):
         if self.textdomain:
-            return "_<%s>'%s'" % (self.textdomain,
-                                  self.data.decode("utf8", "ignore"))
+            return "_<%s>'%s'" % (self.textdomain, self.data.decode("utf8", "ignore"))
         else:
             return "'%s'" % self.data.decode("utf8", "ignore")
 
@@ -122,15 +132,18 @@ class AttributeNode:
         self.value = []  # List of StringNode
 
     def wml(self) -> bytes:
-        s = self.name + b"=\""
+        s = self.name + b'="'
         for v in self.value:
-            s += v.wml().replace(b"\"", b"\"\"")
-        s += b"\""
+            s += v.wml().replace(b'"', b'""')
+        s += b'"'
         return s
 
     def debug(self):
-        return self.name.decode("utf8") + "=" + " .. ".join(
-            [v.debug() for v in self.value])
+        return (
+            self.name.decode("utf8")
+            + "="
+            + " .. ".join([v.debug() for v in self.value])
+        )
 
     def get_text(self, translation=None) -> str:
         """
@@ -195,7 +208,7 @@ class TagNode:
         s = b"[" + self.name + b"]\n"
         for sub in self.data:
             s += sub.wml() + b"\n"
-        s += b"[/" + self.name.lstrip(b'+') + b"]\n"
+        s += b"[/" + self.name.lstrip(b"+") + b"]\n"
         return s
 
     def debug(self):
@@ -203,7 +216,7 @@ class TagNode:
         for sub in self.data:
             for subline in sub.debug().splitlines():
                 s += "    %s\n" % subline
-        s += "[/%s]\n" % self.name.decode("utf8").lstrip('+')
+        s += "[/%s]\n" % self.name.decode("utf8").lstrip("+")
         return s
 
     def get_all(self, **kw):
@@ -273,7 +286,8 @@ class TagNode:
         catalogues loaded.
         """
         x = self.get_all(att=name)
-        if not x: return default
+        if not x:
+            return default
         return x[val].get_text(translation)
 
     def get_binary(self, name, default=None):
@@ -283,7 +297,8 @@ class TagNode:
         found.
         """
         x = self.get_all(att=name)
-        if not x: return default
+        if not x:
+            return default
         return x[0].get_binary()
 
     def append(self, node):
@@ -334,8 +349,7 @@ class RootNode(TagNode):
 
 
 class Parser:
-    def __init__(self, wesnoth_exe=None, config_dir=None,
-                 data_dir=None):
+    def __init__(self, wesnoth_exe=None, config_dir=None, data_dir=None):
         """
         wesnoth_exe - Wesnoth executable to use. This should have been
             configured to use the desired data and config directories.
@@ -349,12 +363,14 @@ class Parser:
         """
         self.wesnoth_exe = wesnoth_exe
         self.config_dir = None
-        if config_dir: self.config_dir = os.path.abspath(config_dir)
+        if config_dir:
+            self.config_dir = os.path.abspath(config_dir)
         self.data_dir = None
-        if data_dir: self.data_dir = os.path.abspath(data_dir)
+        if data_dir:
+            self.data_dir = os.path.abspath(data_dir)
         self.keep_temp_dir = None
         self.temp_dir = None
-        self.no_preprocess = (wesnoth_exe is None)
+        self.no_preprocess = wesnoth_exe is None
         self.preprocessed = None
         self.verbose = False
 
@@ -376,9 +392,8 @@ class Parser:
         """
         Parse a chunk of binary WML.
         """
-        td, tmpfilePath = tempfile.mkstemp(prefix="wmlparser_",
-                                            suffix=".cfg")
-        with open(tmpfilePath, 'wb') as temp:
+        td, tmpfilePath = tempfile.mkstemp(prefix="wmlparser_", suffix=".cfg")
+        with open(tmpfilePath, "wb") as temp:
             temp.write(binary)
         os.close(td)
         self.path = tmpfilePath
@@ -416,27 +431,34 @@ class Parser:
             commandline += ["--preprocess-defines", defines]
         if self.verbose:
             print((" ".join(commandline)))
-        p = subprocess.Popen(commandline,
-                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = subprocess.Popen(
+            commandline, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        )
         out, err = p.communicate()
         if self.verbose:
             print((out + err).decode("utf8"))
-        self.preprocessed = output + "/" + os.path.basename(self.path) + \
-                            ".plain"
+        self.preprocessed = output + "/" + os.path.basename(self.path) + ".plain"
         if not os.path.exists(self.preprocessed):
             first_line = open(self.path).readline().strip()
-            raise WMLError(self, "Preprocessor error:\n" +
-                           " ".join(commandline) + "\n" +
-                           "First line: " + first_line + "\n" +
-                           out.decode("utf8") +
-                           err.decode("utf8"))
+            raise WMLError(
+                self,
+                "Preprocessor error:\n"
+                + " ".join(commandline)
+                + "\n"
+                + "First line: "
+                + first_line
+                + "\n"
+                + out.decode("utf8")
+                + err.decode("utf8"),
+            )
 
     def parse_line_without_commands_loop(self, line: str) -> str:
         """
         Once the .plain commands are handled WML lines are passed to
         this.
         """
-        if not line: return
+        if not line:
+            return
 
         if line.strip():
             self.skip_newlines_after_plus = False
@@ -446,16 +468,15 @@ class Parser:
             return
 
         if self.in_arrows:
-            arrows = line.find(b'>>')
+            arrows = line.find(b">>")
             if arrows >= 0:
                 self.in_arrows = False
                 self.temp_string += line[:arrows]
                 self.temp_string_node = StringNode(self.temp_string)
                 self.temp_string = b""
-                self.temp_key_nodes[self.commas].value.append(
-                    self.temp_string_node)
+                self.temp_key_nodes[self.commas].value.append(self.temp_string_node)
                 self.in_arrows = False
-                return line[arrows + 2:]
+                return line[arrows + 2 :]
             else:
                 self.temp_string += line
             return
@@ -463,18 +484,18 @@ class Parser:
         quote = line.find(b'"')
 
         if not self.in_string:
-            arrows = line.find(b'<<')
+            arrows = line.find(b"<<")
             if arrows >= 0 and (quote < 0 or quote > arrows):
                 self.parse_line_without_commands(line[:arrows])
                 self.in_arrows = True
-                return line[arrows + 2:]
+                return line[arrows + 2 :]
 
         if quote >= 0:
             if self.in_string:
                 # double quote
                 if quote < len(line) - 1 and line[quote + 1] == b'"'[0]:
-                    self.temp_string += line[:quote + 1]
-                    return line[quote + 2:]
+                    self.temp_string += line[: quote + 1]
+                    return line[quote + 2 :]
                 self.temp_string += line[:quote]
                 self.temp_string_node = StringNode(self.temp_string)
                 if self.translatable:
@@ -484,15 +505,14 @@ class Parser:
                 if not self.temp_key_nodes:
                     raise WMLError(self, "Unexpected string value.")
 
-                self.temp_key_nodes[self.commas].value.append(
-                    self.temp_string_node)
+                self.temp_key_nodes[self.commas].value.append(self.temp_string_node)
 
                 self.in_string = False
-                return line[quote + 1:]
+                return line[quote + 1 :]
             else:
                 self.parse_outside_strings(line[:quote])
                 self.in_string = True
-                return line[quote + 1:]
+                return line[quote + 1 :]
         else:
             if self.in_string:
                 self.temp_string += line
@@ -509,13 +529,15 @@ class Parser:
         """
         Parse a WML fragment outside of strings.
         """
-        if not line: return
+        if not line:
+            return
         if line.lstrip(b" \t").startswith(b"#textdomain "):
             self.textdomain = line.lstrip(b" \t")[12:].strip().decode("utf8")
             return
         if not self.temp_key_nodes:
             line = line.lstrip()
-            if not line: return
+            if not line:
+                return
 
             # Is it a tag?
             if line.startswith(b"["):
@@ -532,12 +554,14 @@ class Parser:
                     # at the end) we need to skip newlines.
                     self.skip_newlines_after_plus = not segment.strip()
 
-                if not segment: continue
+                if not segment:
+                    continue
 
                 if segment.rstrip(b" ") == b"_":
                     self.translatable = True
                     segment = segment[1:].lstrip(b" ")
-                    if not segment: continue
+                    if not segment:
+                        continue
                 self.handle_value(segment)
 
     def handle_tag(self, line):
@@ -551,7 +575,11 @@ class Parser:
         self.in_tag = b""
         if tag.startswith(b"/"):
             self.parent_node = self.parent_node[:-1]
-        elif tag.startswith(b"+") and self.parent_node and self.parent_node[-1].get_all(tag=tag[1:].decode()):
+        elif (
+            tag.startswith(b"+")
+            and self.parent_node
+            and self.parent_node[-1].get_all(tag=tag[1:].decode())
+        ):
             node_to_append_to = self.parent_node[-1].get_all(tag=tag[1:].decode())[-1]
             self.parent_node.append(node_to_append_to)
         else:
@@ -559,13 +587,13 @@ class Parser:
             if self.parent_node:
                 self.parent_node[-1].append(node)
             self.parent_node.append(node)
-        self.parse_outside_strings(line[end + 1:])
+        self.parse_outside_strings(line[end + 1 :])
 
     def handle_attribute(self, line):
         assign = line.find(b"=")
         remainder = None
         if assign >= 0:
-            remainder = line[assign + 1:]
+            remainder = line[assign + 1 :]
             line = line[:assign]
 
         self.commas = 0
@@ -583,16 +611,17 @@ class Parser:
     def handle_value(self, segment):
         def add_text(segment):
             segment = segment.rstrip()
-            if not segment: return
+            if not segment:
+                return
             n = len(self.temp_key_nodes)
             maxsplit = n - self.commas - 1
-            if maxsplit < 0: maxsplit = 0
+            if maxsplit < 0:
+                maxsplit = 0
             for subsegment in segment.split(b",", maxsplit):
                 self.temp_string += subsegment.strip()
                 self.temp_string_node = StringNode(self.temp_string)
                 self.temp_string = b""
-                self.temp_key_nodes[self.commas].value.append(
-                    self.temp_string_node)
+                self.temp_key_nodes[self.commas].value.append(self.temp_string_node)
                 if self.commas < n - 1:
                     self.commas += 1
 
@@ -624,7 +653,8 @@ class Parser:
         command_marker_byte = bytes([254])
 
         input = self.preprocessed
-        if not input: input = self.path
+        if not input:
+            input = self.path
 
         for rawline in open(input, "rb"):
             compos = rawline.find(command_marker_byte)
@@ -634,7 +664,7 @@ class Parser:
                 self.line_in_file += 1
             if compos >= 0:
                 self.parse_line_without_commands(rawline[:compos])
-                self.handle_command(rawline[compos + 1:-1])
+                self.handle_command(rawline[compos + 1 : -1])
             else:
                 self.parse_line_without_commands(rawline)
 
@@ -665,12 +695,12 @@ class Parser:
 
 def jsonify(tree, verbose=False, depth=1):
     """
-Convert a Parser tree into JSON
+    Convert a Parser tree into JSON
 
-If verbose, insert a linebreak after every brace and comma (put every
-item on its own line), otherwise, condense everything into a single line.
-"""
+    If verbose, insert a linebreak after every brace and comma (put every
+    item on its own line), otherwise, condense everything into a single line."""
     import json
+
     def node_to_dict(n):
         d = {}
         tags = set(x.get_name() for x in n.get_all(tag=""))
@@ -699,12 +729,15 @@ def xmlify(tree, verbose=False, depth=0):
 
     ET.ElementTree(node_to_et(tree)).write(sys.stdout, encoding="unicode")
 
+
 if __name__ == "__main__":
     arg = argparse.ArgumentParser()
     arg.add_argument("-a", "--data-dir", help="directly passed on to wesnoth.exe")
     arg.add_argument("-c", "--config-dir", help="directly passed on to wesnoth.exe")
     arg.add_argument("-i", "--input", help="a WML file to parse")
-    arg.add_argument("-k", "--keep-temp", help="specify directory where to keep temp files")
+    arg.add_argument(
+        "-k", "--keep-temp", help="specify directory where to keep temp files"
+    )
     arg.add_argument("-t", "--text", help="WML text to parse")
     arg.add_argument("-w", "--wesnoth", help="path to wesnoth.exe")
     arg.add_argument("-d", "--defines", help="comma separated list of WML defines")
@@ -718,27 +751,28 @@ if __name__ == "__main__":
         sys.stderr.write("No input given. Use -h for help.\n")
         sys.exit(1)
 
-    if (args.wesnoth and not os.path.exists(args.wesnoth)):
+    if args.wesnoth and not os.path.exists(args.wesnoth):
         sys.stderr.write("Wesnoth executable not found.\n")
         sys.exit(1)
 
     if not args.wesnoth:
-        print("Warning: Without the -w option WML is not preprocessed!",
-              file=sys.stderr)
+        print(
+            "Warning: Without the -w option WML is not preprocessed!", file=sys.stderr
+        )
 
     if args.test:
         print("Running tests")
-        p = Parser(args.wesnoth, args.config_dir,
-                   args.data_dir)
+        p = Parser(args.wesnoth, args.config_dir, args.data_dir)
         if args.keep_temp:
             p.keep_temp_dir = args.keep_temp
-        if args.verbose: p.verbose = True
+        if args.verbose:
+            p.verbose = True
 
         only = None
 
-
         def test2(input, expected, note, function):
-            if only and note != only: return
+            if only and note != only:
+                return
             input = input.strip()
             expected = expected.strip()
             p.parse_text(input)
@@ -756,7 +790,6 @@ if __name__ == "__main__":
             else:
                 print(("PASSED " + note))
 
-
         def test(input, expected, note):
             test2(input, expected, note, lambda p: p.root.debug())
 
@@ -767,59 +800,71 @@ if __name__ == "__main__":
             test(input, expected, note)
 
         test(
-"""
+            """
 [test]
 a=1
 [/test]
-""", """
+""",
+            """
 [test]
     a='1'
 [/test]
-""", "simple")
+""",
+            "simple",
+        )
 
         test(
-"""
+            """
 [+foo]
 a=1
 [/foo]
-""", """
+""",
+            """
 [+foo]
     a='1'
 [/foo]
-""", "+foo without foo in toplevel")
+""",
+            "+foo without foo in toplevel",
+        )
 
         test(
-"""
+            """
 [foo]
 [+bar]
 a=1
 [/bar]
 [/foo]
-""", """
+""",
+            """
 [foo]
     [+bar]
         a='1'
     [/bar]
 [/foo]
-""", "+foo without foo in child")
+""",
+            "+foo without foo in child",
+        )
 
         test(
-"""
+            """
 [test]
 [foo]
 a=1
 [/foo]
 [/test]
-""", """
+""",
+            """
 [test]
     [foo]
         a='1'
     [/foo]
 [/test]
-""", "subtag, part 1")
+""",
+            "subtag, part 1",
+        )
 
         test(
-"""
+            """
 [test]
 [foo]
 a=1
@@ -829,54 +874,66 @@ a=1
 [+foo]
 [/foo]
 [/test]
-""", """
+""",
+            """
 [test]
     [foo]
         a='1'
     [/foo]
 [/test]
-""", "subtag, part 2")
+""",
+            "subtag, part 2",
+        )
 
         test(
-"""
+            """
 [test]
 a, b, c = 1, 2, 3
 [/test]
-""", """
+""",
+            """
 [test]
     a='1'
     b='2'
     c='3'
 [/test]
-""", "multi assign")
+""",
+            "multi assign",
+        )
 
         test(
-"""
+            """
 [test]
 a, b = 1, 2, 3
 [/test]
-""", """
+""",
+            """
 [test]
     a='1'
     b='2, 3'
 [/test]
-""", "multi assign 2")
+""",
+            "multi assign 2",
+        )
 
         test(
-"""
+            """
 [test]
 a, b, c = 1, 2
 [/test]
-""", """
+""",
+            """
 [test]
     a='1'
     b='2'
     c=
 [/test]
-""", "multi assign 3")
+""",
+            "multi assign 3",
+        )
 
         test_with_preprocessor(
-"""
+            """
 #textdomain A
 #define X
     _ "abc"
@@ -885,38 +942,46 @@ a, b, c = 1, 2
 [test]
 x = _ "abc" + {X}
 [/test]
-""", """
+""",
+            """
 [test]
     x=_<B>'abc' .. _<A>'abc'
 [/test]
-""", "textdomain")
+""",
+            "textdomain",
+        )
 
         test(
-"""
+            """
 [test]
 x,y = _1,_2
 [/test]
-""", """
+""",
+            """
 [test]
     x='_1'
     y='_2'
 [/test]
-""", "underscores")
+""",
+            "underscores",
+        )
 
         test(
-"""
+            """
 [test]
 a = "a ""quoted"" word"
 [/test]
 """,
-"""
+            """
 [test]
     a='a "quoted" word'
 [/test]
-""", "quoted")
+""",
+            "quoted",
+        )
 
         test(
-"""
+            """
 [test]
 code = <<
     "quotes" here
@@ -924,90 +989,106 @@ code = <<
 >>
 [/test]
 """,
-"""
+            """
 [test]
     code='
         "quotes" here
         ""blah""
     '
 [/test]
-""", "quoted2")
+""",
+            "quoted2",
+        )
 
         test(
-"""
+            """
 foo="bar"+
 
 
 
 "baz"
 """,
-"""
+            """
 foo='bar' .. 'baz'
-""", "multi line string")
+""",
+            "multi line string",
+        )
 
         test_with_preprocessor(
-"""
+            """
 #define baz
 
 "baz"
 #enddef
 foo="bar"+{baz}
 """,
-"""
+            """
 foo='bar' .. 'baz'
-""", "defined multi line string")
+""",
+            "defined multi line string",
+        )
 
         test_with_preprocessor(
-"""
+            """
 foo="bar" + "baz" # blah
 """,
-"""
+            """
 foo='bar' .. 'baz'
-""", "comment after +")
+""",
+            "comment after +",
+        )
 
         test_with_preprocessor(
-"""
+            """
 #define baz
 "baz"
 #enddef
 foo="bar" {baz}
 """,
-"""
+            """
 foo='bar' .. 'baz'
-""", "defined string concatenation")
+""",
+            "defined string concatenation",
+        )
 
         test_with_preprocessor(
-"""
+            """
 #define A BLOCK
 [{BLOCK}]
 [/{BLOCK}]
 #enddef
 {A blah}
 """,
-"""
+            """
 [blah]
 [/blah]
-""", "defined tag")
+""",
+            "defined tag",
+        )
 
         test2(
-"""
+            """
 [test]
     a=1
     b=2
     a=3
     b=4
 [/test]
-""", "3, 4", "multiatt",
-    lambda p:
-        p.get_all(tag = "test")[0].get_text_val("a") + ", " +
-        p.get_all(tag = "test")[0].get_text_val("b"))
+""",
+            "3, 4",
+            "multiatt",
+            lambda p: p.get_all(tag="test")[0].get_text_val("a")
+            + ", "
+            + p.get_all(tag="test")[0].get_text_val("b"),
+        )
 
         sys.exit(0)
 
     p = Parser(args.wesnoth, args.config_dir, args.data_dir)
     if args.keep_temp:
         p.keep_temp_dir = args.keep_temp
-    if args.verbose: p.verbose = True
+    if args.verbose:
+        p.verbose = True
     if args.input:
         p.parse_file(args.input, args.defines)
     elif args.text:

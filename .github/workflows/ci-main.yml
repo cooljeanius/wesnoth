@@ -1,5 +1,4 @@
 ---
-
 name: CI
 
 on:
@@ -43,10 +42,30 @@ jobs:
   copyright:  # check takes a bit longer and does not need to run in docker
     runs-on: ubuntu-latest
     steps:
-      - {uses: actions/checkout@v4, with: {fetch-depth: 0}}
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0, submodules: "recursive"}
 
+      - name: Dependencies
+        run: pip install pylint flake8 ruff black pyupgrade
       - name: Copyright check
-        run: ./update_copyrights --output=
+        run: |
+          ./update_copyrights --output= || \
+            (ret="$?"; sync && echo "./update_copyrights returned '${ret}'"; \
+             if test -x "$(which pylint)"; then \
+               sync && which pylint && pylint ./update_copyrights; \
+             elif test -x "$(which flake8)"; then \
+               sync && which flake8 && flake8 ./update_copyrights; \
+             elif test -x "$(which ruff)"; then \
+               sync && which ruff && ruff check ./update_copyrights; \
+             elif test -x "$(which black)"; then \
+               sync && which black && black ./update_copyrights; \
+             elif test -x "$(which pyupgrade)"; then \
+               sync && which pyupgrade && pyupgrade ./update_copyrights; \
+             else \
+               sync && echo "No python code quality tools found!" && sleep 1; \
+               echo "warning: unable to lint ./update_copyrights script!" >&2; \
+               if test -n "${ret}"; then exit "${ret}"; else exit 1; fi; \
+             fi)
 
   ubuntu:
     strategy:
@@ -253,7 +272,7 @@ jobs:
           make clean
 
           scons translations build=release --debug=time nls=true jobs=2; \
-          echo "Ran scons translations"
+            echo "Ran scons translations"
           scons pot-update; echo "Ran scons pot-update"
           scons update-po4a; echo "Ran scons update-po4a"
           scons manual

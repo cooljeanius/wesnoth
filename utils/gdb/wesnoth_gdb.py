@@ -28,20 +28,21 @@ python wesnoth_gdb.set_levels_of_recursion( number )  #Sets the levels of recurs
 python print(wesnoth_gdb.get_levels_of_recursion())   #Gets the levels of recursion (default 1)
 """
 
-import sys, gdb
+import sys
 import importlib
 
 
 def help():
     print(documentation_banner)
 
-#Force a reload, which is handy if you are interactively editing
-if 'register_wesnoth_pretty_printers' in sys.modules:
+
+# Force a reload, which is handy if you are interactively editing
+if "register_wesnoth_pretty_printers" in sys.modules:
     importlib.reload(register_wesnoth_pretty_printers)
 else:
     import register_wesnoth_pretty_printers
 
-if 'wesnoth_pretty_printers' in sys.modules:
+if "wesnoth_pretty_printers" in sys.modules:
     importlib.reload(wesnoth_pretty_printers)
 else:
     import wesnoth_pretty_printers
@@ -52,10 +53,13 @@ pretty_printers_dict = wesnoth_pretty_printers.add_printers(pretty_printers_dict
 register_wesnoth_pretty_printers.register(pretty_printers_dict)
 
 
-#options
+# options
 
-#get/set the default
+
+# get/set the default
 def get_levels_of_recursion():
     return wesnoth_pretty_printers.RecursionManager.get_level()
+
+
 def set_levels_of_recursion(num):
     return wesnoth_pretty_printers.RecursionManager.set_level(num)

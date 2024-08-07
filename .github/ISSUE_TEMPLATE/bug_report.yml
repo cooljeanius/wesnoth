@@ -1,5 +1,4 @@
 ---
-
 name: Bug Report
 description: Create a report to help us improve the game,
 labels: ['Bug']
@@ -55,6 +54,6 @@ body:
     id: more_info
     attributes:
       label: Additional context
-      description: >
-        Add any other context (compiler logs, console output, etc) about the
+      description: |
+        Add any other context (compiler logs, console output, etc.) about the
         problem here.

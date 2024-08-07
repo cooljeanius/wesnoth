@@ -3,25 +3,32 @@
 """
 Various helpers for use by the wmlunits tool.
 """
-import sys, os, re, glob, shutil, copy, subprocess, traceback
+import sys
+import os
+import re
+import shutil
+import traceback
 
 import wesnoth.wmlparser3 as wmlparser3
 from unit_tree.team_colorizer import colorize
 import wesnoth.base64url as base64url
 
+
 class Image:
     def __init__(self, id_name, ipath, bases, no_tc):
         self.id_name = id_name
-        self.ipath = ipath # none if it was not found
+        self.ipath = ipath  # none if it was not found
         self.bases = bases
         self.no_tc = no_tc
         self.addons = set()
+
 
 class ImageCollector:
     """
     A class to collect all the images which need to be copied to the HTML
     output folder.
     """
+
     def __init__(self, wesnoth_exe, userdir, datadir, magick_exe="convert"):
         self.images_by_addon_name = {}
         self.images_by_ipath = {}
@@ -33,7 +40,7 @@ class ImageCollector:
             os.path.join(self.userdir, "data"),
             os.path.join(self.userdir),
             os.path.join(self.datadir, "data"),
-            os.path.join(self.datadir)
+            os.path.join(self.datadir),
         ]
         self.magick = magick_exe
 
@@ -50,7 +57,7 @@ class ImageCollector:
             name = name[:tilde]
         bases = [
             os.path.join(self.datadir, "data", "core", "images"),
-            os.path.join(self.datadir, "images")
+            os.path.join(self.datadir, "images"),
         ]
         binpaths = self.binary_paths_per_addon.get(addon, [])[:]
         binpaths.reverse()
@@ -65,7 +72,9 @@ class ImageCollector:
             dirname, filename = os.path.split(name)
             new_bases = []
             for base in bases:
-                new_bases.append(os.path.join("%s" % base, dirname, "transparent", filename))
+                new_bases.append(
+                    os.path.join("%s" % base, dirname, "transparent", filename)
+                )
                 new_bases.append(os.path.join("%s" % base, name))
             bases = new_bases
 
@@ -95,20 +104,26 @@ class ImageCollector:
             vpath = os.path.normpath(vpath.strip())
             for hidden_path in hide_paths:
                 if vpath.startswith(hidden_path):
-                #if os.path.commonpath(vpath, hidden_path) == hidden_path:
+                    # if os.path.commonpath(vpath, hidden_path) == hidden_path:
                     vpath = os.path.relpath(vpath, hidden_path)
                     break
-            else:                
+            else:
                 # root_dir is prefix after normalization
                 root_dir = vpath.split("/")[0].split("\\")[0]
-                if prefix_fallback is None or (root_dir != "general" and root_dir != prefix_fallback):
-                    print("Path \"%s\" outside valid folders." % vpath)
+                if prefix_fallback is None or (
+                    root_dir != "general" and root_dir != prefix_fallback
+                ):
+                    print('Path "%s" outside valid folders.' % vpath)
                     vpath = "403.png"
 
             encoded_dir_name = base64url.encode_str(os.path.dirname(vpath))
-            sanitized_file_name = re.sub(r'[^a-zA-Z0-9_.-]' , "", ".".join(os.path.basename(vpath).split("(")[0].split(".")[-2:]))
+            sanitized_file_name = re.sub(
+                r"[^a-zA-Z0-9_.-]",
+                "",
+                ".".join(os.path.basename(vpath).split("(")[0].split(".")[-2:]),
+            )
             head, ext = os.path.splitext(sanitized_file_name)
-            return '%s..%s.%s' % (head, encoded_dir_name, ext)
+            return "%s..%s.%s" % (head, encoded_dir_name, ext)
 
         if ipath:
             id_name = make_name(ipath, self.hide_paths)
@@ -144,7 +159,9 @@ class ImageCollector:
             default_addons_dir = os.path.join(options.config_dir, "data", "add-ons")
             if ipath.startswith(default_addons_dir):
                 # Override with custom --addons
-                ipath = os.path.join(options.addons, os.path.relpath(ipath, default_addons_dir))
+                ipath = os.path.join(
+                    options.addons, os.path.relpath(ipath, default_addons_dir)
+                )
             if ipath and os.path.exists(ipath) and not os.path.isdir(ipath):
                 if no_tc:
                     shutil.copy2(ipath, opath)
@@ -152,20 +169,27 @@ class ImageCollector:
                     colorize(None, ipath, opath, magick=self.magick)
             else:
                 sys.stderr.write(
-                    "Warning: Required image %s does not exist at %s (referenced by %s).\n" % (
-                        image.id_name, ipath, ", ".join(image.addons)))
+                    "Warning: Required image %s does not exist at %s (referenced by %s).\n"
+                    % (image.id_name, ipath, ", ".join(image.addons))
+                )
                 if options.verbose:
                     if image.bases:
-                        sys.stderr.write("Warning: Looked at the following locations:\n")
+                        sys.stderr.write(
+                            "Warning: Looked at the following locations:\n"
+                        )
                         sys.stderr.write("\n".join(image.bases) + "\n")
                     else:
                         sys.stderr.write("nowhere\n")
 
+
 blah = 1
+
+
 class WesnothList:
     """
     Lists various Wesnoth stuff like units, campaigns, terrains, factions...
     """
+
     def __init__(self, wesnoth_exe, config_dir, data_dir, transdir):
         self.unit_lookup = {}
         self.race_lookup = {}
@@ -184,7 +208,8 @@ class WesnothList:
         n = 0
         for terrain in self.parser.get_all(tag="terrain_type"):
             tstring = terrain.get_text_val("string")
-            if tstring is None: continue
+            if tstring is None:
+                continue
             self.terrain_lookup[tstring] = terrain
             n += 1
         return n
@@ -195,9 +220,9 @@ class WesnothList:
         """
         self.languages_found = {}
 
-        parser = wmlparser3.Parser(options.wesnoth,
-                                   options.config_dir,
-                                   options.data_dir)
+        parser = wmlparser3.Parser(
+            options.wesnoth, options.config_dir, options.data_dir
+        )
         parser.parse_text("{languages}")
 
         for locale in parser.get_all(tag="locale"):
@@ -287,8 +312,10 @@ class WesnothList:
             uid = unit.get_text_val("id", "none")
             unit.id = uid
 
-            if unit.get_text_val("do_not_list", "no") not in ["no", "false"] or \
-               unit.get_text_val("hide_help", "no") not in ["no", "false"]:
+            if unit.get_text_val("do_not_list", "no") not in [
+                "no",
+                "false",
+            ] or unit.get_text_val("hide_help", "no") not in ["no", "false"]:
                 unit.hidden = True
             else:
                 unit.hidden = False
@@ -316,7 +343,8 @@ class WesnothList:
         newmovetypes = getall("movetype")
         for movetype in newmovetypes:
             mtname = movetype.get_text_val("name")
-            if mtname is None: continue
+            if mtname is None:
+                continue
             self.movetype_lookup[mtname] = movetype
 
         # Store race/movetype/faction of each unit for easier access later.
@@ -328,8 +356,10 @@ class WesnothList:
             except KeyError:
                 unit.race = None
                 unit.rid = "none"
-                error_message("Warning: No race \"%s\" found (%s).\n" % (
-                    race, unit.get_text_val("id")))
+                error_message(
+                    'Warning: No race "%s" found (%s).\n'
+                    % (race, unit.get_text_val("id"))
+                )
             movetype = self.get_unit_value(unit, "movement_type")
             try:
                 unit.movetype = self.movetype_lookup[movetype]
@@ -344,7 +374,8 @@ class WesnothList:
             if advanceto and advanceto != "null":
                 for advance in advanceto.split(","):
                     auid = advance.strip()
-                    if auid: unit.advance.append(auid)
+                    if auid:
+                        unit.advance.append(auid)
             # level
             try:
                 level = int(self.get_unit_value(unit, "level"))
@@ -352,7 +383,8 @@ class WesnothList:
                 level = 0
             except ValueError:
                 level = 0
-            if level < 0: level = 0
+            if level < 0:
+                level = 0
             unit.level = level
 
         return len(newunits)
@@ -375,20 +407,21 @@ class WesnothList:
                         unit = self.unit_lookup[uid]
                     except KeyError:
                         error_message(
-                            ("Error: Era '%s' faction '%s' references " +
-                             "non-existant unit id '%s'!\n") % (
-                                 eid,
-                                 fid,
-                                 str(uid)))
+                            (
+                                "Error: Era '%s' faction '%s' references "
+                                + "non-existant unit id '%s'!\n"
+                            )
+                            % (eid, fid, str(uid))
+                        )
                         continue
-                    if not eid in unit.eras:
+                    if eid not in unit.eras:
                         unit.eras.append(eid)
                     unit.factions.append((eid, fid))
         # as a special case, add units from this addon but with no faction
         for unit in list(self.unit_lookup.values()):
             if unit.campaigns[0] == self.cid:
                 if not unit.factions:
-                    if not eid in unit.eras:
+                    if eid not in unit.eras:
                         unit.eras.append(eid)
                     unit.factions.append((eid, None))
 
@@ -401,8 +434,9 @@ class WesnothList:
                 baseunit = self.unit_lookup[buid]
             except KeyError:
                 error_message(
-                    "Warning: No baseunit \"%s\" for \"%s\".\n" % (
-                        buid, unit.get_text_val("id")))
+                    'Warning: No baseunit "%s" for "%s".\n'
+                    % (buid, unit.get_text_val("id"))
+                )
                 return None
             return baseunit
         return None
@@ -416,10 +450,12 @@ class WesnothList:
             return default
         return value
 
+
 class UnitForest:
     """
     Contains the forest of unit advancement trees.
     """
+
     def __init__(self):
         self.trees = {}
         self.lookup = {}
@@ -444,7 +480,7 @@ class UnitForest:
                 if not c:
                     continue
                 u.children.append(c)
-                if not uid in c.parent_ids:
+                if uid not in c.parent_ids:
                     c.parent_ids.append(uid)
 
         # Put all roots into the forest
@@ -461,14 +497,18 @@ class UnitForest:
                 already2[c.id] = True
                 if c.id in already:
                     error_message(
-                        ("Warning: Unit %s advances to unit %s in a loop.\n" %
-                         (u.id, c.id)) +
-                        ("    Removing advancement %s.\n" % c.id))
+                        (
+                            "Warning: Unit %s advances to unit %s in a loop.\n"
+                            % (u.id, c.id)
+                        )
+                        + ("    Removing advancement %s.\n" % c.id)
+                    )
                     u.children.remove(c)
             for c in u.children:
                 recurse(c, already2)
+
         for u in list(self.trees.values()):
-            already = {u.id : True}
+            already = {u.id: True}
             recurse(u, already)
 
     def update(self):
@@ -484,10 +524,12 @@ class UnitForest:
         un = self.lookup[uid]
         return un.parent_ids
 
+
 class UnitNode:
     """
     A node in the advancement trees forest.
     """
+
     def __init__(self, unit):
         self.unit = unit
         self.children = []
@@ -502,6 +544,7 @@ class UnitNode:
         else:
             self.breadth = sum([x.update_breadth() for x in self.children])
         return self.breadth
+
 
 class GroupNode:
     def __init__(self, data):
