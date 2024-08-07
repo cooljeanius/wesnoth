@@ -38,10 +38,13 @@ import sys
 known_licenses = (
     "CC BY-SA 4.0",
     "CC0",
-    "GNU GPL v2+",
+    "GNU GPL v2+"
 )
 
 
+##
+# Get git status of file.
+##
 def do_git(file):
     return str(
         check_output(
@@ -51,6 +54,9 @@ def do_git(file):
     ).rstrip("\n")
 
 
+##
+# Get hash of file.
+##
 def do_hash(file):
     md5 = hashlib.md5()
     with open(file, "rb") as f:
@@ -202,7 +208,12 @@ else:
 any_check_failed = False
 if len(removed) > 0:
     any_check_failed = True
-    print("There are " + str(len(removed)) + " removed images.\n")
+    print(
+        "\nThere are "
+        + str(len(removed))
+        + " removed images: \n"
+        + "\n".join(",".join(a) for a in removed)
+    )
 else:
     print("No images were removed.\n")
 
