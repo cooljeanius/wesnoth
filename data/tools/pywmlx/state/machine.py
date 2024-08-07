@@ -7,12 +7,10 @@ from pywmlx.wmlerr import wmlwarn
 from pywmlx.wmlerr import warnall
 from pywmlx.postring import PoCommentedString
 from pywmlx.postring import PoCommentedStringPL
-from pywmlx.state.state import State
 from pywmlx.state.lua_states import setup_luastates
 from pywmlx.state.wml_states import setup_wmlstates
 
 import pywmlx.nodemanip
-import pdb
 
 
 # Universe - convenient singleton for which
@@ -262,7 +260,7 @@ class PendingLuaString:
                     loc_addedinfos = []
                 if _pending_cinfo["po"] is not None:
                     loc_addedinfos = _pending_cinfo["po"]
-                if not _currentdomain in _dictionary:
+                if _currentdomain not in _dictionary:
                     _dictionary[_currentdomain] = dict()
                 loc_posentence = _dictionary[_currentdomain].get(self.luastring)
                 if loc_posentence is None:

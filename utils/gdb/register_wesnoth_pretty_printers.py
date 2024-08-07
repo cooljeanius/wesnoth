@@ -7,8 +7,6 @@ Usage:
 """
 
 import gdb
-import re
-import itertools
 
 import wesnoth_type_tools
 import importlib

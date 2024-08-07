@@ -137,7 +137,7 @@ def wmlerr(finfo, message, errtype=WmlError):
     if not is_utest:
         try:
             raise errtype(finfo + ": " + message)
-        except errtype as err:
+        except errtype:
             print_wmlerr(finfo, message, True)
             sys.exit(1)
     else:

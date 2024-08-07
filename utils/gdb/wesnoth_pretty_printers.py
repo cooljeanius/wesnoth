@@ -2,7 +2,6 @@
 
 import gdb
 import re
-import itertools
 
 
 import wesnoth_type_tools
@@ -118,7 +117,7 @@ class TstringPrinter(object):
         # Print the untranslated string or an error
         try:
             ret = shared.dereference()["val"]["value_"]["iter_"]["first"]
-        except RuntimeError as e:
+        except RuntimeError:
             return "wesnoth_gdb error invalid tstring"
         return ret
 
@@ -170,7 +169,7 @@ class AttributeValuePrinter(object):
             else:
                 yield "unknown", "unknown type code = " + ("%d" % attr_type)
 
-        except RuntimeError as e:
+        except RuntimeError:
             yield "error", "wesnoth_gdb error invalid %s" % self.val.type
 
     def display_hint(self):
@@ -304,7 +303,7 @@ class ConfigPrinter(object):
             RecursionManager.inc()
             try:
                 yield "ordered_children", self.lval["ordered_children"]
-            except RuntimeError as e:
+            except RuntimeError:
                 RecursionManager.dec()
             else:
                 RecursionManager.dec()

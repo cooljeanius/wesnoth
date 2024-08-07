@@ -13,7 +13,8 @@ compilation, and compare those symbols to the symbols in the executables.
 Symbols not in any executable likely are unused.
 """
 
-import os, glob
+import os
+import glob
 
 
 def nm(filename):
@@ -49,7 +50,7 @@ for o in output1:
 
     found = []
     for symbol in symbols1:
-        if not symbol in symbols2:
+        if symbol not in symbols2:
             found += [symbol]
 
     if found:

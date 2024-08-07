@@ -23,7 +23,10 @@ Limitations:
 """
 
 from functools import total_ordering
-import sys, re, copy, codecs
+import sys
+import re
+import copy
+import codecs
 import fnmatch
 
 keyPattern = re.compile("(\w+)(,\s?\w+)*\s*=")
@@ -536,7 +539,8 @@ class WmlIterator(object):
 
 if __name__ == "__main__":
     """Perform a test run on a file or directory"""
-    import os, glob
+    import os
+    import glob
 
     didSomething = False
     flist = sys.argv[1:]

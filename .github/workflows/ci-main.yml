@@ -44,6 +44,8 @@ jobs:
     steps:
       - {uses: actions/checkout@v4, with: {fetch-depth: 0}}
 
+      - name: Dependencies
+        run: pip install pylint flake8 ruff black pyupgrade
       - name: Copyright check
         run: |
           ./update_copyrights --output= || \

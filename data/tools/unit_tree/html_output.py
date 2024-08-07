@@ -417,7 +417,7 @@ class HTMLOutput:
             new_units_added = {}
             for uid, u in list(units_added.items()):
                 for auid in u.advance:
-                    if not auid in forest.lookup:
+                    if auid not in forest.lookup:
                         try:
                             au = self.wesnoth.unit_lookup[auid]
                         except KeyError:
@@ -684,7 +684,7 @@ class HTMLOutput:
                     racename = T(u.race, "plural_name")
                 else:
                     racename = "none"
-                if not racename in races:
+                if racename not in races:
                     races[racename] = []
                 races[racename].append(uid)
 
@@ -821,7 +821,7 @@ class HTMLOutput:
             for ability in c:
                 try:
                     id = ability.get_text_val("id")
-                except AttributeError as e:
+                except AttributeError:
                     error_message("Error: Ignoring ability %s" % ability.debug())
                     continue
                 if id in already:

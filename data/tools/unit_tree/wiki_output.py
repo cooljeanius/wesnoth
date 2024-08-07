@@ -78,7 +78,7 @@ def main():
             return x
         for base_unit in unit.get_all(tag="base_unit"):
             base_uid = base_unit.get_text_val("id")
-            if base_uid is None or not base_uid in all_units:
+            if base_uid is None or base_uid not in all_units:
                 continue
             base = all_units[base_uid]
             x = base_val(base, val, translation=translation)
@@ -113,7 +113,7 @@ def main():
     # Find children and parents of all units.
     for unit in list(all_units.values()):
         for aid in unit.advances_to:
-            if not aid in all_units:
+            if aid not in all_units:
                 continue
             unit.children.append(all_units[aid])
             all_units[aid].parents.append(unit)

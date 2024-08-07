@@ -15,8 +15,8 @@ textdomain stuff in here is therefore only useful to CampGen, as that does
 not allow composed strings like above.
 """
 
-import re, sys
-import codecs
+import re
+import sys
 
 
 class Data:
@@ -345,7 +345,7 @@ class DataSub(Data):
 
     def insert_after(self, previous, data):
         """Insert after given node, or else insert as first."""
-        if not previous in self.data:
+        if previous not in self.data:
             return self.insert_first(data)
         # completely rebuild list and dict
         new_childs = []
@@ -438,7 +438,7 @@ class DataSub(Data):
 
     def get_first(self, name, default=None):
         """Return first of given tag, or default"""
-        if not name in self.dict or not self.dict[name]:
+        if name not in self.dict or not self.dict[name]:
             return default
         return self.dict[name][0]
 
@@ -515,7 +515,7 @@ class DataSub(Data):
 
     def get_all(self, name):
         """Return a list of all sub-items matching the given name."""
-        if not name in self.dict:
+        if name not in self.dict:
             return []
         return self.dict[name]
 

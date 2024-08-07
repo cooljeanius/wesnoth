@@ -1,4 +1,4 @@
-import base64, re
+import base64
 
 # Standard Python library provides
 # base64.urlsafe_b64encode, base64.urlsafe_b64decode

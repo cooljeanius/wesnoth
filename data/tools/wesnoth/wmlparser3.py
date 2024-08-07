@@ -43,7 +43,12 @@ The get_name method can be used to get the name and the get_text_val
 method can be used to query the value of an attribute.
 """
 
-import os, glob, sys, re, subprocess, argparse, tempfile, shutil
+import os
+import sys
+import subprocess
+import argparse
+import tempfile
+import shutil
 import atexit
 
 tempdirs_to_clean = []

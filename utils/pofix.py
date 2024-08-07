@@ -362,7 +362,12 @@ website_mode = 0
 # date --utc "+%s  # %c"
 timecheck = 1462268096  # Tue May  3 09:34:56 2016
 
-import os, sys, time, stat, re, argparse, glob, io
+import os
+import sys
+import re
+import argparse
+import glob
+import io
 
 if sys.version_info < (3, 0):
     reload(sys)
@@ -413,7 +418,7 @@ def process_file(path):
             elif (
                 new in decommented_msgids
                 and old in decommented_msgids
-                and not new in old
+                and new not in old
             ):
                 print(
                     'pofix: %s already includes the new string\n\t"%s"\nbut also the old\n\t"%s"\nthis needs handfixing for now since it likely creates duplicate msgids.'

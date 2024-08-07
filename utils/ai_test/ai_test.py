@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
 from subprocess import Popen, PIPE
-from time import clock, time
 import datetime
 import sqlite3
 import configparser
-import os
-import string
 import random
 import sys
 

@@ -1,6 +1,6 @@
 # vi: syntax=python:et:ts=4
 
-import os, sys
+import os
 
 
 def run_pkg_config(context, name):

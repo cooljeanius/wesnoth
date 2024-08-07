@@ -19,7 +19,13 @@ This utility provides two tools
 * update the translations in a campaign (in the packed campaign)
 """
 
-import sys, os.path, argparse, tempfile, shutil, logging, socket
+import sys
+import os.path
+import argparse
+import tempfile
+import shutil
+import logging
+import socket
 
 # in case the wesnoth python package has not been installed
 sys.path.append("data/tools")
