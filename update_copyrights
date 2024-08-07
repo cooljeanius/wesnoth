@@ -163,6 +163,13 @@ for root, _, files in os.walk(options.repo):
                 csv_data[file_path][5] = do_git(file_path)
                 csv_data[file_path][6] = file_size
                 csv_data[file_path][7] = file_hash
+                print(
+                    "\n"
+                    + file_path
+                    + " size is supposed to be "
+                    + str(file_size)
+                    + "\n"
+                )
                 wrong_size.append(csv_data[file_path])
             elif csv_data[file_path][7] != file_hash:
                 csv_data[file_path][5] = do_git(file_path)
