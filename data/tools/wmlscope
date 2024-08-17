@@ -47,7 +47,7 @@
 #
 # The following magic comment:
 #
-#     # prune FOOBAR
+#     # wmlscope: prune FOOBAR
 #
 # will cause wmlscope to forget about all but one of the definitions of FOOBAR
 # it has seen.  This will be useful mainly for symbols that have different
@@ -61,7 +61,7 @@
 #
 # The docstring for the FOOBAR macro will be collected until a non-comment line,
 # a #define or another # wmlscope: docstring are found. External docstrings
-# *must* be defined before the macro they're referring to; defining two or more
+# *must* be defined before the macro to which they referring; defining two or more
 # external docstrings keeps only the most recent one, but having both an
 # external and an internal docstring is allowed (in this case, the internal one
 # will be appended to the external one in the macro reference).
@@ -73,13 +73,13 @@
 #
 # The checking done by this tool has a couple of flaws:
 #
-# (1) It doesn't actually evaluate file inclusions.  Instead, any
+# (1) It fails to actually evaluate file inclusions.  Instead, any
 # macro definition satisfies any macro call made under the same
 # directory.  Exception: when an #undef is detected, the macro is
-# tagged local and not visible outside the span of lines where it's
-# defined.
+# tagged local and not visible outside the span of lines where it
+# was defined.
 #
-# (2) It doesn't read [binary_path] tags, as this would require
+# (2) It fails to read [binary_path] tags, as this would require
 # implementing a WML parser.  Instead, it assumes that a resource-file
 # reference can be satisfied by any matching image file from anywhere
 # in the same directory it came from.  The resources under the *first*
