@@ -38,6 +38,29 @@ jobs:
       - name: Doxygen check
         if: success() || failure()
         run: doxygen doc/doxygen/Doxyfile
+      - name: Lints and stuff
+        if: success() || failure()
+        run: |
+          if test -x "$(which actionlint)"; then actionlint; else \
+            sync && echo "skipping actionlint..."; \
+          fi
+          if test -x "$(which yamllint)"; then \
+            pushd .github; \
+            yamllint FUNDING.yml dependabot.yml ISSUE_TEMPLATE/*.yml; \
+            popd; \
+          else \
+            sync && echo "skipping yamllint..."; \
+          fi
+          if test -x "$(which pylint)"; then \
+            find . -name '*.py' -print0 | xargs -0 pylint --exit-zero; \
+          else \
+            sync && echo "skipping pylint..."; \
+          fi
+          if test -x "$(which ruff)"; then \
+            ruff check || stat "$(which ruff)"; \
+          else \
+            sync && echo "skipping ruff..."; \
+          fi
 
   copyright:  # check takes a bit longer and does not need to run in docker
     runs-on: ubuntu-latest
