@@ -179,7 +179,7 @@ helpers.error_message = error_message
 
 
 def reset_errors():
-    error_only_once = {}
+    pass
 
 
 def int_fallback(str_value, int_fallback=0):

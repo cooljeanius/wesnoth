@@ -250,8 +250,8 @@ class BoostUnorderedMapPrinter(object):
 class BoostUnorderedMapIteratorPrinter(object):
     def __init__(self, val):
         pair = val.type.template_argument(0).template_argument(0)
-        t_key = pair.template_argument(0)
-        t_val = pair.template_argument(1)
+        pair.template_argument(0)
+        pair.template_argument(1)
         self.node = val["base_"]["node_"]
         self.pair_pointer = pair.pointer()
         self.base_pointer = gdb.lookup_type(

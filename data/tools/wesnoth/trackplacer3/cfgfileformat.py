@@ -97,7 +97,7 @@ class CfgFileFormat(FileFormatHandler):
             m = re.search(define_re, line)
             if m:
                 selected_track = journey.findTrack(m.group(1))
-                if selected_track == None:
+                if selected_track is None:
                     selected_track = Track(m.group(1))
                     journey.tracks.append(selected_track)
                 ignore = bool(m.group(2))

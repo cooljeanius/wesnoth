@@ -273,7 +273,7 @@ class WmlNode:
                     )
         # if you don't have override and autowml is true
         #  --> wmlinfos will be always added
-        elif self.autowml == True:
+        elif self.autowml is True:
             if nodesentence.addedinfo is not None and nodesentence.addedinfo != "":
                 return PoCommentedString(
                     nodesentence.sentence,
