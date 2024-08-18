@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2011 - 2023
+	Copyright (C) 2011 - 2024
 	by Lukasz Dobrogowski <lukasz.dobrogowski@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -41,8 +41,6 @@ BOOST_AUTO_TEST_CASE (test_empty_options)
 	BOOST_CHECK(!co.editor);
 	BOOST_CHECK(!co.fps);
 	BOOST_CHECK(!co.fullscreen);
-	BOOST_CHECK(!co.gunzip);
-	BOOST_CHECK(!co.gzip);
 	BOOST_CHECK(!co.help);
 	BOOST_CHECK(!co.load);
 	BOOST_CHECK(!co.log);
@@ -79,8 +77,6 @@ BOOST_AUTO_TEST_CASE (test_empty_options)
 	BOOST_CHECK(!co.screenshot_map_file);
 	BOOST_CHECK(!co.screenshot_output_file);
 	BOOST_CHECK(!co.test);
-	BOOST_CHECK(!co.userconfig_dir);
-	BOOST_CHECK(!co.userconfig_path);
 	BOOST_CHECK(!co.userdata_dir);
 	BOOST_CHECK(!co.userdata_path);
 	BOOST_CHECK(!co.validcache);
@@ -116,8 +112,6 @@ BOOST_AUTO_TEST_CASE (test_default_options)
 	BOOST_CHECK(co.editor && co.editor->empty());
 	BOOST_CHECK(!co.fps);
 	BOOST_CHECK(!co.fullscreen);
-	BOOST_CHECK(!co.gunzip);
-	BOOST_CHECK(!co.gzip);
 	BOOST_CHECK(!co.help);
 	BOOST_CHECK(!co.load);
 	BOOST_CHECK(!co.log);
@@ -154,8 +148,6 @@ BOOST_AUTO_TEST_CASE (test_default_options)
 	BOOST_CHECK(!co.screenshot_map_file);
 	BOOST_CHECK(!co.screenshot_output_file);
 	BOOST_CHECK(co.test && co.test->empty());
-	BOOST_CHECK(!co.userconfig_dir);
-	BOOST_CHECK(!co.userconfig_path);
 	BOOST_CHECK(!co.userdata_dir);
 	BOOST_CHECK(!co.userdata_path);
 	BOOST_CHECK(!co.validcache);
@@ -191,8 +183,6 @@ BOOST_AUTO_TEST_CASE (test_full_options)
 		"--exit-at-end",
 		"--fps",
 		"--fullscreen",
-		"--gunzip=gunzipfoo.gz",
-		"--gzip=gzipfoo",
 		"--help",
 		"--ignore-map-settings",
 		"--label=labelfoo",
@@ -225,8 +215,6 @@ BOOST_AUTO_TEST_CASE (test_full_options)
 		"--server=servfoo",
 		"--test=testfoo",
 		"--turns=42",
-		"--userconfig-dir=userconfigdirfoo",
-		"--userconfig-path",
 		"--userdata-dir=userdatadirfoo",
 		"--userdata-path",
 		"--validcache",
@@ -251,8 +239,6 @@ BOOST_AUTO_TEST_CASE (test_full_options)
 	BOOST_CHECK(co.editor && *co.editor == "editfoo");
 	BOOST_CHECK(co.fps);
 	BOOST_CHECK(co.fullscreen);
-	BOOST_CHECK(co.gunzip && *co.gunzip == "gunzipfoo.gz");
-	BOOST_CHECK(co.gzip && *co.gzip == "gzipfoo");
 	BOOST_CHECK(co.help);
 	BOOST_CHECK(co.load && *co.load == "loadfoo");
 	BOOST_CHECK(co.log);
@@ -311,8 +297,6 @@ BOOST_AUTO_TEST_CASE (test_full_options)
 	BOOST_CHECK(co.screenshot && co.screenshot_map_file && co.screenshot_output_file);
 	BOOST_CHECK(*co.screenshot_map_file == "mapfoo" && *co.screenshot_output_file == "outssfoo");
 	BOOST_CHECK(co.test && *co.test == "testfoo");
-	BOOST_CHECK(co.userconfig_dir && *co.userconfig_dir == "userconfigdirfoo");
-	BOOST_CHECK(co.userconfig_path);
 	BOOST_CHECK(co.userdata_dir && *co.userdata_dir == "userdatadirfoo");
 	BOOST_CHECK(co.userdata_path);
 	BOOST_CHECK(co.validcache);
@@ -344,8 +328,6 @@ BOOST_AUTO_TEST_CASE (test_positional_options)
 	BOOST_CHECK(!co.editor);
 	BOOST_CHECK(!co.fps);
 	BOOST_CHECK(!co.fullscreen);
-	BOOST_CHECK(!co.gunzip);
-	BOOST_CHECK(!co.gzip);
 	BOOST_CHECK(!co.help);
 	BOOST_CHECK(!co.load);
 	BOOST_CHECK(!co.log);
@@ -382,8 +364,6 @@ BOOST_AUTO_TEST_CASE (test_positional_options)
 	BOOST_CHECK(!co.screenshot_map_file);
 	BOOST_CHECK(!co.screenshot_output_file);
 	BOOST_CHECK(!co.test);
-	BOOST_CHECK(!co.userconfig_dir);
-	BOOST_CHECK(!co.userconfig_path);
 	BOOST_CHECK(!co.userdata_dir);
 	BOOST_CHECK(!co.userdata_path);
 	BOOST_CHECK(!co.validcache);

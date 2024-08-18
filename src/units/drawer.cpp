@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2014 - 2023
+	Copyright (C) 2014 - 2024
 	by Chris Beck <render787@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -26,8 +26,7 @@
 #include "map/location.hpp"
 #include "map/map.hpp"
 #include "picture.hpp"
-#include "preferences/game.hpp"
-#include "sdl/surface.hpp"
+#include "preferences/preferences.hpp"
 #include "team.hpp"
 #include "units/animation.hpp"
 #include "units/animation_component.hpp"
@@ -69,7 +68,7 @@ std::unique_ptr<image::locator> get_orb_image(orb_status os)
  */
 std::unique_ptr<image::locator> get_playing_ally_orb_image(orb_status os)
 {
-	if(!preferences::show_status_on_ally_orb())
+	if(!prefs::get().show_status_on_ally_orb())
 		return get_orb_image(orb_status::allied);
 
 	// This is conditional on prefs_show_orb, because a user might want to disable the standard
@@ -287,7 +286,7 @@ void unit_drawer::redraw_unit(const unit& u) const
 	texture ellipse_back;
 	int ellipse_floating = 0;
 	// Always show the ellipse for selected units
-	if(draw_bars && (preferences::show_side_colors() || is_selected_hex)) {
+	if(draw_bars && (prefs::get().show_side_colors() || is_selected_hex)) {
 		if(adjusted_params.submerge > 0.0) {
 			// The division by 2 seems to have no real meaning,
 			// It just works fine with the current center of ellipse
@@ -315,7 +314,7 @@ void unit_drawer::redraw_unit(const unit& u) const
 		}
 	}
 
-	disp.drawing_buffer_add(display::LAYER_UNIT_FIRST, loc, [=, adj_y = adjusted_params.y](const rect& d) {
+	disp.drawing_buffer_add(drawing_layer::unit_first, loc, [=, adj_y = adjusted_params.y](const rect& d) {
 		// Both front and back have the same origin
 		const point origin { d.x, d.y + adj_y - ellipse_floating };
 
@@ -396,7 +395,7 @@ void unit_drawer::redraw_unit(const unit& u) const
 			}
 		};
 
-		disp.drawing_buffer_add(display::LAYER_UNIT_BAR, loc, [=,
+		disp.drawing_buffer_add(drawing_layer::unit_bar, loc, [=,
 			textures      = std::move(textures),
 			adj_y         = adjusted_params.y,
 			//origin        = point{xsrc + xoff, ysrc + yoff + adjusted_params.y},

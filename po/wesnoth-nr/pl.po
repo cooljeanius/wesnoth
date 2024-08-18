@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pl\n"
 "Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
-"POT-Creation-Date: 2023-09-17 03:32 UTC\n"
+"POT-Creation-Date: 2024-05-26 20:07 UTC\n"
 "PO-Revision-Date: 2016-03-13 13:17+0100\n"
 "Last-Translator: Jarom <jaromirb@op.pl>\n"
 "Language-Team: polski <pl@li.org>\n"
@@ -1940,7 +1940,7 @@ msgstr ""
 "Gdy wyprawa w końcu dotarła do kopalń, ich oczom ukazał się niezwykły widok."
 
 #. [side]
-#. [side]: type=Elvish Avenger, id=Sisal
+#. [side]: type=Elvish Avenger, gender=female, id=Sisal
 #. [side]: type=Lieutenant, id=Tallin
 #. [side]: type=Dwarvish Lord, id=Hamel
 #: data/campaigns/Northern_Rebirth/scenarios/04_Clearing_the_Mines.cfg:29
@@ -7565,8 +7565,8 @@ msgstr "No to do dzieła."
 msgid "Right. Onward, men!"
 msgstr "Racja. Naprzód, żołnierze!"
 
-#. [unit]: type=Elvish Avenger, id=Sisal
-#. [side]: type=Elvish Avenger, id=Sisal
+#. [unit]: type=Elvish Avenger, id=Sisal, gender=female
+#. [side]: type=Elvish Avenger, gender=female, id=Sisal
 #. [modify_side]
 #: data/campaigns/Northern_Rebirth/scenarios/10a_Stolen_Gold.cfg:1092
 #: data/campaigns/Northern_Rebirth/scenarios/12a_Get_the_Gold.cfg:141
@@ -9608,23 +9608,6 @@ msgstr ""
 "odwadze, wytrwałości i mądrości wyprowadzili Ziemie Północy z mroku, "
 "przywracając im dawną chwałę."
 
-#. [unit_type]: id=Cave Serpent
-#: data/campaigns/Northern_Rebirth/units/Cave_Serpent.cfg:7
-msgid ""
-"The Water Serpent is a foe dire enough when encountered in the rivers and "
-"seas of the sunlit world, but his rare cave-dwelling kin are yet more "
-"terrible. Though their eyes are of little use in the stygian darkness of the "
-"deep caves where they dwell, they have become sensitive to even the tiniest "
-"sound that might indicate unwary prey in their domain, and will home in on "
-"it with remorseless efficiency."
-msgstr ""
-"Wąż wodny jest groźnym przeciwnikiem, gdy napotkać go w rzekach i morzach "
-"świata powierzchniowego, ale jego rzadko widywani pobratymcy jaskiniowi są "
-"jeszcze groźniejsi. Choć w egipskich ciemnościach podziemnego świata wzrok "
-"nie zdaje im się na wiele, wykształciły sobie niezwykle czuły słuch. "
-"Wystarczy najdrobniejszy szmer nieuważnej ofiary, by wąż nieubłaganie ruszył "
-"do śmiercionośnego ataku."
-
 #: data/campaigns/Northern_Rebirth/utils/characters.cfg:26
 msgid "Camerin"
 msgstr "Camerin"
@@ -10086,6 +10069,21 @@ msgstr "Nie, Eryssa! Proszę, nie umieraj!"
 #: data/campaigns/Northern_Rebirth/utils/herodeaths.cfg:832
 msgid "How could this happen? We can’t possibly go on without her..."
 msgstr ""
+
+#~ msgid ""
+#~ "The Water Serpent is a foe dire enough when encountered in the rivers and "
+#~ "seas of the sunlit world, but his rare cave-dwelling kin are yet more "
+#~ "terrible. Though their eyes are of little use in the stygian darkness of "
+#~ "the deep caves where they dwell, they have become sensitive to even the "
+#~ "tiniest sound that might indicate unwary prey in their domain, and will "
+#~ "home in on it with remorseless efficiency."
+#~ msgstr ""
+#~ "Wąż wodny jest groźnym przeciwnikiem, gdy napotkać go w rzekach i morzach "
+#~ "świata powierzchniowego, ale jego rzadko widywani pobratymcy jaskiniowi "
+#~ "są jeszcze groźniejsi. Choć w egipskich ciemnościach podziemnego świata "
+#~ "wzrok nie zdaje im się na wiele, wykształciły sobie niezwykle czuły "
+#~ "słuch. Wystarczy najdrobniejszy szmer nieuważnej ofiary, by wąż "
+#~ "nieubłaganie ruszył do śmiercionośnego ataku."
 
 #~ msgid "Prose, Grammatical and WML Assistance"
 #~ msgstr "Pomoc w prozie, gramatyce i WML"

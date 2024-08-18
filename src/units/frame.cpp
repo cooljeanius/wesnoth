@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2006 - 2023
+	Copyright (C) 2006 - 2024
 	by Jeremy Rosen <jeremy.rosen@enst-bretagne.fr>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -24,30 +24,12 @@
 static lg::log_domain log_engine("engine");
 #define ERR_NG LOG_STREAM(err, log_engine)
 
-frame_parameters::frame_parameters()
-	: duration(0)
-	, halo_x(0)
-	, halo_y(0)
-	, blend_ratio(0.0)
-	, highlight_ratio(1.0)
-	, offset(0)
-	, submerge(0.0)
-	, x(0)
-	, y(0)
-	, directional_x(0)
-	, directional_y(0)
-	, auto_vflip(boost::logic::indeterminate)
-	, auto_hflip(boost::logic::indeterminate)
-	, primary_frame(boost::logic::indeterminate)
-	, drawing_layer(display::LAYER_UNIT_DEFAULT - display::LAYER_UNIT_FIRST)
-{}
-
 frame_builder::frame_builder()
 	: duration_(1)
 	, auto_vflip_(boost::logic::indeterminate)
 	, auto_hflip_(boost::logic::indeterminate)
 	, primary_frame_(boost::logic::indeterminate)
-	, drawing_layer_(std::to_string(display::LAYER_UNIT_DEFAULT - display::LAYER_UNIT_FIRST))
+	, drawing_layer_(std::to_string(get_abs_frame_layer(drawing_layer::unit_default)))
 {}
 
 frame_builder::frame_builder(const config& cfg,const std::string& frame_string)
@@ -89,7 +71,7 @@ frame_builder::frame_builder(const config& cfg,const std::string& frame_string)
 	const auto& text_color_key = cfg[frame_string + "text_color"];
 	if(!text_color_key.empty()) {
 		try {
-			text_color_ = color_t::from_rgb_string(text_color_key);
+			text_color_ = color_t::from_rgb_string(text_color_key.str());
 		} catch(const std::invalid_argument& e) {
 			// Might be thrown either due to an incorrect number of elements or std::stoul failure.
 			ERR_NG << "Invalid RBG text color in unit animation: " << text_color_key.str()
@@ -114,7 +96,7 @@ frame_builder::frame_builder(const config& cfg,const std::string& frame_string)
 	const auto& blend_color_key = cfg[frame_string + "blend_color"];
 	if(!blend_color_key.empty()) {
 		try {
-			blend_with_ = color_t::from_rgb_string(blend_color_key);
+			blend_with_ = color_t::from_rgb_string(blend_color_key.str());
 		} catch(const std::invalid_argument& e) {
 			// Might be thrown either due to an incorrect number of elements or std::stoul failure.
 			ERR_NG << "Invalid RBG blend color in unit animation: " << blend_color_key.str()
@@ -315,7 +297,7 @@ const frame_parameters frame_parsed_parameters::parameters(int current_time) con
 	result.auto_vflip = auto_vflip_;
 	result.auto_hflip = auto_hflip_;
 	result.primary_frame = primary_frame_;
-	result.drawing_layer = drawing_layer_.get_current_element(current_time,display::LAYER_UNIT_DEFAULT-display::LAYER_UNIT_FIRST);
+	result.drawing_layer = drawing_layer_.get_current_element(current_time, get_abs_frame_layer(drawing_layer::unit_default));
 	return result;
 }
 
@@ -479,7 +461,7 @@ namespace
 void render_unit_image(
 	int x,
 	int y,
-	const display::drawing_layer drawing_layer,
+	const drawing_layer drawing_layer,
 	const map_location& loc,
 	const image::locator& i_locator,
 	bool hreverse,
@@ -510,8 +492,6 @@ void render_unit_image(
 		new_modifications += "~GS()";
 	}
 
-	display::add_submerge_ipf_mod(new_modifications, image_size.y, submerge);
-
 	texture tex;
 	if(!new_modifications.empty()) {
 		tex = image::get_texture({i_locator.get_filename(), i_locator.get_modifications() + new_modifications});
@@ -522,14 +502,30 @@ void render_unit_image(
 	// Clamp blend ratio so nothing weird happens
 	blend_ratio = std::clamp(blend_ratio, 0.0, 1.0);
 
+	submerge_data data = display::get_submerge_data(dest, submerge, image_size, alpha, hreverse, vreverse);
+
 	disp->drawing_buffer_add(drawing_layer, loc, [=](const rect&) mutable {
 		tex.set_alpha_mod(alpha);
-		draw::flipped(tex, dest, hreverse, vreverse);
+		if(submerge > 0.0) {
+			// set clip for dry part
+			// smooth_shaded doesn't use the clip information so it's fine to set it up front
+			tex.set_src(data.unsub_src);
+
+			// draw underwater part
+			draw::smooth_shaded(tex, data.alpha_verts);
+		}
+		// draw dry part
+		draw::flipped(tex, submerge > 0.0 ? data.unsub_dest : dest, hreverse, vreverse);
 
 		if(uint8_t hl = float_to_color(highlight); hl > 0) {
 			tex.set_blend_mode(SDL_BLENDMODE_ADD);
 			tex.set_alpha_mod(hl);
-			draw::flipped(tex, dest, hreverse, vreverse);
+			if(submerge > 0.0) {
+				// draw underwater part
+				draw::smooth_shaded(tex, data.alpha_verts);
+			}
+			// draw dry part
+			draw::flipped(tex, submerge > 0.0 ? data.unsub_dest : dest, hreverse, vreverse);
 		}
 
 		tex.set_blend_mode(SDL_BLENDMODE_BLEND);
@@ -547,15 +543,41 @@ void render_unit_image(
 		);
 
 		disp->drawing_buffer_add(drawing_layer, loc, [=, tex = image::get_texture(whiteout_locator)](const rect&) mutable {
+			if (submerge > 0.0) {
+				// also draw submerged portion
+				// alpha_mod and color_mod are ignored,
+				// so we have to put them in the smooth shaded vertex data.
+				// This also has to incorporate the existing submerge alpha.
+				blendto.a = uint8_t(data.alpha_verts[0].color.a * blend_ratio);
+				data.alpha_verts[0].color = blendto;
+				data.alpha_verts[1].color = blendto;
+				blendto.a = uint8_t(data.alpha_verts[2].color.a * blend_ratio);
+				data.alpha_verts[2].color = blendto;
+				data.alpha_verts[3].color = blendto;
+
+				// set clip for dry part
+				// smooth_shaded doesn't use the clip information so it's fine to set it up front
+				tex.set_src(data.unsub_src);
+
+				// draw underwater part
+				draw::smooth_shaded(tex, data.alpha_verts);
+			}
+
 			tex.set_alpha_mod(alpha * blend_ratio);
 			tex.set_color_mod(blendto);
 
-			draw::flipped(tex, dest, hreverse, vreverse);
+			// draw dry part
+			draw::flipped(tex, submerge > 0.0 ? data.unsub_dest : dest, hreverse, vreverse);
 
 			if(uint8_t hl = float_to_color(highlight); hl > 0) {
 				tex.set_blend_mode(SDL_BLENDMODE_ADD);
 				tex.set_alpha_mod(hl);
-				draw::flipped(tex, dest, hreverse, vreverse);
+				if (submerge > 0.0) {
+					// draw underwater part
+					draw::smooth_shaded(tex, data.alpha_verts);
+				}
+				// draw dry part
+				draw::flipped(tex, submerge > 0.0 ? data.unsub_dest : dest, hreverse, vreverse);
 			}
 
 			tex.set_color_mod(255, 255, 255);
@@ -659,7 +681,7 @@ void unit_frame::redraw(const int frame_time, bool on_start_time, bool in_scope_
 
 		if(alpha != 0) {
 			render_unit_image(my_x, my_y,
-				static_cast<display::drawing_layer>(display::LAYER_UNIT_FIRST + current_data.drawing_layer),
+				drawing_layer { int(drawing_layer::unit_first) + current_data.drawing_layer },
 				src,
 				image_loc,
 				facing_west,
@@ -974,8 +996,8 @@ frame_parameters unit_frame::merge_parameters(int current_time, const frame_para
 	assert(engine_val.directional_y == 0);
 	result.directional_y = current_val.directional_y ? current_val.directional_y : animation_val.directional_y;
 
-	assert(engine_val.drawing_layer == display::LAYER_UNIT_DEFAULT - display::LAYER_UNIT_FIRST);
-	result.drawing_layer = current_val.drawing_layer != display::LAYER_UNIT_DEFAULT-display::LAYER_UNIT_FIRST
+	assert(engine_val.drawing_layer == get_abs_frame_layer(drawing_layer::unit_default));
+	result.drawing_layer = current_val.drawing_layer != get_abs_frame_layer(drawing_layer::unit_default)
 		? current_val.drawing_layer
 		: animation_val.drawing_layer;
 

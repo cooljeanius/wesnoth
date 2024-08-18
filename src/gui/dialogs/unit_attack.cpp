@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2010 - 2023
+	Copyright (C) 2010 - 2024
 	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -20,16 +20,11 @@
 #include "gui/auxiliary/find_widget.hpp"
 #include "gui/dialogs/attack_predictions.hpp"
 #include "gui/widgets/button.hpp"
-#include "gui/widgets/label.hpp"
-#include "gui/widgets/image.hpp"
 #include "gui/widgets/listbox.hpp"
-#include "gui/widgets/settings.hpp"
 #include "gui/widgets/unit_preview_pane.hpp"
 #include "gui/widgets/window.hpp"
 #include "game_config.hpp"
-#include "game_display.hpp"
 #include "gettext.hpp"
-#include "help/help.hpp"
 #include "language.hpp"
 #include "color.hpp"
 #include "units/unit.hpp"

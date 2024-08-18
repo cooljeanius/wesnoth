@@ -2,15 +2,15 @@
 # Vladimír Slávik <slavik.vladimir@seznam.cz>, 2007 - 2011.
 # Honza <Honza-mistic@seznam.cz>, 2014.
 # Martin Hrubý <hrubymar10@gmail.com>, 2017 - 2020.
-# Michal Žejdl <lachim@emer.cz>, 2019 - 2023
+# Michal Žejdl <lachim@emer.cz>, 2019 - 2024
 # Petr Šlejhar (Septim), 2021, 2023
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Battle for Wesnoth\n"
 "Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
-"POT-Creation-Date: 2023-10-17 04:13 UTC\n"
-"PO-Revision-Date: 2023-10-20 22:08+0200\n"
+"POT-Creation-Date: 2024-05-26 20:07 UTC\n"
+"PO-Revision-Date: 2024-06-11 22:16+0200\n"
 "Last-Translator: Michal Žejdl <lachim@emer.cz>\n"
 "Language-Team: Czech https://wiki.wesnoth.org/CzechTranslation\n"
 "Language: cs\n"
@@ -360,7 +360,7 @@ msgstr "Kembe"
 msgid "Treagh"
 msgstr "Treagh"
 
-#. [unit]: type=Footpad_Peasant, id=Harper
+#. [unit]: type=Footpad_Peasant, id=Harper, gender=female
 #: data/campaigns/Liberty/scenarios/01_The_Raid.cfg:240
 msgid "Harper"
 msgstr "Harper"
@@ -627,8 +627,8 @@ msgstr ""
 #. [side]: type=Bandit_Peasant, id=Baldras
 #. [side]
 #. [side]: type=Bandit, id=Baldras
-#. [side]: type=Highwayman_Peasant, id=Relana
-#. [side]: type=General, id=Lord Maddock
+#. [side]: type=Highwayman_Peasant, gender=female, id=Relana
+#. [side]: type=Lord of Elensefar, id=Lord Maddock
 #. [side]: type=Rogue, id=Hans
 #. [side]: type=Highwayman, id=Baldras
 #. [side]: type=Shadow Lord, id=Helicrom
@@ -959,7 +959,7 @@ msgstr ""
 "bezpečí.“ Pěkně prořízlá držka to byla. Ale měla by pravdu, mám odpovědnost "
 "vůči našim lidem. Čeká nás ještě spousta trablů..."
 
-#. [side]: type=Highwayman_Peasant, id=Relana
+#. [side]: type=Highwayman_Peasant, gender=female, id=Relana
 #: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:57
 msgid "Relana"
 msgstr "Relana"
@@ -988,7 +988,7 @@ msgstr "Relana zemře"
 #: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:203
 msgid "Baldras! Ya made it! Lil Harper here told me all about what happened."
 msgstr ""
-"Baldrasi! Zvládnuls to! Tady malá Harper mi už řekla všechno, co se stalo."
+"Baldrasi! Zvládls to! Tady malá Harper mi už řekla všechno, co se stalo."
 
 #. [message]: speaker=Baldras
 #: data/campaigns/Liberty/scenarios/03_A_Strategy_Of_Hope.cfg:207
@@ -1275,7 +1275,7 @@ msgstr "Elensefar"
 msgid "Port of Elensefar"
 msgstr "Elensefarský přístav"
 
-#. [side]: type=General, id=Lord Maddock
+#. [side]: type=Lord of Elensefar, id=Lord Maddock
 #: data/campaigns/Liberty/scenarios/04_Unlawful_Orders.cfg:45
 msgid "Lord Maddock"
 msgstr "Lord Maddok"
@@ -3153,6 +3153,29 @@ msgstr ""
 "Takže přežili! Ty ostrovy jsou trochu daleko, ale myslím, že v mým starým "
 "těle zbejvá ještě dost energie na další dobrodružství..."
 
+#. [unit_type]: id=Lord of Elensefar, race=human
+#: data/campaigns/Liberty/units/Maddock.cfg:4
+msgid "Lord of Elensefar"
+msgstr "Pán Elensefaru"
+
+#. [unit_type]: id=Lord of Elensefar, race=human
+#: data/campaigns/Liberty/units/Maddock.cfg:7
+msgid ""
+"The grand city-state of Elensefar is the wealthiest human settlement on the "
+"Great Continent, commanding a reputation and power that belies its "
+"relatively small population. Unlike the more war-minded inland nobles, "
+"Elensefar’s governors master the art of commerce and the skill of sailing, "
+"and are known to be particularly agreeable. Yet behind that merchant charm "
+"lies a fierce independence, a trait that sometimes puts them at odds with "
+"the aristocrats of other regions."
+msgstr ""
+"Velkolepý městský stát Elensefar je nejbohatší lidskou osadou na Velkém "
+"kontinentu a má pověst a moc, která neodpovídá jeho relativně malému počtu "
+"obyvatel. Na rozdíl od válečnických šlechticů ve vnitrozemí ovládají správci "
+"Elensefaru umění obchodu a plavby a je známo, že jsou mimořádně příjemní. Za "
+"obchodnickým šarmem se však skrývá divoká nezávislost, která je někdy vede "
+"ke sporu s aristokraty z jiných krajů."
+
 #. [unit_type]: id=Rogue Mage, race=human
 #: data/campaigns/Liberty/units/Rogue_Mage.cfg:5
 msgid "Rogue Mage"
@@ -3265,12 +3288,12 @@ msgstr ""
 "Každá z vesnic rozptýlených po Wesnothu je většinou vedena skupinou "
 "starších, kteří patří mezi nejmoudřejší a nejzkušenější obyvatele vesnice."
 
-#. [unit_type]: id=Highwayman_Peasant
+#. [unit_type]: id=Highwayman_Peasant, gender=male,female
 #: data/campaigns/Liberty/units/Villagers.cfg:53
 msgid "Senior Village Elder"
 msgstr "Vesnický stařešina"
 
-#. [unit_type]: id=Highwayman_Peasant
+#. [unit_type]: id=Highwayman_Peasant, gender=male,female
 #: data/campaigns/Liberty/units/Villagers.cfg:57
 msgid ""
 "The entire village looks to the senior elder for guidance. Strong and wise, "
@@ -3283,7 +3306,7 @@ msgstr ""
 "nejzkušenějšího vesnického stařešinu za starostu, čímž se síla zákona a síla "
 "obyčejů propojí."
 
-#. [female]
+#. [female]: gender=female
 #: data/campaigns/Liberty/units/Villagers.cfg:59
 msgid "female^Senior Village Elder"
 msgstr "Vesnická starší"

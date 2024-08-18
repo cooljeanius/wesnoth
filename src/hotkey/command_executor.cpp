@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2023
+	Copyright (C) 2003 - 2024
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -20,28 +20,22 @@
 #include "gui/dialogs/lua_interpreter.hpp"
 #include "gui/dialogs/message.hpp"
 #include "gui/dialogs/screenshot_notification.hpp"
-#include "gui/dialogs/transient_message.hpp"
 #include "gui/dialogs/drop_down_menu.hpp"
 #include "gui/widgets/retval.hpp"
 #include "filesystem.hpp"
 #include "gettext.hpp"
 #include "log.hpp"
-#include "preferences/general.hpp"
-#include "game_end_exceptions.hpp"
+#include "preferences/preferences.hpp"
 #include "display.hpp"
 #include "quit_confirmation.hpp"
 #include "sdl/surface.hpp"
-#include "show_dialog.hpp"
 #include "../resources.hpp"
 #include "../playmp_controller.hpp"
 #include "sdl/input.hpp" // get_mouse_state
 #include "video.hpp" // toggle_fullscreen
 
-#include <functional>
 
-#include <SDL2/SDL_image.h>
 
-#include <cassert>
 #include <ios>
 #include <set>
 
@@ -202,6 +196,9 @@ bool command_executor::do_execute_command(const hotkey::ui_command& cmd, bool pr
 			break;
 		case HOTKEY_KILL_UNIT:
 			kill_unit();
+			break;
+		case HOTKEY_TELEPORT_UNIT:
+			select_teleport();
 			break;
 		case HOTKEY_PREFERENCES:
 			preferences();
@@ -370,23 +367,23 @@ bool command_executor::do_execute_command(const hotkey::ui_command& cmd, bool pr
 			surrender_game();
 			break;
 		case HOTKEY_MINIMAP_DRAW_TERRAIN:
-			preferences::toggle_minimap_draw_terrain();
+			prefs::get().set_minimap_draw_terrain(!prefs::get().minimap_draw_terrain());
 			recalculate_minimap();
 			break;
 		case HOTKEY_MINIMAP_CODING_TERRAIN:
-			preferences::toggle_minimap_terrain_coding();
+			prefs::get().set_minimap_terrain_coding(!prefs::get().minimap_terrain_coding());
 			recalculate_minimap();
 			break;
 		case HOTKEY_MINIMAP_CODING_UNIT:
-			preferences::toggle_minimap_movement_coding();
+			prefs::get().set_minimap_movement_coding(!prefs::get().minimap_movement_coding());
 			recalculate_minimap();
 			break;
 		case HOTKEY_MINIMAP_DRAW_UNITS:
-			preferences::toggle_minimap_draw_units();
+			prefs::get().set_minimap_draw_units(!prefs::get().minimap_draw_units());
 			recalculate_minimap();
 			break;
 		case HOTKEY_MINIMAP_DRAW_VILLAGES:
-			preferences::toggle_minimap_draw_villages();
+			prefs::get().set_minimap_draw_villages(!prefs::get().minimap_draw_villages());
 			recalculate_minimap();
 			break;
 		case HOTKEY_ACHIEVEMENTS:
@@ -631,10 +628,10 @@ void command_executor::execute_command_wrap(const command_executor::queued_comma
 			make_screenshot(_("Screenshot"), false);
 			break;
 		case HOTKEY_ANIMATE_MAP:
-			preferences::set_animate_map(!preferences::animate_map());
+			prefs::get().set_animate_map(!prefs::get().animate_map());
 			break;
 		case HOTKEY_MOUSE_SCROLL:
-			preferences::enable_mouse_scroll(!preferences::mouse_scroll_enabled());
+			prefs::get().set_mouse_scrolling(!prefs::get().mouse_scrolling());
 			break;
 		case HOTKEY_MUTE:
 			{
@@ -644,19 +641,19 @@ void command_executor::execute_command_wrap(const command_executor::queued_comma
 					bool playing_sound,playing_music;
 					before_muted_s() : playing_sound(false),playing_music(false){}
 				} before_muted;
-				if (preferences::music_on() || preferences::sound_on())
+				if (prefs::get().music_on() || prefs::get().sound())
 				{
 					// then remember settings and mute both
-					before_muted.playing_sound = preferences::sound_on();
-					before_muted.playing_music = preferences::music_on();
-					preferences::set_sound(false);
-					preferences::set_music(false);
+					before_muted.playing_sound = prefs::get().sound();
+					before_muted.playing_music = prefs::get().music_on();
+					prefs::get().set_sound(false);
+					prefs::get().set_music(false);
 				}
 				else
 				{
 					// then set settings before mute
-					preferences::set_sound(before_muted.playing_sound);
-					preferences::set_music(before_muted.playing_music);
+					prefs::get().set_sound(before_muted.playing_sound);
+					prefs::get().set_music(before_muted.playing_music);
 				}
 			}
 			break;

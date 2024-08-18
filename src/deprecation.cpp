@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2017 - 2023
+	Copyright (C) 2017 - 2024
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -15,9 +15,8 @@
 #include "deprecation.hpp"
 
 #include "formula/string_utils.hpp"
-#include "gettext.hpp"
 #include "log.hpp"
-#include "preferences/general.hpp"
+#include "preferences/preferences.hpp"
 #include "game_version.hpp"
 
 // Set the default severity with the second parameter.
@@ -80,7 +79,7 @@ std::string deprecated_message(
 		const lg::logger& out_log = *log_ptr;
 		FORCE_LOG_TO(out_log, log_deprecate) << message;
 		// whether to show the error in the ingame chat area
-		if(preferences::get("show_deprecation", game_config::wesnoth_version.is_dev_version())) {
+		if(prefs::get().get_show_deprecation(game_config::wesnoth_version.is_dev_version())) {
 			lg::log_to_chat() << message << '\n';
 		}
 	}

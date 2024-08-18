@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012 - 2023
+	Copyright (C) 2012 - 2024
 	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -33,11 +33,8 @@ namespace implementation
 struct builder_pane;
 } // namespace implementation
 
-class grid;
 
 /**
- * @ingroup GUIWidgetWML
- *
  * A pane is a container where new members can be added and removed during run-time.
  */
 class pane : public widget

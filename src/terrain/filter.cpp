@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2023
+	Copyright (C) 2003 - 2024
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -18,7 +18,6 @@
 #include "config.hpp"
 #include "display_context.hpp"
 #include "filter_context.hpp"
-#include "game_board.hpp"
 #include "game_data.hpp"
 #include "log.hpp"
 #include "map/map.hpp"

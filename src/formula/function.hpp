@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008 - 2023
+	Copyright (C) 2008 - 2024
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -37,8 +37,8 @@ namespace wfl
 		variant execute(const formula_callable& variables, formula_debugger* fdb) const;                               \
 	};                                                                                                                 \
                                                                                                                        \
-	variant name##_function::execute(const formula_callable& variables, formula_debugger* fdb) const
-
+	variant name##_function::execute(                                                                                  \
+		[[maybe_unused]] const formula_callable& variables, [[maybe_unused]] formula_debugger* fdb) const
 
 /**
  * Declares a function `name` in the local function table `functions_table`.

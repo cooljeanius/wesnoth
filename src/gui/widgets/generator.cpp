@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008 - 2023
+	Copyright (C) 2008 - 2024
 	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -17,7 +17,6 @@
 
 #include "gui/widgets/generator_private.hpp"
 
-#include "gui/widgets/window.hpp"
 #include "wml_exception.hpp"
 
 #include <numeric>
@@ -1071,10 +1070,8 @@ void selection::init(grid* g,
 
 void show::init(grid* grid,
 		const widget_data& data,
-		const std::function<void(widget&)>& callback)
+		const std::function<void(widget&)>& /*callback*/)
 {
-	assert(!callback);
-
 	for(const auto& item : data) {
 		if(item.first.empty()) {
 			for(unsigned row = 0; row < grid->get_rows(); ++row) {

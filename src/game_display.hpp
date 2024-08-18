@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2023
+	Copyright (C) 2003 - 2024
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -16,15 +16,12 @@
 #pragma once
 
 class config;
-class team;
 class game_board;
 
-#include "chat_events.hpp"
 #include "display.hpp"
 #include "display_chat_manager.hpp"
 #include "pathfind/pathfind.hpp"
 
-#include <deque>
 
 // This needs to be separate from display.h because of the static
 // singleton member, which will otherwise trigger link failure

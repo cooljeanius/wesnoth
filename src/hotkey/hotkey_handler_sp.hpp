@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2014 - 2023
+	Copyright (C) 2014 - 2024
 	by Chris Beck <render787@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -48,6 +48,7 @@ public:
 	virtual void rename_unit() override;
 	virtual void create_unit() override;
 	virtual void change_side() override;
+	virtual void select_teleport() override;
 	virtual void kill_unit() override;
 	virtual void label_terrain(bool) override;
 	virtual void clear_labels() override;
