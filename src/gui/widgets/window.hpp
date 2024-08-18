@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2007 - 2023
+	Copyright (C) 2007 - 2024
 	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -24,7 +24,6 @@
 #include "formula/callable.hpp"
 #include "formula/function.hpp"
 #include "gui/auxiliary/typed_formula.hpp"
-#include "gui/core/event/handler.hpp"
 #include "gui/core/top_level_drawable.hpp"
 #include "gui/core/window_builder.hpp"
 #include "gui/widgets/panel.hpp"
@@ -38,7 +37,6 @@
 #include <string>
 #include <vector>
 
-struct point;
 
 namespace gui2
 {
@@ -49,8 +47,6 @@ namespace event { struct message; }
 // ------------ WIDGET -----------{
 
 namespace dialogs { class modal_dialog; }
-class debug_layout_graph;
-class pane;
 
 namespace event
 {
@@ -58,8 +54,6 @@ class distributor;
 } // namespace event
 
 /**
- * @ingroup GUIWidgetWML
- *
  * base class of top level items, the only item which needs to store the final canvases to draw on.
  * A window is a kind of panel see the panel for which fields exist.
  */
@@ -221,8 +215,8 @@ public:
 	/**
 	 * Requests to close the window.
 	 *
-	 * At the moment the request is always honored but that might change in the
-	 * future.
+	 * This request is not always honored immediately, and so callers must account for the window remaining open.
+	 * For example, when overriding draw_manager's update() method.
 	 */
 	void close()
 	{

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2009 - 2023
+	Copyright (C) 2009 - 2024
 	by Yurii Chernyi <terraninfo@terraninfo.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -19,7 +19,6 @@
  */
 
 #include "ai/lua/engine_lua.hpp"
-#include "ai/composite/ai.hpp"
 #include "ai/composite/goal.hpp"
 #include "ai/composite/rca.hpp"
 #include "ai/composite/stage.hpp"

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2009 - 2023
+	Copyright (C) 2009 - 2024
 	by Eugen Jiresch
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -16,9 +16,7 @@
 #include "tod_manager.hpp"
 
 #include "actions/attack.hpp"
-#include "display_context.hpp"
 #include "game_data.hpp"
-#include "gettext.hpp"
 #include "log.hpp"
 #include "map/map.hpp"
 #include "play_controller.hpp"
@@ -30,7 +28,6 @@
 #include "units/unit_alignments.hpp"
 
 #include <algorithm>
-#include <functional>
 #include <iterator>
 
 static lg::log_domain log_engine("engine");
@@ -244,7 +241,7 @@ const time_of_day tod_manager::get_illuminated_time_of_day(
 			if(itor != units.end() && !itor->incapacitated()) {
 				unit_ability_list illum = itor->get_abilities("illuminates");
 				if(!illum.empty()) {
-					unit_abilities::effect illum_effect(illum, terrain_light);
+					unit_abilities::effect illum_effect(illum, terrain_light, nullptr, unit_abilities::EFFECT_WITHOUT_CLAMP_MIN_MAX);
 					const int unit_mod = illum_effect.get_composite_value();
 
 					// Record this value.

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2006 - 2023
+	Copyright (C) 2006 - 2024
 	by Jeremy Rosen <jeremy.rosen@enst-bretagne.fr>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -23,7 +23,6 @@
 #include "units/ptr.hpp"
 #include "units/strike_result.hpp"
 
-class unit;
 
 class unit_animation
 {
@@ -191,11 +190,6 @@ private:
 class unit_animator
 {
 public:
-	unit_animator() :
-		animated_units_(),
-		start_time_(INT_MIN)
-	{}
-
 	void add_animation(unit_const_ptr animated_unit
 		, const unit_animation* animation
 		, const map_location& src = map_location::null_location()
@@ -256,7 +250,7 @@ public:
 
 	void clear()
 	{
-		start_time_ = INT_MIN;
+		start_time_ = std::numeric_limits<int>::min();
 		animated_units_.clear();
 	}
 
@@ -272,23 +266,14 @@ public:
 private:
 	struct anim_elem
 	{
-		anim_elem()
-			: my_unit()
-			, animation(0)
-			, text()
-			, text_color()
-			, src()
-			, with_bars(false)
-		{}
-
 		unit_const_ptr my_unit;
-		const unit_animation * animation;
+		const unit_animation* animation = nullptr;
 		std::string text;
 		color_t text_color;
 		map_location src;
-		bool with_bars;
+		bool with_bars = false;
 	};
 
 	std::vector<anim_elem> animated_units_;
-	int start_time_;
+	int start_time_ = std::numeric_limits<int>::min();
 };

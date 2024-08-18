@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008 - 2023
+	Copyright (C) 2008 - 2024
 	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -21,7 +21,7 @@
 #include "gui/core/register_widget.hpp"
 #include "gui/widgets/settings.hpp"
 #include "gui/widgets/window.hpp"
-#include "preferences/game.hpp"
+#include "preferences/preferences.hpp"
 #include "serialization/unicode.hpp"
 #include <functional>
 #include "wml_exception.hpp"
@@ -40,7 +40,7 @@ REGISTER_WIDGET(text_box)
 text_history text_history::get_history(const std::string& id,
 										 const bool enabled)
 {
-	std::vector<std::string>* vec = preferences::get_history(id);
+	std::vector<std::string>* vec = prefs::get().get_history(id);
 	return text_history(vec, enabled);
 }
 
@@ -203,6 +203,8 @@ void text_box::update_canvas()
 		tmp.set_variable("text_maximum_width", wfl::variant(max_width));
 		tmp.set_variable("text_maximum_height", wfl::variant(max_height));
 
+		tmp.set_variable("editable", wfl::variant(is_editable()));
+
 		tmp.set_variable("cursor_offset",
 						 wfl::variant(get_cursor_position(start + length).x));
 
@@ -361,10 +363,6 @@ void text_box::signal_handler_left_button_down(const event::ui_event event,
 {
 	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
-	/*
-	 * Copied from the base class see how we can do inheritance with the new
-	 * system...
-	 */
 	get_window()->keyboard_capture(this);
 	get_window()->mouse_capture();
 
@@ -408,10 +406,10 @@ text_box_definition::resolution::resolution(const config& cfg)
 	, text_y_offset(cfg["text_y_offset"])
 {
 	// Note the order should be the same as the enum state_t in text_box.hpp.
-	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_enabled", _("Missing required state for editable text box")));
-	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_disabled", _("Missing required state for editable text box")));
-	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_focused", _("Missing required state for editable text box")));
-	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_hovered", _("Missing required state for editable text box")));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_enabled", missing_mandatory_wml_tag("text_box_definition][resolution", "state_enabled")));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_disabled", missing_mandatory_wml_tag("text_box_definition][resolution", "state_disabled")));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_focused", missing_mandatory_wml_tag("text_box_definition][resolution", "state_focused")));
+	state.emplace_back(VALIDATE_WML_CHILD(cfg, "state_hovered", missing_mandatory_wml_tag("text_box_definition][resolution", "state_hovered")));
 }
 
 // }---------- BUILDER -----------{
@@ -425,6 +423,7 @@ builder_text_box::builder_text_box(const config& cfg)
 	, max_input_length(cfg["max_input_length"])
 	, hint_text(cfg["hint_text"].t_str())
 	, hint_image(cfg["hint_image"])
+	, editable(cfg["editable"].to_bool(true))
 {
 }
 
@@ -441,6 +440,7 @@ std::unique_ptr<widget> builder_text_box::build() const
 
 	widget->set_max_input_length(max_input_length);
 	widget->set_hint_data(hint_text, hint_image);
+	widget->set_editable(editable);
 
 	DBG_GUI_G << "Window builder: placed text box '" << id
 			  << "' with definition '" << definition << "'.";

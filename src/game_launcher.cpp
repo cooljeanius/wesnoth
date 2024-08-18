@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2023
+	Copyright (C) 2003 - 2024
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -21,11 +21,10 @@
 #include "config.hpp"              // for config, etc
 #include "cursor.hpp"              // for set, CURSOR_TYPE::NORMAL
 #include "exceptions.hpp"          // for error
-#include "filesystem.hpp"          // for get_user_config_dir, etc
+#include "filesystem.hpp"          // for get_user_data_dir, etc
 #include "game_classification.hpp" // for game_classification, etc
 #include "game_config.hpp"         // for path, no_delay, revision, etc
 #include "game_config_manager.hpp" // for game_config_manager
-#include "game_initialization/create_engine.hpp"
 #include "game_initialization/multiplayer.hpp"  // for start_client, etc
 #include "game_initialization/playcampaign.hpp" // for play_game, etc
 #include "game_initialization/singleplayer.hpp" // for sp_create_mode
@@ -35,23 +34,17 @@
 #include "gui/dialogs/loading_screen.hpp"
 #include "gui/dialogs/message.hpp" // for show error message
 #include "gui/dialogs/multiplayer/mp_connect.hpp"
-#include "gui/dialogs/multiplayer/mp_host_game_prompt.hpp" // for host game prompt
-#include "gui/dialogs/multiplayer/mp_method_selection.hpp"
 #include "gui/dialogs/title_screen.hpp"      // for show_debug_clock_button
 #include "gui/dialogs/transient_message.hpp" // for show_transient_message
-#include "gui/widgets/retval.hpp"            // for window, etc
 #include "gui/widgets/settings.hpp"          // for new_widgets
 #include "language.hpp"                      // for language_def, etc
 #include "log.hpp"                           // for LOG_STREAM, logger, general, etc
 #include "map/exception.hpp"
-#include "preferences/credentials.hpp"
-#include "preferences/display.hpp"
-#include "preferences/general.hpp" // for disable_preferences_save, etc
+#include "preferences/preferences.hpp"
 #include "save_index.hpp"
 #include "scripting/application_lua_kernel.hpp"
 #include "sdl/surface.hpp"                // for surface
 #include "serialization/compression.hpp"  // for format::NONE
-#include "serialization/string_utils.hpp" // for split
 #include "tstring.hpp"       // for operator==, operator!=
 #include "video.hpp"
 #include "wesnothd_connection_error.hpp"
@@ -66,13 +59,11 @@
 #include <new>
 #include <utility> // for pair
 
-#include <SDL2/SDL.h> // for SDL_INIT_JOYSTICK, etc
 
 #ifdef DEBUG_WINDOW_LAYOUT_GRAPHS
 #include "gui/widgets/debug.hpp"
 #endif
 
-struct incorrect_map_format_error;
 
 static lg::log_domain log_config("config");
 #define ERR_CONFIG LOG_STREAM(err, log_config)
@@ -100,7 +91,6 @@ namespace bp = boost::process;
 game_launcher::game_launcher(const commandline_options& cmdline_opts)
 	: cmdline_opts_(cmdline_opts)
 	, font_manager_()
-	, prefs_manager_()
 	, image_manager_()
 	, main_event_context_()
 	, hotkey_manager_()
@@ -138,7 +128,7 @@ game_launcher::game_launcher(const commandline_options& cmdline_opts)
 	}
 
 	if(cmdline_opts_.core_id) {
-		preferences::set_core_id(*cmdline_opts_.core_id);
+		prefs::get().set_core(*cmdline_opts_.core_id);
 	}
 	if(cmdline_opts_.campaign) {
 		jump_to_campaign_.jump = true;
@@ -181,7 +171,7 @@ game_launcher::game_launcher(const commandline_options& cmdline_opts)
 		}
 	}
 	if(cmdline_opts_.fps)
-		preferences::set_show_fps(true);
+		prefs::get().set_show_fps(true);
 	if(cmdline_opts_.fullscreen)
 		start_in_fullscreen_ = true;
 	if(cmdline_opts_.load)
@@ -194,11 +184,11 @@ game_launcher::game_launcher(const commandline_options& cmdline_opts)
 		if(1000 % fps != 0) {
 			++fps;
 		}
-		preferences::set_draw_delay(fps);
+		prefs::get().set_draw_delay(fps);
 	}
 	if(cmdline_opts_.nogui || cmdline_opts_.headless_unit_test) {
 		no_sound = true;
-		preferences::disable_preferences_save();
+		prefs::disable_preferences_save();
 	}
 	if(cmdline_opts_.new_widgets)
 		gui2::new_widgets = true;
@@ -212,8 +202,8 @@ game_launcher::game_launcher(const commandline_options& cmdline_opts)
 		const int xres = std::get<0>(*cmdline_opts_.resolution);
 		const int yres = std::get<1>(*cmdline_opts_.resolution);
 		if(xres > 0 && yres > 0) {
-			preferences::_set_resolution(point(xres, yres));
-			preferences::_set_maximized(false);
+			prefs::get().set_resolution(point(xres, yres));
+			prefs::get().set_maximized(false);
 		}
 	}
 	if(cmdline_opts_.screenshot) {
@@ -221,7 +211,7 @@ game_launcher::game_launcher(const commandline_options& cmdline_opts)
 		screenshot_map_ = *cmdline_opts_.screenshot_map_file;
 		screenshot_filename_ = *cmdline_opts_.screenshot_output_file;
 		no_sound = true;
-		preferences::disable_preferences_save();
+		prefs::disable_preferences_save();
 	}
 	if (cmdline_opts_.server){
 		jump_to_multiplayer_ = true;
@@ -231,17 +221,17 @@ game_launcher::game_launcher(const commandline_options& cmdline_opts)
 		} else {
 			// Pick the first server in config
 			if(game_config::server_list.size() > 0) {
-				multiplayer_server_ = preferences::network_host();
+				multiplayer_server_ = prefs::get().network_host();
 			} else {
 				multiplayer_server_ = "";
 			}
 		}
 		if(cmdline_opts_.username) {
-			preferences::disable_preferences_save();
-			preferences::set_login(*cmdline_opts_.username);
+			prefs::disable_preferences_save();
+			prefs::get().set_login(*cmdline_opts_.username);
 			if(cmdline_opts_.password) {
-				preferences::disable_preferences_save();
-				preferences::set_password(*cmdline_opts.server, *cmdline_opts.username, *cmdline_opts_.password);
+				prefs::disable_preferences_save();
+				prefs::get().set_password(*cmdline_opts.server, *cmdline_opts.username, *cmdline_opts_.password);
 			}
 		}
 	}
@@ -263,22 +253,21 @@ game_launcher::game_launcher(const commandline_options& cmdline_opts)
 	if(!cmdline_opts.nobanner) {
 		PLAIN_LOG
 			<< "\nData directory:               " << game_config::path
-			<< "\nUser configuration directory: " << filesystem::get_user_config_dir()
 			<< "\nUser data directory:          " << filesystem::get_user_data_dir()
 			<< "\nCache directory:              " << filesystem::get_cache_dir()
 			<< "\n\n";
 	}
 
 	// disable sound in nosound mode, or when sound engine failed to initialize
-	if(no_sound || ((preferences::sound_on() || preferences::music_on() ||
-	                  preferences::turn_bell() || preferences::UI_sound_on()) &&
+	if(no_sound || ((prefs::get().sound() || prefs::get().music_on() ||
+	                  prefs::get().turn_bell() || prefs::get().ui_sound_on()) &&
 	                 !sound::init_sound())) {
-		preferences::set_sound(false);
-		preferences::set_music(false);
-		preferences::set_turn_bell(false);
-		preferences::set_UI_sound(false);
+		prefs::get().set_sound(false);
+		prefs::get().set_music(false);
+		prefs::get().set_turn_bell(false);
+		prefs::get().set_ui_sound(false);
 	} else if(no_music) { // else disable the music in nomusic mode
-		preferences::set_music(false);
+		prefs::get().set_music(false);
 	}
 }
 
@@ -827,14 +816,17 @@ bool game_launcher::goto_editor()
 
 void game_launcher::start_wesnothd()
 {
-	std::string wesnothd_program = preferences::get_mp_server_program_name().empty()
-		? filesystem::get_exe_dir() + "/" + filesystem::get_program_invocation("wesnothd")
-		: preferences::get_mp_server_program_name();
+	std::string wesnothd_program = "";
+	if(!prefs::get().get_mp_server_program_name().empty()) {
+		wesnothd_program = prefs::get().get_mp_server_program_name();
+	} else {
+		wesnothd_program = filesystem::get_wesnothd_name();
+	}
 
-	std::string config = filesystem::get_user_config_dir() + "/lan_server.cfg";
+	std::string config = filesystem::get_user_data_dir() + "/lan_server.cfg";
 	if (!filesystem::file_exists(config)) {
 		// copy file if it isn't created yet
-		filesystem::write_file(config, filesystem::read_file(filesystem::get_wml_location("lan_server.cfg")));
+		filesystem::write_file(config, filesystem::read_file(filesystem::get_wml_location("lan_server.cfg").value()));
 	}
 
 	LOG_GENERAL << "Starting wesnothd";
@@ -852,7 +844,7 @@ void game_launcher::start_wesnothd()
 	}
 	catch(const bp::process_error& e)
 	{
-		preferences::set_mp_server_program_name("");
+		prefs::get().set_mp_server_program_name("");
 
 		// Couldn't start server so throw error
 		WRN_GENERAL << "Failed to start server " << wesnothd_program << ":\n" << e.what();
@@ -867,7 +859,7 @@ bool game_launcher::play_multiplayer(mp_mode mode)
 			try {
 				start_wesnothd();
 			} catch(const game::mp_server_error&) {
-				preferences::show_wesnothd_server_search();
+				prefs::get().show_wesnothd_server_search();
 
 				try {
 					start_wesnothd();
@@ -884,10 +876,10 @@ bool game_launcher::play_multiplayer(mp_mode mode)
 			}
 
 			// The prompt saves its input to preferences.
-			multiplayer_server_ = preferences::network_host();
+			multiplayer_server_ = prefs::get().network_host();
 
-			if(multiplayer_server_ != preferences::builtin_servers_list().front().address) {
-				preferences::set_network_host(multiplayer_server_);
+			if(multiplayer_server_ != prefs::get().builtin_servers_list().front().address) {
+				prefs::get().set_network_host(multiplayer_server_);
 			}
 		}
 

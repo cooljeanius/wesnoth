@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 - 2023
+	Copyright (C) 2016 - 2024
 	by Chris Beck<render787@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -14,7 +14,6 @@
 */
 
 #include "font/font_config.hpp"
-#include "font/font_description.hpp"
 #include "font/error.hpp"
 
 #include "config.hpp"
@@ -22,21 +21,12 @@
 #include "tstring.hpp"
 
 #include "filesystem.hpp"
-#include "game_config.hpp"
 
 #include "serialization/parser.hpp"
 #include "serialization/preprocessor.hpp"
-#include "serialization/string_utils.hpp"
-#include "serialization/unicode.hpp"
-#include "preferences/general.hpp"
 
-#include <list>
-#include <set>
-#include <stack>
 #include <sstream>
-#include <vector>
 
-#include <cairo-features.h>
 
 #include <fontconfig/fontconfig.h>
 
@@ -48,27 +38,6 @@ static lg::log_domain log_font("font");
 
 namespace font {
 
-
-bool check_font_file(std::string name) {
-	if(game_config::path.empty() == false) {
-		if(!filesystem::file_exists(game_config::path + "/fonts/" + name)) {
-			if(!filesystem::file_exists("fonts/" + name)) {
-				if(!filesystem::file_exists(name)) {
-				WRN_FT << "Failed opening font file '" << name << "': No such file or directory";
-				return false;
-				}
-			}
-		}
-	} else {
-		if(!filesystem::file_exists("fonts/" + name)) {
-			if(!filesystem::file_exists(name)) {
-				WRN_FT << "Failed opening font file '" << name << "': No such file or directory";
-				return false;
-			}
-		}
-	}
-	return true;
-}
 
 namespace
 {
@@ -90,13 +59,13 @@ bool load_font_config()
 {
 	config cfg;
 	try {
-		const std::string& cfg_path = filesystem::get_wml_location("hardwired/fonts.cfg");
-		if(cfg_path.empty()) {
+		const auto cfg_path = filesystem::get_wml_location("hardwired/fonts.cfg");
+		if(!cfg_path) {
 			ERR_FT << "could not resolve path to fonts.cfg, file not found";
 			return false;
 		}
 
-		filesystem::scoped_istream stream = preprocess_file(cfg_path);
+		filesystem::scoped_istream stream = preprocess_file(cfg_path.value());
 		read(cfg, *stream);
 	} catch(const config::error &e) {
 		ERR_FT << "could not read fonts.cfg:\n" << e.message;

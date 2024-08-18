@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008 - 2023
+	Copyright (C) 2008 - 2024
 	by Tomasz Sniatowski <kailoran@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -18,8 +18,6 @@
 #include "editor/editor_display.hpp"
 #include "editor/editor_main.hpp"
 #include "editor/map/context_manager.hpp"
-#include "editor/map/map_context.hpp"
-#include "editor/map/map_fragment.hpp"
 #include "editor/toolkit/editor_toolkit.hpp"
 
 #include "controller_base.hpp"
@@ -30,19 +28,12 @@
 
 #include "sound_music_track.hpp"
 
-class map_generator;
-
-namespace tooltips {
-class manager;
-}
-
 namespace font {
 struct floating_label_context;
 }
 
 namespace editor {
 
-class editor_map;
 
 enum menu_type {
 	MAP,
@@ -74,10 +65,7 @@ class editor_controller : public controller_base,
 		editor_controller& operator=(const editor_controller&) = delete;
 
 		/**
-		 * The constructor. A initial map context can be specified here, the controller
-		 * will assume ownership and delete the pointer during destruction, but changes
-		 * to the map can be retrieved between the main loop's end and the controller's
-		 * destruction.
+		 * The constructor.
 		 */
 		editor_controller(bool clear_id);
 
@@ -91,6 +79,9 @@ class editor_controller : public controller_base,
 
 		/** Show a quit confirmation dialog and returns true if the user pressed 'yes' */
 		bool quit_confirm();
+
+		/** Show Unit Editor dialog */
+		void unit_editor_dialog();
 
 		/** Display the settings dialog, used to control e.g. the lighting settings */
 		void custom_tods_dialog();
@@ -170,6 +161,9 @@ class editor_controller : public controller_base,
 		{
 			return context_manager_->get_map_context();
 		}
+
+		/** Initialize an addon if the addon id is empty */
+		void initialize_addon_if_empty();
 
 	protected:
 		/* controller_base overrides */

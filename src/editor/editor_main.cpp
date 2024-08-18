@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008 - 2023
+	Copyright (C) 2008 - 2024
 	by Tomasz Sniatowski <kailoran@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -17,14 +17,12 @@
 
 #include "editor/controller/editor_controller.hpp"
 
+#include "addon/validation.hpp"
 #include "gettext.hpp"
 #include "gui/dialogs/editor/choose_addon.hpp"
 #include "gui/dialogs/prompt.hpp"
-#include "gui/dialogs/message.hpp"
 #include "filesystem.hpp"
 #include "editor/action/action_base.hpp"
-#include "serialization/parser.hpp"
-#include "serialization/preprocessor.hpp"
 
 lg::log_domain log_editor("editor");
 
@@ -48,8 +46,7 @@ std::string initialize_addon()
 		std::int64_t current_millis = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 		addon_id = "MyAwesomeAddon-"+std::to_string(current_millis);
 		if (gui2::dialogs::prompt::execute(addon_id_new)) {
-			/* In case somebody enters a blank id and presses OK */
-			addon_id = addon_id_new.empty() ? "MyAwesomeAddon-"+std::to_string(current_millis) : addon_id_new;
+			addon_id = !addon_filename_legal(addon_id_new) ? "MyAwesomeAddon-"+std::to_string(current_millis) : addon_id_new;
 		}
 	}
 
@@ -121,7 +118,7 @@ EXIT_STATUS start(bool clear_id, const std::string& filename, bool take_screensh
 
 		editor_controller editor(clear_id);
 
-		if (!filename.empty() && filesystem::file_exists (filename)) {
+		if (!filename.empty() && filesystem::file_exists(filename)) {
 			if (filesystem::is_directory(filename)) {
 				editor.context_manager_->set_default_dir(filename);
 				editor.context_manager_->load_map_dialog(true);
@@ -129,8 +126,7 @@ EXIT_STATUS start(bool clear_id, const std::string& filename, bool take_screensh
 				editor.context_manager_->load_map(filename, false);
 
 				// HACK: this fixes an issue where the button overlays would be missing when
-				// the loaded map appears. Since we're gonna drop this ridiculous GUI1 drawing
-				// stuff in 1.15 I'm not going to waste time coming up with a better fix.
+				// the loaded map appears.
 				//
 				// Do note adding a redraw_everything call to context_manager::refresh_all also
 				// fixes the issue, but I'm pretty sure thats just because editor_controller::

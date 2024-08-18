@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2023
+	Copyright (C) 2003 - 2024
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -85,6 +85,8 @@ public:
 	 * @returns true if the texture exists, false in the case of failure.
 	 */
 	bool create_texture();
+
+	void clear_texture();
 
 	/** Return the size of the label in drawing coordinates */
 	SDL_Point get_draw_size() const

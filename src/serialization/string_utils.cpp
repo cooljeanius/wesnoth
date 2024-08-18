@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2005 - 2023
+	Copyright (C) 2005 - 2024
 	by Philippe Plantier <ayin@anathas.org>
 	Copyright (C) 2005 by Guillaume Melquiond <guillaume.melquiond@gmail.com>
 	Copyright (C) 2003 by David White <dave@whitevine.net>
@@ -25,10 +25,9 @@
 #include "serialization/string_utils.hpp"
 #include "serialization/unicode.hpp"
 #include "utils/general.hpp"
-#include <cassert>
 #include <array>
 #include <limits>
-#include <optional>
+#include "utils/optional_fwd.hpp"
 #include <stdexcept>
 
 #include <boost/algorithm/string.hpp>
@@ -95,6 +94,15 @@ std::set<std::string> split_set(std::string_view s, char sep, const int flags)
 	std::set<std::string> res;
 	split_foreach(s, sep, flags, [&](std::string_view item) {
 		res.emplace(item);
+	});
+	return res;
+}
+
+std::vector<std::string_view> split_view(std::string_view s, const char sep, const int flags)
+{
+	std::vector<std::string_view> res;
+	split_foreach(s, sep, flags, [&](std::string_view item) {
+		res.push_back(item);
 	});
 	return res;
 }
@@ -299,19 +307,16 @@ std::map<std::string, std::string> map_split(
 	return res;
 }
 
-std::vector<std::string> parenthetical_split(const std::string& val,
-		const char separator, const std::string& left,
-		const std::string& right,const int flags)
+std::vector<std::string> parenthetical_split(std::string_view val,
+		const char separator, std::string_view left,
+		std::string_view right,const int flags)
 {
 	std::vector< std::string > res;
 	std::vector<char> part;
 	bool in_parenthesis = false;
 
-	std::string lp=left;
-	std::string rp=right;
-
-	std::string::const_iterator i1 = val.begin();
-	std::string::const_iterator i2;
+	std::string_view::const_iterator i1 = val.begin();
+	std::string_view::const_iterator i2;
 	if (flags & STRIP_SPACES) {
 		while (i1 != val.end() && portable_isspace(*i1))
 			++i1;
@@ -355,8 +360,8 @@ std::vector<std::string> parenthetical_split(const std::string& val,
 			continue;
 		}
 		bool found=false;
-		for(std::size_t i=0; i < lp.size(); i++){
-			if (*i2 == lp[i]){
+		for(std::size_t i=0; i < left.size(); i++){
+			if (*i2 == left[i]){
 				if (!separator && part.empty()){
 					std::string new_val(i1, i2);
 					if (flags & STRIP_SPACES)
@@ -367,7 +372,7 @@ std::vector<std::string> parenthetical_split(const std::string& val,
 				}else{
 					++i2;
 				}
-				part.push_back(rp[i]);
+				part.push_back(right[i]);
 				found=true;
 				break;
 			}
@@ -829,9 +834,9 @@ namespace
  * Internal common code for parse_range and parse_range_real.
  *
  * If str contains two elements and a separator such as "a-b", returns a and b.
- * Otherwise, returns the original string and std::nullopt.
+ * Otherwise, returns the original string and utils::nullopt.
  */
-std::pair<std::string, std::optional<std::string>> parse_range_internal_separator(const std::string& str)
+std::pair<std::string, utils::optional<std::string>> parse_range_internal_separator(const std::string& str)
 {
 	// If turning this into a list with additional options, ensure that "-" (if present) is last. Otherwise a
 	// range such as "-2..-1" might be incorrectly split as "-2..", "1".
@@ -847,7 +852,7 @@ std::pair<std::string, std::optional<std::string>> parse_range_internal_separato
 		return {str.substr(0, pos), str.substr(pos + length)};
 	}
 
-	return {str, std::nullopt};
+	return {str, utils::nullopt};
 }
 } // namespace
 

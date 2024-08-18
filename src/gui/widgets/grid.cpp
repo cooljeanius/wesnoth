@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008 - 2023
+	Copyright (C) 2008 - 2024
 	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -724,7 +724,7 @@ void grid::set_rows_cols(const unsigned rows, const unsigned cols)
 	cols_ = cols;
 	row_grow_factor_.resize(rows);
 	col_grow_factor_.resize(cols);
-	children_.resize(rows_ * cols_);
+	children_.resize(static_cast<size_t>(rows_) * cols_);
 }
 
 point grid::child::get_best_size() const

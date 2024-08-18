@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2023
+	Copyright (C) 2003 - 2024
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -28,7 +28,6 @@
 #include "serialization/preprocessor.hpp"
 #include "serialization/string_utils.hpp"
 #include "serialization/unicode.hpp"
-#include "utils/general.hpp"
 #include "utils/iterable_pair.hpp"
 #include "game_version.hpp"
 
@@ -50,13 +49,10 @@
 #include <algorithm>
 #include <cassert>
 #include <cerrno>
-#include <csignal>
 #include <cstdlib>
 #include <functional>
 #include <iostream>
-#include <iomanip>
 #include <map>
-#include <queue>
 #include <set>
 #include <sstream>
 #include <vector>
@@ -415,6 +411,8 @@ config server::read_config() const
 	}
 
 	try {
+		// necessary to avoid assert since preprocess_file() goes through filesystem::get_short_wml_path()
+		filesystem::set_user_data_dir(std::string());
 		filesystem::scoped_istream stream = preprocess_file(config_file_);
 		read(configuration, *stream);
 		LOG_SERVER << "Server configuration from file: '" << config_file_ << "' read.";
@@ -754,15 +752,8 @@ void server::login_client(boost::asio::yield_context yield, SocketPtr socket)
 		async_send_error(socket, "You must login first.", MP_MUST_LOGIN);
 	}
 
-	simple_wml::document join_lobby_response;
-	join_lobby_response.root().add_child("join_lobby").set_attr("is_moderator", is_moderator ? "yes" : "no");
-	join_lobby_response.root().child("join_lobby")->set_attr_dup("profile_url_prefix", "https://r.wesnoth.org/u");
-	coro_send_doc(socket, join_lobby_response, yield);
-
 	simple_wml::node& player_cfg = games_and_users_list_.root().add_child("user");
-
-	boost::asio::spawn(io_service_,
-		[this, socket, new_player = wesnothd::player{
+	wesnothd::player player_data {
 			username,
 			player_cfg,
 			user_handler_ ? user_handler_->get_forum_id(username) : 0,
@@ -773,7 +764,19 @@ void server::login_client(boost::asio::yield_context yield, SocketPtr socket)
 			default_max_messages_,
 			default_time_period_,
 			is_moderator
-		}](boost::asio::yield_context yield) { handle_player(yield, socket, new_player); }
+	};
+	bool inserted;
+	player_iterator new_player;
+	std::tie(new_player, inserted) = player_connections_.insert(player_connections::value_type(socket, player_data));
+	assert(inserted && "unexpected duplicate username");
+
+	simple_wml::document join_lobby_response;
+	join_lobby_response.root().add_child("join_lobby").set_attr("is_moderator", is_moderator ? "yes" : "no");
+	join_lobby_response.root().child("join_lobby")->set_attr_dup("profile_url_prefix", "https://r.wesnoth.org/u");
+	coro_send_doc(socket, join_lobby_response, yield);
+
+	boost::asio::spawn(io_service_,
+		[this, socket, new_player](boost::asio::yield_context yield) { handle_player(yield, socket, new_player); }
 	);
 
 	LOG_SERVER << log_address(socket) << "\t" << username << "\thas logged on"
@@ -1052,15 +1055,10 @@ template<class SocketPtr> void server::send_password_request(SocketPtr socket,
 	async_send_doc_queued(socket, doc);
 }
 
-template<class SocketPtr> void server::handle_player(boost::asio::yield_context yield, SocketPtr socket, const player& player_data)
+template<class SocketPtr> void server::handle_player(boost::asio::yield_context yield, SocketPtr socket, player_iterator player)
 {
 	if(lan_server_)
 		abort_lan_server_timer();
-
-	bool inserted;
-	player_iterator player;
-	std::tie(player, inserted) = player_connections_.insert(player_connections::value_type(socket, player_data));
-	assert(inserted);
 
 	BOOST_SCOPE_EXIT_ALL(this, &player) {
 		if(!destructed) {
@@ -1075,10 +1073,10 @@ template<class SocketPtr> void server::handle_player(boost::asio::yield_context 
 	}
 	send_server_message(player, information_, "server_info");
 	send_server_message(player, announcements_+tournaments_, "announcements");
-	if(version_info(player_data.version()) < secure_version ){
-		send_server_message(player, "You are using version " + player_data.version() + " which has known security issues that can be used to compromise your computer. We strongly recommend updating to a Wesnoth version " + secure_version.str() + " or newer!", "alert");
+	if(version_info(player->info().version()) < secure_version ){
+		send_server_message(player, "You are using version " + player->info().version() + " which has known security issues that can be used to compromise your computer. We strongly recommend updating to a Wesnoth version " + secure_version.str() + " or newer!", "alert");
 	}
-	if(version_info(player_data.version()) < version_info(recommended_version_)) {
+	if(version_info(player->info().version()) < version_info(recommended_version_)) {
 		send_server_message(player, "A newer Wesnoth version, " + recommended_version_ + ", is out!", "alert");
 	}
 
@@ -1576,10 +1574,7 @@ void server::handle_player_in_game(player_iterator p, simple_wml::document& data
 			desc.child("modification")->set_attr_dup("id", m->attr("id"));
 			desc.child("modification")->set_attr_dup("name", m->attr("name"));
 			desc.child("modification")->set_attr_dup("addon_id", m->attr("addon_id"));
-
-			if(m->attr("require_modification").to_bool(false)) {
-				desc.child("modification")->set_attr("require_modification", "yes");
-			}
+			desc.child("modification")->set_attr_dup("require_modification", m->attr("require_modification"));
 		}
 
 		// Record the full scenario in g.level()
@@ -1994,7 +1989,7 @@ void server::remove_player(player_iterator iter)
 	if(game_ended) delete_game(g->id());
 }
 
-void server::send_to_lobby(simple_wml::document& data, std::optional<player_iterator> exclude)
+void server::send_to_lobby(simple_wml::document& data, utils::optional<player_iterator> exclude)
 {
 	for(const auto& p : player_connections_.get<game_t>().equal_range(0)) {
 		auto player { player_connections_.iterator_to(p) };
@@ -2004,7 +1999,7 @@ void server::send_to_lobby(simple_wml::document& data, std::optional<player_iter
 	}
 }
 
-void server::send_server_message_to_lobby(const std::string& message, std::optional<player_iterator> exclude)
+void server::send_server_message_to_lobby(const std::string& message, utils::optional<player_iterator> exclude)
 {
 	for(const auto& p : player_connections_.get<game_t>().equal_range(0)) {
 		auto player { player_connections_.iterator_to(p) };
@@ -2014,7 +2009,7 @@ void server::send_server_message_to_lobby(const std::string& message, std::optio
 	}
 }
 
-void server::send_server_message_to_all(const std::string& message, std::optional<player_iterator> exclude)
+void server::send_server_message_to_all(const std::string& message, utils::optional<player_iterator> exclude)
 {
 	for(auto player = player_connections_.begin(); player != player_connections_.end(); ++player) {
 		if(player != exclude) {
@@ -2440,7 +2435,7 @@ void server::status_handler(
 	// If a simple username is given we'll check for its IP instead.
 	if(utils::isvalid_username(parameters)) {
 		for(const auto& player : player_connections_) {
-			if(utf8::lowercase(parameters) == utf8::lowercase(player.info().name())) {
+			if(parameters == player.name()) {
 				parameters = player.client_ip();
 				found_something = true;
 				break;
@@ -2975,7 +2970,7 @@ void server::delete_game(int gameid, const std::string& reason)
 	}
 }
 
-void server::update_game_in_lobby(const wesnothd::game& g, std::optional<player_iterator> exclude)
+void server::update_game_in_lobby(const wesnothd::game& g, utils::optional<player_iterator> exclude)
 {
 	simple_wml::document diff;
 	if(make_change_diff(*games_and_users_list_.child("gamelist"), "gamelist", "game", g.description(), diff)) {
@@ -3053,7 +3048,7 @@ int main(int argc, char** argv)
 			keep_alive = true;
 		} else if(val == "--help" || val == "-h") {
 			std::cout << "usage: " << argv[0]
-					  << " [-dvV] [-c path] [-m n] [-p port] [-t n]\n"
+					  << " [-dvV] [-c path] [-m n] [-p port]\n"
 					  << "  -c, --config <path>        Tells wesnothd where to find the config file to use.\n"
 					  << "  -d, --daemon               Runs wesnothd as a daemon.\n"
 					  << "  -h, --help                 Shows this usage message.\n"

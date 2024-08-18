@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 - 2023
+	Copyright (C) 2016 - 2024
 	by Iris Morelle <shadowm2006@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -57,7 +57,6 @@ enum GAME_PATH_TYPES
 {
 	GAME_BIN_DIR = 0,				/**< Game executable dir. */
 	GAME_CORE_DATA_DIR = 1,			/**< Game data dir. */
-	GAME_USER_PREFS_DIR = 2,		/**< User preferences dir. */
 	GAME_USER_DATA_DIR = 3,			/**< User data dir. */
 	GAME_EDITOR_MAP_DIR = 4,		/**< Editor map dir */
 };

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2004 - 2023
+	Copyright (C) 2004 - 2024
 	by Philippe Plantier <ayin@anathas.org>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -20,8 +20,6 @@
 
 #pragma once
 
-#include <map>
-#include <string>
 #include <vector>
 
 void new_animation_frame();
@@ -121,13 +119,6 @@ private:
 			: duration_(duration)
 			, value_(value)
 			, start_time_(start_time)
-		{
-		}
-
-		frame()
-			: duration_(0)
-			, value_(void_value_)
-			, start_time_(0)
 		{
 		}
 

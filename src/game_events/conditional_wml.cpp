@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2023
+	Copyright (C) 2003 - 2024
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -24,7 +24,6 @@
 #include "game_board.hpp"
 #include "game_data.hpp"
 #include "log.hpp"
-#include "preferences/general.hpp"
 #include "recall_list_manager.hpp"
 #include "resources.hpp"
 #include "scripting/game_lua_kernel.hpp"

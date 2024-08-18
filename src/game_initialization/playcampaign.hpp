@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2005 - 2023
+	Copyright (C) 2005 - 2024
 	by Philippe Plantier <ayin@anathas.org>
 	Copyright (C) 2003 - 2005 by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
@@ -18,16 +18,10 @@
 
 #include "game_end_exceptions.hpp"
 
-#include <memory>
-#include <sstream>
 #include <set>
 #include <string>
 
 class saved_game;
-class terrain_type_data;
-class team;
-class playsingle_controller;
-class config;
 class wesnothd_connection;
 
 struct mp_game_metadata

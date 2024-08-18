@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2023
+	Copyright (C) 2003 - 2024
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -26,7 +26,6 @@
 #include <vector>
 
 class surface;
-class texture;
 
 namespace video
 {
@@ -226,7 +225,7 @@ rect input_area();
  * This is equal to output_size() / game_canvas_size().
  * Currently it is always integer, and the same in both dimensions.
  *
- * This may differ from preferences::pixel_scale() in some cases,
+ * This may differ from prefs::get().pixel_scale() in some cases,
  * For example if the window is too small to fit the desired scale.
  *
  * @returns     The currently active pixel scale multiplier.
@@ -314,12 +313,13 @@ struct error : public game::error
 };
 
 /** Type that can be thrown as an exception to quit to desktop. */
-class quit : public lua_jailbreak_exception
+class quit final : public lua_jailbreak_exception
 {
 public:
 	quit()
 		: lua_jailbreak_exception()
 	{
+		this->store();
 	}
 
 private:

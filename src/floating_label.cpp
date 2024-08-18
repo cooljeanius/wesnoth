@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2023
+	Copyright (C) 2003 - 2024
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -20,7 +20,6 @@
 #include "font/standard_colors.hpp"
 #include "font/text.hpp"
 #include "log.hpp"
-#include "sdl/utils.hpp"
 #include "video.hpp"
 
 #include <map>
@@ -103,6 +102,11 @@ rect floating_label::get_bg_rect(const rect& text_rect) const
 		text_rect.w + (border_ * 2),
 		text_rect.h + (border_ * 2)
 	};
+}
+
+void floating_label::clear_texture()
+{
+	tex_.reset();
 }
 
 bool floating_label::create_texture()
