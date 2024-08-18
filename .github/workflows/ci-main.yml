@@ -57,6 +57,11 @@ jobs:
           else \
             sync && echo "skipping pylint..."; \
           fi
+          if test -x "$(which flake8)"; then \
+            flake8 --exit-zero; \
+          else \
+            sync && echo "skipping flake8..."; \
+          fi
           if test -x "$(which ruff)"; then \
             ruff check || stat "$(which ruff)"; \
           else \
