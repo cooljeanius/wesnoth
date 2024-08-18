@@ -41,6 +41,7 @@ jobs:
       - name: Lints and stuff
         if: success() || failure()
         run: |
+          sync && echo "Possibly running some linters..."
           if test -x "$(which actionlint)"; then actionlint; else \
             sync && echo "skipping actionlint..."; \
           fi
@@ -60,6 +61,11 @@ jobs:
             ruff check || stat "$(which ruff)"; \
           else \
             sync && echo "skipping ruff..."; \
+          fi
+          if test -x "$(which shellcheck)"; then \
+            find . -name '*.sh' -print0 | xargs -0 shellcheck -S warning; \
+          else \
+            sync && echo "skipping shellcheck..."; \
           fi
 
   copyright:  # check takes a bit longer and does not need to run in docker

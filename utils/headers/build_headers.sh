@@ -86,6 +86,9 @@ do
       dir_pattern="$OPTARG"
       echo "$dir_pattern"
       ;;
+    * )
+      echo "Warning: unhandled option ${Option}!" >&2
+      ;;
   esac
 done
 shift $(($OPTIND - 1))
@@ -98,7 +101,7 @@ echo "Building header include database in wesnoth/headers/..."
 [ -d headers ] || mkdir headers
 pwd
 #find src/ -type f -print0 | xargs -0 ./build_header.sh
-cd src
+cd src || exit
 for file in `find . -name "*.cpp" -type f -print0 | xargs -0`; do
     if [ ! -f ../headers/"$file" ]; then
         mkdir -p ../headers/"$file"
@@ -108,7 +111,7 @@ for file in `find . -name "*.cpp" -type f -print0 | xargs -0`; do
     echo "src/${file:2}"
     #read -p "asdf"
     clang++ -H $INCLUDE_STR "src/${file:2}" 2>&1 >/dev/null | sed -n '/^\.*\. / p' | sed -e 's/^\.* //g' -e ':loop' -e 's|/[[:alnum:]_-\.]*/\.\./|/|g' -e 't loop' | sed -n '/^'"$dir_pattern"'/ p' | sort | uniq >headers/"${file:2}"
-    cd src
+    cd src || exit
 done
 cd ..
 echo "ranking headers"

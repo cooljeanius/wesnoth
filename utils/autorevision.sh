@@ -163,6 +163,7 @@ gitRepo() {
 
 	# Is the working copy clean?
 	test -z "$(git status --untracked-files=normal --porcelain)"
+	# shellcheck disable=2319
 	VCS_WC_MODIFIED="${?}"
 
 	# Enumeration of changesets
@@ -238,6 +239,7 @@ hgRepo() {
 
 	# Is the working copy clean?
 	test -z "$(hg status -duram)"
+	# shellcheck disable=2319
 	VCS_WC_MODIFIED="${?}"
 
 	# Enumeration of changesets
