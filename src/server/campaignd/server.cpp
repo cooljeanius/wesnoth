@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2015 - 2023
+	Copyright (C) 2015 - 2024
 	by Iris Morelle <shadowm2006@gmail.com>
 	Copyright (C) 2003 - 2018 by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
@@ -121,7 +121,7 @@ All content within add-ons uploaded to this server must be licensed under the te
 
 bool timing_reports_enabled = false;
 
-void timing_report_function(const util::ms_optimer& tim, const campaignd::server::request& req, const std::string& label = {})
+void timing_report_function(const utils::ms_optimer& tim, const campaignd::server::request& req, const std::string& label = {})
 {
 	if(timing_reports_enabled) {
 		if(label.empty()) {
@@ -132,9 +132,9 @@ void timing_report_function(const util::ms_optimer& tim, const campaignd::server
 	}
 }
 
-inline util::ms_optimer service_timer(const campaignd::server::request& req, const std::string& label = {})
+inline utils::ms_optimer service_timer(const campaignd::server::request& req, const std::string& label = {})
 {
-	return util::ms_optimer{std::bind(timing_report_function, std::placeholders::_1, req, label)};
+	return utils::ms_optimer{std::bind(timing_report_function, std::placeholders::_1, req, label)};
 }
 
 //
@@ -230,12 +230,12 @@ bool have_wml(const utils::optional_reference<const config>& cfg)
  * Null WML objects are skipped.
  */
 template<typename... Vals>
-std::optional<std::vector<std::string>> multi_find_illegal_names(const Vals&... args)
+utils::optional<std::vector<std::string>> multi_find_illegal_names(const Vals&... args)
 {
 	std::vector<std::string> names;
 	((args && check_names_legal(*args, &names)), ...);
 
-	return !names.empty() ? std::optional(names) : std::nullopt;
+	return !names.empty() ? utils::optional(names) : utils::nullopt;
 }
 
 /**
@@ -244,12 +244,12 @@ std::optional<std::vector<std::string>> multi_find_illegal_names(const Vals&... 
  * Null WML objects are skipped.
  */
 template<typename... Vals>
-std::optional<std::vector<std::string>> multi_find_case_conflicts(const Vals&... args)
+utils::optional<std::vector<std::string>> multi_find_case_conflicts(const Vals&... args)
 {
 	std::vector<std::string> names;
 	((args && check_case_insensitive_duplicates(*args, &names)), ...);
 
-	return !names.empty() ? std::optional(names) : std::nullopt;
+	return !names.empty() ? utils::optional(names) : utils::nullopt;
 }
 
 /**

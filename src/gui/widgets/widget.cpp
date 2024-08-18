@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2007 - 2023
+	Copyright (C) 2007 - 2024
 	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -24,7 +24,6 @@
 #include "gui/core/log.hpp"
 #include "gui/core/window_builder/helper.hpp"
 #include "sdl/rect.hpp"
-#include "video.hpp"
 
 namespace gui2
 {
@@ -199,11 +198,10 @@ point widget::get_best_size() const
 	if(result == point()) {
 		result = calculate_best_size();
 		//Adjust to linked widget size if linked widget size was already calculated.
-		if(!get_window()->get_need_layout() && !linked_group_.empty())
-		{
-			point linked_size = get_window()->get_linked_size(linked_group_);
-			result.x = std::max(result.x, linked_size.x);
-			result.y = std::max(result.y, linked_size.y);
+		if (get_window() && !get_window()->get_need_layout() && !linked_group_.empty()) {
+				point linked_size = get_window()->get_linked_size(linked_group_);
+				result.x = std::max(result.x, linked_size.x);
+				result.y = std::max(result.y, linked_size.y);
 		}
 	}
 
@@ -388,7 +386,6 @@ bool widget::draw_background()
 	clip.shift(-get_origin());
 	auto clip_setter = draw::reduce_clip(clip);
 
-	draw_debug_border();
 	return impl_draw_background();
 }
 
@@ -431,6 +428,7 @@ bool widget::draw_foreground()
 	clip.shift(-get_origin());
 	auto clip_setter = draw::reduce_clip(clip);
 
+	draw_debug_border();
 	return impl_draw_foreground();
 }
 
@@ -518,21 +516,17 @@ void widget::set_debug_border_color(const color_t debug_border_color)
 
 void widget::draw_debug_border()
 {
-	SDL_Rect r = redraw_action_ == redraw_action::partly
-		? calculate_clipping_rectangle()
-		: calculate_blitting_rectangle();
-
 	switch(debug_border_mode_) {
 		case debug_border::none:
 			/* DO NOTHING */
 			break;
 
 		case debug_border::outline:
-			draw::rect(r, debug_border_color_);
+			draw::rect(rect{{0, 0}, get_size()}, debug_border_color_);
 			break;
 
 		case debug_border::fill:
-			draw::fill(r, debug_border_color_);
+			draw::fill(rect{{0, 0}, get_size()}, debug_border_color_);
 			break;
 
 		default:

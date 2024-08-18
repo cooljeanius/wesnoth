@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2014 - 2023
+	Copyright (C) 2014 - 2024
 	by Chris Beck <render787@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -16,7 +16,6 @@
 #include "hotkey/hotkey_handler_mp.hpp"
 
 #include "hotkey/hotkey_command.hpp"
-#include "hotkey/hotkey_item.hpp"
 #include "playsingle_controller.hpp"
 #include "playmp_controller.hpp"
 
@@ -51,9 +50,7 @@ bool playmp_controller::hotkey_handler::can_execute_command(const hotkey::ui_com
 		case hotkey::HOTKEY_ENDTURN:
 			if  (linger())
 			{
-				bool has_next_scenario = !gamestate().gamedata_.next_scenario().empty() &&
-					gamestate().gamedata_.next_scenario() != "null";
-				return playmp_controller_.is_host() || !has_next_scenario;
+				return playmp_controller_.is_host() || !gamestate().has_next_scenario();
 			}
 			else
 			{

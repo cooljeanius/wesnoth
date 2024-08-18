@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2009 - 2023
+	Copyright (C) 2009 - 2024
 	by Yurii Chernyi <terraninfo@terraninfo.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -18,13 +18,11 @@
 #include "gui/dialogs/gamestate_inspector.hpp"
 
 #include "gui/auxiliary/find_widget.hpp"
-#include "gui/auxiliary/iterator/walker.hpp"
 #include "gui/dialogs/lua_interpreter.hpp"
 #include "gui/widgets/button.hpp"
 #include "gui/widgets/label.hpp"
 #include "gui/widgets/tree_view.hpp"
 #include "gui/widgets/tree_view_node.hpp"
-#include "gui/widgets/settings.hpp"
 #include "gui/widgets/window.hpp"
 
 #include "desktop/clipboard.hpp"
@@ -32,8 +30,6 @@
 #include "game_events/manager.hpp"
 #include "serialization/parser.hpp" // for write()
 
-#include "game_board.hpp"
-#include "game_data.hpp"
 #include "gettext.hpp"
 #include "recall_list_manager.hpp"
 #include "team.hpp"
@@ -42,7 +38,6 @@
 #include "ai/manager.hpp"
 
 #include "display_context.hpp"
-#include "filter_context.hpp"
 #include "video.hpp"
 
 #include <vector>
@@ -190,6 +185,8 @@ public:
 			pages_->set_label(out.str());
 			left_->set_visible(widget::visibility::visible);
 			right_->set_visible(widget::visibility::visible);
+			left_->set_active(current_page_ > 0);
+			right_->set_active(current_page_ < n_pages - 1);
 		} else {
 			pages_->set_label("");
 			left_->set_visible(widget::visibility::invisible);

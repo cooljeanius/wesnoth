@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2014 - 2023
+	Copyright (C) 2014 - 2024
 	by Chris Beck <render787@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -27,9 +27,7 @@
 #include "side_filter.hpp"
 #include "team.hpp"
 #include "terrain/filter.hpp"
-#include "tod_manager.hpp"
 #include "units/unit.hpp"
-#include "units/formula_manager.hpp"
 #include "units/types.hpp"
 #include "variable.hpp" // needed for vconfig, scoped unit
 #include "formula/callable_objects.hpp"
@@ -606,12 +604,7 @@ void unit_filter_compound::fill(vconfig cfg)
 			[](const config::attribute_value& c) { return utils::parse_ranges_unsigned(c.str()); },
 			[](const std::vector<std::pair<int,int>>& ranges, const unit_filter_args& args)
 			{
-				for(auto cost : ranges) {
-					if(cost.first <= args.u.recall_cost() && args.u.recall_cost() <= cost.second) {
-						return true;
-					}
-				}
-				return false;
+				return in_ranges(args.u.recall_cost(), ranges);
 			}
 		);
 
@@ -619,12 +612,7 @@ void unit_filter_compound::fill(vconfig cfg)
 			[](const config::attribute_value& c) { return utils::parse_ranges_unsigned(c.str()); },
 			[](const std::vector<std::pair<int,int>>& ranges, const unit_filter_args& args)
 			{
-				for(auto lvl : ranges) {
-					if(lvl.first <= args.u.level() && args.u.level() <= lvl.second) {
-						return true;
-					}
-				}
-				return false;
+				return in_ranges(args.u.level(), ranges);
 			}
 		);
 
@@ -633,12 +621,7 @@ void unit_filter_compound::fill(vconfig cfg)
 			[](const std::vector<std::pair<int,int>>& ranges, const unit_filter_args& args)
 			{
 				int actual_defense = args.u.defense_modifier(args.context().get_disp_context().map().get_terrain(args.loc));
-				for(auto def : ranges) {
-					if(def.first <= actual_defense && actual_defense <= def.second) {
-						return true;
-					}
-				}
-				return false;
+				return in_ranges(actual_defense, ranges);
 			}
 		);
 
@@ -647,12 +630,7 @@ void unit_filter_compound::fill(vconfig cfg)
 			[](const std::vector<std::pair<int,int>>& ranges, const unit_filter_args& args)
 			{
 				int actual_cost = args.u.movement_cost(args.context().get_disp_context().map().get_terrain(args.loc));
-				for(auto cost : ranges) {
-					if(cost.first <= actual_cost && actual_cost <= cost.second) {
-						return true;
-					}
-				}
-				return false;
+				return in_ranges(actual_cost, ranges);
 			}
 		);
 
@@ -661,12 +639,7 @@ void unit_filter_compound::fill(vconfig cfg)
 			[](const std::vector<std::pair<int,int>>& ranges, const unit_filter_args& args)
 			{
 				int actual_cost = args.u.vision_cost(args.context().get_disp_context().map().get_terrain(args.loc));
-				for(auto cost : ranges) {
-					if(cost.first <= actual_cost && actual_cost <= cost.second) {
-						return true;
-					}
-				}
-				return false;
+				return in_ranges(actual_cost, ranges);
 			}
 		);
 
@@ -675,12 +648,7 @@ void unit_filter_compound::fill(vconfig cfg)
 			[](const std::vector<std::pair<int,int>>& ranges, const unit_filter_args& args)
 			{
 				int actual_cost = args.u.jamming_cost(args.context().get_disp_context().map().get_terrain(args.loc));
-				for(auto cost : ranges) {
-					if(cost.first <= actual_cost && actual_cost <= cost.second) {
-						return true;
-					}
-				}
-				return false;
+				return in_ranges(actual_cost, ranges);
 			}
 		);
 

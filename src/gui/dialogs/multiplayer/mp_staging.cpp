@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008 - 2023
+	Copyright (C) 2008 - 2024
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -18,6 +18,7 @@
 
 #include "ai/configuration.hpp"
 #include "chat_log.hpp"
+#include "formula/string_utils.hpp"
 #include "font/text_formatting.hpp"
 #include "formatter.hpp"
 #include "game_config.hpp"
@@ -30,14 +31,12 @@
 #include "gui/widgets/drawing.hpp"
 #include "gui/widgets/image.hpp"
 #include "gui/widgets/label.hpp"
-#include "gui/widgets/listbox.hpp"
 #include "gui/widgets/menu_button.hpp"
-#include "gui/widgets/settings.hpp"
 #include "gui/widgets/slider.hpp"
-#include "gui/widgets/status_label_helper.hpp"
-#include "gui/widgets/toggle_panel.hpp"
 #include "gui/widgets/tree_view.hpp"
 #include "gui/widgets/tree_view_node.hpp"
+#include "hotkey/hotkey_item.hpp"
+#include "hotkey/hotkey_command.hpp"
 #include "mp_ui_alerts.hpp"
 #include "units/types.hpp"
 #include "wesnothd_connection.hpp"
@@ -75,6 +74,14 @@ void mp_staging::pre_show(window& window)
 {
 	window.set_enter_disabled(true);
 	window.set_escape_disabled(true);
+
+	// Ctrl+G triggers 'I'm Ready' (ok) button's functionality
+	window.register_hotkey(hotkey::HOTKEY_MP_START_GAME, std::bind(&mp_staging::start_game, this));
+	std::stringstream tooltip;
+	tooltip
+		<< vgettext_impl("wesnoth", "Hotkey(s): ",  {{}})
+		<< hotkey::get_names(hotkey::hotkey_command::get_command_by_command(hotkey::HOTKEY_MP_START_GAME).id);
+	find_widget<button>(get_window(), "ok", false).set_tooltip(tooltip.str());
 
 	//
 	// Set title and status widget states
@@ -456,8 +463,6 @@ void mp_staging::on_side_slider_change(ng::side_engine_ptr side, slider& slider)
 
 void mp_staging::update_leader_display(ng::side_engine_ptr side, grid& row_grid)
 {
-	const std::string current_faction = side->flg().current_faction()["name"];
-
 	// BIG FAT TODO: get rid of this shitty "null" string value in the FLG manager
 	std::string current_leader = side->flg().current_leader() != "null" ? side->flg().current_leader() : font::unicode_em_dash;
 	const std::string current_gender = side->flg().current_gender() != "null" ? side->flg().current_gender() : font::unicode_em_dash;
@@ -486,7 +491,7 @@ void mp_staging::update_leader_display(ng::side_engine_ptr side, grid& row_grid)
 	}
 
 	find_widget<label>(&row_grid, "leader_type", false).set_label(current_leader == "random" ? _("Random") : current_leader);
-	find_widget<label>(&row_grid, "leader_faction", false).set_label("<span color='#a69275'>" + current_faction + "</span>");
+	find_widget<label>(&row_grid, "leader_faction", false).set_label(side->flg().current_faction()["name"]);
 
 	// Gender
 	if(current_gender != font::unicode_em_dash) {

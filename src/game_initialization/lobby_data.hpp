@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2009 - 2023
+	Copyright (C) 2009 - 2024
 	by Tomasz Sniatowski <kailoran@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -16,9 +16,6 @@
 #pragma once
 
 #include <ctime>
-#include <set>
-#include <deque>
-#include <functional>
 #include <vector>
 #include <string>
 

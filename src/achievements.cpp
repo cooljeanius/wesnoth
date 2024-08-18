@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2023
+	Copyright (C) 2003 - 2024
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -16,9 +16,8 @@
 #include "achievements.hpp"
 
 #include "filesystem.hpp"
-#include "game_config.hpp"
 #include "log.hpp"
-#include "preferences/general.hpp"
+#include "preferences/preferences.hpp"
 #include "serialization/parser.hpp"
 #include "serialization/preprocessor.hpp"
 
@@ -66,7 +65,7 @@ achievement::achievement(const config& cfg, const std::string& content_for, bool
 		if(sub_id.empty()) {
 			ERR_CONFIG << "Achievement " << id_ << " has a sub-achievement missing the id attribute:\n" << sub_ach.debug();
 		} else {
-			sub_achievements_.emplace_back(sub_ach, achieved_ || preferences::sub_achievement(content_for, id_, sub_id));
+			sub_achievements_.emplace_back(sub_ach, achieved_ || prefs::get().sub_achievement(content_for, id_, sub_id));
 			max_progress_++;
 		}
 	}
@@ -86,7 +85,7 @@ achievement_group::achievement_group(const config& cfg)
 			ERR_CONFIG << content_for_ + " achievement id " << id << " contains a comma, skipping.";
 			continue;
 		} else {
-			achievements_.emplace_back(ach, content_for_, preferences::achievement(content_for_, id), preferences::progress_achievement(content_for_, id));
+			achievements_.emplace_back(ach, content_for_, prefs::get().achievement(content_for_, id), prefs::get().progress_achievement(content_for_, id));
 		}
 	}
 }

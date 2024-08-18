@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2023
+	Copyright (C) 2003 - 2024
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -22,19 +22,16 @@
 
 #include "arrow.hpp"
 #include "color.hpp"
-#include "cursor.hpp"
 #include "draw.hpp"
 #include "draw_manager.hpp"
 #include "fake_unit_manager.hpp"
 #include "filesystem.hpp"
 #include "font/sdl_ttf_compat.hpp"
 #include "font/text.hpp"
-#include "preferences/game.hpp"
-#include "gettext.hpp"
-#include "gui/dialogs/loading_screen.hpp"
+#include "global.hpp"
+#include "preferences/preferences.hpp"
 #include "halo.hpp"
 #include "hotkey/command_executor.hpp"
-#include "language.hpp"
 #include "log.hpp"
 #include "map/map.hpp"
 #include "map/label.hpp"
@@ -49,7 +46,6 @@
 #include "terrain/builder.hpp"
 #include "time_of_day.hpp"
 #include "tooltips.hpp"
-#include "tod_manager.hpp"
 #include "units/unit.hpp"
 #include "units/animation_component.hpp"
 #include "units/drawer.hpp"
@@ -59,7 +55,6 @@
 
 #include <boost/algorithm/string/trim.hpp>
 
-#include <SDL2/SDL_image.h>
 
 #include <algorithm>
 #include <array>
@@ -161,11 +156,11 @@ display::display(const display_context* dc,
 	, xpos_(0)
 	, ypos_(0)
 	, view_locked_(false)
-	, theme_(theme::get_theme_config(theme_id.empty() ? preferences::theme() : theme_id), video::game_canvas())
+	, theme_(theme::get_theme_config(theme_id.empty() ? prefs::get().theme() : theme_id), video::game_canvas())
 	, zoom_index_(0)
 	, fake_unit_man_(new fake_unit_manager(*this))
 	, builder_(new terrain_builder(level, (dc_ ? &dc_->map() : nullptr), theme_.border().tile_image, theme_.border().show_border))
-	, minimap_(nullptr)
+	, minimap_renderer_(nullptr)
 	, minimap_location_(sdl::empty_rect)
 	, redraw_background_(false)
 	, invalidateAll_(true)
@@ -221,13 +216,13 @@ display::display(const display_context* dc,
 	fill_images_list(game_config::fog_prefix, fog_images_);
 	fill_images_list(game_config::shroud_prefix, shroud_images_);
 
-	unsigned int tile_size = preferences::tile_size();
+	unsigned int tile_size = prefs::get().tile_size();
 	if(tile_size < MinZoom || tile_size > MaxZoom)
 		tile_size = DefaultZoom;
 	zoom_index_ = get_zoom_levels_index(tile_size);
 	zoom_ = zoom_levels[zoom_index_];
-	if(zoom_ != preferences::tile_size())	// correct saved tile_size if necessary
-		preferences::set_tile_size(zoom_);
+	if(zoom_ != prefs::get().tile_size())	// correct saved tile_size if necessary
+		prefs::get().set_tile_size(zoom_);
 
 	init_flags();
 
@@ -884,8 +879,9 @@ void display::create_buttons()
 		return;
 	}
 
-	menu_buttons_.clear();
-	action_buttons_.clear();
+	// Keep the old buttons around until we're done so we can check the previous state.
+	std::vector<std::shared_ptr<gui::button>> menu_work;
+	std::vector<std::shared_ptr<gui::button>> action_work;
 
 	DBG_DP << "creating menu buttons...";
 	for(const auto& menu : theme_.menus()) {
@@ -906,7 +902,7 @@ void display::create_buttons()
 			b->enable(b_prev->enabled());
 		}
 
-		menu_buttons_.push_back(std::move(b));
+		menu_work.push_back(std::move(b));
 	}
 
 	DBG_DP << "creating action buttons...";
@@ -927,13 +923,16 @@ void display::create_buttons()
 			}
 		}
 
-		action_buttons_.push_back(std::move(b));
+		action_work.push_back(std::move(b));
 	}
 
 	if (prevent_draw_) {
 		// buttons start hidden in this case
 		hide_buttons();
 	}
+
+	menu_buttons_ = std::move(menu_work);
+	action_buttons_ = std::move(action_work);
 
 	layout_buttons();
 	DBG_DP << "buttons created";
@@ -1222,10 +1221,10 @@ void display::get_terrain_images(const map_location& loc, const std::string& tim
 namespace
 {
 constexpr std::array layer_groups {
-	display::LAYER_TERRAIN_BG,
-	display::LAYER_UNIT_FIRST,
-	display::LAYER_UNIT_MOVE_DEFAULT,
-	display::LAYER_REACHMAP // Make sure the movement doesn't show above fog and reachmap.
+	drawing_layer::terrain_bg,
+	drawing_layer::unit_first,
+	drawing_layer::unit_move_default,
+	drawing_layer::reachmap // Make sure the movement doesn't show above fog and reachmap.
 };
 
 enum {
@@ -1259,7 +1258,7 @@ enum {
 	SHIFT_LAYER_GROUP    = BITS_FOR_Y        + SHIFT_Y
 };
 
-uint32_t generate_hex_key(const display::drawing_layer layer, const map_location& loc)
+uint32_t generate_hex_key(const drawing_layer layer, const map_location& loc)
 {
 	// Start with the index of last group entry...
 	uint32_t group_i = layer_groups.size() - 1;
@@ -1295,13 +1294,7 @@ void display::drawing_buffer_add(const drawing_layer layer, const map_location& 
 		int(zoom_)
 	};
 
-	// C++20 needed for in-place aggregate initilization
-#ifdef HAVE_CXX20
-	drawing_buffer_.emplace_back(generate_hex_key(layer, loc), draw_func, dest);
-#else
-	draw_helper temp{generate_hex_key(layer, loc), draw_func, dest};
-	drawing_buffer_.push_back(std::move(temp));
-#endif //  HAVE_CXX20
+	drawing_buffer_.AGGREGATE_EMPLACE(generate_hex_key(layer, loc), draw_func, dest);
 }
 
 void display::drawing_buffer_commit()
@@ -1503,48 +1496,6 @@ void display::draw_text_in_hex(const map_location& loc,
 	});
 }
 
-void display::add_submerge_ipf_mod(std::string& image_path, int image_height, double submersion_amount, int shift)
-{
-	// We may also want to shift the position so that the waterline matches.
-	// Note: This currently has blending problems (see the note on sdl_blit),
-	// but if that blending problem is fixed it should work.
-	if (shift) {
-		image_path = "misc/blank-hex.png~BLIT(" + image_path;
-	}
-
-	// general formula for submerge alpha:
-	//   if (y > WATERLINE)
-	//   then min(max(alpha_mod, 0), 1) * alpha
-	//   else alpha
-	//   where alpha_mod = alpha_base - (y - WATERLINE) * alpha_delta
-	// formula variables: x, y, red, green, blue, alpha, width, height
-	// full WFL string:
-	// "~ADJUST_ALPHA(if(y>DL,clamp((AB-(y-DL)*AD),0,1)*alpha,alpha))"
-	// where DL = submersion line in pixels from top of image
-	//       AB = base alpha proportion at submersion line (30%)
-	//       AD = proportional alpha delta per pixel (1.5%)
-	if (submersion_amount > 0.0) {
-		int submersion_line = image_height * (1.0 - submersion_amount);
-		const std::string sl_string = std::to_string(submersion_line);
-		image_path += "~ADJUST_ALPHA(if(y>";
-		image_path += sl_string;
-		image_path += ",clamp((0.3-(y-";
-		image_path += sl_string;
-		image_path += ")*0.015),0,1)*alpha,alpha))";
-	}
-	// FUTURE: this submerge function could be done using SDL_RenderGeometry,
-	// but that's not available below SDL 2.0.18.
-	// Alternately it could also be done fairly easily using shaders,
-	// if a graphics system supporting them (such as openGL) is moved to.
-
-	if (shift) {
-		// Finish the shifting blit. This assumes a hex-sized image.
-		image_path += ",0,";
-		image_path += std::to_string(shift);
-		image_path += ')';
-	}
-}
-
 void display::select_hex(map_location hex)
 {
 	invalidate(selectedHex_);
@@ -1583,7 +1534,7 @@ void display::set_diagnostic(const std::string& msg)
 
 void display::update_fps_count()
 {
-	static int time_between_draws = preferences::draw_delay();
+	static int time_between_draws = prefs::get().draw_delay();
 	if(time_between_draws < 0) {
 		time_between_draws = 1000 / video::current_refresh_rate();
 	}
@@ -1662,11 +1613,12 @@ void display::recalculate_minimap()
 		return;
 	}
 
-	minimap_ = texture(image::getMinimap(
-		area.w, area.h, get_map(),
+	minimap_renderer_ = image::prep_minimap_for_rendering(
+		get_map(),
 		dc_->teams().empty() ? nullptr : &dc_->teams()[currentTeam_],
+		nullptr,
 		(selectedHex_.valid() && !is_blindfolded()) ? &reach_map_ : nullptr
-	));
+	);
 
 	redraw_minimap();
 }
@@ -1684,7 +1636,7 @@ void display::draw_minimap()
 		return;
 	}
 
-	if(!minimap_) {
+	if(!minimap_renderer_) {
 		ERR_DP << "trying to draw null minimap";
 		return;
 	}
@@ -1694,23 +1646,15 @@ void display::draw_minimap()
 	// Draw the minimap background.
 	draw::fill(area, 31, 31, 23);
 
-	// Update the minimap location for mouse and units functions
-	minimap_location_.x = area.x + (area.w - minimap_.w()) / 2;
-	minimap_location_.y = area.y + (area.h - minimap_.h()) / 2;
-	minimap_location_.w = minimap_.w();
-	minimap_location_.h = minimap_.h();
-
-	// Draw the minimap.
-	if (minimap_) {
-		draw::blit(minimap_, minimap_location_);
-	}
+	// Draw the minimap and update its location for mouse and units functions
+	minimap_location_ = std::invoke(minimap_renderer_, area);
 
 	draw_minimap_units();
 
 	// calculate the visible portion of the map:
 	// scaling between minimap and full map images
-	double xscaling = 1.0*minimap_.w() / (get_map().w()*hex_width());
-	double yscaling = 1.0*minimap_.h() / (get_map().h()*hex_size());
+	double xscaling = 1.0 * minimap_location_.w / (get_map().w() * hex_width());
+	double yscaling = 1.0 * minimap_location_.h / (get_map().h() * hex_size());
 
 	// we need to shift with the border size
 	// and the 0.25 from the minimap balanced drawing
@@ -1738,7 +1682,7 @@ void display::draw_minimap()
 
 void display::draw_minimap_units()
 {
-	if (!preferences::minimap_draw_units() || is_blindfolded()) return;
+	if (!prefs::get().minimap_draw_units() || is_blindfolded()) return;
 
 	double xscaling = 1.0 * minimap_location_.w / get_map().w();
 	double yscaling = 1.0 * minimap_location_.h / get_map().h();
@@ -1754,7 +1698,7 @@ void display::draw_minimap_units()
 		int side = u.side();
 		color_t col = team::get_minimap_color(side);
 
-		if(!preferences::minimap_movement_coding()) {
+		if(!prefs::get().minimap_movement_coding()) {
 			auto status = orb_status::allied;
 			if(dc_->teams()[currentTeam_].is_enemy(side)) {
 				status = orb_status::enemy;
@@ -1953,7 +1897,7 @@ bool display::set_zoom(unsigned int amount, const bool validate_value_and_set_in
 		last_zoom_ = zoom_;
 	}
 
-	preferences::set_tile_size(zoom_);
+	prefs::get().set_tile_size(zoom_);
 
 	labels().recalculate_labels();
 	redraw_background_ = true;
@@ -1993,7 +1937,7 @@ bool display::tile_nearly_on_screen(const map_location& loc) const
 
 void display::scroll_to_xy(int screenxpos, int screenypos, SCROLL_TYPE scroll_type, bool force)
 {
-	if(!force && (view_locked_ || !preferences::scroll_to_action())) return;
+	if(!force && (view_locked_ || !prefs::get().scroll_to_action())) return;
 	if(video::headless()) {
 		return;
 	}
@@ -2007,7 +1951,7 @@ void display::scroll_to_xy(int screenxpos, int screenypos, SCROLL_TYPE scroll_ty
 	int xmove = xpos - xpos_;
 	int ymove = ypos - ypos_;
 
-	if(scroll_type == WARP || scroll_type == ONSCREEN_WARP || turbo_speed() > 2.0 || preferences::scroll_speed() > 99) {
+	if(scroll_type == WARP || scroll_type == ONSCREEN_WARP || turbo_speed() > 2.0 || prefs::get().scroll_speed() > 99) {
 		scroll(xmove,ymove,true);
 		redraw_minimap();
 		events::draw();
@@ -2039,7 +1983,7 @@ void display::scroll_to_xy(int screenxpos, int screenypos, SCROLL_TYPE scroll_ty
 		const double accel_time = 0.3 / turbo_speed(); // seconds until full speed is reached
 		const double decel_time = 0.4 / turbo_speed(); // seconds from full speed to stop
 
-		double velocity_max = preferences::scroll_speed() * 60.0;
+		double velocity_max = prefs::get().scroll_speed() * 60.0;
 		velocity_max *= turbo_speed();
 		double accel = velocity_max / accel_time;
 		double decel = velocity_max / decel_time;
@@ -2238,14 +2182,14 @@ void display::bounds_check_position(int& xpos, int& ypos) const
 
 double display::turbo_speed() const
 {
-	bool res = preferences::turbo();
+	bool res = prefs::get().turbo();
 	if(keys_[SDLK_LSHIFT] || keys_[SDLK_RSHIFT]) {
 		res = !res;
 	}
 
 	res |= video::headless();
 	if(res)
-		return preferences::turbo_speed();
+		return prefs::get().turbo_speed();
 	else
 		return 1.0;
 }
@@ -2264,6 +2208,52 @@ bool display::get_prevent_draw()
 	return prevent_draw_;
 }
 
+submerge_data display::get_submerge_data(const rect& dest, double submerge, const point& size, uint8_t alpha, bool hreverse, bool vreverse)
+{
+	submerge_data data;
+	if(submerge <= 0.0) {
+		return data;
+	}
+
+	// Set up blit destinations
+	data.unsub_dest = dest;
+	const int dest_sub_h = dest.h * submerge;
+	data.unsub_dest.h -= dest_sub_h;
+	const int dest_y_mid = dest.y + data.unsub_dest.h;
+
+	// Set up blit src regions
+	const int submersion_line = size.y * (1.0 - submerge);
+	data.unsub_src = {0, 0, size.x, submersion_line};
+
+	// Set up shader vertices
+	const color_t c_mid(255, 255, 255, 0.3 * alpha);
+	const int pixels_submerged = size.y * submerge;
+	const int bot_alpha = std::max(0.3 - pixels_submerged * 0.015, 0.0) * alpha;
+	const color_t c_bot(255, 255, 255, bot_alpha);
+	const SDL_FPoint pML{float(dest.x), float(dest_y_mid)};
+	const SDL_FPoint pMR{float(dest.x + dest.w), float(dest_y_mid)};
+	const SDL_FPoint pBL{float(dest.x), float(dest.y + dest.h)};
+	const SDL_FPoint pBR{float(dest.x + dest.w), float(dest.y + dest.h)};
+	data.alpha_verts = {
+		SDL_Vertex{pML, c_mid, {0.0, float(1.0 - submerge)}},
+		SDL_Vertex{pMR, c_mid, {1.0, float(1.0 - submerge)}},
+		SDL_Vertex{pBL, c_bot, {0.0, 1.0}},
+		SDL_Vertex{pBR, c_bot, {1.0, 1.0}},
+	};
+
+	if(hreverse) {
+		for(SDL_Vertex& v : data.alpha_verts) {
+			v.tex_coord.x = 1.0 - v.tex_coord.x;
+		}
+	}
+	if(vreverse) {
+		for(SDL_Vertex& v : data.alpha_verts) {
+			v.tex_coord.y = 1.0 - v.tex_coord.y;
+		}
+	}
+
+	return data;
+}
 
 void display::fade_tod_mask(
 	const std::string& old_mask,
@@ -2423,7 +2413,7 @@ void display::draw()
 		drawing_buffer_commit();
 	}
 
-	if(preferences::show_fps() || debug_flag_set(DEBUG_BENCHMARK)) {
+	if(prefs::get().show_fps() || debug_flag_set(DEBUG_BENCHMARK)) {
 		update_fps_label();
 		update_fps_count();
 	} else if(fps_handle_ != 0) {
@@ -2438,8 +2428,8 @@ void display::update()
 	update_render_textures();
 
 	// Trigger cache rebuild if animated water preference has changed.
-	if(animate_water_ != preferences::animate_water()) {
-		animate_water_ = preferences::animate_water();
+	if(animate_water_ != prefs::get().animate_water()) {
+		animate_water_ = prefs::get().animate_water();
 		builder_->rebuild_cache_all();
 	}
 
@@ -2498,11 +2488,9 @@ void display::render()
 	// update the minimap texture, if necessary
 	// TODO: highdpi - high DPI minimap
 	const rect& area = minimap_area();
-	if(!area.empty() &&
-		(!minimap_ || minimap_.w() > area.w || minimap_.h() > area.h))
-	{
+	if(!area.empty() && !minimap_renderer_) {
 		recalculate_minimap();
-		if(!minimap_) {
+		if(!minimap_renderer_) {
 			ERR_DP << "error creating minimap";
 			return;
 		}
@@ -2647,7 +2635,7 @@ void display::draw_invalidated()
 	DBG_DP << "drawing " << invalidated_.size() << " invalidated hexes with clip " << clip_rect;
 
 	// The unit drawer can't function without teams
-	std::optional<unit_drawer> drawer{};
+	utils::optional<unit_drawer> drawer{};
 	if(!dc_->teams().empty()) {
 		drawer.emplace(*this);
 	}
@@ -2694,7 +2682,7 @@ void display::draw_hex(const map_location& loc)
 		get_terrain_images(loc, tod.id, BACKGROUND); // updates terrain_image_vector_
 		num_images_bg = terrain_image_vector_.size();
 
-		drawing_buffer_add(LAYER_TERRAIN_BG, loc, [images = std::exchange(terrain_image_vector_, {})](const rect& dest) {
+		drawing_buffer_add(drawing_layer::terrain_bg, loc, [images = std::exchange(terrain_image_vector_, {})](const rect& dest) {
 			for(const texture& t : images) {
 				draw::blit(t, dest);
 			}
@@ -2703,28 +2691,24 @@ void display::draw_hex(const map_location& loc)
 		get_terrain_images(loc, tod.id, FOREGROUND); // updates terrain_image_vector_
 		num_images_fg = terrain_image_vector_.size();
 
-		drawing_buffer_add(LAYER_TERRAIN_FG, loc, [images = std::exchange(terrain_image_vector_, {})](const rect& dest) {
+		drawing_buffer_add(drawing_layer::terrain_fg, loc, [images = std::exchange(terrain_image_vector_, {})](const rect& dest) {
 			for(const texture& t : images) {
 				draw::blit(t, dest);
 			}
 		});
 
 		// Draw the grid, if that's been enabled
-		if(preferences::grid()) {
+		if(prefs::get().grid()) {
 			static const image::locator grid_top{game_config::images::grid_top};
 			static const image::locator grid_bottom{game_config::images::grid_bottom};
 
-			drawing_buffer_add(LAYER_GRID_TOP, loc,
+			drawing_buffer_add(drawing_layer::grid_top, loc,
 				[tex = image::get_texture(grid_top, image::TOD_COLORED)](const rect& dest) { draw::blit(tex, dest); });
 
-			drawing_buffer_add(LAYER_GRID_BOTTOM, loc,
+			drawing_buffer_add(drawing_layer::grid_bottom, loc,
 				[tex = image::get_texture(grid_bottom, image::TOD_COLORED)](const rect& dest) { draw::blit(tex, dest); });
 		}
 	}
-
-	const t_translation::terrain_code terrain = get_map().get_terrain(loc);
-	const terrain_type& terrain_info = get_map().get_terrain_info(terrain);
-	const double submerge = terrain_info.unit_submerge();
 
 	if(!is_shrouded) {
 		auto it = get_overlays().find(loc);
@@ -2750,20 +2734,28 @@ void display::draw_hex(const map_location& loc)
 						point isize = image::get_size(ov.image, image::HEXED);
 						std::string ipf = ov.image;
 
-						if(ov.submerge) {
-							// Adjust submerge appropriately
-							double sub = submerge * ov.submerge;
-							// Shift the image so the waterline remains static.
-							// This is so that units swimming there look okay.
-							int shift = isize.y * (sub - submerge);
-							add_submerge_ipf_mod(ipf, isize.y, sub, shift);
-						}
-
-						const texture tex = ov.image.find("~NO_TOD_SHIFT()") == std::string::npos
+						texture tex = ov.image.find("~NO_TOD_SHIFT()") == std::string::npos
 							? image::get_lighted_texture(ipf, lt)
 							: image::get_texture(ipf, image::HEXED);
 
-						drawing_buffer_add(LAYER_TERRAIN_BG, loc, [tex](const rect& dest) { draw::blit(tex, dest); });
+						drawing_buffer_add(drawing_layer::terrain_bg, loc, [=](const rect& dest) mutable {
+							// Adjust submerge appropriately
+							const t_translation::terrain_code terrain = get_map().get_terrain(loc);
+							const terrain_type& terrain_info = get_map().get_terrain_info(terrain);
+							const double submerge = terrain_info.unit_submerge();
+
+							submerge_data data = get_submerge_data(dest, submerge, isize, ALPHA_OPAQUE, false, false);
+							if(submerge > 0.0) {
+								// set clip for dry part
+								// smooth_shaded doesn't use the clip information so it's fine to set it up front
+								tex.set_src(data.unsub_src);
+
+								// draw underwater part
+								draw::smooth_shaded(tex, data.alpha_verts);
+							}
+							// draw dry part
+							draw::blit(tex, submerge > 0.0 ? data.unsub_dest : dest);
+						});
 					}
 				}
 			}
@@ -2772,14 +2764,14 @@ void display::draw_hex(const map_location& loc)
 
 	// village-control flags.
 	if(!is_shrouded) {
-		drawing_buffer_add(LAYER_TERRAIN_BG, loc, [tex = get_flag(loc)](const rect& dest) { draw::blit(tex, dest); });
+		drawing_buffer_add(drawing_layer::terrain_bg, loc, [tex = get_flag(loc)](const rect& dest) { draw::blit(tex, dest); });
 	}
 
 	// Draw the time-of-day mask on top of the terrain in the hex.
 	// tod may differ from tod if hex is illuminated.
 	const std::string& tod_hex_mask = tod.image_mask;
 	if(tod_hex_mask1 || tod_hex_mask2) {
-		drawing_buffer_add(LAYER_TERRAIN_FG, loc, [=](const rect& dest) mutable {
+		drawing_buffer_add(drawing_layer::terrain_fg, loc, [=](const rect& dest) mutable {
 			tod_hex_mask1.set_alpha_mod(tod_hex_alpha1);
 			draw::blit(tod_hex_mask1, dest);
 
@@ -2787,7 +2779,7 @@ void display::draw_hex(const map_location& loc)
 			draw::blit(tod_hex_mask2, dest);
 		});
 	} else if(!tod_hex_mask.empty()) {
-		drawing_buffer_add(LAYER_TERRAIN_FG, loc,
+		drawing_buffer_add(drawing_layer::terrain_fg, loc,
 			[tex = image::get_texture(tod_hex_mask, image::HEXED)](const rect& dest) { draw::blit(tex, dest); });
 	}
 
@@ -2803,19 +2795,19 @@ void display::draw_hex(const map_location& loc)
 
 	if(is_shrouded) {
 		// We apply void also on off-map tiles to shroud the half-hexes too
-		drawing_buffer_add(LAYER_FOG_SHROUD, loc,
+		drawing_buffer_add(drawing_layer::fog_shroud, loc,
 			[tex = image::get_texture(get_variant(shroud_images_, loc), image::TOD_COLORED)](const rect& dest) {
 				draw::blit(tex, dest);
 			});
 	} else if(fogged(loc)) {
-		drawing_buffer_add(LAYER_FOG_SHROUD, loc,
+		drawing_buffer_add(drawing_layer::fog_shroud, loc,
 			[tex = image::get_texture(get_variant(fog_images_, loc), image::TOD_COLORED)](const rect& dest) {
 				draw::blit(tex, dest);
 			});
 	}
 
 	if(!is_shrouded) {
-		drawing_buffer_add(LAYER_FOG_SHROUD, loc, [images = get_fog_shroud_images(loc, image::TOD_COLORED)](const rect& dest) {
+		drawing_buffer_add(drawing_layer::fog_shroud, loc, [images = get_fog_shroud_images(loc, image::TOD_COLORED)](const rect& dest) {
 			for(const texture& t : images) {
 				draw::blit(t, dest);
 			}
@@ -2823,7 +2815,7 @@ void display::draw_hex(const map_location& loc)
 	}
 
 	if(debug_flag_set(DEBUG_FOREGROUND)) {
-		drawing_buffer_add(LAYER_UNIT_DEFAULT, loc,
+		drawing_buffer_add(drawing_layer::unit_default, loc,
 			[tex = image::get_texture(image::locator{"terrain/foreground.png"}, image::TOD_COLORED)](const rect& dest) {
 				draw::blit(tex, dest);
 			});
@@ -2867,7 +2859,7 @@ void display::draw_hex(const map_location& loc)
 		renderer.set_maximum_height(-1, false);
 		renderer.set_maximum_width(-1);
 
-		drawing_buffer_add(LAYER_FOG_SHROUD, loc, [tex = renderer.render_and_get_texture()](const rect& dest) {
+		drawing_buffer_add(drawing_layer::fog_shroud, loc, [tex = renderer.render_and_get_texture()](const rect& dest) {
 			const rect text_dest {
 				(dest.x + dest.w / 2) - (tex.w() / 2),
 				(dest.y + dest.h / 2) - (tex.h() / 2),
@@ -2906,7 +2898,7 @@ void display::refresh_report(const std::string& report_name, const config * new_
 
 	// Now we will need the config. Generate one if needed.
 
-	utils::optional_reference<events::mouse_handler> mhb = std::nullopt;
+	utils::optional_reference<events::mouse_handler> mhb = utils::nullopt;
 
 	if (resources::controller) {
 		mhb = resources::controller->get_mouse_handler_base();
@@ -3228,7 +3220,7 @@ void display::invalidate_animations()
 {
 	// There are timing issues with this, but i'm not touching it.
 	new_animation_frame();
-	animate_map_ = preferences::animate_map();
+	animate_map_ = prefs::get().animate_map();
 	if(animate_map_) {
 		for(const map_location& loc : get_visible_hexes()) {
 			if(shrouded(loc))

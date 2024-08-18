@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2017 - 2023
+	Copyright (C) 2017 - 2024
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -13,10 +13,8 @@
 */
 
 #include "actions/undo_move_action.hpp"
-#include "actions/move.hpp"
 
 #include "resources.hpp"
-#include "replay.hpp"
 #include "units/map.hpp"
 #include "units/animation_component.hpp"
 #include "log.hpp"
@@ -24,7 +22,6 @@
 #include "units/udisplay.hpp"
 #include "units/unit.hpp"
 #include "game_board.hpp"
-#include "map/map.hpp"
 
 static lg::log_domain log_engine("engine");
 #define ERR_NG LOG_STREAM(err, log_engine)

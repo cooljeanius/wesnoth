@@ -10,16 +10,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wesnoth-1.16\n"
 "Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
-"POT-Creation-Date: 2023-10-28 14:02 UTC\n"
-"PO-Revision-Date: 2023-09-10 08:30+0800\n"
-"Last-Translator: CloudiDust <cloudidust@gmail.com>\n"
+"POT-Creation-Date: 2024-02-20 02:52 UTC\n"
+"PO-Revision-Date: 2024-06-02 16:50+0800\n"
+"Last-Translator: vimacs <vimacs.hacks@gmail.com>\n"
 "Language-Team: Wesnoth Simplified Chinese Team\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n>1;\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Poedit 3.4.2\n"
 
 #. [campaign]: id=Dead_Water
 #: data/campaigns/Dead_Water/_main.cfg:13
@@ -1119,11 +1119,6 @@ msgstr ""
 
 #. [message]: speaker=narrator
 #: data/campaigns/Dead_Water/scenarios/04_Slavers.cfg:434
-#, fuzzy
-#| msgid ""
-#| "You can choose when the slaves come out of their villages and attack "
-#| "their captors. When you are ready, right-click anywhere and select "
-#| "'Inspire the slaves to revolt'."
 msgid ""
 "You can choose when the slaves come out of their villages and attack their "
 "captors. When you are ready, right-click anywhere and select ‘Inspire the "
@@ -2424,7 +2419,7 @@ msgstr ""
 "他的，现在我的机会来了。克莱利斯凯王，我和我的朋友将加入你们，并肩作战。请差"
 "遣我们，我们拒绝接受报酬。"
 
-#. [unit]: type=Footpad, id=Lyllan
+#. [unit]: type=Footpad, gender=female, id=Lyllan
 #: data/campaigns/Dead_Water/scenarios/10_The_Flaming_Sword.cfg:451
 msgid "Lyllan"
 msgstr "莱兰"
@@ -2435,7 +2430,7 @@ msgid "Trudd"
 msgstr "特鲁德"
 
 #. [unit]: type=Thug, id=Dorcyn
-#. [unit]: type=Footpad, id=Dorcyn
+#. [unit]: type=Footpad, gender=male, id=Dorcyn
 #: data/campaigns/Dead_Water/scenarios/10_The_Flaming_Sword.cfg:475
 #: data/campaigns/Dead_Water/scenarios/10_The_Flaming_Sword.cfg:492
 msgid "Dorcyn"

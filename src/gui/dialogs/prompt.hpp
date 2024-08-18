@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2023 - 2023
+	Copyright (C) 2023 - 2024
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -22,14 +22,6 @@ namespace gui2
 namespace dialogs
 {
 
-/**
- * @ingroup GUIWindowDefinitionWML
- *
- * Dialog for getting a single text value from the player.
- * Key               |Type           |Mandatory|Description
- * ------------------|---------------|---------|-----------
- * prompt_box        | text_box      |yes      |The text box to enter the value into.
- */
 class prompt : public modal_dialog
 {
 public:

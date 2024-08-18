@@ -1,12 +1,12 @@
 # translation of it.po to Italian
 # Luciano Montanaro <mikelima@cirulla.net>, 2006, 2007.
-# Antonio Rosella <arosella@yahoo.com>, 2012-2022.
+# Antonio Rosella <arosella@yahoo.com>, 2012-2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
-"POT-Creation-Date: 2023-10-28 14:02 UTC\n"
-"PO-Revision-Date: 2022-09-04 10:53+0200\n"
+"POT-Creation-Date: 2024-05-26 20:07 UTC\n"
+"PO-Revision-Date: 2023-12-31 18:34+0100\n"
 "Last-Translator: Antonio 'Antro' Rosella <arosella@yahoo.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -3081,11 +3081,6 @@ msgstr ""
 
 #. [message]: speaker=Ethiliel
 #: data/campaigns/The_South_Guard/scenarios/06a_Into_the_Depths.cfg:702
-#, fuzzy
-#| msgid ""
-#| "Mebrin... that's enough. I am sorry. I should have protected you. I "
-#| "should never have let those humans take you and turn you into... into a "
-#| "monster!"
 msgid ""
 "Mebrin... that’s enough. I am sorry. I should have protected you. I should "
 "never have let those humans take you and turn you into... into a monster!"
@@ -4837,7 +4832,7 @@ msgid "Eyestalk"
 msgstr "Occhio-stelo"
 
 #. [unit_type]: id=Eyestalk, race=monster
-#: data/campaigns/The_South_Guard/units/Eyestalk.cfg:25
+#: data/campaigns/The_South_Guard/units/Eyestalk.cfg:26
 msgid ""
 "Named ‘Eyestalks’ for obvious reasons, these plant-like creatures can focus "
 "their gaze onto an unsuspecting victim to draw life energy straight out of "
@@ -4850,12 +4845,12 @@ msgstr ""
 "sguardo mortale da lontano non deve essere sottostimato."
 
 #. [attack]: type=impact
-#: data/campaigns/The_South_Guard/units/Eyestalk.cfg:32
+#: data/campaigns/The_South_Guard/units/Eyestalk.cfg:33
 msgid "smash"
 msgstr "colpo"
 
 #. [attack]: type=arcane
-#: data/campaigns/The_South_Guard/units/Eyestalk.cfg:56
+#: data/campaigns/The_South_Guard/units/Eyestalk.cfg:57
 msgid "gaze"
 msgstr "sguardo"
 

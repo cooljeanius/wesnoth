@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2014 - 2023
+	Copyright (C) 2014 - 2024
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -16,18 +16,13 @@
 #pragma once
 
 #include "game_events/pump.hpp" // for queued_event
-#include "generic_event.hpp"
 #include "mouse_handler_base.hpp"
 #include "random.hpp"
-#include "random_synced.hpp"
-#include "replay.hpp"
 #include "synced_checkup.hpp"
 #include "synced_commands.hpp"
 
 #include <deque>
-#include <functional>
 
-class config;
 
 // only static methods.
 class synced_context
@@ -157,6 +152,11 @@ public:
 
 	/** Sets is_simultaneous_ = true, called using a user choice that is not the currently playing side. */
 	static void set_is_simultaneous();
+	static void block_undo(bool do_block = true);
+	static void reset_block_undo()
+	{
+		is_undo_blocked_ = false;
+	}
 
 	/** @return Whether we tracked something that can never be undone. */
 	static bool undo_blocked();
@@ -192,7 +192,7 @@ public:
 
 	struct event_info {
 		config cmds_;
-		std::optional<int> lua_;
+		utils::optional<int> lua_;
 		game_events::queued_event evt_;
 		event_info(const config& cmds, game_events::queued_event evt) : cmds_(cmds), evt_(evt) {}
 		event_info(int lua, game_events::queued_event evt) : lua_(lua), evt_(evt) {}
@@ -214,6 +214,7 @@ public:
 		undo_commands_.clear();
 	}
 
+	static bool ignore_undo();
 private:
 	/** Weather we are in a synced move, in a user_choice, or none of them. */
 	static inline synced_state state_ = synced_context::UNSYNCED;
@@ -228,6 +229,7 @@ private:
 	 * TODO: it would be better if the following variable were not static.
 	 */
 	static inline bool is_simultaneous_ = false;
+	static inline bool is_undo_blocked_ = false;
 
 	/** Used to restore the unit id manager when undoing. */
 	static inline int last_unit_id_ = 0;

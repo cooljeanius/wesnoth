@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2011 - 2023
+	Copyright (C) 2011 - 2024
 	by Tommy Schmitz
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -20,21 +20,13 @@
 #include "whiteboard/suppose_dead.hpp"
 
 #include "whiteboard/visitor.hpp"
-#include "whiteboard/manager.hpp"
-#include "whiteboard/side_actions.hpp"
-#include "whiteboard/utility.hpp"
 
-#include "arrow.hpp"
 #include "config.hpp"
 #include "display.hpp"
 #include "draw.hpp"
-#include "game_end_exceptions.hpp"
-#include "mouse_events.hpp"
 #include "play_controller.hpp"
-#include "replay.hpp"
 #include "resources.hpp"
 #include "units/unit.hpp"
-#include "units/udisplay.hpp"
 #include "units/map.hpp"
 
 namespace wb
@@ -142,7 +134,7 @@ void suppose_dead::draw_hex(const map_location& hex)
 	}
 
 	//@todo: Possibly use a different layer
-	const display::drawing_layer layer = display::LAYER_ARROWS;
+	const drawing_layer layer = drawing_layer::arrows;
 
 	display::get_singleton()->drawing_buffer_add(
 		layer, loc_, [tex = image::get_texture(image::locator{"whiteboard/suppose_dead.png"}, image::HEXED)](const rect& d) {

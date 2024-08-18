@@ -15,7 +15,11 @@
 -- which is imo more convenient than the interface wesnoth.game_events.add or wesnoth.game_events.add_repeating offers
 -- even though its at this point technically equivalent to the latter.
 
-
+---Register an event handler
+---@param eventname string The event to handle; can be a comma-separated list
+---@param priority? number Events execute in order of decreasing priority, and secondarily in order of adding
+---@param fcn fun(ctx:event_context)
+---@overload fun(eventname:string, fcn:fun(ctx:event_context))
 return function(eventname, priority, fcn)
 	if type(priority) == "function" then
 		fcn = priority
@@ -27,7 +31,7 @@ return function(eventname, priority, fcn)
 		priority = priority,
 		first_time_only = false,
 		action = function()
-			context = wesnoth.current.event_context
+			local context = wesnoth.current.event_context
 			wesnoth.experimental.game_events.set_undoable(true)
 			fcn(context)
 		end
