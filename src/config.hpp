@@ -62,7 +62,7 @@ public:
 	{
 	}
 
-	optional_config_impl(std::nullopt_t)
+	optional_config_impl(utils::nullopt_t)
 		: opt_()
 	{
 	}
@@ -73,7 +73,7 @@ public:
 			return *opt_;
 		} else {
 			// We're going to drop this codepath once we can use optional::value anyway, but just
-			// noting we want this function to ultimately throw std::bad_optional_access.
+			// noting we want this function to ultimately throw utils::bad_optional_access.
 			throw std::runtime_error("Optional reference has no value");
 		}
 	}
@@ -445,7 +445,7 @@ public:
 	optional_config_impl<const config> get_deprecated_child(config_key_type old_key, const std::string& in_tag, DEP_LEVEL level, const std::string& message) const;
 
 	/**
-	 * Get a deprecated child rangw and log a deprecation message
+	 * Get a deprecated child range and log a deprecation message
 	 * @param old_key The deprecated child to return if present
 	 * @param in_tag The name of the tag this child appears in
 	 * @param level The deprecation level

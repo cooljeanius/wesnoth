@@ -62,13 +62,8 @@ Id на мисията от избраната кампания. По подра
 Прескача екрани с [story] и диалог в края на събитие \fBstart\fP.
 .TP 
 \fB\-\-clock\fP
-Adds the option to show a clock for testing the drawing timer.
-.TP 
-\fB\-\-config\-dir\fP\fI\ name\fP
-Старо, използвайте \fB\-\-userdata\-dir\fP.
-.TP 
-\fB\-\-config\-path\fP
-Старо, използвайте \fB\-\-userdata\-path\fP.
+Adds the option to show a clock for testing the drawing timer. Also adds the
+option for showing the GUI Test Dialog.
 .TP 
 \fB\-\-core\fP\fI\ id_core\fP
 презаписва върху зареденото ядро с посоченото.
@@ -128,10 +123,10 @@ log domain. Available levels: \fBerror\fP,\ \fBwarning\fP,\ \fBinfo\fP,\ \fBdebu
 \fB\-\-log\-precise\fP
 shows the timestamps in log output with more precision.
 .TP 
-\fB\-\-log\-strict\fP
-sets the strict level of the logger. Any messages sent to log domains of
-this level or more severe will cause the unit test to fail regardless of the
-victory result. Only relevant when used with \fB\-u\fP.
+\fB\-\-log\-strict\fP\fI\ level\fP
+sets the strict \fIlevel\fP of the logger. Any messages sent to log domains of
+this \fIlevel\fP or more severe will cause the unit test to fail regardless of
+the victory result. Only relevant when used with \fB\-u\fP.
 .TP 
 \fB\-\-logdomains[\fP\fI=filter\fP\fB]\fP
 lists defined log domains (only the ones containing \fIfilter\fP if used) and
@@ -145,6 +140,10 @@ in the logs directory under the userdata folder.
 \fB\-\-log\-to\-file\fP
 log output is written to a file. Cancels the effect of \-\-no\-log\-to\-file
 whether implicit or explicit.
+.TP 
+\fB\-\-no\-log\-sanitize\fP
+disables the anonymization that's normally applied when logging, for example
+replacing usernames with USER.
 .TP 
 \fB\-\-wnoconsole\fP
 For Windows, when used with \-\-no\-log\-to\-file, results in output being
@@ -289,18 +288,6 @@ lua the same permissions as the wesnoth executable.
 .TP 
 \fB\-S,\-\-use\-schema\fP\fI\ path\fP
 поставя WML схемата за употреба с \fB\-V,\-\-validate\fP.
-.TP 
-\fB\-\-userconfig\-dir\fP\fI\ name\fP
-поставя директорията за настройки към \fIname\fP под $HOME или в "My
-Documents\eMy Games" за windows.  Също можете да посочите абсолютен път за
-директорията извън посочените. На Windows е възможно да посочите директория
-относителна към процеса, като използвате пътища стартиращи с ".\e" or
-"..\e".  Под X11 стандартът за това е $XDG_CONFIG_HOME или
-$HOME/.config/wesnoth, а на други системи е пътят към данните на
-потребителя.
-.TP 
-\fB\-\-userconfig\-path\fP
-извежда името на директорията с информацията на играта и излиза.
 .TP 
 \fB\-\-userdata\-dir\fP\fI\ name\fP
 поставя директорията за настройки към \fIname\fP под $HOME или в "My
