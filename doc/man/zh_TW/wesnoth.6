@@ -52,13 +52,8 @@ Battle for \fBWesnoth\fP是一個回合制奇幻風格的策略遊戲。
 在 \fBstart\fP 事件最後跳過 [story] 畫面及對話框。
 .TP 
 \fB\-\-clock\fP
-增加一個顯示時鐘的選項用來當測試畫面繪製計時器。
-.TP 
-\fB\-\-config\-dir\fP\fI\ name\fP
-已廢棄，請使用 \fB\-\-userdata\-dir\fP。
-.TP 
-\fB\-\-config\-path\fP
-已廢棄，請使用 \fB\-\-config\-path\fP。
+Adds the option to show a clock for testing the drawing timer. Also adds the
+option for showing the GUI Test Dialog.
 .TP 
 \fB\-\-core\fP\fI\ id_core\fP
 以指定 ID 的核心來覆寫被讀取的核心。
@@ -109,8 +104,10 @@ http://www.wesnoth.org/wiki/CommandMode）。
 \fB\-\-log\-precise\fP
 以更精確的方式顯示日誌中的時間戳記。
 .TP 
-\fB\-\-log\-strict\fP
-設定日誌記錄器的嚴格等級。任何訊息傳送至此等級的日誌域或是高的等級將導致單元測試失敗，不管勝利的結果。只有在和 \fB\-u\fP 一同使用時才會有效。
+\fB\-\-log\-strict\fP\fI\ level\fP
+sets the strict \fIlevel\fP of the logger. Any messages sent to log domains of
+this \fIlevel\fP or more severe will cause the unit test to fail regardless of
+the victory result. Only relevant when used with \fB\-u\fP.
 .TP 
 \fB\-\-logdomains[\fP\fI=filter\fP\fB]\fP
 列出定義的日誌域（只列出包含 \fIfilter\fP 的日誌域，如果它有被使用的話）並退出
@@ -123,6 +120,10 @@ in the logs directory under the userdata folder.
 \fB\-\-log\-to\-file\fP
 log output is written to a file. Cancels the effect of \-\-no\-log\-to\-file
 whether implicit or explicit.
+.TP 
+\fB\-\-no\-log\-sanitize\fP
+disables the anonymization that's normally applied when logging, for example
+replacing usernames with USER.
 .TP 
 \fB\-\-wnoconsole\fP
 在 Windows 系統下，當使用 \-\-no\-log\-to\-file 時，會將輸出寫入 cerr/cout 而不是 CONOUT。否則，不會有任何作用。
@@ -241,14 +242,6 @@ https://wiki.wesnoth.org/ImagePathFunctionWML。
 .TP 
 \fB\-S,\-\-use\-schema\fP\fI\ path\fP
 設定要與 \fB\-V,\-\-validate\fP 一同使用的 WML 格式。
-.TP 
-\fB\-\-userconfig\-dir\fP\fI\ name\fP
-在 $HOME 或「我的文件\我的遊戲」(Windows)底下設定使用者配置目錄為 \fIname\fP 。你也可以為配置目錄設定一個在 $HOME
-或「我的文件\我的遊戲」之外的絕對路徑。在 Windows 上，也可以使用 「.\e」或「..\e」作為前綴來指定相對於工作目錄的相對路徑。在 X11
-下，這會預設為 $XDG_CONFIG_HOME 或 $HOME/.config/wesnoth，在其它作業系統上則預設為使用者資料的路徑。
-.TP 
-\fB\-\-userconfig\-path\fP
-印出使用者配置目錄的路徑並退出。
 .TP 
 \fB\-\-userdata\-dir\fP\fI\ name\fP
 在 $HOME 或「我的文件\我的遊戲」(Windows)底下設定使用者資料目錄為 \fIname\fP 。你也可以為使用者資料目錄設定一個在 $HOME
