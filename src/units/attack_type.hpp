@@ -129,6 +129,11 @@ public:
 	 * @param special_tags If true, match @a special against the tag name of special tags.
 	 */
 	bool has_special_or_ability(const std::string& special, bool special_id=true, bool special_tags=true) const;
+	/**
+	 * Returns true if this is a dummy attack_type, for example the placeholder that the unit_attack dialog
+	 * uses when a defender has no weapon for a given range.
+	 */
+	bool attack_empty() const {return (id().empty() && name().empty() && type().empty() && range().empty());}
 
 	// In unit_types.cpp:
 
@@ -150,6 +155,15 @@ private:
 
 	// Configured as a bit field, in case that is useful.
 	enum AFFECTS { AFFECT_SELF=1, AFFECT_OTHER=2, AFFECT_EITHER=3 };
+	/**
+	 * Filter a list of abilities or weapon specials
+	 * @param cfg config of ability checked
+	 * @param tag_name le type of ability who is checked
+	 * @param filter config contain list of attribute who are researched in cfg
+	 *
+	 * @return true if all attribute with ability checked
+	 */
+	bool special_matches_filter(const config & cfg, const std::string& tag_name, const config & filter) const;
 	/**
 	 * Filter a list of abilities or weapon specials, removing any entries that don't own
 	 * the overwrite_specials attributes.

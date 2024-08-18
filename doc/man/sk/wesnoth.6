@@ -63,13 +63,8 @@ Identifikátor scény vo zvolenej výprave. Predvolená je prvá scéna.
 Preskoč [príbehové] obrazovky a dialógy až do konca \fBstart\fP udalosti.
 .TP 
 \fB\-\-clock\fP
-Pridáva možnosť zobraziť hodiny na testovanie časovača kreslenia.
-.TP 
-\fB\-\-config\-dir\fP\fI\ názov\fP
-Zastarané, použi \fB\-\-userdata\-dir\fP.
-.TP 
-\fB\-\-config\-path\fP
-Zastarané, použite \fB\-\-userdata\-path\fP.
+Adds the option to show a clock for testing the drawing timer. Also adds the
+option for showing the GUI Test Dialog.
 .TP 
 \fB\-\-core\fP\fI\ id\fP
 prepíše načítané jadro jadrom, ktorého id je zadané.
@@ -128,10 +123,10 @@ zapisovacie domény. Možné úrovne: \fBerror\fP,\ \fBwarning\fP,\ \fBinfo\fP,\
 \fB\-\-log\-precise\fP
 zobrazuje časové pečiatky vo výstupe protokolu s väčšou presnosťou.
 .TP 
-\fB\-\-log\-strict\fP
-nastavuje prísnu úroveň zapisovača. Všetky správy odoslané do domén tejto
-úrovne alebo závažnejších spôsobia zlyhanie testu jednotky bez ohľadu na
-výsledok víťazstva. Relevantné len pri použití s \fB\-u\fP.
+\fB\-\-log\-strict\fP\fI\ level\fP
+sets the strict \fIlevel\fP of the logger. Any messages sent to log domains of
+this \fIlevel\fP or more severe will cause the unit test to fail regardless of
+the victory result. Only relevant when used with \fB\-u\fP.
 .TP 
 \fB\-\-logdomains[\fP\fI=filter\fP\fB]\fP
 vypíše definované protokolovacie domény domény protokolovania (iba tie ktoré
@@ -145,6 +140,10 @@ in the logs directory under the userdata folder.
 \fB\-\-log\-to\-file\fP
 log output is written to a file. Cancels the effect of \-\-no\-log\-to\-file
 whether implicit or explicit.
+.TP 
+\fB\-\-no\-log\-sanitize\fP
+disables the anonymization that's normally applied when logging, for example
+replacing usernames with USER.
 .TP 
 \fB\-\-wnoconsole\fP
 Pre Windows, keď sa použije s \-\-no\-log\-to\-file, výstup sa zapíše do
@@ -290,18 +289,6 @@ rovnaké oprávnenia ako spustiteľnému súboru wesnoth.
 .TP 
 \fB\-S,\-\-use\-schema\fP\fI\ cesta\fP
 nastaví schému WML na použitie s \fB\-V,\-\-validate\fP.
-.TP 
-\fB\-\-userconfig\-dir\fP\fI\ názov\fP
-nastaví konfiguračný adresár používateľa na \fInázov\fP pod $HOME alebo "My
-Documents\eMy Games" pre Windows.  Môžete tiež zadať absolútnu cestu pre
-konfiguračný adresár mimo $HOME alebo "My Documents\eMy Games". V systéme
-Windows je možné zadať aj adresár relatívny k pracovnému adresáru procesu
-pomocou cesty začínajúcej na ".\e" alebo "..\e".  V systéme X11 je to
-predvolená cesta $XDG_CONFIG_HOME alebo $HOME/.config/wesnoth, v ostatných
-systémoch cesta userdata.
-.TP 
-\fB\-\-userconfig\-path\fP
-vypíše názov adresára s používateľskými nastaveniami a skončí.
 .TP 
 \fB\-\-userdata\-dir\fP\fI\ názov\fP
 nastaví adresár userdata na \fIname\fP pod $HOME alebo "My Documents\eMy Games"

@@ -66,14 +66,8 @@ escenari.
 Omet les pantalles i el diàleg [story] al final de l'esdeveniment \fBstart\fP.
 .TP 
 \fB\-\-clock\fP
-Afegeix l'opció de mostrar un rellotge per a provar el temporitzador de
-dibuix.
-.TP 
-\fB\-\-config\-dir\fP\fI\ name\fP
-Obsolet. Utilitzeu \fB\-\-userdata\-dir\fP.
-.TP 
-\fB\-\-config\-path\fP
-Obsolet. Utilitzeu \fB\-\-userdata\-path\fP.
+Adds the option to show a clock for testing the drawing timer. Also adds the
+option for showing the GUI Test Dialog.
 .TP 
 \fB\-\-core\fP\fI\ id_core\fP
 substitueix el nucli carregat pel de l'ID especificat.
@@ -136,11 +130,10 @@ defecte, el nivell \fBwarning\fP s'utilitza per a la majoria de dominis, però
 \fB\-\-log\-precise\fP
 shows the timestamps in log output with more precision.
 .TP 
-\fB\-\-log\-strict\fP
-estableix el nivell estricte del registrador. Els missatges enviats als
-dominis de registre d'aquest nivell o de més severs faran que la prova de la
-unitat falli independentment del resultat de la victòria. Només és rellevant
-quan s'utilitza amb \fB\-u\fP.
+\fB\-\-log\-strict\fP\fI\ level\fP
+sets the strict \fIlevel\fP of the logger. Any messages sent to log domains of
+this \fIlevel\fP or more severe will cause the unit test to fail regardless of
+the victory result. Only relevant when used with \fB\-u\fP.
 .TP 
 \fB\-\-logdomains[\fP\fI=filter\fP\fB]\fP
 llista els dominis de registre definits (només els que continguin \fIfilter\fP
@@ -154,6 +147,10 @@ in the logs directory under the userdata folder.
 \fB\-\-log\-to\-file\fP
 log output is written to a file. Cancels the effect of \-\-no\-log\-to\-file
 whether implicit or explicit.
+.TP 
+\fB\-\-no\-log\-sanitize\fP
+disables the anonymization that's normally applied when logging, for example
+replacing usernames with USER.
 .TP 
 \fB\-\-wnoconsole\fP
 For Windows, when used with \-\-no\-log\-to\-file, results in output being
@@ -305,18 +302,6 @@ acció dona a lua els mateixos permisos que l'executable wesnoth.
 .TP 
 \fB\-S,\-\-use\-schema\fP\fI\ path\fP
 sets the WML schema for use with \fB\-V,\-\-validate\fP.
-.TP 
-\fB\-\-userconfig\-dir\fP\fI\ name\fP
-estableix el directori de configuració de l'usuari a \fIname\fP a $HOME o «My
-Documents\eMy Games» per al Windows.  També podeu especificar un camí
-absolut per al directori de configuració fora de $HOME o «My Documents\eMy
-Games». Al Windows també és possible especificar un directori relatiu al
-directori de treball del procés utilitzant el camí que comença amb «.\e» o
-«..\e».  A l'X11, el valor per defecte n'és $XDG.CONFIG.HOME o
-$HOME/.config/wesnoth; en altres sistemes, al camí de les dades d'usuari.
-.TP 
-\fB\-\-userconfig\-path\fP
-imprimeix el camí del directori de configuració d'usuari i surt.
 .TP 
 \fB\-\-userdata\-dir\fP\fI\ name\fP
 estableix el directori de dades de l'usuari a \fIname\fP a $HOME o «My

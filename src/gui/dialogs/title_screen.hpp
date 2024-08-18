@@ -57,12 +57,13 @@ public:
 		MP_LOCAL,
 		// Start the map/scenario editor
 		MAP_EDITOR,
-		// Show credits
-		SHOW_ABOUT,
 		// Exit to desktop
 		QUIT_GAME,
 		// Used to reload all game data
 		RELOAD_GAME_DATA,
+		// Used to reshow the titlescreen, for example,
+		// in the case of a gui2 theme change
+		RELOAD_UI,
 	};
 
 private:
@@ -86,6 +87,9 @@ private:
 
 	/** Shows the debug clock. */
 	void show_debug_clock_window();
+
+	/** Shows the gui test window. */
+	void show_gui_test_dialog();
 
 	void hotkey_callback_select_tests();
 

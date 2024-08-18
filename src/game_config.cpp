@@ -23,6 +23,7 @@
 #include "serialization/string_utils.hpp"
 
 #include <cmath>
+#include <random>
 
 static lg::log_domain log_engine("engine");
 #define LOG_NG LOG_STREAM(info, log_engine)
@@ -313,8 +314,19 @@ void load_config(const config &v)
 	if(auto i = v.optional_child("images")){
 		using namespace game_config::images;
 
+		if (!i["game_title_background"].blank()) {
+			// Select a background at random
+			const auto backgrounds = utils::split(i["game_title_background"].str());
+			if (backgrounds.size() > 1) {
+				int r = rand() % (backgrounds.size());
+				game_title_background = backgrounds.at(r);
+			} else if (backgrounds.size() == 1) {
+				game_title_background = backgrounds.at(0);
+			}
+		}
+
+		// Allow game_title to be empty
 		game_title            = i["game_title"].str();
-		game_title_background = i["game_title_background"].str();
 		game_logo             = i["game_logo"].str();
 		game_logo_background  = i["game_logo_background"].str();
 
@@ -482,8 +494,8 @@ void add_color_info(const game_config_view& v, bool build_defaults)
 			for(const auto& s : utils::split(rgb.second)) {
 				try {
 					temp.push_back(color_t::from_hex_string(s));
-				} catch(const std::invalid_argument&) {
-					ERR_NG << "Invalid color in palette: " << s;
+				} catch(const std::invalid_argument& e) {
+					ERR_NG << "Invalid color in palette: " << s << " (" << e.what() << ")";
 				}
 			}
 
@@ -532,9 +544,9 @@ const std::vector<color_t>& tc_info(std::string_view name)
 	for(const auto& s : utils::split(name)) {
 		try {
 			temp.push_back(color_t::from_hex_string(s));
-		} catch(const std::invalid_argument&) {
+		} catch(const std::invalid_argument& e) {
 			static std::vector<color_t> stv;
-			ERR_NG << "Invalid color in palette: " << s;
+			ERR_NG << "Invalid color in palette: " << s << " (" << e.what() << ")";
 			return stv;
 		}
 	}
