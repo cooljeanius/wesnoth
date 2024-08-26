@@ -17,14 +17,12 @@ from unit_tree.team_colorizer import colorize
 #
 
 # HTML assets that need to be copied to the destination dir.
-HTML_RESOURCES = (
-    "style.css", "asc.gif", "bg.gif", "desc.gif" # Used by style.css:
-)
+HTML_RESOURCES = ("style.css", "asc.gif", "bg.gif", "desc.gif")  # Used by style.css:
 
 WESMERE_CSS_VERSION = "1.2.0"
 WESMERE_CSS_PREFIX = "https://www.wesnoth.org"
 
-WESMERE_HEADER = '''\
+WESMERE_HEADER = """\
 <!DOCTYPE html>
 
 <html class="no-js addonsweb" lang="en">
@@ -110,15 +108,15 @@ WESMERE_HEADER = '''\
     <h1>Wesnoth %(server_name)s Add-ons List</h1>
 
     <p>To install add-ons using the in-game client, choose “Add-ons” from the main menu, and click “Connect” to connect to the add-ons server. Pick the add-on you want to install from the list and click the “+” icon — the download will commence immediately and the add-on will be automatically installed once finished. Bear in mind that not all add-ons are singleplayer campaigns!</p>
-'''
+"""
 
-WESMERE_DOWNLOAD_HELP = '''\
+WESMERE_DOWNLOAD_HELP = """\
     <p><strong>If</strong> you really need or would prefer to download add-ons from this web page instead of using the built-in client, use a compatible program to uncompress the full contents of the <code class="noframe">tar.bz2</code> file — including the subfolder named after the add-on — to the <code class="noframe">data/add-ons/</code> folder in your game’s <a href="https://wiki.wesnoth.org/EditingWesnoth#The_user_data_directory">user data folder</a>. The add-on will be recognized next time you launch Wesnoth or press F5 on the main menu.</p>
 
     <p><b>Tip:</b> Hover over the type field to see an explanation of the add-on type and over an icon to see a description for the add-on.</p>
-'''
+"""
 
-WESMERE_FOOTER = '''\
+WESMERE_FOOTER = """\
 </div> <!-- end content -->
 
 </div> <!-- end main -->
@@ -132,7 +130,7 @@ WESMERE_FOOTER = '''\
 </div></div></div>
 </body>
 </html>
-'''
+"""
 
 ADDON_TYPES_INFO = {
     "scenario": {
@@ -209,6 +207,7 @@ def htmlescape(text, quote=True):
         return text
     return html.escape(text, quote)
 
+
 def urlencode(text):
     """
     Encode the given string to ensure it only contains valid URL characters
@@ -216,7 +215,8 @@ def urlencode(text):
     """
     if text is None:
         return text
-    return urllib.parse.quote(text, encoding='utf-8')
+    return urllib.parse.quote(text, encoding="utf-8")
+
 
 def output(path, url, datadir, data):
     """Write the HTML index of add-ons into the specified directory."""
@@ -245,11 +245,14 @@ def output(path, url, datadir, data):
     elif server_name == "trunk":
         server_name = "Testing (Trunk)"
 
-    w(WESMERE_HEADER % {
-        "css_version": WESMERE_CSS_VERSION,
-        "css_prefix": WESMERE_CSS_PREFIX,
-        "server_name": server_name,
-    })
+    w(
+        WESMERE_HEADER
+        % {
+            "css_version": WESMERE_CSS_VERSION,
+            "css_prefix": WESMERE_CSS_PREFIX,
+            "server_name": server_name,
+        }
+    )
     if url:
         w(WESMERE_DOWNLOAD_HELP)
 
@@ -261,30 +264,36 @@ def output(path, url, datadir, data):
         ("size", "Size", "'number'"),
         ("stats", "Traffic", "'number'"),
         ("date", "Date", "'number'"),
-        ("locales", "Translations", "'string'")
+        ("locales", "Translations", "'string'"),
     ]
     for count, (header_class, header_label, sort_type) in enumerate(table_headers):
         if sort_type:
-            w('<th onclick="clickSort(%d, %s, this)" class="addon-%s header">%s&nbsp;&nbsp;&nbsp;</th>' % (count, sort_type, header_class, header_label))
+            w(
+                '<th onclick="clickSort(%d, %s, this)" class="addon-%s header">%s&nbsp;&nbsp;&nbsp;</th>'
+                % (count, sort_type, header_class, header_label)
+            )
         else:
-            w('<th class="addon-%s header">%s&nbsp;&nbsp;&nbsp;</th>' % (header_class, header_label))
-    w('</tr>\n</thead>\n<tbody>')
+            w(
+                '<th class="addon-%s header">%s&nbsp;&nbsp;&nbsp;</th>'
+                % (header_class, header_label)
+            )
+    w("</tr>\n</thead>\n<tbody>")
 
     addons = data.get_all(tag="campaigns")[0]
     for addon in addons.get_all(tag="campaign"):
         v = addon.get_text_val
 
-        addon_id = v("name") # Escaped as part of a path composition later on.
+        addon_id = v("name")  # Escaped as part of a path composition later on.
         title = htmlescape(v("title", "unknown"))
-        size = float(v("size", "0")) # bytes
-        display_size = size / (1024 * 1024) # MiB
+        size = float(v("size", "0"))  # bytes
+        display_size = size / (1024 * 1024)  # MiB
         addon_type = htmlescape(v("type", "none"))
         version = htmlescape(v("version", "unknown"))
         author = htmlescape(v("author", "unknown"))
-        feedback_url = v("feedback_url", None) # Escaped by a function call.
+        feedback_url = v("feedback_url", None)  # Escaped by a function call.
 
         icon = htmlescape(v("icon", ""))
-        description = htmlescape(v('description', '(no description)'))
+        description = htmlescape(v("description", "(no description)"))
         imgurl = ""
 
         downloads = int(v("downloads", "0"))
@@ -297,11 +306,14 @@ def output(path, url, datadir, data):
 
         if icon:
             icon = icon.strip()
-            uri_manifest = re.match('^data:(image/(?:png|jpeg));base64,', icon)
+            uri_manifest = re.match("^data:(image/(?:png|jpeg));base64,", icon)
 
             if uri_manifest:
-                if uri_manifest.group(1) not in ('image/png', 'image/jpeg'):
-                    sys.stderr.write("Data URI icon using unsupported content type " + uri_manifest.group(1))
+                if uri_manifest.group(1) not in ("image/png", "image/jpeg"):
+                    sys.stderr.write(
+                        "Data URI icon using unsupported content type "
+                        + uri_manifest.group(1)
+                    )
                 else:
                     imgurl = icon
             else:
@@ -332,25 +344,34 @@ def output(path, url, datadir, data):
                         imgurl = "icons/missing-image.png"
                 images_to_tc.append((src, path + "/" + imgurl))
 
-        w('<tr>')
+        w("<tr>")
 
         w('<td class="addon-type">')
         if addon_type in ADDON_TYPES_INFO:
-            w('%(short)s<div class="type-tooltip"><b>%(long)s</b><br/>%(help)s</div>' \
-                % ADDON_TYPES_INFO[addon_type])
+            w(
+                '%(short)s<div class="type-tooltip"><b>%(long)s</b><br/>%(help)s</div>'
+                % ADDON_TYPES_INFO[addon_type]
+            )
         else:
             w(addon_type)
-        w('</td>')
+        w("</td>")
 
-        w(('<td class="addon-icon"><img alt="" src="%s"/>'
-           '<div class="desc-tooltip"><b>%s</b><pre>%s</pre></div></td>') % (
-               imgurl, title, description))
+        w(
+            (
+                '<td class="addon-icon"><img alt="" src="%s"/>'
+                '<div class="desc-tooltip"><b>%s</b><pre>%s</pre></div></td>'
+            )
+            % (imgurl, title, description)
+        )
 
         def make_icon_button(url, label, icon):
-            w(('<a href="{0}" title="{1}">'
-               '<i class="fa fa-fw fa-2x fa-{2}" aria-hidden="true"></i>'
-               '<span class="sr-only">{1}</span></a>').format(
-                    htmlescape(url), htmlescape(label), icon))
+            w(
+                (
+                    '<a href="{0}" title="{1}">'
+                    '<i class="fa fa-fw fa-2x fa-{2}" aria-hidden="true"></i>'
+                    '<span class="sr-only">{1}</span></a>'
+                ).format(htmlescape(url), htmlescape(label), icon)
+            )
 
         w('<td class="addon"><span hidden>%s</span>' % title)
         if url or feedback_url:
@@ -360,27 +381,34 @@ def output(path, url, datadir, data):
             if url:
                 link = url.rstrip("/") + "/" + urlencode(addon_id) + ".tar.bz2"
                 make_icon_button(link, "Download", "download")
-            w('</span>')
-        w(('<b>%s</b><br/>'
-           '<span class="addon-meta"><span class="addon-meta-label">Version:</span> %s<br/>'
-           '<span class="addon-meta-label">Author:</span> %s</span></td>') % (
-               title, version, author))
+            w("</span>")
+        w(
+            (
+                "<b>%s</b><br/>"
+                '<span class="addon-meta"><span class="addon-meta-label">Version:</span> %s<br/>'
+                '<span class="addon-meta-label">Author:</span> %s</span></td>'
+            )
+            % (title, version, author)
+        )
 
         w("<td><span hidden>%d</span><b>%.2f</b>&nbsp;MiB</td>" % (size, display_size))
 
         w("<td><b>%d</b> down<br/>%s up</td>" % (downloads, uploads))
 
-        w('<td><span hidden>%d</span>%s</td>' % (timestamp, display_ts))
+        w("<td><span hidden>%d</span>%s</td>" % (timestamp, display_ts))
 
         w("<td>%s</td>" % htmlescape(", ".join(languages), quote=False))
 
         w("</tr>")
 
-    w('</tbody>\n</table>')
+    w("</tbody>\n</table>")
     w(WESMERE_FOOTER)
 
-    sys.stderr.write("Done outputting html, now generating %d TC'ed images\n" % len(images_to_tc))
+    sys.stderr.write(
+        "Done outputting html, now generating %d TC'ed images\n" % len(images_to_tc)
+    )
     for pair in images_to_tc:
         colorize(None, pair[0], pair[1])
+
 
 # kate: indent-mode normal; encoding utf-8; space-indent on;

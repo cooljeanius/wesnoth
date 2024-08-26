@@ -3,12 +3,9 @@
 major = 1
 minor = 19
 release = 3
-dev_suffix = "+dev" # either use "+dev", "-dev", "" (empty string) or None
+dev_suffix = "+dev"  # either use "+dev", "-dev", "" (empty string) or None
 
-as_string = "{}.{}.{}{}".format(major,
-                                minor,
-                                release,
-                                dev_suffix if dev_suffix else "")
+as_string = "{}.{}.{}{}".format(major, minor, release, dev_suffix if dev_suffix else "")
 
 if __name__ == "__main__":
     print("WML Tools version module")

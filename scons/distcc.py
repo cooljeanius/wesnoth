@@ -4,24 +4,27 @@
 
 import os
 
+
 def exists():
     return True
 
+
 def generate(env):
-        print(env["ENV"]["PATH"])
-        env['DISTCC'] = env.WhereIs("distcc")
-        env['CC'] = '$DISTCC %s' % env['CC']
-        env['CXX'] = '$DISTCC %s' % env['CXX']
-        for i in ['HOME',
-                  'DISTCC_HOSTS',
-                  'DISTCC_VERBOSE',
-                  'DISTCC_LOG',
-                  'DISTCC_FALLBACK',
-                  'DISTCC_MMAP',
-                  'DISTCC_SAVE_TEMPS',
-                  'DISTCC_TCP_CORK',
-                  'DISTCC_SSH',
-                  'SSH_AUTH_SOCK'
-                  ]:
-            if i in os.environ and i not in env:
-                env['ENV'][i] = os.environ[i]
+    print(env["ENV"]["PATH"])
+    env["DISTCC"] = env.WhereIs("distcc")
+    env["CC"] = "$DISTCC %s" % env["CC"]
+    env["CXX"] = "$DISTCC %s" % env["CXX"]
+    for i in [
+        "HOME",
+        "DISTCC_HOSTS",
+        "DISTCC_VERBOSE",
+        "DISTCC_LOG",
+        "DISTCC_FALLBACK",
+        "DISTCC_MMAP",
+        "DISTCC_SAVE_TEMPS",
+        "DISTCC_TCP_CORK",
+        "DISTCC_SSH",
+        "SSH_AUTH_SOCK",
+    ]:
+        if i in os.environ and i not in env:
+            env["ENV"][i] = os.environ[i]

@@ -38,11 +38,9 @@ def wmlerr_debug():
     is_utest = True
 
 
-
 def ansi_setEnabled(value):
     global enabled_text_col
     enabled_text_col = value
-
 
 
 def wincol_setEnabled(value):
@@ -51,48 +49,44 @@ def wincol_setEnabled(value):
     global default_console_status
     global default_color
     enabled_text_col = value
-    if sys.platform.startswith('win') and enabled_text_col:
+    if sys.platform.startswith("win") and enabled_text_col:
         # and now, let's start playing with the Win32 API
         # first of all, we need to get a handle to the console output
         handle = ctypes.windll.kernel32.GetStdHandle(STD_OUTPUT_HANDLE)
         # and then we store the current console status
         # to be able to reset the original color
-        ctypes.windll.kernel32.GetConsoleScreenBufferInfo(handle,
-                                                          console_defaults)
+        ctypes.windll.kernel32.GetConsoleScreenBufferInfo(handle, console_defaults)
         # by using struct.unpack_from, platform endianness is automatically
         # handled
         # this is why I'm using it, instead of a bitwise operation
         default_color = struct.unpack_from("H", console_defaults, 8)[0]
 
 
-
 def warnall():
     return _warnall
-
 
 
 def set_warnall(value):
     _warnall = value
 
 
-
 class WmlError(ValueError):
     pass
+
 
 class WmlWarning(UserWarning):
     pass
 
 
-
 def print_wmlerr(finfo, message, iserr):
     # red if error, blue if warning
-    ansi_color = '\033[91;1m' if iserr else '\033[94m'
+    ansi_color = "\033[91;1m" if iserr else "\033[94m"
     errtype = "error:" if iserr else "warning:"
     # now we have ascii_color and errtype values
     # here we print the error/warning.
     # 1) On Windows, write "error" in red and "warning" in blue
     #    by using the Win32 API (except if --no-text-colors is used)
-    if sys.platform.startswith('win') and enabled_text_col:
+    if sys.platform.startswith("win") and enabled_text_col:
         # a syntactic sugar to make lines shorter
         kernel32 = ctypes.windll.kernel32
         # first flush the stderr, otherwise colors might be changed in
@@ -106,8 +100,7 @@ def print_wmlerr(finfo, message, iserr):
         print(errtype + " ", end="", file=sys.stderr)
         # flush again and write file name in yellow on the same line
         sys.stderr.flush()
-        kernel32.SetConsoleTextAttribute(handle,
-                                         FG_RED | FG_GREEN | FG_INTENSITY)
+        kernel32.SetConsoleTextAttribute(handle, FG_RED | FG_GREEN | FG_INTENSITY)
         print(finfo + ": ", end="", file=sys.stderr)
         # then flush again, reset the color and finish writing
         sys.stderr.flush()
@@ -118,17 +111,15 @@ def print_wmlerr(finfo, message, iserr):
     # 2) On posix we write "error" in red and "warning" in blue
     #    by using ansi escape codes (except if --no-text-colors is used)
     elif os.name == "posix" and enabled_text_col:
-        msg = (ansi_color + errtype + ' \033[0m\033[93m' + finfo +
-               ':\033[0m ' + message)
+        msg = ansi_color + errtype + " \033[0m\033[93m" + finfo + ":\033[0m " + message
         print(msg, file=sys.stderr)
     # 3) On non-posix and non-windows system we don't use colors
     #    (is it ever possible?).
     #    If --no-text-colors option is used, than we don't use colors
     #    regardless of OS.
     else:
-        msg = errtype + ' ' + finfo + ': ' + message
+        msg = errtype + " " + finfo + ": " + message
         print(msg, file=sys.stderr)
-
 
 
 def my_showwarning(message, category, filename, lineno, file=None, line=None):
@@ -136,12 +127,10 @@ def my_showwarning(message, category, filename, lineno, file=None, line=None):
         finfo, msg = message.args[0].split(": ", 1)
         print_wmlerr(finfo, msg, False)
     except OSError:
-        pass # the file (probably stderr) is invalid - this warning gets lost.
-
+        pass  # the file (probably stderr) is invalid - this warning gets lost.
 
 
 warnings.showwarning = my_showwarning
-
 
 
 def wmlerr(finfo, message, errtype=WmlError):
@@ -153,7 +142,6 @@ def wmlerr(finfo, message, errtype=WmlError):
             sys.exit(1)
     else:
         raise errtype(finfo + ": " + message)
-
 
 
 def wmlwarn(finfo, message):
