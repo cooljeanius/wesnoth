@@ -1,21 +1,34 @@
-## Version 1.19.2+dev
+## Version 1.19.3+dev
  ### Add-ons client
  ### Add-ons server
  ### Campaigns
-   * Under the Burnings Suns
-     * S04: added sprite for the Cold Dagger item (PR #9189)
  ### Editor
  ### Multiplayer
  ### Lua API
  ### Packaging
  ### Terrain
  ### Translations
+   * Updated translations: Bengali, British English, Chinese (Simplified), Japanese, Turkish
+ ### Units
+ ### User interface
+ ### WML Engine
+ ### Miscellaneous and Bug Fixes
+
+## Version 1.19.3
+ ### Campaigns
+   * Under the Burnings Suns
+     * S04: added sprite for the Cold Dagger item (PR #9189)
+ ### Editor
+   * Added Show Tool Information toggle option in the menus and toolbar to allow hiding the informational tooltip on the edge of the screen that shows the current editor tool's usage and palette information
+ ### Translations
    * Updated translations: Bengali, British English, Chinese (Simplified), Czech, French
  ### Units
    * New cat units: Jumpcat, Forest Lion, and zombie/soulless cat
  ### User interface
+   * Added a few more images that can be shown on the new titlescreen
  ### WML Engine
- ### Miscellaneous and Bug Fixes
+   * Fix crash when weapon specials' filters lead to infinite recursion (issue #8940)
+   * Updated xBRZ implementation to v1.8
 
 ## Version 1.19.2
  ### Campaigns

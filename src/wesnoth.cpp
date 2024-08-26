@@ -344,6 +344,12 @@ static int process_command_args(commandline_options& cmdline_opts)
 		}
 	}
 
+	if(!cmdline_opts.nobanner) {
+		PLAIN_LOG << "Battle for Wesnoth v" << game_config::revision  << " " << game_config::build_arch();
+		const std::time_t t = std::time(nullptr);
+		PLAIN_LOG << "Started on " << ctime(&t);
+	}
+
 	if(cmdline_opts.usercache_path) {
 		std::cout << filesystem::get_cache_dir();
 		return 0;
@@ -355,52 +361,31 @@ static int process_command_args(commandline_options& cmdline_opts)
 	}
 
 	if(cmdline_opts.data_dir) {
-		const std::string datadir = *cmdline_opts.data_dir;
-		PLAIN_LOG << "Starting with directory: '" << datadir << "'";
-#ifdef _WIN32
-		// use c_str to ensure that index 1 points to valid element since c_str() returns null-terminated string
-		if(datadir.c_str()[1] == ':') {
-#else
-		if(datadir[0] == '/') {
-#endif
-			game_config::path = datadir;
-		} else {
-			game_config::path = filesystem::get_cwd() + '/' + datadir;
-		}
-
-		PLAIN_LOG << "Now have with directory: '" << game_config::path << "'";
-		game_config::path = filesystem::normalize_path(game_config::path, true, true);
+		game_config::path = filesystem::normalize_path(*cmdline_opts.data_dir, true, true);
 		if(!cmdline_opts.nobanner) {
 			PLAIN_LOG << "Overriding data directory with '" << game_config::path << "'";
 		}
-
-		if(!filesystem::is_directory(game_config::path)) {
-			PLAIN_LOG << "Could not find directory '" << game_config::path << "'";
-			throw config::error("directory not found");
-		}
-
-		// don't update font as we already updating it in game ctor
-		// font_manager_.update_font_path();
-	}
-
-	if(!cmdline_opts.nobanner) {
-		PLAIN_LOG << "Battle for Wesnoth v" << game_config::revision  << " " << game_config::build_arch();
-		const std::time_t t = std::time(nullptr);
-		PLAIN_LOG << "Started on " << ctime(&t);
-	}
-
-	if(std::string exe_dir = filesystem::get_exe_dir(); !exe_dir.empty()) {
-		if(std::string auto_dir = filesystem::autodetect_game_data_dir(std::move(exe_dir)); !auto_dir.empty()) {
-			if(!cmdline_opts.nobanner) {
-				PLAIN_LOG << "Automatically found a possible data directory at: " << auto_dir;
-			}
-			game_config::path = std::move(auto_dir);
-		} else if(game_config::path.empty()) {
-			if (!cmdline_opts.data_dir.has_value()) {
-				PLAIN_LOG << "Cannot find a data directory. Specify one with --data-dir";
+	} else {
+		// if a pre-defined path does not exist this will empty it
+		game_config::path = filesystem::normalize_path(game_config::path, true, true);
+		if(game_config::path.empty()) {
+			if(std::string exe_dir = filesystem::get_exe_dir(); !exe_dir.empty()) {
+				if(std::string auto_dir = filesystem::autodetect_game_data_dir(std::move(exe_dir)); !auto_dir.empty()) {
+					if(!cmdline_opts.nobanner) {
+						PLAIN_LOG << "Automatically found a possible data directory at: " << auto_dir;
+					}
+					game_config::path = filesystem::normalize_path(auto_dir, true, true);
+				}
+			} else {
+				PLAIN_LOG << "Cannot find game data directory. Specify one with --data-dir";
 				return 1;
 			}
 		}
+	}
+
+	if(!filesystem::is_directory(game_config::path)) {
+		PLAIN_LOG << "Could not find game data directory '" << game_config::path << "'";
+		return 1;
 	}
 
 	if(cmdline_opts.data_path) {
@@ -542,9 +527,8 @@ static int process_command_args(commandline_options& cmdline_opts)
 	if(cmdline_opts.preprocess_defines || cmdline_opts.preprocess_input_macros || cmdline_opts.preprocess_path) {
 		// It would be good if this was supported for running tests too, possibly for other uses.
 		// For the moment show an error message instead of leaving the user wondering why it doesn't work.
-		PLAIN_LOG << "That --preprocess-* option is only supported when using --preprocess or --validate-wml.";
-		// Return an error status other than -1, because in our caller -1 means no error
-		return -2;
+		std::cerr << "That --preprocess-* option is only supported when using --preprocess or --validate-wml.";
+		return 2;
 	}
 
 	// Not the most intuitive solution, but I wanted to leave current semantics for now
@@ -898,6 +882,8 @@ static int do_gameloop(commandline_options& cmdline_opts)
 		case gui2::dialogs::title_screen::RELOAD_GAME_DATA:
 			gui2::dialogs::loading_screen::display([&config_manager]() {
 				config_manager.reload_changed_game_config();
+				gui2::init();
+				gui2::switch_theme(prefs::get().gui2_theme());
 			});
 			break;
 		case gui2::dialogs::title_screen::MAP_EDITOR:
@@ -982,11 +968,11 @@ int main(int argc, char** argv)
 		safe_exit(res);
 	} catch(const boost::program_options::error& e) {
 		// logging hasn't been initialized by this point
+		std::cerr << "Error in command line: " << e.what() << std::endl;
 		std::string error = "Error parsing command line arguments: ";
 		error += e.what();
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", error.c_str(), nullptr);
-		std::cerr << "Error in command line: " << e.what();
-		error_exit(1);
+		error_exit(2);
 	} catch(const video::error& e) {
 		PLAIN_LOG << "Video system error: " << e.what();
 		error_exit(1);
@@ -995,9 +981,6 @@ int main(int argc, char** argv)
 		error_exit(1);
 	} catch(const config::error& e) {
 		PLAIN_LOG << e.message;
-		error_exit(1);
-	} catch(const gui::button::error&) {
-		PLAIN_LOG << "Could not create button: Image could not be found";
 		error_exit(1);
 	} catch(const video::quit&) {
 		// just means the game should quit
