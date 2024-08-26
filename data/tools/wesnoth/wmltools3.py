@@ -6,8 +6,15 @@ wmltools.py -- Python routines for working with a Battle For Wesnoth WML tree
 """
 
 from functools import total_ordering
-import collections, codecs
-import sys, os, re, sre_constants, hashlib, glob, gzip
+import collections
+import codecs
+import sys
+import os
+import re
+import sre_constants
+import hashlib
+import glob
+import gzip
 import string
 import enum
 
@@ -508,7 +515,7 @@ def actualtype(a):
         atype = "shortname"
     elif a == "":
         atype = "empty"
-    elif not ' ' in a:
+    elif ' ' not in a:
         atype = "name"
     else:
         atype = "string"
@@ -800,7 +807,7 @@ class CrossRef:
                             here._raw_optional_args.append([line.strip().split()[1],""])
                         elif line.strip()[0] != "#":
                             state = States.MACRO_BODY
-                    elif state == States.MACRO_OPTIONAL_ARGUMENT and not "#endarg" in line:
+                    elif state == States.MACRO_OPTIONAL_ARGUMENT and "#endarg" not in line:
                         here._raw_optional_args[-1][1] += line
                     elif state == States.MACRO_OPTIONAL_ARGUMENT:
                         end_arg_index = line.index("#endarg")
@@ -872,7 +879,7 @@ class CrossRef:
     macro found in {}: {}".format(filename,
                                   ", ".join(temp_docstrings.keys())),
                       file=sys.stderr)
-        except UnicodeDecodeError as e:
+        except UnicodeDecodeError:
             print('wmlscope: "{}" is not a valid UTF-8 file'.format(filename), file=sys.stderr)
 
     def __init__(self, dirpath=[], filelist=None, exclude="", warnlevel=0, progress=False):
@@ -1041,7 +1048,7 @@ class CrossRef:
                                     beneath = 0
                                     attack_name = default_icon = None
                                     have_icon = False
-                                elif "name=" in line and not "no-icon" in comment:
+                                elif "name=" in line and "no-icon" not in comment:
                                     attack_name = line[line.find("name=")+5:].strip()
                                     default_icon = os.path.join("attacks", attack_name  + ".png")
                                 elif "icon=" in line and beneath == 0:
@@ -1063,7 +1070,7 @@ class CrossRef:
                                     beneath -= 1
                                 elif line.strip().startswith("["):
                                     beneath += 1
-                except UnicodeDecodeError as e:
+                except UnicodeDecodeError:
                     pass # to not have the invalid UTF-8 file warning printed twice
         # Check whether each namespace has a defined export property
         if self.warnlevel >= 1:
@@ -1167,7 +1174,7 @@ class Translations:
         self.topdir = topdir
     def get(self, textdomain, isocode, key, default):
         t = (textdomain, isocode)
-        if not t in self.translations:
+        if t not in self.translations:
             try:
                 self.translations[t] = Translation(textdomain, isocode, self.topdir)
             except TranslationError as e:

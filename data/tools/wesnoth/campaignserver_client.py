@@ -1,7 +1,17 @@
 #!/usr/bin/env python3
 
-import gzip, zlib, io
-import socket, ssl, struct, glob, sys, shutil, threading, os, fnmatch
+import gzip
+import zlib
+import io
+import socket
+import ssl
+import struct
+import glob
+import sys
+import shutil
+import threading
+import os
+import fnmatch
 import wesnoth.wmlparser3 as wmlparser
 
 # See the following files (among others):

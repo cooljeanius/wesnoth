@@ -3,7 +3,11 @@
 """
 Various helpers for use by the wmlunits tool.
 """
-import sys, os, re, glob, shutil, copy, subprocess, traceback
+import sys
+import os
+import re
+import shutil
+import traceback
 
 import wesnoth.wmlparser3 as wmlparser3
 from unit_tree.team_colorizer import colorize
@@ -381,14 +385,14 @@ class WesnothList:
                                  fid,
                                  str(uid)))
                         continue
-                    if not eid in unit.eras:
+                    if eid not in unit.eras:
                         unit.eras.append(eid)
                     unit.factions.append((eid, fid))
         # as a special case, add units from this addon but with no faction
         for unit in list(self.unit_lookup.values()):
             if unit.campaigns[0] == self.cid:
                 if not unit.factions:
-                    if not eid in unit.eras:
+                    if eid not in unit.eras:
                         unit.eras.append(eid)
                     unit.factions.append((eid, None))
 
@@ -444,7 +448,7 @@ class UnitForest:
                 if not c:
                     continue
                 u.children.append(c)
-                if not uid in c.parent_ids:
+                if uid not in c.parent_ids:
                     c.parent_ids.append(uid)
 
         # Put all roots into the forest

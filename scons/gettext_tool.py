@@ -3,7 +3,6 @@ from os.path import join
 import os
 from SCons.Builder import Builder
 from SCons.Util    import WhereIs
-from config_check_utils import find_include
 
 def exists():
     return True

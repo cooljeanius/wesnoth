@@ -1,5 +1,6 @@
 # vi: syntax=python:et:ts=4
-import os, sys
+import os
+import sys
 from os.path import join
 from os import environ
 from SCons.Util import AppendPath

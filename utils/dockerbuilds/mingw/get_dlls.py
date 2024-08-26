@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
-import pefile, pathlib, shutil
+import pefile
+import pathlib
+import shutil
 
 dlls = set()
 dllpath = pathlib.Path('/windows/mingw64/bin')
