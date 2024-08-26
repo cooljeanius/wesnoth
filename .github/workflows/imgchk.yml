@@ -1,0 +1,21 @@
+name: imgchk
+
+on: [push, pull_request]
+
+env:
+  WESNOTH_VERSION: 1.17.25
+
+jobs:
+  woptipng:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Verify images
+      uses: czyzby/wesnoth-png-optimizer@v1
+      if: always()
+      with:
+        path: data/test/
+        wesnoth-version: ${{ env.WESNOTH_VERSION }}
+        threshold: 99
