@@ -12,7 +12,7 @@ def autoscan(pathdir):
             m = re.search(rx, name)
             if m:
                 value = os.path.realpath(os.path.join(root, name))
-                value = value [ len(parentdir) +1 : ]
+                value = value[len(parentdir) + 1:]
                 if os.name == "posix":
                     value = re.sub(r'^\/', '', value)
                 else:

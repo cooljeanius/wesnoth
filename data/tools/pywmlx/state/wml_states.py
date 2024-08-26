@@ -5,7 +5,6 @@ import pywmlx.nodemanip
 from pywmlx.wmlerr import wmlerr
 
 
-
 class WmlIdleState:
     def __init__(self):
         self.regex = None
@@ -20,8 +19,7 @@ class WmlIdleState:
         if m:
             xline = None
             _nextstate = 'wml_idle'
-        return (xline, _nextstate) # 'wml_define'
-
+        return (xline, _nextstate)  # 'wml_define'
 
 
 class WmlCheckdomState:
@@ -33,7 +31,6 @@ class WmlCheckdomState:
         pywmlx.state.machine.switchdomain(lineno, match.group(1))
         xline = None
         return (xline, 'wml_idle')
-
 
 
 class WmlCheckpoState:
@@ -51,12 +48,12 @@ class WmlCheckpoState:
             # on #po: addedinfo, or #po-override: overrideinfo
             pending_infos = pywmlx.state.machine._pending_cinfo[match.group(1)]
             if pending_infos is None:
-                pywmlx.state.machine._pending_cinfo[match.group(1)] = [ match.group(2) ]
+                pywmlx.state.machine._pending_cinfo[match.group(1)] = [
+                    match.group(2)]
             else:
                 pending_infos.append(match.group(2))
             xline = None
         return (xline, 'wml_idle')
-
 
 
 class WmlCommentState:
@@ -67,7 +64,6 @@ class WmlCommentState:
     def run(self, xline, lineno, match):
         xline = None
         return (xline, 'wml_idle')
-
 
 
 # On WML you can also have _ << translatable string >>, even if quite rare
@@ -108,7 +104,7 @@ class WmlStr02:
         if match.group(1) is not None:
             loc_multiline = False
             loc_string = match.group(1)
-            xline = xline [ match.end(): ]
+            xline = xline[match.end():]
         # match.group(2) exists, so it is a multi-line string
         # (group(1) will not exist, than)
         elif match.group(2) is not None:
@@ -120,20 +116,19 @@ class WmlStr02:
             if mydebug:
                 err_message = ("wmlstr02 assertion error (DEBUGGING)\n" +
                                'g1: ' + str(match.group(1)) + '\n' +
-                               'g2: ' + str(match.group(2)) )
+                               'g2: ' + str(match.group(2)))
                 finfo = pywmlx.nodemanip.fileref + ":" + str(lineno)
                 wmlerr(finfo, err_message)
             else:
                 wmlerr('wmlxgettext python sources',
-                   'wmlstr02 assertion error\n'
-                   'please report a bug if you encounter this error message')
+                       'wmlstr02 assertion error\n'
+                       'please report a bug if you encounter this error message')
         pywmlx.state.machine._pending_wmlstring = (
             pywmlx.state.machine.PendingWmlString(
                 lineno, loc_string, loc_multiline, loc_translatable, israw=True
             )
         )
         return (xline, _nextstate)
-
 
 
 class WmlTagState:
@@ -158,23 +153,23 @@ class WmlTagState:
         else:
             opentag = '[' + match.group(2) + ']'
             pywmlx.nodemanip.newnode(opentag)
-            if(opentag == '[lua]'):
+            if (opentag == '[lua]'):
                 pywmlx.state.machine._on_luatag = True
             # xdebug_str = opentag + ': ' + str(lineno)
         # print(xdebug_str, file=xdebug)
         # xdebug.close()
         pywmlx.state.machine.clear_pending_infos(lineno, error=True)
-        xline = xline [ match.end(): ]
+        xline = xline[match.end():]
         return (xline, 'wml_idle')
-
 
 
 class WmlGetinfState:
     def __init__(self):
-        rx = ( r'\s*(speaker|id|role|description|condition|type|race|gender)' +
-               r'\s*=\s*(.*)' )
+        rx = (r'\s*(speaker|id|role|description|condition|type|race|gender)' +
+              r'\s*=\s*(.*)')
         self.regex = re.compile(rx, re.I)
         self.iffail = 'wml_str01'
+
     def run(self, xline, lineno, match):
         _nextstate = 'wml_idle'
         if '"' in match.group(2):
@@ -185,7 +180,6 @@ class WmlGetinfState:
             xline = None
             pywmlx.nodemanip.addWmlInfo(loc_wmlinfo)
         return (xline, _nextstate)
-
 
 
 class WmlStr01:
@@ -205,14 +199,13 @@ class WmlStr01:
             loc_multiline = True
             _nextstate = 'wml_str10'
         else:
-            xline = xline [ match.end(): ]
+            xline = xline[match.end():]
         pywmlx.state.machine._pending_wmlstring = (
             pywmlx.state.machine.PendingWmlString(
                 lineno, match.group(2), loc_multiline, loc_translatable, israw=False
             )
         )
         return (xline, _nextstate)
-
 
 
 # well... the regex will always be true on this state, so iffail will never
@@ -224,15 +217,14 @@ class WmlStr10:
 
     def run(self, xline, lineno, match):
         _nextstate = None
-        pywmlx.state.machine._pending_wmlstring.addline( match.group(1) )
+        pywmlx.state.machine._pending_wmlstring.addline(match.group(1))
         if match.group(2) == "":
             _nextstate = 'wml_str10'
             xline = None
         else:
             _nextstate = 'wml_idle'
-            xline = xline [ match.end(): ]
+            xline = xline[match.end():]
         return (xline, _nextstate)
-
 
 
 class WmlStr20:
@@ -245,15 +237,14 @@ class WmlStr20:
         _nextstate = 'wml_str20'
         if realmatch:
             pywmlx.state.machine._pending_wmlstring.addline(
-                realmatch.group(1) )
-            xline = xline [ realmatch.end(): ]
+                realmatch.group(1))
+            xline = xline[realmatch.end():]
             _nextstate = 'wml_idle'
         else:
             pywmlx.state.machine._pending_wmlstring.addline(xline)
             xline = None
             _nextstate = 'wml_str20'
         return (xline, _nextstate)
-
 
 
 # Only if the symbol '<<' is found inside a [lua] tag, then it means we are
@@ -287,11 +278,10 @@ class WmlGoluaState:
 
     def run(self, xline, lineno, match):
         if pywmlx.state.machine._on_luatag:
-            xline = xline [ match.end(): ]
+            xline = xline[match.end():]
             return (xline, 'lua_idle')
         else:
             return (xline, 'wml_final')
-
 
 
 class WmlFinalState:
@@ -307,21 +297,20 @@ class WmlFinalState:
         return (xline, 'wml_idle')
 
 
-
 def setup_wmlstates():
-    for statename, stateclass in [ ('wml_idle', WmlIdleState),
-                                   # ('wml_define', WmlDefineState),
-                                   ('wml_checkdom', WmlCheckdomState),
-                                   ('wml_checkpo', WmlCheckpoState),
-                                   ('wml_comment', WmlCommentState),
-                                   ('wml_str02', WmlStr02),
-                                   ('wml_tag', WmlTagState),
-                                   ('wml_getinf', WmlGetinfState),
-                                   ('wml_str01', WmlStr01),
-                                   ('wml_str10', WmlStr10),
-                                   ('wml_str20', WmlStr20),
-                                   ('wml_golua', WmlGoluaState),
-                                   ('wml_final', WmlFinalState)]:
+    for statename, stateclass in [('wml_idle', WmlIdleState),
+                                  # ('wml_define', WmlDefineState),
+                                  ('wml_checkdom', WmlCheckdomState),
+                                  ('wml_checkpo', WmlCheckpoState),
+                                  ('wml_comment', WmlCommentState),
+                                  ('wml_str02', WmlStr02),
+                                  ('wml_tag', WmlTagState),
+                                  ('wml_getinf', WmlGetinfState),
+                                  ('wml_str01', WmlStr01),
+                                  ('wml_str10', WmlStr10),
+                                  ('wml_str20', WmlStr20),
+                                  ('wml_golua', WmlGoluaState),
+                                  ('wml_final', WmlFinalState)]:
         st = stateclass()
         pywmlx.state.machine.addstate(statename,
-            State(st.regex, st.run, st.iffail) )
+                                      State(st.regex, st.run, st.iffail))

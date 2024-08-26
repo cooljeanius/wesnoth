@@ -69,7 +69,8 @@ def do_stats(po_files):
 
         try:
             # print('running {}'.format(' '.join(command_args)))
-            byte_output = subprocess.check_output(command_args, env=env, stderr=subprocess.STDOUT)
+            byte_output = subprocess.check_output(
+                command_args, env=env, stderr=subprocess.STDOUT)
 
             # print('output: {}'.format(output))
             str_output = byte_output.decode("utf-8")
@@ -78,7 +79,8 @@ def do_stats(po_files):
             current.parse(str_output)
             total += current
             if verbose:
-                print('File {}: {} strings translated'.format(po_file, current.translated_percent()))
+                print('File {}: {} strings translated'.format(
+                    po_file, current.translated_percent()))
 
         except subprocess.CalledProcessError as e:
             print('yo {}'.format(e.returncode))
@@ -96,7 +98,8 @@ def write_percentage_wml(wml_file, percent):
     if 'percent=' in text:
         text = re.sub(r'percent=\d+', percent_line, text)
     else:
-        text = re.sub(r'\[/locale\]', '    {}\n[/locale]'.format(percent_line), text)
+        text = re.sub(r'\[/locale\]',
+                      '    {}\n[/locale]'.format(percent_line), text)
 
     with open(wml_file, 'w') as f:
         f.write(text)
@@ -117,7 +120,8 @@ def get_wml_cfg(wml_dir, locale):
             candidates.append('{}_{}@{}.cfg'.format(lang, script, region))
         else:
             candidates.append('{}@{}.cfg'.format(lang, region))
-            candidates.append('{}_{}@{}.cfg'.format(lang, lang.upper(), region))
+            candidates.append(
+                '{}_{}@{}.cfg'.format(lang, lang.upper(), region))
             candidates.append('{}_*@{}.cfg'.format(lang, region))
     else:
         if script:
@@ -212,7 +216,8 @@ if __name__ == '__main__':
             # wesnoth,wesnoth-editor,wesnoth-help,wesnoth-lib,wesnoth-multiplayer,wesnoth-tutorial,wesnoth-units
             textdomains = re.split(r'[;, ]', arg)
 
-    wesnoth_dir = os.path.realpath(os.path.join(os.path.dirname(sys.argv[0]), '..'))
+    wesnoth_dir = os.path.realpath(
+        os.path.join(os.path.dirname(sys.argv[0]), '..'))
     with open(os.path.join(wesnoth_dir, 'po/LINGUAS')) as f:
         da_langs = f.read().split()
 

@@ -1,6 +1,7 @@
 # vi: syntax=python:et:ts=4
 from SCons.Script import *
 
+
 def init_metasconf(env, modules):
     modules = map(__import__, modules)
     config_checks = {}

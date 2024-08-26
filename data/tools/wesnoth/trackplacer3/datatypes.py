@@ -20,23 +20,26 @@ selected_icon_dictionary = {
     "JOURNEY": imagedir + "misc/new-journey.png",
     "BATTLE":  imagedir + "misc/new-battle.png",
     "REST":    imagedir + "misc/flag-red.png",
-    }
+}
 unselected_icon_dictionary = {
     "JOURNEY": imagedir + "misc/dot-white.png",
     "BATTLE":  imagedir + "misc/cross-white.png",
     "REST":    imagedir + "misc/flag-white.png",
-    }
+}
 icon_presentation_order = ("JOURNEY", "BATTLE", "REST")
-segmenters = ("BATTLE","REST")
+segmenters = ("BATTLE", "REST")
 
 # Basic functions for bashing points and rectangles
+
 
 def _distance(point1, point2):
     "Euclidean distance between two waypoints."
     return math.sqrt((point1.x - point2.x)**2 + (point1.y - point2.y)**2)
 
+
 class Waypoint:
     """Represents a single dot, battle or restpoint."""
+
     def __init__(self, action, x, y):
         self.action = action
         self.x = x
@@ -45,8 +48,10 @@ class Waypoint:
     def __str__(self):
         return "<Waypoint '{action}' at {x},{y}>".format(action=self.action, x=self.x, y=self.y)
 
+
 class Track:
     """An ordered list of Waypoints, users are expected to directly access the data members."""
+
     def __init__(self, name):
         self.name = name
         self.waypoints = []
@@ -61,7 +66,8 @@ class Track:
             return
 
         # Find the index of the member of self.waypoints nearest to the new point
-        closest = min(range(len(self.waypoints)), key=lambda i: _distance(w, self.waypoints[i]))
+        closest = min(range(len(self.waypoints)),
+                      key=lambda i: _distance(w, self.waypoints[i]))
         if closest == 0:
             if _distance(self.waypoints[0], self.waypoints[1]) < _distance(w, self.waypoints[1]):
                 self.waypoints.insert(0, w)
@@ -79,11 +85,13 @@ class Track:
         else:
             self.waypoints.insert(closest+1, w)
 
+
 class Journey:
     """Collection of all Tracks, and the corresponding background image"""
+
     def __init__(self):
-        self.mapfile = None # Map background of the journey
-        self.tracks = [] # ordered list of Tracks
+        self.mapfile = None  # Map background of the journey
+        self.tracks = []  # ordered list of Tracks
 
     def findTrack(self, name):
         for track in self.tracks:
@@ -93,7 +101,8 @@ class Journey:
 
     def __str__(self):
         return "<Journey based on map file '%s', with tracks {%s}>" % (self.mapfile,
-            ",".join([track.name for track in self.tracks]))
+                                                                       ",".join([track.name for track in self.tracks]))
+
 
 class FileFormatHandler:
     """Interface for reading and writing files"""

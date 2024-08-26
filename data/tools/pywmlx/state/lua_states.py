@@ -5,7 +5,6 @@ from pywmlx.wmlerr import wmlwarn
 from pywmlx.wmlerr import wmlerr
 
 
-
 class LuaIdleState:
     def __init__(self):
         self.regex = None
@@ -23,11 +22,10 @@ class LuaIdleState:
         return (xline, _nextstate)
 
 
-
 class LuaCheckdomState:
     def __init__(self):
-        rx = (   r'\s*(local\s+)?_\s*=\s*wesnoth\s*\.\s*textdomain\s*'
-               r'''(?:\(\s*)?(["'])(.*?)\2''')
+        rx = (r'\s*(local\s+)?_\s*=\s*wesnoth\s*\.\s*textdomain\s*'
+              r'''(?:\(\s*)?(["'])(.*?)\2''')
         self.regex = re.compile(rx, re.I)
         self.iffail = 'lua_checkpo'
 
@@ -38,7 +36,6 @@ class LuaCheckdomState:
             finfo = pywmlx.nodemanip.fileref + ":" + str(lineno)
             wmlwarn(finfo, "function '_', in lua code, should be local.")
         return (xline, 'lua_idle')
-
 
 
 class LuaCheckpoState:
@@ -53,12 +50,12 @@ class LuaCheckpoState:
         # on  -- po: addedinfo, or -- po-override: overrideinfo
         pending_infos = pywmlx.state.machine._pending_cinfo[match.group(1)]
         if pending_infos is None:
-            pywmlx.state.machine._pending_cinfo[match.group(1)] = [ match.group(2) ]
+            pywmlx.state.machine._pending_cinfo[match.group(1)] = [
+                match.group(2)]
         else:
             pending_infos.append(match.group(2))
         xline = None
         return (xline, 'lua_idle')
-
 
 
 class LuaCommentState:
@@ -80,7 +77,7 @@ class LuaStr00:
         self.iffail = 'lua_str01'
 
     def run(self, xline, lineno, match):
-        xline = xline [ match.end(): ]
+        xline = xline[match.end():]
         pywmlx.state.machine._pending_luastring = None
         pywmlx.state.machine._pending_luastring = (
             pywmlx.state.machine.PendingLuaString(
@@ -89,7 +86,6 @@ class LuaStr00:
             )
         )
         return (xline, 'lua_plidle1')
-
 
 
 class LuaStr01:
@@ -109,7 +105,7 @@ class LuaStr01:
             loc_multiline = True
             _nextstate = 'lua_str10'
         else:
-            xline = xline [ match.end(): ]
+            xline = xline[match.end():]
         pywmlx.state.machine._pending_luastring = (
             pywmlx.state.machine.PendingLuaString(
                 lineno, 'luastr1', match.group(2), loc_multiline,
@@ -119,12 +115,11 @@ class LuaStr01:
         return (xline, _nextstate)
 
 
-
 class LuaStr02:
     def __init__(self):
         rx = r'''(?:[^["']*?)(_?)\s*'((?:\\'|[^'])*)('?)'''
         self.regex = re.compile(rx)
-        self.iffail = 'lua_str03' # 'lua_gowml' #'lua_str03'
+        self.iffail = 'lua_str03'  # 'lua_gowml' #'lua_str03'
 
     def run(self, xline, lineno, match):
         _nextstate = 'lua_idle'
@@ -137,7 +132,7 @@ class LuaStr02:
             loc_multiline = True
             _nextstate = 'lua_str20'
         else:
-            xline = xline [ match.end(): ]
+            xline = xline[match.end():]
         pywmlx.state.machine._pending_luastring = (
             pywmlx.state.machine.PendingLuaString(
                 lineno, 'luastr2', match.group(2), loc_multiline,
@@ -147,7 +142,6 @@ class LuaStr02:
         return (xline, _nextstate)
 
 
-
 class LuaStr03:
     def __init__(self):
         rx = r'''(?:[^["']*?)(_?)\s*\[(=*)\[(.*?)]\2]'''
@@ -155,7 +149,7 @@ class LuaStr03:
         self.iffail = 'lua_str03o'
 
     def run(self, xline, lineno, match):
-        xline = xline [ match.end(): ]
+        xline = xline[match.end():]
         loc_translatable = True
         if match.group(1) == "":
             loc_translatable = False
@@ -167,7 +161,6 @@ class LuaStr03:
             )
         )
         return (xline, 'lua_idle')
-
 
 
 class LuaStr03o:
@@ -191,7 +184,6 @@ class LuaStr03o:
         return (xline, 'lua_str30')
 
 
-
 # well... the regex will always be true on this state, so iffail will never
 # be executed
 class LuaStr10:
@@ -201,15 +193,14 @@ class LuaStr10:
 
     def run(self, xline, lineno, match):
         _nextstate = None
-        pywmlx.state.machine._pending_luastring.addline( match.group(1) )
+        pywmlx.state.machine._pending_luastring.addline(match.group(1))
         if match.group(2) == "":
             _nextstate = 'lua_str10'
             xline = None
         else:
             _nextstate = 'lua_idle'
-            xline = xline [ match.end(): ]
+            xline = xline[match.end():]
         return (xline, _nextstate)
-
 
 
 # well... the regex will always be true on this state, so iffail will never
@@ -221,15 +212,14 @@ class LuaStr20:
 
     def run(self, xline, lineno, match):
         _nextstate = None
-        pywmlx.state.machine._pending_luastring.addline( match.group(1) )
+        pywmlx.state.machine._pending_luastring.addline(match.group(1))
         if match.group(2) == "":
             _nextstate = 'lua_str20'
             xline = None
         else:
             _nextstate = 'lua_idle'
-            xline = xline [ match.end(): ]
+            xline = xline[match.end():]
         return (xline, _nextstate)
-
 
 
 class LuaStr30:
@@ -238,15 +228,15 @@ class LuaStr30:
         self.iffail = None
 
     def run(self, xline, lineno, match):
-        rx = ( r'(.*?)]={' +
+        rx = (r'(.*?)]={' +
               str(pywmlx.state.machine._pending_luastring.numequals) +
-              '}]' )
+              '}]')
         realmatch = re.match(rx, xline)
         _nextstate = 'lua_str30'
         if realmatch:
             pywmlx.state.machine._pending_luastring.addline(
-                realmatch.group(1) )
-            xline = xline [ realmatch.end(): ]
+                realmatch.group(1))
+            xline = xline[realmatch.end():]
             _nextstate = 'lua_idle'
         else:
             pywmlx.state.machine._pending_luastring.addline(xline)
@@ -255,22 +245,22 @@ class LuaStr30:
         return (xline, _nextstate)
 
 
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # 2.  LUA PLURAL
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Lua plural will manage _ ("sentence", "plural_form", number) syntax
 #     when _ ( was found on LuaStr00 (fake lua string)
 #     this case will treat also _ ("translatable_string") without plural form.
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
-#.....................
+# .....................
 #  2.1 Plural Idle States
-#.....................
+# .....................
 # Unlike Standard states, here we have multiple idle states, one for every
 # situations.
 # In this way we surely add more states, but every state can be easier to
 # develop, maintain and test, and it is less error-prone
-#.....................
+# .....................
 
 # Plural Idle 1:
 #  When argument 1 or 2 is expected
@@ -303,7 +293,7 @@ class LuaPlIdle1:
                     # PendingLuaString.plural to None
                     if status == 'wait_plural':
                         pywmlx.state.machine._pending_luastring.plural = None
-                    xline = xline [ realmatch.end(): ]
+                    xline = xline[realmatch.end():]
                     return (xline, 'lua_idle')
             else:
                 # this should never happen. But if the first value after _ (
@@ -312,7 +302,7 @@ class LuaPlIdle1:
                 finfo = pywmlx.nodemanip.fileref + ":" + str(lineno)
                 errmsg = "first argument of function '_ (...)' must be a string"
                 wmlerr(finfo, errmsg)
-            xline = xline [ realmatch.end(): ]
+            xline = xline[realmatch.end():]
             xline = realmatch.group(1) + xline
             return (xline, _nextstate)
 
@@ -320,7 +310,6 @@ class LuaPlIdle1:
             # You can find a new line rigthly after _ (. In this case, we will
             # continue to search a string into the next line
             return (None, 'lua_plidle1')
-
 
 
 # Plural Idle 2:
@@ -333,12 +322,11 @@ class LuaPlIdle2:
     def run(self, xline, lineno, match):
         realmatch = re.match(r'\s*,', xline)
         if realmatch:
-            xline = xline [ realmatch.end(): ]
+            xline = xline[realmatch.end():]
             return (xline, 'lua_plidle1')
         else:
             pywmlx.state.machine._pending_luastring.plural = None
             return (xline, 'lua_plidle3')
-
 
 
 # Plural Idle 3:
@@ -351,18 +339,17 @@ class LuaPlIdle3:
     def run(self, xline, lineno, match):
         realmatch = re.match(r'.*?\)', xline)
         if realmatch:
-            xline = xline [ realmatch.end(): ]
+            xline = xline[realmatch.end():]
             return (xline, 'lua_idle')
         else:
             return (None, 'lua_plidle3')
 
 
-
-#.....................
+# .....................
 #  2.2 Plural States - Actual strings
-#.....................
+# .....................
 # Those states works, more or less, like LuaStrXX
-#.....................
+# .....................
 
 
 # Double-quote delimited strings
@@ -388,7 +375,7 @@ class LuaPl01:
                 _nextstate = 'lua_pl10'
                 xline = None
             else:
-                xline = xline [ match.end(): ]
+                xline = xline[match.end():]
                 pywmlx.state.machine._pending_luastring.plural.status = (
                     'wait_plural'
                 )
@@ -405,7 +392,7 @@ class LuaPl01:
                 _nextstate = 'lua_pl10'
                 xline = None
             else:
-                xline = xline [ match.end(): ]
+                xline = xline[match.end():]
                 pywmlx.state.machine._pending_luastring.plural.status = (
                     'wait_close'
                 )
@@ -439,7 +426,7 @@ class LuaPl02:
                 _nextstate = 'lua_pl20'
                 xline = None
             else:
-                xline = xline [ match.end(): ]
+                xline = xline[match.end():]
                 pywmlx.state.machine._pending_luastring.plural.status = (
                     'wait_plural'
                 )
@@ -456,7 +443,7 @@ class LuaPl02:
                 _nextstate = 'lua_pl20'
                 xline = None
             else:
-                xline = xline [ match.end(): ]
+                xline = xline[match.end():]
                 pywmlx.state.machine._pending_luastring.plural.status = (
                     'wait_close'
                 )
@@ -476,7 +463,7 @@ class LuaPl03:
 
     def run(self, xline, lineno, match):
         status = pywmlx.state.machine._pending_luastring.plural.status
-        xline = xline [ match.end(): ]
+        xline = xline[match.end():]
         _nextstate = 'lua_plidle2'
         if status == 'wait_string':
             _nextstate = 'lua_plidle2'
@@ -497,7 +484,6 @@ class LuaPl03:
                 'wait_close'
             )
         return (xline, _nextstate)
-
 
 
 # Long-bracketed strings, first line of a multiline string
@@ -531,7 +517,6 @@ class LuaPl03o:
         return (xline, 'lua_pl30')
 
 
-
 # A previous line opened a double-quote delimited string inside a "_( ... )" translation bracket
 # well... the regex will always be true on this state, so iffail will never
 # be executed
@@ -544,13 +529,13 @@ class LuaPl10:
         status = pywmlx.state.machine._pending_luastring.plural.status
         _nextstate = 'lua_pl10'
         if status == 'wait_string':
-            pywmlx.state.machine._pending_luastring.addline( match.group(1) )
+            pywmlx.state.machine._pending_luastring.addline(match.group(1))
         else:
             pywmlx.state.machine._pending_luastring.plural.addline(
                 match.group(1)
             )
         if match.group(2) == '"':
-            xline = xline [ match.end(): ]
+            xline = xline[match.end():]
             if status == 'wait_string':
                 _nextstate = 'lua_plidle2'
                 pywmlx.state.machine._pending_luastring.plural.status = (
@@ -564,7 +549,6 @@ class LuaPl10:
         else:
             xline = None
         return (xline, _nextstate)
-
 
 
 # A previous line opened a single-quote delimited string inside a "_( ... )" translation bracket
@@ -579,13 +563,13 @@ class LuaPl20:
         status = pywmlx.state.machine._pending_luastring.plural.status
         _nextstate = 'lua_pl20'
         if status == 'wait_string':
-            pywmlx.state.machine._pending_luastring.addline( match.group(1) )
+            pywmlx.state.machine._pending_luastring.addline(match.group(1))
         else:
             pywmlx.state.machine._pending_luastring.plural.addline(
                 match.group(1)
             )
         if match.group(2) == "'":
-            xline = xline [ match.end(): ]
+            xline = xline[match.end():]
             if status == 'wait_string':
                 _nextstate = 'lua_plidle2'
                 pywmlx.state.machine._pending_luastring.plural.status = (
@@ -601,7 +585,6 @@ class LuaPl20:
         return (xline, _nextstate)
 
 
-
 class LuaPl30:
     def __init__(self):
         self.regex = None
@@ -614,11 +597,11 @@ class LuaPl30:
             numequals = pywmlx.state.machine._pending_luastring.numequals
         else:
             numequals = pywmlx.state.machine._pending_luastring.plural.numequals
-        rx = r'(.*?)]={' +  str(numequals) + '}]'
+        rx = r'(.*?)]={' + str(numequals) + '}]'
         realmatch = re.match(rx, xline)
         _nextstate = 'lua_pl30'
         if realmatch:
-            xline = xline [ realmatch.end(): ]
+            xline = xline[realmatch.end():]
             if status == 'wait_string':
                 pywmlx.state.machine._pending_luastring.addline(
                     realmatch.group(1)
@@ -645,14 +628,13 @@ class LuaPl30:
         return (xline, _nextstate)
 
 
-
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # 3.  LUA FINAL STATES
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Now the final states:
 #     LuaGowmlState
 #     LuaFinalState
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 
 class LuaGowmlState:
@@ -666,9 +648,8 @@ class LuaGowmlState:
             xline = None
             _nextstate = 'wml_idle'
         else:
-            xline = xline [ match.end(): ]
+            xline = xline[match.end():]
         return (xline, _nextstate)
-
 
 
 class LuaFinalState:
@@ -677,9 +658,9 @@ class LuaFinalState:
         self.iffail = None
 
     def run(self, xline, lineno, match):
-        rx_str = ( r'function\s+([a-zA-Z0-9_.]+)|' +
-                   r'([a-zA-Z0-9_.]+)\s*=\s*function' # +
-                 )  # r'(local)\s+(?!function).*?=' )
+        rx_str = (r'function\s+([a-zA-Z0-9_.]+)|' +
+                  r'([a-zA-Z0-9_.]+)\s*=\s*function'  # +
+                  )  # r'(local)\s+(?!function).*?=' )
         rx = re.compile(rx_str, re.I)
         m = re.search(rx, xline)
         if m:
@@ -696,32 +677,31 @@ class LuaFinalState:
         return (xline, 'lua_idle')
 
 
-
 def setup_luastates():
-    for statename, stateclass in [ ('lua_idle', LuaIdleState),
-                                   ('lua_checkdom', LuaCheckdomState),
-                                   ('lua_checkpo', LuaCheckpoState),
-                                   ('lua_comment', LuaCommentState),
-                                   ('lua_str00', LuaStr00),
-                                   ('lua_str01', LuaStr01),
-                                   ('lua_str02', LuaStr02),
-                                   ('lua_str03', LuaStr03),
-                                   ('lua_str03o', LuaStr03o),
-                                   ('lua_str10', LuaStr10),
-                                   ('lua_str20', LuaStr20),
-                                   ('lua_str30', LuaStr30),
-                                   ('lua_plidle1', LuaPlIdle1),
-                                   ('lua_plidle2', LuaPlIdle2),
-                                   ('lua_plidle3', LuaPlIdle3),
-                                   ('lua_pl01', LuaPl01),
-                                   ('lua_pl02', LuaPl02),
-                                   ('lua_pl03', LuaPl03),
-                                   ('lua_pl03o', LuaPl03o),
-                                   ('lua_pl10', LuaPl10),
-                                   ('lua_pl20', LuaPl20),
-                                   ('lua_pl30', LuaPl30),
-                                   ('lua_gowml', LuaGowmlState),
-                                   ('lua_final', LuaFinalState)]:
+    for statename, stateclass in [('lua_idle', LuaIdleState),
+                                  ('lua_checkdom', LuaCheckdomState),
+                                  ('lua_checkpo', LuaCheckpoState),
+                                  ('lua_comment', LuaCommentState),
+                                  ('lua_str00', LuaStr00),
+                                  ('lua_str01', LuaStr01),
+                                  ('lua_str02', LuaStr02),
+                                  ('lua_str03', LuaStr03),
+                                  ('lua_str03o', LuaStr03o),
+                                  ('lua_str10', LuaStr10),
+                                  ('lua_str20', LuaStr20),
+                                  ('lua_str30', LuaStr30),
+                                  ('lua_plidle1', LuaPlIdle1),
+                                  ('lua_plidle2', LuaPlIdle2),
+                                  ('lua_plidle3', LuaPlIdle3),
+                                  ('lua_pl01', LuaPl01),
+                                  ('lua_pl02', LuaPl02),
+                                  ('lua_pl03', LuaPl03),
+                                  ('lua_pl03o', LuaPl03o),
+                                  ('lua_pl10', LuaPl10),
+                                  ('lua_pl20', LuaPl20),
+                                  ('lua_pl30', LuaPl30),
+                                  ('lua_gowml', LuaGowmlState),
+                                  ('lua_final', LuaFinalState)]:
         st = stateclass()
         pywmlx.state.machine.addstate(statename,
-            State(st.regex, st.run, st.iffail) )
+                                      State(st.regex, st.run, st.iffail))

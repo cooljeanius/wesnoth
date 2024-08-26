@@ -38,11 +38,9 @@ def wmlerr_debug():
     is_utest = True
 
 
-
 def ansi_setEnabled(value):
     global enabled_text_col
     enabled_text_col = value
-
 
 
 def wincol_setEnabled(value):
@@ -65,23 +63,20 @@ def wincol_setEnabled(value):
         default_color = struct.unpack_from("H", console_defaults, 8)[0]
 
 
-
 def warnall():
     return _warnall
-
 
 
 def set_warnall(value):
     _warnall = value
 
 
-
 class WmlError(ValueError):
     pass
 
+
 class WmlWarning(UserWarning):
     pass
-
 
 
 def print_wmlerr(finfo, message, iserr):
@@ -130,18 +125,15 @@ def print_wmlerr(finfo, message, iserr):
         print(msg, file=sys.stderr)
 
 
-
 def my_showwarning(message, category, filename, lineno, file=None, line=None):
     try:
         finfo, msg = message.args[0].split(": ", 1)
         print_wmlerr(finfo, msg, False)
     except OSError:
-        pass # the file (probably stderr) is invalid - this warning gets lost.
-
+        pass  # the file (probably stderr) is invalid - this warning gets lost.
 
 
 warnings.showwarning = my_showwarning
-
 
 
 def wmlerr(finfo, message, errtype=WmlError):
@@ -153,7 +145,6 @@ def wmlerr(finfo, message, errtype=WmlError):
             sys.exit(1)
     else:
         raise errtype(finfo + ": " + message)
-
 
 
 def wmlwarn(finfo, message):

@@ -1,6 +1,10 @@
 #! /usr/bin/env python3
 
-import os, sys, argparse, re, base64
+import os
+import sys
+import argparse
+import re
+import base64
 from io import BytesIO
 
 try:
@@ -13,7 +17,8 @@ sudo apt-get install python-pil""", file=sys.stderr)
     sys.exit(1)
 
 suffix_re = re.compile(".*-(n|s|w|e|ne|nw|sw|se|[0-9]+)([-.]).*")
-anim_re = re.compile(".*-(attack|defend|melee|ranged|magic|idle|die|dying|death|flying|leading|healing).*")
+anim_re = re.compile(
+    ".*-(attack|defend|melee|ranged|magic|idle|die|dying|death|flying|leading|healing).*")
 # the default mask is a png RGBA file encoded in base64
 default_mask = b"""
 iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAYAAABV7bNHAAAA/UlEQVR42u3cWwoCMRBFQfe/6Tg/
@@ -28,7 +33,7 @@ parser = argparse.ArgumentParser(
     description="Search png images not fitting in a hex",
     epilog="""return numbers of pixels out of the hex for each filename
 (-1 if the image is not a standard 72x72 image and -f was not used)"""
-    )
+)
 parser.add_argument("-m", "--mask",
                     action="store",
                     metavar="file",
@@ -65,7 +70,7 @@ parser.add_argument("dirs",
                     help="directories to check",
                     default=os.getcwd()
                     )
-args=parser.parse_args()
+args = parser.parse_args()
 
 # get all the PNG images
 images = []
@@ -99,11 +104,12 @@ if args.mask:
     try:
         mask = Image.open(args.mask)
     except OSError:
-        print("cannot read mask file {}, exiting".format(args.mask), file=sys.stderr)
+        print("cannot read mask file {}, exiting".format(
+            args.mask), file=sys.stderr)
         sys.exit(1)
 else:
     mask = Image.open(BytesIO(base64.b64decode(default_mask)))
-mask_data = mask.getdata(3) # get alpha channel values
+mask_data = mask.getdata(3)  # get alpha channel values
 
 for fn in images:
     try:

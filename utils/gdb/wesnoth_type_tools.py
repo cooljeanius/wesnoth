@@ -2,6 +2,7 @@
 
 import gdb
 
+
 def strip_all_type(val):
     "Strip the typename of all qualifiers and typedefs"
     # Get the type.
@@ -9,13 +10,16 @@ def strip_all_type(val):
 
     # If it points to a reference, get the reference.
     if type.code == gdb.TYPE_CODE_REF or type.code == gdb.TYPE_CODE_PTR:
-        try: type = type.target().unqualified()
-        except TypeError: type = val.type.unqualified()
+        try:
+            type = type.target().unqualified()
+        except TypeError:
+            type = val.type.unqualified()
 
     # Get the unqualified type, stripped of typedefs.
     type = type.strip_typedefs()
 
     return type
+
 
 def dereference_if_possible(val):
     """ Dereference val if possible"""

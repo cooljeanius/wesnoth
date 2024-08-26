@@ -23,7 +23,7 @@ from sys import argv
 try:
     from PIL import Image as PIL
 except ImportError as e:
-    print ("Unable to import PIL (Python Imaging Library)")
+    print("Unable to import PIL (Python Imaging Library)")
     raise e
 
 list1 = open(argv[1])
@@ -37,6 +37,6 @@ for path1, path2 in zip(list1, list2):
     image2 = PIL.open(path2)
 
     if image1.tobytes() != image2.tobytes():
-        print (path1 + " and " + path2 + " differ!")
+        print(path1 + " and " + path2 + " differ!")
 
 # vim: ts=4:sw=4:expandtab

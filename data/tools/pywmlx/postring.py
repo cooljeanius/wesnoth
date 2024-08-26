@@ -1,7 +1,6 @@
 import re
 
 
-
 # PoCommentedStringPL represents a 'plural' form of a PoCommentedString or a
 # WmlNode. Currently PoCommentedStringPL is actually used only within
 # PoCommentedString
@@ -10,7 +9,6 @@ class PoCommentedStringPL:
     def __init__(self, value, *, ismultiline=False):
         self.value = value
         self.ismultiline = ismultiline
-
 
 
 class PoCommentedString:
@@ -118,7 +116,6 @@ class WmlNodeSentence:
             self.plural = PoCommentedStringPL(plural_value, ismultiline)
 
 
-
 class WmlNode:
     def __init__(self, fileref, fileno, tagname, *, autowml=True):
         self.tagname = tagname
@@ -144,25 +141,25 @@ class WmlNode:
                 plural_value = PoCommentedStringPL(plural)
             elif isinstance(plural, tuple) or isinstance(plural, list):
                 if len(plural) == 2:
-                    if(isinstance(plural[0], str) and
-                          isinstance(plural[1], bool)):
+                    if (isinstance(plural[0], str) and
+                       isinstance(plural[1], bool)):
                         plural_value = PoCommentedStringPL(plural[0],
                                                            plural[1])
-                    elif(isinstance(plural[0], bool) and
+                    elif (isinstance(plural[0], bool) and
                           isinstance(plural[1], str)):
                         plural_value = PoCommentedStringPL(plural[1],
                                                            plural[0])
             elif isinstance(plural, PoCommentedStringPL):
                 plural_value = plural
                 plural = None
-        self.sentences.append( WmlNodeSentence(sentence,
-                                          domain=domain,
-                                          ismultiline=ismultiline,
-                                          lineno=lineno,
-                                          lineno_sub=lineno_sub,
-                                          plural=plural_value,
-                                          override=override,
-                                          addition=addition) )
+        self.sentences.append(WmlNodeSentence(sentence,
+                                              domain=domain,
+                                              ismultiline=ismultiline,
+                                              lineno=lineno,
+                                              lineno_sub=lineno_sub,
+                                              plural=plural_value,
+                                              override=override,
+                                              addition=addition))
 
     def assemble_wmlinfo(self):
         if self.tagname == "":
@@ -199,94 +196,104 @@ class WmlNode:
         # after wml_infos, in addition to them
         if nodesentence.overrideinfo is not None:
             if nodesentence.overrideinfo == "":
-                if(nodesentence.addedinfo is not None and
-                              nodesentence.addedinfo != ""):
+                if (nodesentence.addedinfo is not None and
+                   nodesentence.addedinfo != ""):
                     return PoCommentedString(nodesentence.sentence,
-                               nodesentence.domain,
-                               ismultiline=nodesentence.ismultiline,
-                               orderid=self.assemble_orderid(nodesentence),
-                               wmlinfos=[],
-                               finfos=[self.fileref +
-                                        str(nodesentence.lineno)],
-                               addedinfos=nodesentence.addedinfo,
-                               plural=nodesentence.plural )
+                                             nodesentence.domain,
+                                             ismultiline=nodesentence.ismultiline,
+                                             orderid=self.assemble_orderid(
+                                                 nodesentence),
+                                             wmlinfos=[],
+                                             finfos=[self.fileref +
+                                                     str(nodesentence.lineno)],
+                                             addedinfos=nodesentence.addedinfo,
+                                             plural=nodesentence.plural)
                 else:
                     return PoCommentedString(nodesentence.sentence,
-                               nodesentence.domain,
-                               ismultiline=nodesentence.ismultiline,
-                               orderid=self.assemble_orderid(nodesentence),
-                               wmlinfos=[],
-                               finfos=[self.fileref +
-                                        str(nodesentence.lineno)],
-                               addedinfos=[],
-                               plural=nodesentence.plural )
-            else: # having a non-empty override
-                if(nodesentence.addedinfo is not None and
-                              nodesentence.addedinfo != ""):
+                                             nodesentence.domain,
+                                             ismultiline=nodesentence.ismultiline,
+                                             orderid=self.assemble_orderid(
+                                                 nodesentence),
+                                             wmlinfos=[],
+                                             finfos=[self.fileref +
+                                                     str(nodesentence.lineno)],
+                                             addedinfos=[],
+                                             plural=nodesentence.plural)
+            else:  # having a non-empty override
+                if (nodesentence.addedinfo is not None and
+                   nodesentence.addedinfo != ""):
                     return PoCommentedString(nodesentence.sentence,
-                               nodesentence.domain,
-                               ismultiline=nodesentence.ismultiline,
-                               orderid=self.assemble_orderid(nodesentence),
-                               wmlinfos=[nodesentence.overrideinfo],
-                               finfos=[self.fileref +
-                                        str(nodesentence.lineno)],
-                               addedinfos=nodesentence.addedinfo,
-                               plural=nodesentence.plural )
+                                             nodesentence.domain,
+                                             ismultiline=nodesentence.ismultiline,
+                                             orderid=self.assemble_orderid(
+                                                 nodesentence),
+                                             wmlinfos=[
+                                                 nodesentence.overrideinfo],
+                                             finfos=[self.fileref +
+                                                     str(nodesentence.lineno)],
+                                             addedinfos=nodesentence.addedinfo,
+                                             plural=nodesentence.plural)
                 else:
                     return PoCommentedString(nodesentence.sentence,
-                               nodesentence.domain,
-                               ismultiline=nodesentence.ismultiline,
-                               orderid=self.assemble_orderid(nodesentence),
-                               wmlinfos=[nodesentence.overrideinfo],
-                               finfos=[self.fileref +
-                                        str(nodesentence.lineno)],
-                               addedinfos=[],
-                               plural=nodesentence.plural )
+                                             nodesentence.domain,
+                                             ismultiline=nodesentence.ismultiline,
+                                             orderid=self.assemble_orderid(
+                                                 nodesentence),
+                                             wmlinfos=[
+                                                 nodesentence.overrideinfo],
+                                             finfos=[self.fileref +
+                                                     str(nodesentence.lineno)],
+                                             addedinfos=[],
+                                             plural=nodesentence.plural)
         # if you don't have override and autowml is true
         #  --> wmlinfos will be always added
         elif self.autowml == True:
-            if(nodesentence.addedinfo is not None and
-                          nodesentence.addedinfo != ""):
+            if (nodesentence.addedinfo is not None and
+               nodesentence.addedinfo != ""):
                 return PoCommentedString(nodesentence.sentence,
-                               nodesentence.domain,
-                               ismultiline=nodesentence.ismultiline,
-                               orderid=self.assemble_orderid(nodesentence),
-                               wmlinfos=[self.assemble_wmlinfo()],
-                               finfos=[self.fileref +
-                                        str(nodesentence.lineno)],
-                               addedinfos=nodesentence.addedinfo,
-                               plural=nodesentence.plural )
+                                         nodesentence.domain,
+                                         ismultiline=nodesentence.ismultiline,
+                                         orderid=self.assemble_orderid(
+                                             nodesentence),
+                                         wmlinfos=[self.assemble_wmlinfo()],
+                                         finfos=[self.fileref +
+                                                 str(nodesentence.lineno)],
+                                         addedinfos=nodesentence.addedinfo,
+                                         plural=nodesentence.plural)
             else:
                 return PoCommentedString(nodesentence.sentence,
-                               nodesentence.domain,
-                               ismultiline=nodesentence.ismultiline,
-                               orderid=self.assemble_orderid(nodesentence),
-                               wmlinfos=[self.assemble_wmlinfo()],
-                               finfos=[self.fileref +
-                                        str(nodesentence.lineno)],
-                               addedinfos=[],
-                               plural=nodesentence.plural )
+                                         nodesentence.domain,
+                                         ismultiline=nodesentence.ismultiline,
+                                         orderid=self.assemble_orderid(
+                                             nodesentence),
+                                         wmlinfos=[self.assemble_wmlinfo()],
+                                         finfos=[self.fileref +
+                                                 str(nodesentence.lineno)],
+                                         addedinfos=[],
+                                         plural=nodesentence.plural)
         # if you don't have override and autowml is false
         #  --> wmlinfos will never added
         else:
-            if(nodesentence.addedinfo is not None and
-                          nodesentence.addedinfo != ""):
+            if (nodesentence.addedinfo is not None and
+               nodesentence.addedinfo != ""):
                 return PoCommentedString(nodesentence.sentence,
-                               nodesentence.domain,
-                               ismultiline=nodesentence.ismultiline,
-                               orderid=self.assemble_orderid(nodesentence),
-                               wmlinfos=[],
-                               finfos=[self.fileref +
-                                        str(nodesentence.lineno)],
-                               addedinfos=nodesentence.addedinfo,
-                               plural=nodesentence.plural )
+                                         nodesentence.domain,
+                                         ismultiline=nodesentence.ismultiline,
+                                         orderid=self.assemble_orderid(
+                                             nodesentence),
+                                         wmlinfos=[],
+                                         finfos=[self.fileref +
+                                                 str(nodesentence.lineno)],
+                                         addedinfos=nodesentence.addedinfo,
+                                         plural=nodesentence.plural)
             else:
                 return PoCommentedString(nodesentence.sentence,
-                               nodesentence.domain,
-                               ismultiline=nodesentence.ismultiline,
-                               orderid=self.assemble_orderid(nodesentence),
-                               wml_infos=[],
-                               finfos=[self.fileref +
-                                        str(nodesentence.lineno)],
-                               addedinfos=[],
-                               plural=nodesentence.plural )
+                                         nodesentence.domain,
+                                         ismultiline=nodesentence.ismultiline,
+                                         orderid=self.assemble_orderid(
+                                             nodesentence),
+                                         wml_infos=[],
+                                         finfos=[self.fileref +
+                                                 str(nodesentence.lineno)],
+                                         addedinfos=[],
+                                         plural=nodesentence.plural)

@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
+from . import html_output
 import glob
 import os
 import re
 import sys
 import time
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-from . import html_output
+
 
 def write_addon_overview(folder, addon):
     out = open(os.path.join(folder, "index.html"), "w")
+
     def w(x):
         out.write(x + "\n")
 
@@ -30,8 +32,10 @@ def write_addon_overview(folder, addon):
     if eras:
         w('<h3>Eras</h3><ul>')
         for era in eras:
-            epath = html_output.cleanurl(os.path.join("en_US", era["id"] + ".html"))
-            w('<li><a href="' + epath + '">' + html_output.cleantext(era["name"], quote=False) + '</a></li>')
+            epath = html_output.cleanurl(
+                os.path.join("en_US", era["id"] + ".html"))
+            w('<li><a href="' + epath + '">' +
+              html_output.cleantext(era["name"], quote=False) + '</a></li>')
         w('</ul>')
 
     campaigns = addon.get("campaigns", [])
@@ -39,7 +43,8 @@ def write_addon_overview(folder, addon):
         w('<h3>Campaigns</h3><ul>')
         for campaign in campaigns:
             cpath = os.path.join("en_US", campaign["id"] + ".html")
-            w('<li><a href="' + cpath + '">' + html_output.cleantext(campaign["name"], quote=False) + '</a></li>')
+            w('<li><a href="' + cpath + '">' +
+              html_output.cleantext(campaign["name"], quote=False) + '</a></li>')
         w('</ul>')
 
     w('<div>')
@@ -56,6 +61,7 @@ def write_addon_overview(folder, addon):
 
 def main(folder):
     out = open(os.path.join(folder, "overview.html"), "w")
+
     def w(x):
         out.write(x + "\n")
 
@@ -92,7 +98,8 @@ def main(folder):
         name = f[len(folder):].lstrip("/")
         error_name = os.path.join(name, "error.html")
         w('<tr><td>')
-        w('<a href="' + html_output.cleanurl(os.path.join(name, "index.html")) + '">' + html_output.cleantext(name, quote=False) + '</a>')
+        w('<a href="' + html_output.cleanurl(os.path.join(name, "index.html")
+                                             ) + '">' + html_output.cleantext(name, quote=False) + '</a>')
         w('</td><td>')
         w(str(n))
         w('</td><td>')
@@ -119,7 +126,8 @@ def main(folder):
                    re.match("added .* defines.", line):
                     return ""
 
-                mo = re.match(r"\d+ /tmp(?:/wmlparser_.*?/|/)(.*\.cfg).*", line)
+                mo = re.match(
+                    r"\d+ /tmp(?:/wmlparser_.*?/|/)(.*\.cfg).*", line)
                 if mo:
                     source.append("/tmp/" + mo.group(1))
                     return ""
@@ -132,7 +140,8 @@ def main(folder):
                     line = line.replace(s, "WML")
 
                 line = line.replace("included from WML:1", "")
-                rows = line.replace("included from", "\n&nbsp;included from").splitlines()
+                rows = line.replace(
+                    "included from", "\n&nbsp;included from").splitlines()
                 out = ""
                 for row in rows:
                     row = row.strip()
@@ -145,7 +154,8 @@ def main(folder):
             for line in text.splitlines():
                 line = line.strip()
                 if line in ["<INTERNAL ERROR>", "<WML ERROR>", "<PARSE ERROR>", "<TIMEOUT ERROR>"]:
-                    htmlerr.write('<p class="error %s">' % line[1:-1].replace(" ", "-").lower())
+                    htmlerr.write('<p class="error %s">' %
+                                  line[1:-1].replace(" ", "-").lower())
                 elif line in ["</INTERNAL ERROR>", "</WML ERROR>", "</PARSE ERROR>", "</TIMEOUT ERROR>"]:
                     htmlerr.write('</p>')
                 else:
@@ -157,7 +167,8 @@ def main(folder):
             total_lines += lines_count
 
             total_error_logs += 1
-            w('<a class="error" href="%s">%s (%d lines)</a>' % (html_output.cleanurl(error_name), error_kind, lines_count))
+            w('<a class="error" href="%s">%s (%d lines)</a>' %
+              (html_output.cleanurl(error_name), error_kind, lines_count))
         w('</td></tr>')
 
         count += 1
@@ -175,6 +186,7 @@ def main(folder):
 
     w(html_output.build_timestamp())
     w(html_output.website_footer())
+
 
 if __name__ == "__main__":
     main(sys.argv[1])

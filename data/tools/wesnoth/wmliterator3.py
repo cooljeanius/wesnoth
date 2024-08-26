@@ -23,7 +23,10 @@ Limitations:
 """
 
 from functools import total_ordering
-import sys, re, copy, codecs
+import sys
+import re
+import copy
+import codecs
 import fnmatch
 keyPattern = re.compile(r'(\w+)(,\s?\w+)*\s*=')
 keySplit = re.compile(r'[=,\s]')
@@ -34,12 +37,14 @@ closeMacroType = 'end of macro'
 
 silenceErrors = {}
 
+
 def wmlfind(element, wmlItor):
     """Find a simple element from traversing a WML iterator"""
     for itor in wmlItor.copy():
         if element == itor.element:
             return itor
     return None
+
 
 def wmlfindin(element, scopeElement, wmlItor):
     """Find an element inside a particular type of scope element"""
@@ -67,11 +72,13 @@ def isCloser(elem):
         elem = elem.element
     return type(elem) == type("") and elem.startswith("[/")
 
+
 def isMacroCloser(elem):
     "Are we looking at a macro closer?"
     if isinstance(elem, WmlIterator):
         elem = elem.element
     return type(elem) == type("") and elem == closeMacroType
+
 
 def isOpener(elem):
     "Are we looking at an opening tag?"
@@ -79,17 +86,20 @@ def isOpener(elem):
         elem = elem.element
     return type(elem) == type("") and elem.startswith("[") and not isCloser(elem)
 
+
 def isExtender(elem):
     "Are we looking at an extender tag?"
     if isinstance(elem, WmlIterator):
         elem = elem.element
     return type(elem) == type("") and elem.startswith("[+")
 
+
 def isMacroOpener(elem):
     "Are we looking at a macro opener?"
     if isinstance(elem, WmlIterator):
         elem = elem.element
     return type(elem) == type("") and elem.startswith("{")
+
 
 def isAttribute(elem):
     "Are we looking at an attribute (or attribute tuple)?"
@@ -102,6 +112,8 @@ def isAttribute(elem):
 # the total_ordering decorator from functools allows to define only two comparison
 # methods, and Python generates the remaining methods
 # it comes with a speed penalty, but the alternative is defining six methods by hand...
+
+
 @total_ordering
 class WmlIterator(object):
     """Return an iterable WML navigation object.
@@ -126,6 +138,7 @@ Important Attributes:
            always 1, unless text contains a multi-line quoted string
     lineno - a zero-based line index marking where this text begins
     """
+
     def __init__(self, lines=None, filename=None, begin=-1):
         "Initialize a new WmlIterator."
         self.fname = filename
@@ -156,7 +169,8 @@ Important Attributes:
                 endquote = text.find('>>', beginofend)
                 if endquote < 0:
                     if self.lineno + span >= len(lines):
-                        self.printError('reached EOF due to unterminated string at line', self.lineno+1)
+                        self.printError(
+                            'reached EOF due to unterminated string at line', self.lineno+1)
                         return text, span
                     beginofend = len(text)
                     text += lines[self.lineno + span]
@@ -173,7 +187,8 @@ Important Attributes:
                 endquote = text.find('"', beginofend)
                 if endquote < 0:
                     if self.lineno + span >= len(lines):
-                        self.printError('reached EOF due to unterminated string at line', self.lineno+1)
+                        self.printError(
+                            'reached EOF due to unterminated string at line', self.lineno+1)
                         return text, span
                     beginofend = len(text)
                     text += lines[self.lineno + span]
@@ -192,7 +207,7 @@ Important Attributes:
             if isDirective(closerElement):
                 while not isDirective(scopes.pop()):
                     pass
-            elif (closerElement==closeMacroType):
+            elif (closerElement == closeMacroType):
                 elem = ''
                 while not elem.startswith('{'):
                     closed = scopes.pop()
@@ -201,7 +216,8 @@ Important Attributes:
                         elem = closed.element
                     if isDirective(elem):
                         self.printScopeError(closerElement)
-                        scopes.append(closed) # to reduce additional errors (hopefully)
+                        # to reduce additional errors (hopefully)
+                        scopes.append(closed)
                         return True
             elif not isDirective(scopes[-1]):
                 closed = scopes.pop()
@@ -211,9 +227,11 @@ Important Attributes:
                 if (elem.startswith('{') and closerElement != closeMacroType):
                     scopes.append(closed)
                 elif (isOpener(elem) and closerElement != '[/'+elem[1:]
-                and '+'+closerElement != elem[1]+'[/'+elem[2:]):
-                    self.printError('reached', closerElement, 'at line', self.lineno+1, 'before closing scope', elem)
-                    scopes.append(closed) # to reduce additional errors (hopefully)
+                      and '+'+closerElement != elem[1]+'[/'+elem[2:]):
+                    self.printError('reached', closerElement, 'at line',
+                                    self.lineno+1, 'before closing scope', elem)
+                    # to reduce additional errors (hopefully)
+                    scopes.append(closed)
             return True
         except IndexError:
             return False
@@ -243,14 +261,14 @@ Important Attributes:
             {MACRO_NAME - opens a scope
             } - closes a scope
         """
-        elements = [] #(elementType, sortPos, scopeDelta)
+        elements = []  # (elementType, sortPos, scopeDelta)
         # first remove any lua strings
         beginquote = text.find('<<')
         while beginquote >= 0:
             endquote = text.find('>>', beginquote+2)
             if endquote < 0:
                 text = text[:beginquote]
-                beginquote = -1 #terminate loop
+                beginquote = -1  # terminate loop
             else:
                 text = text[:beginquote] + text[endquote+2:]
                 beginquote = text.find('<<')
@@ -260,7 +278,7 @@ Important Attributes:
             endquote = text.find('"', beginquote+1)
             if endquote < 0:
                 text = text[:beginquote]
-                beginquote = -1 #terminate loop
+                beginquote = -1  # terminate loop
             else:
                 text = text[:beginquote] + text[endquote+1:]
                 beginquote = text.find('"')
@@ -298,7 +316,7 @@ Important Attributes:
         begincomment = text.find('#', commentSearch)
         if begincomment >= 0:
             text = text[:begincomment]
-        #now find elements in a loop
+        # now find elements in a loop
         for m in tagPattern.finditer(text):
             delta = 1
             if isCloser(m.group(2)):
@@ -312,13 +330,13 @@ Important Attributes:
             elements.append((m.group(1), m.start(), 1))
         for m in macroClosePattern.finditer(text):
             elements.append((closeMacroType, m.start(), -1))
-        #sort by start position
-        elements.sort(key=lambda x:x[1])
+        # sort by start position
+        elements.sort(key=lambda x: x[1])
         resultElements = []
         openedScopes = []
         for elem, sortPos, scopeDelta in elements:
             while scopeDelta < 0:
-                if not(self.closeScope(openedScopes, elem)\
+                if not (self.closeScope(openedScopes, elem)
                         or self.closeScope(self.scopes, elem)):
                     self.printScopeError(elem)
                 scopeDelta += 1
@@ -330,7 +348,8 @@ Important Attributes:
 
     def printScopeError(self, elementType):
         """Print out warning if a scope was unable to close"""
-        self.printError('attempt to close empty scope at', elementType, 'line', self.lineno+1)
+        self.printError('attempt to close empty scope at',
+                        elementType, 'line', self.lineno+1)
 
     def __iter__(self):
         """The magic iterator method"""
@@ -411,7 +430,7 @@ Important Attributes:
 
     def __repr__(self):
         """Return a very basic string representation"""
-        return 'WmlIterator<' + repr(self.element) +', line %d>'%(self.lineno+1)
+        return 'WmlIterator<' + repr(self.element) + ', line %d>' % (self.lineno+1)
 
     def __next__(self):
         """Move the iterator to the next line number
@@ -426,12 +445,12 @@ Important Attributes:
         self.element, nextScopes = self.parseElements(self.text)
         self.nextScopes = []
         for elem in nextScopes:
-        # remember scopes by storing a copy of the iterator
+            # remember scopes by storing a copy of the iterator
             copyItor = self.copy()
             copyItor.element = elem
             self.nextScopes.append(copyItor)
             copyItor.nextScopes.append(copyItor)
-        if(len(self.element) == 1):
+        if (len(self.element) == 1):
             # currently we only wish to handle simple single assignment syntax
             self.element = self.element[0]
         if self.endScope is not None and not self.scopes.count(self.endScope):
@@ -476,21 +495,24 @@ Important Attributes:
                 print(nav.fname, file=sys.stderr)
                 silenceErrors[nav.fname] = set()
             elif silenceValue in silenceErrors[nav.fname]:
-                return # do not print a duplicate error for this file
+                return  # do not print a duplicate error for this file
             silenceErrors[nav.fname].add(silenceValue)
         print('wmliterator:', end=" ", file=sys.stderr)
         for item in misc:
             print(item, end=" ", file=sys.stderr)
-        print("", file=sys.stderr) #terminate line
+        print("", file=sys.stderr)  # terminate line
+
 
 if __name__ == '__main__':
     """Perform a test run on a file or directory"""
-    import os, glob
+    import os
+    import glob
     didSomething = False
     flist = sys.argv[1:]
     if not flist:
         print('Current directory is', os.getcwd())
-        flist = glob.glob(os.path.join(os.getcwd(), input('Which file(s) would you like to test?\n')))
+        flist = glob.glob(os.path.join(os.getcwd(), input(
+            'Which file(s) would you like to test?\n')))
     while flist:
         fname = flist.pop()
         if os.path.isdir(fname):

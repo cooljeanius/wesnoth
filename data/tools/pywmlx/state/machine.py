@@ -16,9 +16,12 @@ import pdb
 # Universe - convenient singleton for which
 # `x in Universe` is always True
 # Passing it to a filter is equivalent to not filtering.
+
+
 class UniversalSet:
     def __contains__(self, any):
         return True
+
 
 Universe = UniversalSet()
 
@@ -90,7 +93,6 @@ _current_lineno = 0
 _linenosub = 0
 
 
-
 # --------------------------------------------------------------------
 #  PART 2: machine.py functions and classes
 # --------------------------------------------------------------------
@@ -101,14 +103,12 @@ def clear_pending_infos(lineno, error=False):
     for key in _pending_cinfo:
         if error and _pending_cinfo[key] is not None:
             wmlerr(pywmlx.nodemanip.fileref + ":" + str(lineno),
-                "#%s directive(s) not applied: %s" % (key, _pending_cinfo[key]))
+                   "#%s directive(s) not applied: %s" % (key, _pending_cinfo[key]))
         _pending_cinfo[key] = None
-
 
 
 def after_pending_info(lineno, error):
     clear_pending_infos(lineno, error=error)
-
 
 
 def checkdomain(lineno):
@@ -170,7 +170,8 @@ class PendingPlural:
         if self.pluraltype == 3 and isfirstline and value == "":
             # This should be handled by not adding (self.string + '\n') on the next call,
             # but someone can implement that if they start using long-bracket strings.
-            raise NotImplementedError("Not implemented: handling of long-bracket strings that start with a newline.")
+            raise NotImplementedError(
+                "Not implemented: handling of long-bracket strings that start with a newline.")
         if self.pluraltype == 3:
             value = value.replace('\\', r'\\')
         if isfirstline:
@@ -181,19 +182,18 @@ class PendingPlural:
     def convert(self):
         if self.pluraltype == 2:
             self.string = re.sub(r"\\\'", r"'", self.string)
-        if self.pluraltype != 3 and self.pluraltype!=0:
+        if self.pluraltype != 3 and self.pluraltype != 0:
             self.string = re.sub(r'(?<!\\)"', r'\"', self.string)
         if self.pluraltype == 3:
             self.string = self.string.replace('"', r'\"')
         if self.ismultiline:
             lf = r'\\n"' + '\n"'
             self.string = re.sub(r'(\n\r|\r\n|[\n\r])',
-                                lf, self.string)
+                                 lf, self.string)
             self.string = '""\n"' + self.string + '"'
         if not self.ismultiline:
             self.string = '"' + self.string + '"'
         return PoCommentedStringPL(self.string, ismultiline=self.ismultiline)
-
 
 
 class PendingLuaString:
@@ -213,7 +213,8 @@ class PendingLuaString:
         if self.luatype == 'luastr3' and isfirstline and value == "":
             # This should be handled by not adding (self.string + '\n') on the next call,
             # but someone can implement that if they start using long-bracket strings.
-            raise NotImplementedError("Not implemented: handling of long-bracket strings that start with a newline.")
+            raise NotImplementedError(
+                "Not implemented: handling of long-bracket strings that start with a newline.")
         if self.luatype == 'luastr3':
             value = value.replace('\\', r'\\')
         if isfirstline:
@@ -263,32 +264,32 @@ class PendingLuaString:
                     loc_addedinfos = _pending_cinfo["po"]
                 if not _currentdomain in _dictionary:
                     _dictionary[_currentdomain] = dict()
-                loc_posentence = _dictionary[_currentdomain].get(self.luastring)
+                loc_posentence = _dictionary[_currentdomain].get(
+                    self.luastring)
                 if loc_posentence is None:
                     _dictionary[_currentdomain][self.luastring] = PoCommentedString(
-                                self.luastring,
-                                _currentdomain,
-                                orderid=(fileno, self.lineno, _linenosub),
-                                ismultiline=self.ismultiline,
-                                wmlinfos=loc_wmlinfos, finfos=[finfo],
-                                addedinfos=loc_addedinfos,
-                                plural=self.storePlural() )
+                        self.luastring,
+                        _currentdomain,
+                        orderid=(fileno, self.lineno, _linenosub),
+                        ismultiline=self.ismultiline,
+                        wmlinfos=loc_wmlinfos, finfos=[finfo],
+                        addedinfos=loc_addedinfos,
+                        plural=self.storePlural())
                 else:
                     loc_posentence.update_with_commented_string(
-                           PoCommentedString(
-                                self.luastring,
-                                _currentdomain,
-                                orderid=(fileno, self.lineno, _linenosub),
-                                ismultiline=self.ismultiline,
-                                wmlinfos=loc_wmlinfos, finfos=[finfo],
-                                addedinfos=loc_addedinfos,
-                                plural=self.storePlural()
-                    ) )
+                        PoCommentedString(
+                            self.luastring,
+                            _currentdomain,
+                            orderid=(fileno, self.lineno, _linenosub),
+                            ismultiline=self.ismultiline,
+                            wmlinfos=loc_wmlinfos, finfos=[finfo],
+                            addedinfos=loc_addedinfos,
+                            plural=self.storePlural()
+                        ))
 
         # finally PendingLuaString.store() will clear pendinginfos
         # in any case (even if the pending string is not translatable)
         after_pending_info(self.lineno, not self.istranslatable)
-
 
 
 class PendingWmlString:
@@ -327,14 +328,13 @@ class PendingWmlString:
                 else:
                     self.wmlstring = re.sub('""', r'\"', self.wmlstring)
                 pywmlx.nodemanip.addNodeSentence(self.wmlstring,
-                                             domain=_currentdomain,
-                                             ismultiline=self.ismultiline,
-                                             lineno=self.lineno,
-                                             lineno_sub=_linenosub,
-                                             override=_pending_cinfo["po-override"],
-                                             addition=_pending_cinfo["po"])
+                                                 domain=_currentdomain,
+                                                 ismultiline=self.ismultiline,
+                                                 lineno=self.lineno,
+                                                 lineno_sub=_linenosub,
+                                                 override=_pending_cinfo["po-override"],
+                                                 addition=_pending_cinfo["po"])
         after_pending_info(self.lineno, not self.istranslatable)
-
 
 
 def addstate(name, value):
@@ -342,7 +342,6 @@ def addstate(name, value):
     if _states is None:
         _states = {}
     _states[name.lower()] = value
-
 
 
 def setup(dictionary, initialdomain, domains, wall, fdebug):
@@ -364,7 +363,6 @@ def setup(dictionary, initialdomain, domains, wall, fdebug):
         _debugmode = True
     setup_luastates()
     setup_wmlstates()
-
 
 
 def run(*, filebuf, fileref, fileno, startstate, waitwml=True):
@@ -441,7 +439,8 @@ def run(*, filebuf, fileref, fileno, startstate, waitwml=True):
             # This unit test is allowed to contain invalid UTF-8. Ignore it.
             return
         errpos = int(e.start)  # error position on file object with UTF-8 error
-        errbval = hex(e.object[errpos]) # value of byte wich causes UTF-8 error
+        # value of byte wich causes UTF-8 error
+        errbval = hex(e.object[errpos])
         # well... when exception occurred, the _current_lineno value
         # was not updated at all due to the failure of the try block.
         # (it is = 0)
@@ -449,7 +448,7 @@ def run(*, filebuf, fileref, fileno, startstate, waitwml=True):
         # file the problem happened.
         # In order to perform this task (and not only) we create a temporary
         # string wich contains all the file text UNTIL the UTF-8
-        untilerr_buf = e.object[0:errpos] # buffer containing file text
+        untilerr_buf = e.object[0:errpos]  # buffer containing file text
         untilerr = "".join(map(chr, untilerr_buf))
         # splituntil will be a array of strings (each item is a line of text).
         # the last item will show the point where the invalid UTF-8 character

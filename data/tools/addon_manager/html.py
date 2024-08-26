@@ -18,7 +18,7 @@ from unit_tree.team_colorizer import colorize
 
 # HTML assets that need to be copied to the destination dir.
 HTML_RESOURCES = (
-    "style.css", "asc.gif", "bg.gif", "desc.gif" # Used by style.css:
+    "style.css", "asc.gif", "bg.gif", "desc.gif"  # Used by style.css:
 )
 
 WESMERE_CSS_VERSION = "1.2.0"
@@ -209,6 +209,7 @@ def htmlescape(text, quote=True):
         return text
     return html.escape(text, quote)
 
+
 def urlencode(text):
     """
     Encode the given string to ensure it only contains valid URL characters
@@ -217,6 +218,7 @@ def urlencode(text):
     if text is None:
         return text
     return urllib.parse.quote(text, encoding='utf-8')
+
 
 def output(path, url, datadir, data):
     """Write the HTML index of add-ons into the specified directory."""
@@ -265,23 +267,25 @@ def output(path, url, datadir, data):
     ]
     for count, (header_class, header_label, sort_type) in enumerate(table_headers):
         if sort_type:
-            w('<th onclick="clickSort(%d, %s, this)" class="addon-%s header">%s&nbsp;&nbsp;&nbsp;</th>' % (count, sort_type, header_class, header_label))
+            w('<th onclick="clickSort(%d, %s, this)" class="addon-%s header">%s&nbsp;&nbsp;&nbsp;</th>' %
+              (count, sort_type, header_class, header_label))
         else:
-            w('<th class="addon-%s header">%s&nbsp;&nbsp;&nbsp;</th>' % (header_class, header_label))
+            w('<th class="addon-%s header">%s&nbsp;&nbsp;&nbsp;</th>' %
+              (header_class, header_label))
     w('</tr>\n</thead>\n<tbody>')
 
     addons = data.get_all(tag="campaigns")[0]
     for addon in addons.get_all(tag="campaign"):
         v = addon.get_text_val
 
-        addon_id = v("name") # Escaped as part of a path composition later on.
+        addon_id = v("name")  # Escaped as part of a path composition later on.
         title = htmlescape(v("title", "unknown"))
-        size = float(v("size", "0")) # bytes
-        display_size = size / (1024 * 1024) # MiB
+        size = float(v("size", "0"))  # bytes
+        display_size = size / (1024 * 1024)  # MiB
         addon_type = htmlescape(v("type", "none"))
         version = htmlescape(v("version", "unknown"))
         author = htmlescape(v("author", "unknown"))
-        feedback_url = v("feedback_url", None) # Escaped by a function call.
+        feedback_url = v("feedback_url", None)  # Escaped by a function call.
 
         icon = htmlescape(v("icon", ""))
         description = htmlescape(v('description', '(no description)'))
@@ -301,7 +305,8 @@ def output(path, url, datadir, data):
 
             if uri_manifest:
                 if uri_manifest.group(1) not in ('image/png', 'image/jpeg'):
-                    sys.stderr.write("Data URI icon using unsupported content type " + uri_manifest.group(1))
+                    sys.stderr.write(
+                        "Data URI icon using unsupported content type " + uri_manifest.group(1))
                 else:
                     imgurl = icon
             else:
@@ -323,7 +328,8 @@ def output(path, url, datadir, data):
                 if not os.path.exists(src):
                     src = root_dir + "images/" + icon
                 if not os.path.exists(src):
-                    src = glob.glob(root_dir + "data/campaigns/*/images/" + icon)
+                    src = glob.glob(
+                        root_dir + "data/campaigns/*/images/" + icon)
                     if src:
                         src = src[0]
                     if not src or not os.path.exists(src):
@@ -336,7 +342,7 @@ def output(path, url, datadir, data):
 
         w('<td class="addon-type">')
         if addon_type in ADDON_TYPES_INFO:
-            w('%(short)s<div class="type-tooltip"><b>%(long)s</b><br/>%(help)s</div>' \
+            w('%(short)s<div class="type-tooltip"><b>%(long)s</b><br/>%(help)s</div>'
                 % ADDON_TYPES_INFO[addon_type])
         else:
             w(addon_type)
@@ -350,7 +356,7 @@ def output(path, url, datadir, data):
             w(('<a href="{0}" title="{1}">'
                '<i class="fa fa-fw fa-2x fa-{2}" aria-hidden="true"></i>'
                '<span class="sr-only">{1}</span></a>').format(
-                    htmlescape(url), htmlescape(label), icon))
+                htmlescape(url), htmlescape(label), icon))
 
         w('<td class="addon"><span hidden>%s</span>' % title)
         if url or feedback_url:
@@ -366,7 +372,8 @@ def output(path, url, datadir, data):
            '<span class="addon-meta-label">Author:</span> %s</span></td>') % (
                title, version, author))
 
-        w("<td><span hidden>%d</span><b>%.2f</b>&nbsp;MiB</td>" % (size, display_size))
+        w("<td><span hidden>%d</span><b>%.2f</b>&nbsp;MiB</td>" %
+          (size, display_size))
 
         w("<td><b>%d</b> down<br/>%s up</td>" % (downloads, uploads))
 
@@ -379,7 +386,8 @@ def output(path, url, datadir, data):
     w('</tbody>\n</table>')
     w(WESMERE_FOOTER)
 
-    sys.stderr.write("Done outputting html, now generating %d TC'ed images\n" % len(images_to_tc))
+    sys.stderr.write(
+        "Done outputting html, now generating %d TC'ed images\n" % len(images_to_tc))
     for pair in images_to_tc:
         colorize(None, pair[0], pair[1])
 

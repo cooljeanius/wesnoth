@@ -1,12 +1,13 @@
 # vi: syntax=python:et:ts=4
 import os
 
+
 def setup_cross_compile(env):
     if "mingw" in env["host"] or env["PLATFORM"] == "msys":
         env["PLATFORM"] = "win32"
         env["PROGSUFFIX"] = ".exe"
         env.Tool("mingw")
-        env.Append(LINKFLAGS = ["-static-libgcc", "-static-libstdc++"])
+        env.Append(LINKFLAGS=["-static-libgcc", "-static-libstdc++"])
     else:
         env.Tool("default")
 
@@ -17,7 +18,7 @@ def setup_cross_compile(env):
             "AR",
             "RANLIB",
             "RC"
-            ]
+        ]
         for tool in tools:
             if tool in env:
                 env[tool] = env["host"] + "-" + env[tool]

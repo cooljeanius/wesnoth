@@ -9,19 +9,21 @@ def write_animation(out, aa, name):
     else:
         out.write("%d" % c[0])
 
+
 def count_animations(out, name, a, c):
-    frames = a.get_all(tag = "frame")
+    frames = a.get_all(tag="frame")
     if frames:
         c[0] += len(frames)
         c[1] += 1
-    for a2 in a.get_all(tag = "animation"):
+    for a2 in a.get_all(tag="animation"):
         count_animations(out, name, a2, c)
-    for a2 in a.get_all(tag = "if"):
+    for a2 in a.get_all(tag="if"):
         count_animations(out, name, a2, c)
-    for a2 in a.get_all(tag = "else"):
+    for a2 in a.get_all(tag="else"):
         count_animations(out, name, a2, c)
 
-def write_table_row(out, unit, color, name = None):
+
+def write_table_row(out, unit, color, name=None):
     # See the list at the beginning of src/unit_animation.cpp
     anim_types = [
         "attack_anim",
@@ -49,28 +51,29 @@ def write_table_row(out, unit, color, name = None):
         "sheath_weapon_anim"
     ]
 
-
     needed = {}
-    for at in anim_types: needed[at] = True
+    for at in anim_types:
+        needed[at] = True
 
     needed["healing_anim"] = False
     needed["leading_anim"] = False
     needed["teleport"] = False
-    for abil in unit.get_all(tag = "abilities"):
-        if abil.get_all(tag = "heals"):
+    for abil in unit.get_all(tag="abilities"):
+        if abil.get_all(tag="heals"):
             needed["healing_anim"] = True
-        if abil.get_all(tag = "leadership"):
+        if abil.get_all(tag="leadership"):
             needed["leading_anim"] = True
-        if abil.get_all(tag = "teleport"):
+        if abil.get_all(tag="teleport"):
             needed["teleport"] = True
 
-    if name is None: name = unit.id
+    if name is None:
+        name = unit.id
 
     out.write("<tr><td class=\"%s\">%s</td>" % (color and "c1" or "c2", name))
 
     for t in anim_types:
         if needed[t]:
-            aa = unit.get_all(tag = t)
+            aa = unit.get_all(tag=t)
             if t == "extra_anim":
                 out.write("<td class=\"none\">")
             else:
@@ -82,12 +85,14 @@ def write_table_row(out, unit, color, name = None):
 
     out.write("</tr>\n")
 
-    female = unit.get_all(tag = "female")
-    if female: write_table_row(out, female[0], color, name + "[f]")
+    female = unit.get_all(tag="female")
+    if female:
+        write_table_row(out, female[0], color, name + "[f]")
 
-    for variation in unit.get_all(tag = "variation"):
+    for variation in unit.get_all(tag="variation"):
         write_table_row(out, variation, color, name + "[%s]" %
-            variation.get_text_val("variation_name"))
+                        variation.get_text_val("variation_name"))
+
 
 def put_units(f, us):
     f.write("<table>\n")
@@ -123,7 +128,7 @@ def put_units(f, us):
 
     def by_race(u):
         return u.rid + u.id
-    us.sort(key = by_race)
+    us.sort(key=by_race)
     race = None
     color = 0
     for u in us:
@@ -133,6 +138,7 @@ def put_units(f, us):
         write_table_row(f, u, color)
 
     f.write("</table>\n")
+
 
 def write_table(f, wesnoth):
     f.write("""
@@ -154,12 +160,13 @@ td.none {border: solid 1px; background-color: #ffffff;}
     f.write("<i>total frames (number of animations)</i>\n")
 
     f.write("<h2>Mainline</h2>\n")
-    us = [x for x in list(wesnoth.unit_lookup.values()) if x.campaigns[0] == "mainline"]
+    us = [x for x in list(wesnoth.unit_lookup.values())
+          if x.campaigns[0] == "mainline"]
     put_units(f, us)
 
-    #f.write("<h2>Campaigns and Addons</h2>\n")
-    #us = [x for x in wesnoth.unit_lookup.values() if x.campaigns[0] != "mainline"]
-    #put_units(f, us)
+    # f.write("<h2>Campaigns and Addons</h2>\n")
+    # us = [x for x in wesnoth.unit_lookup.values() if x.campaigns[0] != "mainline"]
+    # put_units(f, us)
 
     f.write("</body></html>")
     f.close()

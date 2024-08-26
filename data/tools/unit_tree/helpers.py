@@ -3,25 +3,35 @@
 """
 Various helpers for use by the wmlunits tool.
 """
-import sys, os, re, glob, shutil, copy, subprocess, traceback
+import sys
+import os
+import re
+import glob
+import shutil
+import copy
+import subprocess
+import traceback
 
 import wesnoth.wmlparser3 as wmlparser3
 from unit_tree.team_colorizer import colorize
 import wesnoth.base64url as base64url
 
+
 class Image:
     def __init__(self, id_name, ipath, bases, no_tc):
         self.id_name = id_name
-        self.ipath = ipath # none if it was not found
+        self.ipath = ipath  # none if it was not found
         self.bases = bases
         self.no_tc = no_tc
         self.addons = set()
+
 
 class ImageCollector:
     """
     A class to collect all the images which need to be copied to the HTML
     output folder.
     """
+
     def __init__(self, wesnoth_exe, userdir, datadir, magick_exe="convert"):
         self.images_by_addon_name = {}
         self.images_by_ipath = {}
@@ -65,7 +75,8 @@ class ImageCollector:
             dirname, filename = os.path.split(name)
             new_bases = []
             for base in bases:
-                new_bases.append(os.path.join("%s" % base, dirname, "transparent", filename))
+                new_bases.append(os.path.join(
+                    "%s" % base, dirname, "transparent", filename))
                 new_bases.append(os.path.join("%s" % base, name))
             bases = new_bases
 
@@ -95,10 +106,10 @@ class ImageCollector:
             vpath = os.path.normpath(vpath.strip())
             for hidden_path in hide_paths:
                 if vpath.startswith(hidden_path):
-                #if os.path.commonpath(vpath, hidden_path) == hidden_path:
+                    # if os.path.commonpath(vpath, hidden_path) == hidden_path:
                     vpath = os.path.relpath(vpath, hidden_path)
                     break
-            else:                
+            else:
                 # root_dir is prefix after normalization
                 root_dir = vpath.split("/")[0].split("\\")[0]
                 if prefix_fallback is None or (root_dir != "general" and root_dir != prefix_fallback):
@@ -106,7 +117,8 @@ class ImageCollector:
                     vpath = "403.png"
 
             encoded_dir_name = base64url.encode_str(os.path.dirname(vpath))
-            sanitized_file_name = re.sub(r'[^a-zA-Z0-9_.-]' , "", ".".join(os.path.basename(vpath).split("(")[0].split(".")[-2:]))
+            sanitized_file_name = re.sub(
+                r'[^a-zA-Z0-9_.-]', "", ".".join(os.path.basename(vpath).split("(")[0].split(".")[-2:]))
             head, ext = os.path.splitext(sanitized_file_name)
             return '%s..%s%s' % (head, encoded_dir_name, ext)
 
@@ -141,10 +153,12 @@ class ImageCollector:
             no_tc = image.no_tc
 
             ipath = os.path.normpath(image.ipath)
-            default_addons_dir = os.path.join(options.config_dir, "data", "add-ons")
+            default_addons_dir = os.path.join(
+                options.config_dir, "data", "add-ons")
             if ipath.startswith(default_addons_dir):
                 # Override with custom --addons
-                ipath = os.path.join(options.addons, os.path.relpath(ipath, default_addons_dir))
+                ipath = os.path.join(
+                    options.addons, os.path.relpath(ipath, default_addons_dir))
             if ipath and os.path.exists(ipath) and not os.path.isdir(ipath):
                 if no_tc:
                     shutil.copy2(ipath, opath)
@@ -156,16 +170,21 @@ class ImageCollector:
                         image.id_name, ipath, ", ".join(image.addons)))
                 if options.verbose:
                     if image.bases:
-                        sys.stderr.write("Warning: Looked at the following locations:\n")
+                        sys.stderr.write(
+                            "Warning: Looked at the following locations:\n")
                         sys.stderr.write("\n".join(image.bases) + "\n")
                     else:
                         sys.stderr.write("nowhere\n")
 
+
 blah = 1
+
+
 class WesnothList:
     """
     Lists various Wesnoth stuff like units, campaigns, terrains, factions...
     """
+
     def __init__(self, wesnoth_exe, config_dir, data_dir, transdir):
         self.unit_lookup = {}
         self.race_lookup = {}
@@ -184,7 +203,8 @@ class WesnothList:
         n = 0
         for terrain in self.parser.get_all(tag="terrain_type"):
             tstring = terrain.get_text_val("string")
-            if tstring is None: continue
+            if tstring is None:
+                continue
             self.terrain_lookup[tstring] = terrain
             n += 1
         return n
@@ -316,7 +336,8 @@ class WesnothList:
         newmovetypes = getall("movetype")
         for movetype in newmovetypes:
             mtname = movetype.get_text_val("name")
-            if mtname is None: continue
+            if mtname is None:
+                continue
             self.movetype_lookup[mtname] = movetype
 
         # Store race/movetype/faction of each unit for easier access later.
@@ -344,7 +365,8 @@ class WesnothList:
             if advanceto and advanceto != "null":
                 for advance in advanceto.split(","):
                     auid = advance.strip()
-                    if auid: unit.advance.append(auid)
+                    if auid:
+                        unit.advance.append(auid)
             # level
             try:
                 level = int(self.get_unit_value(unit, "level"))
@@ -352,7 +374,8 @@ class WesnothList:
                 level = 0
             except ValueError:
                 level = 0
-            if level < 0: level = 0
+            if level < 0:
+                level = 0
             unit.level = level
 
         return len(newunits)
@@ -416,10 +439,12 @@ class WesnothList:
             return default
         return value
 
+
 class UnitForest:
     """
     Contains the forest of unit advancement trees.
     """
+
     def __init__(self):
         self.trees = {}
         self.lookup = {}
@@ -468,12 +493,13 @@ class UnitForest:
             for c in u.children:
                 recurse(c, already2)
         for u in list(self.trees.values()):
-            already = {u.id : True}
+            already = {u.id: True}
             recurse(u, already)
 
     def update(self):
         self.create_network()
-        self.breadth = sum([x.update_breadth() for x in list(self.trees.values())])
+        self.breadth = sum([x.update_breadth()
+                           for x in list(self.trees.values())])
         return self.breadth
 
     def get_children(self, uid):
@@ -484,10 +510,12 @@ class UnitForest:
         un = self.lookup[uid]
         return un.parent_ids
 
+
 class UnitNode:
     """
     A node in the advancement trees forest.
     """
+
     def __init__(self, unit):
         self.unit = unit
         self.children = []
@@ -502,6 +530,7 @@ class UnitNode:
         else:
             self.breadth = sum([x.update_breadth() for x in self.children])
         return self.breadth
+
 
 class GroupNode:
     def __init__(self, data):

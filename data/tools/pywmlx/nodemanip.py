@@ -12,7 +12,6 @@ onDefineMacro = False
 unbalanced_wml = None
 
 
-
 def _closenode_update_dict(podict):
     global unbalanced_wml
     if nodes[-1].sentences is not None:
@@ -31,11 +30,10 @@ def _closenode_update_dict(podict):
             posentence = d.get(i.sentence)
             if posentence is None:
                 d[i.sentence] = (
-                       nodes[-1].nodesentence_to_posentence(i) )
+                    nodes[-1].nodesentence_to_posentence(i))
             else:
                 posentence.update_with_commented_string(
-                       nodes[-1].nodesentence_to_posentence(i) )
-
+                    nodes[-1].nodesentence_to_posentence(i))
 
 
 def newfile(file_ref, file_no):
@@ -51,22 +49,20 @@ def newfile(file_ref, file_no):
     nodes = None
 
 
-
 def closefile(mydict, lineno):
     global unbalanced_wml
     if nodes is not None:
         if len(nodes) > 1:
             err_message = ("End of WML file reached, but some tags were " +
-                            "not properly closed.\n"
-                            "(nearest unclosed tag is: " +
-                            nodes[-1].tagname + ")" )
+                           "not properly closed.\n"
+                           "(nearest unclosed tag is: " +
+                           nodes[-1].tagname + ")")
             finfo = fileref + ":" + str(lineno)
             wmlwarn(finfo, err_message)
             while len(nodes) > 1:
                 closenode("", mydict, lineno)
         _closenode_update_dict(mydict)
     unbalanced_wml = None
-
 
 
 def newnode(tagname):
@@ -76,12 +72,11 @@ def newnode(tagname):
     if nodes is None:
         nodes = [pos.WmlNode(fileref, fileno, "", autowml=False)]
     if tagname == "[lua]":
-        nodes.append( pos.WmlNode(fileref, fileno,
-                                  tagname, autowml=False) )
+        nodes.append(pos.WmlNode(fileref, fileno,
+                                 tagname, autowml=False))
     else:
-        nodes.append( pos.WmlNode(fileref, fileno,
-                                  tagname, autowml=True) )
-
+        nodes.append(pos.WmlNode(fileref, fileno,
+                                 tagname, autowml=True))
 
 
 def closenode(closetag, mydict, lineno):
@@ -91,7 +86,7 @@ def closenode(closetag, mydict, lineno):
     global unbalanced_wml
     if nodes is None:
         err_message = ("unexpected closing tag '" +
-                            closetag + "' outside any scope.")
+                       closetag + "' outside any scope.")
         finfo = fileref + ":" + str(lineno)
         unbalanced_wml = (finfo, err_message)
         wmlwarn(*unbalanced_wml)
@@ -103,14 +98,14 @@ def closenode(closetag, mydict, lineno):
         finfo = fileref + ":" + str(lineno)
         if mynode.tagname == "":
             err_message = ("unexpected closing tag '" +
-                            closetag + "' outside any scope.")
+                           closetag + "' outside any scope.")
             unbalanced_wml = (finfo, err_message)
             wmlwarn(*unbalanced_wml)
         else:
             if closetag != expected_closetag:
                 err_message = ("expected closing tag '" +
-                                expected_closetag + "' but '" +
-                                closetag + "' found.")
+                               expected_closetag + "' but '" +
+                               closetag + "' found.")
                 unbalanced_wml = (finfo, err_message)
                 wmlwarn(*unbalanced_wml)
         _closenode_update_dict(mydict)
@@ -124,7 +119,7 @@ def addNodeSentence(sentence, *, domain, ismultiline, lineno, lineno_sub,
     global nodes
     if nodes is None:
         nodes = [pos.WmlNode(fileref=fileref, fileno=fileno,
-                              tagname="", autowml=False)]
+                             tagname="", autowml=False)]
     nodes[-1].add_sentence(sentence, domain=domain, ismultiline=ismultiline,
                            lineno=lineno, lineno_sub=lineno_sub,
                            override=override, addition=addition,
@@ -135,7 +130,7 @@ def addWmlInfo(info):
     global nodes
     if nodes is None:
         nodes = [pos.WmlNode(fileref=fileref, fileno=fileno,
-                              tagname="", autowml=False)]
+                             tagname="", autowml=False)]
     if nodes[-1].wmlinfos is None:
         nodes[-1].wmlinfos = []
     nodes[-1].wmlinfos.append(info)

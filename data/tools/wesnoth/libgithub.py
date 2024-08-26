@@ -20,37 +20,45 @@ import tempfile
 import urllib.request
 
 
-#TODO: document and log where missing
+# TODO: document and log where missing
 
 class Error(Exception):
     """Base class for exceptions in this module."""
     pass
 
+
 class AddonError(Error):
     """Class for exceptions that belong to an add-on."""
+
     def __init__(self, addon, message):
         self.addon = addon
         self.message = message
         self.args = (addon, message)
+
     def __str__(self):
         return "{0}: {1}".format(str(self.addon), str(self.message))
 
+
 class _execresult(object):
     """Store the results of GitHub._execute and Addon._execute"""
+
     def __init__(self, out, err, returncode):
         self.out = out
         self.err = err
         self.returncode = returncode
+
     def __iter__(self):
         yield self.out
         yield self.err
         yield self.returncode
+
 
 class Addon(object):
     """Represents an add-on from a github directory.
 
     Each Addon object belongs to GitHub object and should not be created manually.
     """
+
     def __init__(self, github, name, readonly):
         """Initialize an Addon object.
 
@@ -60,7 +68,8 @@ class Addon(object):
         name: Name of the add-on that this object represents.
         readonly: Whether the add-on has been checked out over git: instead of ssh:
         """
-        logging.debug("Addon created with name {0} and version {1}{2}".format(name, github.version, ". It is read-only" if readonly else ""))
+        logging.debug("Addon created with name {0} and version {1}{2}".format(
+            name, github.version, ". It is read-only" if readonly else ""))
         self.github = github
         self.name = name
         self.readonly = readonly
@@ -88,11 +97,12 @@ class Addon(object):
                 else:
                     real_errs.append(line)
             if real_errs:
-                raise AddonError(self.name, "Error pulling:\n{0}".format("\n".join(real_errs)))
-
+                raise AddonError(
+                    self.name, "Error pulling:\n{0}".format("\n".join(real_errs)))
 
         def remove_untracked():
-            untracked = [line.replace("?? ", "", 1) for line in self._status() if line.startswith("??")]
+            untracked = [line.replace("?? ", "", 1)
+                         for line in self._status() if line.startswith("??")]
             for item in untracked:
                 try:
                     path = os.path.join(self.get_dir(), item)
@@ -111,12 +121,14 @@ class Addon(object):
             logging.warn("Merge done in add-on {0}.".format(self.name))
             return True
         elif "CONFLICT" in out:
-            #This means that a conflicting local commit was done
-            #Its author will have to fix it
-            logging.error("CONFLICT in add-on {0}. Please merge".format(self.name))
+            # This means that a conflicting local commit was done
+            # Its author will have to fix it
+            logging.error(
+                "CONFLICT in add-on {0}. Please merge".format(self.name))
             return False
         elif "local changes" in err:
-            logging.error("Found local changes in add-on {0}.".format(self.name))
+            logging.error(
+                "Found local changes in add-on {0}.".format(self.name))
             # If this is a read-write repo, leave the files be
             # If it's read-only, they're not supposed to be here
             if self.readonly:
@@ -128,22 +140,27 @@ class Addon(object):
                 untracked = [line for line in status if "??" in line]
                 # I don't want to recursively delete directories
                 if len(untracked) > 0:
-                    logging.warn("Untracked files found. Attempting to remove...")
+                    logging.warn(
+                        "Untracked files found. Attempting to remove...")
                     remove_untracked()
 
             return False
         elif "Untracked working tree" in err:
             if self.readonly:
-                logging.error("Untracked files blocking pull of {0}. Attempting to remove...".format(self.name))
+                logging.error(
+                    "Untracked files blocking pull of {0}. Attempting to remove...".format(self.name))
                 remove_untracked()
             else:
-                logging.error("Untracked files blocking pull of {0}. Please remove.".format(self.name))
+                logging.error(
+                    "Untracked files blocking pull of {0}. Please remove.".format(self.name))
             return False
         elif "Your configuration specifies to merge with the ref 'master'" in err:
-            logging.info("Pulled from still-empty (not initialized) repository {0}.".format(self.name))
+            logging.info(
+                "Pulled from still-empty (not initialized) repository {0}.".format(self.name))
             return False
         else:
-            logging.error("Unknown pull result in add-on {0}:\nOut: {1}\nErr: {2}".format(self.name, out, err))
+            logging.error(
+                "Unknown pull result in add-on {0}:\nOut: {1}\nErr: {2}".format(self.name, out, err))
             return False
 
     def sync_from(self, src, exclude):
@@ -154,15 +171,18 @@ class Addon(object):
         Returns whether anything changed.
         Raises libgithub.Error if the checkout is not clean.
         """
-        logging.debug("Syncing add-on {0} from add-on server ({1})".format(self.name, src))
+        logging.debug(
+            "Syncing add-on {0} from add-on server ({1})".format(self.name, src))
 
         status = self._status()
         if status:
-            raise AddonError(self.name, "Checkout is not clean:\n{0}".format("\n".join(status)))
+            raise AddonError(
+                self.name, "Checkout is not clean:\n{0}".format("\n".join(status)))
 
         self._rmtree(".", exclude)
-        #actual copying
-        self._copytree(src, self.get_dir(), ignore=lambda src, names: [n for n in names if n in exclude])
+        # actual copying
+        self._copytree(src, self.get_dir(), ignore=lambda src,
+                       names: [n for n in names if n in exclude])
         self._execute(["git", "add", "."], check_error=True)
 
         status = self._status()
@@ -182,7 +202,8 @@ class Addon(object):
         tmpname = tmpfile.name
         self._execute(["git", "commit", "-F", tmpname], check_error=True)
         os.remove(tmpname)
-        out, err, ret = self._execute(["git", "push", "-u", "--porcelain", "origin", "master"], check_error=False)
+        out, err, ret = self._execute(
+            ["git", "push", "-u", "--porcelain", "origin", "master"], check_error=False)
         statusline = [x for x in out.splitlines() if "refs/heads/master" in x]
         if not statusline:
             raise AddonError(self.name, "No statusline produced by git push")
@@ -197,11 +218,14 @@ class Addon(object):
                 pass
             elif status == "=":
                 # Up to date?
-                logging.warn("Commit to add-on {0} with message '{1}' has not made any changes".format(self.name, message))
+                logging.warn(
+                    "Commit to add-on {0} with message '{1}' has not made any changes".format(self.name, message))
             elif status == "!":
-                raise AddonError(self.name, "Commit with message '{0}' failed for reason {1}".format(message, summary))
+                raise AddonError(
+                    self.name, "Commit with message '{0}' failed for reason {1}".format(message, summary))
             else:
-                raise AddonError(self.name, "Commit with message '{0}' has done something unexpected: {1}".format(message, statusline[0]))
+                raise AddonError(self.name, "Commit with message '{0}' has done something unexpected: {1}".format(
+                    message, statusline[0]))
 
     def get_dir(self):
         """Return the directory this add-on's checkout is in.
@@ -211,7 +235,8 @@ class Addon(object):
     # Internal functions
 
     def _rmtree(self, directory, exclude):
-        logging.debug("Deleting tree {0}, except for {1}".format(self.name, ",".join(exclude)))
+        logging.debug("Deleting tree {0}, except for {1}".format(
+            self.name, ",".join(exclude)))
 
         # Ensure the os calls all happen in the right directory
         # not needed for _execute, as that does the cwd manipulation itself
@@ -230,7 +255,8 @@ class Addon(object):
                 self._rmtree(relpath, exclude)
                 # git rm removes directories that it empties
                 if os.path.exists(relpath):
-                    self._execute(["rmdir", "--ignore-fail-on-non-empty", relpath])
+                    self._execute(
+                        ["rmdir", "--ignore-fail-on-non-empty", relpath])
             else:
                 self._execute(["git", "rm", relpath], check_error=True)
 
@@ -274,14 +300,19 @@ class Addon(object):
             else:
                 errors.extend((src, dst, str(why)))
         if errors:
-            raise AddonError(self.name, "Errors attempting to sync:\n{0}".format("\n".join(errors)))
+            raise AddonError(
+                self.name, "Errors attempting to sync:\n{0}".format("\n".join(errors)))
+
     def _status(self):
         out, err, ret = self._execute(["git", "status", "--porcelain"])
         if err:
-            raise AddonError(self.name, "Status failed with message: {0}".format(err))
+            raise AddonError(
+                self.name, "Status failed with message: {0}".format(err))
         return [line for line in out.split('\n') if len(line)]
-    def _execute(self, command, check_error = False):
+
+    def _execute(self, command, check_error=False):
         return self.github._execute(command, cwd=self.get_dir(), check_error=check_error)
+
 
 _GITHUB_API_BASE = "https://api.github.com/"
 _GITHUB_API_REPOS = "orgs/wescamp/repos"
@@ -291,18 +322,21 @@ _GITHUB_API_TEAM_REPO = "teams/{0}/repos/wescamp/{1}"
 # POST /repos/:user/:repo/hooks
 _GITHUB_API_HOOKS = "repos/wescamp/{0}/hooks"
 
+
 class GitHub(object):
     """Interface to a github checkout directory. Such a directory contains all translatable add-ons for a certain wesnoth version.
 
     Every GitHub object is specific to a directory and wesnoth version.
     """
+
     def __init__(self, directory, version, authorization=None):
         """Initializes a GitHub object.
 
         directory: Directory in which the git repos for this wesnoth branch live.
         version: The version of this wesnoth branch.
         """
-        logging.debug("GitHub created with directory {0} and version {1}, {2} authentication data".format(directory, version, "with" if authorization else "without"))
+        logging.debug("GitHub created with directory {0} and version {1}, {2} authentication data".format(
+            directory, version, "with" if authorization else "without"))
         self.directory = directory
         self.version = version
         self.authorization = authorization
@@ -331,7 +365,8 @@ class GitHub(object):
         """
         logging.debug("Generating add-on object for {0}".format(name))
         if not os.path.isdir(self._absolute_path(name)):
-            logging.debug("Add-on {0} not found locally, checking github.".format(name))
+            logging.debug(
+                "Add-on {0} not found locally, checking github.".format(name))
             github_list = self._github_repos_list(readonly=readonly)
             matches = [x for x in github_list if x[0] == name]
             if matches:
@@ -367,7 +402,8 @@ class GitHub(object):
 
         Returns a list of names that can be passed to self.addon()
         """
-        logging.debug("Generating list of add-on names for version {0}".format(self.version))
+        logging.debug(
+            "Generating list of add-on names for version {0}".format(self.version))
         github_list = self._github_repos_list()
         return [repo[0] for repo in github_list]
 
@@ -411,6 +447,7 @@ class GitHub(object):
         return os.listdir(self.directory)
 
     _github_repos_memo = None
+
     def _github_repos_list(self, readonly=False):
         """Get a list of repositories.
 
@@ -424,7 +461,7 @@ class GitHub(object):
 
         version_suffix = "-{0}".format(self.version)
         return [(repo["name"][:-len(version_suffix)], repo["git_url"] if readonly else repo["ssh_url"])
-                    for repo in self._github_repos_memo if repo["name"].endswith(version_suffix)]
+                for repo in self._github_repos_memo if repo["name"].endswith(version_suffix)]
 
     def _github_repos_create(self, name):
         """Create a new repository.
@@ -435,8 +472,9 @@ class GitHub(object):
 
         # Create the repository
         url = _GITHUB_API_BASE + _GITHUB_API_REPOS
-        requestdata = { "name" : reponame }
-        repodata = self._github_api_request(url, requestdata, authenticate=True)
+        requestdata = {"name": reponame}
+        repodata = self._github_api_request(
+            url, requestdata, authenticate=True)
 
         # Request the teams
         url = _GITHUB_API_BASE + _GITHUB_API_TEAMS
@@ -444,7 +482,8 @@ class GitHub(object):
 
         # Find the right team number
         # This can probably be cleaner
-        team_number = [team["id"] for team in teams if team["name"] == "Developers"][0]
+        team_number = [team["id"]
+                       for team in teams if team["name"] == "Developers"][0]
 
         # Add the repository to the team
         # PUT /teams/:id/repos/:org/:repo
@@ -456,11 +495,11 @@ class GitHub(object):
         # Add commit hook
         baseurl = _GITHUB_API_BASE + _GITHUB_API_HOOKS
         url = baseurl.format(reponame)
-        requestdata = { "name" : "web", "events" : ["push"], "active" : True,
-            "config" : {
-                "url" : "http://ai0867.net:6660/wescamp",
-                "content_type" : "json"
-            }
+        requestdata = {"name": "web", "events": ["push"], "active": True,
+                       "config": {
+            "url": "http://ai0867.net:6660/wescamp",
+            "content_type": "json"
+        }
         }
         self._github_api_request(url, requestdata, authenticate=True)
 
@@ -488,7 +527,8 @@ class GitHub(object):
             if ":" in auth:
                 # username:password
                 base64string = encodestring(auth).replace('\n', '')
-                request.add_header("Authorization", "Basic {0}".format(base64string))
+                request.add_header(
+                    "Authorization", "Basic {0}".format(base64string))
             else:
                 # token
                 request.add_header("Authorization", "Bearer {0}".format(auth))
@@ -509,17 +549,21 @@ class GitHub(object):
             link_header = link_headers[0].lstrip("Link:")
             links_raw = link_header.split(",")
             links_split_raw = [link.split(";") for link in links_raw]
-            links_split_proc = [(l[1].strip().lstrip('rel="').rstrip('"'), l[0].strip().lstrip("<").rstrip(">")) for l in links_split_raw]
+            links_split_proc = [(l[1].strip().lstrip('rel="').rstrip(
+                '"'), l[0].strip().lstrip("<").rstrip(">")) for l in links_split_raw]
             links_dict = dict((k, v) for (k, v) in links_split_proc)
             if "next" in links_dict:
-                logging.debug("Link with rel=\"next\" found, recursing to deal with pagination")
-                rest = self._github_api_request(links_dict["next"], data, method, authenticate)
+                logging.debug(
+                    "Link with rel=\"next\" found, recursing to deal with pagination")
+                rest = self._github_api_request(
+                    links_dict["next"], data, method, authenticate)
                 json_parsed += rest
 
         return json_parsed
 
     def _github_have_authorization(self):
         return self.authorization is not None
+
     def _github_authorization(self):
         if self.authorization:
             return self.authorization
@@ -527,7 +571,7 @@ class GitHub(object):
             raise Error("Authentication required")
 
     def _execute(self, command, cwd=None, check_error=False):
-        #TODO: have an errorcheck that actually checks the returncode?
+        # TODO: have an errorcheck that actually checks the returncode?
         """Executes a command.
 
         command: The command to execute.
@@ -538,10 +582,11 @@ class GitHub(object):
         """
         logging.debug("execute command = '%s'", command)
 
-        p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=True, cwd=cwd)
+        p = subprocess.Popen(command, stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE, close_fds=True, cwd=cwd)
         out = ""
         err = ""
-        while(p.poll() is None):
+        while (p.poll() is None):
             out += p.stdout.read()
             err += p.stderr.read()
 
@@ -552,20 +597,25 @@ class GitHub(object):
         logging.debug("===== stderr ====\n%s\n===== stderr ====", err)
 
         if check_error and len(err):
-            raise Error("Failure executing command '{0}': {1}".format(" ".join(command), err))
+            raise Error("Failure executing command '{0}': {1}".format(
+                " ".join(command), err))
 
         return _execresult(out, err, p.returncode)
 
+
 def _gen(possible_dirs):
     def _get_build_system(possible_dirs):
-        logging.debug("get_build_system with paths: %s", ";".join(possible_dirs))
+        logging.debug("get_build_system with paths: %s",
+                      ";".join(possible_dirs))
 
         if not isinstance(possible_dirs, list):
-            raise Error("Incorrect argument type passed, {0} instead of {1}".format(str(type(possible_dirs)), str(list)))
+            raise Error("Incorrect argument type passed, {0} instead of {1}".format(
+                str(type(possible_dirs)), str(list)))
 
         def is_good_checkout(addon):
             try:
-                out, err, ret = addon._execute(["git", "remote", "-v"], check_error=True)
+                out, err, ret = addon._execute(
+                    ["git", "remote", "-v"], check_error=True)
                 test = "wescamp/build-system"
                 return test in out
             except:
@@ -576,7 +626,8 @@ def _gen(possible_dirs):
             fake_github = GitHub(base, "system")
             fake_build = Addon(fake_github, rest, True)
             if is_good_checkout(fake_build):
-                logging.debug("Found {0} to be valid build-system checkout".format(path))
+                logging.debug(
+                    "Found {0} to be valid build-system checkout".format(path))
                 return fake_build, False
             else:
                 logging.debug("Discarded possible checkout {0}".format(path))
@@ -607,7 +658,10 @@ def _gen(possible_dirs):
             stored_shutil.rmtree(bs.get_dir())
             stored_os.rmdir(os.path.dirname(bs.get_dir()))
 
+
 _g = None
+
+
 def get_build_system(possible_dirs=[]):
     """Create a special 'add-on', containing the wescamp build system.
 

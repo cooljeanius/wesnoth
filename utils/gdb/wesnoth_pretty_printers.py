@@ -1,6 +1,7 @@
 
 # Assorted Pretty printers for wesnoth data structures in gdb
 
+from wesnoth_type_tools import strip_all_type, dereference_if_possible
 import gdb
 import re
 import itertools
@@ -9,7 +10,6 @@ import itertools
 import wesnoth_type_tools
 import importlib
 importlib.reload(wesnoth_type_tools)
-from wesnoth_type_tools import strip_all_type, dereference_if_possible
 
 
 class RecursionManager(object):
@@ -54,24 +54,26 @@ class RecursionManager(object):
         return cls.should_display()
 
 
-#Printer for n_interned::t_interned
+# Printer for n_interned::t_interned
 class T_InternedPrinter(object):
     """Print a t_interned_token<T>"""
+
     def __init__(self, val):
         self.val = val
 
     def to_string(self):
-        #Returns either a string or an other convertible to string
+        # Returns either a string or an other convertible to string
         return self.val['iter_']['first']['_M_dataplus']['_M_p']
 
     def display_hint(self):
-        #one of 'string' 'array' 'map'
+        # one of 'string' 'array' 'map'
         return 'string'
 
 
-#Printer for n_token::t_token
+# Printer for n_token::t_token
 class T_TokenPrinter(object):
     """Print a t_token"""
+
     def __init__(self, val):
         self.val = val
 
@@ -82,17 +84,19 @@ class T_TokenPrinter(object):
         # Get the type name.
         type = strip_all_type(self.val)
 
-        #Return the underlying base class
+        # Return the underlying base class
         baseclass = type.fields()[0].type
 
         return self.val.cast(baseclass)
 
     def display_hint(self):
-        #one of 'string' 'array' 'map'
+        # one of 'string' 'array' 'map'
         return 'string'
+
 
 class TstringPrinter(object):
     """Print a t_string"""
+
     def __init__(self, val):
         self.val = val
 
@@ -100,17 +104,17 @@ class TstringPrinter(object):
         # Get the type name.
         type = strip_all_type(self.val)
 
-        #Dereference pointers
+        # Dereference pointers
         lval = dereference_if_possible(self.val)
 
-        #Return the underlying base class
+        # Return the underlying base class
         baseclass = type.fields()[0].type
 
         shared = lval.cast(baseclass)['val_']
         if shared == 0:
             return 'NULL'
 
-        #Print the untranslated string or an error
+        # Print the untranslated string or an error
         try:
             ret = shared.dereference()['val']['value_']['iter_']['first']
         except RuntimeError as e:
@@ -118,11 +122,13 @@ class TstringPrinter(object):
         return ret
 
     def display_hint(self):
-        #one of 'string' 'array' 'map'
+        # one of 'string' 'array' 'map'
         return 'string'
+
 
 class AttributeValuePrinter(object):
     """Print an attribute_value"""
+
     def __init__(self, val):
         self.val = val
 
@@ -134,7 +140,7 @@ class AttributeValuePrinter(object):
         self.type = strip_all_type(self.val)
 
         try:
-            #Dereference pointers
+            # Dereference pointers
             lval = dereference_if_possible(self.val)
 
             attr = lval
@@ -167,12 +173,12 @@ class AttributeValuePrinter(object):
             yield 'error', "wesnoth_gdb error invalid %s" % self.val.type
 
     def display_hint(self):
-        #one of 'string' 'array' 'map'
+        # one of 'string' 'array' 'map'
         return 'string'
 
 
-#This will be brittle as it depends on the underlying boost implementation, but its better than nothing
-#With much help from http://stackoverflow.com/questions/2804641/pretty-printing-boostunordered-map-on-gdb
+# This will be brittle as it depends on the underlying boost implementation, but its better than nothing
+# With much help from http://stackoverflow.com/questions/2804641/pretty-printing-boostunordered-map-on-gdb
 class BoostUnorderedMapPrinter(object):
     """ Print a boost unordered map"""
 
@@ -186,8 +192,10 @@ class BoostUnorderedMapPrinter(object):
                 self.current_bucket = 0
                 pair = "std::pair<%s const, %s>" % (t_key, t_val)
                 self.pair_pointer = gdb.lookup_type(pair).pointer()
-                self.base_pointer = gdb.lookup_type("boost::unordered_detail::value_base< %s >" % pair).pointer()
-                self.node_pointer = gdb.lookup_type("boost::unordered_detail::hash_node<std::allocator< %s >, boost::unordered_detail::ungrouped>" % pair).pointer()
+                self.base_pointer = gdb.lookup_type(
+                    "boost::unordered_detail::value_base< %s >" % pair).pointer()
+                self.node_pointer = gdb.lookup_type(
+                    "boost::unordered_detail::hash_node<std::allocator< %s >, boost::unordered_detail::ungrouped>" % pair).pointer()
                 self.node = self.buckets[self.current_bucket]['next_']
 
         def __iter__(self):
@@ -202,7 +210,8 @@ class BoostUnorderedMapPrinter(object):
                     raise StopIteration
                 self.node = self.buckets[self.current_bucket]['next_']
 
-            iterator = self.node.cast(self.node_pointer).cast(self.base_pointer).cast(self.pair_pointer).dereference()
+            iterator = self.node.cast(self.node_pointer).cast(
+                self.base_pointer).cast(self.pair_pointer).dereference()
             self.node = self.node['next_']
 
             return ('%s' % iterator['first']), iterator['second']
@@ -238,30 +247,34 @@ class BoostUnorderedMapIteratorPrinter(object):
         t_val = pair.template_argument(1)
         self.node = val['base_']['node_']
         self.pair_pointer = pair.pointer()
-        self.base_pointer = gdb.lookup_type("boost::unordered_detail::value_base< %s >" % pair).pointer()
-        self.node_pointer = gdb.lookup_type("boost::unordered_detail::hash_node<std::allocator< %s >, boost::unordered_detail::ungrouped>" % pair).pointer()
-        self.bucket_pointer = gdb.lookup_type("boost::unordered_detail::hash_bucket<std::allocator< %s > >" % pair).pointer()
+        self.base_pointer = gdb.lookup_type(
+            "boost::unordered_detail::value_base< %s >" % pair).pointer()
+        self.node_pointer = gdb.lookup_type(
+            "boost::unordered_detail::hash_node<std::allocator< %s >, boost::unordered_detail::ungrouped>" % pair).pointer()
+        self.bucket_pointer = gdb.lookup_type(
+            "boost::unordered_detail::hash_bucket<std::allocator< %s > >" % pair).pointer()
 
     def to_string(self):
         if not self.node:
             return 'NULL'
-        iterator = self.node.cast(self.node_pointer).cast(self.base_pointer).cast(self.pair_pointer).dereference()
+        iterator = self.node.cast(self.node_pointer).cast(
+            self.base_pointer).cast(self.pair_pointer).dereference()
         return iterator['second']
 
     def display_hint(self):
         return 'string'
 
 
-
 class ConfigPrinter(object):
     """Print a config"""
+
     def __init__(self, val):
         self.val = val
 
         # Get the type name.
         self.type = strip_all_type(self.val)
 
-        #Dereference pointers
+        # Dereference pointers
         self.lval = dereference_if_possible(self.val)
 
     def to_string(self):
@@ -269,7 +282,7 @@ class ConfigPrinter(object):
 
     def children(self):
         if RecursionManager.should_display():
-            #yield "invalid",  self.val['invalid']
+            # yield "invalid",  self.val['invalid']
             yield "values", self.lval['values_']
             yield "children", self.lval['children_']
             RecursionManager.inc()
@@ -284,18 +297,22 @@ class ConfigPrinter(object):
             pass
 
     def display_hint(self):
-        #one of 'string' 'array' 'map'
+        # one of 'string' 'array' 'map'
         return 'string'
 
 
 # register the pretty-printers
 def add_printers(pretty_printers_dict):
-    pretty_printers_dict[re.compile('^n_interned::t_interned_token.*$')] = T_InternedPrinter
+    pretty_printers_dict[re.compile(
+        '^n_interned::t_interned_token.*$')] = T_InternedPrinter
     pretty_printers_dict[re.compile('^n_token::t_token$')] = T_TokenPrinter
     pretty_printers_dict[re.compile('^t_string$')] = TstringPrinter
-    pretty_printers_dict[re.compile('^config::attribute_value$')] = AttributeValuePrinter
-    pretty_printers_dict[re.compile('^boost::unordered_map.*$')] = BoostUnorderedMapPrinter
-    pretty_printers_dict[re.compile('^boost::unordered_detail::hash_iterator\<std::allocator\<std::pair\<.*$')] = BoostUnorderedMapIteratorPrinter
+    pretty_printers_dict[re.compile(
+        '^config::attribute_value$')] = AttributeValuePrinter
+    pretty_printers_dict[re.compile(
+        '^boost::unordered_map.*$')] = BoostUnorderedMapPrinter
+    pretty_printers_dict[re.compile(
+        '^boost::unordered_detail::hash_iterator\<std::allocator\<std::pair\<.*$')] = BoostUnorderedMapIteratorPrinter
     pretty_printers_dict[re.compile('^config$')] = ConfigPrinter
 
     return pretty_printers_dict
