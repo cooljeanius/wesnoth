@@ -1,6 +1,10 @@
 #! /usr/bin/env python3
 
-import os, sys, argparse, re, base64
+import os
+import sys
+import argparse
+import re
+import base64
 from io import BytesIO
 
 try:

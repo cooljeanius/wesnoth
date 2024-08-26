@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
 from subprocess import Popen, PIPE
-from time import clock, time
 import datetime
 import sqlite3
 import configparser
-import os
-import string
 import random
 import sys
 
@@ -211,9 +208,9 @@ def save_result_logfile(cfg, test, game_result, log_file):
 			test.map + '", "' +
 			str(game_result['end_turn']) + '", "' +
 			str(test.version_string) + '", "' +
-			str(game_result['winner']) + '"\n');
+			str(game_result['winner']) + '"\n')
 
-	log_file.flush();
+	log_file.flush()
 	print('Saved to log file')
 
 def save_result_database(cfg, test, game_result, sqlite_file):
@@ -293,8 +290,8 @@ if cfg.has_option('default', 'log_file'):
 	log_file = open(datetime.datetime.now().strftime(cfg.get('default', 'log_file').strip())  , 'w')
 	log_file.write('"ai_config1", "ai_config2", "ai_ident1", "ai_ident2", "switched_side", ' +
 			'"faction1", "faction2", "is_success", "local_modifications", ' +
-			'"map", "repo_release", "end_turn", "version_string", "winner_side"\n');
-	log_file.flush();
+			'"map", "repo_release", "end_turn", "version_string", "winner_side"\n')
+	log_file.flush()
 sqlite_file = None
 if cfg.has_option('default', 'sqlite_file'):
 	sqlite_file = cfg.get('default', 'sqlite_file')
@@ -305,7 +302,7 @@ if cfg.has_option('default', 'sqlite_file'):
 					test.map + '","' + test.time + '")')
 	test.test_id = cur.lastrowid
 	conn.commit()
-	conn.close();
+	conn.close()
 
 # the following variables are for generating a print output only
 total = 0
@@ -343,4 +340,4 @@ if sqlite_file:
 				test.faction2,
 				test.test_id))
 	conn.commit()
-	conn.close();
+	conn.close()

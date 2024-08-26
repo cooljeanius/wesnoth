@@ -5,7 +5,9 @@ try:
     from . import wmldata
 except ImportError:
     import wmldata
-import os, glob, sys
+import os
+import glob
+import sys
 import re
 
 """
@@ -246,7 +248,7 @@ class Parser:
         text = ""
         while not self.at_end():
             c = self.peek_next()
-            if not c in sep:
+            if c not in sep:
                 return text
             c = self.read_next()
             text += c
@@ -711,7 +713,7 @@ class Parser:
                         else:
                             condition_failed = True
                     else: # what == "#ifndef"
-                        if not name in self.macros:
+                        if name not in self.macros:
                             pass
                         else:
                             condition_failed = True
@@ -865,7 +867,8 @@ def xmlify(tree, verbose=False, depth=0):
             escape(child.get_value())  + '</' + child.name + '>')
 
 if __name__ == "__main__":
-    import argparse, subprocess
+    import argparse
+    import subprocess
 
     argumentparser = argparse.ArgumentParser("usage: %(prog)s [options]")
     argumentparser.add_argument("-p", "--path",  help = "specify wesnoth data path")

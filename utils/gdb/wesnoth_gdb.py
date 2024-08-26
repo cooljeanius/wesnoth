@@ -28,7 +28,7 @@ python wesnoth_gdb.set_levels_of_recursion( number )  #Sets the levels of recurs
 python print(wesnoth_gdb.get_levels_of_recursion())   #Gets the levels of recursion (default 1)
 """
 
-import sys, gdb
+import sys
 import importlib
 
 
