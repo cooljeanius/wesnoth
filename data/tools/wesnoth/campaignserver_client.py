@@ -5,6 +5,7 @@ import zlib
 import io
 import socket
 import ssl
+from ssl import TLSVersion
 import struct
 import glob
 import sys
