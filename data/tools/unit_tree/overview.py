@@ -18,7 +18,7 @@ def write_addon_overview(folder, addon):
     name = addon["name"]
 
     title = html_output.cleantext("Build Report for " + name)
-    "Last updated on " + time.ctime() + "."
+    _ = "Last updated on " + time.ctime() + "."
 
     w(html_output.website_header(path="../", title=title, classes=["wmlunits-report"]))
 
