@@ -300,7 +300,7 @@ static void find_routes(
 		search_counter = 1;
 	}
 	// Initialize the nodes for this search.
-	nodes.resize(map.w() * map.h());
+	nodes.resize(static_cast<size_t>(map.w()) * static_cast<size_t>(map.h()));
 	findroute_comp node_comp(nodes);
 	findroute_indexer index(map.w(), map.h());
 
