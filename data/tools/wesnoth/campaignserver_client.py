@@ -87,6 +87,7 @@ class CampaignClient:
             print("Attempting to connect to the server using SSL/TLS", file=sys.stderr)
             self.context = ssl.create_default_context()
             self.context.minimum_version = ssl.TLSVersion.TLSv1_2
+            self.context.options |= ssl.OP_NO_TLSv1 | ssl.OP_NO_TLSv1_1
         else:
             self.context = None
 
