@@ -309,8 +309,8 @@ void render_minimap(unsigned dst_w,
 
 	DBG_DP << "Creating minimap: " << static_cast<int>(map.w() * scale * 0.75) << ", " << map.h() * scale;
 
-	const std::size_t map_width  = std::max(0, map.w()) * scale * 3 / 4;
-	const std::size_t map_height = std::max(0, map.h()) * scale;
+	const std::size_t map_width  = static_cast<std::size_t>(std::max(0, map.w())) * scale * 3 / 4;
+	const std::size_t map_height = static_cast<std::size_t>(std::max(0, map.h())) * scale;
 
 	// No map!
 	if(map_width == 0 || map_height == 0) {
