@@ -5,6 +5,7 @@ import zlib
 import io
 import socket
 import ssl
+from ssl import TLSVersion
 import struct
 import glob
 import sys
@@ -87,6 +88,7 @@ class CampaignClient:
             print("Attempting to connect to the server using SSL/TLS", file=sys.stderr)
             self.context = ssl.create_default_context()
             self.context.minimum_version = ssl.TLSVersion.TLSv1_2
+            self.context.options |= ssl.OP_NO_TLSv1 | ssl.OP_NO_TLSv1_1
         else:
             self.context = None
 
