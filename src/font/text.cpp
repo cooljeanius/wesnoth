@@ -809,7 +809,7 @@ surface pango_text::create_surface(const SDL_Rect& viewport)
 	// pre-multiplied alpha. SDL doesn't use that so the pixels need to be
 	// decoded again.
 	for(int y = 0; y < viewport.h; ++y) {
-		uint32_t* pixels = reinterpret_cast<uint32_t*>(&surface_buffer_[y * stride]);
+		uint32_t* pixels = reinterpret_cast<uint32_t*>(&surface_buffer_[static_cast<std::size_t>(y) * stride]);
 		for(int x = 0; x < viewport.w; ++x) {
 			from_cairo_format(pixels[x]);
 		}
