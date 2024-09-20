@@ -10,6 +10,7 @@ on:
       - pr/*
       - dependabot/*
       - autofix/alert-*
+      - ruff_unsafe
   pull_request:
     # The branches below must be a subset of the branches above
     branches:
@@ -19,6 +20,7 @@ on:
       - pr/*
       - dependabot/*
       - autofix/alert-*
+      - ruff_unsafe
 
 jobs:
   analyze:
@@ -39,8 +41,8 @@ jobs:
       fail-fast: false
       matrix:
         language: ['cpp', 'python', 'javascript']
-        # CodeQL supports:
-        # ['cpp', 'csharp', 'go', 'java', 'javascript', 'python', 'ruby', 'swift']
+        # CodeQL supports the following languages:
+        # 'cpp', 'csharp', 'go', 'java', 'javascript', 'python', 'ruby', 'swift'
         # Use only 'java' to analyze code written in Java, Kotlin or both
         # Use only 'javascript' to analyze code written in JavaScript,
         # TypeScript or both
