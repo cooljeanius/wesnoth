@@ -798,7 +798,7 @@ surface pango_text::create_surface(const SDL_Rect& viewport)
 	}
 
 	// Resize buffer appropriately and set all pixel values to 0.
-	surface_buffer_.assign(viewport.h * stride, 0);
+	surface_buffer_.assign(static_cast<std::size_t>(viewport.h) * stride, 0);
 
 	// Try rendering the whole text in one go. If this throws a length_error
 	// then leave it to the caller to handle; one reason it may throw is that
