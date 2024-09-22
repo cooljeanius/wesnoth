@@ -193,7 +193,7 @@ namespace {
 		if (search_counter == 0) search_counter = 2;
 
 		static std::vector<node> nodes;
-		nodes.resize(map.w() * map.h());
+		nodes.resize(static_cast<size_t>(map.w()) * map.h());
 
 		indexer index(map.w(), map.h());
 		comp node_comp(nodes);
