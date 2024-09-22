@@ -92,8 +92,8 @@ namespace t_translation {
 		std::vector<terrain_code> data;
 		int w;
 		int h;
-		std::vector<terrain_code>::iterator operator[](int x) { return data.begin() + h * x; }
-		std::vector<terrain_code>::const_iterator operator[](int x) const { return data.begin() + h * x; }
+		std::vector<terrain_code>::iterator operator[](int x) { return data.begin() + static_cast<std::size_t>(h) * x; }
+		std::vector<terrain_code>::const_iterator operator[](int x) const { return data.begin() + static_cast<std::size_t>(h) * x; }
 	};
 
 	/**
