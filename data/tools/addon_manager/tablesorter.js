@@ -2002,7 +2002,7 @@
         getColumnData: function (e, t, r, o, s) {
           if ("object" != typeof t || null === t) return t;
           var a,
-            n = (e = A(e)[0]).config,
+            n = (e = A.find(e)[0]).config,
             i = s || n.$headers,
             d =
               (n.$headerIndexed && n.$headerIndexed[r]) ||
