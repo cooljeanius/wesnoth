@@ -2006,7 +2006,7 @@
             i = s || n.$headers,
             d =
               (n.$headerIndexed && n.$headerIndexed[r]) ||
-              A(i).find('[data-column="' + r + '"]:last');
+              A(i).filter('[data-column="' + r + '"]:last');
           if (void 0 !== t[r]) return o ? t[r] : t[i.index(d)];
           for (a in t)
             if ("string" == typeof a && d.filter(a).add(d.find(a)).length)
