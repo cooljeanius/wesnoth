@@ -1714,7 +1714,7 @@
             a,
             n,
             i,
-            d = (e = A(e)[0]).config,
+            d = (e = A.find(e)[0]).config,
             l = L.debug(d, "core"),
             c = [];
           if (
