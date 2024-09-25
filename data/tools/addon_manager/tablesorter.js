@@ -1982,7 +1982,7 @@
           var o,
             s,
             a = "",
-            n = A(e);
+            n = A.find(e);
           return n.length
             ? ((o = !!A.metadata && n.metadata()),
               (s = " " + (n.attr("class") || "")),
