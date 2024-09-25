@@ -891,7 +891,7 @@
             c = a.$table
               .find("tfoot tr")
               .children("td, th")
-              .add(A(a.namespace + "_extra_headers"))
+              .add(A(escapeHtml(a.namespace) + "_extra_headers"))
               .removeClass(i.join(" ")),
             g = a.$headers
               .add(A("thead " + a.namespace + "_extra_headers"))
@@ -2460,6 +2460,21 @@
             }
           },
         });
+    // Utility function to escape HTML special characters
+    function escapeHtml(string) {
+      return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+        return {
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;',
+          '/': '&#x2F;',
+          '`': '&#x60;',
+          '=': '&#x3D;'
+        }[s];
+      });
+    }
     })(e),
     e.tablesorter
   );
