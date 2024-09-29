@@ -668,12 +668,20 @@ void server::refresh_tournaments(const boost::system::error_code& ec)
 
 void server::handle_new_client(socket_ptr socket)
 {
-	boost::asio::spawn(io_service_, [socket, this](boost::asio::yield_context yield) { login_client(yield, socket); });
+	boost::asio::spawn(io_service_, [socket, this](boost::asio::yield_context yield) { login_client(yield, socket); }
+#if BOOST_VERSION >= 108000
+		, [](std::exception_ptr e) { if (e) std::rethrow_exception(e); }
+#endif
+	);
 }
 
 void server::handle_new_client(tls_socket_ptr socket)
 {
-	boost::asio::spawn(io_service_, [socket, this](boost::asio::yield_context yield) { login_client(yield, socket); });
+	boost::asio::spawn(io_service_, [socket, this](boost::asio::yield_context yield) { login_client(yield, socket); }
+#if BOOST_VERSION >= 108000
+		, [](std::exception_ptr e) { if (e) std::rethrow_exception(e); }
+#endif
+	);
 }
 
 template<class SocketPtr>
@@ -773,7 +781,22 @@ void server::login_client(boost::asio::yield_context yield, SocketPtr socket)
 			default_max_messages_,
 			default_time_period_,
 			is_moderator
-		}](boost::asio::yield_context yield) { handle_player(yield, socket, new_player); }
+	};
+	bool inserted;
+	player_iterator new_player;
+	std::tie(new_player, inserted) = player_connections_.insert(player_connections::value_type(socket, player_data));
+	assert(inserted && "unexpected duplicate username");
+
+	simple_wml::document join_lobby_response;
+	join_lobby_response.root().add_child("join_lobby").set_attr("is_moderator", is_moderator ? "yes" : "no");
+	join_lobby_response.root().child("join_lobby")->set_attr_dup("profile_url_prefix", "https://r.wesnoth.org/u");
+	coro_send_doc(socket, join_lobby_response, yield);
+
+	boost::asio::spawn(io_service_,
+		[this, socket, new_player](boost::asio::yield_context yield) { handle_player(yield, socket, new_player); }
+#if BOOST_VERSION >= 108000
+		, [](std::exception_ptr e) { if (e) std::rethrow_exception(e); }
+#endif
 	);
 
 	LOG_SERVER << log_address(socket) << "\t" << username << "\thas logged on"
