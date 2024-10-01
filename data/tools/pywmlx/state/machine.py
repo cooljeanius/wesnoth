@@ -409,7 +409,6 @@ def run(*, filebuf, fileref, fileno, startstate, waitwml=True):
                     print("LINE", lno, "|", xline, file=_fdebug)
                 # action number is used to know what function we should run
                 action = 0
-                v = None
                 m = None
                 if cs.regex is None:
                     # action = 1 --> execute state.run
