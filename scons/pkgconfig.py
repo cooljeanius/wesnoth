@@ -20,7 +20,6 @@ def run_pkg_config(context, name):
 
 
 def CheckPKG(context, name):
-    env = context.env
     context.Message("Checking for %s... " % name)
     if run_pkg_config(context, name):
         context.Result("yes")
