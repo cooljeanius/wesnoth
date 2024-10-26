@@ -46,9 +46,7 @@ jobs:
             sync && echo "skipping actionlint..."; \
           fi
           if test -x "$(which yamllint)"; then \
-            pushd .github; \
-            yamllint FUNDING.yml dependabot.yml ISSUE_TEMPLATE/*.yml; \
-            popd; \
+            find .github -name '*.yml' -print0 | xargs -0 yamllint; \
           else \
             sync && echo "skipping yamllint..."; \
           fi
@@ -72,6 +70,7 @@ jobs:
           else \
             sync && echo "skipping shellcheck..."; \
           fi
+          # (bandit has its own separate workflow file, so omit that here)
 
   copyright:  # check takes a bit longer and does not need to run in docker
     runs-on: ubuntu-latest
@@ -80,7 +79,7 @@ jobs:
         with: {fetch-depth: 0, submodules: "recursive"}
 
       - name: Dependencies
-        run: pip install pylint flake8 ruff black pyupgrade
+        run: pip install pylint flake8 ruff black pyupgrade bandit
       - name: Copyright check
         run: |
           ./update_copyrights --output= || \
@@ -95,6 +94,8 @@ jobs:
                sync && which black && black ./update_copyrights; \
              elif test -x "$(which pyupgrade)"; then \
                sync && which pyupgrade && pyupgrade ./update_copyrights; \
+             elif test -x "$(which bandit)"; then \
+               sync && which bandit && bandit ./update_copyrights; \
              else \
                sync && echo "No python code quality tools found!" && sleep 1; \
                echo "warning: unable to lint ./update_copyrights script!" >&2; \
