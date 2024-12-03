@@ -48,7 +48,7 @@ class Data:
             + ")"
         )
         if show_contents:
-            if self.is_translatable() == True:
+            if self.is_translatable() is True:
                 result += " _"
             result += " '" + self.get_value() + "'"
         if write:
