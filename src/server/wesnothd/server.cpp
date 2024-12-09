@@ -781,7 +781,7 @@ void server::login_client(boost::asio::yield_context yield, SocketPtr socket)
 			default_max_messages_,
 			default_time_period_,
 			is_moderator
-	};
+		}](boost::asio::yield_context yield) { handle_player(yield, socket, new_player); }
 	bool inserted;
 	player_iterator new_player;
 	std::tie(new_player, inserted) = player_connections_.insert(player_connections::value_type(socket, player_data));
