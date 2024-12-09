@@ -785,7 +785,6 @@ void server::login_client(boost::asio::yield_context yield, SocketPtr socket)
 	std::tie(new_player, inserted) = player_connections_.insert(player_connections::value_type(socket, player_data));
 	assert(inserted && "unexpected duplicate username");
 
-	simple_wml::document join_lobby_response;
 	join_lobby_response.root().add_child("join_lobby").set_attr("is_moderator", is_moderator ? "yes" : "no");
 	join_lobby_response.root().child("join_lobby")->set_attr_dup("profile_url_prefix", "https://r.wesnoth.org/u");
 	coro_send_doc(socket, join_lobby_response, yield);
@@ -1073,15 +1072,10 @@ template<class SocketPtr> void server::send_password_request(SocketPtr socket,
 	async_send_doc_queued(socket, doc);
 }
 
-template<class SocketPtr> void server::handle_player(boost::asio::yield_context yield, SocketPtr socket, const player& player_data)
+template<class SocketPtr> void server::handle_player(boost::asio::yield_context yield, SocketPtr socket, player_iterator player)
 {
-	if(lan_server_)
+	if(lan_server_/*> 0s*/)
 		abort_lan_server_timer();
-
-	bool inserted;
-	player_iterator player;
-	std::tie(player, inserted) = player_connections_.insert(player_connections::value_type(socket, player_data));
-	assert(inserted);
 
 	BOOST_SCOPE_EXIT_ALL(this, &player) {
 		if(!destructed) {
@@ -1096,10 +1090,10 @@ template<class SocketPtr> void server::handle_player(boost::asio::yield_context 
 	}
 	send_server_message(player, information_, "server_info");
 	send_server_message(player, announcements_+tournaments_, "announcements");
-	if(version_info(player_data.version()) < secure_version ){
-		send_server_message(player, "You are using version " + player_data.version() + " which has known security issues that can be used to compromise your computer. We strongly recommend updating to a Wesnoth version " + secure_version.str() + " or newer!", "alert");
+	if(version_info(player->info().version()) < secure_version ){
+		send_server_message(player, "You are using version " + player->info().version() + " which has known security issues that can be used to compromise your computer. We strongly recommend updating to a Wesnoth version " + secure_version.str() + " or newer!", "alert");
 	}
-	if(version_info(player_data.version()) < version_info(recommended_version_)) {
+	if(version_info(player->info().version()) < version_info(recommended_version_)) {
 		send_server_message(player, "A newer Wesnoth version, " + recommended_version_ + ", is out!", "alert");
 	}
 
