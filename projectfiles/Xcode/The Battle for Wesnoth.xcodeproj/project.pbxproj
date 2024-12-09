@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 53;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -5253,9 +5253,11 @@
 			files = (
 			);
 			inputPaths = (
+				"$(SRCROOT)/utils/autorevision.sh",
 			);
 			name = "Update Revision.h";
 			outputPaths = (
+				"$(SRCROOT)/src/revision.h",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -5263,6 +5265,7 @@
 		};
 		91C2A6EB1B843AA900346948 /* Copy Translations (if present) */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
