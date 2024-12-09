@@ -768,9 +768,7 @@ void server::login_client(boost::asio::yield_context yield, SocketPtr socket)
 	coro_send_doc(socket, join_lobby_response, yield);
 
 	simple_wml::node& player_cfg = games_and_users_list_.root().add_child("user");
-
-	boost::asio::spawn(io_service_,
-		[this, socket, new_player = wesnothd::player{
+	wesnothd::player player_data {
 			username,
 			player_cfg,
 			user_handler_ ? user_handler_->get_forum_id(username) : 0,
@@ -781,7 +779,7 @@ void server::login_client(boost::asio::yield_context yield, SocketPtr socket)
 			default_max_messages_,
 			default_time_period_,
 			is_moderator
-		}](boost::asio::yield_context yield) { handle_player(yield, socket, new_player); }
+	};
 	bool inserted;
 	player_iterator new_player;
 	std::tie(new_player, inserted) = player_connections_.insert(player_connections::value_type(socket, player_data));
