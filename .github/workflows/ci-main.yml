@@ -4,11 +4,9 @@ on:
   push:
     branches:
       - master
-      - android-support
   pull_request:
     branches:
       - master
-      - android-support
   workflow_dispatch:
 
 jobs:
@@ -249,7 +247,7 @@ jobs:
       fail-fast: false
       matrix:
         cfg: [ Debug, Release ]
-    runs-on: macos-12
+    runs-on: macos-13
     env:
       CFG: ${{ matrix.cfg }}
 
