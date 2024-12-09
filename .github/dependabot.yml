@@ -31,3 +31,8 @@ updates:
     directory: "/utils/dockerbuilds/steamrt/"
     schedule:
       interval: "weekly"
+  - package-ecosystem: "gradle"
+    directory: "/packaging/android/"
+    schedule:
+      interval: "weekly"
+    target-branch: "android-support"
