@@ -2,10 +2,14 @@ name: "CodeQL"
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master
+      - android-support
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: [ master ]
+    branches:
+      - master
+      - android-support
 
 jobs:
   analyze:
@@ -25,11 +29,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'cpp', 'python', 'javascript' ]
-        # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python', 'ruby', 'swift' ]
-        # Use only 'java' to analyze code written in Java, Kotlin or both
-        # Use only 'javascript' to analyze code written in JavaScript, TypeScript or both
-        # Learn more about CodeQL language support at https://aka.ms/codeql-docs/language-support
+        language: ['cpp', 'python', 'javascript']
+        # CodeQL supports the following keywords for 'language':
+        # 'cpp', 'csharp', 'go', 'java', 'javascript', 'python', 'ruby', 'swift'
+        # Use 'java' to analyze code written in Java, Kotlin, or both
+        # Use 'javascript' to analyze code written in JavaScript, TypeScript,
+        # or both
+        # Learn more about CodeQL language support at:
+        # https://aka.ms/codeql-docs/language-support
 
     steps:
     - { name: Checkout repository, uses: actions/checkout@v4, with: { submodules: "recursive" } }
@@ -39,23 +46,32 @@ jobs:
       uses: github/codeql-action/init@v3
       with:
         languages: ${{ matrix.language }}
-        # If you wish to specify custom queries, you can do so here or in a config file.
-        # By default, queries listed here will override any specified in a config file.
-        # Prefix the list here with "+" to use these queries and those in the config file.
+        # If you wish to specify custom queries, you can do so here or in a
+        # config file.
+        # By default, queries listed here will override any specified in a
+        # config file.
+        # Prefix the list here with "+" to use these queries and those in the
+        # config file.
 
-        # For more details on CodeQL's query packs, refer to: https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
+        # For more details on CodeQL's query packs, refer to:
+        # https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
         # queries: security-extended,security-and-quality
 
     - name: Install dependencies
       if: matrix.language == 'cpp'
       run: |
         sudo apt update
-        sudo apt install scons libboost-system1.74-dev libboost-filesystem1.74-dev libboost-iostreams1.74-dev \
-          libboost-serialization1.74-dev libboost-locale1.74-dev libboost-regex1.74-dev libboost-random1.74-dev \
-          libboost-program-options1.74-dev libboost-thread1.74-dev libboost-context1.74-dev libboost-test-dev \
-          libboost-coroutine1.74-dev libboost-graph1.74-dev libasio-dev libsdl2-dev libsdl2-image-dev \
-          libsdl2-mixer-dev libvorbis-dev libpango1.0-dev libssl-dev libcurl4-openssl-dev liblua5.4-dev
-    # Autobuild attempts to build any compiled languages (C/C++, C#, Go, Java, or Swift).
+        sudo apt install scons libboost-system1.74-dev \
+          libboost-filesystem1.74-dev libboost-iostreams1.74-dev \
+          libboost-serialization1.74-dev libboost-locale1.74-dev \
+          libboost-regex1.74-dev libboost-random1.74-dev \
+          libboost-program-options1.74-dev libboost-thread1.74-dev \
+          libboost-context1.74-dev libboost-test-dev \
+          libboost-coroutine1.74-dev libboost-graph1.74-dev libasio-dev \
+          libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libvorbis-dev \
+          libpango1.0-dev libssl-dev libcurl4-openssl-dev liblua5.4-dev
+    # Autobuild attempts to build any compiled languages
+    # (C/C++, C#, Go, Java, or Swift).
     - name: Autobuild
       uses: github/codeql-action/autobuild@v3
 

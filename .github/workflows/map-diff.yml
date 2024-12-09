@@ -3,7 +3,7 @@ name: Map Diff
 on:
   pull_request_target:
     paths:
-    - '**.map'
+      - '**.map'
 
 jobs:
   comment-map-diff:
@@ -15,8 +15,8 @@ jobs:
       run:
         working-directory: utils/wesnoth-map-diff
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
       with:
         node-version: '16'
     - name: Package install
