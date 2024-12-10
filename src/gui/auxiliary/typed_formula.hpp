@@ -191,11 +191,11 @@ inline int typed_formula<int>::execute(wfl::variant& v) const
 
 
 template<>
-inline unsigned typed_formula<unsigned>::execute(wfl::variant& v) const
+inline unsigned int typed_formula<unsigned int>::execute(wfl::variant& v) const
 {
 	// FIXME: Validate this? As is, the formula could return a negative number which is blindly converted to unsigned.
 	// Unfortunately, some places rely on this happening for diagnostic messages...
-	return v.as_int();
+	return static_cast<unsigned int>(v.as_int());
 }
 
 

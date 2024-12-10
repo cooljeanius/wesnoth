@@ -48,7 +48,7 @@ namespace apple {
 		}
 #endif
 		NSOperatingSystemVersion os_ver = [[NSProcessInfo processInfo] operatingSystemVersion];
-		version_string += version_info(os_ver.majorVersion, os_ver.minorVersion, os_ver.patchVersion);
+		version_string += version_info(os_ver.majorVersion, os_ver.minorVersion, static_cast<unsigned int>(os_ver.patchVersion));
 
 		return version_string;
 	}

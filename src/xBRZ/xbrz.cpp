@@ -226,7 +226,7 @@ public:
     {
         static const size_t I_old = MatrixRotation<rotDeg, I, J, N>::I_old;
         static const size_t J_old = MatrixRotation<rotDeg, I, J, N>::J_old;
-        return *(out_ + J_old + I_old * outWidth_);
+        return *(out_ + J_old + (I_old * static_cast<size_t>(outWidth_)));
     }
 
 private:
@@ -239,7 +239,7 @@ template <class T> inline
 T square(T value) { return value * value; }
 
 
-/*
+#if 0
 inline
 void rgbtoLuv(uint32_t c, double& L, double& u, double& v)
 {
@@ -287,7 +287,7 @@ void rgbtoLuv(uint32_t c, double& L, double& u, double& v)
     u = 13 * L * ( var_U - ref_U );
     v = 13 * L * ( var_V - ref_V );
 }
-*/
+#endif
 
 #if 0
 inline
@@ -353,7 +353,7 @@ double distLAB(uint32_t pix1, uint32_t pix2)
 }
 #endif
 
-/*
+#if 0
 inline
 void rgbtoHsl(uint32_t c, double& h, double& s, double& l)
 {
@@ -432,7 +432,7 @@ double distHSL(uint32_t pix1, uint32_t pix2, double lightningWeight)
 
     return 255 * std::sqrt(square(x1 - x2) + square(y1 - y2) +  square(lightningWeight * (z1 - z2)));
 }
-*/
+#endif
 
 #if 0
 inline
@@ -919,7 +919,7 @@ void scaleImage(const uint32_t* src, uint32_t* trg, int srcWidth, int srcHeight,
             }
 
             //fill block of size scale * scale with the given color
-            fillBlock(out, trgWidth * sizeof(uint32_t), s_0[x], Scaler::scale); //place *after* preprocessing step, to not overwrite the results while processing the the last pixel!
+            fillBlock(out, trgWidth * static_cast<int>(sizeof(uint32_t)), s_0[x], Scaler::scale); //place *after* preprocessing step, to not overwrite the results while processing the the last pixel!
 
             //blend four corners of current pixel
             if (blendingNeeded(blend_xy)) //good 20% perf-improvement

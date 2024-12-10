@@ -129,7 +129,7 @@ inline void lua_object<utils::variant<bool, std::vector<std::string>>>::from_typ
 				if constexpr(utils::decayed_is_same<bool, decltype(v)>) {
 					lua_pushboolean(L, v);
 				} else {
-					lua_createtable(L, v.size(), 0);
+					lua_createtable(L, static_cast<int>(v.size()), 0);
 					for(const std::string& str : v) {
 						lua_pushlstring(L, str.c_str(), str.size());
 						lua_rawseti(L, -2, lua_rawlen(L, -2) + 1);
@@ -147,7 +147,7 @@ inline std::shared_ptr< utils::variant<bool, std::vector<std::string>> > lua_obj
 		return std::make_shared<utils::variant<bool, std::vector<std::string>>>(luaW_toboolean(L, n));
 	} else {
 		auto v = std::make_shared<std::vector<std::string>>();
-		int l = lua_rawlen(L, n);
+		int l = static_cast<int>(lua_rawlen(L, n));
 		for (int i = 1; i < l + 1; ++i)
 		{
 			lua_pushinteger(L, i);
@@ -198,7 +198,7 @@ template <>
 inline std::shared_ptr< std::vector<std::string> > lua_object< std::vector<std::string> >::to_type(lua_State *L, int n)
 {
 	auto v = std::make_shared<std::vector<std::string>>();
-	int l = lua_rawlen(L, n);
+	int l = static_cast<int>(lua_rawlen(L, n));
 	for (int i = 1; i < l + 1; ++i)
 	{
 		lua_pushinteger(L, i);
@@ -215,7 +215,7 @@ template <>
 inline void lua_object< std::vector<std::string> >::from_type(lua_State *L, std::shared_ptr< std::vector<std::string> > value)
 {
 	if(value) {
-		lua_createtable(L, value->size(), 0);
+		lua_createtable(L, static_cast<int>(value->size()), 0);
 		for(const std::string& str : *value) {
 			lua_pushlstring(L, str.c_str(), str.size());
 			lua_rawseti(L, -2, lua_rawlen(L, -2) + 1);
@@ -256,7 +256,7 @@ inline void lua_object<terrain_filter>::from_type(lua_State *L, std::shared_ptr<
 	if(value) {
 		std::set<map_location> locs;
 		value->get_locations(locs);
-		lua_createtable(L, locs.size(), 0);
+		lua_createtable(L, static_cast<int>(locs.size()), 0);
 		for(const map_location& loc : locs) {
 			luaW_pushlocation(L, loc);
 			lua_rawseti(L, -2, lua_rawlen(L, -2) + 1);
@@ -268,7 +268,7 @@ template <>
 inline std::shared_ptr<std::vector<target> > lua_object< std::vector<target> >::to_type(lua_State *L, int n)
 {
 	auto targets = std::make_shared<std::vector<target>>();
-	int l = lua_rawlen(L, n);
+	int l = static_cast<int>(lua_rawlen(L, n));
 
 	for (int i = 1; i <= l; ++i)
 	{
