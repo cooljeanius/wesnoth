@@ -37,7 +37,7 @@ namespace ucs4_convert_impl
 		template<typename value_type>
 		void push(value_type val)
 		{
-			*out_++  = val;
+			*out_++ = val;
 		}
 	};
 	template<typename Tret, typename Tcheck>

@@ -50,7 +50,7 @@ namespace ucs4_convert_impl
 			/* first bit set: character not in US-ASCII, multiple bytes
 			 * number of set bits at the beginning = bytes per character
 			 * e.g. 11110xxx indicates a 4-byte character */
-			int count = count_leading_ones(ch);
+			int count = static_cast<int>(count_leading_ones(ch));
 			if (count == 1 || count > 6) {		// count > 4 after RFC 3629
 				throw utf8::invalid_utf8_exception(); // Stop on invalid characters
 			}
@@ -96,7 +96,7 @@ namespace ucs4_convert_impl
 		static inline char32_t read(iitor_t& input, const iitor_t& end)
 		{
 			assert(input != end);
-			std::size_t size = byte_size_from_utf8_first(*input);
+			std::size_t size = static_cast<std::size_t>(byte_size_from_utf8_first(*input));
 
 			char32_t current_char = static_cast<unsigned char>(*input);
 

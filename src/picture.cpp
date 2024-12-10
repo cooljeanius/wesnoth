@@ -512,7 +512,7 @@ light_string get_light_string(int op, int r, int g, int b)
 {
 	light_string ls;
 	ls.reserve(4);
-	ls.push_back(op);
+	ls.push_back(static_cast<char>(op));
 	ls.push_back(col_to_uchar(r));
 	ls.push_back(col_to_uchar(g));
 	ls.push_back(col_to_uchar(b));

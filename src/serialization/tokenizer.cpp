@@ -36,7 +36,7 @@ tokenizer::tokenizer(std::istream& in) :
 		} else if (c == ' ' || c == '\t') {
 			t = TOK_SPACE;
 		}
-		char_types_[c] = t;
+		char_types_[c] = static_cast<char>(t);
 	}
 	in_.stream().exceptions(std::ios_base::badbit);
 	next_char_fast();
@@ -81,7 +81,7 @@ const token &tokenizer::next_token()
 	case '<':
 		if (peek_char() != '<') {
 			token_.type = token::MISC;
-			token_.value += current_;
+			token_.value += static_cast<char>(current_);
 			break;
 		}
 		token_.type = token::QSTRING;
@@ -96,7 +96,7 @@ const token &tokenizer::next_token()
 				next_char_fast();
 				break;
 			}
-			token_.value += current_;
+			token_.value += static_cast<char>(current_);
 		}
 		break;
 
@@ -117,19 +117,19 @@ const token &tokenizer::next_token()
 				--lineno_;
 				continue;
 			}
-			token_.value += current_;
+			token_.value += static_cast<char>(current_);
 		}
 		break;
 
 	case '[': case ']': case '/': case '\n': case '=': case ',': case '+':
 		token_.type = token::token_type(current_);
-		token_.value = current_;
+		token_.value = static_cast<char>(current_);
 		break;
 
 	case '_':
 		if (!is_alnum(peek_char())) {
 			token_.type = token::token_type(current_);
-			token_.value = current_;
+			token_.value = static_cast<char>(current_);
 			break;
 		}
 		[[fallthrough]];
@@ -138,7 +138,7 @@ const token &tokenizer::next_token()
 		if (is_alnum(current_) || current_ == '$') {
 			token_.type = token::STRING;
 			do {
-				token_.value += current_;
+				token_.value += static_cast<char>(current_);
 				next_char_fast();
 				while (current_ == 254) {
 					skip_comment();
@@ -147,7 +147,7 @@ const token &tokenizer::next_token()
 			} while (is_alnum(current_) || current_ == '$');
 		} else {
 			token_.type = token::MISC;
-			token_.value += current_;
+			token_.value += static_cast<char>(current_);
 			next_char();
 		}
 		return token_;
@@ -205,7 +205,7 @@ void tokenizer::skip_comment()
 
 	dst->clear();
 	while (current_ != '\n' && current_ != EOF) {
-		*dst += current_;
+		*dst += static_cast<char>(current_);
 		next_char_fast();
 	}
 }

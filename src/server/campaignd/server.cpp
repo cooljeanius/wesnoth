@@ -389,7 +389,7 @@ void server::load_config()
 	cfg_["compress_level"] = compress_level_;
 
 	// But not the listening port number.
-	port_ = cfg_["port"].to_int(default_campaignd_port);
+	port_ = static_cast<unsigned short>(cfg_["port"].to_int(default_campaignd_port));
 
 	// Limit the max size of WML documents received from the net to prevent the
 	// possible excessive use of resources due to malformed packets received.

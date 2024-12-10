@@ -104,7 +104,7 @@ static void make_add_diff(
 	assert(!children.empty());
 
 	if(index < 0) {
-		index = children.size() - 1;
+		index = static_cast<int>(children.size() - 1);
 	}
 
 	assert(index < static_cast<int>(children.size()));
@@ -137,7 +137,7 @@ static bool make_delete_diff(const simple_wml::node& src,
 		return false;
 	}
 
-	const int index = std::distance(children.begin(), itor);
+	const int index = static_cast<int>(std::distance(children.begin(), itor));
 
 	simple_wml::node& del = top->add_child("delete_child");
 	del.set_attr_int("index", index);
@@ -173,7 +173,7 @@ static bool make_change_diff(const simple_wml::node& src,
 	simple_wml::node& diff = *top;
 	simple_wml::node& del = diff.add_child("delete_child");
 
-	const int index = std::distance(children.begin(), itor);
+	const int index = static_cast<int>(std::distance(children.begin(), itor));
 
 	del.set_attr_int("index", index);
 	del.add_child(type);
@@ -210,7 +210,7 @@ const std::string help_msg =
 server::server(int port,
 		bool keep_alive,
 		const std::string& config_file)
-	: server_base(port, keep_alive)
+	: server_base(static_cast<unsigned short>(port), keep_alive)
 	, ban_manager_()
 	, ip_log_()
 	, failed_logins_()
@@ -618,7 +618,7 @@ void server::dummy_player_updates(const boost::system::error_code& ec)
 		return;
 	}
 
-	int size = games_and_users_list_.root().children("user").size();
+	int size = static_cast<int>(games_and_users_list_.root().children("user").size());
 	LOG_SERVER << "player count: " << size;
 	if(size % 2 == 0) {
 		simple_wml::node* dummy_user = games_and_users_list_.root().children("user").at(size-1);
@@ -1163,7 +1163,7 @@ void server::handle_player_in_lobby(player_iterator player, simple_wml::document
 				std::string player_name = request->attr("search_player").to_string();
 				auto player_ptr = player_connections_.get<name_t>().find(player_name);
 				if(player_ptr == player_connections_.get<name_t>().end()) {
-					player_id = user_handler_->get_forum_id(player_name);
+					player_id = static_cast<int>(user_handler_->get_forum_id(player_name));
 				} else {
 					player_id = player_ptr->info().config_address()->attr("forum_id").to_int();
 				}

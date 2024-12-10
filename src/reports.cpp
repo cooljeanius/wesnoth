@@ -725,7 +725,7 @@ static config unit_moves(const reports::context& rc, const unit* u, bool is_visi
 	}
 
 	int grey = 128 + static_cast<int>((255 - 128) * movement_frac);
-	color_t c = color_t(grey, grey, grey);
+	color_t c = color_t(grey, grey, static_cast<uint8_t>(grey));
 	int numerator = u->movement_left();
 	if(is_visible_unit) {
 		const pathfind::marked_route& route = game_display::get_singleton()->get_route();

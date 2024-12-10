@@ -777,7 +777,7 @@ void unit::generate_traits(bool must_have_only)
 
 	// Now randomly fill out to the number of traits required or until
 	// there aren't any more traits.
-	int nb_traits = current_traits.size();
+	int nb_traits = static_cast<int>(current_traits.size());
 	int max_traits = u_type.num_traits();
 	for(; nb_traits < max_traits; ++nb_traits)
 	{

@@ -347,7 +347,7 @@ public:
 
 	int depth() const
 	{
-		return preprocessor_queue_.size();
+		return static_cast<int>(preprocessor_queue_.size());
 	}
 
 	preprocessor* current() const
@@ -421,7 +421,7 @@ preprocessor::preprocessor(preprocessor_streambuf& t)
  */
 int preprocessor_streambuf::underflow()
 {
-	unsigned sz = 0;
+	unsigned int sz = 0;
 	if(char* gp = gptr()) {
 		if(gp < egptr()) {
 			// Sanity check: the internal buffer has not been totally consumed,
@@ -431,7 +431,7 @@ int preprocessor_streambuf::underflow()
 
 		// The buffer has been completely read; fill it again.
 		// Keep part of the previous buffer, to ensure putback capabilities.
-		sz = out_buffer_.size();
+		sz = static_cast<unsigned int>(out_buffer_.size());
 		buffer_.str(std::string());
 
 		if(sz > 3) {
@@ -461,7 +461,7 @@ int preprocessor_streambuf::underflow()
 	}
 
 	char* begin = &*out_buffer_.begin();
-	unsigned bs = out_buffer_.size();
+	unsigned int bs = static_cast<unsigned int>(out_buffer_.size());
 
 	setg(begin, begin + sz, begin + bs);
 
@@ -612,7 +612,7 @@ public:
 	{
 		while(pos_ != end_) {
 			const std::string& name = *(pos_++);
-			unsigned sz = name.size();
+			unsigned int sz = static_cast<unsigned int>(name.size());
 
 			// Use reverse iterator to optimize testing
 			if(sz < 5 || !std::equal(name.rbegin(), name.rbegin() + 4, "gfc.")) {
@@ -894,7 +894,7 @@ void preprocessor_data::push_token(token_desc::token_type t)
 		}
 
 		outer_type = token_desc::token_type::macro_chunk;
-		tokens_.back().stack_pos = strings_.size() + 1;
+		tokens_.back().stack_pos = static_cast<int>(strings_.size() + 1);
 	}
 
 	std::ostringstream s;
@@ -984,7 +984,7 @@ std::string preprocessor_data::read_word()
 	while(true) {
 		int c = in_.peek();
 
-		if(c == preprocessor_streambuf::traits_type::eof() || utils::portable_isspace(c)) {
+		if(c == preprocessor_streambuf::traits_type::eof() || utils::portable_isspace(static_cast<char>(c))) {
 			// DBG_PREPROC << "(" << res << ")";
 			return res;
 		}
@@ -1148,7 +1148,7 @@ bool preprocessor_data::get_chunk()
 		put(c);
 
 		if(c == '>' && in_.peek() == '>') {
-			put(in_.get());
+			put(static_cast<char>(in_.get()));
 			pop_token();
 		}
 	} else if(c == '<' && in_.peek() == '<') {

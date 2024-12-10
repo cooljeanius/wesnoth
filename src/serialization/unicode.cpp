@@ -42,7 +42,7 @@ static int byte_size_from_utf8_first(const unsigned char ch)
 	/* first bit set: character not in US-ASCII, multiple bytes
 	 * number of set bits at the beginning = bytes per character
 	 * e.g. 11110xxx indicates a 4-byte character */
-	int count = count_leading_ones(ch);
+	int count = static_cast<int>(count_leading_ones(ch));
 	if (count == 1 || count > 6) {		// count > 4 after RFC 3629
 		throw invalid_utf8_exception(); // Stop on invalid characters
 	}
@@ -59,7 +59,7 @@ std::string lowercase(const std::string& s)
 			char32_t uchar = *itor;
 			// If wchar_t is less than 32 bits wide, we cannot apply towlower() to all codepoints
 			if(uchar <= static_cast<char32_t>(std::numeric_limits<wchar_t>::max()))
-				uchar = towlower(static_cast<wchar_t>(uchar));
+				uchar = static_cast<char32_t>(towlower(static_cast<wchar_t>(uchar)));
 			res += unicode_cast<std::string>(uchar);
 		}
 
@@ -73,10 +73,11 @@ std::size_t index(const std::string& str, const std::size_t index)
 {
 	// chr counts characters, i is the codepoint index
 	// remark: several functions rely on the fallback to str.length()
-	unsigned int i = 0, len = str.size();
+	unsigned int i = 0;
+	unsigned int len = static_cast<unsigned int>(str.size());
 	try {
 		for (unsigned int chr=0; chr<index && i<len; ++chr) {
-			i += byte_size_from_utf8_first(str[i]);
+			i += static_cast<unsigned int>(byte_size_from_utf8_first(str[i]));
 		}
 	} catch(const invalid_utf8_exception&) {
 		ERR_GENERAL << "Invalid UTF-8 string.";
@@ -86,10 +87,11 @@ std::size_t index(const std::string& str, const std::size_t index)
 
 std::size_t size(const std::string& str)
 {
-	unsigned int chr, i = 0, len = str.size();
+	unsigned int chr, i = 0;
+	unsigned int len = static_cast<unsigned int>(str.size());
 	try {
 		for (chr=0; i<len; ++chr) {
-			i += byte_size_from_utf8_first(str[i]);
+			i += static_cast<unsigned int>(byte_size_from_utf8_first(str[i]));
 		}
 	} catch(const invalid_utf8_exception&) {
 		ERR_GENERAL << "Invalid UTF-8 string.";
@@ -105,7 +107,7 @@ std::string& insert(std::string& str, const std::size_t pos, const std::string& 
 std::string& erase(std::string& str, const std::size_t start, const std::size_t len)
 {
 	if (start > size(str)) return str;
-	unsigned pos = index(str, start);
+	unsigned int pos = static_cast<unsigned int>(index(str, start));
 
 	if (len == std::string::npos) {
 		// without second argument, std::string::erase truncates
