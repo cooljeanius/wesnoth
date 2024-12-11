@@ -611,7 +611,6 @@ class Parser:
         spaces = ""
         filename = "(None)"
         line = -1
-        got_lua = False
         while 1:
             if c == "{":
                 keep_macro = self.parse_macro()

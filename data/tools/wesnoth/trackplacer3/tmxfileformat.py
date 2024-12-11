@@ -167,7 +167,7 @@ class TmxFileFormat(FileFormatHandler):
                 attrib["id"] = id_counter.get()
                 attrib["x"] = str(point.x + image_offset[point.action][0])
                 attrib["y"] = str(point.y + image_offset[point.action][1])
-                o = ET.SubElement(layer, "object", attrib=attrib)
+                _ = ET.SubElement(layer, "object", attrib=attrib)
 
         # The points in each journey need to be kept in the correct order, so that the animation
         # shows movement in the correct direction. If we know which points are newly-added, then the
