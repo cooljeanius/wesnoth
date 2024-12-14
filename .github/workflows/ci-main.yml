@@ -355,11 +355,17 @@ jobs:
         with:
           name: MacOS ${{ matrix.cfg }} disk image
           path: projectfiles/Xcode/Wesnoth_${{ matrix.cfg }}.dmg
-      - name: Run WML tests
+      - name: Possibly run WML tests
         if: matrix.cfg == 'Release'
-        run: >
-          ./run_wml_tests -g -c -t 30 -p \
-            "projectfiles/Xcode/build/$CFG/The Battle for Wesnoth.app/Contents/MacOS/The Battle for Wesnoth"
+        run: |
+          if test -x "$(which gdb)"; then \
+            ./run_wml_tests -g -c -t 30 -p \
+              "projectfiles/Xcode/build/$CFG/The Battle for Wesnoth.app/Contents/MacOS/The Battle for Wesnoth"; \
+          else \
+            sync && stat ./run_wml_tests; \
+            sync && echo "FIXME: need gdb to handle WML test crashes"; \
+            sync && echo "FIXME: see upstream wesnoth bug 9597"; \
+          fi
       - name: Skip unit tests
         run: >
           stat ./run_boost_tests && sync && echo "FIXME: unit tests are broken"
