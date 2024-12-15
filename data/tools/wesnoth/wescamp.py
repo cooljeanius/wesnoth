@@ -336,7 +336,6 @@ if __name__ == "__main__":
 
         # Item [0] hardcoded seems to work
         campaigns = data.data[0]
-        result = {}
         for c in campaigns.get_all("campaign"):
             if c.get_text_val("name") != addon:
                 continue
@@ -367,7 +366,7 @@ if __name__ == "__main__":
 
         # Is the addon in the list with campaigns to be translated.
         campaigns = list_addons(server, True)
-        if (addon in campaigns) == False:
+        if (addon in campaigns) is False:
             logging.info(
                 "Addon '%s' is not marked as translatable " + "upload aborted.", addon
             )
