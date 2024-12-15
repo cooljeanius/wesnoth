@@ -390,7 +390,7 @@ void game::reset_sides()
 	side_controllers_.clear();
 	sides_.clear();
 
-	nsides_ = get_sides_list().size();
+	nsides_ = static_cast<int>(get_sides_list().size());
 
 	side_controllers_.resize(nsides_);
 	sides_.resize(nsides_);
@@ -637,7 +637,7 @@ bool game::describe_slots()
 	}
 
 	int available_slots = 0;
-	int num_sides = get_sides_list().size();
+	int num_sides = static_cast<int>(get_sides_list().size());
 	int i = 0;
 
 	for(const simple_wml::node* side : get_sides_list()) {
@@ -984,7 +984,7 @@ bool game::process_turn(simple_wml::document& data, player_iterator user)
 			LOG_GAME << msg.str() << " (game id: " << id_ << ", " << db_id_ << ")";
 			send_and_record_server_message(msg.str());
 
-			marked.push_back(index - marked.size());
+			marked.push_back(static_cast<int>(index - marked.size()));
 		} else if((*command).child("speak")) {
 			simple_wml::node& speak = *(*command).child("speak");
 			if(!speak["to_sides"].empty() || is_muted_observer(user)) {
@@ -1346,7 +1346,7 @@ void game::update_turn_data()
 		turns_cfg = &description_->add_child("turn_data");
 	}
 
-	turns_cfg->set_attr_int("current", current_turn());
+	turns_cfg->set_attr_int("current", static_cast<int>(current_turn()));
 	turns_cfg->set_attr_int("max", num_turns_);
 }
 

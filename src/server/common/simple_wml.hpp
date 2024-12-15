@@ -37,11 +37,11 @@ class string_span
 public:
 	string_span() : str_(nullptr), size_(0)
 	{}
-	string_span(const char* str, int size) : str_(str), size_(size)
+	string_span(const char* str, int size) : str_(str), size_(static_cast<unsigned int>(size))
 	{}
-	string_span(const char* str) : str_(str), size_(strlen(str))
+	string_span(const char* str) : str_(str), size_(static_cast<unsigned int>(strlen(str)))
 	{}
-	string_span(const char* begin, const char* end) : str_(begin), size_(end - begin)
+	string_span(const char* begin, const char* end) : str_(begin), size_(static_cast<unsigned int>(end - begin))
 	{}
 
 	typedef const char* const_iterator;
@@ -74,7 +74,7 @@ public:
 		return !operator==(o);
 	}
 	bool operator<(const string_span& o) const {
-		const int len = size_ < o.size_ ? size_ : o.size_;
+		const int len = static_cast<int>((size_ < o.size_) ? size_ : o.size_);
 		for(int n = 0; n < len; ++n) {
 			if(str_[n] != o.str_[n]) {
 				if(str_[n] < o.str_[n]) {
@@ -91,7 +91,7 @@ public:
 	const char* begin() const { return str_; }
 	const char* end() const { return str_ + size_; }
 
-	int size() const { return size_; }
+	int size() const { return static_cast<int>(size_); }
 	bool empty() const { return size_ == 0; }
 	bool is_null() const { return str_ == nullptr; }
 

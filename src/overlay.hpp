@@ -47,8 +47,8 @@ struct overlay
 		, id(cfg["id"])
 		, halo_handle()
 		, visible_in_fog(cfg["visible_in_fog"].to_bool())
-		, submerge(cfg["submerge"].to_double(0))
-		, z_order(cfg["z_order"].to_double(0))
+		, submerge(static_cast<float>(cfg["submerge"].to_double(0)))
+		, z_order(static_cast<float>(cfg["z_order"].to_double(0)))
 	{
 	}
 

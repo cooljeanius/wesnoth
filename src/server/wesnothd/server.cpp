@@ -104,7 +104,7 @@ static void make_add_diff(
 	assert(!children.empty());
 
 	if(index < 0) {
-		index = children.size() - 1;
+		index = static_cast<int>(children.size() - 1);
 	}
 
 	assert(index < static_cast<int>(children.size()));
@@ -137,7 +137,7 @@ static bool make_delete_diff(const simple_wml::node& src,
 		return false;
 	}
 
-	const int index = std::distance(children.begin(), itor);
+	const int index = static_cast<int>(std::distance(children.begin(), itor));
 
 	simple_wml::node& del = top->add_child("delete_child");
 	del.set_attr_int("index", index);
@@ -173,7 +173,7 @@ static bool make_change_diff(const simple_wml::node& src,
 	simple_wml::node& diff = *top;
 	simple_wml::node& del = diff.add_child("delete_child");
 
-	const int index = std::distance(children.begin(), itor);
+	const int index = static_cast<int>(std::distance(children.begin(), itor));
 
 	del.set_attr_int("index", index);
 	del.add_child(type);
@@ -210,7 +210,7 @@ const std::string help_msg =
 server::server(int port,
 		bool keep_alive,
 		const std::string& config_file)
-	: server_base(port, keep_alive)
+	: server_base(static_cast<unsigned short>(port), keep_alive)
 	, ban_manager_()
 	, ip_log_()
 	, failed_logins_()
@@ -618,7 +618,7 @@ void server::dummy_player_updates(const boost::system::error_code& ec)
 		return;
 	}
 
-	int size = games_and_users_list_.root().children("user").size();
+	int size = static_cast<int>(games_and_users_list_.root().children("user").size());
 	LOG_SERVER << "player count: " << size;
 	if(size % 2 == 0) {
 		simple_wml::node* dummy_user = games_and_users_list_.root().children("user").at(size-1);
@@ -668,12 +668,20 @@ void server::refresh_tournaments(const boost::system::error_code& ec)
 
 void server::handle_new_client(socket_ptr socket)
 {
-	boost::asio::spawn(io_service_, [socket, this](boost::asio::yield_context yield) { login_client(yield, socket); });
+	boost::asio::spawn(io_service_, [socket, this](boost::asio::yield_context yield) { login_client(yield, socket); }
+#if BOOST_VERSION >= 108000
+		, [](std::exception_ptr e) { if (e) std::rethrow_exception(e); }
+#endif
+	);
 }
 
 void server::handle_new_client(tls_socket_ptr socket)
 {
-	boost::asio::spawn(io_service_, [socket, this](boost::asio::yield_context yield) { login_client(yield, socket); });
+	boost::asio::spawn(io_service_, [socket, this](boost::asio::yield_context yield) { login_client(yield, socket); }
+#if BOOST_VERSION >= 108000
+		, [](std::exception_ptr e) { if (e) std::rethrow_exception(e); }
+#endif
+	);
 }
 
 template<class SocketPtr>
@@ -760,9 +768,7 @@ void server::login_client(boost::asio::yield_context yield, SocketPtr socket)
 	coro_send_doc(socket, join_lobby_response, yield);
 
 	simple_wml::node& player_cfg = games_and_users_list_.root().add_child("user");
-
-	boost::asio::spawn(io_service_,
-		[this, socket, new_player = wesnothd::player{
+	wesnothd::player player_data {
 			username,
 			player_cfg,
 			user_handler_ ? user_handler_->get_forum_id(username) : 0,
@@ -773,7 +779,21 @@ void server::login_client(boost::asio::yield_context yield, SocketPtr socket)
 			default_max_messages_,
 			default_time_period_,
 			is_moderator
-		}](boost::asio::yield_context yield) { handle_player(yield, socket, new_player); }
+	};
+	bool inserted;
+	player_iterator new_player;
+	std::tie(new_player, inserted) = player_connections_.insert(player_connections::value_type(socket, player_data));
+	assert(inserted && "unexpected duplicate username");
+
+	join_lobby_response.root().add_child("join_lobby").set_attr("is_moderator", is_moderator ? "yes" : "no");
+	join_lobby_response.root().child("join_lobby")->set_attr_dup("profile_url_prefix", "https://r.wesnoth.org/u");
+	coro_send_doc(socket, join_lobby_response, yield);
+
+	boost::asio::spawn(io_service_,
+		[this, socket, new_player](boost::asio::yield_context yield) { handle_player(yield, socket, new_player); }
+#if BOOST_VERSION >= 108000
+		, [](std::exception_ptr e) { if (e) std::rethrow_exception(e); }
+#endif
 	);
 
 	LOG_SERVER << log_address(socket) << "\t" << username << "\thas logged on"
@@ -1052,15 +1072,10 @@ template<class SocketPtr> void server::send_password_request(SocketPtr socket,
 	async_send_doc_queued(socket, doc);
 }
 
-template<class SocketPtr> void server::handle_player(boost::asio::yield_context yield, SocketPtr socket, const player& player_data)
+template<class SocketPtr> void server::handle_player(boost::asio::yield_context yield, SocketPtr socket, player_iterator player)
 {
-	if(lan_server_)
+	if(lan_server_/*> 0s*/)
 		abort_lan_server_timer();
-
-	bool inserted;
-	player_iterator player;
-	std::tie(player, inserted) = player_connections_.insert(player_connections::value_type(socket, player_data));
-	assert(inserted);
 
 	BOOST_SCOPE_EXIT_ALL(this, &player) {
 		if(!destructed) {
@@ -1075,10 +1090,10 @@ template<class SocketPtr> void server::handle_player(boost::asio::yield_context 
 	}
 	send_server_message(player, information_, "server_info");
 	send_server_message(player, announcements_+tournaments_, "announcements");
-	if(version_info(player_data.version()) < secure_version ){
-		send_server_message(player, "You are using version " + player_data.version() + " which has known security issues that can be used to compromise your computer. We strongly recommend updating to a Wesnoth version " + secure_version.str() + " or newer!", "alert");
+	if(version_info(player->info().version()) < secure_version ){
+		send_server_message(player, "You are using version " + player->info().version() + " which has known security issues that can be used to compromise your computer. We strongly recommend updating to a Wesnoth version " + secure_version.str() + " or newer!", "alert");
 	}
-	if(version_info(player_data.version()) < version_info(recommended_version_)) {
+	if(version_info(player->info().version()) < version_info(recommended_version_)) {
 		send_server_message(player, "A newer Wesnoth version, " + recommended_version_ + ", is out!", "alert");
 	}
 
@@ -1148,7 +1163,7 @@ void server::handle_player_in_lobby(player_iterator player, simple_wml::document
 				std::string player_name = request->attr("search_player").to_string();
 				auto player_ptr = player_connections_.get<name_t>().find(player_name);
 				if(player_ptr == player_connections_.get<name_t>().end()) {
-					player_id = user_handler_->get_forum_id(player_name);
+					player_id = static_cast<int>(user_handler_->get_forum_id(player_name));
 				} else {
 					player_id = player_ptr->info().config_address()->attr("forum_id").to_int();
 				}

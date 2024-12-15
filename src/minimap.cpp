@@ -309,8 +309,8 @@ void render_minimap(unsigned dst_w,
 
 	DBG_DP << "Creating minimap: " << static_cast<int>(map.w() * scale * 0.75) << ", " << map.h() * scale;
 
-	const std::size_t map_width  = std::max(0, map.w()) * scale * 3 / 4;
-	const std::size_t map_height = std::max(0, map.h()) * scale;
+	const std::size_t map_width  = static_cast<std::size_t>(std::max(0, map.w())) * scale * 3 / 4;
+	const std::size_t map_height = static_cast<std::size_t>(std::max(0, map.h())) * scale;
 
 	// No map!
 	if(map_width == 0 || map_height == 0) {
@@ -426,15 +426,15 @@ void render_minimap(unsigned dst_w,
 						color_t tmp = it->second.rep();
 
 						if(fogged(loc)) {
-							tmp.r = std::max(0, tmp.r - 50);
-							tmp.g = std::max(0, tmp.g - 50);
-							tmp.b = std::max(0, tmp.b - 50);
+							tmp.r = static_cast<Uint8>(std::max(0, tmp.r - 50));
+							tmp.g = static_cast<Uint8>(std::max(0, tmp.g - 50));
+							tmp.b = static_cast<Uint8>(std::max(0, tmp.b - 50));
 						}
 
 						if(highlighted) {
-							tmp.r = std::min(255, tmp.r + 50);
-							tmp.g = std::min(255, tmp.g + 50);
-							tmp.b = std::min(255, tmp.b + 50);
+							tmp.r = static_cast<Uint8>(std::min(255, tmp.r + 50));
+							tmp.g = static_cast<Uint8>(std::min(255, tmp.g + 50));
+							tmp.b = static_cast<Uint8>(std::min(255, tmp.b + 50));
 						}
 
 						if(first) {

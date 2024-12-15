@@ -884,7 +884,7 @@ void reposition_sound(int id, unsigned int distance)
 		if(distance >= DISTANCE_SILENT) {
 			Mix_HaltChannel(ch);
 		} else {
-			Mix_SetDistance(ch, distance);
+			Mix_SetDistance(ch, static_cast<Uint8>(distance));
 		}
 	}
 }
@@ -998,7 +998,7 @@ static void play_sound_internal(const std::string& files,
 	 * in response to toggling the checkbox which disables sound.
 	 */
 	if(group != SOUND_UI) {
-		Mix_SetDistance(channel, distance);
+		Mix_SetDistance(channel, static_cast<Uint8>(distance));
 	}
 
 	int res;

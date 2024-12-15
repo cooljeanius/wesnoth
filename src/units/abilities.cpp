@@ -149,12 +149,12 @@ const team& get_team(std::size_t side)
 {
 	// Used if we're in the game, including during the construction of the display_context
 	if(resources::gameboard) {
-		return resources::gameboard->get_team(side);
+		return resources::gameboard->get_team(static_cast<int>(side));
 	}
 
 	// If we get here, we're in the scenario editor
 	assert(display::get_singleton());
-	return display::get_singleton()->get_disp_context().get_team(side);
+	return display::get_singleton()->get_disp_context().get_team(static_cast<int>(side));
 }
 
 /**
@@ -171,7 +171,7 @@ bool affects_side(const config& cfg, std::size_t side, std::size_t other_side)
 
 	if(side == other_side)
 		return cfg["affect_allies"].to_bool(true);
-	if(side_team.is_enemy(other_side))
+	if(side_team.is_enemy(static_cast<int>(other_side)))
 		return cfg["affect_enemies"].to_bool();
 	else
 		return cfg["affect_allies"].to_bool();

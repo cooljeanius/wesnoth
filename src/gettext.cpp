@@ -180,7 +180,7 @@ namespace
 					return nullptr;
 				}
 				auto& catalog = iter->second;
-				const char* lookup = ctx ? catalog.npgettext(ctx, sid, sid, n) : catalog.ngettext(sid, sid, n);
+				const char* lookup = ctx ? catalog.npgettext(ctx, sid, sid, static_cast<unsigned int>(n)) : catalog.ngettext(sid, sid, static_cast<unsigned int>(n));
 				if(lookup != sid) {
 					// n(p)gettext returns one of the input pointers if the string was not found
 					msg = lookup;

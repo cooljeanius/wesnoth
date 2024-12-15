@@ -606,7 +606,7 @@ BOOST_AUTO_TEST_CASE( test_base64_encodings )
 
 	many_bytes.resize(1024);
 	for(int i = 0; i < 1024; ++i) {
-		many_bytes[i] = i % 256;
+		many_bytes[i] = static_cast<uint8_t>(i % 256);
 	}
 
 	BOOST_CHECK(base64::encode({empty.data(), empty.size()}).empty());

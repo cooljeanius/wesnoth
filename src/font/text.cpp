@@ -696,7 +696,7 @@ static void unpremultiply(uint8_t & value, const unsigned div) {
 	// It's probably not worth removing the min, since branch prediction will
 	// make it essentially free if one of the branches is never actually
 	// selected.
-	value = std::min(255u, temp);
+	value = static_cast<uint8_t>(std::min(255u, temp));
 }
 
 /**
@@ -798,7 +798,7 @@ surface pango_text::create_surface(const SDL_Rect& viewport)
 	}
 
 	// Resize buffer appropriately and set all pixel values to 0.
-	surface_buffer_.assign(viewport.h * stride, 0);
+	surface_buffer_.assign(static_cast<std::size_t>(viewport.h) * stride, 0);
 
 	// Try rendering the whole text in one go. If this throws a length_error
 	// then leave it to the caller to handle; one reason it may throw is that
@@ -809,7 +809,7 @@ surface pango_text::create_surface(const SDL_Rect& viewport)
 	// pre-multiplied alpha. SDL doesn't use that so the pixels need to be
 	// decoded again.
 	for(int y = 0; y < viewport.h; ++y) {
-		uint32_t* pixels = reinterpret_cast<uint32_t*>(&surface_buffer_[y * stride]);
+		uint32_t* pixels = reinterpret_cast<uint32_t*>(&surface_buffer_[static_cast<std::size_t>(y) * stride]);
 		for(int x = 0; x < viewport.w; ++x) {
 			from_cairo_format(pixels[x]);
 		}

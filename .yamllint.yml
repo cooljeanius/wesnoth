@@ -1,0 +1,18 @@
+---
+extends: default
+
+ignore:
+  - src/modules/mariadbpp/*.yml
+
+rules:
+  float-values: enable
+  indentation:
+    ignore:
+      - .github/labeler.yml
+  # some lines might be really long in this repo, and I don't feel like
+  # figuring out how to break them up:
+  line-length:
+    max: 363
+    level: warning
+  octal-values: enable
+  truthy: disable

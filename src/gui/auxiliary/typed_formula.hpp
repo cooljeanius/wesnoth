@@ -191,11 +191,11 @@ inline int typed_formula<int>::execute(wfl::variant& v) const
 
 
 template<>
-inline unsigned typed_formula<unsigned>::execute(wfl::variant& v) const
+inline unsigned int typed_formula<unsigned int>::execute(wfl::variant& v) const
 {
 	// FIXME: Validate this? As is, the formula could return a negative number which is blindly converted to unsigned.
 	// Unfortunately, some places rely on this happening for diagnostic messages...
-	return v.as_int();
+	return static_cast<unsigned int>(v.as_int());
 }
 
 
@@ -245,10 +245,10 @@ inline color_t typed_formula<color_t>::execute(wfl::variant& v) const
 	const int alpha = result.size() == 4 ? result[3].as_int() : ALPHA_OPAQUE;
 
 	return color_t(
-		result.at(0).as_int(),
-		result.at(1).as_int(),
-		result.at(2).as_int(),
-		alpha
+		static_cast<uint8_t>(result.at(0).as_int()),
+		static_cast<uint8_t>(result.at(1).as_int()),
+		static_cast<uint8_t>(result.at(2).as_int()),
+		static_cast<uint8_t>(alpha)
 	);
 }
 

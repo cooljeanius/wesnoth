@@ -67,7 +67,7 @@ surface scale_surface_xbrz(const surface & surf, std::size_t z)
 		return temp;
 	}
 
-	surface dst(surf->w *z, surf->h * z);
+	surface dst(static_cast<int>(surf->w * z), static_cast<int>(surf->h * z));
 
 	if (z == 0) {
 		PLAIN_LOG << "Create an empty image";
@@ -221,9 +221,9 @@ surface scale_surface(const surface &surf, int w, int h)
 				rr = bb = gg = aa = 0;
 				for (loc=0; loc<4; loc++) {
 				  a = pix[loc] >> 24;
-				  r = pix[loc] >> 16;
-				  g = pix[loc] >> 8;
-				  b = pix[loc] >> 0;
+				  r = static_cast<uint8_t>(pix[loc] >> 16);
+				  g = static_cast<uint8_t>(pix[loc] >> 8);
+				  b = static_cast<uint8_t>(pix[loc] >> 0);
 
 				  //We also have to implement weighting by alpha for the RGB components
 				  //If a unit has some parts solid and some parts translucent,
@@ -238,15 +238,15 @@ surface scale_surface(const surface &surf, int w, int h)
 				  aa += temp;
 				}
 
-				a = aa >> (16); // we average the alphas, they don't get weighted by any other factor besides bilin
+				a = static_cast<uint8_t>(aa >> (16)); // we average the alphas, they don't get weighted by any other factor besides bilin
 				if (a != 0) {
 					rr /= a;	// finish alpha weighting: divide by sum of alphas
 					gg /= a;
 					bb /= a;
 				}
-				r = rr >> (16); // now shift over by 16 for the bilin part
-				g = gg >> (16);
-				b = bb >> (16);
+				r = static_cast<uint8_t>(rr >> (16)); // now shift over by 16 for the bilin part
+				g = static_cast<uint8_t>(gg >> (16));
+				b = static_cast<uint8_t>(bb >> (16));
 				*dst_word = (a << 24) + (r << 16) + (g << 8) + b;
 			}
 		}
@@ -338,9 +338,9 @@ surface scale_surface_legacy(const surface &surf, int w, int h)
 				int loc;
 				for (loc=0; loc<4; loc++) {
 				  a = pix[loc] >> 24;
-				  r = pix[loc] >> 16;
-				  g = pix[loc] >> 8;
-				  b = pix[loc] >> 0;
+				  r = static_cast<uint8_t>(pix[loc] >> 16);
+				  g = static_cast<uint8_t>(pix[loc] >> 8);
+				  b = static_cast<uint8_t>(pix[loc] >> 0);
 				  if (a != 0) {
 				    avg_r += r;
 				    avg_g += g;
@@ -366,9 +366,9 @@ surface scale_surface_legacy(const surface &surf, int w, int h)
 				rr = gg = bb = aa = 0;
 				for (loc=0; loc<4; loc++) {
 				  a = pix[loc] >> 24;
-				  r = pix[loc] >> 16;
-				  g = pix[loc] >> 8;
-				  b = pix[loc] >> 0;
+				  r = static_cast<uint8_t>(pix[loc] >> 16);
+				  g = static_cast<uint8_t>(pix[loc] >> 8);
+				  b = static_cast<uint8_t>(pix[loc] >> 0);
 				  if (a == 0) {
 				    r = static_cast<uint8_t>(avg_r);
 				    g = static_cast<uint8_t>(avg_g);
@@ -379,10 +379,10 @@ surface scale_surface_legacy(const surface &surf, int w, int h)
 				  bb += b * bilin[loc];
 				  aa += a * bilin[loc];
 				}
-				r = rr >> 16;
-				g = gg >> 16;
-				b = bb >> 16;
-				a = aa >> 16;
+				r = static_cast<uint8_t>(rr >> 16);
+				g = static_cast<uint8_t>(gg >> 16);
+				b = static_cast<uint8_t>(bb >> 16);
+				a = static_cast<uint8_t>(aa >> 16);
 				*dst_word = (a << 24) + (r << 16) + (g << 8) + b;
 			}
 		}
@@ -1419,7 +1419,7 @@ surface blur_alpha_surface(const surface &surf, int depth)
 		p = lock.pixels() + y*res->w;
 		for(x = 0; x < res->w; ++x, ++p) {
 			// Write the current average
-			const uint32_t num = queue.size();
+			const uint32_t num = static_cast<uint32_t>(queue.size());
 			*p = avg(num);
 
 			// Unload earlier pixels that are now too far away
@@ -1458,7 +1458,7 @@ surface blur_alpha_surface(const surface &surf, int depth)
 		p = lock.pixels() + x;
 		for(y = 0; y < res->h; ++y, p += res->w) {
 			// Write the current average
-			const uint32_t num = queue.size();
+			const uint32_t num = static_cast<uint32_t>(queue.size());
 			*p = avg(num);
 
 			// Unload earlier pixels that are now too far away
