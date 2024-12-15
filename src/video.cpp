@@ -838,7 +838,7 @@ std::pair<float, float> get_dpi()
 		//
 		// For more info see issue: https://github.com/wesnoth/wesnoth/issues/5019
 		if(sdl::get_version() >= version_info{2, 0, 12}) {
-			float scale_factor = desktop::apple::get_scale_factor(window->get_display_index());
+			float scale_factor = static_cast<float>(desktop::apple::get_scale_factor(window->get_display_index()));
 			hdpi /= scale_factor;
 			vdpi /= scale_factor;
 		}

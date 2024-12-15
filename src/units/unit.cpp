@@ -208,7 +208,7 @@ static unit_race::GENDER generate_gender(const unit_type& type, bool random_gend
 	if(random_gender == false  ||  genders.size() == 1) {
 		return genders.front();
 	} else {
-		return genders[randomness::generator->get_random_int(0,genders.size()-1)];
+		return genders[randomness::generator->get_random_int(0, static_cast<int>(genders.size() - 1))];
 	}
 }
 
@@ -777,7 +777,7 @@ void unit::generate_traits(bool must_have_only)
 
 	// Now randomly fill out to the number of traits required or until
 	// there aren't any more traits.
-	int nb_traits = current_traits.size();
+	int nb_traits = static_cast<int>(current_traits.size());
 	int max_traits = u_type.num_traits();
 	for(; nb_traits < max_traits; ++nb_traits)
 	{
@@ -861,7 +861,7 @@ void unit::generate_traits(bool must_have_only)
 			break;
 		}
 
-		int num = randomness::generator->get_random_int(0,candidate_traits.size()-1);
+		int num = randomness::generator->get_random_int(0, static_cast<int>(candidate_traits.size() - 1));
 		modifications_.add_child("trait", *candidate_traits[num]);
 		candidate_traits.erase(candidate_traits.begin() + num);
 	}
@@ -1226,7 +1226,7 @@ void unit::expire_modifications(const std::string& duration)
 	for(const auto& mod_name : ModificationTypes) {
 		// Loop through all modifications of this type.
 		// Looping in reverse since we may delete the current modification.
-		for(int j = modifications_.child_count(mod_name)-1; j >= 0; --j)
+		for(int j = static_cast<int>(modifications_.child_count(mod_name) - 1); j >= 0; --j)
 		{
 			const config& mod = modifications_.mandatory_child(mod_name, j);
 
@@ -1853,7 +1853,7 @@ std::vector<std::pair<std::string, std::string>> unit::amla_icons() const
 		icon.first = adv["icon"].str();
 		icon.second = adv["description"].str();
 
-		for(unsigned j = 0, j_count = modification_count("advancement", adv["id"]); j < j_count; ++j) {
+		for(unsigned int j = 0, j_count = static_cast<unsigned int>(modification_count("advancement", adv["id"])); j < j_count; ++j) {
 			temp.push_back(icon);
 		}
 	}
@@ -1896,8 +1896,8 @@ std::vector<config> unit::get_modification_advances() const
 
 		bool exclusion_found = false;
 		for(const std::string& s : uniq_exclude) {
-			int max_num = std::count(temp_exclude.begin(), temp_exclude.end(), s);
-			int mod_num = modification_count("advancement", s);
+			int max_num = static_cast<int>(std::count(temp_exclude.begin(), temp_exclude.end(), s));
+			int mod_num = static_cast<int>(modification_count("advancement", s));
 			if(mod_num >= max_num) {
 				exclusion_found = true;
 				break;
@@ -1910,8 +1910,8 @@ std::vector<config> unit::get_modification_advances() const
 
 		bool requirements_done = true;
 		for(const std::string& s : uniq_require) {
-			int required_num = std::count(temp_require.begin(), temp_require.end(), s);
-			int mod_num = modification_count("advancement", s);
+			int required_num = static_cast<int>(std::count(temp_require.begin(), temp_require.end(), s));
+			int mod_num = static_cast<int>(modification_count("advancement", s));
 			if(required_num > mod_num) {
 				requirements_done = false;
 				break;
@@ -2337,7 +2337,7 @@ void unit::apply_builtin_effect(std::string apply_to, const config& effect)
 
 		temp_advances = utils::parenthetical_split(amlas, ',');
 
-		for(int i = advancements_.size() - 1; i >= 0; i--) {
+		for(int i = static_cast<int>(advancements_.size() - 1); i >= 0; i--) {
 			if(std::find(temp_advances.begin(), temp_advances.end(), advancements_[i]["id"]) != temp_advances.end()) {
 				advancements_.erase(advancements_.begin() + i);
 			}

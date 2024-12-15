@@ -137,7 +137,7 @@ std::vector<uint8_t> generic_decode_le(std::string_view in, const std::vector<in
 
 std::string generic_encode_be(utils::byte_string_view in, const std::string& itoa_map, bool pad)
 {
-	const int in_len = in.length();
+	const int in_len = static_cast<int>(in.length());
 	const int groups = (in_len + 2) / 3;
 	const int out_len = groups * 4;
 
@@ -170,7 +170,7 @@ std::string generic_encode_be(utils::byte_string_view in, const std::string& ito
 }
 std::string generic_encode_le(utils::byte_string_view in, const std::string& itoa_map, bool pad)
 {
-	const int in_len = in.length();
+	const int in_len = static_cast<int>(in.length());
 	const int groups = (in_len + 2) / 3;
 	const int out_len = groups * 4;
 
@@ -239,7 +239,7 @@ std::string encode(utils::byte_string_view bytes)
 int decode(char encoded_char)
 {
 	std::size_t pos = crypt64_itoa_map.find(encoded_char);
-	return pos == std::string::npos ? -1 : pos;
+	return ((pos == std::string::npos) ? -1 : static_cast<int>(pos));
 }
 char encode(int value)
 {

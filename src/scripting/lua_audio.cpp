@@ -496,7 +496,7 @@ static int impl_audio_set(lua_State* L)
 		return 0;
 	}
 	int vol = preferences::sound_volume();
-	float rel = lua_tonumber(L, 3);
+	float rel = static_cast<float>(lua_tonumber(L, 3));
 	if(rel < 0.0f || rel > 100.0f) {
 		return luaL_argerror(L, 1, "volume must be in range 0..100");
 	}

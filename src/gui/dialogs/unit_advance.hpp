@@ -27,7 +27,7 @@ public:
 
 	int get_selected_index() const
 	{
-		return selected_index_;
+		return static_cast<int>(selected_index_);
 	}
 
 private:

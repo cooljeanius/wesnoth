@@ -58,7 +58,7 @@ char* uncompress_buffer(const string_span& input, string_span* span)
 		state = 3;
 
 		const std::size_t chunk_size = input.size() * 10;
-		nalloc = chunk_size;
+		nalloc = static_cast<int>(chunk_size);
 		std::vector<char> buf(chunk_size);
 		state = 4;
 		std::size_t len = 0;
@@ -79,7 +79,7 @@ char* uncompress_buffer(const string_span& input, string_span* span)
 
 		pos += len;
 		state = 5;
-		nalloc = pos;
+		nalloc = static_cast<int>(pos);
 
 		buf.resize(pos);
 		state = 6;
@@ -90,7 +90,7 @@ char* uncompress_buffer(const string_span& input, string_span* span)
 
 		small_out[pos] = 0;
 
-		*span = string_span(small_out, pos);
+		*span = string_span(small_out, static_cast<int>(pos));
 		state = 8;
 		return small_out;
 	} catch (const std::bad_alloc& e) {
@@ -103,7 +103,7 @@ char* uncompress_buffer(const string_span& input, string_span* span)
 
 char* compress_buffer(const char* input, string_span* span, bool bzip2)
 {
-	int nalloc = strlen(input);
+	int nalloc = static_cast<int>(strlen(input));
 	int state = 0;
 	try {
 		std::string in(input);
@@ -118,7 +118,7 @@ char* compress_buffer(const char* input, string_span* span, bool bzip2)
 			filter.push(boost::iostreams::gzip_compressor());
 		}
 		state = 4;
-		nalloc = in.size()*2 + 80;
+		nalloc = static_cast<int>((in.size() * 2) + 80);
 		std::vector<char> buf(nalloc);
 		boost::iostreams::array_sink out(&buf[0], buf.size());
 		filter.push(boost::iostreams::counter());
@@ -238,7 +238,7 @@ node::node(document& doc, node* parent, const char** str, int depth) :
 		switch(*s) {
 		case '[': {
 			if(s[1] == '/') {
-				output_cache_ = string_span(begin, s - begin);
+				output_cache_ = string_span(begin, static_cast<int>(s - begin));
 				s = strchr(s, ']');
 				if(s == nullptr) {
 					throw error("end element unterminated");
@@ -254,7 +254,7 @@ node::node(document& doc, node* parent, const char** str, int depth) :
 				throw error("unterminated element");
 			}
 
-			const int list_index = get_children(string_span(s, end - s));
+			const int list_index = get_children(string_span(s, static_cast<int>(end - s)));
 			check_ordered_children();
 
 			s = end + 1;
@@ -283,7 +283,7 @@ node::node(document& doc, node* parent, const char** str, int depth) :
 				throw error("did not find '=' after attribute");
 			}
 
-			string_span name(s, end - s);
+			string_span name(s, static_cast<int>(end - s));
 			s = end + 1;
 			if(*s == '_') {
 				s = strchr(s, '"');
@@ -345,7 +345,7 @@ node::node(document& doc, node* parent, const char** str, int depth) :
 			++s;
 
 			read_attribute:
-			string_span value(s, end - s);
+			string_span value(s, static_cast<int>(end - s));
 			if(attr_.empty() == false && !(attr_.back().key < name)) {
 				ERR_SWML << "attributes: '" << attr_.back().key << "' < '" << name << "'";
 				throw error("attributes not in order");
@@ -358,7 +358,7 @@ node::node(document& doc, node* parent, const char** str, int depth) :
 		}
 	}
 
-	output_cache_ = string_span(begin, s - begin);
+	output_cache_ = string_span(begin, static_cast<int>(s - begin));
 	check_ordered_children();
 }
 
@@ -456,7 +456,7 @@ node& node::add_child_at(const char* name, std::size_t index)
 
 	check_ordered_children();
 	list.insert(list.begin() + index, new node(*doc_, this));
-	insert_ordered_child(list_index, index);
+	insert_ordered_child(list_index, static_cast<int>(index));
 
 	check_ordered_children();
 	return *list[index];
@@ -491,13 +491,13 @@ void node::remove_child(const string_span& name, std::size_t index)
 		return;
 	}
 
-	remove_ordered_child(std::distance(children_.begin(), itor), index);
+	remove_ordered_child(static_cast<int>(std::distance(children_.begin(), itor)), static_cast<int>(index));
 
 	debug_delete(list[index]);
 	list.erase(list.begin() + index);
 
 	if(list.empty()) {
-		remove_ordered_child_list(std::distance(children_.begin(), itor));
+		remove_ordered_child_list(static_cast<int>(std::distance(children_.begin(), itor)));
 		children_.erase(itor);
 	}
 }
@@ -653,12 +653,12 @@ int node::get_children(const string_span& name)
 {
 	for(child_map::iterator i = children_.begin(); i != children_.end(); ++i) {
 		if(i->first == name) {
-			return std::distance(children_.begin(), i);
+			return static_cast<int>(std::distance(children_.begin(), i));
 		}
 	}
 
 	children_.emplace_back(string_span(name), child_list());
-	return children_.size() - 1;
+	return static_cast<int>(children_.size() - 1);
 }
 
 node::child_map::const_iterator node::find_in_map(const child_map& m, const string_span& attr)
@@ -788,7 +788,7 @@ void node::output(char*& buf, CACHE_STATUS cache_status)
 	}
 
 	if(cache_status == REFRESH_CACHE) {
-		output_cache_ = string_span(begin, buf - begin);
+		output_cache_ = string_span(begin, static_cast<int>(buf - begin));
 	}
 }
 
@@ -919,7 +919,7 @@ int node::nchildren() const
 
 int node::nattributes_recursive() const
 {
-	int res = attr_.capacity();
+	int res = static_cast<int>(attr_.capacity());
 	for(child_map::const_iterator i = children_.begin(); i != children_.end(); ++i) {
 		for(child_list::const_iterator j = i->second.begin(); j != i->second.end(); ++j) {
 			res += (*j)->nattributes_recursive();
@@ -1020,7 +1020,7 @@ document::~document()
 
 const char* document::dup_string(const char* str)
 {
-	const int len = strlen(str);
+	const int len = static_cast<int>(strlen(str));
 	char* res = new char[len+1];
 	memcpy(res, str, len + 1);
 	buffers_.push_back(res);

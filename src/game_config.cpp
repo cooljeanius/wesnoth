@@ -540,9 +540,9 @@ color_t red_to_green(double val, bool for_text)
 	const std::vector<color_t>& color_scale = for_text ? red_green_scale_text : red_green_scale;
 
 	const double val_scaled = std::clamp(0.01 * val, 0.0, 1.0);
-	const int lvl = std::nearbyint((color_scale.size() - 1) * val_scaled);
+	const int lvl = static_cast<int>(std::nearbyint((color_scale.size() - 1) * val_scaled));
 
-	return color_scale[lvl];
+	return static_cast<color_t>(color_scale[lvl]);
 }
 
 color_t blue_to_white(double val, bool for_text)
@@ -550,9 +550,9 @@ color_t blue_to_white(double val, bool for_text)
 	const std::vector<color_t>& color_scale = for_text ? blue_white_scale_text : blue_white_scale;
 
 	const double val_scaled = std::clamp(0.01 * val, 0.0, 1.0);
-	const int lvl = std::nearbyint((color_scale.size() - 1) * val_scaled);
+	const int lvl = static_cast<int>(std::nearbyint((color_scale.size() - 1) * val_scaled));
 
-	return color_scale[lvl];
+	return static_cast<color_t>(color_scale[lvl]);
 }
 
 std::string get_default_title_string()

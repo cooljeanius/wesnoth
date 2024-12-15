@@ -57,7 +57,7 @@ int parse_index(const char* index_str);
 int parse_index(const char* index_str)
 {
 	char* endptr;
-	int res = strtol(index_str, &endptr, 10);
+	int res = static_cast<int>(strtol(index_str, &endptr, 10));
 
 	if(*endptr != ']' || res > static_cast<int>(game_config::max_loop) || endptr == index_str) {
 		throw invalid_variablename_exception();
@@ -182,7 +182,7 @@ public:
 	void from_named(typename get_variable_index_visitor::param_t state) const
 	{
 		state.index_ = n_;
-		resolve_negative_value(state.child_->child_count(state.key_), state.index_);
+		resolve_negative_value(static_cast<int>(state.child_->child_count(state.key_)), state.index_);
 		state.type_ = state_indexed;
 	}
 
@@ -266,7 +266,7 @@ public:
 
 	result_t from_named(param_t state) const
 	{
-		return get_child_range(*state.child_, state.key_, 0, state.child_->child_count(state.key_));
+		return get_child_range(*state.child_, state.key_, 0, static_cast<int>(state.child_->child_count(state.key_)));
 	}
 
 	result_t from_indexed(param_t state) const
@@ -310,7 +310,7 @@ public:
 
 	result_t from_named(param_t state) const
 	{
-		return handler_(*state.child_, state.key_, 0, state.child_->child_count(state.key_));
+		return handler_(*state.child_, state.key_, 0, static_cast<int>(state.child_->child_count(state.key_)));
 	}
 
 	result_t from_indexed(param_t state) const
@@ -407,7 +407,7 @@ public:
 			vi_policy_create::get_child_at(child, key, endindex - 1);
 		}
 
-		int size_diff = datasource_.size() - (endindex - startindex);
+		int size_diff = static_cast<int>(datasource_.size() - (endindex - startindex));
 
 		// remove configs first
 		while(size_diff < 0) {
@@ -421,10 +421,10 @@ public:
 		}
 
 		for(; index < datasource_.size(); ++index) {
-			child.mandatory_child(key, startindex + index).swap(datasource_[index]);
+			child.mandatory_child(key, static_cast<int>(startindex + index)).swap(datasource_[index]);
 		}
 
-		return get_child_range(child, key, startindex, datasource_.size());
+		return get_child_range(child, key, startindex, static_cast<int>(datasource_.size()));
 	}
 
 private:
@@ -459,7 +459,7 @@ public:
 	result_t operator()(config& child, const std::string& key, int /*startindex*/, int /*endindex*/) const
 	{
 		// append == insert at end.
-		int insert_pos = child.child_count(key);
+		int insert_pos = static_cast<int>(child.child_count(key));
 		return insert_range_h::operator()(child, key, insert_pos, insert_pos /*ignored by insert_range_h*/);
 	}
 };

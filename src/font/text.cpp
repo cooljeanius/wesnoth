@@ -696,7 +696,7 @@ static void unpremultiply(uint8_t & value, const unsigned div) {
 	// It's probably not worth removing the min, since branch prediction will
 	// make it essentially free if one of the branches is never actually
 	// selected.
-	value = std::min(255u, temp);
+	value = static_cast<uint8_t>(std::min(255u, temp));
 }
 
 /**
