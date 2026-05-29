@@ -210,7 +210,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - {uses: actions/checkout@v4, with: {submodules: "recursive"}}
+      - {uses: actions/checkout@v6, with: {submodules: "recursive"}}
 
       - name: Steam Runtime
         run: |
@@ -219,7 +219,7 @@ jobs:
           tar -cf "steambuild-$version.tar" steambuild
 
       - name: Upload
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: Steam-Linux
           path: utils/dockerbuilds/steambuild-*.tar
@@ -259,11 +259,12 @@ jobs:
       options: --tty --cap-add=ALL --privileged  # docker create options
 
     steps:
-      - { uses: actions/checkout@v6, with: { submodules: "recursive" } }
+      - {uses: actions/checkout@v6, with: {submodules: "recursive"}}
 
       - name: Flatpak
         run: |
           # write to an ignored filename so the build is not marked as modified
+          set -x
           jq '.modules |= map(if .name == "wesnoth" then ."build-commands"[0]+=" appdata_filepath=org.wesnoth.Wesnoth.appdata.xml" | .sources[0]={type:"dir",path:"."} else . end)' packaging/flatpak/org.wesnoth.Wesnoth.json > wesnoth-manifest.json
           git config --global --add safe.directory "$PWD"
           branch=ci-$(git log -n 1 --format=%h)
@@ -271,7 +272,7 @@ jobs:
           date=$(TZ=UTC0 git log -1 --date=iso-local --format=%cd)
           cp packaging/org.wesnoth.Wesnoth.appdata.xml .
           # add release info so the flatpak shows the version
-          utils/update_appdata "$version" org.wesnoth.Wesnoth.appdata.xml "$date"
+          utils/update_appdata "$version" org.wesnoth.Wesnoth.appdata.xml
           flatpak-builder --force-clean --disable-rofiles-fuse --jobs=2 wesnoth-app wesnoth-manifest.json
           flatpak build-export export-repo wesnoth-app "$branch"
           flatpak build-bundle --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo export-repo wesnoth.flatpak org.wesnoth.Wesnoth "$branch"
@@ -319,7 +320,7 @@ jobs:
       fail-fast: false
       matrix:
         cfg: [Debug, Release]
-    runs-on: macos-13
+    runs-on: macos-14
     env:
       CFG: ${{matrix.cfg}}
 
@@ -399,7 +400,7 @@ jobs:
     defaults:
       run:
         shell: cmd
-    runs-on: windows-2019
+    runs-on: windows-latest
 
     steps:
       - {uses: actions/checkout@v4, with: {submodules: "recursive"}}
