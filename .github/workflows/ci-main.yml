@@ -206,24 +206,6 @@ jobs:
         if: success() || steps.build.outcome == 'success'
         run: ./run_boost_tests
 
-  steam-runtime:
-    runs-on: ubuntu-latest
-
-    steps:
-      - {uses: actions/checkout@v6, with: {submodules: "recursive"}}
-
-      - name: Steam Runtime
-        run: |
-          version=$(sed -n 's/#define VERSION "\(.*\)"/\1/p' src/wesconfig.h)
-          cd utils/dockerbuilds && ./make_steam_build
-          tar -cf "steambuild-$version.tar" steambuild
-
-      - name: Upload
-        uses: actions/upload-artifact@v7
-        with:
-          name: Steam-Linux
-          path: utils/dockerbuilds/steambuild-*.tar
-
   mingw:
     runs-on: ubuntu-latest
 
@@ -265,17 +247,19 @@ jobs:
         run: |
           # write to an ignored filename so the build is not marked as modified
           set -x
-          jq '.modules |= map(if .name == "wesnoth" then ."build-commands"[0]+=" appdata_filepath=org.wesnoth.Wesnoth.appdata.xml" | .sources[0]={type:"dir",path:"."} else . end)' packaging/flatpak/org.wesnoth.Wesnoth.json > wesnoth-manifest.json
+          jq '.modules |= map(if .name == "wesnoth" then ."build-commands"[0]+=" appdata_filepath=org.wesnoth.Wesnoth.appdata.xml" | .sources[0]={type:"dir",path:"."} else . end)' \
+            packaging/flatpak/org.wesnoth.Wesnoth.json > wesnoth-manifest.json
           git config --global --add safe.directory "$PWD"
           branch=ci-$(git log -n 1 --format=%h)
           version=$(sed -n 's/#define VERSION "\(.*\)"/\1/p' src/wesconfig.h)
           date=$(TZ=UTC0 git log -1 --date=iso-local --format=%cd)
           cp packaging/org.wesnoth.Wesnoth.appdata.xml .
-          # add release info so the flatpak shows the version
-          utils/update_appdata "$version" org.wesnoth.Wesnoth.appdata.xml
-          flatpak-builder --force-clean --disable-rofiles-fuse --jobs=2 wesnoth-app wesnoth-manifest.json
+          touch org.wesnoth.Wesnoth.appdata.xml
+          flatpak-builder --force-clean --disable-rofiles-fuse \
+            --jobs=2 wesnoth-app wesnoth-manifest.json
           flatpak build-export export-repo wesnoth-app "$branch"
-          flatpak build-bundle --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo export-repo wesnoth.flatpak org.wesnoth.Wesnoth "$branch"
+          flatpak build-bundle export-repo wesnoth.flatpak org.wesnoth.Wesnoth "$branch" \
+            --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
 
       - name: Upload flatpak bundle
         uses: actions/upload-artifact@v7
@@ -410,7 +394,7 @@ jobs:
 
       - name: Cache object files
         id: windows-cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: vcpkg_installed  # vcpkg generates this dir next to vcpkg.json
           # the final key part needs to be changed if anything in the build
@@ -422,7 +406,10 @@ jobs:
 
       - name: Run cmake
         run: >
-          cmake -DCMAKE_BUILD_TYPE=%CFG% -DENABLE_GAME=true -DENABLE_SERVER=true -DENABLE_CAMPAIGN_SERVER=true -DENABLE_TESTS=true -DENABLE_MYSQL=false -DENABLE_NLS=false -DCMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.cmake -DVCPKG_INSTALL_OPTIONS=--debug -DVCPKG_TARGET_TRIPLET=x64-windows -DCMAKE_GENERATOR_PLATFORM=x64 -G "Visual Studio 16 2019" .
+          cmake -DCMAKE_BUILD_TYPE=%CFG% -DENABLE_GAME=true -DENABLE_SERVER=true -DENABLE_CAMPAIGN_SERVER=true
+          -DENABLE_TESTS=true -DENABLE_MYSQL=false -DENABLE_NLS=false
+          -DCMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.cmake -DVCPKG_INSTALL_OPTIONS=--debug
+          -DVCPKG_TARGET_TRIPLET=x64-windows -DCMAKE_GENERATOR_PLATFORM=x64 -G "Visual Studio 17 2022" .
 
       - name: Build wesnoth, wesnothd, campaignd and unit tests
         run: MSBuild.exe wesnoth.sln -p:Configuration=%CFG%
