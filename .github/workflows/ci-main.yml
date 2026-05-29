@@ -258,7 +258,7 @@ jobs:
           cp packaging/org.wesnoth.Wesnoth.appdata.xml .
           touch org.wesnoth.Wesnoth.appdata.xml
           flatpak-builder --force-clean --disable-rofiles-fuse \
-            --jobs=2 wesnoth-app wesnoth-manifest.json || cat wesnoth-manifest.json
+            --jobs=2 wesnoth-app wesnoth-manifest.json || flatpak build-init
           flatpak build-export export-repo wesnoth-app "$branch"
           flatpak build-bundle export-repo wesnoth.flatpak org.wesnoth.Wesnoth "$branch" \
             --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
@@ -405,6 +405,9 @@ jobs:
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v3
+        
+      - name: Visual Studio shell
+        uses: egor-tensin/vs-shell@v2
 
       - name: Run cmake
         run: >
