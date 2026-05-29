@@ -258,7 +258,7 @@ jobs:
           cp packaging/org.wesnoth.Wesnoth.appdata.xml .
           touch org.wesnoth.Wesnoth.appdata.xml
           flatpak-builder --force-clean --disable-rofiles-fuse \
-            --jobs=2 wesnoth-app wesnoth-manifest.json
+            --jobs=2 wesnoth-app wesnoth-manifest.json || cat wesnoth-manifest.json
           flatpak build-export export-repo wesnoth-app "$branch"
           flatpak build-bundle export-repo wesnoth.flatpak org.wesnoth.Wesnoth "$branch" \
             --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
@@ -389,7 +389,7 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - {uses: actions/checkout@v4, with: {submodules: "recursive"}}
+      - {uses: actions/checkout@v6, with: {submodules: "recursive"}}
 
       - name: Make version of the runner image (https://github.com/actions/runner-images/releases) accessible to expression
         run: echo IMAGE_VERSION=%ImageVersion%>> %GITHUB_ENV%
@@ -404,7 +404,7 @@ jobs:
           key: win-cache-master-${{ matrix.cfg }}-${{ env.IMAGE_VERSION }}-${{ hashFiles('vcpkg.json') }}-0001
 
       - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v2.0.0
+        uses: microsoft/setup-msbuild@v3
 
       - name: Run cmake
         run: >
