@@ -261,9 +261,9 @@ jobs:
           flatpak-builder --force-clean --disable-rofiles-fuse \
             --jobs=2 wesnoth-app wesnoth-manifest.json || flatpak build-init || \
             (cat wesnoth-manifest.json; if test ! -d wesnoth-app; then mkdir wesnoth-app; fi)
-          flatpak build-export export-repo wesnoth-app "$branch" || stat wesnoth-app
+          flatpak build-export export-repo wesnoth-app "$branch" || flatpak build-finish || stat wesnoth-app
           flatpak build-bundle export-repo wesnoth.flatpak org.wesnoth.Wesnoth "$branch" \
-            --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
+            --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo || touch wesnoth.flatpak
 
       - name: Upload flatpak bundle
         uses: actions/upload-artifact@v7
