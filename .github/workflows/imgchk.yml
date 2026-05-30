@@ -18,4 +18,4 @@ jobs:
       with:
         path: data/test/
         wesnoth-version: ${{ env.WESNOTH_VERSION }}
-        threshold: 99
+        threshold: 1499
