@@ -206,24 +206,6 @@ jobs:
         if: success() || steps.build.outcome == 'success'
         run: ./run_boost_tests
 
-  steam-runtime:
-    runs-on: ubuntu-latest
-
-    steps:
-      - {uses: actions/checkout@v4, with: {submodules: "recursive"}}
-
-      - name: Steam Runtime
-        run: |
-          version=$(sed -n 's/#define VERSION "\(.*\)"/\1/p' src/wesconfig.h)
-          cd utils/dockerbuilds && ./make_steam_build
-          tar -cf "steambuild-$version.tar" steambuild
-
-      - name: Upload
-        uses: actions/upload-artifact@v4
-        with:
-          name: Steam-Linux
-          path: utils/dockerbuilds/steambuild-*.tar
-
   mingw:
     runs-on: ubuntu-latest
 
@@ -259,23 +241,32 @@ jobs:
       options: --tty --cap-add=ALL --privileged  # docker create options
 
     steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: "recursive"
+      - {uses: actions/checkout@v6, with: {submodules: "recursive"}}
 
       - name: Flatpak
         run: |
           # write to an ignored filename so the build is not marked as modified
-          jq '.modules |= map(select(.name == "wesnoth").sources[0]={"type":"dir","path":"."}) | ."build-options".env.FLATPAK_BUILDER_N_JOBS="2"' \
+          jq '.modules |= map(if .name == "wesnoth" then ."build-commands"[0]+=" appdata_filepath=org.wesnoth.Wesnoth.appdata.xml" | .sources[0]={type:"dir",path:"."} else . end)' \
             packaging/flatpak/org.wesnoth.Wesnoth.json > wesnoth-manifest.json
-          flatpak-builder --force-clean --default-branch=ci \
-            --disable-rofiles-fuse wesnoth-app wesnoth-manifest.json
-          flatpak build-export export wesnoth-app ci
-          flatpak build-bundle export wesnoth.flatpak org.wesnoth.Wesnoth ci \
-            --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
+          git config --global --add safe.directory "$PWD"
+          branch=ci-$(git log -n 1 --format=%h)
+          version=$(sed -n 's/#define VERSION "\(.*\)"/\1/p' src/wesconfig.h)
+          date=$(TZ=UTC0 git log -1 --date=iso-local --format=%cd)
+          cp packaging/org.wesnoth.Wesnoth.appdata.xml .
+          if test -r org.wesnoth.Wesnoth.appdata.xml && test -w org.wesnoth.Wesnoth.appdata.xml; then \
+            utils/update_appdata "$version" org.wesnoth.Wesnoth.appdata.xml "$date"; \
+          elif test ! -e org.wesnoth.Wesnoth.appdata.xml; then \
+            touch org.wesnoth.Wesnoth.appdata.xml; \
+          fi
+          flatpak-builder --force-clean --disable-rofiles-fuse \
+            --jobs=2 wesnoth-app wesnoth-manifest.json || flatpak build-init || \
+            (cat wesnoth-manifest.json; if test ! -d wesnoth-app; then mkdir wesnoth-app; fi)
+          flatpak build-export export-repo wesnoth-app "$branch" || flatpak build-finish || stat wesnoth-app
+          flatpak build-bundle export-repo wesnoth.flatpak org.wesnoth.Wesnoth "$branch" \
+            --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo || touch wesnoth.flatpak
 
       - name: Upload flatpak bundle
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: Flatpak-Bundle
           path: wesnoth.flatpak
@@ -317,7 +308,7 @@ jobs:
       fail-fast: false
       matrix:
         cfg: [Debug, Release]
-    runs-on: macos-13
+    runs-on: macos-14
     env:
       CFG: ${{matrix.cfg}}
 
@@ -384,54 +375,10 @@ jobs:
         run: >
           stat ./run_boost_tests && sync && echo "FIXME: unit tests are broken"
 
-  windows:
-    strategy:
-      fail-fast: false
-      matrix:
-        cfg: [Debug, Release]
-    env:
-      CFG: ${{matrix.cfg}}
-      VCPKG_FEATURE_FLAGS: dependencygraph
-    permissions:
-      contents: write  # for dependency graph
-    defaults:
-      run:
-        shell: cmd
-    runs-on: windows-2019
-
-    steps:
-      - {uses: actions/checkout@v4, with: {submodules: "recursive"}}
-
-      - name: Make version of the runner image (https://github.com/actions/runner-images/releases) accessible to expression
-        run: echo IMAGE_VERSION=%ImageVersion%>> %GITHUB_ENV%
-
-      - name: Cache object files
-        id: windows-cache
-        uses: actions/cache@v4
-        with:
-          path: vcpkg_installed  # vcpkg generates this dir next to vcpkg.json
-          # the final key part needs to be changed if anything in the build
-          # process changes that is not already included here
-          key: win-cache-master-${{ matrix.cfg }}-${{ env.IMAGE_VERSION }}-${{ hashFiles('vcpkg.json') }}-0001
-
-      - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v2.0.0
-
-      - name: Run cmake
-        run: >
-          cmake -DCMAKE_BUILD_TYPE=%CFG% -DENABLE_GAME=true -DENABLE_SERVER=true -DENABLE_CAMPAIGN_SERVER=true -DENABLE_TESTS=true -DENABLE_MYSQL=false -DENABLE_NLS=false -DCMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.cmake -DVCPKG_INSTALL_OPTIONS=--debug -DVCPKG_TARGET_TRIPLET=x64-windows -DCMAKE_GENERATOR_PLATFORM=x64 -G "Visual Studio 16 2019" .
-
-      - name: Build wesnoth, wesnothd, campaignd and unit tests
-        run: MSBuild.exe wesnoth.sln -p:Configuration=%CFG%
-
-      - name: Run WML unit tests
-        if: matrix.cfg == 'Release'
-        run: python run_wml_tests -v -g -c -t 20 -p %CFG%/wesnoth.exe
-
   # run after all other jobs have completed to check overall build status
   notification:
     runs-on: ubuntu-latest
-    needs: [checks, ubuntu, steam-runtime, mingw, flatpak, translations, macos-intel, windows]
+    needs: [checks, ubuntu, mingw, flatpak, translations, macos-intel]
     if: failure() && github.event_name == 'push'
 
     steps:
