@@ -251,14 +251,16 @@ jobs:
           git config --global --add safe.directory "$PWD"
           branch=ci-$(git log -n 1 --format=%h)
           version=$(sed -n 's/#define VERSION "\(.*\)"/\1/p' src/wesconfig.h)
-          export version && echo "version is '${version}'"
           date=$(TZ=UTC0 git log -1 --date=iso-local --format=%cd)
-          export date && echo "date is '${date}'"
           cp packaging/org.wesnoth.Wesnoth.appdata.xml .
-          touch org.wesnoth.Wesnoth.appdata.xml
+          if test -r org.wesnoth.Wesnoth.appdata.xml && test -w org.wesnoth.Wesnoth.appdata.xml; then \
+            utils/update_appdata "$version" org.wesnoth.Wesnoth.appdata.xml "$date"; \
+          elif test ! -e org.wesnoth.Wesnoth.appdata.xml; then \
+            touch org.wesnoth.Wesnoth.appdata.xml; \
+          fi
           flatpak-builder --force-clean --disable-rofiles-fuse \
             --jobs=2 wesnoth-app wesnoth-manifest.json || flatpak build-init || \
-            (sync && cat wesnoth-manifest.json && sync && mkdir wesnoth-app && sync)
+            (cat wesnoth-manifest.json; if test ! -d wesnoth-app; then mkdir wesnoth-app; fi)
           flatpak build-export export-repo wesnoth-app "$branch" || stat wesnoth-app
           flatpak build-bundle export-repo wesnoth.flatpak org.wesnoth.Wesnoth "$branch" \
             --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
