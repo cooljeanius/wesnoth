@@ -246,21 +246,20 @@ jobs:
       - name: Flatpak
         run: |
           # write to an ignored filename so the build is not marked as modified
-          set -x
           jq '.modules |= map(if .name == "wesnoth" then ."build-commands"[0]+=" appdata_filepath=org.wesnoth.Wesnoth.appdata.xml" | .sources[0]={type:"dir",path:"."} else . end)' \
             packaging/flatpak/org.wesnoth.Wesnoth.json > wesnoth-manifest.json
           git config --global --add safe.directory "$PWD"
           branch=ci-$(git log -n 1 --format=%h)
           version=$(sed -n 's/#define VERSION "\(.*\)"/\1/p' src/wesconfig.h)
-          export version
+          export version && echo "version is '${version}'"
           date=$(TZ=UTC0 git log -1 --date=iso-local --format=%cd)
-          export date
+          export date && echo "date is '${date}'"
           cp packaging/org.wesnoth.Wesnoth.appdata.xml .
           touch org.wesnoth.Wesnoth.appdata.xml
           flatpak-builder --force-clean --disable-rofiles-fuse \
             --jobs=2 wesnoth-app wesnoth-manifest.json || flatpak build-init || \
-            (cat wesnoth-manifest.json && sync && mkdir wesnoth-app && sync)
-          flatpak build-export export-repo wesnoth-app "$branch"
+            (sync && cat wesnoth-manifest.json && sync && mkdir wesnoth-app && sync)
+          flatpak build-export export-repo wesnoth-app "$branch" || stat wesnoth-app
           flatpak build-bundle export-repo wesnoth.flatpak org.wesnoth.Wesnoth "$branch" \
             --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
 
