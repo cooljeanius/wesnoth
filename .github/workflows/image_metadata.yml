@@ -1,20 +1,22 @@
+---
+# See https://wiki.wesnoth.org/ImageMetadata for documentation
 name: Image metadata check CI
 
 on:
-  #push:
-  #  branches: [master]
+  push:
+    branches: [master]
   pull_request:
     paths:
       - '**.webp'
       - '**.png'
       - '**.jpg'
       - '**.jpeg'
-  
+
 jobs:
   build:
     name: Ubuntu - Image Metadata
     runs-on: ubuntu-latest
-    
+
     permissions:
       contents: read
       pull-requests: write
@@ -62,6 +64,3 @@ jobs:
               echo "Copyright tag in $file is $copyright"
             fi
           done
-#      - name: The image_check step has failed
-#        if: ${{ failure() && steps.image_check.conclusion == 'failure' }}
-        

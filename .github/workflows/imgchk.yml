@@ -1,3 +1,4 @@
+---
 name: imgchk
 
 on: [push, pull_request]
@@ -10,12 +11,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-    - name: Verify images
-      uses: czyzby/wesnoth-png-optimizer@v1
-      if: always()
-      with:
-        path: data/test/
-        wesnoth-version: ${{ env.WESNOTH_VERSION }}
-        threshold: 99
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Verify images
+        uses: czyzby/wesnoth-png-optimizer@v1
+        if: always()
+        with:
+          path: data/test/
+          wesnoth-version: ${{ env.WESNOTH_VERSION }}
+          threshold: 99
