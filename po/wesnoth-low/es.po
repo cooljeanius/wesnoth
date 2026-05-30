@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
-"POT-Creation-Date: 2023-09-17 03:32 UTC\n"
-"PO-Revision-Date: 2023-05-12 06:09+0200\n"
-"Last-Translator: Toranks <toranksmervat@gmail.com>\n"
+"POT-Creation-Date: 2026-05-19 02:15 UTC\n"
+"PO-Revision-Date: 2023-05-12 12:41-0300\n"
+"Last-Translator: Sebastián Lecchini<sebas38760@gmail.com>\n"
 "Language-Team: Wesnoth\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -19,18 +19,18 @@ msgstr ""
 "X-Generator: Poedit 3.2.2\n"
 
 #. [campaign]: id=LOW, type=hybrid
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:44
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:45
 msgid "LoW"
 msgstr "LdW"
 
 #. [campaign]: id=LOW, type=hybrid
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:45
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:46
 msgid "Legend of Wesmere"
 msgstr "La leyenda de Wesmere"
 
 #. [campaign]: id=LOW, type=hybrid
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:47
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:51
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:48
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:52
 msgid ""
 "The tale of Kalenz, the High Lord who rallied his people after the second "
 "orcish invasion of the Great Continent and became the most renowned hero in "
@@ -43,88 +43,88 @@ msgstr ""
 "\n"
 
 #. [campaign]: id=LOW, type=hybrid
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:49
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:50
 msgid "(Hard level, 17 scenarios.)"
 msgstr "(Nivel experto, 17 escenarios.)"
 
 #. [campaign]: id=LOW, type=hybrid
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:53
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:54
 msgid "(Hard level, 18 scenarios.)"
 msgstr "(Nivel experto, 18 escenarios.)"
 
 #. [campaign]: id=LOW, type=hybrid
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:57
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:58
 msgid "Normal"
 msgstr "Normal"
 
 #. [campaign]: id=LOW, type=hybrid
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:57
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:58
 msgid "Soldier"
 msgstr "Soldado"
 
 #. [campaign]: id=LOW, type=hybrid
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:58
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:59
 msgid "Challenging"
 msgstr "Desafiante"
 
 #. [campaign]: id=LOW, type=hybrid
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:58
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:59
 msgid "Lord"
 msgstr "Señor"
 
 #. [campaign]: id=LOW, type=hybrid
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:59
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:60
 msgid "Difficult"
 msgstr "Difícil"
 
 #. [campaign]: id=LOW, type=hybrid
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:59
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:60
 msgid "High Lord"
 msgstr "Gran Señor"
 
 #. [about]
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:62
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:63
 msgid "Creator and Lead Designer"
 msgstr "Creador y diseñador principal"
 
 #. [entry]
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:64
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:77
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:65
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:78
 msgid "Spiros, George and Alexander Alexiou (Santi/fnaek)"
 msgstr "Spiros, George y Alexander Alexiou (Santi/fnaek)"
 
 #. [about]
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:71
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:72
 msgid "Campaign Maintenance"
 msgstr "Mantenimiento de la campaña"
 
 #. [about]
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:81
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:82
 msgid "Prose-doctoring and adaptation for mainline"
 msgstr "Revisión de prosa y adaptación para la línea principal"
 
 #. [about]
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:91
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:92
 msgid "WML Assistance"
 msgstr "Asistencia con WML"
 
 #. [about]
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:106
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:107
 msgid "Artificial Intelligence"
 msgstr "Inteligencia Artificial"
 
 #. [about]
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:113
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:114
 msgid "Graphics"
 msgstr "Gráficos"
 
 #. [about]
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:129
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:130
 msgid "Additional thanks to"
 msgstr "Agradecimientos adicionales"
 
 #. [entry]
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:187
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:188
 msgid ""
 "And the rest of the Wesnoth community for feedback,\n"
 "criticism, help with WML code and graphics."
@@ -4961,22 +4961,26 @@ msgstr ""
 #. [part]
 #: data/campaigns/Legend_of_Wesmere/scenarios/chapter5/22_Northern_Battle.cfg:33
 msgid ""
-"Kalenz’s veterans joined the host of the Northern Elves under Uradredia. "
-"Very soon, Landar’s army appeared..."
+"Though some of Kalenz’s veterans had joined Landar in revolt, others instead "
+"joined the northern host under Uradredia. Very soon, Landar’s army "
+"appeared..."
 msgstr ""
-"Los veteranos de Kalenz se unieron a las huestes de los elfos del norte, "
-"bajo el mando de Uradredia. Muy pronto, el ejército de Landar hizo su "
-"aparición..."
+"Aunque algunos veteranos de Kalenz se habían unido a Landar en la revuelta, "
+"otros se unieron a las huestes del norte bajo Uradredia. Muy pronto, el "
+"ejército de Landar apareció..."
 
 #. [message]: speaker=narrator
 #: data/campaigns/Legend_of_Wesmere/scenarios/chapter5/22_Northern_Battle.cfg:145
 msgid ""
 "Kalenz can only recall shamans and their advancements from his former army; "
-"the rest of his men joined Uradredia before he arrived."
+"as for the rest of his men, it’s been a bitter split — for every elf who "
+"came back from Saurgrath to stand with Uradredia, two came back pledging "
+"their blade to Landar’s call."
 msgstr ""
-"Kalenz solo podrá reincorporar chamanes y sus avances de su antiguo "
-"ejército; el resto de sus hombres, se unieron a Uradredia antes de su "
-"llegada."
+"Kalenz solo puede recordar a los chamanes y sus progresos de su antiguo "
+"ejército; en cuanto al resto de sus hombres, hubo una amarga división: por "
+"cada elfo que regresó de Saurgrath para apoyar a Uradredia, dos regresaron "
+"prometiendo su espada al llamado de Landar."
 
 #. [objective]: condition=win
 #: data/campaigns/Legend_of_Wesmere/scenarios/chapter5/22_Northern_Battle.cfg:277

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2023
+	Copyright (C) 2003 - 2025
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -38,14 +38,12 @@ BOOST_AUTO_TEST_CASE(test_super_cycle)
 
 	// See: wesnoth.cpp > handle_validate_command
 	preproc_map defines_map;
-	defines_map["WESNOTH_VERSION"] = preproc_define(game_config::wesnoth_version.str());
-	defines_map["SCHEMA_VALIDATION"] = preproc_define();
+	defines_map.try_emplace("WESNOTH_VERSION", game_config::wesnoth_version.str());
+	defines_map.try_emplace("SCHEMA_VALIDATION");
 
-	auto stream = preprocess_file(config_path, &defines_map);
+	auto stream = preprocess_file(config_path, defines_map);
 
-	config result;
-
-	BOOST_CHECK_EXCEPTION(read(result, *stream, &validator), wml_exception, [](const wml_exception& e) {
+	BOOST_CHECK_EXCEPTION(io::read(*stream, &validator), wml_exception, [](const wml_exception& e) {
 		return boost::algorithm::contains(e.dev_message, "Inheritance cycle from other/second to main/first found");
 	});
 }
@@ -60,13 +58,11 @@ BOOST_AUTO_TEST_CASE(test_super_cycle_only_if_used)
 	validator.set_create_exceptions(true);
 
 	preproc_map defines_map;
-	defines_map["WESNOTH_VERSION"] = preproc_define(game_config::wesnoth_version.str());
-	defines_map["SCHEMA_VALIDATION"] = preproc_define();
+	defines_map.try_emplace("WESNOTH_VERSION", game_config::wesnoth_version.str());
+	defines_map.try_emplace("SCHEMA_VALIDATION");
 
-	auto stream = preprocess_file(config_path, &defines_map);
-
-	config result;
-	BOOST_CHECK_NO_THROW(read(result, *stream, &validator));
+	auto stream = preprocess_file(config_path, defines_map);
+	BOOST_CHECK_NO_THROW(io::read(*stream, &validator));
 }
 
 BOOST_AUTO_TEST_CASE(test_super_cycle_crashes_on_unknown_key)
@@ -80,14 +76,12 @@ BOOST_AUTO_TEST_CASE(test_super_cycle_crashes_on_unknown_key)
 	validator.set_create_exceptions(true);
 
 	preproc_map defines_map;
-	defines_map["WESNOTH_VERSION"] = preproc_define(game_config::wesnoth_version.str());
-	defines_map["SCHEMA_VALIDATION"] = preproc_define();
+	defines_map.try_emplace("WESNOTH_VERSION", game_config::wesnoth_version.str());
+	defines_map.try_emplace("SCHEMA_VALIDATION");
 
-	auto stream = preprocess_file(config_path, &defines_map);
+	auto stream = preprocess_file(config_path, defines_map);
 
-	config result;
-
-	BOOST_CHECK_EXCEPTION(read(result, *stream, &validator), wml_exception, [](const wml_exception& e) {
+	BOOST_CHECK_EXCEPTION(io::read(*stream, &validator), wml_exception, [](const wml_exception& e) {
 		return boost::algorithm::contains(e.dev_message, "Invalid key 'unknown=' in tag [first]");
 	});
 }
@@ -102,14 +96,12 @@ BOOST_AUTO_TEST_CASE(test_super_missing)
 	validator.set_create_exceptions(true);
 
 	preproc_map defines_map;
-	defines_map["WESNOTH_VERSION"] = preproc_define(game_config::wesnoth_version.str());
-	defines_map["SCHEMA_VALIDATION"] = preproc_define();
+	defines_map.try_emplace("WESNOTH_VERSION", game_config::wesnoth_version.str());
+	defines_map.try_emplace("SCHEMA_VALIDATION");
 
-	auto stream = preprocess_file(config_path, &defines_map);
+	auto stream = preprocess_file(config_path, defines_map);
 
-	config result;
-
-	BOOST_CHECK_EXCEPTION(read(result, *stream, &validator), wml_exception, [](const wml_exception& e) {
+	BOOST_CHECK_EXCEPTION(io::read(*stream, &validator), wml_exception, [](const wml_exception& e) {
 		return boost::algorithm::contains(e.dev_message, "Super not/here not found. Needed by other/second");
 	});
 }
@@ -124,13 +116,11 @@ BOOST_AUTO_TEST_CASE(test_super_missing_only_if_used)
 	validator.set_create_exceptions(true);
 
 	preproc_map defines_map;
-	defines_map["WESNOTH_VERSION"] = preproc_define(game_config::wesnoth_version.str());
-	defines_map["SCHEMA_VALIDATION"] = preproc_define();
+	defines_map.try_emplace("WESNOTH_VERSION", game_config::wesnoth_version.str());
+	defines_map.try_emplace("SCHEMA_VALIDATION");
 
-	auto stream = preprocess_file(config_path, &defines_map);
-
-	config result;
-	BOOST_CHECK_NO_THROW(read(result, *stream, &validator));
+	auto stream = preprocess_file(config_path, defines_map);
+	BOOST_CHECK_NO_THROW(io::read(*stream, &validator));
 }
 
 BOOST_AUTO_TEST_CASE(test_super_mandatory)
@@ -143,13 +133,11 @@ BOOST_AUTO_TEST_CASE(test_super_mandatory)
 	validator.set_create_exceptions(true);
 
 	preproc_map defines_map;
-	defines_map["WESNOTH_VERSION"] = preproc_define(game_config::wesnoth_version.str());
-	defines_map["SCHEMA_VALIDATION"] = preproc_define();
+	defines_map.try_emplace("WESNOTH_VERSION", game_config::wesnoth_version.str());
+	defines_map.try_emplace("SCHEMA_VALIDATION");
 
-	auto stream = preprocess_file(config_path, &defines_map);
-
-	config result;
-	BOOST_CHECK_NO_THROW(read(result, *stream, &validator));
+	auto stream = preprocess_file(config_path, defines_map);
+	BOOST_CHECK_NO_THROW(io::read(*stream, &validator));
 }
 
 BOOST_AUTO_TEST_CASE(test_super_mandatory_missing)
@@ -162,14 +150,11 @@ BOOST_AUTO_TEST_CASE(test_super_mandatory_missing)
 	validator.set_create_exceptions(true);
 
 	preproc_map defines_map;
-	defines_map["WESNOTH_VERSION"] = preproc_define(game_config::wesnoth_version.str());
-	defines_map["SCHEMA_VALIDATION"] = preproc_define();
+	defines_map.try_emplace("WESNOTH_VERSION", game_config::wesnoth_version.str());
+	defines_map.try_emplace("SCHEMA_VALIDATION");
 
-	auto stream = preprocess_file(config_path, &defines_map);
-
-	config result;
-
-	BOOST_CHECK_EXCEPTION(read(result, *stream, &validator), wml_exception, [](const wml_exception& e) {
+	auto stream = preprocess_file(config_path, defines_map);
+	BOOST_CHECK_EXCEPTION(io::read(*stream, &validator), wml_exception, [](const wml_exception& e) {
 		return boost::algorithm::contains(e.dev_message, "Missing key 'id=' in tag [campaign]");
 	});
 }
@@ -184,13 +169,11 @@ BOOST_AUTO_TEST_CASE(test_super_cycle_mandatory)
 	validator.set_create_exceptions(true);
 
 	preproc_map defines_map;
-	defines_map["WESNOTH_VERSION"] = preproc_define(game_config::wesnoth_version.str());
-	defines_map["SCHEMA_VALIDATION"] = preproc_define();
+	defines_map.try_emplace("WESNOTH_VERSION", game_config::wesnoth_version.str());
+	defines_map.try_emplace("SCHEMA_VALIDATION");
 
-	auto stream = preprocess_file(config_path, &defines_map);
-
-	config result;
-	BOOST_CHECK_NO_THROW(read(result, *stream, &validator));
+	auto stream = preprocess_file(config_path, defines_map);
+	BOOST_CHECK_NO_THROW(io::read(*stream, &validator));
 }
 
 BOOST_AUTO_TEST_CASE(test_schema_link_cycle)

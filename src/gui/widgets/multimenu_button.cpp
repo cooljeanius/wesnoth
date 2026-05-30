@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008 - 2024
+	Copyright (C) 2008 - 2025
 	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -164,7 +164,7 @@ void multimenu_button::update_label()
 			continue;
 		}
 
-		selected.push_back(values_[i]["label"]);
+		selected.push_back(values_[i]["label"].t_str());
 	}
 
 	if(selected.size() == values_.size()) {
@@ -214,7 +214,7 @@ void multimenu_button::select_option(const unsigned option, const bool selected)
 	update_label();
 }
 
-void multimenu_button::select_options(boost::dynamic_bitset<> states)
+void multimenu_button::select_options(const boost::dynamic_bitset<>& states)
 {
 	assert(states.size() == values_.size());
 	toggle_states_ = states;

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2024
+	Copyright (C) 2003 - 2025
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -25,6 +25,7 @@
 #include <cassert>
 #include <set>
 #include <sstream>
+#include <utility>
 
 // This is here only for the below initialization code.
 // If other logging is required in this file, it should use a different logdomain
@@ -97,17 +98,14 @@ expression_ptr parse_expression(const tk::token* i1, const tk::token* i2, functi
 
 const char* const formula::id_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_";
 
-formula::formula(const std::string& text, function_symbol_table* symbols)
+formula::formula(const std::string& text, function_symbol_table* symbols, bool manage_symbols)
 	: expr_()
 	, str_(text)
-	, managed_symbols_(symbols ? nullptr : new function_symbol_table)
+	, managed_symbols_(symbols ? (manage_symbols ? symbols : nullptr) : new function_symbol_table)
 	, symbols_(symbols ? symbols : managed_symbols_.get())
 {
 	std::vector<tk::token> tokens;
 	std::string::const_iterator i1 = text.begin(), i2 = text.end();
-
-	// Set true when 'fai' keyword is found
-	bool fai_keyword = false;
 
 	// Set true when 'wfl' keyword is found
 	bool wfl_keyword = false;
@@ -147,21 +145,9 @@ formula::formula(const std::string& text, function_symbol_table* symbols)
 			} else if(current_type == tk::token_type::eol) {
 				files.back().second++;
 				tokens.pop_back();
-			} else if((current_type == tk::token_type::keyword) && (std::string(tokens.back().begin, tokens.back().end) == "fai")) {
-				fai_keyword = true;
-				tokens.pop_back();
 			} else if((current_type == tk::token_type::keyword) && (std::string(tokens.back().begin, tokens.back().end) == "wfl")) {
 				wfl_keyword = true;
 				tokens.pop_back();
-			} else if((current_type == tk::token_type::keyword) && (std::string(tokens.back().begin, tokens.back().end) == "faiend")) {
-				if(files.size() > 1) {
-					files.pop_back();
-					filenames_it = filenames.find(files.back().first);
-
-					tokens.pop_back();
-				} else {
-					throw formula_error("Unexpected 'faiend' found", "", "", 0);
-				}
 			} else if((current_type == tk::token_type::keyword) && (std::string(tokens.back().begin, tokens.back().end) == "wflend")) {
 				if(files.size() > 1) {
 					files.pop_back();
@@ -171,7 +157,7 @@ formula::formula(const std::string& text, function_symbol_table* symbols)
 				} else {
 					throw formula_error("Unexpected 'wflend' found", "", "", 0);
 				}
-			} else if(fai_keyword || wfl_keyword) {
+			} else if(wfl_keyword) {
 				if(current_type == tk::token_type::string_literal) {
 					std::string str = std::string(tokens.back().begin, tokens.back().end);
 					files.emplace_back(str , 1);
@@ -181,22 +167,13 @@ formula::formula(const std::string& text, function_symbol_table* symbols)
 					if(success) {
 						filenames_it = pos;
 					} else {
-						if(fai_keyword) {
-							throw formula_error("Faifile already included", "fai" + str, "", 0);
-						} else {
-							throw formula_error("Wflfile already included", "wfl" + str, "", 0);
-						}
+						throw formula_error("Wflfile already included", "wfl" + str, "", 0);
 					}
 
 					tokens.pop_back();
-					fai_keyword = false;
 					wfl_keyword = false;
 				} else {
-					if(fai_keyword) {
-						throw formula_error("Expected string after the 'fai'", "fai", "", 0);
-					} else {
-						throw formula_error("Expected string after the 'wfl'", "wfl", "", 0);
-					}
+					throw formula_error("Expected string after the 'wfl'", "wfl", "", 0);
 				}
 			} else {
 				// In every token not specified above, store line number and name of file it came from
@@ -247,6 +224,9 @@ formula::formula(const tk::token* i1, const tk::token* i2, function_symbol_table
 		expr_ = std::make_shared<null_expression>();
 	}
 }
+
+// Explicitly defaulted out-of-line destructor (see header comment)
+formula::~formula() = default;
 
 formula_ptr formula::create_optional_formula(const std::string& str, function_symbol_table* symbols)
 {
@@ -313,7 +293,7 @@ private:
 			res.emplace_back(fcn_name);
 		}
 
-		return variant(res);
+		return variant(std::move(res));
 	}
 
 	function_symbol_table* symbols_;
@@ -335,7 +315,7 @@ private:
 			res.push_back(i->evaluate(variables, add_debug_info(fdb, 0, "[list element]")));
 		}
 
-		return variant(res);
+		return variant(std::move(res));
 	}
 
 	std::vector<expression_ptr> items_;
@@ -387,14 +367,14 @@ public:
 private:
 	variant execute(const formula_callable& variables, formula_debugger*fdb) const
 	{
-		std::map<variant,variant> res;
+		std::map<variant ,variant> res;
 		for(std::vector<expression_ptr>::const_iterator i = items_.begin(); (i != items_.end()) && (i + 1 != items_.end()) ; i += 2) {
 			variant key = (*i)->evaluate(variables, add_debug_info(fdb, 0, "key ->"));
 			variant value = (*(i+1))->evaluate(variables, add_debug_info(fdb, 1, "-> value"));
 			res[key] = value;
 		}
 
-		return variant(res);
+		return variant(std::move(res));
 	}
 
 	std::vector<expression_ptr> items_;
@@ -405,7 +385,7 @@ class unary_operator_expression : public formula_expression
 public:
 	unary_operator_expression(const std::string& op, expression_ptr arg)
 		: op_(),op_str_(op)
-		, operand_(arg)
+		, operand_(std::move(arg))
 	{
 		if(op == "not") {
 			op_ = NOT;
@@ -429,7 +409,7 @@ private:
 		const variant res = operand_->evaluate(variables, add_debug_info(fdb, 0, op_str_ + " unary"));
 		switch(op_) {
 		case NOT:
-			return res.as_bool() ? variant(0) : variant(1);
+			return variant(!res.as_bool());
 		case SUB:
 		default:
 			return -res;
@@ -468,7 +448,7 @@ public:
 				chars.emplace_back(std::string(1, c));
 			}
 
-			return variant(chars);
+			return variant(std::move(chars));
 		} else if(key == "word" || key == "words") {
 			std::vector<variant> words;
 			const std::string& str = string_.as_string();
@@ -480,7 +460,7 @@ public:
 				next_space = str.find_first_not_of(" \t", next_space);
 			} while(next_space != std::string::npos);
 
-			return variant(words);
+			return variant(std::move(words));
 		} else if(key == "item" || key == "items") {
 			std::vector<std::string> split = utils::parenthetical_split(string_.as_string(), ',');
 			std::vector<variant> items;
@@ -489,7 +469,7 @@ public:
 				items.emplace_back(s);
 			}
 
-			return variant(items);
+			return variant(std::move(items));
 		}
 
 		return variant();
@@ -620,7 +600,7 @@ class dot_expression : public formula_expression
 {
 public:
 	dot_expression(expression_ptr left, expression_ptr right)
-		: left_(left), right_(right)
+		: left_(std::move(left)), right_(std::move(right))
 	{}
 
 	std::string str() const
@@ -633,7 +613,7 @@ public:
 private:
 	variant execute(const formula_callable& variables, formula_debugger*fdb) const
 	{
-		const variant left = left_->evaluate(variables, add_debug_info(fdb,0,"left ."));
+		variant left = left_->evaluate(variables, add_debug_info(fdb,0,"left ."));
 		if(!left.is_callable()) {
 			if(left.is_list()) {
 				list_callable list_call(left);
@@ -667,7 +647,7 @@ class square_bracket_expression : public formula_expression
 {
 public:
 	square_bracket_expression(expression_ptr left, expression_ptr key)
-		: left_(left), key_(key)
+		: left_(std::move(left)), key_(std::move(key))
 	{}
 
 	std::string str() const
@@ -696,7 +676,7 @@ class operator_expression : public formula_expression
 {
 public:
 	operator_expression(const std::string& op, expression_ptr left, expression_ptr right)
-		: op_(OP(op[0])), op_str_(op), left_(left), right_(right)
+		: op_(OP(op[0])), op_str_(op), left_(std::move(left)), right_(std::move(right))
 	{
 		if(op == ">=") {
 			op_ = GTE;
@@ -764,17 +744,17 @@ private:
 		case OP_CAT:
 			return left.concatenate(right);
 		case EQ:
-			return left == right ? variant(1) : variant(0);
+			return variant(left == right);
 		case NEQ:
-			return left != right ? variant(1) : variant(0);
+			return variant(left != right);
 		case LTE:
-			return left <= right ? variant(1) : variant(0);
+			return variant(left <= right);
 		case GTE:
-			return left >= right ? variant(1) : variant(0);
+			return variant(left >= right);
 		case LT:
-			return left < right ? variant(1) : variant(0);
+			return variant(left < right);
 		case GT:
-			return left > right ? variant(1) : variant(0);
+			return variant(left > right);
 		case MOD:
 			return left % right;
 		case RAN:
@@ -812,7 +792,7 @@ public:
 	where_variables(const formula_callable &base, expr_table_ptr table, formula_debugger* fdb)
 		: formula_callable(false)
 		, base_(base)
-		, table_(table)
+		, table_(std::move(table))
 		, evaluated_table_()
 		, debugger_(fdb)
 	{
@@ -853,7 +833,7 @@ class where_expression: public formula_expression
 {
 public:
 	where_expression(expression_ptr body, expr_table_ptr clauses)
-		: body_(body), clauses_(clauses)
+		: body_(std::move(body)), clauses_(std::move(clauses))
 	{}
 
 	std::string str() const
@@ -1198,7 +1178,7 @@ static void parse_set_args(const tk::token* i1, const tk::token* i2,
 	}
 }
 
-static void parse_where_clauses(const tk::token* i1, const tk::token* i2, expr_table_ptr res, function_symbol_table* symbols)
+static void parse_where_clauses(const tk::token* i1, const tk::token* i2, const expr_table_ptr& res, function_symbol_table* symbols)
 {
 	int parens = 0;
 	const tk::token* original_i1_cached = i1;
@@ -1329,9 +1309,14 @@ expression_ptr parse_expression(const tk::token* i1, const tk::token* i2, functi
 	}
 
 	if(op == nullptr) {
-		if(i1->type == tk::token_type::lparens && (i2-1)->type == tk::token_type::rparens) {
+		// There's a situation when i1+1 equals i2-1 (meanwhile iter length is 2, like `()`)
+		// Resulting in empty expression.
+		if(i1->type == tk::token_type::lparens && (i2 - 1)->type == tk::token_type::rparens) {
+			if(i1 + 1 == i2 - 1) {
+				throw formula_error("No expression between parentheses", "()", *i1->filename, i1->line_number);
+			}
 			return parse_expression(i1+1,i2-1,symbols);
-		} else if((i2-1)->type == tk::token_type::rsquare) { //check if there is [ ] : either a list/map definition, or a operator
+		} else if((i2 - 1)->type == tk::token_type::rsquare) { // check if there is [ ] : either a list/map definition, or a operator
 			// First, a special case for an empty map
 			if(i2 - i1 == 3 && i1->type == tk::token_type::lsquare && (i1+1)->type == tk::token_type::pointer) {
 				return std::make_shared<map_expression>(std::vector<expression_ptr>());

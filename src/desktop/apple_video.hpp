@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2020 - 2024
+	Copyright (C) 2020 - 2025
 	by Martin Hrubý <hrubymar10@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -20,5 +20,6 @@
 namespace desktop {
 	namespace apple {
 		CGFloat get_scale_factor(int display_index);
+		void install_keyboard_dismiss_toolbar();
 	} // end namespace apple
 } // end namespace desktop

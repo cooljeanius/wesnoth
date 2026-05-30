@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 - 2024
+	Copyright (C) 2016 - 2025
 	by Charles Dang <exodia339gmail.com>
 	Copyright (C) 2011, 2015 by Iris Morelle <shadowm2006@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
@@ -62,12 +62,11 @@ public:
 private:
 	virtual const std::string& window_id() const override;
 
-	virtual void pre_show(window& window) override;
-	virtual void post_show(window& /*window*/) override;
+	virtual void pre_show() override;
+	virtual void post_show() override;
 
 	/** Initializers */
 	void initialize_callbacks();
-	void initialize_tabs(listbox& selector);
 	void set_resolution_list(menu_button& res_list);
 	void set_theme_list(menu_button& theme_list);
 	void set_gui2_theme_list(menu_button& theme_list);
@@ -86,11 +85,7 @@ private:
 	void on_friends_list_select(listbox& list, text_box& textbox);
 	void update_friends_list_controls(listbox& list);
 
-	void set_visible_page(unsigned int page, const std::string& pager_id);
-
 	/** Callback for selection changes */
-	void on_page_select();
-	void on_tab_select();
 	void on_advanced_prefs_list_select(listbox& tree);
 
 	/** Special callback functions */
@@ -111,6 +106,7 @@ private:
 
 	int last_selected_item_;
 	unsigned current_gui_theme_;
+	bool is_reload_needed_;
 
 	std::vector<double> accl_speeds_;
 

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2020 - 2024
+	Copyright (C) 2020 - 2025
 	by CrawlCycle <73139676+CrawlCycle@users.noreply.github.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -27,11 +27,10 @@
 /**
  * Make a syntax tree by preprocessing and parsing a WML string
  * @param[in]  wml_str    The string
- * @param[out] macro_map  Store preprocessor macros found by the preprocessor
  * @return                The syntax tree.
  * @warning Create and delete a temporary file at the current directory.
  */
-config preprocess_and_parse(const std::string& wml_str, preproc_map* macro_map = nullptr);
+config preprocess_and_parse(const std::string& wml_str);
 
 /**
  * Assert two WML strings are equivalent. The function performs two steps:

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2024
+	Copyright (C) 2003 - 2025
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -21,8 +21,9 @@
 #include "utils/math.hpp"
 #include "game_version.hpp"
 
-#include <cstdlib>
 #include <string>
+
+struct rect;
 
 namespace sdl
 {
@@ -35,18 +36,6 @@ version_info get_version();
  * specified version, false otherwise.
  */
 bool runtime_at_least(uint8_t major, uint8_t minor = 0, uint8_t patch = 0);
-
-/**
- * Fill a rectangle on a given surface. Alias for SDL_FillRect.
- *
- * @param dst                     The surface to operate on.
- * @param dst_rect                The rectangle to fill.
- * @param color                   Color of the rectangle.
- */
-inline void fill_surface_rect(surface& dst, SDL_Rect* dst_rect, const uint32_t color)
-{
-	SDL_FillRect(dst, dst_rect, color);
-}
 
 } // namespace sdl
 
@@ -122,7 +111,7 @@ void swap_channels_image(surface& surf, channel r, channel g, channel b, channel
  * @param map_rgb            Map of color values, with the keys corresponding to the
  *                           source palette, and the values to the recolored palette.
  */
-void recolor_image(surface& surf, const color_range_map& map_rgb);
+void recolor_image(surface& surf, const color_mapping& map_rgb);
 
 void brighten_image(surface& surf, int32_t amount);
 
@@ -134,16 +123,16 @@ void brighten_image(surface& surf, int32_t amount);
  *                           No RLE or Alpha bits are set.
  *  @retval 0                if error or the portion is outside of the surface.
  */
-surface get_surface_portion(const surface &surf, SDL_Rect &rect);
+surface get_surface_portion(const surface &surf, rect &rect);
 
 void adjust_surface_alpha(surface& surf, uint8_t alpha_mod);
 void adjust_surface_alpha_add(surface& surf, int amount);
 
 /** Applies a mask on a surface. */
-void mask_surface(surface& surf, const surface& mask, bool* empty_result = nullptr, const std::string& filename = std::string());
+bool mask_surface(surface& surf, const surface& mask, const std::string& filename = std::string());
 
 /** Check if a surface fit into a mask */
-bool in_mask_surface(surface surf, surface mask);
+bool in_mask_surface(const surface& surf, const surface& mask);
 
 /**
  * Light surf using lightmap
@@ -162,7 +151,7 @@ void light_surface(surface& surf, const surface &lightmap);
  * @param rect                    The part of the surface to blur.
  * @param depth                   The depth of the blurring.
  */
-void blur_surface(surface& surf, SDL_Rect rect, int depth = 1);
+void blur_surface(surface& surf, rect rect, int depth = 1);
 
 /**
  * Cross-fades a surface with alpha channel.
@@ -173,7 +162,7 @@ void blur_surface(surface& surf, SDL_Rect rect, int depth = 1);
 void blur_alpha_surface(surface& surf, int depth = 1);
 
 /** Cuts a rectangle from a surface. */
-surface cut_surface(const surface &surf, const SDL_Rect& r);
+surface cut_surface(const surface &surf, const rect& r);
 
 /**
  * Blends a surface with a color.

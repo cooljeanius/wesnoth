@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2024
+	Copyright (C) 2003 - 2025
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -25,17 +25,18 @@
 #include "game_errors.hpp" //thrown sometimes
 #include "language.hpp" // for string_table
 #include "log.hpp"
+#include "serialization/string_utils.hpp"
 #include "units/abilities.hpp"
 #include "units/animation.hpp"
 #include "units/unit.hpp"
 
-#include "gui/auxiliary/typed_formula.hpp"
 #include "gui/dialogs/loading_screen.hpp"
 
 #include <boost/range/algorithm_ext/erase.hpp>
 
 #include <array>
 #include <locale>
+#include <vector>
 
 static lg::log_domain log_config("config");
 #define ERR_CF LOG_STREAM(err, log_config)
@@ -45,63 +46,15 @@ static lg::log_domain log_config("config");
 
 static lg::log_domain log_unit("unit");
 #define DBG_UT LOG_STREAM(debug, log_unit)
+#define WRN_UT LOG_STREAM(warn, log_unit)
 #define LOG_UT LOG_STREAM(info, log_unit)
 #define ERR_UT LOG_STREAM(err, log_unit)
 
 /* ** unit_type ** */
 
-unit_type::unit_type(const unit_type& o)
-	: cfg_(o.cfg_)
-	, id_(o.id_)
-	, debug_id_(o.debug_id_)
-	, parent_id_(o.parent_id_)
-	, base_unit_id_(o.base_unit_id_)
-	, type_name_(o.type_name_)
-	, description_(o.description_)
-	, hitpoints_(o.hitpoints_)
-	, hp_bar_scaling_(o.hp_bar_scaling_)
-	, xp_bar_scaling_(o.xp_bar_scaling_)
-	, level_(o.level_)
-	, recall_cost_(o.recall_cost_)
-	, movement_(o.movement_)
-	, vision_(o.vision_)
-	, jamming_(o.jamming_)
-	, max_attacks_(o.max_attacks_)
-	, cost_(o.cost_)
-	, usage_(o.usage_)
-	, undead_variation_(o.undead_variation_)
-	, image_(o.image_)
-	, icon_(o.icon_)
-	, small_profile_(o.small_profile_)
-	, profile_(o.profile_)
-	, flag_rgb_(o.flag_rgb_)
-	, num_traits_(o.num_traits_)
-	, variations_(o.variations_)
-	, default_variation_(o.default_variation_)
-	, variation_name_(o.variation_name_)
-	, race_(o.race_)
-	, abilities_(o.abilities_)
-	, adv_abilities_(o.adv_abilities_)
-	, zoc_(o.zoc_)
-	, hide_help_(o.hide_help_)
-	, do_not_list_(o.do_not_list_)
-	, advances_to_(o.advances_to_)
-	, experience_needed_(o.experience_needed_)
-	, alignment_(o.alignment_)
-	, movement_type_(o.movement_type_)
-	, possible_traits_(o.possible_traits_)
-	, genders_(o.genders_)
-	, animations_(o.animations_)
-	, build_status_(o.build_status_)
-{
-	gender_types_[0].reset(gender_types_[0] != nullptr ? new unit_type(*o.gender_types_[0]) : nullptr);
-	gender_types_[1].reset(gender_types_[1] != nullptr ? new unit_type(*o.gender_types_[1]) : nullptr);
-}
-
-unit_type::unit_type(defaut_ctor_t, const config& cfg, const std::string & parent_id)
+unit_type::unit_type(default_ctor_t, const config& cfg, const std::string & parent_id)
 	: cfg_(nullptr)
 	, built_cfg_()
-	, has_cfg_build_()
 	, id_(cfg.has_attribute("id") ? cfg["id"].str() : parent_id)
 	, debug_id_()
 	, parent_id_(!parent_id.empty() ? parent_id : id_)
@@ -131,12 +84,14 @@ unit_type::unit_type(defaut_ctor_t, const config& cfg, const std::string & paren
 	, default_variation_()
 	, variation_name_()
 	, race_(&unit_race::null_race)
+	, abilities_infos_()
+	, adv_abilities_infos_()
 	, abilities_()
-	, adv_abilities_()
 	, zoc_(false)
 	, hide_help_(false)
 	, do_not_list_()
 	, advances_to_()
+	, advancements_(cfg.child_range("advancement"))
 	, experience_needed_(0)
 	, alignment_(unit_alignments::type::neutral)
 	, movement_type_()
@@ -152,19 +107,18 @@ unit_type::unit_type(defaut_ctor_t, const config& cfg, const std::string & paren
 	check_id(id_);
 	check_id(parent_id_);
 }
+
 unit_type::unit_type(const config& cfg, const std::string & parent_id)
-	: unit_type(defaut_ctor_t(), cfg, parent_id)
+	: unit_type(default_ctor_t(), cfg, parent_id)
 {
 	cfg_ = &cfg;
-
 }
 
 unit_type::unit_type(config&& cfg, const std::string & parent_id)
-	: unit_type(defaut_ctor_t(), cfg, parent_id)
+	: unit_type(default_ctor_t(), cfg, parent_id)
 {
 	built_cfg_ = std::make_unique<config>(std::move(cfg));
 }
-
 
 unit_type::~unit_type()
 {
@@ -172,6 +126,7 @@ unit_type::~unit_type()
 
 unit_type::ability_metadata::ability_metadata(const config& cfg)
 	: id(cfg["id"])
+	, help_topic_id(unit_ability_t::get_help_topic_id(cfg))
 	, name(cfg["name"].t_str())
 	, name_inactive(cfg["name_inactive"].t_str())
 	, female_name(cfg["female_name"].t_str())
@@ -244,10 +199,10 @@ void unit_type::build_help_index(
 
 	const config& cfg = get_cfg();
 
-	type_name_ = cfg["name"];
-	description_ = cfg["description"];
+	type_name_ = cfg["name"].t_str();
+	description_ = cfg["description"].t_str();
 	hitpoints_ = cfg["hitpoints"].to_int(1);
-	level_ = cfg["level"];
+	level_ = cfg["level"].to_int();
 	recall_cost_ = cfg["recall_cost"].to_int(-1);
 	movement_ = cfg["movement"].to_int(1);
 	vision_ = cfg["vision"].to_int(-1);
@@ -263,7 +218,7 @@ void unit_type::build_help_index(
 	do_not_list_ = cfg["do_not_list"].to_bool(false);
 
 	for(const config& sn : cfg.child_range("special_note")) {
-		special_notes_.push_back(sn["note"]);
+		special_notes_.push_back(sn["note"].t_str());
 	}
 
 	adjust_profile(profile_);
@@ -299,22 +254,30 @@ void unit_type::build_help_index(
 		genders_.push_back(unit_race::MALE);
 	}
 
-	if(auto abil_cfg = cfg.optional_child("abilities")) {
-		for(const config::any_child ab : abil_cfg->all_children_range()) {
-			abilities_.emplace_back(ab.cfg);
-		}
+	auto abilities = abilities_cfg();
+	for(const auto [key, cfg] : abilities.all_children_view()) {
+		//TODO: std::move
+		auto p_ab = unit_ability_t::create(key, cfg, false);
+		abilities_.emplace_back(p_ab);
+		config subst_cfg(cfg);
+		subst_cfg["name"] = p_ab->substitute_variables(cfg["name"]);
+		subst_cfg["female_name"] = p_ab->substitute_variables(cfg["female_name"]);
+		subst_cfg["description"] = p_ab->substitute_variables(cfg["description"]);
+		subst_cfg["name_inactive"] = p_ab->substitute_variables(cfg["name_inactive"]);
+		subst_cfg["female_name_inactive"] = p_ab->substitute_variables(cfg["female_name_inactive"]);
+		subst_cfg["description_inactive"] = p_ab->substitute_variables(cfg["description_inactive"]);
+		abilities_infos_.emplace_back(subst_cfg);
 	}
 
 	for(const config& adv : cfg.child_range("advancement")) {
 		for(const config& effect : adv.child_range("effect")) {
-			auto abil_cfg = effect.optional_child("abilities");
-
-			if(!abil_cfg || effect["apply_to"] != "new_ability") {
+			auto abil_cfg = unit_type_data::add_registry_entries(effect, "abilities", unit_types.abilities());
+			if(!abil_cfg.empty() || effect["apply_to"] != "new_ability") {
 				continue;
 			}
 
-			for(const config::any_child ab : abil_cfg->all_children_range()) {
-				adv_abilities_.emplace_back(ab.cfg);
+			for(const auto [key, cfg] : abil_cfg.all_children_view()) {
+				adv_abilities_infos_.emplace_back(cfg);
 			}
 		}
 	}
@@ -450,7 +413,7 @@ void unit_type::build(BUILD_STATUS status,
 	}
 }
 
-const unit_type& unit_type::get_gender_unit_type(std::string gender) const
+const unit_type& unit_type::get_gender_unit_type(const std::string& gender) const
 {
 	if(gender == unit_race::s_female) {
 		return get_gender_unit_type(unit_race::FEMALE);
@@ -499,26 +462,25 @@ static void append_special_note(std::vector<t_string>& notes, const t_string& ne
 	std::string_view note_plain = new_note.c_str();
 	utils::trim(note_plain);
 	if(note_plain.empty()) return;
-	auto iter = std::find(notes.begin(), notes.end(), new_note);
-	if(iter != notes.end()) return;
+	if(utils::contains(notes, new_note)) return;
 	notes.push_back(new_note);
 }
 
-std::vector<t_string> combine_special_notes(const std::vector<t_string> direct, const config& abilities, const_attack_itors attacks, const movetype& mt)
+std::vector<t_string> combine_special_notes(const std::vector<t_string>& direct, const config& abilities, const const_attack_itors& attacks, const movetype& mt)
 {
 	std::vector<t_string> notes;
 	for(const auto& note : direct) {
 		append_special_note(notes, note);
 	}
-	for(const config::any_child ability : abilities.all_children_range()) {
-		if(ability.cfg.has_attribute("special_note")) {
-			append_special_note(notes, ability.cfg["special_note"].t_str());
+	for(const auto [key, cfg] : abilities.all_children_view()) {
+		if(cfg.has_attribute("special_note")) {
+			append_special_note(notes, cfg["special_note"].t_str());
 		}
 	}
 	for(const auto& attack : attacks) {
-		for(const config::any_child ability : attack.specials().all_children_range()) {
-			if(ability.cfg.has_attribute("special_note")) {
-				append_special_note(notes, ability.cfg["special_note"].t_str());
+		for(const auto& p_ab : attack.specials()) {
+			if(p_ab->cfg().has_attribute("special_note")) {
+				append_special_note(notes, p_ab->cfg()["special_note"].t_str());
 			}
 		}
 		if(auto attack_type_note = string_table.find("special_note_damage_type_" + attack.type()); attack_type_note != string_table.end()) {
@@ -590,35 +552,31 @@ int unit_type::experience_needed(bool with_acceleration) const
 
 bool unit_type::has_ability_by_id(const std::string& ability) const
 {
-	if(auto abil = get_cfg().optional_child("abilities")) {
-		for(const config::any_child ab : abil->all_children_range()) {
-			if(ab.cfg["id"] == ability) {
-				return true;
-			}
+	for(const auto& p_ab : abilities()) {
+		if(p_ab->id() == ability) {
+			return true;
 		}
 	}
 
 	return false;
 }
 
-std::vector<std::string> unit_type::get_ability_list() const
+std::vector<std::string> unit_type::get_ability_id_list() const
 {
 	std::vector<std::string> res;
 
-	auto abilities = get_cfg().optional_child("abilities");
-	if(!abilities) {
-		return res;
-	}
-
-	for(const config::any_child ab : abilities->all_children_range()) {
-		std::string id = ab.cfg["id"];
-
+	for(const auto& p_ab : abilities()) {
+		std::string id = p_ab->id();
 		if(!id.empty()) {
 			res.push_back(std::move(id));
 		}
 	}
 
 	return res;
+}
+
+config unit_type::abilities_cfg() const {
+	return unit_type_data::add_registry_entries(get_cfg(), "abilities", unit_types.abilities());
 }
 
 bool unit_type::hide_help() const
@@ -692,9 +650,7 @@ bool unit_type::musthave_status(const std::string& status_name) const
 			const std::string& ut = effect["unit_type"];
 
 			if(!ut.empty()) {
-				const std::vector<std::string>& types = utils::split(ut);
-
-				if(std::find(types.begin(), types.end(), id()) == types.end()) {
+				if(!utils::contains(utils::split(ut), id())) {
 					continue;
 				}
 			}
@@ -722,24 +678,9 @@ const std::string& unit_type::flag_rgb() const
 	return flag_rgb_.empty() ? game_config::unit_rgb : flag_rgb_;
 }
 
-bool unit_type::has_random_traits() const
+bool unit_type::has_gender_variation(const unit_race::GENDER gender) const
 {
-	if(num_traits() == 0) {
-		return false;
-	}
-
-	for(const auto& cfg : possible_traits()) {
-		const config::attribute_value& availability = cfg["availability"];
-		if(availability.blank()) {
-			return true;
-		}
-
-		if(availability.str() != "musthave") {
-			return true;
-		}
-	}
-
-	return false;
+	return utils::contains(genders_, gender);
 }
 
 std::vector<std::string> unit_type::variations() const
@@ -773,20 +714,21 @@ bool unit_type::show_variations_in_help() const
 int unit_type::resistance_against(const std::string& damage_name, bool attacker) const
 {
 	int resistance = movement_type_.resistance_against(damage_name);
-	unit_ability_list resistance_abilities;
-
-	if(auto abilities = get_cfg().optional_child("abilities")) {
-		for(const config& cfg : abilities->child_range("resistance")) {
-			if(!cfg["affect_self"].to_bool(true)) {
-				continue;
-			}
-
-			if(!resistance_filter_matches(cfg, attacker, damage_name, 100 - resistance)) {
-				continue;
-			}
-
-			resistance_abilities.emplace_back(&cfg, map_location::null_location(), map_location::null_location());
+	active_ability_list resistance_abilities;
+	for(const auto& p_ab : abilities()) {
+		if (p_ab->tag() != "resistance") {
+			continue;
 		}
+
+		if (!p_ab->cfg()["affect_self"].to_bool(true)) {
+			continue;
+		}
+
+		if(!resistance_filter_matches(p_ab->cfg(), attacker, damage_name, 100 - resistance)) {
+			continue;
+		}
+
+		resistance_abilities.emplace_back(p_ab, map_location::null_location(), map_location::null_location());
 	}
 
 	if(!resistance_abilities.empty()) {
@@ -816,9 +758,7 @@ bool unit_type::resistance_filter_matches(
 	if(!apply_to.empty()) {
 		if(damage_name != apply_to) {
 			if(apply_to.find(',') != std::string::npos && apply_to.find(damage_name) != std::string::npos) {
-				const std::vector<std::string>& vals = utils::split(apply_to);
-
-				if(std::find(vals.begin(), vals.end(), damage_name) == vals.end()) {
+				if(!utils::contains(utils::split(apply_to), damage_name)) {
 					return false;
 				}
 			} else {
@@ -941,7 +881,7 @@ void patch_movetype(movetype& mt,
 		// before the formula is evaluated.
 		std::list<config> config_copies;
 
-		gui2::typed_formula<int> formula(formula_str, default_val);
+		auto formula = wfl::formula(formula_str);
 		wfl::map_formula_callable original;
 
 		// These three need to follow movetype's fallback system, where values for
@@ -954,7 +894,7 @@ void patch_movetype(movetype& mt,
 			}
 			config_copies.emplace_back(cumulative_values);
 			auto val = std::make_shared<wfl::config_callable>(config_copies.back());
-			original.add(x, val);
+			original.add(x, wfl::variant(val));
 
 			// Allow "flat" to work as "vision_costs.flat" when patching vision_costs, etc
 			if(type_to_patch == x) {
@@ -968,7 +908,7 @@ void patch_movetype(movetype& mt,
 			if(mt_cfg.has_child(x)) {
 				const auto& subtag = mt_cfg.mandatory_child(x);
 				auto val = std::make_shared<wfl::config_callable>(subtag);
-				original.add(x, val);
+				original.add(x, wfl::variant(val));
 
 				// Allow "arcane" to work as well as "resistance.arcane", etc
 				if(type_to_patch == x) {
@@ -977,8 +917,12 @@ void patch_movetype(movetype& mt,
 			}
 		}
 
-		LOG_CONFIG << " formula=" << formula_str << ", resolves to " << formula(original);
-		temp_cfg[new_key] = formula(original);
+		try {
+			temp_cfg[new_key] = formula.evaluate(original).as_int(default_val);
+		} catch(const wfl::formula_error&) {
+			ERR_CF << "Error evaluating movetype formula: " << formula_str;
+			return;
+		}
 	}
 	mt.merge(temp_cfg, type_to_patch, true);
 }
@@ -998,7 +942,7 @@ void unit_type_data::apply_base_unit(unit_type& type, std::vector<std::string>& 
 	}
 
 	// Detect recursion so the WML author is made aware of an error.
-	if(std::find(base_tree.begin(), base_tree.end(), type.base_unit_id_) != base_tree.end()) {
+	if(utils::contains(base_tree, type.base_unit_id_)) {
 		throw_base_unit_recursion_error(base_tree, type.base_unit_id_);
 	}
 
@@ -1058,7 +1002,7 @@ void unit_type::fill_variations()
 
 		std::unique_ptr<unit_type> var = create_sub_type(var_cfg, false);
 
-		var->built_cfg_->remove_children("variation", [](const config&){return true;});
+		var->built_cfg_->remove_children("variation");
 		var->variation_id_ = var_cfg["variation_id"].str();
 		var->debug_id_ = debug_id_ + " [" + var->variation_id_ + "]";
 
@@ -1093,6 +1037,28 @@ void unit_type::fill_variations_and_gender()
 
 	gui2::dialogs::loading_screen::progress();
 }
+
+config unit_type_data::add_registry_entries(
+	const config& base_cfg,
+	const std::string& registry_name,
+	const std::map<std::string, config>& registry
+)
+{
+	config to_append = base_cfg.child_or_empty(registry_name);
+	if(base_cfg.has_attribute(registry_name + "_list")) {
+		std::vector<std::string> abil_ids_list = utils::split(base_cfg[registry_name + "_list"].str());
+		for(const std::string& id : abil_ids_list) {
+			auto registry_entry = registry.find(id);
+			if(registry_entry != registry.end()) {
+				to_append.append_children(registry_entry->second);
+			} else {
+				WRN_UT << "ID ‘" << id << "’ does not exist in registry for ‘" << registry_name << "’, skipping.";
+			}
+		}
+	}
+	return to_append;
+}
+
 /**
  * Resets all data based on the provided config.
  * This includes some processing of the config, such as expanding base units.
@@ -1118,20 +1084,42 @@ void unit_type_data::set_config(const game_config_view& cfg)
 		gui2::dialogs::loading_screen::progress();
 	}
 
+	for(const auto& abil_cfg : cfg.child_range("abilities")) {
+		for(const auto [key, child_cfg] : abil_cfg.get().all_children_range()) {
+			const std::string& id = child_cfg["unique_id"].str(child_cfg["id"]);
+			if(abilities_registry_.find(id) == abilities_registry_.end()) {
+				DBG_UT << "Adding ability ‘" << id << "’ to registry.";
+				abilities_registry_.try_emplace(id, config(key, child_cfg));
+			} else {
+				WRN_UT << "Ability with id ‘" << id << "’ already exists in registry, not adding.";
+			}
+		}
+	}
+
+	for(const auto& sp_cfg : cfg.child_range("weapon_specials")) {
+		for(const auto [key, child_cfg] : sp_cfg.get().all_children_range()) {
+			const std::string& id = child_cfg["unique_id"].str(child_cfg["id"]);
+			if(specials_registry_.find(id) == specials_registry_.end()) {
+				DBG_UT << "Adding weapon special ‘" << id << "’ to registry.";
+				specials_registry_.try_emplace(id, config(key, child_cfg));
+			} else {
+				WRN_UT << "Weapon special with id ‘" << id << "’ already exists in registry, not adding.";
+			}
+		}
+	}
+
 	// Movetype resistance patching
 	DBG_CF << "Start of movetype patching";
 	for(const config& r : cfg.child_range("resistance_defaults")) {
 		const std::string& dmg_type = r["id"];
 
-		for(const config::attribute& attr : r.attribute_range()) {
-			const std::string& mt = attr.first;
-
+		for(const auto& [mt, value] : r.attribute_range()) {
 			if(mt == "id" || mt == "default" || movement_types_.find(mt) == movement_types_.end()) {
 				continue;
 			}
 
 			DBG_CF << "Patching specific movetype " << mt;
-			patch_movetype(movement_types_[mt], "resistance", dmg_type, attr.second, 100, true);
+			patch_movetype(movement_types_[mt], "resistance", dmg_type, value, 100, true);
 		}
 
 		if(r.has_attribute("default")) {
@@ -1185,15 +1173,13 @@ void unit_type_data::set_config(const game_config_view& cfg)
 
 			const config& info = terrain.mandatory_child(*src_tag);
 
-			for(const config::attribute& attr : info.attribute_range()) {
-				const std::string& mt = attr.first;
-
+			for(const auto& [mt, value] : info.attribute_range()) {
 				if(mt == "default" || movement_types_.find(mt) == movement_types_.end()) {
 					continue;
 				}
 
 				patch_movetype(
-					movement_types_[mt], cost_type.subtag, ter_type, attr.second, cost_type.default_val, true);
+					movement_types_[mt], cost_type.subtag, ter_type, value, cost_type.default_val, true);
 			}
 
 			if(info.has_attribute("default")) {
@@ -1299,6 +1285,8 @@ void unit_type_data::clear()
 	types_.clear();
 	movement_types_.clear();
 	races_.clear();
+	abilities_registry_.clear();
+	specials_registry_.clear();
 	build_status_ = unit_type::NOT_BUILT;
 
 	hide_help_all_ = false;
@@ -1399,19 +1387,34 @@ void unit_type::apply_scenario_fix(const config& cfg)
 		}
 	}
 
+	if(cfg.has_child("advancement")) {
+		advancements_ = cfg.child_range("advancement");
+	}
+
 	// apply recursively to subtypes.
 	for(int gender = 0; gender <= 1; ++gender) {
 		if(!gender_types_[gender]) {
 			continue;
 		}
 		gender_types_[gender]->apply_scenario_fix(cfg);
+		std::string gender_str = gender == 0 ? "male" : "female";
+		if(cfg.has_child(gender_str)) {
+			auto gender_cfg = cfg.optional_child(gender_str);
+			if(gender_cfg){
+				gender_types_[gender]->apply_scenario_fix(*gender_cfg);
+			}
+		}
 	}
 
 	if(get_cfg().has_child("variation")) {
 		// Make sure the variations are created.
 		unit_types.build_unit_type(*this, VARIATIONS);
-		for(auto& v : variations_) {
-			v.second.apply_scenario_fix(cfg);
+		for (auto& cv : cfg.child_range("variation")){
+			for(auto& [variation_id, variation_type] : variations_) {
+				if(cv["variation_id"] == variation_id) {
+					variation_type.apply_scenario_fix(cv);
+				}
+			}
 		}
 	}
 }
@@ -1448,6 +1451,7 @@ void unit_type::remove_scenario_fixes()
 	for(auto& v : variations_) {
 		v.second.remove_scenario_fixes();
 	}
+	advancements_ = get_cfg().child_range("advancement");
 }
 
 void unit_type_data::remove_scenario_fixes()
@@ -1464,6 +1468,10 @@ void unit_type::check_id(std::string& id)
 	// We don't allow leading whitepaces.
 	if(id[0] == ' ') {
 		throw error("Found unit type id with a leading whitespace \"" + id + "\"");
+	}
+
+	if(id == "random" || id == "null") {
+		throw error("Found unit type using a 'random' or 'null' as an id");
 	}
 
 	bool gave_warning = false;

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2010 - 2024
+	Copyright (C) 2010 - 2025
 	by Guillaume Melquiond <guillaume.melquiond@gmail.com>
 	Copyright (C) 2006 - 2009 by Rusty Russell <rusty@rustcorp.com.au>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
@@ -361,7 +361,7 @@ public:
 	unit_map& operator=(const unit_map& that);
 
 	~unit_map();
-	void swap(unit_map& o);
+	void swap(unit_map& o) noexcept;
 
 	typedef iterator_base<standard_iter_types> unit_iterator;
 	typedef iterator_base<const_iter_types> const_unit_iterator;
@@ -481,7 +481,7 @@ public:
 	 * @note            If the unit::underlying_id is already in use, a new one will be generated.
 	 * @note            The map takes ownership of the pointed object only if the operation succeeds.
 	 */
-	umap_retval_pair_t insert(unit_ptr p);
+	umap_retval_pair_t insert(const unit_ptr& p);
 
 	/**
 	 * Moves a unit from location @a src to location @a dst.
@@ -501,7 +501,7 @@ public:
 	 * @returns         A pair consisting of an iterator pointing to the new unit (or the unit
 	 *                  already occupying that location) and a bool indicating success.
 	 */
-	umap_retval_pair_t replace(const map_location& l, unit_ptr p);
+	umap_retval_pair_t replace(const map_location& l, const unit_ptr& p);
 
 	/**
 	 * Erases the unit at location @a l, if any.
@@ -595,7 +595,7 @@ private:
 };
 
 /** Implement non-member swap function for std::swap (calls @ref unit_map::swap). */
-void swap(unit_map& lhs, unit_map& rhs);
+void swap(unit_map& lhs, unit_map& rhs) noexcept;
 
 template<typename T>
 std::size_t unit_map::erase(const T& iter)

@@ -64,6 +64,11 @@ Campaign DiD:
     - any-glob-to-any-file:
       - data/campaigns/Descent_Into_Darkness/**
 
+Campaign DoD:
+  - changed-files:
+    - any-glob-to-any-file:
+      - data/campaigns/Dusk_of_Dawn/**
+
 Campaign EI:
   - changed-files:
     - any-glob-to-any-file:
@@ -73,6 +78,11 @@ Campaign HttT:
   - changed-files:
     - any-glob-to-any-file:
       - data/campaigns/Heir_To_The_Throne/**
+
+Campaign HttTC:
+  - changed-files:
+    - any-glob-to-any-file:
+      - data/campaigns/Heir_To_The_Throne_Classic/**
 
 Campaign LoW:
   - changed-files:
@@ -89,6 +99,11 @@ Campaign NR:
     - any-glob-to-any-file:
       - data/campaigns/Northern_Rebirth/**
 
+Campaign PaP:
+  - changed-files:
+    - any-glob-to-any-file:
+      - data/campaigns/Of_Pearls_and_Pirates/**
+
 Campaign SoF:
   - changed-files:
     - any-glob-to-any-file:
@@ -103,6 +118,11 @@ Campaign SotBE:
   - changed-files:
     - any-glob-to-any-file:
       - data/campaigns/Son_Of_The_Black_Eye/**
+
+Campaign TDG:
+  - changed-files:
+    - any-glob-to-any-file:
+      - data/campaigns/The_Deceivers_Gambit/**
 
 Campaign THoT:
   - changed-files:
@@ -138,6 +158,11 @@ Campaign WC:
   - changed-files:
     - any-glob-to-any-file:
       - data/campaigns/World_Conquest/**
+
+CI:
+  - changed-files:
+    - any-glob-to-any-file:
+      - .github/workflows/**
 
 CMake:
   - changed-files:

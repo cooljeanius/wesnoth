@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2014 - 2024
+	Copyright (C) 2014 - 2025
 	by Chris Beck <render787@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -36,7 +36,7 @@ namespace lua_wml {
 static int intf_wml_tostring(lua_State* L) {
 	const config& arg = luaW_checkconfig(L, 1);
 	std::ostringstream stream;
-	write(stream, arg);
+	io::write(stream, arg);
 	lua_pushstring(L, stream.str().c_str());
 	return 1;
 }
@@ -60,14 +60,13 @@ static int intf_load_wml(lua_State* L)
 		int n = lua_tointeger(L, -1);
 		lua_pop(L, 1);
 		for(int i = 0; i < n; i++) {
-			lua_geti(L, 2, i);
+			const auto arg = scoped_lua_argument{L, 2, i};
 			if(!lua_isstring(L, -1)) {
 				return luaL_argerror(L, 2, "expected bool or array of strings");
 			}
 			std::string define = lua_tostring(L, -1);
-			lua_pop(L, 1);
 			if(!define.empty()) {
-				defines_map.emplace(define, preproc_define(define));
+				defines_map.try_emplace(define, define);
 			}
 		}
 	} else if(!lua_isnoneornil(L, 2)) {
@@ -81,13 +80,12 @@ static int intf_load_wml(lua_State* L)
 	}
 	std::string wml_file = filesystem::get_wml_location(file).value();
 	filesystem::scoped_istream stream;
-	config result;
 	if(preprocess) {
-		stream = preprocess_file(wml_file, &defines_map);
+		stream = preprocess_file(wml_file, defines_map);
 	} else {
 		stream.reset(new std::ifstream(wml_file));
 	}
-	read(result, *stream, validator.get());
+	config result = io::read(*stream, validator.get());
 	luaW_pushconfig(L, result);
 	return 1;
 }
@@ -106,8 +104,7 @@ static int intf_parse_wml(lua_State* L)
 		validator.reset(new schema_validation::schema_validator(filesystem::get_wml_location(schema_path).value()));
 		validator->set_create_exceptions(false); // Don't crash if there's an error, just go ahead anyway
 	}
-	config result;
-	read(result, wml, validator.get());
+	config result = io::read(wml, validator.get());
 	luaW_pushconfig(L, result);
 	return 1;
 }
@@ -174,8 +171,8 @@ static int intf_wml_merge(lua_State* L)
 		base.append_children(merge);
 	} else {
 		if(mode == "replace") {
-			for(const auto c : merge.all_children_range()) {
-				base.clear_children(c.key);
+			for(const auto [key, _] : merge.all_children_view()) {
+				base.clear_children(key);
 			}
 		} else if(mode != "merge") {
 			return luaL_argerror(L, 3, "invalid merge mode - must be merge, append, or replace");

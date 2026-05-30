@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2017 - 2024
+	Copyright (C) 2017 - 2025
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -17,12 +17,12 @@
 #include "gui/dialogs/log_settings.hpp"
 
 #include "gettext.hpp"
-#include "gui/auxiliary/find_widget.hpp"
 #include "gui/widgets/grid.hpp"
 #include "gui/widgets/listbox.hpp"
 #include "gui/widgets/text_box.hpp"
 #include "gui/widgets/toggle_button.hpp"
 #include "gui/widgets/window.hpp"
+#include "utils/ci_searcher.hpp"
 
 #include "log.hpp"
 
@@ -33,7 +33,6 @@ REGISTER_DIALOG(log_settings)
 
 log_settings::log_settings()
 	: modal_dialog(window_id())
-	, last_words_()
 {
 	//list of names must match those in logging.cfg
 	widget_id_.push_back("none");
@@ -55,19 +54,14 @@ log_settings::log_settings()
 	}
 }
 
-void log_settings::pre_show(window& window)
+void log_settings::pre_show()
 {
-	listbox& logger_box = find_widget<listbox>(&window, "logger_listbox", false);
+	listbox& logger_box = find_widget<listbox>("logger_listbox");
 
 	for(unsigned int i = 0; i < domain_list_.size(); i++){
 		std::string this_domain = domain_list_[i];
-		widget_data data;
-		widget_item item;
 
-		item["label"] = this_domain;
-		data["label"] = item;
-
-		logger_box.add_row(data);
+		logger_box.add_row(widget_data{{ "label", {{ "label", this_domain }}}});
 		group<std::string>& group = groups_[this_domain];
 
 		grid* this_grid = logger_box.get_row_grid(i);
@@ -87,57 +81,33 @@ void log_settings::pre_show(window& window)
 		}
 	}
 
-	text_box* filter = find_widget<text_box>(&window, "filter_box", false, true);
-	filter->set_text_changed_callback(std::bind(&log_settings::filter_text_changed, this, std::placeholders::_2));
+	text_box* filter = find_widget<text_box>("filter_box", false, true);
+	filter->on_modified([this](const auto& box) { filter_text_changed(box.text()); });
 
-	window.keyboard_capture(filter);
-	window.add_to_keyboard_chain(&logger_box);
+#ifdef __IPHONEOS__
+	// On iOS, opening log settings should not immediately summon the
+	// software keyboard just because the optional filter field exists.
+	keyboard_capture(&logger_box);
+#else
+	keyboard_capture(filter);
+#endif
+	add_to_keyboard_chain(&logger_box);
 }
 
 void log_settings::filter_text_changed(const std::string& text)
 {
-	listbox& list = find_widget<listbox>(get_window(), "logger_listbox", false);
-
-	const std::vector<std::string> words = utils::split(text, ' ');
-
-	if(words == last_words_) {
-		return;
-	}
-
-	last_words_ = words;
-
-	boost::dynamic_bitset<> show_items;
-	show_items.resize(list.get_item_count(), true);
-
-	if(!text.empty()) {
-		for(unsigned int i = 0; i < list.get_item_count(); i++) {
-			assert(i < domain_list_.size());
-
-			bool found = false;
-
-			for(const auto& word : words)
-			{
-				found = translation::ci_search(domain_list_[i], word);
-				if(!found) {
-					break;
-				}
-			}
-
-			show_items[i] = found;
-		}
-	}
-
-	list.set_row_shown(show_items);
+	find_widget<listbox>("logger_listbox").filter_rows_by(
+		[this, match = translation::make_ci_matcher(text)](std::size_t row) { return match(domain_list_[row]); });
 }
 
-void log_settings::post_show(window& /*window*/)
+void log_settings::post_show()
 {
 	for(std::string this_domain : domain_list_){
 		set_logger(this_domain);
 	}
 }
 
-void log_settings::set_logger(const std::string log_domain)
+void log_settings::set_logger(const std::string& log_domain)
 {
 	std::string active_value = groups_[log_domain].get_active_member_value();
 

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2024
+	Copyright (C) 2003 - 2025
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -21,75 +21,30 @@
 #define GETTEXT_DOMAIN "wesnoth-help"
 
 #include "help/help.hpp"
+#include "help/help_impl.hpp"
 
-#include "config.hpp"                   // for config, etc
-#include "events.hpp"                   // for draw, pump, etc
-#include "font/constants.hpp"           // for relative_size
+#include "gui/dialogs/help_browser.hpp"
 #include "preferences/preferences.hpp"
-#include "game_config_manager.hpp"
-#include "gettext.hpp"                  // for _
-#include "help/help_browser.hpp"        // for help_browser
-#include "help/help_impl.hpp"           // for hidden_symbol, toplevel, etc
-#include "key.hpp"                      // for CKey
-#include "log.hpp"                      // for LOG_STREAM, log_domain
-#include "show_dialog.hpp"              // for dialog_frame, etc
-#include "terrain/terrain.hpp"          // for terrain_type
-#include "units/unit.hpp"               // for unit
-#include "units/types.hpp"              // for unit_type, unit_type_data, etc
-#include "video.hpp"                    // for game_canvas_size
-#include "widgets/button.hpp"           // for button
+#include "terrain/terrain.hpp"
+#include "units/types.hpp"
+#include "units/unit.hpp"
 
-#include <cassert>                      // for assert
-#include <algorithm>                    // for min
-#include <vector>                       // for vector, vector<>::iterator
-
-
-static lg::log_domain log_display("display");
-#define WRN_DP LOG_STREAM(warn, log_display)
-
-static lg::log_domain log_help("help");
-#define ERR_HELP LOG_STREAM(err, log_help)
+#include <boost/logic/tribool.hpp>
+#include <cassert>
 
 namespace help {
-/**
- * Open a help dialog using a specified toplevel.
- *
- * This would allow for complete customization of the contents, although not in a
- * very easy way. It's used as the internal implementation of the other help*
- * functions.
- *
- *@pre The help_manager must already exist; this is different to the functions
- * declared in help.hpp, which is why this one's declaration is in the .cpp
- * file. Because this takes a section as an argument, it wouldn't make sense
- * for it to call ensure_cache_lifecycle() internally - if the help_manager
- * doesn't already exist, that would likely destroy the referenced object at
- * the point that this function exited.
- */
-void show_with_toplevel(const section &toplevel, const std::string& show_topic="", int xloc=-1, int yloc=-1);
 
-
-void show_unit_description(const unit &u)
+std::string get_unit_type_help_id(const unit_type& t)
 {
-	auto cache_lifecycle = ensure_cache_lifecycle();
-	help::show_unit_description(u.type());
-}
-
-void show_terrain_description(const terrain_type &t)
-{
-	auto cache_lifecycle = ensure_cache_lifecycle();
-	help::show_terrain_help(t.id(), t.hide_help());
-}
-
-void show_unit_description(const unit_type &t)
-{
-	auto cache_lifecycle = ensure_cache_lifecycle();
-	std::string var_id = t.get_cfg()["variation_id"].str();
-	if (var_id.empty())
-		var_id = t.get_cfg()["variation_name"].str();
+	std::string var_id = t.variation_id();
+	if(var_id.empty()) {
+		var_id = t.variation_name();
+	}
 	bool hide_help = t.hide_help();
 	bool use_variation = false;
-	if (!var_id.empty()) {
-		const unit_type *parent = unit_types.find(t.id());
+
+	if(!var_id.empty()) {
+		const unit_type* parent = unit_types.find(t.id());
 		assert(parent);
 		if (hide_help) {
 			hide_help = parent->hide_help();
@@ -98,176 +53,119 @@ void show_unit_description(const unit_type &t)
 		}
 	}
 
-	if (use_variation)
-		help::show_variation_help(t.id(), var_id, hide_help);
-	else
-		help::show_unit_help(t.id(), t.show_variations_in_help(), hide_help);
-}
-
-help_manager::help_manager(const game_config_view *cfg)
-{
-	assert(!game_cfg);
-	assert(cfg);
-	// This is a global rawpointer in the help:: namespace.
-	game_cfg = cfg;
-}
-
-std::unique_ptr<help_manager> ensure_cache_lifecycle()
-{
-	// The internals of help_manager are that this global raw pointer is
-	// non-null if and only if an instance of help_manager already exists.
-	if(game_cfg)
-		return nullptr;
-	return std::make_unique<help_manager>(&game_config_manager::get()->game_config());
-}
-
-help_manager::~help_manager()
-{
-	game_cfg = nullptr;
-	default_toplevel.clear();
-	hidden_sections.clear();
-	// These last numbers must be reset so that the content is regenerated.
-	// Upon next start.
-	last_num_encountered_units = -1;
-	last_num_encountered_terrains = -1;
-}
-
-/**
- * Open the help browser, show topic with id show_topic.
- *
- * If show_topic is the empty string, the default topic will be shown.
- */
-void show_help(const std::string& show_topic, int xloc, int yloc)
-{
-	auto cache_lifecycle = ensure_cache_lifecycle();
-	show_with_toplevel(default_toplevel, show_topic, xloc, yloc);
-}
-
-/**
- * Open the help browser, show unit with id unit_id.
- *
- * If show_topic is the empty string, the default topic will be shown.
- */
-void show_unit_help(const std::string& show_topic, bool has_variations, bool hidden, int xloc, int yloc)
-{
-	auto cache_lifecycle = ensure_cache_lifecycle();
-	show_with_toplevel(default_toplevel,
-			  hidden_symbol(hidden) + (has_variations ? ".." : "") + unit_prefix + show_topic, xloc, yloc);
-}
-
-/**
- * Open the help browser, show terrain with id terrain_id.
- *
- * If show_topic is the empty string, the default topic will be shown.
- */
-void show_terrain_help(const std::string& show_topic, bool hidden, int xloc, int yloc)
-{
-	auto cache_lifecycle = ensure_cache_lifecycle();
-	show_with_toplevel(default_toplevel, hidden_symbol(hidden) + terrain_prefix + show_topic, xloc, yloc);
-}
-
-/**
- * Open the help browser, show the variation of the unit matching.
- */
-void show_variation_help(const std::string& unit, const std::string &variation, bool hidden, int xloc, int yloc)
-{
-	auto cache_lifecycle = ensure_cache_lifecycle();
-	show_with_toplevel(default_toplevel, hidden_symbol(hidden) + variation_prefix + unit + "_" + variation, xloc, yloc);
-}
-
-/**
- * Open a help dialog using a toplevel other than the default.
- *
- * This allows for complete customization of the contents, although not in a
- * very easy way.
- */
-void show_with_toplevel(const section &toplevel_sec,
-			   const std::string& show_topic,
-			   int xloc, int yloc)
-{
-	const events::event_context dialog_events_context;
-	const gui::dialog_manager manager;
-
-	point canvas_size = video::game_canvas_size();
-
-	const int width  = std::min<int>(font::relative_size(1200), canvas_size.x - font::relative_size(20));
-	const int height = std::min<int>(font::relative_size(850), canvas_size.y - font::relative_size(150));
-	const int left_padding = font::relative_size(10);
-	const int right_padding = font::relative_size(10);
-	const int top_padding = font::relative_size(10);
-	const int bot_padding = font::relative_size(10);
-
-	// If not both locations were supplied, put the dialog in the middle
-	// of the screen.
-	if (yloc <= -1 || xloc <= -1) {
-		xloc = canvas_size.x / 2 - width / 2;
-		yloc = canvas_size.y / 2 - height / 2;
+	if(use_variation) {
+		return hidden_symbol(hide_help) + variation_prefix + t.id() + "_" + var_id;
+	} else {
+		return hidden_symbol(hide_help) + (t.show_variations_in_help() ? ".." : "") + unit_prefix + t.id();
 	}
-	std::vector<gui::button*> buttons_ptr;
-	gui::button close_button_(_("Close"));
-	buttons_ptr.push_back(&close_button_);
+}
 
-	gui::dialog_frame f(
-		_("Help"), gui::dialog_frame::default_style, &buttons_ptr
-	);
-	f.layout(xloc, yloc, width, height);
+void show_unit_description(const unit& u)
+{
+	show_unit_description(u.type());
+}
 
+void show_unit_description(const unit_type& t)
+{
+	show_help(get_unit_type_help_id(t));
+}
+
+void show_terrain_description(const terrain_type& t)
+{
+	show_help(hidden_symbol(t.hide_help()) + terrain_prefix + t.id());
+}
+
+static void show_with_toplevel(const section& toplevel_sec, const std::string& show_topic)
+{
+	gui2::dialogs::help_browser::display(toplevel_sec, show_topic);
+}
+
+void show_help(const std::string& show_topic)
+{
+	const auto manager = help_manager::get_instance();
+	show_with_toplevel(manager->regenerate(), show_topic);
+}
+
+//
+// Help Manager Implementation
+//
+
+class help_manager::implementation
+{
+public:
+	friend class help_manager;
+
+	/**
+	 * Regenerates the cached help topics if necessary.
+	 *
+	 * @returns the current toplevel section.
+	 */
+	const section& regenerate();
+
+private:
+	std::size_t last_num_encountered_units_{0};
+	std::size_t last_num_encountered_terrains_{0};
+
+	boost::tribool last_debug_state_{boost::indeterminate};
+
+	/** The default toplevel. */
+	section toplevel_section_;
+
+	/** All sections and topics not referenced from the default toplevel. */
+	section hidden_sections_;
+};
+
+const section& help_manager::implementation::regenerate()
+{
 	// Find all unit_types that have not been constructed yet and fill in the information
 	// needed to create the help topics
 	unit_types.build_all(unit_type::HELP_INDEXED);
 
-	if (prefs::get().encountered_units().size() != size_t(last_num_encountered_units) ||
-		prefs::get().encountered_terrains().size() != size_t(last_num_encountered_terrains) ||
-		last_debug_state != game_config::debug ||
-		last_num_encountered_units < 0)
-	{
-		// More units or terrains encountered, update the contents.
-		last_num_encountered_units = prefs::get().encountered_units().size();
-		last_num_encountered_terrains = prefs::get().encountered_terrains().size();
-		last_debug_state = game_config::debug;
-		generate_contents();
+	const auto& enc_units = prefs::get().encountered_units();
+	const auto& enc_terrains = prefs::get().encountered_terrains();
+
+	// More units or terrains encountered, or debug mode toggled
+	if(boost::indeterminate(last_debug_state_)
+		|| enc_units.size()    != last_num_encountered_units_
+		|| enc_terrains.size() != last_num_encountered_terrains_
+		|| last_debug_state_   != game_config::debug
+	) {
+		last_num_encountered_units_ = enc_units.size();
+		last_num_encountered_terrains_ = enc_terrains.size();
+		last_debug_state_ = game_config::debug;
+
+		// Update the contents
+		std::tie(toplevel_section_, hidden_sections_) = generate_contents();
 	}
-	try {
-		help_browser hb(toplevel_sec);
-		hb.set_location(xloc + left_padding, yloc + top_padding);
-		hb.set_width(width - left_padding - right_padding);
-		hb.set_height(height - top_padding - bot_padding);
-		if (!show_topic.empty()) {
-			hb.show_topic(show_topic);
-		}
-		else {
-			hb.show_topic(default_show_topic);
-		}
-		hb.queue_redraw();
-		events::draw();
-		CKey key;
-		for (;;) {
-			events::pump();
-			events::raise_process_event();
-			if (key[SDLK_ESCAPE]) {
-				// Escape quits from the dialog.
-				return;
-			}
-			for (std::vector<gui::button*>::iterator button_it = buttons_ptr.begin();
-				 button_it != buttons_ptr.end(); ++button_it) {
-				if ((*button_it)->pressed()) {
-					// There is only one button, close.
-					return;
-				}
-			}
-			// This also rate limits to vsync
-			events::draw();
-		}
+
+	return toplevel_section_;
+}
+
+help_manager::help_manager()
+	: impl_(new help_manager::implementation)
+{
+}
+
+/** Defined out-of-line so the implementation class is visible. */
+help_manager::~help_manager() = default;
+
+std::shared_ptr<help_manager> help_manager::get_instance()
+{
+	// Null if no manager instance exists
+	std::shared_ptr instance = singleton_.lock();
+
+	if(!instance) {
+		instance.reset(new help_manager);
+		singleton_ = instance;
 	}
-	catch (const parse_error& e) {
-		ERR_HELP << _("Parse error when parsing help text:") << " " << e.message;
-#if 0
-		// Displaying in the UI is disabled due to issue #2587
-		std::stringstream msg;
-		msg << _("Parse error when parsing help text:") << " '" << e.message << "'";
-		gui2::show_transient_message("", msg.str());
-#endif
-	}
+
+	assert(instance);
+	return instance;
+}
+
+const section& help_manager::regenerate()
+{
+	return impl_->regenerate();
 }
 
 } // End namespace help.

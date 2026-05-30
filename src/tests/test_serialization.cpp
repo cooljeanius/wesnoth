@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2009 - 2024
+	Copyright (C) 2009 - 2025
 	by Karol Nowak <grywacz@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -426,13 +426,13 @@ BOOST_AUTO_TEST_CASE( utils_square_parenthetical_split )
 		BOOST_CHECK_EQUAL_COLLECTIONS(split.begin(), split.end(), expect.begin(), expect.end());
 	}
 	{
-		auto split = utils::square_parenthetical_split("q[1~5]");
-		std::array expect = {"q1", "q2", "q3", "q4", "q5"};
+		auto split = utils::square_parenthetical_split("q[0~5]");
+		std::array expect = {"q0", "q1", "q2", "q3", "q4", "q5"};
 		BOOST_CHECK_EQUAL_COLLECTIONS(split.begin(), split.end(), expect.begin(), expect.end());
 	}
 	{
-		auto split = utils::square_parenthetical_split("q[5~1]");
-		std::array expect = {"q5", "q4", "q3", "q2", "q1"};
+		auto split = utils::square_parenthetical_split("q[5~0]");
+		std::array expect = {"q5", "q4", "q3", "q2", "q1", "q0"};
 		BOOST_CHECK_EQUAL_COLLECTIONS(split.begin(), split.end(), expect.begin(), expect.end());
 	}
 	{
@@ -443,6 +443,16 @@ BOOST_AUTO_TEST_CASE( utils_square_parenthetical_split )
 	{
 		auto split = utils::square_parenthetical_split("q[007~012]");
 		std::array expect = {"q007", "q008", "q009", "q010", "q011", "q012"};
+		BOOST_CHECK_EQUAL_COLLECTIONS(split.begin(), split.end(), expect.begin(), expect.end());
+	}
+	{
+		auto split = utils::square_parenthetical_split("q[095~100]");
+		std::array expect = {"q095", "q096", "q097", "q098", "q099", "q100"};
+		BOOST_CHECK_EQUAL_COLLECTIONS(split.begin(), split.end(), expect.begin(), expect.end());
+	}
+	{
+		auto split = utils::square_parenthetical_split("q[095~098]");
+		std::array expect = {"q095", "q096", "q097", "q098"};
 		BOOST_CHECK_EQUAL_COLLECTIONS(split.begin(), split.end(), expect.begin(), expect.end());
 	}
 	{
@@ -562,7 +572,7 @@ BOOST_AUTO_TEST_CASE( test_wildcard_string_match )
 
 	superfluous_mask = std::string(str.length(), '?');
 	BOOST_CHECK(utils::wildcard_string_match(str, superfluous_mask));
-	BOOST_CHECK(utils::wildcard_string_match(str, superfluous_mask + '?'));
+	BOOST_CHECK(!utils::wildcard_string_match(str, superfluous_mask + '?'));
 
 	superfluous_mask = std::string(str.length(), '*');
 	BOOST_CHECK(utils::wildcard_string_match(str, superfluous_mask));
@@ -583,6 +593,47 @@ BOOST_AUTO_TEST_CASE( test_wildcard_string_match )
 	BOOST_CHECK(!utils::wildcard_string_match("", "+++?++"));
 	BOOST_CHECK(!utils::wildcard_string_match("", "?"));
 	BOOST_CHECK(!utils::wildcard_string_match("", "???"));
+
+	BOOST_CHECK(utils::wildcard_string_match("hello.txt", "*.txt"));
+	BOOST_CHECK(utils::wildcard_string_match("hello.txt", "h*t"));
+	BOOST_CHECK(utils::wildcard_string_match("hello.txt", "?ello.*"));
+	BOOST_CHECK(!utils::wildcard_string_match("hello.txt", "*.doc"));
+	BOOST_CHECK(utils::wildcard_string_match("file123.tmp", "file?2*.tmp"));
+	BOOST_CHECK(utils::wildcard_string_match("test", "t*t"));
+	BOOST_CHECK(utils::wildcard_string_match("multiple.dots.file", "*.dots.*"));
+	BOOST_CHECK(!utils::wildcard_string_match("case.txt", "CASE.TXT"));
+	BOOST_CHECK(utils::wildcard_string_match("single", "?ingle"));
+	BOOST_CHECK(!utils::wildcard_string_match("different", "diff*txt"));
+
+	BOOST_CHECK(utils::wildcard_string_match("foo bar baz bar baz", "*bar baz"));
+	BOOST_CHECK(!utils::wildcard_string_match("abc", "ab*d"));
+	BOOST_CHECK(utils::wildcard_string_match("abcccd", "*ccd"));
+	BOOST_CHECK(utils::wildcard_string_match("mississipissippi", "*issip*ss*"));
+	BOOST_CHECK(!utils::wildcard_string_match("xxxx*zzzzzzzzy*f", "xxxx*zzy*fffff"));
+	BOOST_CHECK(utils::wildcard_string_match("xxxx*zzzzzzzzy*f", "xxx*zzy*f"));
+	BOOST_CHECK(!utils::wildcard_string_match("xxxxzzzzzzzzyf", "xxxx*zzy*fffff"));
+	BOOST_CHECK(utils::wildcard_string_match("xxxxzzzzzzzzyf", "xxxx*zzy*f"));
+	BOOST_CHECK(utils::wildcard_string_match("xyxyxyzyxyz", "xy*z*xyz"));
+	BOOST_CHECK(utils::wildcard_string_match("mississippi", "*sip*"));
+	BOOST_CHECK(utils::wildcard_string_match("xyxyxyxyz", "xy*xyz"));
+	BOOST_CHECK(utils::wildcard_string_match("mississippi", "mi*sip*"));
+	BOOST_CHECK(utils::wildcard_string_match("ababac", "*abac*"));
+	BOOST_CHECK(utils::wildcard_string_match("ababac", "*abac*"));
+	BOOST_CHECK(utils::wildcard_string_match("aaazz", "a*zz*"));
+	BOOST_CHECK(!utils::wildcard_string_match("a12b12", "*12*23"));
+	BOOST_CHECK(!utils::wildcard_string_match("a12b12", "a12b"));
+	BOOST_CHECK(utils::wildcard_string_match("a12b12", "*12*12*"));
+	BOOST_CHECK(utils::wildcard_string_match("caaab", "*a?b"));
+	BOOST_CHECK(utils::wildcard_string_match("*", "*"));
+	BOOST_CHECK(utils::wildcard_string_match("a*abab", "a*b"));
+	BOOST_CHECK(utils::wildcard_string_match("a*r", "a*"));
+	BOOST_CHECK(!utils::wildcard_string_match("a*ar", "a*aar"));
+	BOOST_CHECK(utils::wildcard_string_match("XYXYXYZYXYz", "XY*Z*XYz"));
+	BOOST_CHECK(utils::wildcard_string_match("missisSIPpi", "*SIP*"));
+	BOOST_CHECK(utils::wildcard_string_match("mississipPI", "*issip*PI"));
+	BOOST_CHECK(utils::wildcard_string_match("xyxyxyxyz", "xy*xyz"));
+	BOOST_CHECK(utils::wildcard_string_match("miSsissippi", "mi*sip*"));
+	BOOST_CHECK(utils::wildcard_string_match("c+od", "**c+d"));
 }
 
 BOOST_AUTO_TEST_CASE( test_base64_encodings )
@@ -604,18 +655,18 @@ BOOST_AUTO_TEST_CASE( test_base64_encodings )
 		many_bytes[i] = i % 256;
 	}
 
-	BOOST_CHECK(base64::encode({empty.data(), empty.size()}).empty());
-	BOOST_CHECK_EQUAL(base64::encode({foo.data(), foo.size()}), foo_b64);
-	BOOST_CHECK_EQUAL(base64::encode({foob.data(), foob.size()}), foob_b64);
+	BOOST_CHECK(base64::encode(empty).empty());
+	BOOST_CHECK_EQUAL(base64::encode(foo), foo_b64);
+	BOOST_CHECK_EQUAL(base64::encode(foob), foob_b64);
 
 	BOOST_CHECK(base64::decode(empty_b64).empty());
 	// Not using CHECK_EQUAL because vector<uint8_t> is not printable
 	BOOST_CHECK(base64::decode(foo_b64) == foo);
 	BOOST_CHECK(base64::decode(foob_b64) == foob);
 
-	BOOST_CHECK(crypt64::encode({empty.data(), empty.size()}).empty());
-	BOOST_CHECK_EQUAL(crypt64::encode({foo.data(), foo.size()}), foo_c64);
-	BOOST_CHECK_EQUAL(crypt64::encode({foob.data(), foob.size()}), foob_c64);
+	BOOST_CHECK(crypt64::encode(empty).empty());
+	BOOST_CHECK_EQUAL(crypt64::encode(foo), foo_c64);
+	BOOST_CHECK_EQUAL(crypt64::encode(foob), foob_c64);
 
 	BOOST_CHECK(crypt64::decode(empty_c64).empty());
 	// Not using CHECK_EQUAL because vector<uint8_t> is not printable
@@ -627,8 +678,8 @@ BOOST_AUTO_TEST_CASE( test_base64_encodings )
 	BOOST_CHECK_EQUAL(crypt64::encode(0), '.');
 	BOOST_CHECK_EQUAL(crypt64::encode(63), 'z');
 
-	BOOST_CHECK(base64::decode(base64::encode({many_bytes.data(), many_bytes.size()})) == many_bytes);
-	BOOST_CHECK(crypt64::decode(crypt64::encode({many_bytes.data(), many_bytes.size()})) == many_bytes);
+	BOOST_CHECK(base64::decode(base64::encode(many_bytes)) == many_bytes);
+	BOOST_CHECK(crypt64::decode(crypt64::encode(many_bytes)) == many_bytes);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

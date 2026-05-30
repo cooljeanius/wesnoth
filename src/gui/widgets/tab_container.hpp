@@ -1,6 +1,6 @@
 /*
-	Copyright (C) 2024
-	by Subhraman Sarkar (babaissarkar) <suvrax@gmail.com>
+	Copyright (C) 2024 - 2025
+	by Subhraman Sarkar (babaissarkar) <sbmskmm@protonmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -55,7 +55,7 @@ public:
 	}
 
 	unsigned get_tab_count() const {
-		return builders_.size();
+		return tab_count_;
 	}
 
 	grid* get_tab_grid(unsigned i)
@@ -88,15 +88,7 @@ private:
 	 */
 	state_t state_;
 
-	std::vector<std::shared_ptr<builder_grid>> builders_;
-	std::vector<widget_data> list_items_;
-
-	/**
-	 * Finishes the building initialization of the widget.
-	 *
-	 * @param generator           Generator for the list
-	 */
-	void finalize(std::unique_ptr<generator_base> generator);
+	int tab_count_;
 
 	/**
 	 * Contains a pointer to the generator.
@@ -106,24 +98,19 @@ private:
 	/** Get the listbox inside which the tabs are shown */
 	listbox& get_internal_list();
 
-	void add_tab_entry(const widget_data row);
+	void add_tab_entry(const widget_data& row);
 
 	void change_selection();
-
-	void finalize_listbox();
-
-	void set_items(std::vector<widget_data> list_items)
-	{
-		list_items_ = list_items;
-	}
-
-	void set_builders(std::vector<std::shared_ptr<builder_grid>> builders) {
-		builders_ = builders;
-	}
 
 public:
 	/** Static type getter that does not rely on the widget being constructed. */
 	static const std::string& type();
+
+	/** See @ref widget::find. */
+	virtual widget* find(const std::string_view id, const bool must_be_active) override;
+
+	/** See @ref widget::find. */
+	virtual const widget* find(const std::string_view id, const bool must_be_active) const override;
 
 private:
 	/* **** ***** ***** inherited ****** **** */

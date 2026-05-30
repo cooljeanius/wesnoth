@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2004 - 2024
+	Copyright (C) 2004 - 2025
 	by Philippe Plantier <ayin@anathas.org>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -32,6 +32,8 @@
 static lg::log_domain log_engine("engine");
 #define ERR_NG LOG_STREAM(err, log_engine)
 #define WRN_NG LOG_STREAM(warn, log_engine)
+
+using namespace std::chrono_literals;
 
 /**
  *
@@ -86,28 +88,6 @@ static map_location legacy_difference(const map_location& me, const map_location
  * This file holds the terrain_builder implementation.
  *
  */
-
-terrain_builder::rule_image::rule_image(int layer, int x, int y, bool global_image, int cx, int cy, bool is_water)
-	: layer(layer)
-	, basex(x)
-	, basey(y)
-	, variants()
-	, global_image(global_image)
-	, center_x(cx)
-	, center_y(cy)
-	, is_water(is_water)
-{
-}
-
-terrain_builder::tile::tile()
-	: flags()
-	, images()
-	, images_foreground()
-	, images_background()
-	, last_tod("invalid_tod")
-	, sorted_images(false)
-{
-}
 
 void terrain_builder::tile::rebuild_cache(const std::string& tod, logs* log)
 {
@@ -164,12 +144,13 @@ void terrain_builder::tile::rebuild_cache(const std::string& tod, logs* log)
 
 			img_list.push_back(anim);
 
-			assert(anim.get_animation_duration() != 0);
+			assert(anim.get_animation_duration() != 0ms);
 
-			if(variant.random_start < 0)
-				img_list.back().set_animation_time(ri.rand % img_list.back().get_animation_duration());
-			else if(variant.random_start > 0)
-				img_list.back().set_animation_time(ri.rand % variant.random_start);
+			if(variant.random_start < 0ms) {
+				img_list.back().set_animation_time(std::chrono::milliseconds{ri.rand} % img_list.back().get_animation_duration());
+			} else if(variant.random_start > 0ms) {
+				img_list.back().set_animation_time(std::chrono::milliseconds{ri.rand} % variant.random_start);
+			}
 
 			if(!animate) {
 				img_list.back().pause_animation();
@@ -221,7 +202,7 @@ void terrain_builder::tilemap::reload(int x, int y)
 {
 	x_ = x;
 	y_ = y;
-	std::vector<terrain_builder::tile> new_tiles(static_cast<size_t>(x + 4) * (y + 4));
+	std::vector<terrain_builder::tile> new_tiles(static_cast<std::size_t>(x + 4) * (y + 4));
 	tiles_.swap(new_tiles);
 	reset();
 }
@@ -298,10 +279,7 @@ void terrain_builder::flush_local_rules()
 void terrain_builder::set_terrain_rules_cfg(const game_config_view& cfg)
 {
 	rules_cfg_ = &cfg;
-	// use the swap trick to clear the rules cache and get a fresh one.
-	// because simple clear() seems to cause some progressive memory degradation.
-	building_ruleset empty;
-	std::swap(building_rules_, empty);
+	building_rules_.clear();
 }
 
 void terrain_builder::reload_map()
@@ -374,8 +352,8 @@ void terrain_builder::rebuild_terrain(const map_location& loc)
 
 		if(!filename.empty()) {
 			animated<image::locator> img_loc;
-			img_loc.add_frame(100, image::locator("terrain/" + filename + ".png"));
-			img_loc.start_animation(0, true);
+			img_loc.add_frame(100ms, image::locator("terrain/" + filename + ".png"));
+			img_loc.start_animation(0ms, true);
 			btile.images_background.push_back(img_loc);
 		}
 
@@ -385,8 +363,8 @@ void terrain_builder::rebuild_terrain(const map_location& loc)
 
 			if(!filename_ovl.empty()) {
 				animated<image::locator> img_loc_ovl;
-				img_loc_ovl.add_frame(100, image::locator("terrain/" + filename_ovl + ".png"));
-				img_loc_ovl.start_animation(0, true);
+				img_loc_ovl.add_frame(100ms, image::locator("terrain/" + filename_ovl + ".png"));
+				img_loc_ovl.start_animation(0ms, true);
 				btile.images_background.push_back(img_loc_ovl);
 			}
 		}
@@ -470,10 +448,10 @@ bool terrain_builder::load_images(building_rule& rule)
 
 						const std::string modif = (has_tilde ? str.substr(tilde + 1) : "");
 
-						int time = 100;
+						auto time = 100ms;
 						if(items.size() > 1) {
 							try {
-								time = std::stoi(items.back());
+								time = std::chrono::milliseconds{std::stoi(items.back())};
 							} catch(const std::invalid_argument&) {
 								ERR_NG << "Invalid 'time' value in terrain image builder: " << items.back();
 							}
@@ -487,7 +465,7 @@ bool terrain_builder::load_images(building_rule& rule)
 					if(res.get_frames_count() == 0)
 						break; // no valid images, don't register it
 
-					res.start_animation(0, true);
+					res.start_animation(0ms, true);
 					variant.images.push_back(std::move(res));
 				}
 				if(variant.images.empty())
@@ -666,7 +644,7 @@ void terrain_builder::rotate_rule(building_rule& ret, int angle, const std::vect
 
 terrain_builder::rule_image_variant::rule_image_variant(const std::string& image_string,
 		const std::string& variations,
-		int random_start)
+		const std::chrono::milliseconds& random_start)
 	: image_string(image_string)
 	, variations(variations)
 	, images()
@@ -680,7 +658,7 @@ terrain_builder::rule_image_variant::rule_image_variant(const std::string& image
 		const std::string& variations,
 		const std::string& tod,
 		const std::string& has_flag,
-		int random_start)
+		const std::chrono::milliseconds& random_start)
 	: image_string(image_string)
 	, variations(variations)
 	, images()
@@ -700,7 +678,7 @@ terrain_builder::rule_image_variant::rule_image_variant(const std::string& image
 void terrain_builder::add_images_from_config(rule_imagelist& images, const config& cfg, bool global, int dx, int dy)
 {
 	for(const config& img : cfg.child_range("image")) {
-		int layer = img["layer"];
+		int layer = img["layer"].to_int();
 
 		int basex = tilewidth_ / 2 + dx, basey = tilewidth_ / 2 + dy;
 		if(const config::attribute_value* base_ = img.get("base")) {
@@ -730,7 +708,7 @@ void terrain_builder::add_images_from_config(rule_imagelist& images, const confi
 
 		bool is_water = img["is_water"].to_bool();
 
-		images.push_back(rule_image(layer, basex - dx, basey - dy, global, center_x, center_y, is_water));
+		images.AGGREGATE_EMPLACE(layer, basex - dx, basey - dy, global, center_x, center_y, is_water);
 
 		// Adds the other variants of the image
 		for(const config& variant : img.child_range("variant")) {
@@ -742,7 +720,7 @@ void terrain_builder::add_images_from_config(rule_imagelist& images, const confi
 			// If an integer is given then assign that, but if a bool is given, then assign -1 if true and 0 if false
 			int random_start = variant["random_start"].to_bool(true) ? variant["random_start"].to_int(-1) : 0;
 
-			images.back().variants.emplace_back(name, variations, tod, has_flag, random_start);
+			images.back().variants.emplace_back(name, variations, tod, has_flag, std::chrono::milliseconds{random_start});
 		}
 
 		// Adds the main (default) variant of the image at the end,
@@ -752,7 +730,7 @@ void terrain_builder::add_images_from_config(rule_imagelist& images, const confi
 
 		int random_start = img["random_start"].to_bool(true) ? img["random_start"].to_int(-1) : 0;
 
-		images.back().variants.emplace_back(name, variations, random_start);
+		images.back().variants.emplace_back(name, variations, std::chrono::milliseconds{random_start});
 	}
 }
 
@@ -792,8 +770,8 @@ void terrain_builder::add_constraints(terrain_builder::constraint_set& constrain
 		const config& global_images)
 
 {
-	terrain_constraint& constraint = add_constraints(
-			constraints, loc, t_translation::ter_match(cfg["type"].str(), t_translation::WILDCARD), global_images);
+	// default to WILDCARD overlay in [terrain_graphics] [tile] type=
+	terrain_constraint& constraint = add_constraints(constraints, loc, t_translation::ter_match(cfg["type"].str(), t_translation::WILDCARD), global_images);
 
 	std::vector<std::string> item_string = utils::square_parenthetical_split(cfg["set_flag"], ',', "[", "]");
 	constraint.set_flag.insert(constraint.set_flag.end(), item_string.begin(), item_string.end());
@@ -928,22 +906,22 @@ void terrain_builder::parse_config(const game_config_view& cfg, bool local)
 			// of terrain constraints, if it does not exist.
 			map_location loc;
 			if(const config::attribute_value* v = tc.get("x")) {
-				loc.x = *v;
+				loc.x = v->to_int();
 			}
 			if(const config::attribute_value* v = tc.get("y")) {
-				loc.y = *v;
+				loc.y = v->to_int();
 			}
 			if(loc.valid()) {
 				add_constraints(pbr.constraints, loc, tc, br);
 			}
 			if(const config::attribute_value* v = tc.get("pos")) {
-				int pos = *v;
+				int pos = v->to_int();
 				if(anchors.find(pos) == anchors.end()) {
 					WRN_NG << "Invalid anchor!";
 					continue;
 				}
 
-				std::pair<anchormap::const_iterator, anchormap::const_iterator> range = anchors.equal_range(pos);
+				auto range = anchors.equal_range(pos);
 
 				for(; range.first != range.second; ++range.first) {
 					loc = range.first->second;
@@ -968,7 +946,7 @@ void terrain_builder::parse_config(const game_config_view& cfg, bool local)
 		// Handles rotations
 		const std::string& rotations = br["rotations"];
 
-		pbr.precedence = br["precedence"];
+		pbr.precedence = br["precedence"].to_int();
 
 		add_rotated_rules(building_rules_, pbr, rotations);
 
@@ -1104,7 +1082,7 @@ void terrain_builder::apply_rule(const terrain_builder::building_rule& rule, con
 
 		if(!constraint.no_draw) {
 			for(const rule_image& img : constraint.images) {
-				btile.images.emplace_back(&img, rand_seed);
+				btile.images.AGGREGATE_EMPLACE(&img, rand_seed);
 			}
 		}
 

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008 - 2024
+	Copyright (C) 2008 - 2025
 	by Fabian Mueller <fabianmueller5@gmx.de>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -94,11 +94,29 @@ protected:
 	map_location new_loc_;
 };
 
+class editor_action_item_move_all : public editor_action
+{
+public:
+	editor_action_item_move_all(int x_offset, int y_offset)
+		: x_offset_(x_offset)
+		, y_offset_(y_offset)
+	{
+	}
+
+	std::unique_ptr<editor_action> clone() const override;
+	std::unique_ptr<editor_action> perform(map_context& mc) const override;
+	void perform_without_undo(map_context& mc) const override;
+	const std::string& get_name() const override;
+
+protected:
+	int x_offset_, y_offset_;
+};
+
 class editor_action_item_facing : public editor_action_location
 {
 public:
 	editor_action_item_facing(
-			map_location loc, map_location::DIRECTION new_direction, map_location::DIRECTION old_direction)
+			map_location loc, map_location::direction new_direction, map_location::direction old_direction)
 		: editor_action_location(loc)
 		, new_direction_(new_direction)
 		, old_direction_(old_direction)
@@ -111,8 +129,8 @@ public:
 	const std::string& get_name() const override;
 
 protected:
-	map_location::DIRECTION new_direction_;
-	map_location::DIRECTION old_direction_;
+	map_location::direction new_direction_;
+	map_location::direction old_direction_;
 };
 
 } // end namespace editor

@@ -1,6 +1,6 @@
 /*
-	Copyright (C) 2023 - 2024
-	by Subhraman Sarkar (babaissarkar) <suvrax@gmail.com>
+	Copyright (C) 2023 - 2025
+	by Subhraman Sarkar (babaissarkar) <sbmskmm@protonmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -17,8 +17,12 @@
 
 #include "gui/widgets/multiline_text.hpp"
 
+#include "cursor.hpp"
+#include "desktop/clipboard.hpp"
+#include "desktop/open.hpp"
 #include "gui/core/log.hpp"
 #include "gui/core/register_widget.hpp"
+#include "gui/dialogs/message.hpp"
 #include "gui/widgets/window.hpp"
 #include "serialization/unicode.hpp"
 #include "font/text.hpp"
@@ -37,14 +41,17 @@ namespace gui2
 
 REGISTER_WIDGET(multiline_text)
 
-multiline_text::multiline_text(const implementation::builder_styled_widget& builder)
+multiline_text::multiline_text(const implementation::builder_multiline_text& builder)
 	: text_box_base(builder, type())
 	, history_()
-	, max_input_length_(0)
+	, max_input_length_(builder.max_input_length)
 	, text_x_offset_(0)
 	, text_y_offset_(0)
 	, text_height_(0)
 	, dragging_(false)
+	, link_aware_(builder.link_aware)
+	, hint_text_(builder.hint_text)
+	, hint_image_(builder.hint_image)
 {
 	set_wants_mouse_left_double_click();
 
@@ -64,6 +71,15 @@ multiline_text::multiline_text(const implementation::builder_styled_widget& buil
 	set_font_style(conf->text_font_style);
 
 	update_offsets();
+}
+
+void multiline_text::set_link_aware(bool link_aware)
+{
+	if(link_aware != link_aware_) {
+		link_aware_ = link_aware;
+		update_canvas();
+		queue_redraw();
+	}
 }
 
 void multiline_text::place(const point& origin, const point& size)
@@ -124,16 +140,22 @@ void multiline_text::update_canvas()
 
 	const int max_width = get_text_maximum_width();
 	const int max_height = get_text_maximum_height();
-	const point cpos = get_cursor_pos_from_index(start + length);
+	unsigned byte_pos = start + length;
+	if (get_use_markup() && (start + length > utf8::size(plain_text()) + 1)) {
+		byte_pos = utf8::size(plain_text());
+	}
+	const point cpos = get_cursor_pos_from_index(byte_pos);
 
 	for(auto & tmp : get_canvases())
 	{
 
 		tmp.set_variable("text", wfl::variant(get_value()));
+		tmp.set_variable("text_markup", wfl::variant(get_use_markup()));
 		tmp.set_variable("text_x_offset", wfl::variant(text_x_offset_));
 		tmp.set_variable("text_y_offset", wfl::variant(text_y_offset_));
 		tmp.set_variable("text_maximum_width", wfl::variant(max_width));
 		tmp.set_variable("text_maximum_height", wfl::variant(max_height));
+		tmp.set_variable("text_link_aware", wfl::variant(get_link_aware()));
 		tmp.set_variable("text_wrap_mode", wfl::variant(PANGO_ELLIPSIZE_NONE));
 
 		tmp.set_variable("editable", wfl::variant(is_editable()));
@@ -191,26 +213,22 @@ void multiline_text::delete_selection()
 
 void multiline_text::handle_mouse_selection(point mouse, const bool start_selection)
 {
-	mouse.x -= get_x();
-	mouse.y -= get_y();
+	mouse -= get_origin();
+	point text_offset(text_x_offset_, text_y_offset_);
 	// FIXME we don't test for overflow in width
-	if(mouse.x < static_cast<int>(text_x_offset_)
-	   || mouse.y < static_cast<int>(text_y_offset_)
-	   || mouse.y >= static_cast<int>(text_y_offset_ + get_lines_count() * font::get_line_spacing_factor() * text_height_)) {
+	if(mouse < text_offset
+		|| mouse.y >= static_cast<int>(text_y_offset_ + get_lines_count() * font::get_line_spacing_factor() * text_height_))
+	{
 		return;
 	}
 
-	point cursor_pos = get_column_line(point(mouse.x - text_x_offset_, mouse.y - text_y_offset_));
-	int offset = cursor_pos.x;
-	int line = cursor_pos.y;
+	const auto& [offset, line] = get_column_line(mouse - text_offset);
 
 	if(offset < 0) {
 		return;
 	}
 
-	offset += get_line_start_offset(line);
-
-	set_cursor(offset, !start_selection);
+	set_cursor(offset + get_line_start_offset(line), !start_selection);
 
 	update_canvas();
 	queue_redraw();
@@ -231,7 +249,7 @@ void multiline_text::update_offsets()
 	const auto conf = cast_config_to<multiline_text_definition>();
 	assert(conf);
 
-	text_height_ = font::get_max_height(get_text_font_size(), get_font_family());
+	text_height_ = font::get_max_height(get_text_font_size(), conf->text_font_family);
 
 	wfl::map_formula_callable variables;
 	variables.add("height", wfl::variant(get_height()));
@@ -319,10 +337,10 @@ void multiline_text::handle_key_down_arrow(SDL_Keymod modifier, bool& handled)
 
 	handled = true;
 
-	size_t offset = get_selection_start();
+	unsigned offset = get_selection_start();
 	const unsigned line_num = get_line_number(offset);
 
-	if (line_num == get_lines_count()) {
+	if (line_num == get_lines_count()-1) {
 		return;
 	}
 
@@ -330,15 +348,7 @@ void multiline_text::handle_key_down_arrow(SDL_Keymod modifier, bool& handled)
 	const unsigned next_line_start = get_line_start_offset(line_num+1);
 	const unsigned next_line_end = get_line_end_offset(line_num+1);
 
-	if (line_num < get_lines_count()-1) {
-		offset = offset - line_start + next_line_start;
-
-		if (offset > next_line_end) {
-			offset = next_line_end;
-		}
-	}
-
-	offset += get_selection_length();
+	offset = std::min(offset - line_start + next_line_start, next_line_end) + get_selection_length();
 
 	if (offset <= get_length()) {
 		set_cursor(offset, (modifier & KMOD_SHIFT) != 0);
@@ -354,7 +364,7 @@ void multiline_text::handle_key_up_arrow(SDL_Keymod modifier, bool& handled)
 
 	handled = true;
 
-	size_t offset = get_selection_start();
+	unsigned offset = get_selection_start();
 	const unsigned line_num = get_line_number(offset);
 
 	if (line_num == 0) {
@@ -365,15 +375,7 @@ void multiline_text::handle_key_up_arrow(SDL_Keymod modifier, bool& handled)
 	const unsigned prev_line_start = get_line_start_offset(line_num-1);
 	const unsigned prev_line_end = get_line_end_offset(line_num-1);
 
-	if (line_num > 0) {
-		offset = offset - line_start + prev_line_start;
-
-		if (offset > prev_line_end) {
-			offset = prev_line_end;
-		}
-	}
-
-	offset += get_selection_length();
+	offset = std::min(offset - line_start + prev_line_start, prev_line_end) + get_selection_length();
 
 	/* offset is unsigned int */
 	if (offset <= get_length()) {
@@ -392,6 +394,17 @@ void multiline_text::signal_handler_mouse_motion(const event::ui_event event,
 
 	if(dragging_) {
 		handle_mouse_selection(coordinate, false);
+	} else {
+		if(!get_link_aware()) {
+			return; // without marking event as "handled"
+		}
+
+		point mouse = coordinate - get_origin();
+		if (!get_label_link(mouse).empty()) {
+			cursor::set(cursor::HYPERLINK);
+		} else {
+			cursor::set(cursor::IBEAM);
+		}
 	}
 
 	handled = true;
@@ -402,10 +415,30 @@ void multiline_text::signal_handler_left_button_down(const event::ui_event event
 {
 	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
-	get_window()->keyboard_capture(this);
+	get_window()->capture_and_show_keyboard(this);
 	get_window()->mouse_capture();
 
-	handle_mouse_selection(get_mouse_position(), true);
+	point mouse_pos = get_mouse_position();
+
+	if (get_link_aware()) {
+		std::string link = get_label_link(mouse_pos - get_origin());
+		DBG_GUI_E << "Clicked Link:\"" << link << "\"";
+
+		if (!link.empty()) {
+			if (desktop::open_object_is_supported()) {
+				if(show_message(_("Open link?"), link, dialogs::message::yes_no_buttons) == gui2::retval::OK) {
+					desktop::open_object(link);
+				}
+			} else {
+				desktop::clipboard::copy_to_clipboard(link);
+				show_message("", _("Opening links is not supported, contact your packager. Link URL has been copied to the clipboard."), dialogs::message::auto_close);
+			}
+		} else {
+			handle_mouse_selection(mouse_pos, true);
+		}
+	} else {
+		handle_mouse_selection(mouse_pos, true);
+	}
 
 	handled = true;
 }
@@ -459,11 +492,12 @@ namespace implementation
 builder_multiline_text::builder_multiline_text(const config& cfg)
 	: builder_styled_widget(cfg)
 	, history(cfg["history"])
-	, max_input_length(cfg["max_input_length"])
+	, max_input_length(cfg["max_input_length"].to_size_t())
 	, hint_text(cfg["hint_text"].t_str())
 	, hint_image(cfg["hint_image"])
 	, editable(cfg["editable"].to_bool(true))
 	, wrap(cfg["wrap"].to_bool(true))
+	, link_aware(cfg["link_aware"].to_bool(false))
 {
 }
 
@@ -478,9 +512,6 @@ std::unique_ptr<widget> builder_multiline_text::build() const
 	if(!history.empty()) {
 		widget->set_history(history);
 	}
-
-	widget->set_max_input_length(max_input_length);
-	widget->set_hint_data(hint_text, hint_image);
 
 	DBG_GUI_G << "Window builder: placed text box '" << id
 			  << "' with definition '" << definition << "'.";

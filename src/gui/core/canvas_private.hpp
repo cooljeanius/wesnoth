@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2007 - 2024
+	Copyright (C) 2007 - 2025
 	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -13,8 +13,11 @@
 	See the COPYING file for more details.
 */
 
+#include "color.hpp"
 #include "gui/core/canvas.hpp"
 #include "gui/auxiliary/typed_formula.hpp"
+
+#include "font/attributes.hpp"
 
 namespace gui2
 {
@@ -53,6 +56,25 @@ private:
 class rect_bounded_shape : public canvas::shape
 {
 protected:
+
+	explicit rect_bounded_shape(const rect& bounds)
+		: shape()
+		, x_(bounds.x)
+		, y_(bounds.y)
+		, w_(bounds.w)
+		, h_(bounds.h)
+	{
+	}
+
+	explicit rect_bounded_shape(const point& origin, const std::string& w_f, const std::string& h_f)
+		: shape()
+		, x_(origin.x)
+		, y_(origin.y)
+		, w_(w_f)
+		, h_(h_f)
+	{
+	}
+
 	/**
 	 * Constructor.
 	 *
@@ -82,6 +104,12 @@ public:
 	 * @param cfg                 The config object to define the rectangle.
 	 */
 	explicit rectangle_shape(const config& cfg);
+
+	rectangle_shape(
+		const rect& bounds,
+		const color_t& border_color,
+		const unsigned thickness = 1,
+		const color_t& fill_color = color_t::null_color());
 
 	void draw(wfl::map_formula_callable& variables) override;
 
@@ -155,7 +183,7 @@ public:
 	 */
 	explicit circle_shape(const config& cfg);
 
-	void draw( wfl::map_formula_callable& variables) override;
+	void draw(wfl::map_formula_callable& variables) override;
 
 private:
 	typed_formula<unsigned> x_; /**< The center x coordinate of the circle. */
@@ -185,6 +213,10 @@ public:
 	 */
 	image_shape(const config& cfg, wfl::action_function_symbol_table& functions);
 
+	image_shape(
+		const point& origin,
+		const std::string& img_path);
+
 	void draw(wfl::map_formula_callable& variables) override;
 
 private:
@@ -193,13 +225,7 @@ private:
 	typed_formula<unsigned> w_; /**< The width of the image. */
 	typed_formula<unsigned> h_; /**< The height of the image. */
 
-	/**
-	 * Name of the image.
-	 *
-	 * This value is only used when the image name is a formula. If it isn't a
-	 * formula the image will be loaded in the constructor. If it's a formula it
-	 * will be loaded every draw cycles. This allows 'changing' images.
-	 */
+	/** Image path from which the image will be loaded. May also be a Data URI, and may include Image Path Functions. */
 	typed_formula<std::string> image_name_;
 
 	/**
@@ -229,6 +255,11 @@ private:
 	// TODO: use a typed_formula?
 	wfl::formula actions_formula_;
 
+	/**
+	 * Prevents duplicate error logs when an image can't be loaded.
+	 */
+	bool failure_logged_;
+
 	static void dimension_validation(unsigned value, const std::string& name, const std::string& key);
 };
 
@@ -242,6 +273,26 @@ public:
 	 * @param functions           WFL functions to execute.
 	 */
 	explicit text_shape(const config& cfg, wfl::action_function_symbol_table& functions);
+
+	text_shape(
+		const point& origin,
+		font::family_class family,
+		const unsigned size,
+		font::pango_text::FONT_STYLE style,
+		const std::string& align,
+		const unsigned wrap_width);
+
+	t_string get_text() const;
+	void set_text(const t_string& text);
+	std::pair<std::size_t, std::size_t> add_text(const t_string& text);
+	void add_attribute(
+		const std::string& attr_name,
+		const std::string& extra_data = "",
+		std::size_t start = PANGO_ATTR_INDEX_FROM_TEXT_BEGINNING,
+		std::size_t end = PANGO_ATTR_INDEX_TO_TEXT_END);
+	void add_attributes(font::attribute_list&& other_attrs);
+	void add_attributes_from(text_shape& tshape2, const unsigned attr_start);
+	void set_wrap_width(const unsigned wrap_width);
 
 	void draw(wfl::map_formula_callable& variables) override;
 
@@ -262,7 +313,10 @@ private:
 	typed_formula<color_t> color_;
 
 	/** The text to draw. */
-	typed_formula<t_string> text_;
+	config::attribute_value text_;
+
+	/** Whether to parse text_ as WFL formula */
+	bool parse_text_as_formula_;
 
 	/** The text markup switch of the text. */
 	typed_formula<bool> text_markup_;
@@ -282,35 +336,26 @@ private:
 	/** The maximum height for the text. */
 	typed_formula<int> maximum_height_;
 
-	/** Start and end offsets for highlight */
-	std::string highlight_start_;
-	std::string highlight_end_;
+	/** Start offset for highlight */
+	typed_formula<int> highlight_start_;
+
+	/** End offset for highlight */
+	typed_formula<int> highlight_end_;
 
 	/** The color to be used for highlighting */
 	typed_formula<color_t> highlight_color_;
 
-	/** Generic start and end offsets for various attributes */
-	std::string attr_start_;
-	std::string attr_end_;
-
-	/**
-	 * The attribute type
-	 * Possible values :
-	 *  color/foreground, bgcolor/background, font_size/size,
-	 *  bold, italic, underline
-	 * The first three require extra data
-	 * the color for the first two, and font size for the last
-	 */
-	std::string attr_name_;
-
-	/** extra data for the attribute, if any */
-	std::string attr_data_;
+	/** Spacing between lines */
+	float line_spacing_;
 
 	/** Whether to apply a text outline. */
 	typed_formula<bool> outline_;
 
 	/** Any extra WFL actions to execute. */
 	wfl::formula actions_formula_;
+
+	/** Any custom Pango text attributes. */
+	font::attribute_list text_attributes_;
 };
 
 }

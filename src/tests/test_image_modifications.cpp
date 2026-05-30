@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2011 - 2024
+	Copyright (C) 2011 - 2025
 	by Karol Kozub <karol.alt@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -52,15 +52,18 @@ private:
 	 */
 	void set_up_color_info()
 	{
-		config cfg;
-		cfg.add_child("color_range",
-			       create_color_range("red",
-						  "FF0000,FFFFFF,000000,FF0000",
-						  "Red"));
-		cfg.add_child("color_range",
-			       create_color_range("blue",
-						  "2E419B,FFFFFF,0F0F0F,0000FF",
-						  "Blue"));
+		const auto cfg = config{
+			"color_range", config{
+				"id",   "red",
+				"name", "Red",
+				"rgb",  "FF0000,FFFFFF,000000,FF0000"
+			},
+			"color_range", config{
+				"id",   "blue",
+				"name", "Blue",
+				"rgb",  "2E419B,FFFFFF,0F0F0F,0000FF"
+			}
+		};
 
 		game_config::add_color_info(game_config_view::wrap(cfg));
 	}
@@ -72,35 +75,8 @@ private:
 	 */
 	void set_up_image_paths()
 	{
-		config cfg;
-		game_config_view v = game_config_view::wrap(cfg);
-		cfg.add_child("binary_path",
-			      create_path_config("data/core"));
-
-
-		paths_manager_.set_paths(v);
-	}
-
-	static config create_color_range(const std::string& id,
-				  const std::string& rgb,
-				  const std::string& name)
-	{
-		config cfg;
-
-		cfg["id"] = id;
-		cfg["rgb"] = rgb;
-		cfg["name"] = name;
-
-		return cfg;
-	}
-
-	static config create_path_config(const std::string& path)
-	{
-		config cfg;
-
-		cfg["path"] = path;
-
-		return cfg;
+		const auto cfg = config{"binary_path", config{"path", "data/core"}};
+		paths_manager_.set_paths(game_config_view::wrap(cfg));
 	}
 
 	std::stringstream ignored_stream_;
@@ -134,9 +110,9 @@ BOOST_AUTO_TEST_CASE(test_modificaiton_queue_order)
 
 	BOOST_REQUIRE_EQUAL(queue.size(), 2);
 
-	BOOST_CHECK_EQUAL(queue.top(), hptr);
+	BOOST_CHECK_EQUAL(&queue.top(), hptr);
 	queue.pop();
-	BOOST_CHECK_EQUAL(queue.top(), lptr);
+	BOOST_CHECK_EQUAL(&queue.top(), lptr);
 	queue.pop();
 
 	low_priority_mod = std::make_unique<fl_modification>();
@@ -151,9 +127,9 @@ BOOST_AUTO_TEST_CASE(test_modificaiton_queue_order)
 
 	BOOST_REQUIRE_EQUAL(queue.size(), 2);
 
-	BOOST_CHECK_EQUAL(queue.top(), hptr);
+	BOOST_CHECK_EQUAL(&queue.top(), hptr);
 	queue.pop();
-	BOOST_CHECK_EQUAL(queue.top(), lptr);
+	BOOST_CHECK_EQUAL(&queue.top(), lptr);
 	queue.pop();
 }
 
@@ -166,7 +142,7 @@ BOOST_AUTO_TEST_CASE(test_tc_modification_decoding)
 
 	BOOST_REQUIRE_EQUAL(queue.size(), 1);
 
-	rc_modification* mod = dynamic_cast<rc_modification*>(queue.top());
+	auto mod = dynamic_cast<const rc_modification*>(&queue.top());
 
 	// The dynamic_cast returns nullptr if the argument doesn't match the type
 	BOOST_REQUIRE(mod != nullptr);
@@ -174,7 +150,7 @@ BOOST_AUTO_TEST_CASE(test_tc_modification_decoding)
 	const std::vector<color_t>& old_color = game_config::tc_info("blue");
 	// The first team color is red
 	const color_range& new_color = game_config::color_info("red");
-	color_range_map expected = recolor_range(new_color, old_color);
+	color_mapping expected = generate_color_mapping(new_color, old_color);
 
 	BOOST_CHECK(expected == mod->map());
 }
@@ -198,14 +174,14 @@ BOOST_AUTO_TEST_CASE(test_rc_modification_decoding)
 
 	BOOST_REQUIRE_EQUAL(queue.size(), 1);
 
-	rc_modification* mod = dynamic_cast<rc_modification*>(queue.top());
+	auto mod = dynamic_cast<const rc_modification*>(&queue.top());
 
 	// The dynamic_cast returns nullptr if the argument doesn't match the type
 	BOOST_REQUIRE(mod != nullptr);
 
 	const std::vector<color_t>& old_color = game_config::tc_info("red");
 	const color_range& new_color = game_config::color_info("blue");
-	color_range_map expected = recolor_range(new_color, old_color);
+	color_mapping expected = generate_color_mapping(new_color, old_color);
 
 	BOOST_CHECK(expected == mod->map());
 }
@@ -230,14 +206,14 @@ BOOST_AUTO_TEST_CASE(test_pal_modification_decoding)
 
 	BOOST_REQUIRE_EQUAL(queue.size(), 1);
 
-	rc_modification* mod = dynamic_cast<rc_modification*>(queue.top());
+	auto mod = dynamic_cast<const rc_modification*>(&queue.top());
 
 	// The dynamic_cast returns nullptr if the argument doesn't match the type
 	BOOST_REQUIRE(mod != nullptr);
 
 	const std::vector<color_t>& old_palette = game_config::tc_info("000000,005000");
 	const std::vector<color_t>& new_palette = game_config::tc_info("FFFFFF,FF00FF");
-	color_range_map expected;
+	color_mapping expected;
 
 	for(std::size_t i = 0; i < old_palette.size() && i < new_palette.size(); ++i) {
 	environment_setup env_setup;
@@ -268,7 +244,7 @@ BOOST_AUTO_TEST_CASE(test_fl_modification_decoding_default)
 
 	BOOST_REQUIRE_EQUAL(queue.size(), 1);
 
-	fl_modification* mod = dynamic_cast<fl_modification*>(queue.top());
+	auto mod = dynamic_cast<const fl_modification*>(&queue.top());
 
 	// The dynamic_cast returns nullptr if the argument doesn't match the type
 	BOOST_REQUIRE(mod != nullptr);
@@ -286,7 +262,7 @@ BOOST_AUTO_TEST_CASE(test_fl_modification_decoding_horiz)
 
 	BOOST_REQUIRE_EQUAL(queue.size(), 1);
 
-	fl_modification* mod = dynamic_cast<fl_modification*>(queue.top());
+	auto mod = dynamic_cast<const fl_modification*>(&queue.top());
 
 	// The dynamic_cast returns nullptr if the argument doesn't match the type
 	BOOST_REQUIRE(mod != nullptr);
@@ -304,7 +280,7 @@ BOOST_AUTO_TEST_CASE(test_fl_modification_decoding_vert)
 
 	BOOST_REQUIRE_EQUAL(queue.size(), 1);
 
-	fl_modification* mod = dynamic_cast<fl_modification*>(queue.top());
+	auto mod = dynamic_cast<const fl_modification*>(&queue.top());
 
 	// The dynamic_cast returns nullptr if the argument doesn't match the type
 	BOOST_REQUIRE(mod != nullptr);
@@ -322,7 +298,7 @@ BOOST_AUTO_TEST_CASE(test_fl_modification_decoding_horiz_and_vert)
 
 	BOOST_REQUIRE_EQUAL(queue.size(), 1);
 
-	fl_modification* mod = dynamic_cast<fl_modification*>(queue.top());
+	auto mod = dynamic_cast<const fl_modification*>(&queue.top());
 
 	// The dynamic_cast returns nullptr if the argument doesn't match the type
 	BOOST_REQUIRE(mod != nullptr);
@@ -340,7 +316,7 @@ BOOST_AUTO_TEST_CASE(test_gs_modification_decoding)
 
 	BOOST_REQUIRE(queue.size() == 1);
 
-	gs_modification* mod = dynamic_cast<gs_modification*>(queue.top());
+	auto mod = dynamic_cast<const gs_modification*>(&queue.top());
 
 	// The dynamic_cast returns nullptr if the argument doesn't match the type
 	BOOST_CHECK(mod != nullptr);
@@ -365,12 +341,12 @@ BOOST_AUTO_TEST_CASE(test_crop_modification_decoding_1_arg)
 
 	BOOST_REQUIRE_EQUAL(queue.size(), 1);
 
-	crop_modification* mod = dynamic_cast<crop_modification*>(queue.top());
+	auto mod = dynamic_cast<const crop_modification*>(&queue.top());
 
 	// The dynamic_cast returns nullptr if the argument doesn't match the type
 	BOOST_REQUIRE(mod != nullptr);
 
-	const SDL_Rect& slice = mod->get_slice();
+	const rect& slice = mod->get_slice();
 
 	BOOST_CHECK_EQUAL(slice.x, 1);
 	BOOST_CHECK_EQUAL(slice.y, 0);
@@ -387,12 +363,12 @@ BOOST_AUTO_TEST_CASE(test_crop_modification_decoding_2_args)
 
 	BOOST_REQUIRE_EQUAL(queue.size(), 1);
 
-	crop_modification* mod = dynamic_cast<crop_modification*>(queue.top());
+	auto mod = dynamic_cast<const crop_modification*>(&queue.top());
 
 	// The dynamic_cast returns nullptr if the argument doesn't match the type
 	BOOST_REQUIRE(mod != nullptr);
 
-	const SDL_Rect& slice = mod->get_slice();
+	const rect& slice = mod->get_slice();
 
 	BOOST_CHECK_EQUAL(slice.x, 1);
 	BOOST_CHECK_EQUAL(slice.y, 2);
@@ -409,12 +385,12 @@ BOOST_AUTO_TEST_CASE(test_crop_modification_decoding_3_args)
 
 	BOOST_REQUIRE_EQUAL(queue.size(), 1);
 
-	crop_modification* mod = dynamic_cast<crop_modification*>(queue.top());
+	auto mod = dynamic_cast<const crop_modification*>(&queue.top());
 
 	// The dynamic_cast returns nullptr if the argument doesn't match the type
 	BOOST_REQUIRE(mod != nullptr);
 
-	const SDL_Rect& slice = mod->get_slice();
+	const rect& slice = mod->get_slice();
 
 	BOOST_CHECK_EQUAL(slice.x, 1);
 	BOOST_CHECK_EQUAL(slice.y, 2);
@@ -431,12 +407,12 @@ BOOST_AUTO_TEST_CASE(test_crop_modification_decoding_4_args)
 
 	BOOST_REQUIRE_EQUAL(queue.size(), 1);
 
-	crop_modification* mod = dynamic_cast<crop_modification*>(queue.top());
+	auto mod = dynamic_cast<const crop_modification*>(&queue.top());
 
 	// The dynamic_cast returns nullptr if the argument doesn't match the type
 	BOOST_REQUIRE(mod != nullptr);
 
-	const SDL_Rect& slice = mod->get_slice();
+	const rect& slice = mod->get_slice();
 
 	BOOST_CHECK_EQUAL(slice.x, 1);
 	BOOST_CHECK_EQUAL(slice.y, 2);
@@ -456,7 +432,7 @@ BOOST_AUTO_TEST_CASE(test_blit_modification_decoding_1_arg)
 
 	BOOST_REQUIRE_EQUAL(queue.size(), 1);
 
-	blit_modification* mod = dynamic_cast<blit_modification*>(queue.top());
+	auto mod = dynamic_cast<const blit_modification*>(&queue.top());
 
 	// The dynamic_cast returns nullptr if the argument doesn't match the type
 	BOOST_REQUIRE(mod != nullptr);
@@ -478,7 +454,7 @@ BOOST_AUTO_TEST_CASE(test_blit_modification_decoding_3_args)
 
 	BOOST_REQUIRE_EQUAL(queue.size(), 1);
 
-	blit_modification* mod = dynamic_cast<blit_modification*>(queue.top());
+	auto mod = dynamic_cast<const blit_modification*>(&queue.top());
 
 	BOOST_REQUIRE(mod != nullptr);
 	// The dynamic_cast returns nullptr if the argument doesn't match the type
@@ -515,7 +491,7 @@ BOOST_AUTO_TEST_CASE(test_mask_modification_decoding_1_arg)
 
 	BOOST_REQUIRE_EQUAL(queue.size(), 1);
 
-	mask_modification* mod = dynamic_cast<mask_modification*>(queue.top());
+	auto mod = dynamic_cast<const mask_modification*>(&queue.top());
 
 	// The dynamic_cast returns nullptr if the argument doesn't match the type
 	BOOST_REQUIRE(mod != nullptr);
@@ -537,7 +513,7 @@ BOOST_AUTO_TEST_CASE(test_mask_modification_decoding_3_args)
 
 	BOOST_REQUIRE_EQUAL(queue.size(), 1);
 
-	mask_modification* mod = dynamic_cast<mask_modification*>(queue.top());
+	auto mod = dynamic_cast<const mask_modification*>(&queue.top());
 
 	// The dynamic_cast returns nullptr if the argument doesn't match the type
 	BOOST_REQUIRE(mod != nullptr);
@@ -583,7 +559,7 @@ BOOST_AUTO_TEST_CASE(test_l_modification_decoding_1_arg)
 
 	BOOST_REQUIRE_EQUAL(queue.size(), 1);
 
-	light_modification* mod = dynamic_cast<light_modification*>(queue.top());
+	auto mod = dynamic_cast<const light_modification*>(&queue.top());
 
 	// The dynamic_cast returns nullptr if the argument doesn't match the type
 	BOOST_REQUIRE(mod != nullptr);
@@ -610,7 +586,7 @@ BOOST_AUTO_TEST_CASE(test_scale_modification_decoding_1_arg)
 
 	BOOST_REQUIRE_EQUAL(queue.size(), 1);
 
-	scale_modification* mod = dynamic_cast<scale_modification*>(queue.top());
+	auto mod = dynamic_cast<const scale_modification*>(&queue.top());
 
 	// The dynamic_cast returns nullptr if the argument doesn't match the type
 	BOOST_REQUIRE(mod != nullptr);
@@ -628,7 +604,7 @@ BOOST_AUTO_TEST_CASE(test_scale_modification_decoding_2_args)
 
 	BOOST_REQUIRE_EQUAL(queue.size(), 1);
 
-	scale_modification* mod = dynamic_cast<scale_modification*>(queue.top());
+	auto mod = dynamic_cast<const scale_modification*>(&queue.top());
 
 	// The dynamic_cast returns nullptr if the argument doesn't match the type
 	BOOST_REQUIRE(mod != nullptr);
@@ -646,7 +622,7 @@ BOOST_AUTO_TEST_CASE(test_o_modification_decoding_percent_args)
 
 	BOOST_REQUIRE_EQUAL(queue.size(), 1);
 
-	o_modification* mod = dynamic_cast<o_modification*>(queue.top());
+	auto mod = dynamic_cast<const o_modification*>(&queue.top());
 
 	// The dynamic_cast returns nullptr if the argument doesn't match the type
 	BOOST_REQUIRE(mod != nullptr);
@@ -664,7 +640,7 @@ BOOST_AUTO_TEST_CASE(test_o_modification_decoding_fraction_args)
 
 	BOOST_REQUIRE_EQUAL(queue.size(), 1);
 
-	o_modification* mod = dynamic_cast<o_modification*>(queue.top());
+	auto mod = dynamic_cast<const o_modification*>(&queue.top());
 
 	// The dynamic_cast returns nullptr if the argument doesn't match the type
 	BOOST_REQUIRE(mod != nullptr);
@@ -682,7 +658,7 @@ BOOST_AUTO_TEST_CASE(test_bl_modification_decoding_no_args)
 
 	BOOST_REQUIRE_EQUAL(queue.size(), 1);
 
-	bl_modification* mod = dynamic_cast<bl_modification*>(queue.top());
+	auto mod = dynamic_cast<const bl_modification*>(&queue.top());
 
 	// The dynamic_cast returns nullptr if the argument doesn't match the type
 	BOOST_REQUIRE(mod != nullptr);
@@ -699,7 +675,7 @@ BOOST_AUTO_TEST_CASE(test_bl_modification_decoding)
 
 	BOOST_REQUIRE_EQUAL(queue.size(), 1);
 
-	bl_modification* mod = dynamic_cast<bl_modification*>(queue.top());
+	auto mod = dynamic_cast<const bl_modification*>(&queue.top());
 
 	// The dynamic_cast returns nullptr if the argument doesn't match the type
 	BOOST_REQUIRE(mod != nullptr);
@@ -719,7 +695,7 @@ BOOST_AUTO_TEST_CASE(test_rgb_modification_decoding_no_args)
 	for(int i = 0; i < 3; i++) {
 	environment_setup env_setup;
 
-		cs_modification* mod = dynamic_cast<cs_modification*>(queue.top());
+		auto mod = dynamic_cast<const cs_modification*>(&queue.top());
 
 		// The dynamic_cast returns nullptr if the argument doesn't match the type
 		BOOST_REQUIRE(mod != nullptr);
@@ -741,7 +717,7 @@ BOOST_AUTO_TEST_CASE(test_r_modification_decoding)
 
 	BOOST_REQUIRE_EQUAL(queue.size(), 1);
 
-	cs_modification* mod = dynamic_cast<cs_modification*>(queue.top());
+	auto mod = dynamic_cast<const cs_modification*>(&queue.top());
 
 	// The dynamic_cast returns nullptr if the argument doesn't match the type
 	BOOST_REQUIRE(mod != nullptr);
@@ -760,7 +736,7 @@ BOOST_AUTO_TEST_CASE(test_g_modification_decoding)
 
 	BOOST_REQUIRE_EQUAL(queue.size(), 1);
 
-	cs_modification* mod = dynamic_cast<cs_modification*>(queue.top());
+	auto mod = dynamic_cast<const cs_modification*>(&queue.top());
 
 	// The dynamic_cast returns nullptr if the argument doesn't match the type
 	BOOST_REQUIRE(mod != nullptr);
@@ -779,7 +755,7 @@ BOOST_AUTO_TEST_CASE(test_b_modification_decoding)
 
 	BOOST_REQUIRE_EQUAL(queue.size(), 1);
 
-	cs_modification* mod = dynamic_cast<cs_modification*>(queue.top());
+	auto mod = dynamic_cast<const cs_modification*>(&queue.top());
 
 	// The dynamic_cast returns nullptr if the argument doesn't match the type
 	BOOST_REQUIRE(mod != nullptr);
@@ -798,7 +774,7 @@ BOOST_AUTO_TEST_CASE(test_bg_modification_decoding_no_args)
 
 	BOOST_REQUIRE_EQUAL(queue.size(), 1);
 
-	background_modification* mod = dynamic_cast<background_modification*>(queue.top());
+	auto mod = dynamic_cast<const background_modification*>(&queue.top());
 
 	// The dynamic_cast returns nullptr if the argument doesn't match the type
 	BOOST_REQUIRE(mod != nullptr);
@@ -818,7 +794,7 @@ BOOST_AUTO_TEST_CASE(test_bg_modification_decoding_1_arg)
 
 	BOOST_REQUIRE_EQUAL(queue.size(), 1);
 
-	background_modification* mod = dynamic_cast<background_modification*>(queue.top());
+	auto mod = dynamic_cast<const background_modification*>(&queue.top());
 
 	// The dynamic_cast returns nullptr if the argument doesn't match the type
 	BOOST_REQUIRE(mod != nullptr);
@@ -838,7 +814,7 @@ BOOST_AUTO_TEST_CASE(test_bg_modification_decoding_2_args)
 
 	BOOST_REQUIRE_EQUAL(queue.size(), 1);
 
-	background_modification* mod = dynamic_cast<background_modification*>(queue.top());
+	auto mod = dynamic_cast<const background_modification*>(&queue.top());
 
 	// The dynamic_cast returns nullptr if the argument doesn't match the type
 	BOOST_REQUIRE(mod != nullptr);
@@ -858,7 +834,7 @@ BOOST_AUTO_TEST_CASE(test_bg_modification_decoding_3_args)
 
 	BOOST_REQUIRE_EQUAL(queue.size(), 1);
 
-	background_modification* mod = dynamic_cast<background_modification*>(queue.top());
+	auto mod = dynamic_cast<const background_modification*>(&queue.top());
 
 	// The dynamic_cast returns nullptr if the argument doesn't match the type
 	BOOST_REQUIRE(mod != nullptr);
@@ -878,7 +854,7 @@ BOOST_AUTO_TEST_CASE(test_bg_modification_decoding_4_args)
 
 	BOOST_REQUIRE_EQUAL(queue.size(), 1);
 
-	background_modification* mod = dynamic_cast<background_modification*>(queue.top());
+	auto mod = dynamic_cast<const background_modification*>(&queue.top());
 
 	// The dynamic_cast returns nullptr if the argument doesn't match the type
 	BOOST_REQUIRE(mod != nullptr);

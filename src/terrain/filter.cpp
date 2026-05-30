@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2024
+	Copyright (C) 2003 - 2025
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -18,6 +18,7 @@
 #include "config.hpp"
 #include "display_context.hpp"
 #include "filter_context.hpp"
+#include "game_config.hpp"
 #include "game_data.hpp"
 #include "log.hpp"
 #include "map/map.hpp"
@@ -33,6 +34,7 @@
 #include "formula/function_gamestate.hpp"
 #include "scripting/game_lua_kernel.hpp"
 #include "units/unit_alignments.hpp"
+#include "utils/general.hpp"
 
 #include <boost/range/adaptor/transformed.hpp>
 
@@ -47,32 +49,31 @@ terrain_filter::~terrain_filter()
 {
 }
 
-terrain_filter::terrain_filter(const vconfig& cfg, const filter_context * fc, const bool flat_tod) :
-	cfg_(cfg),
-	fc_(fc),
-	cache_(),
-	max_loop_(game_config::max_loop),
-	flat_(flat_tod)
+terrain_filter::terrain_filter(const vconfig& cfg, const filter_context* fc, const bool flat_tod)
+	: cfg_(cfg)
+	, fc_(fc)
+	, cache_()
+	, max_loop_(game_config::max_loop)
+	, flat_(flat_tod)
 {
 }
 
-terrain_filter::terrain_filter(const vconfig& cfg, const terrain_filter& original) :
-	cfg_(cfg),
-	fc_(original.fc_),
-	cache_(),
-	max_loop_(original.max_loop_),
-	flat_(original.flat_)
+terrain_filter::terrain_filter(const vconfig& cfg, const terrain_filter& original)
+	: cfg_(cfg)
+	, fc_(original.fc_)
+	, cache_()
+	, max_loop_(original.max_loop_)
+	, flat_(original.flat_)
 {
 }
 
-terrain_filter::terrain_filter(const terrain_filter& other) :
-	xy_pred(), // We should construct this too, since it has no datamembers
-	           // use the default constructor.
-	cfg_(other.cfg_),
-	fc_(other.fc_),
-	cache_(),
-	max_loop_(other.max_loop_),
-	flat_(other.flat_)
+terrain_filter::terrain_filter(const terrain_filter& other)
+	: xy_pred() // We should construct this too, since it has no datamembers use the default constructor.
+	, cfg_(other.cfg_)
+	, fc_(other.fc_)
+	, cache_()
+	, max_loop_(other.max_loop_)
+	, flat_(other.flat_)
 {
 }
 
@@ -86,12 +87,13 @@ terrain_filter& terrain_filter::operator=(const terrain_filter& other)
 	return *this ;
 }
 
-terrain_filter::terrain_filter_cache::terrain_filter_cache() :
-	parsed_terrain(nullptr),
-	adjacent_matches(nullptr),
-	adjacent_match_cache(),
-	ufilter_()
-{}
+terrain_filter::terrain_filter_cache::terrain_filter_cache()
+	: parsed_terrain(nullptr)
+	, adjacent_matches(nullptr)
+	, adjacent_match_cache()
+	, ufilter_()
+{
+}
 
 bool terrain_filter::match_internal(const map_location& loc, const unit* ref_unit, const bool ignore_xy) const
 {
@@ -212,11 +214,11 @@ bool terrain_filter::match_internal(const map_location& loc, const unit* ref_uni
 		for (i = i_begin, i_end = adj_cfgs.end(); i != i_end; ++i) {
 			int match_count = 0;
 			vconfig::child_list::difference_type index = i - i_begin;
-			std::vector<map_location::DIRECTION> dirs = (*i).has_attribute("adjacent")
-				? map_location::parse_directions((*i)["adjacent"]) : map_location::default_dirs();
-			std::vector<map_location::DIRECTION>::const_iterator j, j_end = dirs.end();
+			std::vector<map_location::direction> dirs = (*i).has_attribute("adjacent")
+				? map_location::parse_directions((*i)["adjacent"]) : map_location::all_directions();
+			std::vector<map_location::direction>::const_iterator j, j_end = dirs.end();
 			for (j = dirs.begin(); j != j_end; ++j) {
-				const map_location &adj = adjacent[*j];
+				const map_location &adj = adjacent[static_cast<int>(*j)];
 				if (fc_->get_disp_context().map().on_board(adj)) {
 					if(cache_.adjacent_matches == nullptr) {
 						while(index >= std::distance(cache_.adjacent_match_cache.begin(), cache_.adjacent_match_cache.end())) {
@@ -257,43 +259,40 @@ bool terrain_filter::match_internal(const map_location& loc, const unit* ref_uni
 		}
 	}
 
-	const t_string& t_tod_type = cfg_["time_of_day"];
-	const t_string& t_tod_id = cfg_["time_of_day_id"];
+	const t_string& t_tod_type = cfg_["time_of_day"].t_str();
+	const t_string& t_tod_id = cfg_["time_of_day_id"].t_str();
 	const std::string& tod_type = t_tod_type;
 	const std::string& tod_id = t_tod_id;
 	if(!tod_type.empty() || !tod_id.empty()) {
 		// creating a time_of_day is expensive, only do it if we will use it
-		time_of_day tod;
-
-		if(flat_) {
-			tod = fc_->get_tod_man().get_time_of_day(loc);
-		} else {
-			tod = fc_->get_tod_man().get_illuminated_time_of_day(fc_->get_disp_context().units(), fc_->get_disp_context().map(),loc);
-		}
+		const time_of_day& tod = flat_
+			? fc_->get_tod_man().get_time_of_day(loc)
+			: fc_->get_tod_man().get_illuminated_time_of_day(fc_->get_disp_context().units(), fc_->get_disp_context().map(), loc);
 
 		if(!tod_type.empty()) {
 			const std::vector<std::string>& vals = utils::split(tod_type);
 			if(tod.lawful_bonus<0) {
-				if(std::find(vals.begin(),vals.end(), unit_alignments::chaotic) == vals.end()) {
+				if(!utils::contains(vals, unit_alignments::chaotic)) {
 					return false;
 				}
 			} else if(tod.lawful_bonus>0) {
-				if(std::find(vals.begin(),vals.end(), unit_alignments::lawful) == vals.end()) {
+				if(!utils::contains(vals, unit_alignments::lawful)) {
 					return false;
 				}
-			} else if(std::find(vals.begin(),vals.end(), unit_alignments::neutral) == vals.end() &&
-				std::find(vals.begin(),vals.end(), unit_alignments::liminal) == vals.end()) {
+			} else if(
+				!utils::contains(vals, unit_alignments::neutral) &&
+				!utils::contains(vals, unit_alignments::liminal)
+			) {
 				return false;
 			}
 		}
 
 		if(!tod_id.empty()) {
 			if(tod_id != tod.id) {
-				if(std::find(tod_id.begin(),tod_id.end(),',') != tod_id.end() &&
-					std::search(tod_id.begin(),tod_id.end(),
-					tod.id.begin(),tod.id.end()) != tod_id.end()) {
-					const std::vector<std::string>& vals = utils::split(tod_id);
-					if(std::find(vals.begin(),vals.end(),tod.id) == vals.end()) {
+				if(utils::contains(tod_id, ',')
+					&& std::search(tod_id.begin(), tod_id.end(), tod.id.begin(), tod.id.end()) != tod_id.end()
+				) {
+					if(!utils::contains(utils::split(tod_id), tod.id)) {
 						return false;
 					}
 				} else {
@@ -497,7 +496,7 @@ public:
 	{
 		if (filter.cfg_.has_attribute("x") || filter.cfg_.has_attribute("y")) {
 			std::vector<map_location> xy_vector = filter.fc_->get_disp_context().map().parse_location_range(filter.cfg_["x"], filter.cfg_["y"], with_border);
-			filter_area(src, dest, filter, [&xy_vector](const map_location& loc) { return std::find(xy_vector.begin(), xy_vector.end(), loc) != xy_vector.end(); });
+			filter_area(src, dest, filter, [&xy_vector](const map_location& loc) { return utils::contains(xy_vector, loc); });
 		}
 		else {
 			filter_area(src, dest, filter, no_filter());

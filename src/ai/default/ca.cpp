@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2009 - 2024
+	Copyright (C) 2009 - 2025
 	by Yurii Chernyi <terraninfo@terraninfo.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -23,12 +23,14 @@
 #include "ai/manager.hpp"
 #include "ai/composite/rca.hpp"
 #include "game_board.hpp"
+#include "game_config.hpp"
 #include "game_data.hpp"
 #include "log.hpp"
 #include "map/map.hpp"
 #include "resources.hpp"
 #include "team.hpp"
 #include "units/unit.hpp"
+#include "utils/general.hpp"
 #include "pathfind/pathfind.hpp"
 #include "pathfind/teleport.hpp"
 
@@ -670,7 +672,6 @@ void get_villages_phase::find_villages(
 
 	std::size_t min_distance = 100000;
 	const gamemap &map_ = resources::gameboard->map();
-	std::vector<team> &teams_ = resources::gameboard->teams();
 
 	// When a unit is dispatched we need to make sure we don't
 	// dispatch this unit a second time, so store them here.
@@ -689,8 +690,7 @@ void get_villages_phase::find_villages(
 			}
 		}
 
-		if(std::find(dispatched_units.begin(), dispatched_units.end(),
-				j->second) != dispatched_units.end()) {
+		if(utils::contains(dispatched_units, j->second)) {
 			continue;
 		}
 
@@ -699,9 +699,9 @@ void get_villages_phase::find_villages(
 		}
 
 		bool want_village = true, owned = false;
-		for(std::size_t n = 0; n != teams_.size(); ++n) {
-			owned = teams_[n].owns_village(current_loc);
-			if(owned && !current_team().is_enemy(n+1)) {
+		for(const team& t : resources::gameboard->teams()) {
+			owned = t.owns_village(current_loc);
+			if(owned && !current_team().is_enemy(t.side())) {
 				want_village = false;
 			}
 
@@ -934,7 +934,7 @@ bool get_villages_phase::remove_village(
 	bool result = false;
 	treachmap::iterator itor = reachmap.begin();
 	while(itor != reachmap.end()) {
-		itor->second.erase(std::remove(itor->second.begin(), itor->second.end(), village), itor->second.end());
+		utils::erase(itor->second, village);
 		if(itor->second.empty()) {
 			result = true;
 			itor = remove_unit(reachmap, moves, itor);
@@ -1340,12 +1340,11 @@ double get_healing_phase::evaluate()
 		    !u.get_ability_bool("regenerate") && is_allowed_unit(*u_it))
 		{
 			// Look for the village which is the least vulnerable to enemy attack.
-			typedef std::multimap<map_location,map_location>::const_iterator Itor;
-			std::pair<Itor,Itor> it = get_srcdst().equal_range(u_it->get_location());
+			auto it = get_srcdst().equal_range(u_it->get_location());
 			double best_vulnerability = 100000.0;
 			// Make leader units more unlikely to move to vulnerable villages
 			const double leader_penalty = (u.can_recruit()?2.0:1.0);
-			Itor best_loc = it.second;
+			auto best_loc = it.second;
 			while(it.first != it.second) {
 				const map_location& dst = it.first->second;
 				if (resources::gameboard->map().gives_healing(dst) && (units_.find(dst) == units_.end() || dst == u_it->get_location())) {
@@ -1431,7 +1430,7 @@ double retreat_phase::evaluate()
 		if (i->side() == get_side() &&
 		    i->movement_left() == i->total_movement() &&
 		    //leaders.find(*i) == leaders.end() && //unit_map::const_iterator(i) != leader &&
-		    std::find(leaders.begin(), leaders.end(), i) == leaders.end() &&
+		    !utils::contains(leaders, i) &&
 		    !i->incapacitated() && is_allowed_unit(*i))
 		{
 			// This unit still has movement left, and is a candidate to retreat.
@@ -1445,8 +1444,7 @@ double retreat_phase::evaluate()
 				// is most in our favor.
 				// If we can't find anywhere where we like the power balance,
 				// just try to get to the best defensive hex.
-				typedef move_map::const_iterator Itor;
-				std::pair<Itor,Itor> itors = get_srcdst().equal_range(i->get_location());
+				auto itors = get_srcdst().equal_range(i->get_location());
 				map_location best_pos, best_defensive(i->get_location());
 
 				double best_rating = -1000.0;
@@ -1456,8 +1454,7 @@ double retreat_phase::evaluate()
 
 					//if(leader != units_.end() && std::count(leader_adj,
 					//			leader_adj + 6, itors.first->second)) {
-					if(std::find(leaders_adj_v.begin(), leaders_adj_v.end(), itors.first->second) != leaders_adj_v.end()){
-
+					if(utils::contains(leaders_adj_v, itors.first->second)){
 						can_reach_leader = true;
 						break;
 					}

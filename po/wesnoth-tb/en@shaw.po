@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: en@shaw\n"
 "Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
-"POT-Creation-Date: 2024-07-22 03:31 UTC\n"
+"POT-Creation-Date: 2026-02-26 01:03 UTC\n"
 "PO-Revision-Date: 2009-10-10 23:40-0400\n"
 "Last-Translator: Arc Riley <arcriley@ubuntu.com>\n"
 "Language-Team: Shavian English <ubuntu-l10n-en-shaw@lists.launchpad.net>\n"
@@ -22,7 +22,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. [campaign]: id=Two_Brothers
+#. [achievement_group]
 #: data/campaigns/Two_Brothers/_main.cfg:13
+#: data/campaigns/Two_Brothers/achievements.cfg:4
 msgid "A Tale of Two Brothers"
 msgstr "𐑩 𐑑𐑱𐑤 𐑝 𐑑𐑵 𐑚𐑮𐑳𐑞𐑼𐑟"
 
@@ -111,6 +113,49 @@ msgstr "𐑥𐑦𐑕𐑩𐑤𐑱𐑯𐑰𐑩𐑕"
 #: data/campaigns/Two_Brothers/_main.cfg:89
 msgid "And special thanks to everyone else who I forgot to mention."
 msgstr "𐑯 𐑕𐑐𐑧𐑖𐑩𐑤 𐑔𐑨𐑙𐑒𐑕 𐑑 𐑧𐑝𐑮𐑰𐑢𐑳𐑯 𐑧𐑤𐑕 𐑣𐑵 𐑲 𐑓𐑼𐑜𐑪𐑑 𐑑 𐑥𐑧𐑯𐑖𐑩𐑯."
+
+#. [achievement]: id=heroes_of_maghre
+#: data/campaigns/Two_Brothers/achievements.cfg:8
+msgid "Heroes of Maghre"
+msgstr ""
+
+#. [achievement]: id=heroes_of_maghre
+#: data/campaigns/Two_Brothers/achievements.cfg:9
+msgid "Complete <i>Rooting Out a Mage</i> without recruiting."
+msgstr ""
+
+#. [achievement]: id=treasure
+#: data/campaigns/Two_Brothers/achievements.cfg:15
+msgid "Treasure"
+msgstr ""
+
+#. [achievement]: id=treasure
+#: data/campaigns/Two_Brothers/achievements.cfg:16
+msgid "Find the chest of gold in <i>Guarded Castle</i>."
+msgstr ""
+
+#. [achievement]: id=baran_returns
+#: data/campaigns/Two_Brothers/achievements.cfg:22
+msgid "Baran Returns"
+msgstr ""
+
+#. [achievement]: id=baran_returns
+#: data/campaigns/Two_Brothers/achievements.cfg:23
+msgid ""
+"Complete <i>Return to the Village</i> by defeating the enemy leader with "
+"Baran."
+msgstr ""
+
+#. [achievement]: id=arvith_the_great_knight
+#: data/campaigns/Two_Brothers/achievements.cfg:29
+msgid "Arvith the Great Knight"
+msgstr ""
+
+#. [achievement]: id=arvith_the_great_knight
+#: data/campaigns/Two_Brothers/achievements.cfg:30
+msgid ""
+"Advance Arvith into a Grand Knight or a Paladin before the campaign ends."
+msgstr ""
 
 #. [scenario]: id=01_Rooting_Out_a_Mage
 #: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:5
@@ -212,7 +257,7 @@ msgstr ""
 #. [part]
 #: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:72
 msgid ""
-"12 V, 363 YW\n"
+"12 Scryer’s Bloom, 363 YW\n"
 "Excerpt from the journal of Baran of Maghre\n"
 "\n"
 "If I could but face this ‘Mordak’! I think my magic might prove stronger "
@@ -406,7 +451,7 @@ msgid "... Aye. Just make sure you’re there when we need you."
 msgstr ""
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:243
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:252
 #, fuzzy
 #| msgid ""
 #| "Bjarn should be in position by now. Press them, distract the adept so "
@@ -419,17 +464,17 @@ msgstr ""
 "𐑣𐑦𐑟 𐑑𐑮𐑨𐑐!"
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:254
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:263
 msgid "Baran has not made his attack!"
 msgstr ""
 
 #. [message]: role=Mercenary
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:259
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:268
 msgid "Could he have abandoned us?"
 msgstr ""
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:264
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:273
 #, fuzzy
 msgid ""
 "No... No. This is something else. I’m worried about him... but right now it "
@@ -439,23 +484,23 @@ msgstr ""
 "𐑞𐑦𐑕 ·𐑥𐑹𐑛𐑭𐑒 𐑬𐑼𐑕𐑧𐑤𐑝𐑟!"
 
 #. [message]: speaker=unit
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:276
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:285
 msgid "Argh!"
 msgstr "𐑸𐑜!"
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:281
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:290
 msgid "Good work, men! But what has become of my brother?"
 msgstr "𐑜𐑫𐑛 𐑢𐑻𐑒, 𐑥𐑧𐑯! 𐑚𐑳𐑑 𐑢𐑪𐑑 𐑣𐑨𐑟 𐑚𐑦𐑒𐑳𐑥 𐑝 𐑥𐑲 𐑚𐑮𐑳𐑞𐑼?"
 
 #. [message]: speaker=unit
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:286
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:295
 #, fuzzy
 msgid "Worried about him, are you? E-he-he... hergh... gaargh..."
 msgstr "𐑢𐑳𐑮𐑦𐑛 𐑩𐑚𐑬𐑑 𐑣𐑦𐑥, 𐑸 𐑿? 𐑰-𐑣𐑰-𐑣𐑰..𐑣𐑧𐑮𐑜...𐑜𐑱𐑮𐑜..."
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:296
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:305
 #, fuzzy
 #| msgid ""
 #| "There’s nothing more to be had from this one; we will have to search for "
@@ -467,7 +512,7 @@ msgstr ""
 "𐑞𐑺'𐑟 𐑯𐑳𐑔𐑦𐑙 𐑥𐑹 𐑑 𐑚𐑰 𐑣𐑨𐑛 𐑓𐑮𐑪𐑥 𐑞𐑦𐑕 𐑢𐑳𐑯; 𐑢𐑰 𐑢𐑦𐑤 𐑣𐑨𐑝 𐑑 𐑕𐑻𐑗 𐑓𐑹 ·𐑚𐑿𐑸𐑥 𐑬𐑼𐑕𐑧𐑤𐑝𐑟!"
 
 #. [message]: role=Reporter
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:318
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:327
 #, fuzzy
 #| msgid ""
 #| "Sir, our scouts report that Bjarn was seen captured and carried away "
@@ -478,18 +523,18 @@ msgid ""
 msgstr "𐑕𐑻, 𐑬𐑼 𐑕𐑒𐑬𐑑𐑕 𐑮𐑩𐑐𐑹𐑑 𐑞𐑨𐑑 ·𐑚𐑿𐑸𐑥 𐑢𐑪𐑟 𐑕𐑰𐑯 𐑒𐑨𐑐𐑗𐑻𐑛 𐑯 𐑒𐑨𐑮𐑦𐑛 𐑩𐑢𐑱 𐑓𐑻𐑞𐑼 𐑯𐑹𐑔!"
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:323
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:332
 msgid "That they should dare this! We will give chase at once."
 msgstr "𐑞𐑨𐑑 𐑞𐑱 𐑖𐑫𐑛 𐑛𐑺 𐑞𐑦𐑕! 𐑢𐑰 𐑢𐑦𐑤 𐑜𐑦𐑝 𐑗𐑱𐑕 𐑨𐑑 𐑢𐑳𐑯𐑕."
 
 #. [message]: speaker=Mordak
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:349
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:373
 #, fuzzy
 msgid "Your brother’s plan to ambush me has failed. He is our prisoner now."
 msgstr "𐑿𐑼 𐑚𐑮𐑳𐑞𐑼'𐑟 𐑐𐑤𐑨𐑯 𐑑 𐑨𐑥𐑚𐑫𐑖 𐑥𐑰 𐑣𐑨𐑟 𐑓𐑱𐑤𐑛. 𐑣𐑰 𐑦𐑟 𐑬𐑼 𐑐𐑮𐑦𐑟𐑩𐑯𐑼 𐑯𐑬."
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:354
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:378
 #, fuzzy
 msgid ""
 "My brother, kidnapped? I have failed you, Baran! And even now Mordak’s "
@@ -499,12 +544,12 @@ msgstr ""
 "𐑞 𐑝𐑦𐑤𐑦𐑡!"
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:370
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:394
 msgid "I hear these creatures are nigh-immune to our weapons, let us see!"
 msgstr "𐑲 𐑣𐑽 𐑞𐑰𐑟 𐑒𐑮𐑰𐑗𐑼𐑟 𐑸 𐑯𐑲-𐑦𐑥𐑿𐑯 𐑑 𐑬𐑼 𐑢𐑧𐑐𐑩𐑯𐑟, 𐑤𐑧𐑑 𐑳𐑕 𐑕𐑰!"
 
 #. [message]: speaker=second_unit
-#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:386
+#: data/campaigns/Two_Brothers/scenarios/01_Rooting_Out_a_Mage.cfg:410
 msgid "That was not so hard!"
 msgstr "𐑞𐑨𐑑 𐑢𐑪𐑟 𐑯𐑪𐑑 𐑕𐑴 𐑣𐑸𐑛!"
 
@@ -521,7 +566,7 @@ msgstr ""
 #. [part]
 #: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:34
 msgid ""
-"16 V, 363 YW\n"
+"16 Scryer’s Bloom, 363 YW\n"
 "Excerpt from the journal of Arvith of Maghre\n"
 "\n"
 "We’ve been searching three days for Baran, and turned up nothing. My best "
@@ -542,7 +587,7 @@ msgstr ""
 #. [part]
 #: data/campaigns/Two_Brothers/scenarios/02_The_Chase.cfg:43
 msgid ""
-"16 V, 363 YW\n"
+"16 Scryer’s Bloom, 363 YW\n"
 "Excerpt from the journal of Arvith of Maghre\n"
 "\n"
 "But I’m past superstitions now; I’ve seen enough of the world to guess at "
@@ -931,7 +976,7 @@ msgstr "𐑜𐑸𐑛𐑩𐑛 𐑒𐑨𐑕𐑩𐑤"
 #. [part]
 #: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:26
 msgid ""
-"19 V, 363 YW\n"
+"19 Scryer’s Bloom, 363 YW\n"
 "Excerpt from the journal of Rotharik the Clanless\n"
 "\n"
 "The last of Mordak’s servants arrived this morning bearing the news of his "
@@ -954,7 +999,7 @@ msgstr ""
 #. [part]
 #: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:34
 msgid ""
-"19 V, 363 YW\n"
+"19 Scryer’s Bloom, 363 YW\n"
 "Excerpt from the journal of Rotharik the Clanless\n"
 "\n"
 "I have done what I can to fortify this dilapidated castle. The orcs who came "
@@ -1284,32 +1329,38 @@ msgid "Look what I have found in here! I can count fifty pieces of gold."
 msgstr "𐑤𐑫𐑒 𐑢𐑪𐑑 𐑲 𐑣𐑨𐑝 𐑓𐑬𐑯𐑛 𐑦𐑯 𐑣𐑽! 𐑲 𐑒𐑨𐑯 𐑒𐑬𐑯𐑑 𐑓𐑦𐑓𐑑𐑦 𐑐𐑰𐑕𐑩𐑟 𐑝 𐑜𐑴𐑤𐑛."
 
 #. [message]: speaker=unit
-#: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:845
+#. The player’s unit stepped in the space between two runes, and a Soulless appeared
+#: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:848
+msgid "What sort of creature have I summoned here?!"
+msgstr ""
+
+#. [message]: speaker=unit
+#: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:878
 #, fuzzy
 #| msgid "I found Bjarn. He is in this cell."
 msgid "I found Baran. He is in this cell."
 msgstr "𐑲 𐑓𐑬𐑯𐑛 ·𐑚𐑿𐑸𐑥. 𐑣𐑰 𐑦𐑟 𐑦𐑯 𐑞𐑦𐑕 𐑕𐑧𐑤."
 
 #. [message]: speaker=Baran
-#: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:856
+#: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:889
 #, fuzzy
 msgid "It’s good to see you, Arvith."
 msgstr "𐑲 𐑨𐑥 𐑜𐑤𐑨𐑛 𐑑 𐑕𐑰 𐑿 𐑮𐑦𐑑𐑻𐑯𐑛."
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:861
+#: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:894
 msgid "And you too, brother."
 msgstr ""
 
 #. [message]: speaker=Baran
-#: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:867
+#: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:900
 #, fuzzy
 msgid ""
 "You must be one of Arvith’s men. Please help me get out of this dungeon."
 msgstr "𐑿 𐑥𐑳𐑕𐑑 𐑚𐑰 𐑢𐑳𐑯 𐑝 ·𐑸𐑯𐑰𐑟 𐑥𐑧𐑯. 𐑐𐑤𐑰𐑟 𐑣𐑧𐑤𐑐 𐑥𐑰 𐑜𐑧𐑑 𐑬𐑑 𐑝 𐑞𐑦𐑕 𐑛𐑩𐑯𐑡𐑩𐑯."
 
 #. [message]: speaker=Baran
-#: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:874
+#: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:907
 msgid ""
 "The accursed dark sorcerer Rotharik has imprisoned me behind this magically "
 "enhanced iron gate. It can only be opened with the correct key. You must get "
@@ -1319,46 +1370,46 @@ msgstr ""
 "𐑜𐑱𐑑. 𐑦𐑑 𐑒𐑨𐑯 𐑴𐑯𐑤𐑦 𐑚𐑰 𐑴𐑐𐑩𐑯𐑛 𐑢𐑦𐑞 𐑞 𐑒𐑩𐑮𐑧𐑒𐑑 𐑒𐑰. 𐑿 𐑥𐑳𐑕𐑑 𐑜𐑧𐑑 𐑦𐑑 𐑓𐑮𐑪𐑥 𐑣𐑦𐑥 𐑑 𐑓𐑮𐑰 𐑥𐑰."
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:886
+#: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:919
 msgid ""
 "I have already met, and killed, the sorcerer. Is this the key to which you "
 "referred?"
 msgstr ""
 
 #. [message]: speaker=Baran
-#: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:890
+#: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:923
 msgid ""
 "Yes, it is. Come, unlock this cell door, and let us depart this place, "
 "brother!"
 msgstr ""
 
 #. [message]: speaker=Baran
-#: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:944
+#: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:977
 #, fuzzy
 msgid "Thank you for saving me. I... was not certain you would come."
 msgstr "𐑔𐑨𐑙𐑒 𐑿 𐑓𐑹 𐑕𐑱𐑝𐑦𐑙 𐑥𐑰. 𐑲 𐑣𐑨𐑛 𐑷𐑤𐑥𐑴𐑕𐑑 𐑜𐑦𐑝𐑩𐑯 𐑳𐑐 𐑣𐑴𐑐 𐑿 𐑢𐑫𐑛 𐑓𐑮𐑰 𐑥𐑰."
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:949
+#: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:982
 msgid "Have you no faith in your brother, Baran?"
 msgstr ""
 
 #. [message]: speaker=Baran
-#: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:954
+#: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:987
 msgid ""
 "It’s not that. Perhaps I deserved to rot here. I failed you. I failed you "
 "again."
 msgstr ""
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:959
+#: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:992
 msgid ""
 "That is as may be. But you are my brother still. And... I never doubted you "
 "would have come for me."
 msgstr ""
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:964
+#: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:997
 #, fuzzy
 msgid ""
 "It was no great trial, after all. A few elves, one or two dark sorcerers, a "
@@ -1368,23 +1419,23 @@ msgstr ""
 "𐑮𐑾𐑤𐑦 𐑡𐑳𐑕𐑑 𐑩 𐑛𐑱'𐑟 𐑢𐑻𐑒 𐑓𐑹 𐑳𐑕 𐑥𐑻𐑕𐑩𐑯𐑺𐑰𐑟."
 
 #. [message]: speaker=Baran
-#: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:969
+#: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:1002
 msgid "Thank you for coming to my aid. Let us return to the village."
 msgstr "𐑔𐑨𐑙𐑒 𐑿 𐑓𐑹 𐑒𐑳𐑥𐑦𐑙 𐑑 𐑥𐑲 𐑲𐑛. 𐑤𐑧𐑑 𐑳𐑕 𐑮𐑦𐑑𐑻𐑯 𐑑 𐑞 𐑝𐑦𐑤𐑦𐑡."
 
 #. [unit]: id=Rotharik, type=Orcish Assassin
-#: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:1003
+#: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:1036
 msgid "Minion of Tairach"
 msgstr ""
 
 #. [message]: speaker=Rotharik
-#: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:1015
+#: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:1048
 #, fuzzy
 msgid "You are too late! Your brother is already dead! Muahahaha...!"
 msgstr "𐑿 𐑸 𐑑𐑵 𐑤𐑱𐑑! 𐑿𐑼 𐑚𐑮𐑳𐑞𐑼 𐑦𐑟 𐑷𐑤𐑮𐑧𐑛𐑦 𐑛𐑧𐑛! 𐑥𐑵𐑣𐑭𐑣𐑭𐑣𐑭𐑣𐑭𐑣𐑭..."
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:1020
+#: data/campaigns/Two_Brothers/scenarios/03_Guarded_Castle.cfg:1053
 #, fuzzy
 msgid "Argh!!"
 msgstr "𐑸𐑜!!!"
@@ -1397,7 +1448,7 @@ msgstr "𐑮𐑦𐑑𐑻𐑯 𐑑 𐑞 𐑝𐑦𐑤𐑦𐑡"
 #. [part]
 #: data/campaigns/Two_Brothers/scenarios/04_Return_to_the_Village.cfg:26
 msgid ""
-"27 V, 363 YW\n"
+"27 Scryer’s Bloom, 363 YW\n"
 "Excerpt from the journal of Baran of Maghre\n"
 "\n"
 "Almost home now. The last week has been full of mixed feelings for me — "
@@ -1417,7 +1468,7 @@ msgstr ""
 #. [part]
 #: data/campaigns/Two_Brothers/scenarios/04_Return_to_the_Village.cfg:34
 msgid ""
-"27 V, 363 YW\n"
+"27 Scryer’s Bloom, 363 YW\n"
 "Excerpt from the journal of Baran of Maghre\n"
 "\n"
 "Though I am more at ease now, my thoughts often turn back to Toen Caric. We "
@@ -1581,14 +1632,14 @@ msgid ""
 msgstr ""
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/04_Return_to_the_Village.cfg:355
+#: data/campaigns/Two_Brothers/scenarios/04_Return_to_the_Village.cfg:370
 msgid ""
 "It is finished. We’ve defeated him at last. It was good to have you at my "
 "side, Baran."
 msgstr ""
 
 #. [message]: speaker=Baran
-#: data/campaigns/Two_Brothers/scenarios/04_Return_to_the_Village.cfg:360
+#: data/campaigns/Two_Brothers/scenarios/04_Return_to_the_Village.cfg:375
 msgid ""
 "So much has been destroyed. It will be difficult to repair all that the orcs "
 "and undead have wrecked. And they could come again."
@@ -1598,7 +1649,7 @@ msgstr ""
 
 #. [message]: speaker=Arvith
 #. "you have my word" is a idiom for promising to do something
-#: data/campaigns/Two_Brothers/scenarios/04_Return_to_the_Village.cfg:366
+#: data/campaigns/Two_Brothers/scenarios/04_Return_to_the_Village.cfg:381
 #, fuzzy
 #| msgid ""
 #| "I must go back to earning my living. But we have our amulets, little "
@@ -1611,13 +1662,13 @@ msgstr ""
 "𐑚𐑦𐑕𐑧𐑑 𐑩𐑜𐑱𐑯, 𐑲 𐑢𐑦𐑤 𐑒𐑳𐑥."
 
 #. [message]: speaker=Arvith
-#: data/campaigns/Two_Brothers/scenarios/04_Return_to_the_Village.cfg:384
+#: data/campaigns/Two_Brothers/scenarios/04_Return_to_the_Village.cfg:399
 #, fuzzy
 msgid "I don’t think we can rescue anyone from these villages. It is too late."
 msgstr "𐑲 𐑛𐑴𐑯𐑑 𐑔𐑦𐑙𐑒 𐑢𐑰 𐑒𐑨𐑯 𐑮𐑧𐑕𐑒𐑿 𐑧𐑯𐑦𐑢𐑳𐑯 𐑓𐑮𐑪𐑥 𐑞𐑰𐑟 𐑝𐑦𐑤𐑦𐑡𐑦𐑟. 𐑦𐑑 𐑦𐑟 𐑑𐑵 𐑤𐑱𐑑."
 
 #. [message]: speaker=Baran
-#: data/campaigns/Two_Brothers/scenarios/04_Return_to_the_Village.cfg:389
+#: data/campaigns/Two_Brothers/scenarios/04_Return_to_the_Village.cfg:404
 #, fuzzy
 msgid "I was too weak to protect these people. Oh, why did this happen to me?!"
 msgstr "𐑲 𐑢𐑪𐑟 𐑑𐑵 𐑢𐑰𐑒 𐑑 𐑐𐑮𐑩𐑑𐑧𐑒𐑑 𐑞𐑰𐑟 𐑐𐑰𐑐𐑩𐑤. 𐑴 𐑢𐑲 𐑛𐑦𐑛 𐑞𐑦𐑕 𐑣𐑨𐑐𐑩𐑯 𐑑 𐑥𐑰?!?"
@@ -1631,7 +1682,7 @@ msgstr "𐑩 𐑑𐑱𐑤 𐑝 𐑑𐑵 𐑚𐑮𐑳𐑞𐑼𐑟 - 𐑧𐑐𐑩�
 #. [part]
 #: data/campaigns/Two_Brothers/scenarios/05_Epilogue.cfg:18
 msgid ""
-"22 IX, 365 YW\n"
+"22 Stillseed, 365 YW\n"
 "Excerpt from the journal of Arvith of Maghre\n"
 "\n"
 "Maghre is looking much better than the last time I saw it. Baran has done "
@@ -1648,7 +1699,7 @@ msgstr ""
 #. [part]
 #: data/campaigns/Two_Brothers/scenarios/05_Epilogue.cfg:27
 msgid ""
-"22 IX, 365 YW\n"
+"22 Stillseed, 365 YW\n"
 "Excerpt from the journal of Arvith of Maghre\n"
 "\n"
 "This patron is, of all things, an elf. I never thought I’d befriend one, but "

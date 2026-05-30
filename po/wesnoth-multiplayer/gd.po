@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
-"POT-Creation-Date: 2024-05-26 20:07 UTC\n"
+"POT-Creation-Date: 2025-10-21 01:10 UTC\n"
 "PO-Revision-Date: 2022-01-13 19:27+0000\n"
 "Last-Translator: GunChleoc, 2021\n"
 "Language-Team: Gaelic, Scottish (https://www.transifex.com/gunchleoc/"
@@ -35,12 +35,12 @@ msgstr ""
 
 #. [achievement]: id=Wesnoth_MP_Dark_Forecast
 #: data/multiplayer/achievements.cfg:11
-msgid "Complete the survival scenario <i>2p - Dark Forecast</i>."
+msgid "Complete the survival scenario <i>2p — Dark Forecast</i>."
 msgstr ""
 
 #. [achievement]: id=Wesnoth_MP_Dark_Forecast
 #: data/multiplayer/achievements.cfg:12
-msgid "Completed the survival scenario <i>2p - Dark Forecast</i>."
+msgid "Completed the survival scenario <i>2p — Dark Forecast</i>."
 msgstr ""
 
 #. [achievement]: id=Wesnoth_MP_Isle_of_Mists
@@ -55,12 +55,12 @@ msgstr ""
 
 #. [achievement]: id=Wesnoth_MP_Isle_of_Mists
 #: data/multiplayer/achievements.cfg:22
-msgid "Complete the survival scenario <i>2p - Isle of Mists</i>."
+msgid "Complete the survival scenario <i>2p — Isle of Mists</i>."
 msgstr ""
 
 #. [achievement]: id=Wesnoth_MP_Isle_of_Mists
 #: data/multiplayer/achievements.cfg:23
-msgid "Completed the survival scenario <i>2p - Isle of Mists</i>."
+msgid "Completed the survival scenario <i>2p — Isle of Mists</i>."
 msgstr ""
 
 #. [achievement]: id=Wesnoth_MP_Team_Survival
@@ -70,12 +70,12 @@ msgstr ""
 
 #. [achievement]: id=Wesnoth_MP_Team_Survival
 #: data/multiplayer/achievements.cfg:33
-msgid "Complete the survival scenario <i>6p - Team Survival</i>."
+msgid "Complete the survival scenario <i>6p — Team Survival</i>."
 msgstr ""
 
 #. [achievement]: id=Wesnoth_MP_Team_Survival
 #: data/multiplayer/achievements.cfg:34
-msgid "Completed the survival scenario <i>6p - Team Survival</i>."
+msgid "Completed the survival scenario <i>6p — Team Survival</i>."
 msgstr ""
 
 #. [achievement]: id=Wesnoth_MP_ANL
@@ -85,12 +85,12 @@ msgstr ""
 
 #. [achievement]: id=Wesnoth_MP_ANL
 #: data/multiplayer/achievements.cfg:44
-msgid "Complete the survival scenario <i>4p - A New Land</i>."
+msgid "Complete the survival scenario <i>4p — A New Land</i>."
 msgstr ""
 
 #. [achievement]: id=Wesnoth_MP_ANL
 #: data/multiplayer/achievements.cfg:45
-msgid "Completed the survival scenario <i>4p - A New Land</i>."
+msgid "Completed the survival scenario <i>4p — A New Land</i>."
 msgstr ""
 
 #. [achievement]: id=Wesnoth_MP_ANL_mines
@@ -100,12 +100,12 @@ msgstr ""
 
 #. [achievement]: id=Wesnoth_MP_ANL_mines
 #: data/multiplayer/achievements.cfg:54
-msgid "Destroy all enemy mushroom mines in <i>4p - A New Land</i>."
+msgid "Destroy all enemy mushroom mines in <i>4p — A New Land</i>."
 msgstr ""
 
 #. [achievement]: id=Wesnoth_MP_ANL_mines
 #: data/multiplayer/achievements.cfg:55
-msgid "Destroyed all enemy mushroom mines in <i>4p - A New Land</i>."
+msgid "Destroyed all enemy mushroom mines in <i>4p — A New Land</i>."
 msgstr ""
 
 #. [achievement]: id=Wesnoth_MP_ANL_rescue_allies
@@ -115,12 +115,12 @@ msgstr ""
 
 #. [achievement]: id=Wesnoth_MP_ANL_rescue_allies
 #: data/multiplayer/achievements.cfg:65
-msgid "Rescue the trapped units in <i>4p - A New Land</i>."
+msgid "Rescue the trapped units in <i>4p — A New Land</i>."
 msgstr ""
 
 #. [achievement]: id=Wesnoth_MP_ANL_rescue_allies
 #: data/multiplayer/achievements.cfg:66
-msgid "Rescued the trapped units in <i>4p - A New Land</i>."
+msgid "Rescued the trapped units in <i>4p — A New Land</i>."
 msgstr ""
 
 #. [era]: id=era_default, type=hybrid
@@ -218,16 +218,24 @@ msgid "Drakes"
 msgstr "Dràic"
 
 #. [multiplayer_side]: id=Drakes, type=random
-#: data/multiplayer/factions/drakes-aoh.cfg:14
-#: data/multiplayer/factions/drakes-default.cfg:14
+#: data/multiplayer/factions/drakes-aoh.cfg:13
+#: data/multiplayer/factions/drakes-default.cfg:13
+#, fuzzy
+#| msgid ""
+#| "The <bold>text='Drakes'</bold> are a faction of dragon-like "
+#| "<ref>text='Drakes' dst='..race_drake'</ref> and their lizard "
+#| "<ref>text='Saurian' dst='..race_lizard'</ref> allies. Drakes are "
+#| "descendants of dragons, but smaller in size. Saurians are considerably "
+#| "smaller than Drakes and from different ancestry. Together, the Drake "
+#| "faction has high mobility but low defense, leading to unusual tactics for "
+#| "a <ref>text='Default Era' dst='..era_era_default'</ref> faction."
 msgid ""
-"The <bold>text='Drakes'</bold> are a faction of dragon-like "
-"<ref>text='Drakes' dst='..race_drake'</ref> and their lizard "
-"<ref>text='Saurian' dst='..race_lizard'</ref> allies. Drakes are descendants "
-"of dragons, but smaller in size. Saurians are considerably smaller than "
-"Drakes and from different ancestry. Together, the Drake faction has high "
-"mobility but low defense, leading to unusual tactics for a "
-"<ref>text='Default Era' dst='..era_era_default'</ref> faction."
+"The <b>Drakes</b> are a faction of dragon-like <ref dst='.."
+"race_drake'>Drakes</ref> and their lizard <ref dst='..race_lizard'>Saurian</"
+"ref> allies. Drakes are descendants of dragons, but smaller in size. "
+"Saurians are considerably smaller than Drakes and from different ancestry. "
+"Together, the Drake faction has high mobility but low defense, leading to "
+"unusual tactics for a <ref dst='..era_era_default'>Default Era</ref> faction."
 msgstr ""
 "’S e buidheann <ref>text='dhràcan' dst='..race_drake'</ref> a tha coltach ri "
 "dràgonan agus an caidreabhach, na <ref>text='laghairtean' dst='.."
@@ -245,16 +253,25 @@ msgid "Dunefolk"
 msgstr "Muinntir na Gainmhich"
 
 #. [multiplayer_side]: id=Dunefolk, type=random
-#: data/multiplayer/factions/dunefolk-aoh.cfg:14
-#: data/multiplayer/factions/dunefolk-default.cfg:14
+#: data/multiplayer/factions/dunefolk-aoh.cfg:13
+#: data/multiplayer/factions/dunefolk-default.cfg:13
+#, fuzzy
+#| msgid ""
+#| "The <bold>text='Dunefolk'</bold> are a faction of humans from the deserts "
+#| "and hills of the southern lands. The Dunefolk specialize in using terrain "
+#| "features to coordinate attacks at dawn or dusk. Their ranks boast lawful "
+#| "and liminal units, healers, high-accuracy melee fighters, and fearsome "
+#| "horse-mounted archers. While Dunefolk units tend to be more expensive "
+#| "than those of the Loyalist faction, they make up for this with high "
+#| "mobility — especially on hilly terrains."
 msgid ""
-"The <bold>text='Dunefolk'</bold> are a faction of humans from the deserts "
-"and hills of the southern lands. The Dunefolk specialize in using terrain "
-"features to coordinate attacks at dawn or dusk. Their ranks boast lawful and "
-"liminal units, healers, high-accuracy melee fighters, and fearsome horse-"
-"mounted archers. While Dunefolk units tend to be more expensive than those "
-"of the Loyalist faction, they make up for this with high mobility — "
-"especially on hilly terrains."
+"The <b>Dunefolk</b> are a faction of humans from the deserts and hills of "
+"the southern lands. The Dunefolk specialize in using terrain features to "
+"coordinate attacks at dawn or dusk. Their ranks boast lawful and liminal "
+"units, healers, high-accuracy melee fighters, and fearsome horse-mounted "
+"archers. While Dunefolk units tend to be more expensive than those of the "
+"Loyalist faction, they make up for this with high mobility — especially on "
+"hilly terrains."
 msgstr ""
 "’S e bhuidheann de dhaoine às na fàsaichean agus cnuic deasach a th’ ann am "
 "<b>Muinntir na Gainmhich</b>. Tha muinntir na Gainmhich glè mhath air "
@@ -272,17 +289,28 @@ msgid "Knalgan Alliance"
 msgstr "Caidreachas Chnalga"
 
 #. [multiplayer_side]: id=Knalgan Alliance, type=random
-#: data/multiplayer/factions/knalgans-aoh.cfg:13
-#: data/multiplayer/factions/knalgans-default.cfg:13
+#: data/multiplayer/factions/knalgans-aoh.cfg:12
+#: data/multiplayer/factions/knalgans-default.cfg:12
+#, fuzzy
+#| msgid ""
+#| "The <bold>text='Knalgan Alliance'</bold> is a faction of "
+#| "<ref>text='Dwarves' dst='..race_dwarf'</ref> and their outlaw "
+#| "<ref>text='Human' dst='..race_human'</ref> allies. Dwarves are an old "
+#| "race who live underground and have tough, but short, warriors. The "
+#| "outlaws are humans who are not socially acceptable among others of their "
+#| "race, but have become allies of the dwarves due to common enemies. This "
+#| "leads to a combination of tough and defensive dwarves who are only good "
+#| "on certain terrain and humans who can cover ground that dwarves are not "
+#| "good at fighting in."
 msgid ""
-"The <bold>text='Knalgan Alliance'</bold> is a faction of <ref>text='Dwarves' "
-"dst='..race_dwarf'</ref> and their outlaw <ref>text='Human' dst='.."
-"race_human'</ref> allies. Dwarves are an old race who live underground and "
-"have tough, but short, warriors. The outlaws are humans who are not socially "
-"acceptable among others of their race, but have become allies of the dwarves "
-"due to common enemies. This leads to a combination of tough and defensive "
-"dwarves who are only good on certain terrain and humans who can cover ground "
-"that dwarves are not good at fighting in."
+"The <b>Knalgan Alliance</b> is a faction of <ref dst='..race_dwarf'>Dwarves</"
+"ref> and their outlaw <ref dst='..race_human'>Human</ref> allies. Dwarves "
+"are an old race who live underground and have tough, but short, warriors. "
+"The outlaws are humans who are not socially acceptable among others of their "
+"race, but have become allies of the dwarves due to common enemies. This "
+"leads to a combination of tough and defensive dwarves who are only good on "
+"certain terrain and humans who can cover ground that dwarves are not good at "
+"fighting in."
 msgstr ""
 "’S e buidheann <ref>text='throichean' dst='..race_dwarf'</ref> an "
 "caidreabhach ceatharnach-coille <ref>text='daonna' dst='..race_human'</ref> "
@@ -302,14 +330,21 @@ msgid "Loyalists"
 msgstr "Dìlsich"
 
 #. [multiplayer_side]: id=Loyalists, type=random
-#: data/multiplayer/factions/loyalists-aoh.cfg:14
-#: data/multiplayer/factions/loyalists-default.cfg:14
+#: data/multiplayer/factions/loyalists-aoh.cfg:13
+#: data/multiplayer/factions/loyalists-default.cfg:13
+#, fuzzy
+#| msgid ""
+#| "The <bold>text='Loyalists'</bold> are a faction of <ref>text='Humans' "
+#| "dst='..race_human'</ref> who are loyal to the throne of Wesnoth. Humans "
+#| "are a versatile race who specialize in many different areas. Similarly, "
+#| "the Loyalist faction is a very versatile melee-oriented faction with "
+#| "important ranged support from bowmen and mages."
 msgid ""
-"The <bold>text='Loyalists'</bold> are a faction of <ref>text='Humans' dst='.."
-"race_human'</ref> who are loyal to the throne of Wesnoth. Humans are a "
-"versatile race who specialize in many different areas. Similarly, the "
-"Loyalist faction is a very versatile melee-oriented faction with important "
-"ranged support from bowmen and mages."
+"The <b>Loyalists</b> are a faction of <ref dst='..race_human'>Humans</ref> "
+"who are loyal to the throne of Wesnoth. Humans are a versatile race who "
+"specialize in many different areas. Similarly, the Loyalist faction is a "
+"very versatile melee-oriented faction with important ranged support from "
+"bowmen and mages."
 msgstr ""
 "’S e buidheann <ref>text='dhuine' dst='..race_human'</ref>  a th’ anns na "
 "<bold>text='Dìlsich'</bold> a tha dìleas do chathair Bheasnaid. ’S e "
@@ -318,24 +353,33 @@ msgstr ""
 "cuideam air a’ choisridh ach le taic chudromach aig astar o na boghadairean "
 "is draoidhean aca."
 
-#. [multiplayer_side]: id=Northerners, type=random, description=<img>src='portraits/orcs/warlord.webp~BG()' align='middle'</img>
+#. [multiplayer_side]: id=Northerners, type=random
 #: data/multiplayer/factions/northerners-aoh.cfg:4
 #: data/multiplayer/factions/northerners-default.cfg:4
 msgid "Northerners"
 msgstr "Tuathaich"
 
-#. [multiplayer_side]: id=Northerners, type=random, description=<img>src='portraits/orcs/warlord.webp~BG()' align='middle'</img>
-#: data/multiplayer/factions/northerners-aoh.cfg:16
-#: data/multiplayer/factions/northerners-default.cfg:15
+#. [multiplayer_side]: id=Northerners, type=random
+#: data/multiplayer/factions/northerners-aoh.cfg:13
+#: data/multiplayer/factions/northerners-default.cfg:12
+#, fuzzy
+#| msgid ""
+#| "The <bold>text='Northerners'</bold> are a faction of <ref>text='Orcs' "
+#| "dst='..race_orc'</ref> and their allies who live in the north of the "
+#| "Great Continent, thus their name. Northerners consist of the warrior orcs "
+#| "race, the enslaved <ref>text='goblins' dst='..race_goblin'</ref>, "
+#| "<ref>text='trolls' dst='..race_troll'</ref> who are tricked into combat "
+#| "by the orcs, and the serpentine <ref>text='naga' dst='..race_naga'</ref>. "
+#| "The Northerners play best by taking advantage of having many low-cost and "
+#| "high HP soldiers."
 msgid ""
-"The <bold>text='Northerners'</bold> are a faction of <ref>text='Orcs' dst='.."
-"race_orc'</ref> and their allies who live in the north of the Great "
-"Continent, thus their name. Northerners consist of the warrior orcs race, "
-"the enslaved <ref>text='goblins' dst='..race_goblin'</ref>, "
-"<ref>text='trolls' dst='..race_troll'</ref> who are tricked into combat by "
-"the orcs, and the serpentine <ref>text='naga' dst='..race_naga'</ref>. The "
-"Northerners play best by taking advantage of having many low-cost and high "
-"HP soldiers."
+"The <b>Northerners</b> are a faction of <ref dst='..race_orc'>Orcs</ref> and "
+"their allies who live in the north of the Great Continent, thus their name. "
+"Northerners consist of the warrior orcs race, the enslaved <ref dst='.."
+"race_goblin'>goblins</ref>, <ref dst='..race_troll'>trolls</ref> who are "
+"tricked into combat by the orcs, and the serpentine <ref dst='.."
+"race_naga'>naga</ref>. The Northerners play best by taking advantage of "
+"having many low-cost and high HP soldiers."
 msgstr ""
 "’S e buidheann <ref>text='dheamhan' dst='..race_orc'</ref> agus an "
 "caidreabhach a tha sna <bold>text='Tuathaich'</bold> a tha a’ fuireach air "
@@ -354,18 +398,30 @@ msgid "Rebels"
 msgstr "Aramaichean"
 
 #. [multiplayer_side]: id=Rebels, type=random
-#: data/multiplayer/factions/rebels-aoh.cfg:14
-#: data/multiplayer/factions/rebels-default.cfg:14
+#: data/multiplayer/factions/rebels-aoh.cfg:13
+#: data/multiplayer/factions/rebels-default.cfg:13
+#, fuzzy
+#| msgid ""
+#| "The <bold>text='Rebels'</bold> are a faction of <ref>text='Elves' dst='.."
+#| "race_elf'</ref> and their various forest-dwelling allies. They get their "
+#| "human name, Rebels, from the time of Heir to the Throne, when they "
+#| "started the rebellion against the evil Queen Asheviere. Elves are a "
+#| "magical race that are masters of the bow and are capable of living many "
+#| "years longer than humans. In harmony with nature, the elves find allies "
+#| "with the <ref>text='human' dst='..race_human'</ref> mages, certain "
+#| "<ref>text='merfolk' dst='..race_merman'</ref>, and tree creatures called "
+#| "<ref>text='Woses' dst='..race_wose'</ref>. Rebels are best played taking "
+#| "advantage of their high forest defense, mastery of ranged attacks, and "
+#| "the elves’ neutral alignment."
 msgid ""
-"The <bold>text='Rebels'</bold> are a faction of <ref>text='Elves' dst='.."
-"race_elf'</ref> and their various forest-dwelling allies. They get their "
-"human name, Rebels, from the time of Heir to the Throne, when they started "
-"the rebellion against the evil Queen Asheviere. Elves are a magical race "
-"that are masters of the bow and are capable of living many years longer than "
-"humans. In harmony with nature, the elves find allies with the "
-"<ref>text='human' dst='..race_human'</ref> mages, certain "
-"<ref>text='merfolk' dst='..race_merman'</ref>, and tree creatures called "
-"<ref>text='Woses' dst='..race_wose'</ref>. Rebels are best played taking "
+"The <b>Rebels</b> are a faction of <ref dst='..race_elf'>Elves</ref> and "
+"their various forest-dwelling allies. They get their human name, Rebels, "
+"from the time of Heir to the Throne, when they started the rebellion against "
+"the evil Queen Asheviere. Elves are a magical race that are masters of the "
+"bow and are capable of living many years longer than humans. In harmony with "
+"nature, the elves find allies with the <ref dst='..race_human'>human</ref> "
+"mages, certain <ref dst='..race_merman'>merfolk</ref>, and tree creatures "
+"called <ref dst='..race_wose'>Woses</ref>. Rebels are best played taking "
 "advantage of their high forest defense, mastery of ranged attacks, and the "
 "elves’ neutral alignment."
 msgstr ""
@@ -390,17 +446,28 @@ msgid "Undead"
 msgstr "Closaich"
 
 #. [multiplayer_side]: id=Undead, type=random
-#: data/multiplayer/factions/undead-aoh.cfg:14
-#: data/multiplayer/factions/undead-default.cfg:14
+#: data/multiplayer/factions/undead-aoh.cfg:13
+#: data/multiplayer/factions/undead-default.cfg:13
+#, fuzzy
+#| msgid ""
+#| "The <bold>text='Undead'</bold> are a faction of <ref>text='undead' dst='.."
+#| "race_undead'</ref> creatures and <ref>text='human' dst='..race_human'</"
+#| "ref> practitioners of dark arts that usually accompany them. Often, these "
+#| "“Dark Adepts” are the units that do the most damage for the faction, but "
+#| "they have a major vulnerability — their practicing of this forbidden, "
+#| "evil magic has consumed all their energy and so they have no melee attack "
+#| "at all. The Undead are a very aggressive faction and the most powerful "
+#| "<ref>text='Default Era' dst='..era_era_default'</ref> faction at "
+#| "nighttime."
 msgid ""
-"The <bold>text='Undead'</bold> are a faction of <ref>text='undead' dst='.."
-"race_undead'</ref> creatures and <ref>text='human' dst='..race_human'</ref> "
-"practitioners of dark arts that usually accompany them. Often, these “Dark "
-"Adepts” are the units that do the most damage for the faction, but they have "
-"a major vulnerability — their practicing of this forbidden, evil magic has "
-"consumed all their energy and so they have no melee attack at all. The "
-"Undead are a very aggressive faction and the most powerful "
-"<ref>text='Default Era' dst='..era_era_default'</ref> faction at nighttime."
+"The <b>Undead</b> are a faction of <ref dst='..race_undead'>undead</ref> "
+"creatures and <ref dst='..race_human'>human</ref> practitioners of dark arts "
+"that usually accompany them. Often, these “Dark Adepts” are the units that "
+"do the most damage for the faction, but they have a major vulnerability — "
+"their practicing of this forbidden, evil magic has consumed all their energy "
+"and so they have no melee attack at all. The Undead are a very aggressive "
+"faction and the most powerful <ref dst='..era_era_default'>Default Era</ref> "
+"faction at nighttime."
 msgstr ""
 "’S e buidheann chreutairean <ref>text='closach' dst='..race_undead'</"
 "ref>agus draoidhean dubha <ref>text='daonna' dst='..race_human'</ref> a thig "
@@ -1214,28 +1281,28 @@ msgstr ""
 "cnàmh-sgeul seo gu ceart."
 
 #. [side]
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:21
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:33
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:22
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:34
 msgid "teamname^Revolt"
 msgstr "Aramach"
 
 #. [side]
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:50
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:76
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:51
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:77
 msgid "teamname^Human"
 msgstr "Cinne-daonna"
 
 #. [then]
 #. [objective]: condition=lose
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:114
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:135
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:274
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:115
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:136
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:278
 msgid "Death of your leader"
 msgstr "Bàs do cheannard"
 
 #. [then]
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:115
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:136
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:116
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:137
 msgid ""
 "Since your team has only one leader, the enemy waves will not be at full "
 "strength."
@@ -1244,14 +1311,14 @@ msgstr ""
 "ionnsaighean an nàmhad."
 
 #. [else]
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:118
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:143
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:119
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:144
 msgid "Death of both of your team’s leaders"
 msgstr "Bàs an dà cheannard agad"
 
 #. [else]
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:119
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:144
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:120
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:145
 msgid ""
 "Since your team has two leaders, the enemy waves will be at full strength."
 msgstr ""
@@ -1259,18 +1326,18 @@ msgstr ""
 "an nàmhad."
 
 #. [objective]: condition=win
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:146
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:171
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:133
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:157
 msgid "Survive and defeat all enemy waves"
 msgstr "Mair beò is thoir buaidh air a h-uile ionnsaigh nàmhad"
 
 #. [message]: speaker=narrator
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:166
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:153
 msgid "Dark Forecast — a random survival scenario"
 msgstr "Ro-aithris dhorcha – cnàmh-sgeul mairsinn beò air thuaiream"
 
 #. [message]: speaker=narrator
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:169
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:156
 msgid ""
 "Your aim is to survive the spawning waves of units and defeat the final "
 "archenemies.\n"
@@ -1317,12 +1384,12 @@ msgstr ""
 "• Prògramachadh WML"
 
 #. [message]
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:188
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:175
 msgid "So this is the accursed valley — a land ours for the taking."
 msgstr "Seo an gleann mallaichte – tìr as urrainn dhuinn gabhail."
 
 #. [message]
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:192
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:179
 msgid ""
 "The inhabitants are rumored to be a strange alliance of man and beast, and "
 "our claim is not going to be unopposed. We must be prepared for the "
@@ -1333,7 +1400,7 @@ msgstr ""
 "ullachadh an aghaidh iongnaidhean na tìre seo."
 
 #. [message]
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:196
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:183
 msgid ""
 "Then let us discover what lies in waiting and teach them not to oppose our "
 "claim."
@@ -1342,7 +1409,7 @@ msgstr ""
 "an aghaidh ar tagairte."
 
 #. [message]: speaker=unit
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:215
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:202
 msgid ""
 "Ugh! How can this be? Defeated by mere barbarians! My gods have forsaken "
 "me..."
@@ -1351,7 +1418,7 @@ msgstr ""
 "tha seo! Chuir mo dhiathan an cùil rium …"
 
 #. [message]: speaker=second_unit
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:229
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:216
 msgid ""
 "Cheers of your enemy are the last thing you hear as you slip into death..."
 "their joy fills your last moments with pure hate."
@@ -1361,7 +1428,7 @@ msgstr ""
 "diogan mu dheireadh do bheatha."
 
 #. [message]
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:251
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:238
 msgid ""
 "The enemy cheers as a dark mist rises from the land, engulfing you. As "
 "ghostly wisps drain away your will, you realize that your time in this land "
@@ -1374,8 +1441,8 @@ msgstr ""
 
 #. [slider]: id=enemey_gold_factor
 #. [slider]: id=enemy_gold_factor
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:264
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:311
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:251
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:297
 msgid "Changes the gold worth of the enemy spawns by a certain percentage"
 msgstr ""
 "Atharraichidh seo luach an òir air gineadh an nàmhad le ceudad sònraichte"
@@ -1680,55 +1747,55 @@ msgid ""
 msgstr ""
 
 #. [side]
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:25
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:38
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:26
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:39
 msgid "teamname^Invaders"
 msgstr "Luchd-ionnsaighe"
 
 #. [side]
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:56
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:83
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:107
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:57
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:84
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:108
 #: data/multiplayer/scenarios/Test_Elevation_Test.cfg:45
 msgid "teamname^Defenders"
 msgstr "Luchd-dìona"
 
 #. [label]
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:189
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:175
 msgid "Healing Keep"
 msgstr "Daingean slànachaidh"
 
 #. [message]: speaker=narrator
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:213
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:199
 msgid "Isle of Mists — a random survival scenario"
 msgstr "Eilean a’ cheò – cnàmh-sgeul mairsinn beò air thuaiream"
 
 #. [message]
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:220
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:206
 msgid ""
 "You arrive near a mystic shrine, where the apparitions of ancient armies are "
 "forever trapped and doomed to eternally cleanse the isle of all interlopers."
 msgstr ""
 
 #. [message]
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:224
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:210
 msgid ""
 "Phantom armies approach on the horizon. If we defeat them all, they may be "
 "released from this timeless prison."
 msgstr ""
 
 #. [message]
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:228
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:214
 msgid "Let us prepare ourselves for the coming battle."
 msgstr ""
 
 #. [message]: speaker=unit
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:247
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:233
 msgid "How can this be? My gods have forsaken me..."
 msgstr "Ciamar as urrainn dha bhith? Chuir mo dhiathan an cùil rium…"
 
 #. [message]: speaker=second_unit
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:261
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:247
 msgid ""
 "As the cold grasp of death draws nearer, you feel your spirit being "
 "separated from your body. You realize that you will soon be doomed to the "
@@ -1736,7 +1803,7 @@ msgid ""
 msgstr ""
 
 #. [message]
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:283
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:269
 msgid ""
 "A dark mist rises from the land, draining your senses and your will away. "
 "You dimly realize that you will soon join the other ghosts as another "
@@ -1880,8 +1947,13 @@ msgstr "Ìomhaigh Sulla"
 
 #. [unit]: gender=female
 #: data/multiplayer/scenarios/2p_Sullas_Ruins.cfg:101
+#, fuzzy
+#| msgid ""
+#| "A stone-carved likeness of Sulla the Great, also known as Sulla the Just, "
+#| "Sulla the Tyrant, Empress of the Sinking Tower, Lady of the Walking "
+#| "Glacier, Sulla the Incinerator, Sulla the Proud and Sulla the Righteous."
 msgid ""
-"A stone-carved likeness of Sulla the Great, also known as Sulla the Just, "
+"A stone-carved likeness of Aether Mage Sulla, also known as Sulla the Just, "
 "Sulla the Tyrant, Empress of the Sinking Tower, Lady of the Walking Glacier, "
 "Sulla the Incinerator, Sulla the Proud and Sulla the Righteous."
 msgstr ""
@@ -2249,7 +2321,7 @@ msgstr ""
 #. [side]
 #: data/multiplayer/scenarios/4p_Blue_Water_Province.cfg:21
 #: data/multiplayer/scenarios/4p_Blue_Water_Province.cfg:54
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:73
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:70
 #: data/multiplayer/scenarios/6p_Crusaders_Field.cfg:20
 #: data/multiplayer/scenarios/6p_Crusaders_Field.cfg:42
 #: data/multiplayer/scenarios/6p_Crusaders_Field.cfg:64
@@ -2263,7 +2335,7 @@ msgstr "Sgioba 1"
 #. [side]
 #: data/multiplayer/scenarios/4p_Blue_Water_Province.cfg:32
 #: data/multiplayer/scenarios/4p_Blue_Water_Province.cfg:43
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:84
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:81
 #: data/multiplayer/scenarios/6p_Crusaders_Field.cfg:31
 #: data/multiplayer/scenarios/6p_Crusaders_Field.cfg:53
 #: data/multiplayer/scenarios/6p_Crusaders_Field.cfg:75
@@ -2668,19 +2740,19 @@ msgstr ""
 "ùghdarrais."
 
 #. [multiplayer]: id=multiplayer_The_Wilderlands
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:57
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:54
 msgid "5p — The Wilderlands"
 msgstr "5cl – Na tìrean fàs"
 
 #. [multiplayer]: id=multiplayer_The_Wilderlands
 #. [multiplayer]: id=multiplayer_Crusaders_Field
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:58
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:55
 #: data/multiplayer/scenarios/6p_Crusaders_Field.cfg:7
 msgid " Recommended setting of 1 gold per village."
 msgstr " Mholamaid gun suidhich thu òr bhailtean air 1."
 
 #. [multiplayer]: id=multiplayer_The_Wilderlands
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:58
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:55
 msgid ""
 "A vast region of wild, untamed wilderness, its terrain dotted with forests, "
 "caves, rivers, and the ruins of ancient fortresses."
@@ -2689,42 +2761,42 @@ msgstr ""
 "uamhan, aibhnichean is tobhtaichean dhaingnean àrsaidh."
 
 #. [side]
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:95
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:92
 msgid "teamname^Team 3"
 msgstr "Sgioba 3"
 
 #. [side]
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:106
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:103
 msgid "teamname^Team 4"
 msgstr "Sgioba 4"
 
 #. [side]
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:128
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:125
 msgid "teamname^Monsters"
 msgstr "Biastan"
 
 #. [objective]: condition=win
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:245
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:249
 msgid "Defeat all enemy leaders"
 msgstr "Thoir buaidh air a h&#8209;uile ceannard nàmhad"
 
 #. [objective]: condition=win
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:264
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:268
 msgid "Defeat all monsters"
 msgstr "Thoir buaidh air a h&#8209;uile biast nàmhad"
 
 #. [objective]: condition=win
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:282
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:286
 msgid "Defeat the enemy leaders"
 msgstr "Thoir buaidh air na ceannardan nàmhad"
 
 #. [objective]: condition=lose
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:287
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:291
 msgid "Death of all your units"
 msgstr "Bàs nan aonadan uile agad"
 
 #. [note]
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:292
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:296
 msgid "You cannot recruit units."
 msgstr "Chan urrainn dhut aonadan a thrusadh."
 
@@ -2743,6 +2815,36 @@ msgstr ""
 "Cluinnear na sluagh-ghairmean air a sheann bhlàr seo a-rithist far an "
 "siubhail taibhsean aig mìltean dhe ghaisgich dhàna gu neo-fhaicsinneach thar "
 "nam beanntan, craobhan is aibhnichean."
+
+#. [multiplayer]: id=multiplayer_Double_Siege
+#: data/multiplayer/scenarios/6p_Double_Siege.cfg:7
+msgid "6p — Double Siege"
+msgstr ""
+
+#. [multiplayer]: id=multiplayer_Double_Siege
+#: data/multiplayer/scenarios/6p_Double_Siege.cfg:8
+msgid ""
+"Two armies attacked a single city, both emerged victorious. Now, only one "
+"can claim the victory."
+msgstr ""
+
+#. [side]
+#: data/multiplayer/scenarios/6p_Double_Siege.cfg:25
+#: data/multiplayer/scenarios/6p_Double_Siege.cfg:61
+#: data/multiplayer/scenarios/6p_Double_Siege.cfg:73
+#, fuzzy
+#| msgid "teamname^North"
+msgid "teamname^Top"
+msgstr "Tuath"
+
+#. [side]
+#: data/multiplayer/scenarios/6p_Double_Siege.cfg:37
+#: data/multiplayer/scenarios/6p_Double_Siege.cfg:49
+#: data/multiplayer/scenarios/6p_Double_Siege.cfg:85
+#, fuzzy
+#| msgid "teamname^North"
+msgid "teamname^Bottom"
+msgstr "Tuath"
 
 #. [multiplayer]: id=multiplayer_Hexcake
 #: data/multiplayer/scenarios/6p_Hexcake.cfg:5
@@ -3036,8 +3138,10 @@ msgstr ""
 
 #. [multiplayer]: id=multiplayer_test_Elevation_Demo
 #: data/multiplayer/scenarios/Test_Elevation_Test.cfg:5
-msgid "3p - Elevation Test"
-msgstr ""
+#, fuzzy
+#| msgid "2p — Clearing Gushes"
+msgid "3p — Elevation Test"
+msgstr "2chl – Maoim blàir"
 
 #. [multiplayer]: id=multiplayer_test_Elevation_Demo
 #: data/multiplayer/scenarios/Test_Elevation_Test.cfg:6

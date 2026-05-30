@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2024
+	Copyright (C) 2003 - 2025
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -15,7 +15,7 @@
 #include "color.hpp"
 
 #include "serialization/string_utils.hpp"
-#include "utils/from_chars.hpp"
+#include "utils/charconv.hpp"
 
 #include <iomanip>
 #include <sstream>

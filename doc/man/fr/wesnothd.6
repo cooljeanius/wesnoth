@@ -18,7 +18,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH WESNOTHD 6 2022 wesnothd "Serveur multijoueur de Bataille pour Wesnoth"
+.TH WESNOTHD 6 2025 wesnothd "Serveur multijoueur de Bataille pour Wesnoth"
 .
 .SH NOM
 .
@@ -27,7 +27,7 @@ wesnothd \- Serveur pour jeu multijoueur en réseau de Bataille pour
 .
 .SH SYNOPSIS
 .
-\fBwesnothd\fP [\|\fB\-dvw\fP\|] [\|\fB\-c\fP \fIpath\fP\|] [\|\fB\-p\fP \fIport\fP\|]
+\fBwesnothd\fP [\|\fB\-dvw\fP\|] [\|\fB\-c\fP \fIchemin\fP\|] [\|\fB\-p\fP \fIport\fP\|]
 .br
 \fBwesnothd\fP \fB\-V\fP
 .
@@ -101,9 +101,9 @@ Spécifie si les joueurs non\-enregistrés avec le \fBuser_handler\fP utilisé
 peuvent se connecter (défaut\ : non).
 .TP 
 \fBdisallow_names\fP
-Names/nicks that are not accepted by the server. \fB*\fP and \fB?\fP from wildcard
-patterns are supported. See \fBglob\fP(7)  for more details.  Default values
-(used if nothing is specified) are:
+Noms/surnoms non acceptés par le serveur. Les caractères génériques \fB*\fP et
+\fB?\fP sont acceptés. Voir \fBglob\fP(7) pour plus d'informations. Les valeurs
+par défaut (utilisées si rien n'est précisé) sont\ :
 \fB*admin*,*admln*,*moderator*,*server*,ai,ai?,computer,human,network,player\fP.
 .TP 
 \fBfifo_path\fP
@@ -129,8 +129,7 @@ Période, en secondes, après laquelle un surnombre de messages est détecté
 Le message du jour.
 .TP 
 \fBpasswd\fP
-Mot de passe pour obtenir des droits d'administrateur.(via \fB/query admin
-\fP\fIpassword\fP).
+Mot de passe pour obtenir des droits d'administrateur.(via \fB/query admin \fP\fIpassword\fP).
 .TP 
 \fBreplay_save_path\fP
 Répertoire où le serveur sauvegarde les films des parties (n'oubliez pas le
@@ -157,8 +156,7 @@ La chaîne du certificat TLS au format .pem
 La clé privée TLS au format .pem
 .TP 
 \fBtls_dh\fP
-Le paramètre DH de TLS au format .pem. À générer par  \fBopenssl dhparam \-out
-nom_de_fichier.pem 4096\fP
+Le paramètre DH de TLS au format .pem. À générer par  \fBopenssl dhparam \-out nom_de_fichier.pem 4096\fP
 .TP 
 \fBversions_accepted\fP
 Liste des versions acceptées par le serveur, séparées par des virgules. Les
@@ -244,8 +242,8 @@ Nom de la table dans laquelle wesnothd stockera ses données à propos des
 joueurs d'une partie.
 .TP 
 \fBdb_game_content_info_table\fP
-The name of the table in which wesnothd will save its own data about game
-content (scenario/era/modifications) used in a game.
+Nom de la table dans laquelle wesnothd stockera ses données à propos des
+contenus du jeu (scénario/ère/modifications) utilisés dans une partie.
 .TP 
 \fBdb_user_group_table\fP
 Nom de la table des données de groupe d'utilisateurs de vos forums phpbb,
@@ -273,6 +271,14 @@ exemple\ : phpbb3_banlist.
 .TP 
 \fBmp_mod_group\fP
 L'identifiant du groupe du forum ayant les pouvoirs de modération.
+.TP 
+\fBforum_admin_group\fP
+L'identifiant d'un des groupes du forum ayant les pouvoirs de modération sur
+le serveur d'extensions.
+.TP 
+\fBsite_admin_group\fP
+L'identifiant d'un des groupes du forum ayant les pouvoirs de modération sur
+le serveur d'extensions.
 .RE
 .
 .SH "STATUT DE SORTIE"
@@ -293,7 +299,7 @@ Rendez\-vous sur la page d'accueil officielle\ : https://www.wesnoth.org/
 .
 .SH COPYRIGHT
 .
-Copyright \(co 2003\-2024 David White <davidnwhite@verizon.net>
+Copyright \(co 2003\-2025 David White <davidnwhite@verizon.net>
 .br
 Ceci est un logiciel libre\ ; ce logiciel est sous la licence GPL version 2,
 comme définie par la Free Software Foundation. Il n'offre AUCUNE GARANTIE, y

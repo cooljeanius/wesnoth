@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2009 - 2024
+	Copyright (C) 2009 - 2025
 	by Iris Morelle <shadowm2006@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -27,9 +27,9 @@ namespace storyscreen
 {
 floating_image::floating_image(const config& cfg)
 	: file_(cfg["file"])
-	, x_(cfg["x"])
-	, y_(cfg["y"])
-	, delay_(cfg["delay"])
+	, x_(cfg["x"].to_int())
+	, y_(cfg["y"].to_int())
+	, delay_(cfg["delay"].to_int())
 	, resize_with_background_(cfg["resize_with_background"].to_bool())
 	, centered_(cfg["centered"].to_bool())
 {
@@ -188,6 +188,55 @@ void part::resolve_wml(const vconfig& cfg)
 
 	if(cfg.has_attribute("text_alignment")) {
 		text_alignment_ = cfg["text_alignment"].str();
+	}
+
+	const auto decode_hposition = [](const std::string& pos_str) {
+		if(pos_str == "left") {
+			return 0;
+		} else if (pos_str == "center") {
+			return 50;
+		} else if (pos_str == "right") {
+			return 100;
+		} else {
+			return 0;
+		}
+	};
+
+	const auto decode_vposition = [&loc = text_block_loc_](const std::string& pos_str) {
+		// The ternary checks avoid part text and title text overlaping.
+		if(pos_str == "top") {
+			return loc == BLOCK_TOP ? 50 : 0;
+		} else if (pos_str == "middle") {
+			return loc == BLOCK_MIDDLE ? 0 : 50;
+		} else if (pos_str == "bottom") {
+			return loc == BLOCK_BOTTOM ? 50 : 100;
+		} else {
+			return 0;
+		}
+	};
+
+	if(cfg.has_attribute("title_position")) {
+		if(cfg["title_position"] == "centered") {
+			title_perc_pos_ = {50, 50};
+		} else {
+			const auto vals = utils::split(cfg["title_position"]);
+			switch(vals.size()) {
+			case 0:
+				// No values provided. Default to top-left.
+				title_perc_pos_ = {0, 0};
+				break;
+
+			case 1:
+				// Singe value, could be either horizontal or vertical.
+				title_perc_pos_ = {decode_hposition(vals[0]), decode_vposition(vals[0])};
+				break;
+
+			default:
+				// Separate horizontal and vertical values.
+				title_perc_pos_ = {decode_hposition(vals[0]), decode_vposition(vals[1])};
+				break;
+			}
+		}
 	}
 
 	if(cfg.has_attribute("title_alignment")) {

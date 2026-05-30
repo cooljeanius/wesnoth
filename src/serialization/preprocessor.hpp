@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2005 - 2024
+	Copyright (C) 2005 - 2025
 	by Guillaume Melquiond <guillaume.melquiond@gmail.com>
 	Copyright (C) 2003 by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
@@ -35,24 +35,16 @@ typedef std::map<std::string, struct preproc_define> preproc_map;
 
 struct preproc_define
 {
-	preproc_define()
-		: value()
-		, arguments()
-		, optional_arguments()
-		, textdomain()
-		, linenum(0)
-		, location()
-	{
-	}
+	preproc_define() = default;
 
 	explicit preproc_define(const std::string& val)
 		: value(val)
-		, arguments()
-		, optional_arguments()
-		, textdomain()
-		, linenum(0)
-		, location()
 	{
+	}
+
+	explicit preproc_define(const config& cfg)
+	{
+		read(cfg);
 	}
 
 	preproc_define(const std::string& val,
@@ -67,11 +59,11 @@ struct preproc_define
 		, arguments(args)
 		, optional_arguments(optargs)
 		, textdomain(domain)
-		, linenum(line)
 		, location(loc)
 		, deprecation_message(dep_msg)
-		, deprecation_level(dep_lvl)
 		, deprecation_version(dep_ver)
+		, deprecation_level(dep_lvl)
+		, linenum(line)
 	{
 	}
 
@@ -83,15 +75,15 @@ struct preproc_define
 
 	std::string textdomain;
 
-	int linenum;
-
 	std::string location;
 
 	std::string deprecation_message;
 
+	version_info deprecation_version;
+
 	utils::optional<DEP_LEVEL> deprecation_level;
 
-	version_info deprecation_version;
+	int linenum{0};
 
 	bool is_deprecated() const {
 		return deprecation_level.has_value();
@@ -104,7 +96,7 @@ struct preproc_define
 	void read(const config&);
 	void read_argument(const config&);
 
-	static preproc_map::value_type read_pair(const config&);
+	static void insert(preproc_map&, const config&);
 
 	bool operator==(const preproc_define&) const;
 
@@ -141,10 +133,24 @@ std::ostream& operator<<(std::ostream& stream, const preproc_map::value_type& de
  *
  * @returns                       The resulting preprocessed file data.
  */
-filesystem::scoped_istream preprocess_file(const std::string& fname, preproc_map* defines = nullptr);
+filesystem::scoped_istream preprocess_file(const std::string& fname, preproc_map& defines);
+filesystem::scoped_istream preprocess_file(const std::string& fname);
 
-void preprocess_resource(const std::string& res_name,
-		preproc_map* defines_map,
-		bool write_cfg = false,
-		bool write_plain_cfg = false,
-		const std::string& target_directory = "");
+/**
+ * Function to use the WML preprocessor on a string.
+ *
+ * @param defines                 A map of symbols defined.
+ * @param contents                The string to be preprocessed.
+ * @param textdomain              The textdomain to associate the contents.
+ *
+ * @returns                       The resulting preprocessed string.
+ */
+filesystem::scoped_istream preprocess_string(const std::string& contents, const std::string& textdomain, preproc_map& defines);
+filesystem::scoped_istream preprocess_string(const std::string& contents, const std::string& textdomain);
+
+void preprocess_resource(
+	const std::string& res_name,
+	preproc_map* defines_map,
+	bool write_cfg = false,
+	bool write_plain_cfg = false,
+	const std::string& target_directory = "");

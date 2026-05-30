@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2005 - 2024
+	Copyright (C) 2005 - 2025
 	by Philippe Plantier <ayin@anathas.org>
 	Copyright (C) 2005 by Guillaume Melquiond <guillaume.melquiond@gmail.com>
 	Copyright (C) 2003 by David White <dave@whitevine.net>
@@ -98,6 +98,9 @@ std::vector<std::string> split(std::string_view val, const char c = ',', const i
 std::set<std::string> split_set(std::string_view val, const char c = ',', const int flags = REMOVE_EMPTY | STRIP_SPACES);
 
 std::vector<std::string_view> split_view(std::string_view val, const char c = ',', const int flags = REMOVE_EMPTY | STRIP_SPACES);
+
+/** You cannot take a non-owning view to a temporary string! */
+std::vector<std::string_view> split_view(std::string&&) = delete;
 
 /**
  * This function is identical to split(), except it does not split when it otherwise would if the
@@ -200,14 +203,15 @@ std::vector<std::string> square_parenthetical_split(
  * @param v A container with elements.
  * @param s List delimiter.
  */
-template <typename T>
-std::string join(const T& v, const std::string& s = ",")
+template<typename Range>
+std::string join(const Range& v, const std::string& s = ",")
 {
 	std::stringstream str;
+	const auto sentinel = std::end(v);
 
-	for(typename T::const_iterator i = v.begin(); i != v.end(); ++i) {
+	for(auto i = std::begin(v); i != sentinel; ++i) {
 		str << *i;
-		if(std::next(i) != v.end()) {
+		if(std::next(i) != sentinel) {
 			str << s;
 		}
 	}
@@ -287,7 +291,7 @@ std::string indent(const std::string& string, std::size_t indent_size = 4);
  * * Although "-infinity--1", "2-infinity" and "-infinity-infinity" are all supported,
  * * ranges that can't match a reasonable number, e.g. "-infinity" or "infinity..infinity", may be treated as errors.
  */
-std::pair<int, int> parse_range(const std::string& str);
+std::pair<int, int> parse_range(std::string_view str);
 
 /**
  * Handles a comma-separated list of inputs to parse_range, in a context that does not expect
@@ -306,7 +310,7 @@ std::vector<std::pair<int, int>> parse_ranges_int(const std::string& str);
  *
  * For this function, "infinity" results in std::numeric_limits<double>::infinity.
  */
-std::pair<double, double> parse_range_real(const std::string& str);
+std::pair<double, double> parse_range_real(std::string_view str);
 
 std::vector<std::pair<double, double>> parse_ranges_real(const std::string& str);
 
@@ -318,8 +322,42 @@ inline std::string print_modifier(const std::string &mod)
 	return mod[0] == '-' ? (font::unicode_minus + std::string(mod.begin() + 1, mod.end())) : ("+" + mod);
 }
 
+/** Format @a str as a WML value  */
+inline std::string wml_escape_string(std::string_view str)
+{
+	std::string res;
+
+	for(char c : str) {
+		res.append(c == '"' ? 2 : 1, c);
+	}
+
+	return res;
+}
+
+/** Format @a str as a strongly quoted WML value. Occurances of `<<` are double quoted separately */
+inline std::string wml_escape_strong(const std::string& str)
+{
+	std::string res;
+	std::size_t i = str.find(">>");
+	if(i == std::string::npos) {
+		return str;
+	}
+
+	res.append(str, 0, i);
+	res.append(">>\">>\"<<");
+	std::size_t j;
+	while((j = str.find(">>", i + 2)) != std::string::npos) {
+		res.append(str, i + 2, j - (i + 2));
+		res.append(">>\">>\"<<");
+		i = j;
+	}
+	res.append(str, i + 2);
+
+	return res;
+}
+
 /** Prepends a configurable set of characters with a backslash */
-std::string escape(const std::string &str, const char *special_chars);
+std::string escape(std::string_view str, const char *special_chars);
 
 /**
  * Prepend all special characters with a backslash.
@@ -327,22 +365,16 @@ std::string escape(const std::string &str, const char *special_chars);
  * Special characters are:
  * #@{}+-,\*=
  */
-inline std::string escape(const std::string &str)
+inline std::string escape(std::string_view str)
 {
 	return escape(str, "#@{}+-,\\*=");
 }
 
 /** Remove all escape characters (backslash) */
-std::string unescape(const std::string &str);
+std::string unescape(std::string_view str);
 
 /** Percent-escape characters in a UTF-8 string intended to be part of a URL. */
-std::string urlencode(const std::string &str);
-
-/** Surround the string 'str' with double quotes. */
-inline std::string quote(const std::string &str)
-{
-	return '"' + str + '"';
-}
+std::string urlencode(std::string_view str);
 
 /** Convert no, false, off, 0, 0.0 to false, empty to def, and others to true */
 bool string_bool(const std::string& str,bool def=false);
@@ -390,10 +422,18 @@ bool word_completion(std::string& text, std::vector<std::string>& wordlist);
 bool word_match(const std::string& message, const std::string& word);
 
 /**
- * Match using '*' as any number of characters (including none),
- * '+' as one or more characters, and '?' as any one character.
+ * @brief Performs pattern matching with wildcards.
+ *
+ * @param str Any byte-string.
+ * @param pat A string of characters with the following interpretation:
+ *            	- @c '*' represents zero or more characters.
+ *            	- @c '+' represents one or more characters.
+ *				- @c '?' represents exactly one character.
+ *				- All other characters are interpreted literally.
+ *
+ * @returns @c true if @p str matches @p pat
  */
-bool wildcard_string_match(const std::string& str, const std::string& match);
+[[nodiscard]] bool wildcard_string_match(std::string_view str, std::string_view pat) noexcept;
 
 /**
  * Converts '*' to '%' and optionally escapes '_'.

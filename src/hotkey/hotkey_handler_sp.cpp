@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2014 - 2024
+	Copyright (C) 2014 - 2025
 	by Chris Beck <render787@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -30,6 +30,7 @@
 #include "map/map.hpp"
 #include "save_index.hpp"
 #include "saved_game.hpp"
+#include "savegame.hpp"
 #include "resources.hpp"
 #include "replay.hpp"
 
@@ -53,29 +54,29 @@ void playsingle_controller::hotkey_handler::recruit(){
 	if (!browse())
 		menu_handler_.recruit(play_controller_.current_side(), mouse_handler_.get_last_hex());
 	else if (whiteboard_manager_->is_active())
-		menu_handler_.recruit(gui()->viewing_side(), mouse_handler_.get_last_hex());
+		menu_handler_.recruit(gui()->viewing_team().side(), mouse_handler_.get_last_hex());
 }
 
 void playsingle_controller::hotkey_handler::repeat_recruit(){
 	if (!browse())
 		menu_handler_.repeat_recruit(play_controller_.current_side(), mouse_handler_.get_last_hex());
 	else if (whiteboard_manager_->is_active())
-		menu_handler_.repeat_recruit(gui()->viewing_side(), mouse_handler_.get_last_hex());
+		menu_handler_.repeat_recruit(gui()->viewing_team().side(), mouse_handler_.get_last_hex());
 }
 
 void playsingle_controller::hotkey_handler::recall(){
 	if (!browse())
 		menu_handler_.recall(play_controller_.current_side(), mouse_handler_.get_last_hex());
 	else if (whiteboard_manager_->is_active())
-		menu_handler_.recall(gui()->viewing_side(), mouse_handler_.get_last_hex());
+		menu_handler_.recall(gui()->viewing_team().side(), mouse_handler_.get_last_hex());
 }
 
 void playsingle_controller::hotkey_handler::toggle_shroud_updates(){
-	menu_handler_.toggle_shroud_updates(gui()->viewing_team()+1);
+	menu_handler_.toggle_shroud_updates(gui()->viewing_team().side());
 }
 
 void playsingle_controller::hotkey_handler::update_shroud_now(){
-	menu_handler_.update_shroud_now(gui()->viewing_team()+1);
+	menu_handler_.update_shroud_now(gui()->viewing_team().side());
 }
 
 void playsingle_controller::hotkey_handler::end_turn(){
@@ -148,7 +149,7 @@ void playsingle_controller::hotkey_handler::whiteboard_toggle() {
 	whiteboard_manager_->set_active(!whiteboard_manager_->is_active());
 
 	if (whiteboard_manager_->is_active()) {
-		std::string hk = hotkey::get_names(hotkey::hotkey_command::get_command_by_command(hotkey::HOTKEY_WB_TOGGLE).id);
+		std::string hk = hotkey::get_names(hotkey::get_hotkey_command(hotkey::HOTKEY_WB_TOGGLE).id);
 		utils::string_map symbols;
 		symbols["hotkey"] = hk;
 
@@ -184,7 +185,7 @@ void playsingle_controller::hotkey_handler::whiteboard_bump_down_action()
 
 void playsingle_controller::hotkey_handler::whiteboard_suppose_dead()
 {
-	unit* curr_unit;
+	const unit* curr_unit;
 	map_location loc;
 	{ wb::future_map future; //start planned unit map scope
 		curr_unit = &*menu_handler_.current_unit();
@@ -193,11 +194,11 @@ void playsingle_controller::hotkey_handler::whiteboard_suppose_dead()
 	whiteboard_manager_->save_suppose_dead(*curr_unit,loc);
 }
 
-hotkey::ACTION_STATE playsingle_controller::hotkey_handler::get_action_state(const hotkey::ui_command& cmd) const
+hotkey::action_state playsingle_controller::hotkey_handler::get_action_state(const hotkey::ui_command& cmd) const
 {
 	switch(cmd.hotkey_command) {
 	case hotkey::HOTKEY_WB_TOGGLE:
-		return whiteboard_manager_->is_active() ? hotkey::ACTION_ON : hotkey::ACTION_OFF;
+		return hotkey::on_if(whiteboard_manager_->is_active());
 	default:
 		return play_controller::hotkey_handler::get_action_state(cmd);
 	}
@@ -237,16 +238,16 @@ bool playsingle_controller::hotkey_handler::can_execute_command(const hotkey::ui
 
 		case hotkey::HOTKEY_DELAY_SHROUD:
 			return !linger()
-				&& (viewing_team().uses_fog() || viewing_team().uses_shroud())
-				&& viewing_team_is_playing()
-				&& viewing_team().is_local_human()
+				&& (gui()->viewing_team().uses_fog() || gui()->viewing_team().uses_shroud())
+				&& gui()->viewing_team_is_playing()
+				&& gui()->viewing_team().is_local_human()
 				&& !events::commands_disabled;
 		case hotkey::HOTKEY_UPDATE_SHROUD:
 			return !linger()
-				&& viewing_team_is_playing()
-				&& viewing_team().is_local_human()
+				&& gui()->viewing_team_is_playing()
+				&& gui()->viewing_team().is_local_human()
 				&& !events::commands_disabled
-				&& viewing_team().auto_shroud_updates() == false;
+				&& gui()->viewing_team().auto_shroud_updates() == false;
 
 		// Commands we can only do if in debug mode
 		case hotkey::HOTKEY_CREATE_UNIT:
@@ -316,34 +317,33 @@ bool playsingle_controller::hotkey_handler::can_execute_command(const hotkey::ui
 
 void playsingle_controller::hotkey_handler::load_autosave(const std::string& filename, bool start_replay)
 {
-	if(!start_replay) {
-		play_controller::hotkey_handler::load_autosave(filename);
-	}
-	auto invalid_save_file = [this, filename](std::string msg){
-		if(playsingle_controller_.is_networked_mp()) {
-			gui2::show_error_message(msg);
-		} else {
-			const int res = gui2::show_message("", msg + _("Do you want to load it anyway?"), gui2::dialogs::message::yes_no_buttons);
-			if(res != gui2::retval::CANCEL) {
-				play_controller::hotkey_handler::load_autosave(filename);
-			}
-		}
-	};
-
 	config savegame;
-	std::string error_log;
-	savegame::read_save_file(filesystem::get_saves_dir(), filename, savegame, &error_log);
-
-	if(!error_log.empty()) {
-		invalid_save_file(_("The file you have tried to load is corrupt: '") + error_log);
+	try {
+		savegame = savegame::read_save_file(filesystem::get_saves_dir(), filename);
+	} catch(const game::load_game_failed& e) {
+		gui2::show_error_message(_("The file you have tried to load is corrupt") + "\n\n" + e.what());
 		return;
 	}
+
+	// TODO: look into loading autosaves by resetting the gamestate. Since we're going
+	// back a turn, we don't strictly need to exit the game and reload the game config.
+	// Perhaps we could neverage the replay system directly instead of autosave files?
+	if(!start_replay) {
+#ifdef __cpp_designated_initializers
+		throw savegame::load_game_exception({ .load_config = std::move(savegame) });
+#else
+		savegame::load_game_metadata payload;
+		payload.load_config = std::move(savegame);
+		throw savegame::load_game_exception(std::move(payload));
+#endif
+	}
+
 	if(savegame.child_or_empty("snapshot")["replay_pos"].to_int(-1) < 0 ) {
-		invalid_save_file(_("The file you have tried to load has no replay information. "));
+		gui2::show_error_message(_("The file you have tried to load has no replay information."));
 		return;
 	}
 	if(!playsingle_controller_.get_saved_game().get_replay().is_ancestor(savegame.child_or_empty("replay"))) {
-		invalid_save_file(_("The file you have tried to load is not from the current session."));
+		gui2::show_error_message(_("The file you have tried to load is not from the current session."));
 		return;
 	}
 

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013 - 2024
+	Copyright (C) 2013 - 2025
 	by Andrius Silinskas <silinskas.andrius@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -21,6 +21,7 @@
 #include "log.hpp"
 #include "mt_rng.hpp"
 #include "units/types.hpp"
+#include "utils/general.hpp"
 
 #include <algorithm>
 
@@ -30,18 +31,19 @@ static lg::log_domain log_mp_connect_engine("mp/connect/engine");
 
 namespace ng
 {
+era_metadata::era_metadata(const config& cfg)
+	: faction_sort_order(sort_order::get_enum(cfg["auto_sort"].str()).value_or(sort_order::type::ascending))
+{
+}
 
-flg_manager::flg_manager(const std::vector<const config*>& era_factions,
+flg_manager::flg_manager(const era_metadata& era_info, const std::vector<const config*>& era_factions,
 		const config& side, const bool lock_settings, const bool use_map_settings, const bool saved_game)
-	: era_factions_(era_factions)
+	: era_info_(era_info)
+	, era_factions_(era_factions)
 	, side_num_(side["side"].to_int())
 	, faction_from_recruit_(side["faction_from_recruit"].to_bool())
-	, original_type_(get_default_faction(side)["type"].str())
-	, original_gender_(get_default_faction(side)["gender"].str())
-	, savegame_gender_()
 	, original_faction_(get_default_faction(side)["faction"].str())
 	, original_recruit_(utils::split(get_default_faction(side)["recruit"].str()))
-	, choose_faction_by_leader_(side["leader"].str())
 	, saved_game_(saved_game)
 	, has_no_recruits_(original_recruit_.empty() && side["previous_recruits"].empty())
 	, faction_lock_(side["faction_lock"].to_bool(lock_settings))
@@ -55,48 +57,55 @@ flg_manager::flg_manager(const std::vector<const config*>& era_factions,
 	, current_faction_(nullptr)
 	, current_leader_("null")
 	, current_gender_("null")
-	, default_leader_type_(side["type"])
-	, default_leader_gender_(side["gender"])
-	, default_leader_cfg_(nullptr)
+	, default_leader_type_("")
+	, default_leader_gender_("")
 {
-	const std::string& leader_id = side["id"];
-	if(!leader_id.empty()) {
-		// Check if leader was carried over and now is in [unit] tag.
-		default_leader_cfg_ = side.find_child("unit", "id", leader_id).ptr();
-		if(default_leader_cfg_) {
-			default_leader_type_ = (*default_leader_cfg_)["type"].str();
-			default_leader_gender_ = (*default_leader_cfg_)["gender"].str();
-		} else {
-			default_leader_cfg_ = nullptr;
-		}
-	} else if(default_leader_type_.empty()) {
-		// Find a unit which can recruit.
-		for(const config& side_unit : side.child_range("unit")) {
-			if(side_unit["canrecruit"].to_bool()) {
-				default_leader_type_ = side_unit["type"].str();
-				default_leader_gender_ = side_unit["gender"].str();
-				default_leader_cfg_ = &side_unit;
-				break;
-			}
+	std::string leader_id = side["id"];
+	bool found_leader;
+
+	leader_lock_ = leader_lock_ && (use_map_settings || lock_settings || default_leader_type_.empty());
+	faction_lock_ = faction_lock_ && (use_map_settings || lock_settings);
+
+	auto set_leader = [&](const config& cfg) {
+		found_leader = true;
+		leader_id = cfg["id"];
+		default_leader_type_ = cfg["type"];
+		default_leader_gender_ = cfg["gender"];
+	};
+
+	if(auto p_cfg = side.optional_child("leader")) {
+		set_leader(*p_cfg);
+		// If we are not the host of the game it can happen that the code overwrote
+		// the [leaders] type/gender and the original values are found in [default_faction]
+		// we still need the id from p_cfg tho.
+		if(auto p_ocfg = get_default_faction(side).optional_child("leader")) {
+			default_leader_type_ = (*p_ocfg)["type"];
+			default_leader_gender_ = (*p_ocfg)["gender"];
 		}
 	}
+
+	if(!leader_id.empty()) {
+		// Check if leader was carried over and now is in [unit] tag.
+		// (in this case we dont allow changing it, but we still want to show the corect unit type in the dialogs)
+		if(auto p_cfg = side.find_child("unit", "id", leader_id)) {
+			set_leader(*p_cfg);
+			leader_lock_ = true;
+		}
+	}
+
+	if(!found_leader) {
+		// Find a unit which can recruit.
+		if(auto p_cfg = side.find_child("unit", "canrecruit", "yes")) {
+			set_leader(*p_cfg);
+			leader_lock_ = true;
+		}
+	}
+
 
 	if(!default_leader_type_.empty() && default_leader_type_ != "random") {
 		if(unit_types.find(default_leader_type_) == nullptr) {
 			default_leader_type_.clear();
 			default_leader_gender_.clear();
-			default_leader_cfg_ = nullptr;
-		}
-	}
-
-	leader_lock_ = leader_lock_ && (use_map_settings || lock_settings || default_leader_type_.empty());
-	faction_lock_ = faction_lock_ && (use_map_settings || lock_settings);
-
-	//TODO: this code looks wrong, we should probably just use default_leader_gender_ from above.
-	for(const config& side_unit : side.child_range("unit")) {
-		if(current_leader_ == side_unit["type"] && side_unit["canrecruit"].to_bool()) {
-			savegame_gender_ = side_unit["gender"].str();
-			break;
 		}
 	}
 
@@ -181,21 +190,18 @@ void flg_manager::resolve_random(randomness::mt_rng& rng, const std::vector<std:
 
 			const std::string& faction_id = faction["id"];
 
-			if(!faction_choices.empty() && std::find(faction_choices.begin(), faction_choices.end(),
-					faction_id) == faction_choices.end()) {
+			if(!faction_choices.empty() && !utils::contains(faction_choices, faction_id)) {
 				continue;
 			}
 
-			if(!faction_excepts.empty() && std::find(faction_excepts.begin(), faction_excepts.end(),
-					faction_id) != faction_excepts.end()) {
+			if(!faction_excepts.empty() && utils::contains(faction_excepts, faction_id)) {
 				continue;
 			}
 
 			// This side is consistent with this random faction, remember as a fallback.
 			fallback_nonrandom_sides.push_back(i);
 
-			if(!avoid.empty() && std::find(avoid.begin(), avoid.end(),
-					faction_id) != avoid.end()) {
+			if(!avoid.empty() && utils::contains(avoid, faction_id)) {
 				continue;
 			}
 
@@ -275,7 +281,7 @@ void flg_manager::update_available_factions()
 		}
 
 		// Add default faction to the top of the list.
-		if(original_faction_ == (*faction)["id"]) {
+		if((*faction)["id"] == original_faction_) {
 			available_factions_.insert(available_factions_.begin(), faction);
 		} else {
 			available_factions_.push_back(faction);
@@ -318,11 +324,7 @@ void flg_manager::update_available_leaders()
 
 			// Remove duplicate leaders.
 			std::set<std::string> seen;
-			auto pos = std::remove_if(available_leaders_.begin(), available_leaders_.end(),
-				[&seen](const std::string& s) { return !seen.insert(s).second; }
-			);
-
-			available_leaders_.erase(pos, available_leaders_.end());
+			utils::erase_if(available_leaders_, [&seen](const std::string& s) { return !seen.insert(s).second; });
 
 			if(available_leaders_.size() > 1) {
 				available_leaders_.insert(available_leaders_.begin() + random_pos, "random");
@@ -344,8 +346,8 @@ void flg_manager::update_available_genders()
 	available_genders_.clear();
 
 	if(saved_game_) {
-		if(!savegame_gender_.empty()) {
-			available_genders_.push_back(savegame_gender_);
+		if(!default_leader_gender_.empty()) {
+			available_genders_.push_back(default_leader_gender_);
 		}
 	} else {
 		if(const unit_type* unit = unit_types.find(current_leader_)) {
@@ -396,9 +398,7 @@ void flg_manager::update_choosable_leaders()
 	choosable_leaders_ = available_leaders_;
 
 	if(!default_leader_type_.empty() && leader_lock_) {
-		if(std::find(available_leaders_.begin(), available_leaders_.end(),
-			default_leader_type_) != available_leaders_.end()) {
-
+		if(utils::contains(available_leaders_, default_leader_type_)) {
 			choosable_leaders_.clear();
 			choosable_leaders_.push_back(default_leader_type_);
 		}
@@ -420,7 +420,7 @@ void flg_manager::update_choosable_genders()
 			default_gender = choosable_genders_.front();
 		}
 
-		if(std::find(available_genders_.begin(), available_genders_.end(), default_gender) != available_genders_.end()) {
+		if(utils::contains(available_genders_, default_gender)) {
 			choosable_genders_.clear();
 			choosable_genders_.push_back(default_gender);
 		}
@@ -430,10 +430,8 @@ void flg_manager::update_choosable_genders()
 void flg_manager::select_default_faction()
 {
 	const std::string& default_faction = original_faction_;
-	auto default_faction_it = std::find_if(choosable_factions_.begin(), choosable_factions_.end(),
-		[&default_faction](const config* faction) {
-			return (*faction)["id"] == default_faction;
-		});
+	auto default_faction_it = utils::ranges::find(choosable_factions_, default_faction,
+		[](const config* faction) { return (*faction)["id"]; });
 
 	if(default_faction_it != choosable_factions_.end()) {
 		set_current_faction(std::distance(choosable_factions_.begin(), default_faction_it));
@@ -455,10 +453,6 @@ int flg_manager::find_suitable_faction() const
 		// Choose based on recruit.
 		find = original_recruit_;
 		search_field = "recruit";
-	} else if(!choose_faction_by_leader_.empty()) {
-		// Choose based on leader.
-		find.push_back(choose_faction_by_leader_);
-		search_field = "leader";
 	} else {
 		find.push_back("Custom");
 		search_field = "id";

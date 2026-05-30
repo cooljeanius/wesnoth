@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2024
+	Copyright (C) 2003 - 2025
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -18,12 +18,13 @@
 class terrain_type;
 class unit;
 class unit_type;
-class game_config_view;
 
 #include <memory>
 #include <string>
 
-namespace help {
+namespace help
+{
+struct section;
 
 /**
  * The help implementation caches data parsed from the game_config. This class
@@ -36,47 +37,51 @@ namespace help {
  *
  * Creating two instances of this will cause an assert.
  */
-struct help_manager {
-	help_manager(const game_config_view *game_config);
+class help_manager
+{
+public:
 	help_manager(const help_manager&) = delete;
 	help_manager& operator=(const help_manager&) = delete;
-	~help_manager();
-};
 
-/**
- * Helper function for any of the show_help functions to control the cache's
- * lifecycle; can also be used by any other caller that wants to ensure the
- * cache is reused over multiple show_help calls.
- *
- * Treat the return type as opaque, it can return nullptr on success. Also
- * don't extend the cache lifecycle beyond the lifecycle of the
- * game_config_manager or over a reload of the game config.
- *
- *@pre game_config_manager has been initialised
- */
-std::unique_ptr<help_manager> ensure_cache_lifecycle();
+	~help_manager();
+
+	/** Returns the existing help_manager instance, or a newly allocated object otherwise. */
+	static std::shared_ptr<help_manager> get_instance();
+
+	/**
+	 * Regenerates the cached help topics if necessary.
+	 *
+	 * @returns the toplevel section.
+	 */
+	const section& regenerate();
+
+private:
+	/**
+	 * Private default constructor.
+	 *
+	 * Use @ref get_instance to get a managed instance instead.
+	 */
+	help_manager();
+
+	class implementation;
+
+	/** Pointer-to-implementation to reduce include dependencies. */
+	std::unique_ptr<implementation> impl_;
+
+	static inline std::weak_ptr<help_manager> singleton_;
+};
 
 /**
  * Open the help browser. The help browser will have the topic with id
  * show_topic open if it is not the empty string. The default topic
  * will be shown if show_topic is the empty string.
- *
- *@pre game_config_manager has been initialised, or the instance of help_manager
- * has been created with an alternative config.
  */
-void show_help(const std::string& show_topic="", int xloc=-1, int yloc=-1);
+void show_help(const std::string& show_topic = "");
 
-/** wrapper to add unit prefix and hiding symbol */
-void show_unit_help(const std::string& unit_id, bool has_variations=false,
-				bool hidden = false, int xloc=-1, int yloc=-1);
-
-/** wrapper to add variation prefix and hiding symbol */
-void show_variation_help(const std::string &unit_id, const std::string &variation,
-				bool hidden = false, int xloc=-1, int yloc=-1);
-
-/** wrapper to add terrain prefix and hiding symbol */
-void show_terrain_help(const std::string& unit_id, bool hidden = false,
-				int xloc = -1, int yloc = -1);
+/**
+ * Given a unit type, find the corresponding help topic's id.
+ */
+std::string get_unit_type_help_id(const unit_type& t);
 
 void show_unit_description(const unit_type &t);
 void show_unit_description(const unit &u);

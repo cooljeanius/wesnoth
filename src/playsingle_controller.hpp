@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2006 - 2024
+	Copyright (C) 2006 - 2025
 	by Joerg Hinrichs <joerg.hinrichs@alice-dsl.de>
 	Copyright (C) 2003 by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
@@ -71,10 +71,11 @@ public:
 	virtual void on_not_observer() override {}
 	virtual bool is_host() const { return true; }
 	virtual void maybe_linger();
+	virtual bool end_linger() { return end_turn_requested_; }
 
 	void end_turn();
 	void force_end_turn() override;
-	void require_end_turn();
+	void require_end_turn() override;
 
 	class hotkey_handler;
 	std::string describe_result() const;

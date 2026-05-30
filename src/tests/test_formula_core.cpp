@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008 - 2024
+	Copyright (C) 2008 - 2025
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -17,7 +17,6 @@
 #include <boost/test/unit_test.hpp>
 
 #include <array>
-#include <ctime>
 
 #include "formula/formula.hpp"
 #include "formula/callable.hpp"
@@ -48,7 +47,7 @@ class mock_party : public formula_callable {
 				members.emplace_back(i_[n].fake_ptr());
 			}
 
-			return variant(members);
+			return variant(std::move(members));
 		} else if(key == "char") {
 			return variant(c_.fake_ptr());
 		} else {

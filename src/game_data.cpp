@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2024
+	Copyright (C) 2003 - 2025
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -85,7 +85,7 @@ config& game_data::get_variable_cfg(const std::string& key)
 	return get_variable_access_write(key).as_container();
 }
 
-void game_data::set_variable(const std::string& key, const t_string& value)
+void game_data::set_variable(const std::string& key, const config::attribute_value& value)
 {
 	try
 	{
@@ -162,7 +162,7 @@ void game_data::activate_scope_variable(std::string var_name) const
 		var_name.erase(itor, var_name.end());
 	}
 
-	for (scoped_wml_variable* v : utils::reversed_view(scoped_variables)) {
+	for (scoped_wml_variable* v : scoped_variables | utils::views::reverse) {
 		if (v->name() == var_name) {
 			recursive_activation = true;
 			if (!v->activated()) {
@@ -179,7 +179,7 @@ game_data::PHASE game_data::read_phase(const config& cfg)
 	if(cfg["playing_team"].empty()) {
 		return game_data::PRELOAD;
 	}
-	if(!cfg["init_side_done"]) {
+	if(!cfg["init_side_done"].to_bool()) {
 		return game_data::TURN_STARTING_WAITING;
 	}
 	if(cfg.has_child("end_level_data")) {

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008 - 2024
+	Copyright (C) 2008 - 2025
 	by Jörg Hinrichs <joerg.hinrichs@alice-dsl.de>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -22,6 +22,7 @@
 #include "formatter.hpp"
 #include "formula/string_utils.hpp"
 #include "game_config.hpp"
+#include "game_config_manager.hpp"
 #include "gettext.hpp"
 #include "gui/auxiliary/field.hpp"
 #include "gui/dialogs/game_delete.hpp"
@@ -37,9 +38,12 @@
 #include "picture.hpp"
 #include "preferences/preferences.hpp"
 #include "serialization/string_utils.hpp"
+#include "serialization/markup.hpp"
 #include "utils/general.hpp"
-#include <functional>
+#include "utils/ci_searcher.hpp"
 #include "game_config_view.hpp"
+
+#include <functional>
 
 
 static lg::log_domain log_gameloaddlg{"gui/dialogs/game_load_dialog"};
@@ -53,7 +57,7 @@ namespace gui2::dialogs
 
 REGISTER_DIALOG(game_load)
 
-bool game_load::execute(const game_config_view& cache_config, savegame::load_game_metadata& data)
+bool game_load::execute(savegame::load_game_metadata& data)
 {
 	if(savegame::save_index_class::default_saves_dir()->get_saves_list().empty()) {
 		bool found_files = false;
@@ -71,10 +75,10 @@ bool game_load::execute(const game_config_view& cache_config, savegame::load_gam
 		}
 	}
 
-	return game_load(cache_config, data).show();
+	return game_load(data).show();
 }
 
-game_load::game_load(const game_config_view& cache_config, savegame::load_game_metadata& data)
+game_load::game_load(savegame::load_game_metadata& data)
 	: modal_dialog(window_id())
 	, filename_(data.filename)
 	, save_index_manager_(data.manager)
@@ -83,39 +87,46 @@ game_load::game_load(const game_config_view& cache_config, savegame::load_game_m
 	, cancel_orders_(register_bool("cancel_orders", true, data.cancel_orders))
 	, summary_(data.summary)
 	, games_()
-	, cache_config_(cache_config)
-	, last_words_()
+	, cache_config_(game_config_manager::get()->game_config())
 {
 }
 
-void game_load::pre_show(window& window)
+void game_load::pre_show()
 {
 	// Allow deleting saves with the Delete key.
-	connect_signal_pre_key_press(window, std::bind(&game_load::key_press_callback, this, std::placeholders::_5));
+	connect_signal_pre_key_press(*this, std::bind(&game_load::key_press_callback, this, std::placeholders::_5));
 
-	text_box* filter = find_widget<text_box>(&window, "txtFilter", false, true);
+	text_box* filter = find_widget<text_box>("txtFilter", false, true);
 
-	filter->set_text_changed_callback(std::bind(&game_load::filter_text_changed, this, std::placeholders::_2));
+	filter->on_modified([this](const auto& box) { apply_filter_text(box.text()); });
 
-	listbox& list = find_widget<listbox>(&window, "savegame_list", false);
+	listbox& list = find_widget<listbox>("savegame_list");
 
 	connect_signal_notify_modified(list, std::bind(&game_load::display_savegame, this));
 
-	window.keyboard_capture(filter);
-	window.add_to_keyboard_chain(&list);
+#ifdef __IPHONEOS__
+	// On iOS, opening the load dialog should not immediately summon the
+	// software keyboard just because the optional filter field exists.
+	keyboard_capture(&list);
+#else
+	keyboard_capture(filter);
+#endif
+	add_to_keyboard_chain(&list);
 
-	list.register_sorting_option(0, [this](const int i) { return games_[i].name(); });
-	list.register_sorting_option(1, [this](const int i) { return games_[i].modified(); });
+	list.set_sorters(
+		[this](const std::size_t i) { return games_[i].name(); },
+ 		[this](const std::size_t i) { return games_[i].modified(); }
+	);
 
 	populate_game_list();
 
-	connect_signal_mouse_left_click(find_widget<button>(&window, "delete", false),
+	connect_signal_mouse_left_click(find_widget<button>("delete"),
 			std::bind(&game_load::delete_button_callback, this));
 
-	connect_signal_mouse_left_click(find_widget<button>(&window, "browse_saves_folder", false),
+	connect_signal_mouse_left_click(find_widget<button>("browse_saves_folder"),
 			std::bind(&game_load::browse_button_callback, this));
 
-	menu_button& dir_list = find_widget<menu_button>(&window, "dirList", false);
+	menu_button& dir_list = find_widget<menu_button>("dirList");
 
 	dir_list.set_use_markup(true);
 	set_save_dir_list(dir_list);
@@ -150,28 +161,27 @@ void game_load::set_save_dir_list(menu_button& dir_list)
 
 void game_load::populate_game_list()
 {
-	listbox& list = find_widget<listbox>(get_window(), "savegame_list", false);
+	listbox& list = find_widget<listbox>("savegame_list");
 
 	list.clear();
 
 	games_ = save_index_manager_->get_saves_list();
 
 	for(const auto& game : games_) {
-		widget_data data;
-		widget_item item;
-
 		std::string name = game.name();
 		utils::ellipsis_truncate(name, 40);
-		item["label"] = name;
-		data.emplace("filename", item);
 
-		item["label"] = game.format_time_summary();
-		data.emplace("date", item);
-
-		list.add_row(data);
+		list.add_row(widget_data{
+			{ "filename", {
+				{ "label", std::move(name) }
+			}},
+			{ "date", {
+				{ "label", game.format_time_summary() }
+			}},
+		});
 	}
 
-	find_widget<button>(get_window(), "delete", false).set_active(!save_index_manager_->read_only());
+	find_widget<button>("delete").set_active(!save_index_manager_->read_only());
 }
 
 void game_load::display_savegame_internal(const savegame::save_info& game)
@@ -179,13 +189,13 @@ void game_load::display_savegame_internal(const savegame::save_info& game)
 	filename_ = game.name();
 	summary_  = game.summary();
 
-	find_widget<minimap>(get_window(), "minimap", false)
+	find_widget<minimap>("minimap")
 			.set_map_data(summary_["map_data"]);
 
-	find_widget<label>(get_window(), "lblScenario", false)
-			.set_label(summary_["label"]);
+	find_widget<label>("lblScenario")
+			.set_label(summary_["label"].t_str());
 
-	listbox& leader_list = find_widget<listbox>(get_window(), "leader_list", false);
+	listbox& leader_list = find_widget<listbox>("leader_list");
 
 	leader_list.clear();
 
@@ -220,14 +230,14 @@ void game_load::display_savegame_internal(const savegame::save_info& game)
 		item["label"] = leader_image;
 		data.emplace("imgLeader", item);
 
-		item["label"] = leader["leader_name"];
+		item["label"] = leader["leader_name"].t_str();
 		data.emplace("leader_name", item);
 
-		item["label"] = leader["gold"];
+		item["label"] = leader["gold"].str();
 		data.emplace("leader_gold", item);
 
 		// TRANSLATORS: "reserve" refers to units on the recall list
-		item["label"] = VGETTEXT("$active active, $reserve reserve", {{"active", leader["units"]}, {"reserve", leader["recall_units"]}});
+		item["label"] = VGETTEXT("$active active, $reserve reserve", {{"active", leader["units"].str()}, {"reserve", leader["recall_units"].str()}});
 		data.emplace("leader_troops", item);
 
 		leader_list.add_row(data);
@@ -244,14 +254,14 @@ void game_load::display_savegame_internal(const savegame::save_info& game)
 	evaluate_summary_string(str, summary_);
 
 	// The new label value may have more or less lines than the previous value, so invalidate the layout.
-	find_widget<styled_widget>(get_window(), "slblSummary", false).set_label(str.str());
-	//get_window()->invalidate_layout();
+	find_widget<styled_widget>("slblSummary").set_label(str.str());
+	//invalidate_layout();
 
 	toggle_button& replay_toggle            = dynamic_cast<toggle_button&>(*show_replay_->get_widget());
 	toggle_button& cancel_orders_toggle     = dynamic_cast<toggle_button&>(*cancel_orders_->get_widget());
 	toggle_button& change_difficulty_toggle = dynamic_cast<toggle_button&>(*change_difficulty_->get_widget());
 
-	const bool is_replay = savegame::loadgame::is_replay_save(summary_);
+	const bool is_replay = savegame::is_replay_save(summary_);
 	const bool is_scenario_start = summary_["turn"].empty();
 
 	// Always toggle show_replay on if the save is a replay
@@ -272,11 +282,11 @@ void game_load::display_savegame()
 	bool successfully_displayed_a_game = false;
 
 	try {
-		const int selected_row = find_widget<listbox>(get_window(), "savegame_list", false).get_selected_row();
+		const int selected_row = find_widget<listbox>("savegame_list").get_selected_row();
 		if(selected_row < 0) {
-			find_widget<button>(get_window(), "delete", false).set_active(false);
+			find_widget<button>("delete").set_active(false);
 		} else {
-			find_widget<button>(get_window(), "delete", false).set_active(!save_index_manager_->read_only());
+			find_widget<button>("delete").set_active(!save_index_manager_->read_only());
 			game_load::display_savegame_internal(games_[selected_row]);
 			successfully_displayed_a_game = true;
 		}
@@ -288,13 +298,13 @@ void game_load::display_savegame()
 	}
 
 	if(!successfully_displayed_a_game) {
-		find_widget<minimap>(get_window(), "minimap", false).set_map_data("");
-		find_widget<label>(get_window(), "lblScenario", false)
+		find_widget<minimap>("minimap").set_map_data("");
+		find_widget<label>("lblScenario")
 			.set_label("");
-		find_widget<styled_widget>(get_window(), "slblSummary", false)
+		find_widget<styled_widget>("slblSummary")
 			.set_label("");
 
-		listbox& leader_list = find_widget<listbox>(get_window(), "leader_list", false);
+		listbox& leader_list = find_widget<listbox>("leader_list");
 		leader_list.clear();
 
 		toggle_button& replay_toggle            = dynamic_cast<toggle_button&>(*show_replay_->get_widget());
@@ -307,59 +317,22 @@ void game_load::display_savegame()
 	}
 
 	// Disable Load button if nothing is selected or if the currently selected file can't be loaded
-	find_widget<button>(get_window(), "ok", false).set_active(successfully_displayed_a_game);
+	find_widget<button>("ok").set_active(successfully_displayed_a_game);
 
 	// Disable 'Enter' loading in the same circumstance
-	get_window()->set_enter_disabled(!successfully_displayed_a_game);
+	set_enter_disabled(!successfully_displayed_a_game);
 }
 
-void game_load::filter_text_changed(const std::string& text)
+void game_load::apply_filter_text(const std::string& text)
 {
-	apply_filter_text(text, false);
-}
-
-void game_load::apply_filter_text(const std::string& text, bool force)
-{
-	listbox& list = find_widget<listbox>(get_window(), "savegame_list", false);
-
-	const std::vector<std::string> words = utils::split(text, ' ');
-
-	if(words == last_words_ && !force)
-		return;
-	last_words_ = words;
-
-	boost::dynamic_bitset<> show_items;
-	show_items.resize(list.get_item_count(), true);
-
-	if(!text.empty()) {
-		for(unsigned int i = 0; i < list.get_item_count() && i < games_.size(); i++) {
-			bool found = false;
-			for(const auto & word : words)
-			{
-				found = std::search(games_[i].name().begin(),
-									games_[i].name().end(),
-									word.begin(),
-									word.end(),
-									utils::chars_equal_insensitive)
-						!= games_[i].name().end();
-
-				if(!found) {
-					// one word doesn't match, we don't reach words.end()
-					break;
-				}
-			}
-
-			show_items[i] = found;
-		}
-	}
-
-	list.set_row_shown(show_items);
+	find_widget<listbox>("savegame_list").filter_rows_by(
+		[this, match = translation::make_ci_matcher(text)](std::size_t row) { return match(games_[row].name()); });
 }
 
 void game_load::evaluate_summary_string(std::stringstream& str, const config& cfg_summary)
 {
 	if(cfg_summary["corrupt"].to_bool()) {
-		str << "\n<span color='#f00'>" << _("(Invalid)") << "</span>";
+		str << "\n" << markup::span_color("#f00", _("(Invalid)"));
 		// \todo: this skips the catch() statement in display_savegame. Low priority, as the
 		// dialog's state is reasonable; the "load" button is inactive, the "delete" button is
 		// active, and (cosmetic bug) it leaves the "change difficulty" toggle active. Can be
@@ -374,16 +347,11 @@ void game_load::evaluate_summary_string(std::stringstream& str, const config& cf
 	if(campaign_type_enum) {
 		switch(*campaign_type_enum) {
 			case campaign_type::type::scenario: {
-				const config* campaign = nullptr;
-				if(!campaign_id.empty()) {
-					if(auto c = cache_config_.find_child("campaign", "id", campaign_id)) {
-						campaign = c.ptr();
-					}
-				}
-
+				const auto campaign = cache_config_.find_child("campaign", "id", campaign_id);
 				utils::string_map symbols;
-				if(campaign != nullptr) {
-					symbols["campaign_name"] = (*campaign)["name"];
+
+				if(campaign) {
+					symbols["campaign_name"] = (*campaign)["name"].t_str();
 				} else {
 					// Fallback to nontranslatable campaign id.
 					symbols["campaign_name"] = "(" + campaign_id + ")";
@@ -392,7 +360,7 @@ void game_load::evaluate_summary_string(std::stringstream& str, const config& cf
 				str << VGETTEXT("Campaign: $campaign_name", symbols);
 
 				// Display internal id for debug purposes if we didn't above
-				if(game_config::debug && (campaign != nullptr)) {
+				if(game_config::debug && campaign) {
 					str << '\n' << "(" << campaign_id << ")";
 				}
 				break;
@@ -413,7 +381,7 @@ void game_load::evaluate_summary_string(std::stringstream& str, const config& cf
 
 	str << "\n";
 
-	if(savegame::loadgame::is_replay_save(cfg_summary)) {
+	if(savegame::is_replay_save(cfg_summary)) {
 		str << _("Replay");
 	} else if(!cfg_summary["turn"].empty()) {
 		str << _("Turn") << " " << cfg_summary["turn"];
@@ -425,18 +393,11 @@ void game_load::evaluate_summary_string(std::stringstream& str, const config& cf
 		switch (*campaign_type_enum) {
 		case campaign_type::type::scenario:
 		case campaign_type::type::multiplayer: {
-			const config* campaign = nullptr;
-			if (!campaign_id.empty()) {
-				if (auto c = cache_config_.find_child("campaign", "id", campaign_id)) {
-					campaign = c.ptr();
-				}
-			}
-
 			// 'SCENARIO' or SP should only ever be campaigns
 			// 'MULTIPLAYER' may be a campaign with difficulty or single scenario without difficulty
 			// For the latter do not show the difficulty - even though it will be listed as
 			// NORMAL -> Medium in the save file it should not be considered valid (GitHub Issue #5321)
-			if (campaign != nullptr) {
+			if(auto campaign = cache_config_.find_child("campaign", "id", campaign_id)) {
 				str << "\n" << _("Difficulty: ");
 				try {
 					const config& difficulty = campaign->find_mandatory_child("difficulty", "define", cfg_summary["difficulty"]);
@@ -486,7 +447,7 @@ void game_load::browse_button_callback()
 
 void game_load::delete_button_callback()
 {
-	listbox& list = find_widget<listbox>(get_window(), "savegame_list", false);
+	listbox& list = find_widget<listbox>("savegame_list");
 
 	const std::size_t index = std::size_t(list.get_selected_row());
 	if(index < games_.size()) {
@@ -517,11 +478,11 @@ void game_load::key_press_callback(const SDL_Keycode key)
 	//
 	// I'm not sure if this check was necessary when I first added this feature
 	// (I didn't check at the time), but regardless, it's needed now. If it turns
-	// out I screwed something up in my refactoring, I'll remove this.
+	// out I screwed something up in my refactoring, I'll remove
 	//
 	// - vultraz, 2017-08-28
 	//
-	if(find_widget<text_box>(get_window(), "txtFilter", false).get_state() == text_box_base::FOCUSED) {
+	if(find_widget<text_box>("txtFilter").get_state() == text_box_base::FOCUSED) {
 		return;
 	}
 
@@ -532,7 +493,7 @@ void game_load::key_press_callback(const SDL_Keycode key)
 
 void game_load::handle_dir_select()
 {
-	menu_button& dir_list = find_widget<menu_button>(get_window(), "dirList", false);
+	menu_button& dir_list = find_widget<menu_button>("dirList");
 
 	const auto& path = dir_list.get_value_config()["path"].str();
 	if(path.empty()) {
@@ -542,8 +503,8 @@ void game_load::handle_dir_select()
 	}
 
 	populate_game_list();
-	if(auto* filter = find_widget<text_box>(get_window(), "txtFilter", false, true)) {
-		apply_filter_text(filter->get_value(), true);
+	if(auto* filter = find_widget<text_box>("txtFilter", false, true)) {
+		apply_filter_text(filter->get_value());
 	}
 	display_savegame();
 }

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2024
+	Copyright (C) 2003 - 2025
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -77,7 +77,7 @@ struct time_of_day
 			&& sounds == o.sounds;
 	}
 
-	void write(config& cfg, std::string textdomain = "") const;
+	void write(config& cfg, const std::string& textdomain = "") const;
 
 	/** The % bonus lawful units receive. Chaotics receive -lawful_bonus. */
 	int lawful_bonus;
@@ -108,7 +108,7 @@ struct time_of_day
 	std::string sounds;
 
 	/**
-	 * Parse config and add time of day entries into passed vector
+	 * Parse config and into a vector of time of day entries.
 	 */
-	static void parse_times(const config& cfg, std::vector<time_of_day>& normal_times);
+	static std::vector<time_of_day> parse_times(const config& cfg);
 };

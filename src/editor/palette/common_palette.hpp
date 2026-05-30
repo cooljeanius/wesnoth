@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2024
+	Copyright (C) 2003 - 2025
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -19,7 +19,7 @@
 #include "tstring.hpp"
 #include "widgets/widget.hpp"
 
-struct SDL_Rect;
+struct rect;
 
 namespace editor {
 
@@ -64,7 +64,7 @@ public:
 	virtual bool can_scroll_down() = 0;
 
 	//drawing
-	virtual void adjust_size(const SDL_Rect& target) = 0;
+	virtual void adjust_size(const rect& target) = 0;
 
 	//group
 	virtual void set_group(std::size_t index) = 0;
@@ -73,14 +73,23 @@ public:
 	virtual const std::vector<item_group>& get_groups() const = 0;
 
 	/** Menu expanding for palette group list */
-	virtual void expand_palette_groups_menu(std::vector<config>& items, int i) = 0;
+	virtual void expand_palette_groups_menu(std::vector<config>& items) = 0;
 
 	//item
 	virtual std::size_t num_items() = 0;
 	virtual std::size_t start_num() = 0;
 	virtual void set_start_item(std::size_t index) = 0;
 
+	/** Whether the hotkey system should the enable GUI button connected to swap(). */
 	virtual bool supports_swap() { return true; }
+	/**
+	 * For tools which support fg and bg items, exchange the two items. Typically, fg and bg mean
+	 * that they're placed by left or right mouse clicks, respectively.
+	 *
+	 * There's a mismatch between class structure and responsibilities here, as part of the UX isn't
+	 * part of the palette. The tool decides what right-click does. Even for the scenery item tool,
+	 * where right-click deletes an item, fg and bg provide a way to switch between two items.
+	 */
 	virtual void swap() = 0;
 
 	virtual std::vector<std::string> action_pressed() const { return std::vector<std::string>(); }

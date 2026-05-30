@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008 - 2024
+	Copyright (C) 2008 - 2025
 	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -137,12 +137,12 @@ unsigned toggle_panel::get_state() const
 	return state_ + COUNT * state_num_;
 }
 
-SDL_Rect toggle_panel::get_client_rect() const
+rect toggle_panel::get_client_rect() const
 {
 	const auto conf = cast_config_to<toggle_panel_definition>();
 	assert(conf);
 
-	SDL_Rect result = get_rectangle();
+	rect result = get_rectangle();
 	result.x += conf->left_border;
 	result.y += conf->top_border;
 	result.w -= conf->left_border + conf->right_border;
@@ -210,19 +210,23 @@ bool toggle_panel::impl_draw_foreground()
 void toggle_panel::signal_handler_mouse_enter(const event::ui_event event,
 											   bool& handled)
 {
+#ifndef __ANDROID__
 	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	set_state(FOCUSED);
 	handled = true;
+#endif
 }
 
 void toggle_panel::signal_handler_mouse_leave(const event::ui_event event,
 											   bool& handled)
 {
+#ifndef __ANDROID__
 	DBG_GUI_E << LOG_HEADER << ' ' << event << ".";
 
 	set_state(ENABLED);
 	handled = true;
+#endif
 }
 
 void
@@ -291,10 +295,10 @@ toggle_panel_definition::toggle_panel_definition(const config& cfg)
 
 toggle_panel_definition::resolution::resolution(const config& cfg)
 	: resolution_definition(cfg)
-	, top_border(cfg["top_border"])
-	, bottom_border(cfg["bottom_border"])
-	, left_border(cfg["left_border"])
-	, right_border(cfg["right_border"])
+	, top_border(cfg["top_border"].to_unsigned())
+	, bottom_border(cfg["bottom_border"].to_unsigned())
+	, left_border(cfg["left_border"].to_unsigned())
+	, right_border(cfg["right_border"].to_unsigned())
 {
 	// Note the order should be the same as the enum state_t in toggle_panel.hpp.
 	for(const auto& c : cfg.child_range("state"))
@@ -314,7 +318,7 @@ builder_toggle_panel::builder_toggle_panel(const config& cfg)
 	: builder_styled_widget(cfg)
 	, grid(nullptr)
 	, retval_id_(cfg["return_value_id"])
-	, retval_(cfg["return_value"])
+	, retval_(cfg["return_value"].to_int())
 {
 	auto c = cfg.optional_child("grid");
 

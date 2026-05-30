@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2024
+	Copyright (C) 2003 - 2025
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -26,11 +26,6 @@
  * with assertions disabled.
  */
 #error "Compilation with NDEBUG defined isn't supported, Wesnoth depends on asserts."
-#endif
-
-// To allow using some optional C++20 features
-#if __cplusplus >= 202002L
-#define HAVE_CXX20
 #endif
 
 #if defined(__clang__)

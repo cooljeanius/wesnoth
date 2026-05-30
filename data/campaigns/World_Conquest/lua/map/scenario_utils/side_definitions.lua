@@ -46,11 +46,13 @@ end
 
 local function add_player_side(scenario, scenario_num, gold)
 	local side_num = #scenario.side + 1
+	local is_defeated = side_num == wml.variables.wc2_defeated_side
+	-- set the defeated side to save_id 4 which means side 4 replaces the defeated side (if side 4 is defeated nothing happens because there are only 3 sides now)
+	local id_str = "wc2_leader" .. (is_defeated and 4 or side_num)
+
 	local side = {
 		side = side_num,
-		type = "Peasant",
-		id = "wc2_leader" .. side_num,
-		save_id = "wc2_leader" .. side_num,
+		save_id = id_str,
 		persistent = true,
 		canrecruit = true,
 		gold = gold,
@@ -61,16 +63,15 @@ local function add_player_side(scenario, scenario_num, gold)
 		village_gold = 2,
 		share_vision = "all",
 		terrain_liked = "",
+		leader = {{
+			type = (scenario_num == 1 and "" or "Peasant"),
+			id = id_str,
+		}}
 	}
 	if scenario_num == 1 then
-		side.type=""
 		side.color_lock = false
 		side.faction_lock = false
 		side.leader_lock = false
-	end
-	if side_num == wml.variables.wc2_defeated_side then
-		side.save_id = "wc2_leader4"
-		side.id = "wc2_leader4"
 	end
 	table.insert(scenario.side, side)
 end

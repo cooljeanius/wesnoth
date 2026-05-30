@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008 - 2024
+	Copyright (C) 2008 - 2025
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -17,7 +17,7 @@
 #include "gui/dialogs/multiplayer/mp_join_game.hpp"
 
 #include "chat_log.hpp"
-#include "font/text_formatting.hpp"
+#include "serialization/markup.hpp"
 #include "formatter.hpp"
 #include "formula/string_utils.hpp"
 #include "game_config.hpp"
@@ -25,7 +25,6 @@
 #include "game_initialization/mp_game_utils.hpp"
 #include "game_initialization/multiplayer.hpp"
 #include "gettext.hpp"
-#include "gui/auxiliary/find_widget.hpp"
 #include "gui/core/timer.hpp"
 #include "gui/dialogs/loading_screen.hpp"
 #include "gui/dialogs/multiplayer/faction_select.hpp"
@@ -70,6 +69,7 @@ mp_join_game::mp_join_game(saved_game& state, wesnothd_connection& connection, c
 	, flg_dialog_(nullptr)
 {
 	set_show_even_without_video(true);
+	set_allow_plugin_skip(false);
 }
 
 mp_join_game::~mp_join_game()
@@ -87,7 +87,7 @@ bool mp_join_game::fetch_game_config()
 {
 	// Ask for the next scenario data, if applicable
 	if(!first_scenario_) {
-		mp::send_to_server(config("load_next_scenario"));
+		mp::send_to_server(config{"load_next_scenario"});
 	}
 
 	bool has_scenario_and_controllers = false;
@@ -215,7 +215,8 @@ static std::string generate_user_description(const config& side)
 
 	const std::string controller_type = side["controller"].str();
 	const std::string reservation = side["current_player"].str();
-	const std::string owner = side["player_id"].str();
+	// Making this string const means it can't be automatically moved when returned from this method
+	std::string owner = side["player_id"].str();
 
 	if(controller_type == side_controller::ai) {
 		return _("Computer Player");
@@ -232,15 +233,15 @@ static std::string generate_user_description(const config& side)
 	}
 }
 
-void mp_join_game::pre_show(window& window)
+void mp_join_game::pre_show()
 {
-	window.set_enter_disabled(true);
-	window.set_escape_disabled(true);
+	set_enter_disabled(true);
+	set_escape_disabled(true);
 
 	//
 	// Set title
 	//
-	label& title = find_widget<label>(&window, "title", false);
+	label& title = find_widget<label>("title");
 	// FIXME: very hacky way to get the game name...
 	title.set_label((formatter() << level_.mandatory_child("multiplayer")["scenario"] << " " << font::unicode_em_dash << " " << get_scenario()["name"].t_str()).str());
 
@@ -252,7 +253,7 @@ void mp_join_game::pre_show(window& window)
 	//
 	// Initialize chatbox and game rooms
 	//
-	chatbox& chat = find_widget<chatbox>(&window, "chat", false);
+	chatbox& chat = find_widget<chatbox>("chat");
 
 	chat.room_window_open(N_("this game"), true, false);
 	chat.active_window_changed();
@@ -261,7 +262,7 @@ void mp_join_game::pre_show(window& window)
 	//
 	// Set up player list
 	//
-	player_list_.reset(new player_list_helper(&window));
+	player_list_.reset(new player_list_helper(this));
 
 	//
 	// Set up the network handling
@@ -273,8 +274,8 @@ void mp_join_game::pre_show(window& window)
 	//
 	plugins_context_.reset(new plugins_context("Multiplayer Join"));
 
-	plugins_context_->set_callback("launch", [&window](const config&) { window.set_retval(retval::OK); }, false);
-	plugins_context_->set_callback("quit",   [&window](const config&) { window.set_retval(retval::CANCEL); }, false);
+	plugins_context_->set_callback("launch", [this](const config&) { set_retval(retval::OK); }, false);
+	plugins_context_->set_callback("quit",   [this](const config&) { set_retval(retval::CANCEL); }, false);
 	plugins_context_->set_callback("chat",   [&chat](const config& cfg) { chat.send_chat_message(cfg["message"], false); }, true);
 }
 
@@ -312,7 +313,8 @@ bool mp_join_game::show_flg_select(int side_num, bool first_time)
 		const bool use_map_settings = level_.mandatory_child("multiplayer")["mp_use_map_settings"].to_bool();
 		const saved_game_mode::type saved_game = saved_game_mode::get_enum(level_.mandatory_child("multiplayer")["savegame"].str()).value_or(saved_game_mode::type::no);
 
-		ng::flg_manager flg(era_factions, *side_choice, lock_settings, use_map_settings, saved_game == saved_game_mode::type::midgame);
+		const auto era_info = ng::era_metadata(*era);
+		ng::flg_manager flg(era_info, era_factions, *side_choice, lock_settings, use_map_settings, saved_game == saved_game_mode::type::midgame);
 
 		{
 			gui2::dialogs::faction_select flg_dialog(flg, color, side_num);
@@ -323,8 +325,7 @@ bool mp_join_game::show_flg_select(int side_num, bool first_time)
 			}
 		}
 
-		config faction;
-		config& change = faction.add_child("change_faction");
+		config change;
 		change["change_faction"] = true;
 		change["name"] = prefs::get().login();
 		change["faction"] = flg.current_faction()["id"];
@@ -333,7 +334,7 @@ bool mp_join_game::show_flg_select(int side_num, bool first_time)
 		// TODO: the host cannot yet handle this and always uses the first side owned by that player.
 		change["side_num"] = side_num;
 
-		mp::send_to_server(faction);
+		mp::send_to_server(config{"change_faction", std::move(change)});
 	}
 
 	return true;
@@ -345,7 +346,7 @@ void mp_join_game::generate_side_list()
 		return;
 	}
 
-	tree_view& tree = find_widget<tree_view>(get_window(), "side_list", false);
+	tree_view& tree = find_widget<tree_view>("side_list");
 
 	tree.clear();
 	team_tree_map_.clear();
@@ -375,14 +376,21 @@ void mp_join_game::generate_side_list()
 		widget_data data;
 		widget_item item;
 
-		const std::string color = !side["color"].empty() ? side["color"] : side["side"].str();
+		const std::string color_str = !side["color"].empty() ? side["color"] : side["side"].str();
+		const auto team_color_it = game_config::team_rgb_colors.find(color_str);
 
-		item["label"] = (formatter() << "<span color='" << font::get_pango_color_from_id(color) << "'>" << side["side"] << "</span>").str();
+		if (team_color_it != game_config::team_rgb_colors.end()) {
+			item["label"] = markup::span_color(team_color_it->second[0], side["side"]);
+		} else {
+			item["label"] = side["side"].str();
+		}
 		data.emplace("side_number", item);
 
 		std::string leader_image = ng::random_enemy_picture;
-		std::string leader_type = side["type"];
-		std::string leader_gender = side["gender"];
+
+		const config& leader = side.child_or_empty("leader");
+		std::string leader_type = leader["type"];
+		std::string leader_gender = leader["gender"];
 		std::string leader_name;
 
 		// If there is a unit which can recruit, use it as a leader.
@@ -398,7 +406,7 @@ void mp_join_game::generate_side_list()
 		if(const unit_type* ut = unit_types.find(leader_type)) {
 			const unit_type& type = ut->get_gender_unit_type(leader_gender);
 
-			leader_image = formatter() << type.image() << "~RC(" << type.flag_rgb() << ">" << color << ")";
+			leader_image = formatter() << type.image() << "~RC(" << type.flag_rgb() << ">" << color_str << ")";
 			leader_name = type.type_name();
 		}
 
@@ -413,7 +421,7 @@ void mp_join_game::generate_side_list()
 		item["label"] = description;
 		data.emplace("leader_type", item);
 
-		item["label"] = side["faction_name"];
+		item["label"] = side["faction_name"].t_str();
 		data.emplace("leader_faction", item);
 
 		std::string gender_icon = "icons/icon-random.png";
@@ -434,7 +442,7 @@ void mp_join_game::generate_side_list()
 			data.emplace("side_gold", item);
 		}
 
-		const int income_amt = side["income"];
+		const int income_amt = side["income"].to_int();
 		if(income_amt != 0) {
 			const std::string income_string = formatter() << (income_amt > 0 ? "+" : "") << income_amt << " " << _("Income");
 
@@ -446,7 +454,7 @@ void mp_join_game::generate_side_list()
 
 		grid& row_grid = node.get_grid();
 
-		auto* select_leader_button = find_widget<button>(&row_grid, "select_leader", false, false);
+		auto* select_leader_button = &row_grid.find_widget<button>("select_leader", false);
 		if(select_leader_button) {
 			if(side["player_id"] == prefs::get().login() && side["allow_changes"].to_bool(true)) {
 				//
@@ -473,8 +481,8 @@ void mp_join_game::generate_side_list()
 		}
 
 		if(income_amt == 0) {
-			find_widget<image>(&row_grid, "income_icon", false).set_visible(widget::visibility::invisible);
-			find_widget<label>(&row_grid, "side_income", false).set_visible(widget::visibility::invisible);
+			row_grid.find_widget<image>("income_icon").set_visible(widget::visibility::invisible);
+			row_grid.find_widget<label>("side_income").set_visible(widget::visibility::invisible);
 		}
 	}
 }
@@ -482,9 +490,7 @@ void mp_join_game::generate_side_list()
 void mp_join_game::close_faction_select_dialog_if_open()
 {
 	if(flg_dialog_) {
-		if(window* w = flg_dialog_->get_window()) {
-			w->set_retval(retval::CANCEL);
-		}
+		flg_dialog_->set_retval(retval::CANCEL);
 	}
 }
 
@@ -502,7 +508,7 @@ void mp_join_game::network_handler()
 	}
 
 	// Update chat
-	find_widget<chatbox>(get_window(), "chat", false).process_network_data(data);
+	find_widget<chatbox>("chat").process_network_data(data);
 
 	if(!data["message"].empty()) {
 		gui2::show_transient_message(_("Response") , data["message"]);
@@ -565,22 +571,18 @@ config& mp_join_game::get_scenario()
 	return level_;
 }
 
-void mp_join_game::post_show(window& window)
+void mp_join_game::post_show()
 {
 	if(update_timer_ != 0) {
 		remove_timer(update_timer_);
 		update_timer_ = 0;
 	}
 
-	if(window.get_retval() == retval::OK) {
-
+	if(get_retval() == retval::OK) {
 		mp::level_to_gamestate(level_, state_);
-
 		mp::ui_alerts::game_has_begun();
-	} else if(observe_game_) {
-		mp::send_to_server(config("observer_quit", config { "name", prefs::get().login() }));
 	} else {
-		mp::send_to_server(config("leave_game"));
+		mp::send_to_server(config{"leave_game"});
 	}
 }
 

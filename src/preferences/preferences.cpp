@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2024 - 2024
+	Copyright (C) 2024 - 2025
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -36,6 +36,7 @@
 #include "map_settings.hpp"
 #include "map/map.hpp"
 #include "resources.hpp"
+#include "serialization/chrono.hpp"
 #include "serialization/parser.hpp"
 #include "sound.hpp"
 #include "units/unit.hpp"
@@ -46,7 +47,6 @@
 
 #ifdef _WIN32
 #include "serialization/unicode_cast.hpp"
-#include <boost/range/iterator_range.hpp>
 #include <windows.h>
 #endif
 
@@ -67,23 +67,25 @@ static lg::log_domain log_filesystem("filesystem");
 static lg::log_domain advanced_preferences("advanced_preferences");
 #define ERR_ADV LOG_STREAM(err, advanced_preferences)
 
+using namespace std::chrono_literals;
+
 prefs::prefs()
-: preferences_()
-, fps_(false)
-, completed_campaigns_()
-, encountered_units_set_()
-, encountered_terrains_set_()
-, history_map_()
-, acquaintances_()
-, option_values_()
-, options_initialized_(false)
-, mp_modifications_()
-, mp_modifications_initialized_(false)
-, sp_modifications_()
-, sp_modifications_initialized_(false)
-, message_private_on_(false)
-, credentials_()
-, advanced_prefs_()
+	: preferences_()
+	, fps_(false)
+	, completed_campaigns_()
+	, encountered_units_set_()
+	, encountered_terrains_set_()
+	, history_map_()
+	, acquaintances_()
+	, option_values_()
+	, options_initialized_(false)
+	, mp_modifications_()
+	, mp_modifications_initialized_(false)
+	, sp_modifications_()
+	, sp_modifications_initialized_(false)
+	, message_private_on_(false)
+	, credentials_()
+	, advanced_prefs_()
 {
 	load_preferences();
 	load_credentials();
@@ -93,7 +95,7 @@ prefs::prefs()
 		preferences_[prefs_list::scroll_threshold] = 10;
 	}
 
-	for(const config& acfg : preferences_.child_range("acquaintance")) {
+	for(const config& acfg : preferences_.child_range(prefs_list::acquaintance)) {
 		preferences::acquaintance ac = preferences::acquaintance(acfg);
 		acquaintances_[ac.get_nick()] = ac;
 	}
@@ -136,10 +138,10 @@ prefs::~prefs()
 	}
 	set_child(prefs_list::history, history);
 
-	preferences_.clear_children("acquaintance");
+	preferences_.clear_children(prefs_list::acquaintance);
 
 	for(auto& a : acquaintances_) {
-		config& item = preferences_.add_child("acquaintance");
+		config& item = preferences_.add_child(prefs_list::acquaintance);
 		a.second.save(item);
 	}
 
@@ -158,6 +160,8 @@ prefs::~prefs()
 
 void prefs::load_advanced_prefs(const game_config_view& gc)
 {
+	advanced_prefs_.clear();
+
 	for(const config& pref : gc.child_range("advanced_preference")) {
 		try {
 			advanced_prefs_.emplace_back(pref);
@@ -187,18 +191,17 @@ void prefs::migrate_preferences(const std::string& migrate_prefs_file)
 		if(!filesystem::file_exists(filesystem::get_synced_prefs_file())) {
 			filesystem::copy_file(migrate_prefs_file, filesystem::get_synced_prefs_file());
 		} else {
-			config current_cfg;
-			filesystem::scoped_istream current_stream = filesystem::istream_file(filesystem::get_synced_prefs_file(), false);
-			read(current_cfg, *current_stream);
-			config old_cfg;
-			filesystem::scoped_istream old_stream = filesystem::istream_file(migrate_prefs_file, false);
-			read(old_cfg, *old_stream);
+			auto current_stream = filesystem::istream_file(filesystem::get_synced_prefs_file(), false);
+			config current_cfg = io::read(*current_stream);
+
+			auto old_stream = filesystem::istream_file(migrate_prefs_file, false);
+			config old_cfg = io::read(*old_stream);
 
 			// when both files have the same attribute, use the one from whichever was most recently modified
 			bool current_prefs_are_older = filesystem::file_modified_time(filesystem::get_synced_prefs_file()) < filesystem::file_modified_time(migrate_prefs_file);
-			for(const config::attribute& val : old_cfg.attribute_range()) {
-				if(current_prefs_are_older || !current_cfg.has_attribute(val.first)) {
-					preferences_[val.first] = val.second;
+			for(const auto& [key, value] : old_cfg.attribute_range()) {
+				if(current_prefs_are_older || !current_cfg.has_attribute(key)) {
+					preferences_[key] = value;
 				}
 			}
 
@@ -242,18 +245,18 @@ void prefs::load_preferences()
 		// NOTE: the system preferences file is only ever relevant for the first time wesnoth starts
 		//	   any default values will subsequently be written to the normal preferences files, which takes precedence over any values in the system preferences file
 		{
-			filesystem::scoped_istream stream = filesystem::istream_file(filesystem::get_default_prefs_file(), false);
-			read(default_prefs, *stream);
+			auto stream = filesystem::istream_file(filesystem::get_default_prefs_file(), false);
+			default_prefs = io::read(*stream);
 		}
 #endif
 		{
-			filesystem::scoped_istream stream = filesystem::istream_file(filesystem::get_unsynced_prefs_file(), false);
-			read(unsynced_prefs, *stream);
+			auto stream = filesystem::istream_file(filesystem::get_unsynced_prefs_file(), false);
+			unsynced_prefs = io::read(*stream);
 		}
 
 		{
-			filesystem::scoped_istream stream = filesystem::istream_file(filesystem::get_synced_prefs_file(), false);
-			read(synced_prefs, *stream);
+			auto stream = filesystem::istream_file(filesystem::get_synced_prefs_file(), false);
+			synced_prefs = io::read(*stream);
 		}
 
 		preferences_.merge_with(default_prefs);
@@ -261,25 +264,25 @@ void prefs::load_preferences()
 		preferences_.merge_with(synced_prefs);
 
 		// check for any unknown preferences
-		for(const auto& attr : synced_prefs.attribute_range()) {
-			if(std::find(synced_attributes_.begin(), synced_attributes_.end(), attr.first) == synced_attributes_.end()) {
-				unknown_synced_attributes_.insert(attr.first);
+		for(const auto& [key, _] : synced_prefs.attribute_range()) {
+			if(!utils::contains(synced_attributes_, key)) {
+				unknown_synced_attributes_.insert(key);
 			}
 		}
-		for(const auto& attr : unsynced_prefs.attribute_range()) {
-			if(std::find(unsynced_attributes_.begin(), unsynced_attributes_.end(), attr.first) == unsynced_attributes_.end()) {
-				unknown_unsynced_attributes_.insert(attr.first);
+		for(const auto& [key, _] : unsynced_prefs.attribute_range()) {
+			if(!utils::contains(unsynced_attributes_, key)) {
+				unknown_unsynced_attributes_.insert(key);
 			}
 		}
 
-		for(const auto& child : synced_prefs.all_children_range()) {
-			if(std::find(synced_children_.begin(), synced_children_.end(), child.key) == synced_children_.end()) {
-				unknown_synced_children_.insert(child.key);
+		for(const auto [key, _] : synced_prefs.all_children_view()) {
+			if(!utils::contains(synced_children_, key)) {
+				unknown_synced_children_.insert(key);
 			}
 		}
-		for(const auto& child : unsynced_prefs.all_children_range()) {
-			if(std::find(unsynced_children_.begin(), unsynced_children_.end(), child.key) == unsynced_children_.end()) {
-				unknown_unsynced_children_.insert(child.key);
+		for(const auto [key, _] : unsynced_prefs.all_children_view()) {
+			if(!utils::contains(unsynced_children_, key)) {
+				unknown_unsynced_children_.insert(key);
 			}
 		}
 	} catch(const config::error& e) {
@@ -325,9 +328,9 @@ void prefs::load_preferences()
 						message = foobar
 					[/line]
 		*/
-		for(const config::any_child h : history->all_children_range()) {
-			for(const config& l : h.cfg.child_range("line")) {
-				history_map_[h.key].push_back(l["message"]);
+		for(const auto [key, cfg] : history->all_children_view()) {
+			for(const config& l : cfg.child_range("line")) {
+				history_map_[key].push_back(l["message"]);
 			}
 		}
 	}
@@ -385,15 +388,13 @@ void prefs::write_preferences()
 	}
 
 	try {
-		filesystem::scoped_ostream synced_prefs_file = filesystem::ostream_file(filesystem::get_synced_prefs_file());
-		write(*synced_prefs_file, synced);
+		io::write(*filesystem::ostream_file(filesystem::get_synced_prefs_file()), synced);
 	} catch(const filesystem::io_exception&) {
 		ERR_FS << "error writing to synced preferences file '" << filesystem::get_synced_prefs_file() << "'";
 	}
 
 	try {
-		filesystem::scoped_ostream unsynced_prefs_file = filesystem::ostream_file(filesystem::get_unsynced_prefs_file());
-		write(*unsynced_prefs_file, unsynced);
+		io::write(*filesystem::ostream_file(filesystem::get_unsynced_prefs_file()), unsynced);
 	} catch(const filesystem::io_exception&) {
 		ERR_FS << "error writing to unsynced preferences file '" << filesystem::get_unsynced_prefs_file() << "'";
 	}
@@ -575,6 +576,45 @@ std::string prefs::partial_color() {
 }
 void prefs::set_partial_color(const std::string& color_id) {
 	preferences_[prefs_list::partial_orb_color] = color_id;
+}
+std::string prefs::reach_map_color() {
+	std::string reachmap_color = preferences_[prefs_list::reach_map_color].str();
+	if (reachmap_color.empty())
+		return game_config::colors::reach_map_color;
+	return fix_orb_color_name(reachmap_color);
+}
+void prefs::set_reach_map_color(const std::string& color_id) {
+	preferences_[prefs_list::reach_map_color] = color_id;
+}
+
+std::string prefs::reach_map_enemy_color() {
+	std::string reachmap_enemy_color = preferences_[prefs_list::reach_map_enemy_color].str();
+	if (reachmap_enemy_color.empty())
+		return game_config::colors::reach_map_enemy_color;
+	return fix_orb_color_name(reachmap_enemy_color);
+}
+void prefs::set_reach_map_enemy_color(const std::string& color_id) {
+	preferences_[prefs_list::reach_map_enemy_color] = color_id;
+}
+
+int prefs::reach_map_border_opacity()
+{
+	return preferences_[prefs_list::reach_map_border_opacity].to_int(game_config::reach_map_border_opacity);
+}
+
+void prefs::set_reach_map_border_opacity(const int new_opacity)
+{
+	preferences_[prefs_list::reach_map_border_opacity] = new_opacity;
+}
+
+int prefs::reach_map_tint_opacity()
+{
+	return preferences_[prefs_list::reach_map_tint_opacity].to_int(game_config::reach_map_tint_opacity);
+}
+
+void prefs::set_reach_map_tint_opacity(const int new_opacity)
+{
+	preferences_[prefs_list::reach_map_tint_opacity] = new_opacity;
 }
 
 point prefs::resolution()
@@ -932,7 +972,7 @@ bool prefs::use_twelve_hour_clock_format()
 
 sort_order::type prefs::addon_manager_saved_order_direction()
 {
-	return sort_order::get_enum(preferences_[prefs_list::addon_manager_saved_order_direction]).value_or(sort_order::type::none);
+	return sort_order::get_enum(preferences_[prefs_list::addon_manager_saved_order_direction].to_int()).value_or(sort_order::type::none);
 }
 
 void prefs::set_addon_manager_saved_order_direction(sort_order::type value)
@@ -946,8 +986,7 @@ bool prefs::achievement(const std::string& content_for, const std::string& id)
 	{
 		if(ach["content_for"].str() == content_for)
 		{
-			std::vector<std::string> ids = utils::split(ach["ids"]);
-			return std::find(ids.begin(), ids.end(), id) != ids.end();
+			return utils::contains(utils::split(ach["ids"]), id);
 		}
 	}
 	return false;
@@ -966,7 +1005,7 @@ void prefs::set_achievement(const std::string& content_for, const std::string& i
 			{
 				ach["ids"] = id;
 			}
-			else if(std::find(ids.begin(), ids.end(), id) == ids.end())
+			else if(!utils::contains(ids, id))
 			{
 				ach["ids"] = ach["ids"].str() + "," + id;
 			}
@@ -1060,8 +1099,7 @@ bool prefs::sub_achievement(const std::string& content_for, const std::string& i
 			{
 				if(in_progress["id"] == id)
 				{
-					std::vector<std::string> sub_ids = utils::split(in_progress["sub_ids"]);
-					return std::find(sub_ids.begin(), sub_ids.end(), sub_id) != sub_ids.end();
+					return utils::contains(utils::split(in_progress["sub_ids"]), sub_id);
 				}
 			}
 		}
@@ -1087,9 +1125,9 @@ void prefs::set_sub_achievement(const std::string& content_for, const std::strin
 			{
 				if(in_progress["id"].str() == id)
 				{
-					std::vector<std::string> sub_ids = utils::split(ach["ids"]);
+					std::vector<std::string> sub_ids = utils::split(in_progress["sub_ids"]);
 
-					if(std::find(sub_ids.begin(), sub_ids.end(), sub_id) == sub_ids.end())
+					if(!utils::contains(sub_ids, sub_id))
 					{
 						in_progress["sub_ids"] = in_progress["sub_ids"].str() + "," + sub_id;
 					}
@@ -1218,7 +1256,7 @@ void prefs::add_recent_files_entry(const std::string& path)
 
 	// Enforce uniqueness. Normally shouldn't do a thing unless somebody
 	// has been tampering with the preferences file.
-	mru.erase(std::remove(mru.begin(), mru.end(), path), mru.end());
+	utils::erase(mru, path);
 
 	mru.insert(mru.begin(), path);
 	mru.resize(std::min(editor_mru_limit(), mru.size()));
@@ -1510,11 +1548,38 @@ const std::vector<game_config::server_info>& prefs::builtin_servers_list()
 	return pref_servers;
 }
 
+void prefs::add_game_preset(config&& preset_data)
+{
+	config preset{ prefs_list::game_preset, std::move(preset_data) };
+
+	int min = 0;
+	for(const auto& c : preferences_.child_range(prefs_list::game_preset)) {
+		min = std::min(min, c["id"].to_int());
+	}
+	preset.mandatory_child(prefs_list::game_preset)["id"] = min-1;
+	preferences_.append(preset);
+}
+
+void prefs::remove_game_preset(int id)
+{
+	preferences_.remove_children(prefs_list::game_preset, [&id](const config& preset) { return preset["id"].to_int() == id; });
+}
+
+config::child_itors prefs::get_game_presets()
+{
+	return preferences_.child_range(prefs_list::game_preset);
+}
+
+optional_const_config prefs::get_game_preset(int id)
+{
+	return preferences_.find_child(prefs_list::game_preset, "id", std::to_string(id));
+}
+
 std::vector<game_config::server_info> prefs::user_servers_list()
 {
 	std::vector<game_config::server_info> pref_servers;
 
-	for(const config& server : preferences_.child_range("server")) {
+	for(const config& server : preferences_.child_range(prefs_list::server)) {
 		pref_servers.emplace_back();
 		pref_servers.back().name = server["name"].str();
 		pref_servers.back().address = server["address"].str();
@@ -1525,10 +1590,10 @@ std::vector<game_config::server_info> prefs::user_servers_list()
 
 void prefs::set_user_servers_list(const std::vector<game_config::server_info>& value)
 {
-	preferences_.clear_children("server");
+	preferences_.clear_children(prefs_list::server);
 
 	for(const auto& svinfo : value) {
-		config& sv_cfg = preferences_.add_child("server");
+		config& sv_cfg = preferences_.add_child(prefs_list::server);
 		sv_cfg["name"] = svinfo.name;
 		sv_cfg["address"] = svinfo.address;
 	}
@@ -1536,7 +1601,7 @@ void prefs::set_user_servers_list(const std::vector<game_config::server_info>& v
 
 std::string prefs::network_host()
 {
-	const std::string res = preferences_[prefs_list::host];
+	std::string res = preferences_[prefs_list::host];
 	if(res.empty()) {
 		return builtin_servers_list().front().address;
 	} else {
@@ -1594,14 +1659,14 @@ void prefs::set_options(const config& values)
 	options_initialized_ = false;
 }
 
-int prefs::countdown_init_time()
+std::chrono::seconds prefs::countdown_init_time()
 {
-	return std::clamp<int>(preferences_[prefs_list::mp_countdown_init_time].to_int(240), 0, 1500);
+	return chrono::parse_duration(preferences_[prefs_list::mp_countdown_init_time], 240s);
 }
 
-void prefs::set_countdown_init_time(int value)
+void prefs::set_countdown_init_time(const std::chrono::seconds& value)
 {
-	preferences_[prefs_list::mp_countdown_init_time] = value;
+	preferences_[prefs_list::mp_countdown_init_time] = std::clamp(value, 0s, 1500s);
 }
 
 void prefs::clear_countdown_init_time()
@@ -1609,14 +1674,14 @@ void prefs::clear_countdown_init_time()
 	preferences_.remove_attribute(prefs_list::mp_countdown_init_time);
 }
 
-int prefs::countdown_reservoir_time()
+std::chrono::seconds prefs::countdown_reservoir_time()
 {
-	return std::clamp<int>(preferences_[prefs_list::mp_countdown_reservoir_time].to_int(360), 30, 1500);
+	return chrono::parse_duration(preferences_[prefs_list::mp_countdown_reservoir_time], 360s);
 }
 
-void prefs::set_countdown_reservoir_time(int value)
+void prefs::set_countdown_reservoir_time(const std::chrono::seconds& value)
 {
-	preferences_[prefs_list::mp_countdown_reservoir_time] = value;
+	preferences_[prefs_list::mp_countdown_reservoir_time] = std::clamp(value, 30s, 1500s);
 }
 
 void prefs::clear_countdown_reservoir_time()
@@ -1624,14 +1689,14 @@ void prefs::clear_countdown_reservoir_time()
 	preferences_.remove_attribute(prefs_list::mp_countdown_reservoir_time);
 }
 
-int prefs::countdown_turn_bonus()
+std::chrono::seconds prefs::countdown_turn_bonus()
 {
-	return std::clamp<int>(preferences_[prefs_list::mp_countdown_turn_bonus].to_int(240), 0, 300);
+	return chrono::parse_duration(preferences_[prefs_list::mp_countdown_turn_bonus], 240s);
 }
 
-void prefs::set_countdown_turn_bonus(int value)
+void prefs::set_countdown_turn_bonus(const std::chrono::seconds& value)
 {
-	preferences_[prefs_list::mp_countdown_turn_bonus] = value;
+	preferences_[prefs_list::mp_countdown_turn_bonus] = std::clamp(value, 0s, 300s);
 }
 
 void prefs::clear_countdown_turn_bonus()
@@ -1639,19 +1704,29 @@ void prefs::clear_countdown_turn_bonus()
 	preferences_.remove_attribute(prefs_list::mp_countdown_turn_bonus);
 }
 
-int prefs::countdown_action_bonus()
+std::chrono::seconds prefs::countdown_action_bonus()
 {
-	return std::clamp<int>(preferences_[prefs_list::mp_countdown_action_bonus], 0, 30);
+	return chrono::parse_duration(preferences_[prefs_list::mp_countdown_action_bonus], 0s);
 }
 
-void prefs::set_countdown_action_bonus(int value)
+void prefs::set_countdown_action_bonus(const std::chrono::seconds& value)
 {
-	preferences_[prefs_list::mp_countdown_action_bonus] = value;
+	preferences_[prefs_list::mp_countdown_action_bonus] = std::clamp(value, 0s, 30s);
 }
 
 void prefs::clear_countdown_action_bonus()
 {
 	preferences_.remove_attribute(prefs_list::mp_countdown_action_bonus);
+}
+
+std::chrono::minutes prefs::chat_message_aging()
+{
+	return chrono::parse_duration(preferences_[prefs_list::chat_message_aging], 20min);
+}
+
+void prefs::set_chat_message_aging(const std::chrono::minutes& value)
+{
+	preferences_[prefs_list::chat_message_aging] = value;
 }
 
 int prefs::village_gold()
@@ -1740,13 +1815,13 @@ compression::format prefs::save_compression_format()
 	return compression::format::gzip;
 }
 
-std::string prefs::get_chat_timestamp(const std::time_t& t)
+std::string prefs::get_chat_timestamp(const std::chrono::system_clock::time_point& t)
 {
 	if(chat_timestamp()) {
 		if(use_twelve_hour_clock_format() == false) {
-			return lg::get_timestamp(t, _("[%H:%M]")) + " ";
+			return chrono::format_local_timestamp(t, _("[%H:%M]")) + " ";
 		} else {
-			return lg::get_timestamp(t, _("[%I:%M %p]")) + " ";
+			return chrono::format_local_timestamp(t, _("[%I:%M %p]")) + " ";
 		}
 	}
 
@@ -1819,12 +1894,16 @@ void prefs::encounter_recallable_units(const std::vector<team>& teams)
 void prefs::encounter_map_terrain(const gamemap& map)
 {
 	map.for_each_loc([&](const map_location& loc) {
-		const t_translation::terrain_code terrain = map.get_terrain(loc);
-		encountered_terrains().insert(terrain);
-		for(t_translation::terrain_code t : map.underlying_union_terrain(loc)) {
-			encountered_terrains().insert(t);
-		}
+		encounter_map_terrain(map.get_terrain_info(loc));
 	});
+}
+
+void prefs::encounter_map_terrain(const terrain_type& terrain)
+{
+	encountered_terrains().insert(terrain.number());
+	for(const t_translation::terrain_code& t : terrain.union_type()) {
+		encountered_terrains().insert(t);
+	}
 }
 
 void prefs::encounter_all_content(const game_board& gameboard_)
@@ -1871,21 +1950,20 @@ void prefs::clear_mp_alert_prefs()
 
 std::string prefs::get_system_username()
 {
-	std::string res;
 #ifdef _WIN32
 	wchar_t buffer[300];
 	DWORD size = 300;
 	if(GetUserNameW(buffer, &size)) {
 		//size includes a terminating null character.
 		assert(size > 0);
-		res = unicode_cast<std::string>(boost::iterator_range<wchar_t*>(buffer, buffer + size - 1));
+		return unicode_cast<std::string>(std::wstring_view{buffer});
 	}
 #else
 	if(char* const login = getenv("USER")) {
-		res = login;
+		return login;
 	}
 #endif
-	return res;
+	return {};
 }
 
 preferences::secure_buffer prefs::build_key(const std::string& server, const std::string& login)
@@ -1921,15 +1999,15 @@ preferences::secure_buffer prefs::aes_encrypt(const preferences::secure_buffer& 
 	if(!ctx)
 	{
 		ERR_CFG << "AES EVP_CIPHER_CTX_new failed with error:";
-		ERR_CFG << ERR_error_string(ERR_get_error(), NULL);
+		ERR_CFG << ERR_error_string(ERR_get_error(), nullptr);
 		return preferences::secure_buffer();
 	}
 
 	// TODO: use EVP_EncryptInit_ex2 once openssl 3.0 is more widespread
-	if(EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key.data(), iv) != 1)
+	if(EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), nullptr, key.data(), iv) != 1)
 	{
 		ERR_CFG << "AES EVP_EncryptInit_ex failed with error:";
-		ERR_CFG << ERR_error_string(ERR_get_error(), NULL);
+		ERR_CFG << ERR_error_string(ERR_get_error(), nullptr);
 		EVP_CIPHER_CTX_free(ctx);
 		return preferences::secure_buffer();
 	}
@@ -1937,7 +2015,7 @@ preferences::secure_buffer prefs::aes_encrypt(const preferences::secure_buffer& 
 	if(EVP_EncryptUpdate(ctx, encrypted_buffer, &update_length, plaintext.data(), plaintext.size()) != 1)
 	{
 		ERR_CFG << "AES EVP_EncryptUpdate failed with error:";
-		ERR_CFG << ERR_error_string(ERR_get_error(), NULL);
+		ERR_CFG << ERR_error_string(ERR_get_error(), nullptr);
 		EVP_CIPHER_CTX_free(ctx);
 		return preferences::secure_buffer();
 	}
@@ -1946,7 +2024,7 @@ preferences::secure_buffer prefs::aes_encrypt(const preferences::secure_buffer& 
 	if(EVP_EncryptFinal_ex(ctx, encrypted_buffer + update_length, &extra_length) != 1)
 	{
 		ERR_CFG << "AES EVP_EncryptFinal failed with error:";
-		ERR_CFG << ERR_error_string(ERR_get_error(), NULL);
+		ERR_CFG << ERR_error_string(ERR_get_error(), nullptr);
 		EVP_CIPHER_CTX_free(ctx);
 		return preferences::secure_buffer();
 	}
@@ -1966,7 +2044,7 @@ preferences::secure_buffer prefs::aes_encrypt(const preferences::secure_buffer& 
 
 	return result;
 #else
-	size_t outWritten = 0;
+	std::size_t outWritten = 0;
 	preferences::secure_buffer result(plaintext.size(), '\0');
 
 	CCCryptorStatus ccStatus = CCCrypt(kCCDecrypt,
@@ -2009,15 +2087,15 @@ preferences::secure_buffer prefs::aes_decrypt(const preferences::secure_buffer& 
 	if(!ctx)
 	{
 		ERR_CFG << "AES EVP_CIPHER_CTX_new failed with error:";
-		ERR_CFG << ERR_error_string(ERR_get_error(), NULL);
+		ERR_CFG << ERR_error_string(ERR_get_error(), nullptr);
 		return preferences::secure_buffer();
 	}
 
 	// TODO: use EVP_DecryptInit_ex2 once openssl 3.0 is more widespread
-	if(EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key.data(), iv) != 1)
+	if(EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), nullptr, key.data(), iv) != 1)
 	{
 		ERR_CFG << "AES EVP_DecryptInit_ex failed with error:";
-		ERR_CFG << ERR_error_string(ERR_get_error(), NULL);
+		ERR_CFG << ERR_error_string(ERR_get_error(), nullptr);
 		EVP_CIPHER_CTX_free(ctx);
 		return preferences::secure_buffer();
 	}
@@ -2025,7 +2103,7 @@ preferences::secure_buffer prefs::aes_decrypt(const preferences::secure_buffer& 
 	if(EVP_DecryptUpdate(ctx, plaintext_buffer, &update_length, encrypted.data(), encrypted.size()) != 1)
 	{
 		ERR_CFG << "AES EVP_DecryptUpdate failed with error:";
-		ERR_CFG << ERR_error_string(ERR_get_error(), NULL);
+		ERR_CFG << ERR_error_string(ERR_get_error(), nullptr);
 		EVP_CIPHER_CTX_free(ctx);
 		return preferences::secure_buffer();
 	}
@@ -2034,7 +2112,7 @@ preferences::secure_buffer prefs::aes_decrypt(const preferences::secure_buffer& 
 	if(EVP_DecryptFinal_ex(ctx, plaintext_buffer + update_length, &extra_length) != 1)
 	{
 		ERR_CFG << "AES EVP_DecryptFinal failed with error:";
-		ERR_CFG << ERR_error_string(ERR_get_error(), NULL);
+		ERR_CFG << ERR_error_string(ERR_get_error(), nullptr);
 		EVP_CIPHER_CTX_free(ctx);
 		return preferences::secure_buffer();
 	}
@@ -2054,7 +2132,7 @@ preferences::secure_buffer prefs::aes_decrypt(const preferences::secure_buffer& 
 
 	return result;
 #else
-	size_t outWritten = 0;
+	std::size_t outWritten = 0;
 	preferences::secure_buffer result(encrypted.size(), '\0');
 
 	CCCryptorStatus ccStatus = CCCrypt(kCCDecrypt,

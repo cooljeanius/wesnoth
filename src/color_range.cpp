@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2024
+	Copyright (C) 2003 - 2025
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -21,22 +21,15 @@
 
 #include "color_range.hpp"
 
+#include "utils/span.hpp"
+
 #include <array>
 #include <cassert>
 #include <sstream>
 
-#ifdef __cpp_lib_span
-#include <span>
-#endif
-
 namespace
 {
-#ifdef __cpp_lib_span
-std::vector<color_t> recolor_range_impl(const color_range& new_range, std::span<const color_t> old_rgb)
-#else
-template<typename Container>
-std::vector<color_t> recolor_range_impl(const color_range& new_range, const Container& old_rgb)
-#endif
+std::vector<color_t> recolor_palette(const color_range& new_range, utils::span<const color_t> old_rgb)
 {
 	std::vector<color_t> clist;
 	clist.reserve(old_rgb.size());
@@ -57,21 +50,18 @@ std::vector<color_t> recolor_range_impl(const color_range& new_range, const Cont
 			float old_ratio = static_cast<float>(old_avg) / reference_avg;
 
 			clist.emplace_back(
-				std::min<uint8_t>(255u, old_ratio * mid_c.r + (1 - old_ratio) * min_c.r),
-				std::min<uint8_t>(255u, old_ratio * mid_c.g + (1 - old_ratio) * min_c.g),
-				std::min<uint8_t>(255u, old_ratio * mid_c.b + (1 - old_ratio) * min_c.b)
+				std::min(255u, static_cast<uint32_t>(old_ratio * mid_c.r + (1 - old_ratio) * min_c.r)),
+				std::min(255u, static_cast<uint32_t>(old_ratio * mid_c.g + (1 - old_ratio) * min_c.g)),
+				std::min(255u, static_cast<uint32_t>(old_ratio * mid_c.b + (1 - old_ratio) * min_c.b))
 			);
 		} else if(reference_avg != 255) {
 			float old_ratio = (255.0f - static_cast<float>(old_avg)) / (255.0f - reference_avg);
 
 			clist.emplace_back(
-				std::min<uint8_t>(255u, old_ratio * mid_c.r + (1 - old_ratio) * max_c.r),
-				std::min<uint8_t>(255u, old_ratio * mid_c.g + (1 - old_ratio) * max_c.r),
-				std::min<uint8_t>(255u, old_ratio * mid_c.b + (1 - old_ratio) * max_c.r)
+				std::min(255u, static_cast<uint32_t>(old_ratio * mid_c.r + (1 - old_ratio) * max_c.r)),
+				std::min(255u, static_cast<uint32_t>(old_ratio * mid_c.g + (1 - old_ratio) * max_c.g)),
+				std::min(255u, static_cast<uint32_t>(old_ratio * mid_c.b + (1 - old_ratio) * max_c.b))
 			);
-		} else {
-			// Should never get here. Would imply old_avg > reference_avg = 255
-			assert(false);
 		}
 	}
 
@@ -87,7 +77,7 @@ constexpr auto base_palette = []() {
 	for(uint8_t i = 255u; i != 0; --i) {
 		res[index++] = {0, 0, i};
 
-		// Avoid duplicate entries on the first pass when i == j
+		// Avoid duplicate entry on the first pass when j == 0
 		if(uint8_t j = 255u - i; j != 0) {
 			res[index++] = {j, j, 255};
 		}
@@ -96,14 +86,14 @@ constexpr auto base_palette = []() {
 	return res;
 }();
 
-} // end anon namespace
+} // namespace
 
-color_range_map recolor_range(const color_range& new_range, const std::vector<color_t>& old_rgb)
+color_mapping generate_color_mapping(const color_range& new_range, const std::vector<color_t>& old_rgb)
 {
-	auto new_rgb = recolor_range_impl(new_range, old_rgb);
+	std::vector new_rgb = recolor_palette(new_range, old_rgb);
 	assert(new_rgb.size() == old_rgb.size());
 
-	color_range_map res;
+	color_mapping res;
 	for(std::size_t i = 0; i < new_rgb.size(); ++i) {
 		res[old_rgb[i]] = new_rgb[i];
 	}
@@ -111,9 +101,9 @@ color_range_map recolor_range(const color_range& new_range, const std::vector<co
 	return res;
 }
 
-std::vector<color_t> palette(const color_range& cr)
+std::vector<color_t> generate_reference_palette(const color_range& cr)
 {
-	return recolor_range_impl(cr, base_palette);
+	return recolor_palette(cr, base_palette);
 }
 
 std::string color_range::debug() const

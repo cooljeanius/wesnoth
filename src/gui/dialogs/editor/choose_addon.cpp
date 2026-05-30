@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2009 - 2024
+	Copyright (C) 2009 - 2025
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -16,7 +16,6 @@
 
 #include "filesystem.hpp"
 #include "gettext.hpp"
-#include "gui/auxiliary/find_widget.hpp"
 #include "gui/widgets/label.hpp"
 #include "gui/widgets/listbox.hpp"
 #include "gui/widgets/toggle_button.hpp"
@@ -31,25 +30,22 @@ editor_choose_addon::editor_choose_addon(std::string& addon_id)
 	: modal_dialog(window_id())
 	, addon_id_(addon_id)
 {
-	connect_signal_mouse_left_click(find_widget<toggle_button>(get_window(), "show_all", false),
+	connect_signal_mouse_left_click(
+		find_widget<toggle_button>("show_all"),
 		std::bind(&editor_choose_addon::toggle_installed, this));
 
 	populate_list(false);
 }
 
-void editor_choose_addon::pre_show(window&)
+void editor_choose_addon::post_show()
 {
-}
-
-void editor_choose_addon::post_show(window& win)
-{
-	listbox& existing_addons = find_widget<listbox>(&win, "existing_addons", false);
+	listbox& existing_addons = find_widget<listbox>("existing_addons");
 	int selected_row = existing_addons.get_selected_row();
 
 	if(selected_row == 0) {
 		addon_id_ = "///newaddon///";
 		prefs::get().set_editor_chosen_addon("");
-	} else if(selected_row == 1 && find_widget<toggle_button>(get_window(), "show_all", false).get_value_bool()) {
+	} else if(selected_row == 1 && find_widget<toggle_button>("show_all").get_value_bool()) {
 		addon_id_ = "mainline";
 		prefs::get().set_editor_chosen_addon("");
 	} else {
@@ -61,39 +57,34 @@ void editor_choose_addon::post_show(window& win)
 
 void editor_choose_addon::toggle_installed()
 {
-	toggle_button& show_all = find_widget<toggle_button>(get_window(), "show_all", false);
+	toggle_button& show_all = find_widget<toggle_button>("show_all");
 	populate_list(show_all.get_value_bool());
 }
 
 void editor_choose_addon::populate_list(bool show_all)
 {
-	listbox& existing_addons = find_widget<listbox>(get_window(), "existing_addons", false);
+	listbox& existing_addons = find_widget<listbox>("existing_addons");
 	existing_addons.clear();
 
 	std::vector<std::string> dirs;
 	filesystem::get_files_in_dir(filesystem::get_addons_dir(), nullptr, &dirs, filesystem::name_mode::FILE_NAME_ONLY);
 
-	const widget_data& new_addon{
-		{"existing_addon_id", widget_item{{"label", _("New Add-on")}, {"tooltip", _("Create a new add-on")}}},
-	};
-	existing_addons.add_row(new_addon);
+	existing_addons.add_row(widget_data{
+		{ "existing_addon_id", {{ "label", _("New Add-on") }, { "tooltip", _("Create a new add-on") }}},
+	});
 
 	if(show_all) {
-		const widget_data& mainline{
-			{"existing_addon_id",
-				widget_item{{"label", _("Mainline")}, {"tooltip", _("Mainline multiplayer scenarios")}}},
-		};
-		existing_addons.add_row(mainline);
+		existing_addons.add_row(widget_data{
+			{ "existing_addon_id", {{ "label", _("Mainline") }, { "tooltip", _("Mainline multiplayer scenarios") }}},
+		});
 	}
 
 	int selected_row = 0;
 	for(const std::string& dir : dirs) {
 		if((show_all || filesystem::file_exists(filesystem::get_addons_dir() + "/" + dir + "/_server.pbl"))
-			&& filesystem::file_exists(filesystem::get_addons_dir() + "/" + dir + "/_main.cfg")) {
-			const widget_data& entry{
-				{"existing_addon_id", widget_item{{"label", dir}}},
-			};
-			existing_addons.add_row(entry);
+			&& filesystem::file_exists(filesystem::get_addons_dir() + "/" + dir + "/_main.cfg"))
+		{
+			existing_addons.add_row(widget_data{{ "existing_addon_id", {{ "label", dir }}}});
 			if(dir == prefs::get().editor_chosen_addon()) {
 				selected_row = existing_addons.get_item_count()-1;
 			}

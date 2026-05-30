@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2020 - 2024
+	Copyright (C) 2020 - 2025
 	by CrawlCycle <73139676+CrawlCycle@users.noreply.github.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -54,14 +54,12 @@ private:
 	bfs::ofstream stream;
 };
 
-config preprocess_and_parse(const std::string& wml_str, preproc_map* macro_map)
+config preprocess_and_parse(const std::string& wml_str)
 {
 	tmp_file tmp_f;
 	tmp_f.set(wml_str);
-	auto b = preprocess_file(tmp_f.path.string(), macro_map);
-	config actual;
-	read(actual, *b);
-	return actual;
+	auto b = preprocess_file(tmp_f.path.string());
+	return io::read(*b);
 }
 
 void check_wml_equivalence(const std::string& a, const std::string& b)

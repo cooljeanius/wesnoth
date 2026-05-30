@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2006 - 2024
+	Copyright (C) 2006 - 2025
 	by Joerg Hinrichs <joerg.hinrichs@alice-dsl.de>
 	Copyright (C) 2003 by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
@@ -17,7 +17,6 @@
 #pragma once
 
 #include "playsingle_controller.hpp"
-#include "syncmp_handler.hpp"
 
 struct mp_game_metadata;
 class playmp_controller : public playsingle_controller
@@ -26,6 +25,7 @@ public:
 	playmp_controller(const config& level, saved_game& state_of_game, mp_game_metadata* mp_info);
 	virtual ~playmp_controller();
 	void maybe_linger() override;
+	bool end_linger() override;
 	void process_oos(const std::string& err_msg) const override;
 
 	void receive_actions() override;
@@ -38,8 +38,7 @@ public:
 	void send_to_wesnothd(const config& cfg, const std::string& packet_type = "unknown") const override;
 	bool receive_from_wesnothd(config& cfg) const override;
 
-
-	void play_slice(bool is_delay_enabled = true) override;
+	void play_slice() override;
 protected:
 	virtual void handle_generic_event(const std::string& name) override;
 

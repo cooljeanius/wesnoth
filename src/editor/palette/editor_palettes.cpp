@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2024
+	Copyright (C) 2003 - 2025
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -18,7 +18,7 @@
 #include "editor/palette/editor_palettes.hpp"
 
 #include "gettext.hpp"
-#include "font/text_formatting.hpp"
+#include "serialization/markup.hpp"
 #include "overlay.hpp"
 #include "filesystem.hpp"
 
@@ -37,11 +37,8 @@ sdl_handler_vector editor_palette<Item>::handler_members()
 }
 
 template<class Item>
-void editor_palette<Item>::expand_palette_groups_menu(std::vector<config>& items, int i)
+void editor_palette<Item>::expand_palette_groups_menu(std::vector<config>& items)
 {
-	auto pos = items.erase(items.begin() + i);
-
-	std::vector<config> groups;
 	const std::vector<item_group>& item_groups = get_groups();
 
 	for (std::size_t mci = 0; mci < item_groups.size(); ++mci) {
@@ -61,13 +58,8 @@ void editor_palette<Item>::expand_palette_groups_menu(std::vector<config>& items
 			img += ".png";
 		}
 
-		groups.emplace_back(
-			"label", groupname,
-			"icon", img
-		);
+		items.emplace_back("label", groupname, "icon", img);
 	}
-
-	items.insert(pos, groups.begin(), groups.end());
 }
 
 template<class Item>
@@ -122,7 +114,6 @@ void editor_palette<Item>::set_group(const std::string& id)
 			found = true;
 			std::shared_ptr<gui::button> palette_menu_button = gui_.find_menu_button("menu-editor-terrain");
 			if (palette_menu_button) {
-				//palette_menu_button->set_label(group.name);
 				palette_menu_button->set_tooltip_string(group.name);
 				palette_menu_button->set_overlay(group.icon);
 			}
@@ -158,7 +149,7 @@ std::size_t editor_palette<Item>::active_group_index()
 }
 
 template<class Item>
-void editor_palette<Item>::adjust_size(const SDL_Rect& target)
+void editor_palette<Item>::adjust_size(const rect& target)
 {
 	// The number of columns is passed to the constructor, and isn't changed afterwards. It's likely to be
 	// exactly 4, but will always be a small number which makes the next cast reasonable.
@@ -180,7 +171,7 @@ void editor_palette<Item>::adjust_size(const SDL_Rect& target)
 
 	// Update button locations and sizes. Needs to be done even if the number of buttons hasn't changed,
 	// because adjust_size() also handles moving left and right when the window's width is changed.
-	SDL_Rect dstrect;
+	rect dstrect;
 	dstrect.w = item_size_ + 2;
 	dstrect.h = item_size_ + 2;
 	for(std::size_t i = 0; i < buttons_.size(); ++i) {
@@ -298,36 +289,23 @@ void editor_palette<Item>::layout()
 		}
 
 		const std::string item_id = active_group()[item_index];
-		//typedef std::map<std::string, Item> item_map_wurscht;
 		typename item_map::iterator item = item_map_.find(item_id);
 
 		texture item_base, item_overlay;
 		std::stringstream tooltip_text;
 		setup_item((*item).second, item_base, item_overlay, tooltip_text);
-
 		bool is_core = non_core_items_.find(get_id((*item).second)) == non_core_items_.end();
 		if (!is_core) {
 			tooltip_text << " "
-					<< font::span_color(font::BAD_COLOR)
 			<< _("(non-core)") << "\n"
-			<< _("Will not work in game without extra care.")
-			<< "</span>";
+			<< _("Will not work in game without extra care.");
+			tile.set_tooltip_string(markup::span_color(font::BAD_COLOR, tooltip_text.str()));
+		} else {
+			tile.set_tooltip_string(tooltip_text.str());
 		}
 
-		tile.set_tooltip_string(tooltip_text.str());
 		tile.set_item_image(item_base, item_overlay);
 		tile.set_item_id(item_id);
-
-//		if (get_id((*item).second) == selected_bg_item_
-//				&& get_id((*item).second) == selected_fg_item_) {
-//			tile.set_pressed(gui::tristate_button::BOTH);
-//		} else if (get_id((*item).second) == selected_bg_item_) {
-//			tile.set_pressed(gui::tristate_button::RIGHT);
-//		} else if (get_id((*item).second) == selected_fg_item_) {
-//			tile.set_pressed(gui::tristate_button::LEFT);
-//		} else {
-//			tile.set_pressed(gui::tristate_button::NONE);
-//		}
 
 		if (is_selected_bg_item(get_id(item->second))
 				&& is_selected_fg_item(get_id(item->second))) {

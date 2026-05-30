@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008 - 2024
+	Copyright (C) 2008 - 2025
 	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -59,6 +59,11 @@ public:
 	 * @param value               The default value for the object.
 	 */
 	explicit typed_formula(const std::string& str, const T value = T());
+
+	explicit typed_formula(T value);
+
+	/** Set the value for this object */
+	void set_value(T value) { value_ = value; }
 
 	/**
 	 * Returns the value, can only be used if the data is no formula.
@@ -146,6 +151,12 @@ typed_formula<T>::typed_formula(const std::string& str, const T value)
 	} else {
 		convert(str);
 	}
+}
+
+template<typename T>
+typed_formula<T>::typed_formula(const T value)
+	: formula_(), value_(value)
+{
 }
 
 template<typename T>

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008 - 2024
+	Copyright (C) 2008 - 2025
 	by Tomasz Sniatowski <kailoran@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -23,6 +23,7 @@
 #include "gui/dialogs/prompt.hpp"
 #include "filesystem.hpp"
 #include "editor/action/action_base.hpp"
+#include "serialization/chrono.hpp"
 
 lg::log_domain log_editor("editor");
 
@@ -42,11 +43,16 @@ std::string initialize_addon()
 	}
 
 	if(addon_id == "///newaddon///") {
-		std::string& addon_id_new = addon_id;
-		std::int64_t current_millis = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-		addon_id = "MyAwesomeAddon-"+std::to_string(current_millis);
-		if (gui2::dialogs::prompt::execute(addon_id_new)) {
-			addon_id = !addon_filename_legal(addon_id_new) ? "MyAwesomeAddon-"+std::to_string(current_millis) : addon_id_new;
+		static constexpr std::string_view ts_format = "%Y-%m-%d_%H-%M-%S";
+		std::string timestamp = chrono::format_local_timestamp(std::chrono::system_clock::now(), ts_format);
+
+		addon_id = "MyAwesomeAddon-" + timestamp;
+		std::string addon_id_new = addon_id;
+
+		if(gui2::dialogs::prompt::execute(addon_id_new)) {
+			if(addon_filename_legal(addon_id_new)) {
+				addon_id = addon_id_new;
+			}
 		}
 	}
 
@@ -118,7 +124,17 @@ EXIT_STATUS start(bool clear_id, const std::string& filename, bool take_screensh
 
 		editor_controller editor(clear_id);
 
-		if (!filename.empty() && filesystem::file_exists(filename)) {
+		if (take_screenshot) {
+			if (!filesystem::file_exists(filename)) {
+				ERR_ED << "Map file '" << filename << "' does not exist. Unable to take screenshot!";
+				return EXIT_ERROR;
+			}
+			editor.context_manager_->load_map(filename, false);
+			editor.do_screenshot(screenshot_filename);
+			return EXIT_NORMAL;
+		}
+
+		if (!filename.empty()) {
 			if (filesystem::is_directory(filename)) {
 				editor.context_manager_->set_default_dir(filename);
 				editor.context_manager_->load_map_dialog(true);
@@ -135,16 +151,9 @@ EXIT_STATUS start(bool clear_id, const std::string& filename, bool take_screensh
 				// -- vultraz, 2018-02-24
 				editor.set_button_state();
 			}
-
-			if (take_screenshot) {
-				editor.do_screenshot(screenshot_filename);
-				e = EXIT_NORMAL;
-			}
 		}
 
-		if (!take_screenshot) {
-			e = editor.main_loop();
-		}
+		e = editor.main_loop();
 	} catch(const editor_exception& e) {
 		ERR_ED << "Editor exception in editor::start: " << e.what();
 		throw;

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2024
+	Copyright (C) 2003 - 2025
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -247,12 +247,6 @@ WML_HANDLER_FUNCTION(clear_global_variable,,pcfg)
 		verify_and_clear_global_variable(pcfg);
 }
 
-static void on_replay_error(const std::string& message)
-{
-	ERR_NG << "Error via [do_command]:";
-	ERR_NG << message;
-}
-
 // This tag exposes part of the code path used to handle [command]'s in replays
 // This allows to perform scripting in WML that will use the same code path as player actions, for example.
 WML_HANDLER_FUNCTION(do_command,, cfg)
@@ -306,12 +300,14 @@ WML_HANDLER_FUNCTION(do_command,, cfg)
 
 		//Note that this fires related events and everything else that also happens normally.
 		//have to watch out with the undo stack, therefore forbid [auto_shroud] and [update_shroud] here...
+		auto spectator = action_spectator([](const std::string& message) {
+			ERR_NG << "Error via [do_command]:";
+			ERR_NG << message;
+		});
 		synced_context::run_in_synced_context_if_not_already(
-			/*commandname*/ key,
-			/*data*/ child.get_parsed_config(),
-			/*use_undo*/ true,
-			/*show*/ true,
-			/*error_handler*/ &on_replay_error
+			key,
+			child.get_parsed_config(),
+			spectator
 		);
 		ai::manager::get_singleton().raise_gamestate_changed();
 	}
@@ -374,7 +370,7 @@ WML_HANDLER_FUNCTION(move_unit_fake,, cfg)
 	const std::vector<map_location>& path = fake_unit_path(*dummy_unit, xvals, yvals);
 	if (!path.empty()) {
 		// Always scroll.
-		unit_display::move_unit(path, dummy_unit.get_unit_ptr(), true, map_location::NDIRECTIONS, force_scroll);
+		unit_display::move_unit(path, dummy_unit.get_unit_ptr(), true, map_location::direction::indeterminate, force_scroll);
 	}
 }
 
@@ -399,7 +395,7 @@ WML_HANDLER_FUNCTION(move_units_fake,, cfg)
 	for (const vconfig& config : unit_cfgs) {
 		const std::vector<std::string> xvals = utils::split(config["x"]);
 		const std::vector<std::string> yvals = utils::split(config["y"]);
-		int skip_steps = config["skip_steps"];
+		int skip_steps = config["skip_steps"].to_int();
 		fake_unit_ptr u = create_fake_unit(config);
 		units.push_back(u);
 		paths.push_back(fake_unit_path(*u, xvals, yvals));
@@ -424,7 +420,7 @@ WML_HANDLER_FUNCTION(move_units_fake,, cfg)
 			DBG_NG << "Moving unit " << un << ", doing step " << step;
 			path_step[0] = paths[un][step - 1];
 			path_step[1] = paths[un][step];
-			unit_display::move_unit(path_step, units[un].get_unit_ptr(), true, map_location::NDIRECTIONS, force_scroll);
+			unit_display::move_unit(path_step, units[un].get_unit_ptr(), true, map_location::direction::indeterminate, force_scroll);
 			units[un]->set_location(path_step[1]);
 			units[un]->anim_comp().set_standing(false);
 		}
@@ -456,18 +452,18 @@ WML_HANDLER_FUNCTION(recall,, cfg)
 	vconfig unit_filter_cfg(temp_config);
 	const vconfig & leader_filter = cfg.child("secondary_unit");
 
-	for(int index = 0; index < static_cast<int>(resources::gameboard->teams().size()); ++index) {
-		LOG_NG << "for side " << index + 1 << "...";
-		const std::string player_id = resources::gameboard->teams()[index].save_id_or_number();
+	for(team& t : resources::gameboard->teams()) {
+		LOG_NG << "for side " << t.side() << "...";
+		const std::string player_id = t.save_id_or_number();
 
-		if(resources::gameboard->teams()[index].recall_list().size() < 1) {
+		if(t.recall_list().size() < 1) {
 			DBG_NG << "recall list is empty when trying to recall!";
-			DBG_NG << "player_id: " << player_id << " side: " << index+1;
+			DBG_NG << "player_id: " << player_id << " side: " << t.side();
 			continue;
 		}
 
-		recall_list_manager & avail = resources::gameboard->teams()[index].recall_list();
-		std::vector<unit_map::unit_iterator> leaders = resources::gameboard->units().find_leaders(index + 1);
+		recall_list_manager & avail = t.recall_list();
+		std::vector<unit_map::unit_iterator> leaders = resources::gameboard->units().find_leaders(t.side());
 
 		const unit_filter ufilt(unit_filter_cfg);
 		const unit_filter lfilt(leader_filter); // Note that if leader_filter is null, this correctly gives a null filter that matches all units.
@@ -581,10 +577,10 @@ WML_HANDLER_FUNCTION(replace_map,, cfg)
 			config file_cfg = mp_sync::get_user_choice("map_data", map_choice(cfg["map_file"].str()));
 			map.read(file_cfg["map_data"].str(), false);
 		} else if(!cfg["map_data"].empty()) {
-			map.read(cfg["map_data"], false);
+			map.read(cfg["map_data"].str(), false);
 		} else {
 			deprecated_message("[replace_map]map=", DEP_LEVEL::INDEFINITE, "1.16", "Use map_data= instead.");
-			map.read(cfg["map"], false);
+			map.read(cfg["map"].str(), false);
 		}
 	} catch(const incorrect_map_format_error&) {
 		const std::string log_map_name = cfg["map"].empty() ? cfg["map_file"] : std::string("from inline data");
@@ -634,111 +630,6 @@ WML_HANDLER_FUNCTION(set_global_variable,,pcfg)
 {
 	if (!resources::controller->is_replay())
 		verify_and_set_global_variable(pcfg);
-}
-
-WML_HANDLER_FUNCTION(set_variables,, cfg)
-{
-	const t_string& name = cfg["name"];
-	variable_access_create dest = resources::gamedata->get_variable_access_write(name);
-	if(name.empty()) {
-		ERR_NG << "trying to set a variable with an empty name:\n" << cfg.get_config().debug();
-		return;
-	}
-
-	std::vector<config> data;
-	if(cfg.has_attribute("to_variable"))
-	{
-		try
-		{
-			variable_access_const tovar = resources::gamedata->get_variable_access_read(cfg["to_variable"]);
-			for (const config& c : tovar.as_array())
-			{
-				data.push_back(c);
-			}
-		}
-		catch(const invalid_variablename_exception&)
-		{
-			ERR_NG << "Cannot do [set_variables] with invalid to_variable variable: " << cfg["to_variable"] << " with " << cfg.get_config().debug();
-		}
-	} else {
-		typedef std::pair<std::string, vconfig> vchild;
-		for (const vchild& p : cfg.all_ordered()) {
-			if(p.first == "value") {
-				data.push_back(p.second.get_parsed_config());
-			} else if(p.first == "literal") {
-				data.push_back(p.second.get_config());
-			} else if(p.first == "split") {
-				const vconfig & split_element = p.second;
-
-				std::string split_string=split_element["list"];
-				std::string separator_string=split_element["separator"];
-				std::string key_name=split_element["key"];
-				if(key_name.empty())
-				{
-					key_name="value";
-				}
-
-				bool remove_empty = split_element["remove_empty"].to_bool();
-
-				char* separator = separator_string.empty() ? nullptr : &separator_string[0];
-				if(separator_string.size() > 1){
-					ERR_NG << "[set_variables] [split] separator only supports 1 character, multiple passed: " << split_element["separator"] << " with " << cfg.get_config().debug();
-				}
-
-				std::vector<std::string> split_vector;
-
-				//if no separator is specified, explode the string
-				if(separator == nullptr)
-				{
-					for(std::string::iterator i=split_string.begin(); i!=split_string.end(); ++i)
-					{
-						split_vector.push_back(std::string(1, *i));
-					}
-				}
-				else {
-					split_vector=utils::split(split_string, *separator, remove_empty ? utils::REMOVE_EMPTY | utils::STRIP_SPACES : utils::STRIP_SPACES);
-				}
-
-				for(std::vector<std::string>::iterator i=split_vector.begin(); i!=split_vector.end(); ++i)
-				{
-					data.emplace_back(key_name, *i);
-				}
-			}
-		}
-	}
-	try
-	{
-		const std::string& mode = cfg["mode"];
-		if(mode == "merge")
-		{
-			if(dest.explicit_index() && data.size() > 1)
-			{
-				//merge children into one
-				config merged_children;
-				for (const config &ch : data) {
-					merged_children.append(ch);
-				}
-				data = {merged_children};
-			}
-			dest.merge_array(data);
-		}
-		else if(mode == "insert")
-		{
-			dest.insert_array(data);
-		}
-		else if(mode == "append")
-		{
-			dest.append_array(data);
-		}
-		else /*default if(mode == "replace")*/
-		{
-			dest.replace_array(data);
-		}
-	}
-	catch(const invalid_variablename_exception&)
-	{
-		ERR_NG << "Cannot do [set_variables] with invalid destination variable: " << name << " with " << cfg.get_config().debug();
-	}
 }
 
 /**
@@ -894,8 +785,16 @@ WML_HANDLER_FUNCTION(unit,, cfg)
 		.allow_rename_side(true)
 		.allow_show(true);
 
-	uc.add_unit(parsed_cfg, &cfg);
+	try
+	{
+		uc.add_unit(parsed_cfg, &cfg);
+	}
+	catch(const unit_type::error& e)
+	{
+		ERR_WML << "Error occured inside [unit]: " << e.what();
 
+		throw;
+	}
 }
 
 } // end namespace game_events

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2024
+	Copyright (C) 2003 - 2025
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -17,6 +17,7 @@
 
 #include "config.hpp"
 #include "gettext.hpp"
+#include "utils/general.hpp"
 
 std::ostream& operator<<(std::ostream& s, const tod_color& c)
 {
@@ -25,14 +26,14 @@ std::ostream& operator<<(std::ostream& s, const tod_color& c)
 }
 
 time_of_day::time_of_day(const config& cfg)
-	: lawful_bonus(cfg["lawful_bonus"])
+	: lawful_bonus(cfg["lawful_bonus"].to_int())
 	, bonus_modified(0)
 	, image(cfg["image"])
 	, name(cfg["name"].t_str())
 	, description(cfg["description"].t_str())
 	, id(cfg["id"])
 	, image_mask(cfg["mask"])
-	, color(cfg["red"], cfg["green"], cfg["blue"])
+	, color(cfg["red"].to_int(), cfg["green"].to_int(), cfg["blue"].to_int())
 	, sounds(cfg["sound"])
 {
 }
@@ -50,7 +51,7 @@ time_of_day::time_of_day()
 {
 }
 
-void time_of_day::write(config& cfg, std::string textdomain) const
+void time_of_day::write(config& cfg, const std::string& textdomain) const
 {
 	cfg["lawful_bonus"] = lawful_bonus;
 	cfg["red"] = color.r;
@@ -66,9 +67,7 @@ void time_of_day::write(config& cfg, std::string textdomain) const
 	cfg["sound"].write_if_not_empty(sounds);
 }
 
-void time_of_day::parse_times(const config& cfg, std::vector<time_of_day>& times)
+std::vector<time_of_day> time_of_day::parse_times(const config& cfg)
 {
-	for(const config& t : cfg.child_range("time")) {
-		times.emplace_back(t);
-	}
+	return utils::from_range<time_of_day>(cfg.child_range("time"));
 }

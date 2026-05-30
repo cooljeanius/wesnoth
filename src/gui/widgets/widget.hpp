@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2007 - 2024
+	Copyright (C) 2007 - 2025
 	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -18,9 +18,11 @@
 #include "color.hpp"
 #include "gui/core/event/dispatcher.hpp"
 #include "gui/widgets/event_executor.hpp"
+#include "gui/widgets/helper.hpp"
 #include "scripting/lua_ptr.hpp"
 #include "sdl/point.hpp"
 #include "sdl/rect.hpp"
+#include "wml_exception.hpp"
 
 #include <string>
 
@@ -196,6 +198,7 @@ public:
 	 * @retval nullptr          No parent grid found.
 	 */
 	grid* get_parent_grid();
+	const grid* get_parent_grid() const;
 
 	/*** *** *** *** *** *** Setters and getters. *** *** *** *** *** ***/
 
@@ -458,6 +461,11 @@ protected:
 public:
 	void set_linked_group(const std::string& linked_group);
 
+	std::string get_linked_group() const
+	{
+		return linked_group_;
+	}
+
 	/*** *** *** *** *** *** *** *** Members. *** *** *** *** *** *** *** ***/
 
 private:
@@ -520,7 +528,7 @@ public:
 	 *
 	 * @returns                   The drawing rectangle.
 	 */
-	SDL_Rect calculate_blitting_rectangle() const;
+	rect calculate_blitting_rectangle() const;
 
 	/**
 	 * Calculates the clipping rectangle of the widget.
@@ -530,7 +538,7 @@ public:
 	 *
 	 * @returns                   The clipping rectangle.
 	 */
-	SDL_Rect calculate_clipping_rectangle() const;
+	rect calculate_clipping_rectangle() const;
 
 	/**
 	 * Draws the background of a widget.
@@ -592,7 +600,7 @@ public:
 	 *
 	 * @returns                   The dirty rectangle.
 	 */
-	SDL_Rect get_dirty_rectangle() const;
+	rect get_dirty_rectangle() const;
 
 	/**
 	 * Sets the visible rectangle for a widget.
@@ -602,7 +610,7 @@ public:
 	 *
 	 * @param rectangle           The visible rectangle in screen coordinates.
 	 */
-	virtual void set_visible_rectangle(const SDL_Rect& rectangle);
+	virtual void set_visible_rectangle(const rect& rectangle);
 
 	/**
 	 * Indicates that this widget should be redrawn.
@@ -624,6 +632,12 @@ public:
 
 	void set_visible(const visibility visible);
 	visibility get_visible() const;
+
+	/** Sets widget to visible if @a visible is true, else invisible. */
+	void set_visible(bool visible)
+	{
+		set_visible(visible ? visibility::visible : visibility::invisible);
+	}
 
 	redraw_action get_drawing_action() const;
 
@@ -694,11 +708,10 @@ public:
 	 * @retval nullptr               No widget with the id found (or not active if
 	 *                            must_be_active was set).
 	 */
-	virtual widget* find(const std::string& id, const bool must_be_active);
+	virtual widget* find(const std::string_view id, const bool must_be_active);
 
 	/** The constant version of @ref find. */
-	virtual const widget* find(const std::string& id,
-								const bool must_be_active) const;
+	virtual const widget* find(const std::string_view id, const bool must_be_active) const;
 
 	/**
 	 * Does the widget contain the widget.
@@ -712,6 +725,76 @@ public:
 	 * @returns                   Whether or not the @p widget was found.
 	 */
 	virtual bool has_widget(const widget& widget) const;
+
+	/**
+	 * Gets a widget with the wanted id.
+	 *
+	 * This template function doesn't return a pointer to a generic widget but
+	 * returns the wanted type and tests for its existence if required.
+	 *
+	 * @param id                  The id of the widget to find.
+	 * @param must_be_active      The widget should be active, not all widgets
+	 *                            have an active flag, those who don't ignore
+	 *                            flag.
+	 * @param must_exist          The widget should be exist, the function will
+	 *                            fail if the widget doesn't exist or is
+	 *                            inactive and must be active. Upon failure a
+	 *                            wml_error is thrown.
+	 *
+	 * @returns                   The widget with the id.
+	 */
+	template <class T>
+	T* find_widget(
+		const std::string_view id,
+		const bool must_be_active,
+		const bool must_exist)
+	{
+		T* result = dynamic_cast<T*>(this->find(id, must_be_active));
+		VALIDATE(!must_exist || result, missing_widget(std::string(id)));
+
+		return result;
+	}
+
+	template <class T>
+	const T* find_widget(
+		const std::string_view id,
+		const bool must_be_active,
+		const bool must_exist) const
+	{
+		T* result = dynamic_cast<T*>(this->find(id, must_be_active));
+		VALIDATE(!must_exist || result, missing_widget(std::string(id)));
+
+		return result;
+	}
+
+	/**
+	 * Gets a widget with the wanted id.
+	 *
+	 * This template function doesn't return a reference to a generic widget but
+	 * returns a reference to the wanted type
+	 *
+	 * @param id                  The id of the widget to find.
+	 * @param must_be_active      The widget should be active, not all widgets
+	 *                            have an active flag, those who don't ignore
+	 *                            flag.
+	 *
+	 * @returns                   The widget with the id.
+	 */
+	template <class T>
+	T& find_widget(
+		const std::string_view id,
+		const bool must_be_active = false)
+	{
+		return *(this->find_widget<T>(id, must_be_active, true));
+	}
+
+	template <class T>
+	const T& find_widget(
+		const std::string_view id,
+		const bool must_be_active = false) const
+	{
+		return *(this->find_widget<T>(id, must_be_active, true));
+	}
 
 private:
 	/** See @ref event::dispatcher::is_at. */

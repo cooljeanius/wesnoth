@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2010 - 2024
+	Copyright (C) 2010 - 2025
 	by Jody Northup
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -104,7 +104,7 @@ static void set_global_variable(persist_context &ctx, const vconfig &pcfg)
 		if (arraylen == 0) {
 			try
 			{
-				val = pack_scalar(global,resources::gamedata->get_variable(local));
+				val = pack_scalar(global, resources::gamedata->get_variable(local).t_str());
 			}
 			catch(const invalid_variablename_exception&)
 			{
@@ -170,7 +170,7 @@ void verify_and_set_global_variable(const vconfig &pcfg)
 	}
 	if (resources::controller->is_networked_mp()) {
 		config::attribute_value pcfg_side = pcfg["side"];
-		int side = pcfg_side;
+		int side = pcfg_side.to_int();
 		//Check side matching only if the side is not "global" or empty.
 		if (pcfg_side.str() != "global" && !pcfg_side.empty()) {
 			//Ensure that the side is valid.

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2024
+	Copyright (C) 2003 - 2025
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -28,8 +28,7 @@ class editor_palette : public tristate_palette {
 
 public:
 
-	editor_palette(editor_display &gui, const game_config_view& /*cfg*/
-	             , int item_size, std::size_t columns, editor_toolkit &toolkit)
+	editor_palette(editor_display &gui, int item_size, std::size_t columns, editor_toolkit &toolkit)
 		: tristate_palette()
 		, groups_()
 		, gui_(gui)
@@ -49,8 +48,6 @@ public:
 	{
 	}
 
-
-
 	virtual sdl_handler_vector handler_members() override;
 
 	void set_start_item(std::size_t index) override { items_start_ = index; }
@@ -58,7 +55,7 @@ public:
 	std::size_t start_num(void) override { return items_start_; }
 
 	/** Menu expanding for palette group list */
-	void expand_palette_groups_menu(std::vector<config>& items, int i) override;
+	void expand_palette_groups_menu(std::vector<config>& items) override;
 
 	void set_group(std::size_t index) override;
 
@@ -81,7 +78,7 @@ public:
 	 *
 	 * Use if the size_specs have changed.
 	 */
-	void adjust_size(const SDL_Rect& target) override;
+	void adjust_size(const rect& target) override;
 
 	virtual bool scroll_up() override;
 	virtual bool can_scroll_up() override;
@@ -90,7 +87,7 @@ public:
 
 	void swap() override;
 
-	virtual std::string get_help_string() = 0;
+	virtual std::string get_help_string() const = 0;
 
 	/** Return the currently selected foreground/background item. */
 	const Item& selected_fg_item() const { return item_map_.find(selected_fg_item_)->second; }
@@ -138,7 +135,7 @@ protected:
 	virtual void select_bg_item(const std::string& item_id) override;
 
 	/**
-	 * The editor_groups as defined in editor-groups.cfg.
+	 * The editor_groups as defined in terrain-groups.cfg.
 	 *
 	 * Note the user must make sure the id's here are the same as the
 	 * editor_group in terrain.cfg.

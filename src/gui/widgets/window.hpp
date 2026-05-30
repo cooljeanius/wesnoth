@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2007 - 2024
+	Copyright (C) 2007 - 2025
 	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -46,8 +46,6 @@ namespace event { struct message; }
 
 // ------------ WIDGET -----------{
 
-namespace dialogs { class modal_dialog; }
-
 namespace event
 {
 class distributor;
@@ -60,7 +58,6 @@ class distributor;
 class window : public panel, public top_level_drawable
 {
 	friend class debug_layout_graph;
-	friend std::unique_ptr<window> build(const builder_window::window_resolution&);
 	friend struct window_implementation;
 	friend class invalidate_layout_blocker;
 	friend class pane;
@@ -81,8 +78,6 @@ public:
 
 	/** Gets the retval for the default buttons. */
 	static retval get_retval_by_id(const std::string& id);
-
-	void finish_build(const builder_window::window_resolution&);
 
 	/**
 	 * Shows the window, running an event loop until it should close.
@@ -266,18 +261,11 @@ public:
 	virtual const widget* find_at(const point& coordinate,
 								   const bool must_be_active) const override;
 
-	/** Inherited from widget. */
-	dialogs::modal_dialog* dialog()
-	{
-		return owner_;
-	}
+	/** See @ref widget::find. */
+	widget* find(const std::string_view id, const bool must_be_active) override;
 
 	/** See @ref widget::find. */
-	widget* find(const std::string& id, const bool must_be_active) override;
-
-	/** See @ref widget::find. */
-	const widget* find(const std::string& id,
-						const bool must_be_active) const override;
+	const widget* find(const std::string_view id, const bool must_be_active) const override;
 
 #if 0
 	/** @todo Implement these functions. */
@@ -348,8 +336,10 @@ public:
 	 * @param id                  The id of the group.
 	 * @param fixed_width         Does the group have a fixed width?
 	 * @param fixed_height        Does the group have a fixed height?
+	 *
+	 * @returns                   True if successful, false otherwise.
 	 */
-	void init_linked_size_group(const std::string& id,
+	bool init_linked_size_group(const std::string& id,
 								const bool fixed_width,
 								const bool fixed_height);
 
@@ -406,11 +396,6 @@ public:
 		return retval_;
 	}
 
-	void set_owner(dialogs::modal_dialog* owner)
-	{
-		owner_ = owner;
-	}
-
 	void set_click_dismiss(const bool click_dismiss)
 	{
 		click_dismiss_ = click_dismiss;
@@ -426,21 +411,19 @@ public:
 		variables_.add(key, value);
 		queue_redraw();
 	}
-	point get_linked_size(const std::string& linked_group_id) const
-	{
-		std::map<std::string, linked_size>::const_iterator it = linked_size_.find(linked_group_id);
-		if(it != linked_size_.end()) {
-			return point(it->second.width, it->second.height);
-		}
 
-		return point(-1, -1);
+	point get_linked_size(std::string_view group_id) const
+	{
+		if(auto it = linked_size_.find(group_id); it != linked_size_.end()) {
+			return { it->second.width, it->second.height };
+		} else {
+			return { -1, -1 };
+		}
 	}
 
 	enum class exit_hook {
-		/** Always run hook */
-		on_all,
-		/** Run hook *only* if result is OK. */
-		on_ok,
+		always,
+		ok_only,
 	};
 
 	/**
@@ -448,18 +431,21 @@ public:
 	 *
 	 * A window will only close if the given function returns true under the specified mode.
 	 */
-	void set_exit_hook(exit_hook mode, std::function<bool(window&)> func)
+	template<typename Func>
+	void set_exit_hook(exit_hook mode, const Func& hook)
 	{
-		exit_hook_ = [mode, func](window& w) {
-			switch(mode) {
-			case exit_hook::on_all:
-				return func(w);
-			case exit_hook::on_ok:
-				return w.get_retval() != OK || func(w);
-			default:
-				return true;
-			}
-		};
+		switch(mode) {
+		case exit_hook::always:
+			exit_hook_ = hook;
+			break;
+
+		case exit_hook::ok_only:
+			exit_hook_ = [this, hook] { return get_retval() != OK || hook(); };
+			break;
+
+		default:
+			break;
+		}
 	}
 
 	enum class show_mode {
@@ -482,9 +468,6 @@ private:
 
 	// return value of the window, 0 default.
 	int retval_;
-
-	/** The dialog that owns the window. */
-	dialogs::modal_dialog* owner_;
 
 	/**
 	 * When set the form needs a full layout redraw cycle.
@@ -602,7 +585,7 @@ private:
 	};
 
 	/** List of the widgets, whose size are linked together. */
-	std::map<std::string, linked_size> linked_size_;
+	std::map<std::string, linked_size, std::less<>> linked_size_;
 
 	/** List of widgets in the tabbing order. */
 	std::vector<widget*> tab_order;
@@ -653,16 +636,6 @@ private:
 	virtual const std::string& get_control_type() const override;
 
 	/**
-	 * In how many consecutive frames the window has changed. This is used to
-	 * detect the situation where the title screen changes in every frame,
-	 * forcing all other windows to redraw everything all the time.
-	 */
-	unsigned int consecutive_changed_frames_ = 0u;
-
-	/** Schedules windows on top of us (if any) to redraw. */
-	void redraw_windows_on_top() const;
-
-	/**
 	 * Finishes the initialization of the grid.
 	 *
 	 * @param content_grid        The new contents for the content grid.
@@ -670,7 +643,7 @@ private:
 	void finalize(const builder_grid& content_grid);
 
 #ifdef DEBUG_WINDOW_LAYOUT_GRAPHS
-	debug_layout_graph* debug_layout_;
+	std::unique_ptr<debug_layout_graph> debug_layout_;
 
 public:
 	/** wrapper for debug_layout_graph::generate_dot_file. */
@@ -702,6 +675,7 @@ public:
 	// dispatcher. Chaining probably should remain exclusive to windows.
 	void mouse_capture(const bool capture = true);
 	void keyboard_capture(widget* widget);
+	void capture_and_show_keyboard(widget* widget);
 
 	/**
 	 * Adds the widget to the keyboard chain.
@@ -768,7 +742,7 @@ private:
 
 	void signal_handler_close_window();
 
-	std::function<bool(window&)> exit_hook_;
+	std::function<bool()> exit_hook_;
 };
 
 // }---------- DEFINITION ---------{

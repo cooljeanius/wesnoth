@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2014 - 2024
+	Copyright (C) 2014 - 2025
 	by Chris Beck <render787@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -32,3 +32,9 @@ class attack_type;
 
 using attack_ptr = std::shared_ptr<attack_type>;
 using const_attack_ptr = std::shared_ptr<const attack_type>;
+
+class unit_ability_t;
+
+using ability_ptr = std::shared_ptr<unit_ability_t>;
+using const_ability_ptr = std::shared_ptr<const unit_ability_t>;
+

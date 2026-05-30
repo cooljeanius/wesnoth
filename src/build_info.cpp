@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2015 - 2024
+	Copyright (C) 2015 - 2025
 	by Iris Morelle <shadowm2006@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -42,12 +42,18 @@
 #include <boost/predef.h>
 #include <boost/version.hpp>
 
+#if defined(__APPLE__)
+#include <TargetConditionals.h>
+#endif
+
 #ifndef __APPLE__
 #include <openssl/crypto.h>
 #include <openssl/opensslv.h>
 #endif
 
+#if !(defined(__APPLE__) && TARGET_OS_IPHONE)
 #include <curl/curl.h>
+#endif
 
 #include <pango/pangocairo.h>
 
@@ -250,6 +256,11 @@ version_table_manager::version_table_manager()
 	// libcurl
 	//
 
+#if defined(__APPLE__) && TARGET_OS_IPHONE
+	compiled[LIB_CURL] = "unavailable";
+	linked[LIB_CURL] = "unavailable";
+	names[LIB_CURL] = "libcurl";
+#else
 	compiled[LIB_CURL] = format_version(
 		(LIBCURL_VERSION_NUM & 0xFF0000) >> 16,
 		(LIBCURL_VERSION_NUM & 0x00FF00) >> 8,
@@ -261,6 +272,7 @@ version_table_manager::version_table_manager()
 	// This is likely to upset somebody out there, but the cURL authors
 	// consistently call it 'libcurl' (all lowercase) in all documentation.
 	names[LIB_CURL] = "libcurl";
+#endif
 
 	//
 	// Cairo
@@ -593,7 +605,8 @@ list_formatter video_settings_report_internal(const std::string& heading = "")
 	fmt.insert("Window size", geometry_to_string(video::current_resolution()));
 	fmt.insert("Game canvas size", geometry_to_string(video::game_canvas_size()));
 	fmt.insert("Final render target size", geometry_to_string(video::output_size()));
-	fmt.insert("Screen refresh rate", std::to_string(video::current_refresh_rate()));
+	fmt.insert("Render refresh rate", std::to_string(video::current_refresh_rate()));
+	fmt.insert("Screen refresh rate", std::to_string(video::native_refresh_rate()));
 	fmt.insert("Screen dpi", dpi_report);
 
 	const auto& renderer_report = video::renderer_report();

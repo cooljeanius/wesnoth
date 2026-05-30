@@ -1,13 +1,14 @@
 # #-#-#-#-#  wesnoth-low  #-#-#-#-#
 # Bengali translation of Wesnoth.
 # Copyright (C) 2024 Wesnoth development team
-# Subhraman Sarkar <suvrax@gmail.com>, 2024.
+# Subhraman Sarkar <suvrax@gmail.com>, 2024-2025.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: bn\n"
 "Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
-"POT-Creation-Date: 2024-03-03 07:37+0530\n"
-"PO-Revision-Date: 2024-02-21 09:49+0530\n"
+"POT-Creation-Date: 2026-05-19 02:15 UTC\n"
+"PO-Revision-Date: 2025-07-24 23:22+0530\n"
 "Last-Translator: Subhraman Sarkar <suvrax@gmail.com>\n"
 "Language-Team: Bengali < >\n"
 "Language: bn\n"
@@ -19,242 +20,248 @@ msgstr ""
 "X-Generator: Gtranslator 42.0\n"
 
 #. [campaign]: id=LOW, type=hybrid
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:44
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:45
 msgid "LoW"
-msgstr ""
+msgstr "LoW"
 
 #. [campaign]: id=LOW, type=hybrid
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:45
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:46
 msgid "Legend of Wesmere"
 msgstr "ওয়েসমেয়ারের উপাখ্যান"
 
 #. [campaign]: id=LOW, type=hybrid
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:47
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:51
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:48
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:52
 msgid ""
 "The tale of Kalenz, the High Lord who rallied his people after the second "
 "orcish invasion of the Great Continent and became the most renowned hero in "
 "the recorded history of the elves.\n"
 "\n"
 msgstr ""
+"মহান লর্ড কালেন্জ, যিনি বিরাট মহাদেশের দ্বিতীয় ওর্ক আক্রমণের পর তাঁর জনগণের "
+"পুনরুত্থান ঘটিয়েছিলেন, এবং এল্ফদের ইতিহাসের সর্বাধিক খ্যাত নায়কে পরিণত হয়েছিলেন, "
+"তাঁর কাহিনী ।\n"
+"\n"
 
 #. [campaign]: id=LOW, type=hybrid
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:49
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:50
 msgid "(Hard level, 17 scenarios.)"
 msgstr "কঠিন পর্যায়, 17টি ঘটনাক্রম"
 
 #. [campaign]: id=LOW, type=hybrid
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:53
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:54
 msgid "(Hard level, 18 scenarios.)"
 msgstr "কঠিন পর্যায়, 18টি ঘটনাক্রম"
 
 #. [campaign]: id=LOW, type=hybrid
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:57
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:58
 msgid "Normal"
 msgstr "স্বাভাবিক"
 
 #. [campaign]: id=LOW, type=hybrid
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:57
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:58
 msgid "Soldier"
 msgstr "সেনা"
 
 #. [campaign]: id=LOW, type=hybrid
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:58
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:59
 msgid "Challenging"
 msgstr "ঝুঁকিপূর্ণ"
 
 #. [campaign]: id=LOW, type=hybrid
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:58
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:59
 msgid "Lord"
 msgstr "লর্ড"
 
 #. [campaign]: id=LOW, type=hybrid
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:59
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:60
 msgid "Difficult"
 msgstr "কঠিন"
 
 #. [campaign]: id=LOW, type=hybrid
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:59
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:60
 msgid "High Lord"
 msgstr "মহান লর্ড"
 
 #. [about]
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:62
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:63
 msgid "Creator and Lead Designer"
 msgstr "সৃষ্টিকর্তা এবং মূখ্য পরিকল্পক"
 
 #. [entry]
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:64
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:77
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:65
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:78
 msgid "Spiros, George and Alexander Alexiou (Santi/fnaek)"
-msgstr ""
+msgstr "Spiros, George এবং Alexander Alexiou (Santi/fnaek)"
 
 #. [about]
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:71
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:72
 msgid "Campaign Maintenance"
 msgstr "অভিযান রক্ষণাবেক্ষণ"
 
 #. [about]
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:81
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:82
 msgid "Prose-doctoring and adaptation for mainline"
-msgstr ""
+msgstr "গদ্য পরিমার্জন এবং মূখ্যবিভাগের জন্য উপযোগীকরণ"
 
 #. [about]
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:91
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:92
 msgid "WML Assistance"
 msgstr "WML সহায়তা"
 
 #. [about]
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:106
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:107
 msgid "Artificial Intelligence"
 msgstr "কৃত্রিম বুদ্ধিমত্তা"
 
 #. [about]
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:113
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:114
 msgid "Graphics"
 msgstr "গ্রাফিক্স"
 
 #. [about]
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:129
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:130
 msgid "Additional thanks to"
 msgstr "অতিরিক্ত ধন্যবাদ"
 
 #. [entry]
-#: data/campaigns/Legend_of_Wesmere/_main.cfg:187
+#: data/campaigns/Legend_of_Wesmere/_main.cfg:188
 msgid ""
 "And the rest of the Wesnoth community for feedback,\n"
 "criticism, help with WML code and graphics."
 msgstr ""
+"এবং ওয়েসনথ পরিবারের বাকি সকলকে ফিডব্যাক,\n"
+"সমালোচনা, ডব্লুএমএল কোড এবং গ্রাফিক্সের জন্য ।"
 
 #. [label]
 #: data/campaigns/Legend_of_Wesmere/maps/Kalian_map.cfg:15
 msgid "Essarn"
-msgstr ""
+msgstr "এসার্ন"
 
 #. [label]
 #: data/campaigns/Legend_of_Wesmere/maps/Kalian_map.cfg:24
 msgid "Valcathra"
-msgstr ""
+msgstr "ভালকাথ্রা"
 
 #. [label]
 #: data/campaigns/Legend_of_Wesmere/maps/Kalian_map.cfg:33
 msgid "River Telfar"
-msgstr ""
+msgstr "টেলফার নদী"
 
 #. [label]
 #: data/campaigns/Legend_of_Wesmere/maps/Kalian_map.cfg:42
 msgid "Telfar Green"
-msgstr ""
+msgstr "টেলফার সবুজভূমি"
 
 #. [label]
 #: data/campaigns/Legend_of_Wesmere/maps/Kalian_map.cfg:51
 msgid "Erethean"
-msgstr ""
+msgstr "এরেথিয়ান"
 
 #. [label]
 #: data/campaigns/Legend_of_Wesmere/maps/Kalian_map.cfg:60
 msgid "Northern Shallows"
-msgstr ""
+msgstr "উত্তরের অগভীরাংশ"
 
 #. [label]
 #: data/campaigns/Legend_of_Wesmere/maps/Kalian_map.cfg:69
 msgid "Arthen"
-msgstr ""
+msgstr "আর্থেন"
 
 #. [label]
 #: data/campaigns/Legend_of_Wesmere/maps/Kalian_map.cfg:78
 msgid "Dancer’s Green"
-msgstr ""
+msgstr "নর্তকদের সবুজভূমি"
 
 #. [label]
 #: data/campaigns/Legend_of_Wesmere/maps/Kalian_map.cfg:87
 msgid "Illissa"
-msgstr ""
+msgstr "ইলিসা"
 
 #. [label]
 #: data/campaigns/Legend_of_Wesmere/maps/Kalian_map.cfg:96
 msgid "Brightleaf Wood"
-msgstr ""
+msgstr "উজ্জ্বলপত্র অরণ্য"
 
 #. [label]
 #: data/campaigns/Legend_of_Wesmere/maps/Kalian_map.cfg:105
 msgid "Viricon"
-msgstr ""
+msgstr "ভিরিকন"
 
 #. [label]
 #: data/campaigns/Legend_of_Wesmere/maps/Kalian_map.cfg:114
 msgid "Ford of Alyas"
-msgstr ""
+msgstr "আলয়াস ফোর্ড"
 
 #. [label]
 #: data/campaigns/Legend_of_Wesmere/maps/Kalian_map.cfg:123
 msgid "Elendor"
-msgstr ""
+msgstr "এলেনডোর"
 
 #. [label]
 #: data/campaigns/Legend_of_Wesmere/maps/Kalian_map.cfg:132
 msgid "Telionath"
-msgstr ""
+msgstr "টেলিওনাথ"
 
 #. [label]
 #: data/campaigns/Legend_of_Wesmere/maps/Kalian_map.cfg:141
 msgid "West Tower"
-msgstr ""
+msgstr "পশ্চিম মিনার"
 
 #. [label]
 #: data/campaigns/Legend_of_Wesmere/maps/Kalian_map.cfg:150
 msgid "North Bridge"
-msgstr ""
+msgstr "উত্তরের সেতু"
 
 #. [label]
 #: data/campaigns/Legend_of_Wesmere/maps/Kalian_map.cfg:159
 msgid "North Tower"
-msgstr ""
+msgstr "উত্তরের মিনার"
 
 #. [label]
 #: data/campaigns/Legend_of_Wesmere/maps/Kalian_map.cfg:168
 msgid "South Bastion"
-msgstr ""
+msgstr "দক্ষিণের দূর্গপ্রাচীর"
 
 #. [label]
 #: data/campaigns/Legend_of_Wesmere/maps/Kalian_map.cfg:177
 msgid "Tireas"
-msgstr ""
+msgstr "টিরেয়াস"
 
 #. [label]
 #: data/campaigns/Legend_of_Wesmere/maps/Kalian_map.cfg:186
 msgid "East Tower"
-msgstr ""
+msgstr "পূর্বের মিনার"
 
 #. [label]
 #: data/campaigns/Legend_of_Wesmere/maps/Kalian_map.cfg:195
 msgid "Aelion"
-msgstr ""
+msgstr "অ্যালিয়ন"
 
 #. [label]
 #: data/campaigns/Legend_of_Wesmere/maps/Kalian_map.cfg:204
 msgid "Ford of Tifranur"
-msgstr ""
+msgstr "টিফ্রানুরের ফোর্ড"
 
 #. [label]
 #: data/campaigns/Legend_of_Wesmere/maps/Kalian_map.cfg:213
 msgid "Karmarth Hills"
-msgstr ""
+msgstr "কারমাথ পাহাড়"
 
 #. [label]
 #: data/campaigns/Legend_of_Wesmere/maps/Kalian_map.cfg:222
 msgid "Arryn"
-msgstr ""
+msgstr "আররিন"
 
 #. [label]
 #: data/campaigns/Legend_of_Wesmere/maps/Kalian_map.cfg:231
 msgid "Westwind Wood"
-msgstr ""
+msgstr "পশ্চিমবায়ু অরণ্য"
 
 #. [label]
 #: data/campaigns/Legend_of_Wesmere/maps/Kalian_map.cfg:240
 msgid "Southwind Wood"
-msgstr ""
+msgstr "দক্ষিণাবায়ু অরণ্য"
 
 #. [scenario]: id=01_The_Uprooting
 #: data/campaigns/Legend_of_Wesmere/scenarios/chapter1/01_The_Uprooting.cfg:3
@@ -272,6 +279,8 @@ msgid ""
 "<i>The Legend of Wesmere</i>\n"
 "Chapter One"
 msgstr ""
+"<i>ওয়েসমেয়ারের উপাখ্যান</i>\n"
+"প্রথম অধ্যায়"
 
 #. [part]
 #: data/campaigns/Legend_of_Wesmere/scenarios/chapter1/01_The_Uprooting.cfg:33
@@ -279,6 +288,8 @@ msgid ""
 "Chapter One\n"
 "<i>Flight and Fight</i>"
 msgstr ""
+"প্রথম অধ্যায়\n"
+"<i>পলায়ন এবং লড়াই</i>"
 
 #. [part]
 #: data/campaigns/Legend_of_Wesmere/scenarios/chapter1/01_The_Uprooting.cfg:37
@@ -286,6 +297,8 @@ msgid ""
 "The great elven heroes Kalenz and Landar were born in a quiet green wood in "
 "Lintanir on the fringes of the Great Northern Forest."
 msgstr ""
+"বিরাট উত্তরের অরণ্য লিন্টানিরের প্রান্তে একটি শান্ত সবুজ বনে মহান এলভেন নায়ক কালেঞ্জ "
+"এবং ল্যান্ডার জন্মগ্রহণ করেছিলেন।"
 
 #. [part]
 #: data/campaigns/Legend_of_Wesmere/scenarios/chapter1/01_The_Uprooting.cfg:42
@@ -295,6 +308,10 @@ msgid ""
 "elders normally inclined to pay little heed to anyone younger than a century "
 "old."
 msgstr ""
+"অভিজাত বংশের না হলেও, কালেঞ্জ তার জনগণের পেশায় খুব কম বয়সেই দক্ষতা দেখিয়েছিলেন "
+"। তার দ্রুত বুদ্ধিমত্তা তাকে প্রাচীনদের মধ্যে স্বাভাবিকের চেয়ে বেশি সম্মান অর্জন করতে "
+"সাহায্য করেছিল, যাঁরা সাধারণত এক শতাব্দীর কম বয়সী কারও প্রতি খুব বেশী মনোযোগ দিতে "
+"আগ্রহী ছিলেন না ।"
 
 #. [part]
 #: data/campaigns/Legend_of_Wesmere/scenarios/chapter1/01_The_Uprooting.cfg:47
@@ -458,7 +475,7 @@ msgstr ""
 #. [message]: id=Velon
 #: data/campaigns/Legend_of_Wesmere/scenarios/chapter1/01_The_Uprooting.cfg:344
 msgid "They are too many. We have no choice but to submit!"
-msgstr ""
+msgstr "ওদের সংখ্যাটা খুব বেশী । আমাদের বশ্যতা স্বীকার করে নিতেই হবে ।"
 
 #. [message]: id=Kalenz
 #: data/campaigns/Legend_of_Wesmere/scenarios/chapter1/01_The_Uprooting.cfg:348
@@ -470,7 +487,7 @@ msgstr ""
 #. [message]: id=Landar
 #: data/campaigns/Legend_of_Wesmere/scenarios/chapter1/01_The_Uprooting.cfg:356
 msgid "We will follow you, Kalenz — but where can we go?"
-msgstr ""
+msgstr "আমরা তোমাকে অনুসরণ করব, কালেন্জ — কিন্তু আমরা যাব কোথায়?"
 
 #. [message]: id=Kalenz
 #: data/campaigns/Legend_of_Wesmere/scenarios/chapter1/01_The_Uprooting.cfg:360
@@ -570,7 +587,7 @@ msgstr ""
 #. [message]: id=Velon
 #: data/campaigns/Legend_of_Wesmere/scenarios/chapter1/01_The_Uprooting.cfg:452
 msgid "Flee, Kalenz... find vengeance for us!"
-msgstr ""
+msgstr "পালাও, কালেন্জ... পরে আমাদের জন্য প্রতিশোধ নিও!"
 
 #. [message]: id=Kalenz
 #: data/campaigns/Legend_of_Wesmere/scenarios/chapter1/01_The_Uprooting.cfg:456
@@ -4166,15 +4183,18 @@ msgstr ""
 #. [part]
 #: data/campaigns/Legend_of_Wesmere/scenarios/chapter5/22_Northern_Battle.cfg:33
 msgid ""
-"Kalenz’s veterans joined the host of the Northern Elves under Uradredia. "
-"Very soon, Landar’s army appeared..."
+"Though some of Kalenz’s veterans had joined Landar in revolt, others instead "
+"joined the northern host under Uradredia. Very soon, Landar’s army "
+"appeared..."
 msgstr ""
 
 #. [message]: speaker=narrator
 #: data/campaigns/Legend_of_Wesmere/scenarios/chapter5/22_Northern_Battle.cfg:145
 msgid ""
 "Kalenz can only recall shamans and their advancements from his former army; "
-"the rest of his men joined Uradredia before he arrived."
+"as for the rest of his men, it’s been a bitter split — for every elf who "
+"came back from Saurgrath to stand with Uradredia, two came back pledging "
+"their blade to Landar’s call."
 msgstr ""
 
 #. [objective]: condition=win

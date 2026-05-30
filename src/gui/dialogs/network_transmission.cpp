@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2011 - 2024
+	Copyright (C) 2011 - 2025
 	by Sergey Popov <loonycyborg@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -18,7 +18,6 @@
 #include "gui/dialogs/network_transmission.hpp"
 
 #include "gettext.hpp"
-#include "gui/auxiliary/find_widget.hpp"
 #include "gui/widgets/progress_bar.hpp"
 #include "gui/widgets/label.hpp"
 #include "gui/widgets/window.hpp"
@@ -26,33 +25,33 @@
 
 namespace gui2::dialogs
 {
-using namespace std::chrono_literals;
-
 REGISTER_DIALOG(network_transmission)
 
-void network_transmission::pump_monitor::process(events::pump_info&)
+void network_transmission::pump_monitor::process()
 {
-	if(!window_)
+	if(!window_) {
 		return;
+	}
+
 	connection_->poll();
+
+	std::size_t completed = connection_->current();
+	std::size_t total = connection_->total();
+
+	if(total) {
+		window_->find_widget<progress_bar>("progress")
+			.set_percentage(std::round((completed * 100.) / total));
+
+		auto ss = formatter()
+			<< utils::si_string(completed, true, _("unit_byte^B")) << "/"
+			<< utils::si_string(total, true, _("unit_byte^B"));
+
+		window_->find_widget<label>("numeric_progress")
+			.set_label(ss.str());
+	}
+
 	if(connection_->finished()) {
 		window_->set_retval(retval::OK);
-	} else {
-		size_t completed, total;
-			completed = connection_->current();
-			total = connection_->total();
-		if(total) {
-			find_widget<progress_bar>(window_.ptr(), "progress", false)
-					.set_percentage((completed * 100.) / total);
-
-			std::stringstream ss;
-			ss << utils::si_string(completed, true, _("unit_byte^B")) << "/"
-			   << utils::si_string(total, true, _("unit_byte^B"));
-
-			find_widget<label>(window_.ptr(), "numeric_progress", false)
-					.set_label(ss.str());
-			window_->invalidate_layout();
-		}
 	}
 }
 
@@ -68,26 +67,25 @@ network_transmission::network_transmission(
 	register_label("title", true, title, false);
 }
 
-void network_transmission::pre_show(window& window)
+void network_transmission::pre_show()
 {
 	// ***** ***** ***** ***** Set up the widgets ***** ***** ***** *****
 	if(!subtitle_.empty()) {
-		label& subtitle_label
-				= find_widget<label>(&window, "subtitle", false);
-
+		label& subtitle_label = find_widget<label>("subtitle");
 		subtitle_label.set_label(subtitle_);
 		subtitle_label.set_use_markup(true);
 	}
 
 	// NOTE: needed to avoid explicit calls to invalidate_layout()
 	// in network_transmission::pump_monitor::process()
-	find_widget<label>(&window, "numeric_progress", false).set_label(" ");
-	pump_monitor_.window_ = window;
+	find_widget<label>("numeric_progress").set_label(" ");
+	pump_monitor_.window_ = this;
 }
 
-void network_transmission::post_show(window& /*window*/)
+void network_transmission::post_show()
 {
-	pump_monitor_.window_ = utils::nullopt;
+	// In case we close the dialog before transmission is complete
+	pump_monitor_.window_ = nullptr;
 
 	if(get_retval() == retval::CANCEL) {
 		connection_->cancel();

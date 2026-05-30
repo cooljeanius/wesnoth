@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2024
+	Copyright (C) 2003 - 2025
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -24,17 +24,27 @@
 #include "sdl/texture.hpp"
 #include "sdl/utils.hpp"
 #include "sdl/window.hpp"
-#include "widgets/menu.hpp" // for bluebg_style.unload_images
+#include "utils/general.hpp"
 
-#ifdef TARGET_OS_OSX
+#ifdef __APPLE__
+#include <TargetConditionals.h>
 #include "desktop/apple_video.hpp"
+#if TARGET_OS_OSX
 #include "game_version.hpp"
 #endif
+#endif
 
+#include <SDL2/SDL.h>
 #include <SDL2/SDL_render.h> // SDL_Texture
 
 #include <cassert>
 #include <vector>
+
+#ifdef __ANDROID__
+extern "C" {
+	SDL_Surface* Android_AP_getFrameBuffer();
+}
+#endif
 
 static lg::log_domain log_display("display");
 #define LOG_DP LOG_STREAM(info, log_display)
@@ -59,6 +69,7 @@ point test_resolution_ = {1024, 768}; /**< resolution for unit tests */
 int refresh_rate_ = 0;
 point game_canvas_size_ = {0, 0};
 int pixel_scale_ = 1;
+int max_scale_ = 1;
 rect input_area_ = {};
 
 } // anon namespace
@@ -119,10 +130,8 @@ void deinit()
 	// Clear any static texture caches,
 	// lest they try to delete textures after SDL_Quit.
 	image::flush_cache();
-	font::flush_texture_cache();
 	render_texture_.reset();
 	current_render_target_.reset();
-	gui::menu::bluebg_style.unload_images();
 
 	// Destroy the window, and thus also the renderer.
 	window.reset();
@@ -228,10 +237,10 @@ bool update_framebuffer()
 
 	// Find max valid pixel scale at current output size.
 	point osize(window->get_output_size());
-	int max_scale = std::min(
+	max_scale_ = std::min(
 		osize.x / pref_constants::min_window_width,
 		osize.y / pref_constants::min_window_height);
-	max_scale = std::min(max_scale, pref_constants::max_pixel_scale);
+	max_scale_ = std::min(max_scale_, pref_constants::max_pixel_scale);
 
 	// Determine best pixel scale according to preference and window size
 	int scale = 1;
@@ -240,14 +249,14 @@ bool update_framebuffer()
 		int def_scale = std::min(
 			osize.x / pref_constants::def_window_width,
 			osize.y / pref_constants::def_window_height);
-		scale = std::min(max_scale, def_scale);
+		scale = std::min(max_scale_, def_scale);
 		// Otherwise reduce to keep below the max window size (1920x1080).
 		int min_scale = std::min(
 			osize.x / (pref_constants::max_window_width+1) + 1,
 			osize.y / (pref_constants::max_window_height+1) + 1);
 		scale = std::max(scale, min_scale);
 	} else {
-		scale = std::min(max_scale, prefs::get().pixel_scale());
+		scale = std::min(max_scale_, prefs::get().pixel_scale());
 	}
 	// Cache it for easy access.
 	if (pixel_scale_ != scale) {
@@ -317,11 +326,11 @@ bool update_framebuffer()
 
 	rect active_area = to_output(draw_area());
 	if (active_area.size() != osize) {
-		LOG_DP << "render target offset: LT " << active_area.pos() << " RB "
-		       << osize - active_area.size() - active_area.pos();
+		LOG_DP << "render target offset: LT " << active_area.origin() << " RB "
+		       << osize - active_area.size() - active_area.origin();
 		// Translate active_area into display coordinates as input_area_
 		input_area_ = {
-			(active_area.pos() * wsize) / osize,
+			(active_area.origin() * wsize) / osize,
 			(active_area.size() * wsize) / osize
 		};
 		LOG_DP << "input area: " << input_area_;
@@ -353,6 +362,14 @@ void init_test_window()
 
 void init_window(bool hidden)
 {
+#ifdef __ANDROID__
+	prefs::get().set_fullscreen(true);
+	SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengles");
+#endif
+#if defined(__APPLE__) && TARGET_OS_IPHONE
+	desktop::apple::install_keyboard_dismiss_toolbar();
+#endif
+
 	// Position
 	const int x = prefs::get().fullscreen() ? SDL_WINDOWPOS_UNDEFINED : SDL_WINDOWPOS_CENTERED;
 	const int y = prefs::get().fullscreen() ? SDL_WINDOWPOS_UNDEFINED : SDL_WINDOWPOS_CENTERED;
@@ -400,6 +417,10 @@ void init_window(bool hidden)
 	SDL_DisplayMode currentDisplayMode;
 	SDL_GetCurrentDisplayMode(window->get_display_index(), &currentDisplayMode);
 	refresh_rate_ = currentDisplayMode.refresh_rate != 0 ? currentDisplayMode.refresh_rate : 60;
+
+#ifdef __ANDROID__
+	window->set_size(w, h);
+#endif
 
 	update_framebuffer();
 }
@@ -470,7 +491,7 @@ rect to_output(const rect& r)
 	// Multiply r by integer scale, adding draw_offset to the position.
 	point dsize = current_render_target_.draw_size();
 	point osize = current_render_target_.get_raw_size();
-	point pos = (r.pos() * (osize / dsize)) + draw_offset();
+	point pos = (r.origin() * (osize / dsize)) + draw_offset();
 	point size = r.size() * (osize / dsize);
 	return {pos, size};
 }
@@ -485,10 +506,24 @@ int get_pixel_scale()
 	return pixel_scale_;
 }
 
+int get_max_pixel_scale()
+{
+	return max_scale_;
+}
+
+int native_refresh_rate()
+{
+	return refresh_rate_;
+}
+
 int current_refresh_rate()
 {
 	// TODO: this should be more clever, depending on usage
-	return refresh_rate_;
+	if(auto preferred = prefs::get().refresh_rate(); preferred > 0) {
+		return std::min(preferred, refresh_rate_);
+	} else {
+		return refresh_rate_;
+	}
 }
 
 void force_render_target(const texture& t)
@@ -534,8 +569,10 @@ void reset_render_target()
 
 texture get_render_target()
 {
+#ifndef __ANDROID__
 	// This should always be up-to-date, but assert for sanity.
 	assert(current_render_target_ == SDL_GetRenderTarget(get_renderer()));
+#endif
 	return current_render_target_;
 }
 
@@ -567,6 +604,12 @@ void render_screen()
 	// Clear the render target so we're drawing to the window.
 	clear_render_target();
 
+	// Use fully transparent black to clear the window backbuffer
+	SDL_SetRenderDrawColor(*window, 0u, 0u, 0u, 0u);
+
+	// Clear the window backbuffer before rendering the render texture.
+	SDL_RenderClear(*window);
+
 	// Copy the render texture to the window.
 	SDL_RenderCopy(*window, render_texture_, nullptr, nullptr);
 
@@ -577,7 +620,7 @@ void render_screen()
 	reset_render_target();
 }
 
-surface read_pixels(SDL_Rect* r)
+surface read_pixels(rect* r)
 {
 	if (!window) {
 		WRN_DP << "trying to read pixels with no window";
@@ -617,7 +660,7 @@ surface read_pixels(SDL_Rect* r)
 	return s;
 }
 
-surface read_pixels_low_res(SDL_Rect* r)
+surface read_pixels_low_res(rect* r)
 {
 	if(!window) {
 		WRN_DP << "trying to read pixels with no window";
@@ -721,7 +764,7 @@ std::vector<point> get_available_resolutions(const bool include_current)
 
 	// The maximum size to which this window can be set. For some reason this won't
 	// pop up as a display mode of its own.
-	SDL_Rect bounds;
+	rect bounds;
 	SDL_GetDisplayBounds(display_index, &bounds);
 
 	SDL_DisplayMode mode;
@@ -739,7 +782,7 @@ std::vector<point> get_available_resolutions(const bool include_current)
 		}
 	}
 
-	if(std::find(result.begin(), result.end(), min_res) == result.end()) {
+	if(!utils::contains(result, min_res)) {
 		result.push_back(min_res);
 	}
 
@@ -758,7 +801,7 @@ point current_resolution()
 	if (testing_) {
 		return test_resolution_;
 	}
-	return point(window->get_size()); // Convert from plain SDL_Point
+	return window->get_size();
 }
 
 bool is_fullscreen()

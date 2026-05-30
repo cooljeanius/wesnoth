@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008 - 2024
+	Copyright (C) 2008 - 2025
 	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -39,12 +39,12 @@ panel::panel(const implementation::builder_styled_widget& builder, const std::st
 {
 }
 
-SDL_Rect panel::get_client_rect() const
+rect panel::get_client_rect() const
 {
 	const auto conf = cast_config_to<panel_definition>();
 	assert(conf);
 
-	SDL_Rect result = get_rectangle();
+	rect result = get_rectangle();
 	result.x += conf->left_border;
 	result.y += conf->top_border;
 	result.w -= conf->left_border + conf->right_border;
@@ -108,10 +108,10 @@ panel_definition::panel_definition(const config& cfg)
 
 panel_definition::resolution::resolution(const config& cfg)
 	: resolution_definition(cfg)
-	, top_border(cfg["top_border"])
-	, bottom_border(cfg["bottom_border"])
-	, left_border(cfg["left_border"])
-	, right_border(cfg["right_border"])
+	, top_border(cfg["top_border"].to_unsigned())
+	, bottom_border(cfg["bottom_border"].to_unsigned())
+	, left_border(cfg["left_border"].to_unsigned())
+	, right_border(cfg["right_border"].to_unsigned())
 {
 	// The panel needs to know the order.
 	state.emplace_back(VALIDATE_WML_CHILD(cfg, "background", missing_mandatory_wml_tag("panel_definition][resolution", "background")));

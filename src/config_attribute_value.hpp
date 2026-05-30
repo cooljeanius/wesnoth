@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2024
+	Copyright (C) 2003 - 2025
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -31,12 +31,18 @@
 #include "tstring.hpp"
 #include "utils/variant.hpp"
 
-#include <climits>
-#include <ctime>
+#include <chrono>
+#ifdef __cpp_concepts
+#include <concepts>
+#endif
 #include <iosfwd>
 #include <string>
-#include <vector>
 #include <type_traits>
+
+#ifdef __cpp_concepts
+template<typename T>
+concept StringLike = std::constructible_from<std::string, T>;
+#endif
 
 /**
  * Variant for storing WML attributes.
@@ -122,9 +128,25 @@ public:
 
 	// String assignments:
 	config_attribute_value& operator=(const char *v) { return operator=(std::string(v)); }
+	config_attribute_value& operator=(std::string&& v);
 	config_attribute_value& operator=(const std::string &v);
 	config_attribute_value& operator=(const std::string_view &v);
 	config_attribute_value& operator=(const t_string &v);
+
+	//TODO: should this be a normal constructor?
+	template<typename T>
+	static config_attribute_value create(const T val)
+	{
+		config_attribute_value res;
+		res = val;
+		return res;
+	}
+
+	template<typename... Args>
+	config_attribute_value& operator=(const std::chrono::duration<Args...>& v)
+	{
+		return this->operator=(v.count());
+	}
 
 	/** Calls @ref operator=(const std::string&) if @a v is not empty. */
 	void write_if_not_empty(const std::string& v);
@@ -136,7 +158,6 @@ public:
 	long long to_long_long(long long def = 0) const;
 	unsigned to_unsigned(unsigned def = 0) const;
 	std::size_t to_size_t(std::size_t def = 0) const;
-	std::time_t to_time_t(std::time_t def = 0) const;
 	double to_double(double def = 0.) const;
 	std::string str(const std::string& fallback = "") const;
 	t_string t_str() const;
@@ -148,11 +169,7 @@ public:
 	std::string to(const std::string& def) const { return str(def); }
 
 	// Implicit conversions:
-	operator int() const { return to_int(); }
 	operator std::string() const { return str(); }
-	operator t_string() const { return t_str(); }
-	// This is to prevent int conversion being used when an attribute value is tested in an if statement
-	explicit operator bool() const {return to_bool(); }
 
 	/** Tests for an attribute that was never set. */
 	bool blank() const;
@@ -166,37 +183,52 @@ public:
 		return !operator==(other);
 	}
 
-	bool operator==(bool comp) const
+#ifdef __cpp_concepts
+	bool operator==(const StringLike auto& comp) const
 	{
-		const bool has_bool =
-			utils::holds_alternative<yes_no>(value_) ||
-			utils::holds_alternative<true_false>(value_);
-		return has_bool && to_bool() == comp;
+		return apply_visitor([this, &comp]<typename V>(const V& value) {
+			if constexpr(StringLike<V>) {
+				return value == comp;
+			} else {
+				return *this == create(comp);
+			}
+		});
+	}
+#else
+	template<typename T>
+	std::enable_if_t<std::is_constructible_v<std::string, T>, bool>
+	friend operator==(const config_attribute_value& attribute, const T& comp)
+	{
+		return attribute.apply_visitor([&](const auto& value) {
+			if constexpr(std::is_constructible_v<std::string, std::decay_t<decltype(value)>>) {
+				return value == comp;
+			} else {
+				return attribute == config_attribute_value::create(comp);
+			}
+		});
 	}
 
 	template<typename T>
-	bool operator==(const T& comp) const
+	std::enable_if_t<std::is_constructible_v<std::string, T>, bool>
+	friend operator==(const T& comp, const config_attribute_value& val)
 	{
-		if constexpr(std::is_convertible_v<T, std::string>) {
-			config_attribute_value v;
-			v = comp;
-			return *this == v;
-		} else {
-			return utils::holds_alternative<T>(value_) && T(*this) == comp;
-		}
+		return val == comp;
 	}
 
 	template<typename T>
-	bool friend operator!=(const config_attribute_value& val, const T& str)
+	std::enable_if_t<std::is_constructible_v<std::string, T>, bool>
+	friend operator!=(const config_attribute_value& val, const T& comp)
 	{
-		return !val.operator==(str);
+		return !(val == comp);
 	}
 
 	template<typename T>
-	bool friend operator!=(const T &str, const config_attribute_value& val)
+	std::enable_if_t<std::is_constructible_v<std::string, T>, bool>
+	friend operator!=(const T& comp, const config_attribute_value& val)
 	{
-		return !val.operator==(str);
+		return !(val == comp);
 	}
+#endif
 
 	// Streaming:
 	friend std::ostream& operator<<(std::ostream& os, const config_attribute_value& v);

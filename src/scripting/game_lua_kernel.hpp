@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2009 - 2024
+	Copyright (C) 2009 - 2025
 	by Guillaume Melquiond <guillaume.melquiond@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -43,6 +43,8 @@ class reports;
 struct map_location;
 typedef int (*lua_CFunction) (lua_State *L);
 
+class scoped_lua_argument;
+
 class game_lua_kernel : public lua_kernel_base
 {
 	game_display * game_display_;
@@ -55,7 +57,6 @@ class game_lua_kernel : public lua_kernel_base
 	game_data & gamedata();
 	tod_manager & tod_man();
 
-	config level_lua_;
 	int EVENT_TABLE;
 	bool has_preloaded_ = false;
 
@@ -68,6 +69,10 @@ class game_lua_kernel : public lua_kernel_base
 	static config preload_config;
 
 	friend class game_config_manager; // to allow it to call extract_preload_scripts
+	friend struct current_tag;
+	friend struct scenario_tag;
+	friend struct schedule_tag;
+	friend struct game_config_glk_tag;
 
 	// Private lua callbacks
 	int intf_allow_end_turn(lua_State *);
@@ -76,7 +81,6 @@ class game_lua_kernel : public lua_kernel_base
 	int intf_add_time_area(lua_State *);
 	int intf_remove_time_area(lua_State *);
 	int intf_get_time_area(lua_State *);
-	int intf_animate_unit(lua_State *);
 	int intf_gamestate_inspector(lua_State *);
 	int impl_run_animation(lua_State *);
 	int intf_create_animator(lua_State *);
@@ -93,6 +97,7 @@ class game_lua_kernel : public lua_kernel_base
 	int intf_view_locked(lua_State *L);
 	int intf_lock_view(lua_State *L);
 	int impl_get_terrain_info(lua_State *L);
+	int impl_get_terrain_list(lua_State *L);
 	template<bool consider_illuminates>
 	int intf_get_time_of_day(lua_State *L);
 	int impl_schedule_get(lua_State *L);
@@ -102,11 +107,11 @@ class game_lua_kernel : public lua_kernel_base
 	int intf_set_village_owner(lua_State *L);
 	int intf_get_mouseover_tile(lua_State *L);
 	int intf_get_selected_tile(lua_State *L);
-	int impl_game_config_get(lua_State *L) override;
-	int impl_game_config_set(lua_State *L) override;
 	int impl_scenario_get(lua_State *L);
 	int impl_scenario_set(lua_State *L);
+	int impl_scenario_dir(lua_State *L);
 	int impl_current_get(lua_State *L);
+	int impl_current_dir(lua_State *L);
 	int intf_clear_messages(lua_State*);
 	int impl_end_level_data_set(lua_State*);
 	int intf_end_turn(lua_State*);
@@ -114,7 +119,6 @@ class game_lua_kernel : public lua_kernel_base
 	int intf_find_path(lua_State *L);
 	int intf_find_reach(lua_State *L);
 	int intf_find_vision_range(lua_State *L);
-	int intf_heal_unit(lua_State *L);
 	int intf_message(lua_State *L);
 	int intf_play_sound(lua_State *L);
 	int intf_set_achievement(lua_State *L);
@@ -148,7 +152,6 @@ class game_lua_kernel : public lua_kernel_base
 	int intf_match_location(lua_State *L);
 	int intf_match_side(lua_State *L);
 	int intf_set_side_id(lua_State *L);
-	int intf_modify_ai_wml(lua_State *L);
 	int intf_get_sides(lua_State* L);
 	int intf_get_side(lua_State* L);
 	int intf_add_tile_overlay(lua_State *L);
@@ -170,11 +173,13 @@ class game_lua_kernel : public lua_kernel_base
 	int intf_redraw(lua_State *L);
 	int intf_replace_schedule(lua_State *l);
 	int impl_schedule_set(lua_State *L);
+	int impl_schedule_dir(lua_State *L);
 	int intf_scroll(lua_State *L);
 	int intf_get_all_vars(lua_State *L);
-	int impl_theme_item(lua_State *L, std::string name);
+	int impl_theme_item(lua_State *L, const std::string& name);
 	int impl_theme_items_get(lua_State *L);
 	int impl_theme_items_set(lua_State *L);
+	int impl_theme_items_dir(lua_State *L);
 	int cfun_builtin_effect(lua_State *L);
 	int cfun_wml_action(lua_State *L);
 	int intf_fire_event(lua_State *L, const bool by_id);
@@ -191,11 +196,18 @@ class game_lua_kernel : public lua_kernel_base
 	void lua_chat(const std::string& caption, const std::string& msg);
 	std::vector<int> get_sides_vector(const vconfig& cfg);
 
+	/**
+	 * Pushes the WML events table to the Lua stack.
+	 *
+	 * @returns RAII helper instance that controls the lifetime
+	 * of the resulting stack variable.
+	 */
+	[[nodiscard]] scoped_lua_argument push_wml_events_table(lua_State* L) const;
+
 public:
 	game_board & board();
 	std::vector<team> & teams();
 	const gamemap & map() const;
-	game_display * get_display() const { return game_display_; }
 	/**
 		A value != 0 means that the shouldn't remove any units from the map, usually because
 		we are currently operating on a unit& and removing it might cause memory corruptions

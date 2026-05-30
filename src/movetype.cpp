@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2014 - 2024
+	Copyright (C) 2014 - 2025
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -20,9 +20,9 @@
 
 #include "movetype.hpp"
 
-#include "game_config_manager.hpp"
 #include "log.hpp"
 #include "terrain/translation.hpp"
+#include "terrain/type_data.hpp"
 
 static lg::log_domain log_config("config");
 #define ERR_CF LOG_STREAM(err, log_config)
@@ -169,13 +169,13 @@ bool movetype::terrain_info::data::config_has_changes(const config & new_values,
                                                       bool overwrite) const
 {
 	if ( overwrite ) {
-		for (const config::attribute & a : new_values.attribute_range())
-			if ( a.second != cfg_[a.first] )
+		for (const auto& [key, value] : new_values.attribute_range())
+			if ( value != cfg_[key] )
 				return true;
 	}
 	else {
-		for (const config::attribute & a : new_values.attribute_range())
-			if ( a.second.to_int() != 0 )
+		for(const auto& [_, value] : new_values.attribute_range())
+			if ( value.to_int() != 0 )
 				return true;
 	}
 
@@ -202,15 +202,15 @@ void movetype::terrain_info::data::merge(const config & new_values, bool overwri
 		// change "merge_attributes" to "merge_with".)
 		cfg_.merge_attributes(new_values);
 	else {
-		for (const config::attribute & a : new_values.attribute_range()) {
-			config::attribute_value & dest = cfg_[a.first];
+		for(const auto& [new_key, new_value] : new_values.attribute_range()) {
+			config::attribute_value & dest = cfg_[new_key];
 			int old = dest.to_int(params_.max_value);
 
 			// The new value is the absolute value of the old plus the
 			// provided value, capped between minimum and maximum, then
 			// given the sign of the old value.
 			// (Think defenses for why we might have negative values.)
-			int value = std::abs(old) + a.second.to_int(0);
+			int value = std::abs(old) + new_value.to_int(0);
 			value = std::max(params_.min_value, std::min(value, params_.max_value));
 			if ( old < 0 )
 				value = -value;
@@ -284,24 +284,19 @@ int movetype::terrain_info::data::calc_value(
 		return params_.default_value;
 	}
 
-	std::shared_ptr<terrain_type_data> tdata;
-	if (game_config_manager::get()){
-		tdata = game_config_manager::get()->terrain_types(); //This permits to get terrain info in unit help pages from the help in title screen, even if there is no residual gamemap object
-	}
-	assert(tdata);
+	const terrain_type& ter_info = terrain_type_data::get()->get_terrain_info(terrain);
 
 	// Get a list of underlying terrains.
-	const t_translation::ter_list & underlying = params_.use_move ?
-			tdata->underlying_mvt_terrain(terrain) :
-			tdata->underlying_def_terrain(terrain);
+	const t_translation::ter_list& underlying = params_.use_move
+		? ter_info.mvt_type()
+		: ter_info.def_type();
 
 	if (terrain_type::is_indivisible(terrain, underlying))
 	{
 		// This is not an alias; get the value directly.
 		int result = params_.default_value;
 
-		const std::string & id = tdata->get_terrain_info(terrain).id();
-		if (const config::attribute_value *val = cfg_.get(id)) {
+		if (const config::attribute_value *val = cfg_.get(ter_info.id())) {
 			// Read the value from our config.
 			result = val->to_int(params_.default_value);
 			if ( params_.eval != nullptr )
@@ -448,10 +443,11 @@ movetype::terrain_info::terrain_info(const terrain_info & that,
 
 movetype::terrain_info::terrain_info(terrain_info && that,
 	const terrain_info * fallback) :
+	unique_data_(std::move(that.unique_data_)),
+	shared_data_(std::move(that.shared_data_)),
 	fallback_(fallback)
 {
 	assert(fallback ? !! that.fallback_ : ! that.fallback_);
-	swap_data(that);
 }
 
 /**
@@ -727,8 +723,8 @@ utils::string_map_res movetype::resistances::damage_table() const
 {
 	utils::string_map_res result;
 
-	for (const config::attribute & attrb : cfg_.attribute_range()) {
-		result[attrb.first] = attrb.second;
+	for(const auto& [key, value] : cfg_.attribute_range()) {
+		result[key] = value.t_str();
 	}
 
 	return result;
@@ -755,9 +751,9 @@ void movetype::resistances::merge(const config & new_data, bool overwrite)
 		// change "merge_attributes" to "merge_with".)
 		cfg_.merge_attributes(new_data);
 	else
-		for (const config::attribute & a : new_data.attribute_range()) {
-			config::attribute_value & dest = cfg_[a.first];
-			dest = std::max(0, dest.to_int(100) + a.second.to_int(0));
+		for(const auto& [key, value] : new_data.attribute_range()) {
+			config::attribute_value & dest = cfg_[key];
+			dest = std::max(0, dest.to_int(100) + value.to_int(0));
 		}
 }
 
@@ -811,7 +807,7 @@ movetype::movetype(const config & cfg) :
 	flying_ = cfg["flying"].to_bool(flying_);
 
 	for(const config& sn : cfg.child_range("special_note")) {
-		special_notes_.push_back(sn["note"]);
+		special_notes_.push_back(sn["note"].t_str());
 	}
 }
 
@@ -839,7 +835,7 @@ movetype::movetype(movetype && that) :
 	jamming_(std::move(that.jamming_), &vision_),
 	defense_(std::move(that.defense_)),
 	resist_(std::move(that.resist_)),
-	flying_(std::move(that.flying_)),
+	flying_(that.flying_),
 	special_notes_(std::move(that.special_notes_))
 {
 }

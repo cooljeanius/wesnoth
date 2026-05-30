@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2014 - 2024
+	Copyright (C) 2014 - 2025
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -15,6 +15,7 @@
 
 #pragma once
 
+#include "color.hpp"
 #include "formula/callable.hpp"
 #include "formula/formula.hpp"
 #include "map/location.hpp"
@@ -64,6 +65,8 @@ public:
 
 	int do_compare(const formula_callable* callable) const override;
 
+	const terrain_type& get_terrain_type() const { return t_; }
+
 private:
 	const map_location loc_;
 	const terrain_type& t_;
@@ -93,7 +96,8 @@ public:
 		type_ = LOCATION_C;
 	}
 
-	void serialize_to_string(std::string& str) const override;
+	/** Inherited from formula_callable. */
+	std::string serialize_to_string() const override;
 
 	const map_location& loc() const { return loc_; }
 
@@ -192,6 +196,25 @@ public:
 private:
 	const team& team_;
 };
+
+
+class color_callable : public formula_callable
+{
+public:
+	color_callable(color_t clr)
+		: clr_(clr)
+	{}
+
+	void get_inputs(formula_input_vector& inputs) const override;
+	variant get_value(const std::string& key) const override;
+
+	const color_t get_color() const { return clr_; }
+
+private:
+	color_t clr_;
+};
+
+
 
 class set_var_callable : public action_callable
 {

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2024
+	Copyright (C) 2003 - 2025
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -35,12 +35,13 @@ static lg::log_domain log_halo("halo");
 #define LOG_HL LOG_STREAM(info, log_halo)
 #define DBG_HL LOG_STREAM(debug, log_halo)
 
+using namespace std::chrono_literals;
+
 namespace halo
 {
 
 class halo_impl
 {
-
 	class effect
 	{
 	public:
@@ -64,8 +65,6 @@ class halo_impl
 		bool expired()     const { return !images_.cycles() && images_.animation_finished(); }
 		bool need_update() const { return images_.need_update(); }
 		bool does_change() const { return !images_.does_not_change(); }
-		bool on_location(const std::set<map_location>& locations) const;
-		bool location_not_known() const;
 
 	private:
 
@@ -82,6 +81,8 @@ class halo_impl
 
 		// The current halo image frame
 		texture tex_ = {};
+		// Track the last used locator to avoid redundant cache lookups
+		image::locator last_locator_ = image::locator();
 		// The current location where the halo will be drawn on the screen
 		rect screen_loc_ = {};
 		// The last drawn location
@@ -96,7 +97,7 @@ class halo_impl
 	};
 
 	std::map<int, effect> haloes;
-	int halo_id;
+	int halo_id{1};
 
 	/**
 	 * Upon unrendering, an invalidation list is send. All haloes in that area and
@@ -117,20 +118,7 @@ class halo_impl
 	 */
 	std::set<int> changing_haloes;
 
-	public:
-	/**
-	 * impl's of exposed functions
-	 */
-
-	explicit halo_impl() :
-		haloes(),
-		halo_id(1),
-		invalidated_haloes(),
-		deleted_haloes(),
-		changing_haloes()
-	{}
-
-
+public:
 	int add(int x, int y, const std::string& image, const map_location& loc,
 			ORIENTATION orientation=NORMAL, bool infinite=true);
 
@@ -161,19 +149,17 @@ halo_impl::effect::effect(int xpos, int ypos,
 
 	set_location(xpos, ypos);
 
-	images_.start_animation(0, infinite);
+	images_.start_animation(0ms, infinite);
 
 	update();
 }
 
 void halo_impl::effect::set_location(int x, int y)
 {
-	int new_x = x - disp->get_location_x(map_location::ZERO());
-	int new_y = y - disp->get_location_y(map_location::ZERO());
-	if (new_x != abs_mid_.x || new_y != abs_mid_.y) {
-		DBG_HL << "setting halo location " << point{new_x,new_y};
-		abs_mid_.x = new_x;
-		abs_mid_.y = new_y;
+	point new_center = point{x, y} - disp->get_location(map_location::ZERO());
+	if(new_center != abs_mid_) {
+		DBG_HL << "setting halo location " << new_center;
+		abs_mid_ = new_center;
 	}
 }
 
@@ -181,7 +167,6 @@ rect halo_impl::effect::get_draw_location()
 {
 	return screen_loc_;
 }
-
 
 /** Update the current location, animation frame, etc. */
 void halo_impl::effect::update()
@@ -191,10 +176,8 @@ void halo_impl::effect::update()
 	if(map_loc_.x != -1 && map_loc_.y != -1) {
 		// If the halo is attached to a particular map location,
 		// make sure it stays attached.
-		set_location(
-			disp->get_location_x(map_loc_) + disp->hex_size() / 2,
-			disp->get_location_y(map_loc_) + disp->hex_size() / 2
-		);
+		auto [x, y] = disp->get_location_rect(map_loc_).center();
+		set_location(x, y);
 	} else {
 		// It would be good to attach to a position within a hex,
 		// or persistently to an item or unit. That's not the case,
@@ -207,7 +190,11 @@ void halo_impl::effect::update()
 	}
 
 	// Load texture for current animation frame
-	tex_ = image::get_texture(current_image());
+	const image::locator& loc = current_image();
+	if (loc != last_locator_ || !tex_) {
+		tex_ = image::get_texture(loc);
+		last_locator_ = loc;
+	}
 	if(!tex_) {
 		ERR_HL << "no texture found for current halo animation frame";
 		screen_loc_ = {};
@@ -218,8 +205,7 @@ void halo_impl::effect::update()
 	int w(tex_.w() * disp->get_zoom_factor());
 	int h(tex_.h() * disp->get_zoom_factor());
 
-	const int zero_x = disp->get_location_x(map_location::ZERO());
-	const int zero_y = disp->get_location_y(map_location::ZERO());
+	const auto [zero_x, zero_y] = disp->get_location(map_location::ZERO());
 
 	const int xpos = zero_x + abs_mid_.x - w/2;
 	const int ypos = zero_y + abs_mid_.y - h/2;
@@ -300,7 +286,6 @@ void halo_impl::effect::queue_redraw()
 }
 
 
-
 /*************/
 /* halo_impl */
 /*************/
@@ -317,20 +302,19 @@ int halo_impl::add(int x, int y, const std::string& image, const map_location& l
 	for(const std::string& item : items) {
 		const std::vector<std::string>& sub_items = utils::split(item, ':');
 		std::string str = item;
-		int time = 100;
+		auto time = 100ms;
 
 		if(sub_items.size() > 1) {
 			str = sub_items.front();
 			try {
-				time = std::stoi(sub_items.back());
+				time = std::chrono::milliseconds{std::stoi(sub_items.back())};
 			} catch(const std::invalid_argument&) {
 				ERR_HL << "Invalid time value found when constructing halo: " << sub_items.back();
 			}
 		}
-		image_vector.push_back(animated<image::locator>::frame_description(time,image::locator(str)));
-
+		image_vector.emplace_back(time, image::locator(str));
 	}
-	haloes.emplace(id, effect(x, y, image_vector, loc, orientation, infinite));
+	haloes.try_emplace(id, x, y, image_vector, loc, orientation, infinite);
 	invalidated_haloes.insert(id);
 	if(haloes.find(id)->second.does_change() || !infinite) {
 		changing_haloes.insert(id);
@@ -384,7 +368,7 @@ void halo_impl::update()
 	deleted_haloes.clear();
 
 	// Update the location and animation frame of the remaining halos
-	for(auto& [id, halo] : haloes) { (void)id;
+	for(auto& [id, halo] : haloes) {
 		halo.update();
 	}
 
@@ -411,7 +395,6 @@ void halo_impl::render(const rect& region)
 		}
 	}
 }
-
 
 
 /*****************/

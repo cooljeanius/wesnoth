@@ -1,22 +1,22 @@
 # Turkish translations for Battle for Wesnoth package.
-# Copyright (C) 2022 Wesnoth development team
+# Copyright (C) 2024 Wesnoth development team
 # This file is distributed under the same license as the Battle for Wesnoth package.
+# Nilgün Belma Bugüner <nillguine@gmail.com>, 2008-2024.
 #
-# Nilgün Belma Bugüner <nilgun@belgeler.gen.tr>, 2008,..., 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: wesnoth-did\n"
 "Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
-"POT-Creation-Date: 2024-02-20 02:52 UTC\n"
-"PO-Revision-Date: 2023-01-02 13:16+0300\n"
-"Last-Translator: Nilgün Belma Bugüner <nilgunbelma@gmail.com>\n"
-"Language-Team: Turkish\n"
+"POT-Creation-Date: 2026-05-19 02:15 UTC\n"
+"PO-Revision-Date: 2024-09-15 17:45+0300\n"
+"Last-Translator: Nilgün Belma Bugüner <nillguine@gmail.com>\n"
+"Language-Team: Turkish <->\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.4.2\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"X-Generator: Gtranslator 42.0\n"
 
 #. [campaign]: id=Descent_into_Darkness
 #. [achievement_group]
@@ -105,76 +105,74 @@ msgstr "Çeşitli"
 #. [achievement]: id=did_rat_eater
 #: data/campaigns/Descent_Into_Darkness/achievements.cfg:10
 msgid "A Big Hunk of Flesh"
-msgstr ""
+msgstr "Büyük Bir Et Parçası"
 
 #. [achievement]: id=did_rat_eater
 #. the achievements are somewhat written as if from Malin's point of view which is why there's some weird and sometimes quirky flavor in them
 #: data/campaigns/Descent_Into_Darkness/achievements.cfg:12
 msgid "Feed a Ghoul way too many rats."
-msgstr ""
+msgstr "Gulyabani'ye çok fazla fare yedir."
 
 #. [achievement]: id=did_drogan
 #. you can interpret this as a Harry Potter reference or you can think about it as Malin making fun of Drogan's country accent, or you can take artistic liberty with the translation
 #: data/campaigns/Descent_Into_Darkness/achievements.cfg:19
-#, fuzzy
-#| msgid "Death of Drogan"
 msgid "Yer a Ghoul, Drogan"
-msgstr "Drogan’ın ölümü"
+msgstr "Sen bir gulyabanisin, Drogan"
 
 #. [achievement]: id=did_drogan
 #: data/campaigns/Descent_Into_Darkness/achievements.cfg:20
 msgid "Make that arrogant jerk Drogan into just another one of your minions."
-msgstr ""
+msgstr "O kibirli pislik Drogan'ı da kölelerinden biri yap."
 
 #. [achievement]: id=did_sushi
 #: data/campaigns/Descent_Into_Darkness/achievements.cfg:26
 msgid "High Grade Sushi"
-msgstr ""
+msgstr "Yüksek Dereceli Suşi"
 
 #. [achievement]: id=did_sushi
 #: data/campaigns/Descent_Into_Darkness/achievements.cfg:27
 msgid "Upgrade a normal swimmer zombie into a super zombie."
-msgstr ""
+msgstr "Normal yüzücü zombiyi süper zombiye yükseltir."
 
 #. [achievement]: id=did_drunk
 #: data/campaigns/Descent_Into_Darkness/achievements.cfg:33
 msgid "Drunken Fist Style"
-msgstr ""
+msgstr "Sarhoş Yumruk Tarzı"
 
 #. [achievement]: id=did_drunk
 #: data/campaigns/Descent_Into_Darkness/achievements.cfg:34
 msgid "Make the drunken sailor zombie drink some poorly aged rum."
-msgstr ""
+msgstr "Sarhoş denizci zombiye biraz kötü dinlendirilmiş rom içir."
 
 #. [achievement]: id=did_monolith
 #: data/campaigns/Descent_Into_Darkness/achievements.cfg:40
 msgid "A Monolith of Stone"
-msgstr ""
+msgstr "Dikilitaş"
 
 #. [achievement]: id=did_monolith
 #: data/campaigns/Descent_Into_Darkness/achievements.cfg:41
 msgid "Find and explore all eight unique monoliths in a single playthrough."
-msgstr ""
+msgstr "Tek oynanışta sekiz benzersiz dikilitaşın hepsini bulup keşfedin."
 
 #. [achievement]: id=did_reflection
 #: data/campaigns/Descent_Into_Darkness/achievements.cfg:48
 msgid "Am I the Bad Guy?"
-msgstr ""
+msgstr "Kötü Adam Ben miyim?"
 
 #. [achievement]: id=did_reflection
 #: data/campaigns/Descent_Into_Darkness/achievements.cfg:49
 msgid "Reflect on all of your doings. Did you learn anything from them?"
-msgstr ""
+msgstr "Yaptığınız her şeyi düşünün. Bunlardan bir şey öğrendiniz mi?"
 
 #. [achievement]: id=did_tentacle
 #: data/campaigns/Descent_Into_Darkness/achievements.cfg:55
 msgid "Fish are Friends not Food"
-msgstr ""
+msgstr "Balıklar Yemek Değil Arkadaştır"
 
 #. [achievement]: id=did_tentacle
 #: data/campaigns/Descent_Into_Darkness/achievements.cfg:56
 msgid "Find and eat Inky in the secret underground squid village."
-msgstr ""
+msgstr "Gizli yeraltı kalamar köyünde Inki'yi bul ve ye."
 
 #. [scenario]: id=01_Saving_Parthyn
 #: data/campaigns/Descent_Into_Darkness/scenarios/01_Saving_Parthyn.cfg:5
@@ -335,10 +333,10 @@ msgstr ""
 #: data/campaigns/Descent_Into_Darkness/scenarios/01_Saving_Parthyn.cfg:129
 #: data/campaigns/Descent_Into_Darkness/scenarios/06_Return_to_Parthyn.cfg:125
 #: data/campaigns/Descent_Into_Darkness/scenarios/07a_A_Small_Favor.cfg:143
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:49
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:65
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:43
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:97
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:50
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:66
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:44
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:98
 msgid "Defenders"
 msgstr "Savunmacılar"
 
@@ -405,12 +403,12 @@ msgstr "Orklar Partin'in kıyı köylerine erişirse"
 #: data/campaigns/Descent_Into_Darkness/scenarios/06_Return_to_Parthyn.cfg:209
 #: data/campaigns/Descent_Into_Darkness/scenarios/06_Return_to_Parthyn.cfg:819
 #: data/campaigns/Descent_Into_Darkness/scenarios/07a_A_Small_Favor.cfg:431
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:129
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:929
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:211
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1077
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1145
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1192
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:130
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:930
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:212
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1078
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1146
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1193
 #: data/campaigns/Descent_Into_Darkness/scenarios/08_Alone_at_Last.cfg:174
 #: data/campaigns/Descent_Into_Darkness/scenarios/08_Alone_at_Last.cfg:900
 #: data/campaigns/Descent_Into_Darkness/scenarios/09_Descent_into_Darkness.cfg:203
@@ -863,12 +861,12 @@ msgstr "Tüm goblin köylerini ele geçir"
 #: data/campaigns/Descent_Into_Darkness/scenarios/04_Spring_of_Reprisal.cfg:146
 #: data/campaigns/Descent_Into_Darkness/scenarios/05_Schism.cfg:211
 #: data/campaigns/Descent_Into_Darkness/scenarios/07a_A_Small_Favor.cfg:435
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:133
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:933
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:215
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1081
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1149
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1196
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:134
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:934
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:216
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1082
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1150
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1197
 msgid "Death of Darken Volk"
 msgstr "Kara Volk’un ölümü"
 
@@ -2994,9 +2992,9 @@ msgstr ""
 
 #. [side]
 #: data/campaigns/Descent_Into_Darkness/scenarios/07a_A_Small_Favor.cfg:122
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:30
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:24
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:65
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:31
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:25
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:66
 msgid "Intruders"
 msgstr "Saldırganlar"
 
@@ -3208,45 +3206,43 @@ msgstr ""
 "verici."
 
 #. [scenario]: id=07b_A_Small_Favor2
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:5
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:6
 msgid "A Small Favor — II"
 msgstr "Küçük Bir İyilik — II"
 
 #. [time]: id=indoors
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:13
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:14
 msgid "Indoors"
 msgstr "İçeriye"
 
 #. [objective]: condition=win
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:125
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:126
 msgid "Find Lady Karae"
 msgstr "Komutan Karres'i bul"
 
 #. [unit]: type=Silver Mage, id=Lady Karae, gender=female
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:177
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:178
 msgid "Lady Karae"
 msgstr "Komutan Karres"
 
 #. [command]
 #. Unit name
 #. Unit name
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:263
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:345
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:264
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:346
 msgid "Guard"
 msgstr "Muhafız"
 
 #. [command]
 #. Unit name
 #. Unit name
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:265
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:347
-#, fuzzy
-#| msgid "female^maimed"
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:266
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:348
 msgid "female^Guard"
-msgstr "sakat"
+msgstr "Muhafız"
 
 #. [message]: speaker=narrator
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:419
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:420
 msgid ""
 "Malin and Darken Volk enter the mage lady’s manor, closing the heavy gates "
 "behind them."
@@ -3255,22 +3251,22 @@ msgstr ""
 "arkalarından hemen kapattılar."
 
 #. [message]: speaker=Darken Volk
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:424
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:425
 msgid "That gate will not hold back the soldiers for long. We must hurry."
 msgstr "Bu kapılar askerleri uzun süre tutamaz. Acele etmeliyiz."
 
 #. [message]: speaker=unit
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:439
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:440
 msgid "Undead have entered the manor! Defend yourselves!"
 msgstr "Yarıölüler malikâne girdi! Kendinizi koruyun!"
 
 #. [message]
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:639
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:640
 msgid "Hunt down the undead! Destroy them all!"
 msgstr "Yarölüleri indirin! Hepsini yok edin!"
 
 #. [message]: speaker=Darken Volk
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:643
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:644
 msgid ""
 "The city guard has entered the manor. We will have to hold them off while we "
 "search."
@@ -3279,34 +3275,34 @@ msgstr ""
 "gerekecek."
 
 #. [message]: speaker=Darken Volk
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:657
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:658
 msgid "More guards are coming. We must hasten our search!"
 msgstr "Daha fazla muhafız geliyor. Aramayı hızlandırmalıyız!"
 
 #. [message]: speaker=Malin Keshar
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:671
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:672
 msgid "It does not look like we have much time left..."
 msgstr "Fazla zamanımız kalmadı..."
 
 #. [message]: speaker=narrator
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:686
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:687
 msgid "There is only one thing that makes a dream impossible to achieve."
 msgstr "Bir hayali gerçekleştirmeyi imkansız kılan tek bir şey vardır."
 
 #. [message]: speaker=narrator
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:699
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:700
 msgid "... the fear of failure."
 msgstr "... başarısızlık korkusu."
 
 #. [message]: speaker=narrator
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:710
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:711
 msgid "<i>There is nothing good or bad, but thinking makes it so.</i>"
 msgstr ""
 "<i>Hiçbir şey sadece iyi ya da sadece kötü değildir, ancak öyle düşünürüz.</"
 "i>"
 
 #. [message]: speaker=narrator
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:721
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:722
 msgid ""
 "<i>Mirrors of shallow blue, cold and opaque, they stare,\n"
 "Piercing, unblinking, a pitiless reflection,\n"
@@ -3317,7 +3313,7 @@ msgstr ""
 "Gevrek, düşlenmiş gerçekliğimizi eder paramparça.</i>"
 
 #. [message]: speaker=narrator
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:734
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:735
 msgid ""
 "<i>Emerald, verdant green gives way,\n"
 "Touched by shadow, dark dye of black,\n"
@@ -3328,7 +3324,7 @@ msgstr ""
 "dokunur vebanın kokuşmuş lekesine. </i>"
 
 #. [message]: speaker=narrator
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:747
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:748
 msgid ""
 "<i>Crimson pool, essence of life,\n"
 "Flesh and blood flow away to rot,\n"
@@ -3339,42 +3335,42 @@ msgstr ""
 "Bırakarak arkada sadece kemikleri.</i>"
 
 #. [message]: speaker=Darken Volk
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:762
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:763
 msgid "This appears to be a wedding ring."
 msgstr "Bu bir alyans gibi görünüyor."
 
 #. [message]: speaker=Darken Volk
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:775
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:776
 msgid "This vial of holy water is inscribed with a cross and two rings."
 msgstr "Bu okunmuş su şişesi üzerinde bir haç ve iki yüzük yazılıdır."
 
 #. [message]: speaker=Darken Volk
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:787
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:788
 msgid "There is a torn up dress on this altar."
 msgstr "Bu sunakta yırtık bir elbise var."
 
 #. [message]: speaker=Malin Keshar
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:800
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:801
 msgid "This amulet feels strangely cold."
 msgstr "Bu muska tuhaf bir şekilde soğuk geliyor."
 
 #. [message]: speaker=Malin Keshar
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:828
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:829
 msgid "The mages have hidden their gold somewhere else."
 msgstr "Büyücüler altınlarını başka bir yere sakladı."
 
 #. [message]: speaker=Lady Karae
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:845
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:846
 msgid "Darken Volk! I should have known it was you! What are you doing here?"
 msgstr "Kara Volk! Tanıdım seni! Burada ne yapıyorsun?"
 
 #. [message]: speaker=Darken Volk
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:849
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:850
 msgid "Taking back what is rightfully mine."
 msgstr "Benim olanı geri almak için."
 
 #. [message]: speaker=Lady Karae
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:853
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:854
 msgid ""
 "As impudent as ever. What lies in that book is not meant for human eyes — "
 "yours or mine."
@@ -3383,19 +3379,19 @@ msgstr ""
 "insanların gözü için değildir."
 
 #. [message]: speaker=Darken Volk
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:857
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:858
 msgid "I am not here to argue."
 msgstr "Tartışmaya gelmedim."
 
 #. [message]: speaker=Lady Karae
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:861
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:862
 msgid ""
 "Of course you are not. I assume your arrogance has only grown over the years."
 msgstr ""
 "Tabii ki sizin için değil. Kibirinizin yıllar geçtikçe büyüdüğünü görüyorum."
 
 #. [message]: speaker=Darken Volk
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:865
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:866
 msgid ""
 "If you wish to continue lecturing me, by all means, do so. It will only make "
 "you easier to kill."
@@ -3404,28 +3400,28 @@ msgstr ""
 "kolaylaştır."
 
 #. [message]: speaker=Lady Karae
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:869
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:870
 msgid "I regret that it has come to this."
 msgstr "Bunun için geleni pişman ederim."
 
 #. [message]: speaker=Darken Volk
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:881
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:882
 msgid "Someone was... messing... with some potions here."
 msgstr "Biri ... burada ... iksirleri birbirine karıştırıyordu."
 
 #. [message]: speaker=Lady Karae
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:893
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:894
 msgid "Darken Volk... you... wouldn’t dare..."
 msgstr "Kara Volk... sen... cesaret edemezsin..."
 
 #. [message]: speaker=Darken Volk
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:897
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:898
 msgid "Enough with your decrepit prattling."
 msgstr "Bu kadar yıpranmış gevezeliğin yeter."
 
 #. [message]: speaker=Darken Volk
 #. a vault is a big underground room, sort of like a gigantic basement
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:918
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:919
 msgid ""
 "I feel the breaking of an illusion spell. The book is in the vault in the "
 "northwest corner of the manor. We must find the passageway leading there!"
@@ -3434,26 +3430,26 @@ msgstr ""
 "kuzeybatı köşesindeki mahzende olmalı. Oraya giden bir koridor bulmalıyız!"
 
 #. [objective]: condition=win
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:925
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:926
 msgid ""
 "Move Malin Keshar or Darken Volk through the passageway in the northwest "
 "leading to the vault"
 msgstr "Malin Keşnar veya Kara Volk'u kuzeybatıdaki koridordan mahzene götür"
 
 #. [message]: speaker=unit
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:949
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:950
 msgid "Here is the passage to the vault!"
 msgstr "İşte kasaya geçiş!"
 
 #. [message]: speaker=RGuard
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:999
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:1028
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1272
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:1000
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:1029
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1273
 msgid "Surround those necromancers! They cannot escape now!"
 msgstr "Büyücüleri kuşatın! Artık kaçamazlar!"
 
 #. [message]: speaker=Darken Volk
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:1003
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:1004
 msgid ""
 "Fool boy! You took too long to defeat Karae! Now we are at the mercy of the "
 "city guards!"
@@ -3462,7 +3458,7 @@ msgstr ""
 "insafına kaldık!"
 
 #. [message]: speaker=Darken Volk
-#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:1032
+#: data/campaigns/Descent_Into_Darkness/scenarios/07b_A_Small_Favor2.cfg:1033
 msgid ""
 "Fool boy! You took too long to find the path to the vault! Now we are at the "
 "mercy of the city guards!"
@@ -3471,60 +3467,56 @@ msgstr ""
 "insafına kaldık!"
 
 #. [scenario]: id=07c_A_Small_Favor3
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:5
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:6
 msgid "A Small Favor — III"
 msgstr "Küçük Bir İyilik — III"
 
 #. [side]
 #. Book guards
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:50
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:53
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:51
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:54
 msgid "Guardian"
 msgstr "Ağır Muhafız"
 
 #. [side]
 #. Book guards
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:52
 #: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:53
-#, fuzzy
-#| msgid "Guardian"
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:54
 msgid "female^Guardian"
-msgstr "Ağır Muhafız"
+msgstr "Muhafız"
 
 #. [objective]: condition=win
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:207
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:208
 msgid "Retrieve the book and escape"
 msgstr "Kitabı al ve kaç"
 
 #. [command]
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:377
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:378
 msgid "Mage"
 msgstr "Büyücü"
 
 #. [command]
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:377
-#, fuzzy
-#| msgid "female^maimed"
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:378
 msgid "female^Mage"
-msgstr "sakat"
+msgstr "Büyücü"
 
 #. [message]: speaker=Darken Volk
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:467
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:468
 msgid "The book is very close, somewhere to the northwest."
 msgstr "Kitabın çok yakında, kuzeybatıda bir yerde olduğunu hissediyorum."
 
 #. [message]: speaker=Darken Volk
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:783
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:784
 msgid "The guards continue to pursue us."
 msgstr "Muhafızlar bizi takip etmeye devam ediyor."
 
 #. [message]: speaker=Malin Keshar
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:797
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:798
 msgid "The guards are catching up to us."
 msgstr "Muhafızlar bize yetişiyor."
 
 #. [message]: speaker=narrator
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:811
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:812
 msgid ""
 "<i>Beware that, when fighting monsters, you yourself do not become a "
 "monster...</i>"
@@ -3532,7 +3524,7 @@ msgstr ""
 "<i>Dikkat edin, canavarlarla savaşırken, kendinizin canavarlaşmayın ... </i>"
 
 #. [message]: speaker=narrator
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:822
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:823
 msgid ""
 "<i>Death is the twilight that follows the light of day.\n"
 "Life fades with the setting sun into darkness.\n"
@@ -3543,49 +3535,49 @@ msgstr ""
 "Varoluş çığlıkları ve ruh sonsuz geceye yeniden doğar. </i>"
 
 #. [message]: speaker=Malin Keshar
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:835
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:836
 msgid "There are quite a few failed potions around here."
 msgstr "Buralarda birkaç başarısız iksir var."
 
 #. [message]: speaker=Malin Keshar
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:846
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:847
 msgid "This coffin is empty."
 msgstr "Tabut boş."
 
 #. [message]: speaker=Malin Keshar
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:862
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:863
 msgid "Be careful around those urns."
 msgstr "O çömleklerin etrafında dikkatli ol."
 
 #. [message]: speaker=Malin Keshar
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:875
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:876
 msgid "Fancy, but I’ve no use for a new cloak right now."
 msgstr "Süslü, ama şu anda yeni bir pelerin kullanmıyorum."
 
 #. [message]: id=Darken Volk
 #. The speaker addresses an undead minion.
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1019
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1020
 msgid "The book! Guard it with your unlife while I come to fetch it."
 msgstr "Kitap! Ben alıp götürmek için gelirken onu ölümün pahasına koru."
 
 #. [message]: id=Darken Volk
 #. The speaker addresses a human or a bat.
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1026
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1027
 msgid "The book! Guard it with your life while I come to fetch it."
 msgstr "Kitap! Ben alıp götürmek için gelirken onu yaşamın pahasına koru."
 
 #. [message]: speaker=Darken Volk
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1056
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1057
 msgid "Hand that over."
 msgstr "Bunu teslim et."
 
 #. [message]: speaker=Malin Keshar
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1061
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1062
 msgid "Can’t it wait until we’re away from all these guards?"
 msgstr "Biz tüm bu muhafızlardan uzaklaşana kadar bekleyemez mi?"
 
 #. [message]: speaker=Darken Volk
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1066
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1067
 msgid ""
 "... Fine. There is a small tunnel in the cellar to the northeast. It will "
 "lead us far enough out of the city that we can escape pursuit."
@@ -3594,29 +3586,29 @@ msgstr ""
 "kurtulabilecek kadar şehrin dışına götürecektir."
 
 #. [objective]: condition=win
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1073
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1141
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1074
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1142
 msgid "Escape via the tunnel in the northeast cellar"
 msgstr "Kuzeydoğu mahzenindeki tünelden kaç"
 
 #. [message]: speaker=Malin Keshar
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1101
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1235
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1102
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1236
 msgid "Let’s get out of here."
 msgstr "Gidelim buradan."
 
 #. [message]: speaker=Malin Keshar
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1164
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1165
 msgid "We’ve got the book, but how do we get out of here?"
 msgstr "Kitabı aldık, fakat buradan dışarı nasıl çıkacağız?"
 
 #. [message]: speaker=Malin Keshar
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1177
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1178
 msgid "Wait, you aren’t leaving me behind, are you?"
 msgstr "Bekle, beni burada bırakmayacaksın, değil mi?"
 
 #. [objective]: condition=win
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1184
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1185
 msgid ""
 "Escape the manor (Malin reaches the tunnel in the northeast cellar before "
 "Darken Volk)"
@@ -3625,17 +3617,17 @@ msgstr ""
 "kaçarsa)"
 
 #. [objective]: condition=lose
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1188
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1189
 msgid "Darken Volk reaches the tunnel before Malin does"
 msgstr "Kara Volk, Malin'den önce tünele ulaşırsa"
 
 #. [message]: speaker=Darken Volk
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1212
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1213
 msgid "You have served me well, boy."
 msgstr "Bana iyi hizmet ettin, oğlum."
 
 #. [message]: speaker=narrator
-#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1218
+#: data/campaigns/Descent_Into_Darkness/scenarios/07c_A_Small_Favor3.cfg:1219
 msgid ""
 "As he heads into the tunnel, Darken Volk collapses the entrance, leaving "
 "Malin to be captured and executed by the city guards."
@@ -3919,10 +3911,8 @@ msgstr "... hayır, bu aptalca olurdu..."
 
 #. [message]: speaker=Malin Keshar
 #: data/campaigns/Descent_Into_Darkness/scenarios/08_Alone_at_Last.cfg:605
-#, fuzzy
-#| msgid "He seems to be drinking the remains of the wine in the cargo hold."
 msgid "He seems to be drinking the remains of the rum in the cargo hold."
-msgstr "Kargo ambarındaki şarabın kalıntılarını içiyor gibi görünüyor."
+msgstr "Kargo ambarındaki romun kalanını içiyor gibi görünüyor."
 
 #. [unit]: type=Paladin, id=Sir Cadaeus
 #: data/campaigns/Descent_Into_Darkness/scenarios/08_Alone_at_Last.cfg:665
@@ -5393,7 +5383,7 @@ msgstr "Aptal Kahraman"
 #. [message]: speaker=Mal Keshar
 #: data/campaigns/Descent_Into_Darkness/scenarios/10_Endless_Night.cfg:965
 msgid "That was quite the nightmare..."
-msgstr ""
+msgstr "Tam bir kabustu..."
 
 #. [message]: speaker=Mal Keshar
 #: data/campaigns/Descent_Into_Darkness/scenarios/10_Endless_Night.cfg:969
@@ -5401,11 +5391,13 @@ msgid ""
 "...unless it was not one? No. No no no. I don’t even want to think about "
 "that."
 msgstr ""
+"...yar bir tane değilse? Hayır. Hayır, hayır, hayır. Bunu düşünmek bile "
+"istemiyorum."
 
 #. [message]: speaker=Mal Keshar
 #: data/campaigns/Descent_Into_Darkness/scenarios/10_Endless_Night.cfg:973
 msgid "I need to go slaughter some foolish heroes to purge that from my mind."
-msgstr ""
+msgstr "Bunu zihnimden temizlemek için birkaç aptal kahramanı katletmem gerek."
 
 #. [message]: speaker=Mal Keshar
 #: data/campaigns/Descent_Into_Darkness/scenarios/10_Endless_Night.cfg:989
@@ -5576,9 +5568,13 @@ msgstr "Baltam kağıdı keser. Sihir ile korunuyor!"
 #. [message]: role=speakinghero
 #. regular english: Yes, but the lich still seems to be hurt. Let's take it and retreat. Maybe the forge can destroy it.
 #: data/campaigns/Descent_Into_Darkness/scenarios/10_Endless_Night.cfg:1266
+#, fuzzy
+#| msgid ""
+#| "Aye, but the lich still seems ta be hurtin’. Let’s take it ’n retreat. "
+#| "Maybe tha forge ken destroy it."
 msgid ""
 "Aye, but the lich still seems ta be hurtin’. Let’s take it ’n retreat. Maybe "
-"tha forge ken destroy it."
+"tha forge can destroy it."
 msgstr ""
 "Evet, ama umacı da incinmiş gibi görünüyor. Hadi geri çekilelim. Belki "
 "demirhane de yok edebiliriz."
@@ -5709,20 +5705,18 @@ msgstr "Tekrar karşılaştık, kalamarımsı şey."
 #. [message]: speaker=Mal Keshar
 #: data/campaigns/Descent_Into_Darkness/scenarios/10_Endless_Night.cfg:1452
 msgid "Get these tentacles off of me!"
-msgstr ""
+msgstr "Çekin şu dokunaçları üzerimden!"
 
 #. [message]: speaker=Mal Keshar
 #: data/campaigns/Descent_Into_Darkness/scenarios/10_Endless_Night.cfg:1465
 msgid "Release me at once you oversized piece of calamari— eeeeaaaaaaaaa!"
-msgstr ""
+msgstr "Beni hemen bırak, kalamarın büyük parçası— eeeeaaaaaaaaa!"
 
 #. [message]: speaker=narrator
 #. Mal Keshar is sinking...
 #: data/campaigns/Descent_Into_Darkness/scenarios/10_Endless_Night.cfg:1470
-#, fuzzy
-#| msgid "<i>It’s... so... cold...</i>"
 msgid "<i>Blub... blub... blub...</i>"
-msgstr "<i>Oh... çok... soğuk...</i>"
+msgstr "<i>Blub... blub... blub...</i>"
 
 #. [message]: speaker=Inky
 #: data/campaigns/Descent_Into_Darkness/scenarios/10_Endless_Night.cfg:1495
@@ -6005,7 +5999,9 @@ msgstr ""
 #. [message]: role=second
 #. regular english - I don't know. You think the lich's castle can be useful
 #: data/campaigns/Descent_Into_Darkness/scenarios/10_Endless_Night.cfg:1895
-msgid "I dinna know. Ye think tha lich’s castle ken be useful?"
+#, fuzzy
+#| msgid "I dinna know. Ye think tha lich’s castle ken be useful?"
+msgid "I dinna know. Ye think tha lich’s castle can be useful?"
 msgstr "Bilmiyorum. Umacının kalesinin faydalı olabileceğini mi düşünüyorsun?"
 
 #. [message]: role=speakinghero
@@ -6104,19 +6100,17 @@ msgstr "... Sayende orklara karşı savaşta yenildim!"
 #. [scenario]: id=11_Squidville
 #: data/campaigns/Descent_Into_Darkness/scenarios/11_Squidville.cfg:5
 msgid "Squidville"
-msgstr ""
+msgstr "Kalamarköy"
 
 #. [side]
 #: data/campaigns/Descent_Into_Darkness/scenarios/11_Squidville.cfg:41
-#, fuzzy
-#| msgid "teamname^Void"
 msgid "teamname^Squid"
-msgstr "Boş"
+msgstr "Kalamar"
 
 #. [message]: speaker=Mal Keshar
 #: data/campaigns/Descent_Into_Darkness/scenarios/11_Squidville.cfg:118
 msgid "This cuttlefish will not escape me any longer! Hunt her down!"
-msgstr ""
+msgstr "Bu kalamar artık benden kaçamayacak! Onu avlayın!"
 
 #. [message]: speaker=Mal Keshar
 #: data/campaigns/Descent_Into_Darkness/scenarios/11_Squidville.cfg:152
@@ -6124,33 +6118,33 @@ msgid ""
 "Right, I got dragged down here without any of my minions. I suppose I will "
 "have to do this myself."
 msgstr ""
+"Haklısın, hiçbir kölem olmadan buraya sürüklendim. Sanırım bunu kendim "
+"yapmak zorunda kalacağım."
 
 #. [objective]: condition=win
 #: data/campaigns/Descent_Into_Darkness/scenarios/11_Squidville.cfg:161
 msgid "Hunt down Inky"
-msgstr ""
+msgstr "Inki'yi avla"
 
 #. [message]: speaker=Mal Keshar
 #: data/campaigns/Descent_Into_Darkness/scenarios/11_Squidville.cfg:217
-#, fuzzy
-#| msgid "Why are these bats chasing me?"
 msgid "Why are these tentacles so large..?"
-msgstr "Bu yarasalar neden beni takip ediyor?"
+msgstr "Bu dokunaçlar neden bu kadar büyük?"
 
 #. [message]: speaker=Mal Keshar
 #: data/campaigns/Descent_Into_Darkness/scenarios/11_Squidville.cfg:230
 msgid "(<i>huff huff huff</i>)"
-msgstr ""
+msgstr "(<i>huff huff huff</i>)"
 
 #. [message]: speaker=Mal Keshar
 #: data/campaigns/Descent_Into_Darkness/scenarios/11_Squidville.cfg:250
 msgid "I can see... the colors of the universe..!"
-msgstr ""
+msgstr "Evrenin renklerini görebiliyorum..!"
 
 #. [message]: speaker=Mal Keshar
 #: data/campaigns/Descent_Into_Darkness/scenarios/11_Squidville.cfg:269
 msgid "The stars go whirly whirl and turn into..."
-msgstr ""
+msgstr "Yıldızlar dönüyor, dönüyor ve dönüşüyor..."
 
 #. [message]: speaker=Mal Keshar
 #. He's high so basically this is gibberish describing mushrooms
@@ -6159,21 +6153,23 @@ msgid ""
 "... glowy mushrooms lighting up this dank gloom, blue and green, loomy "
 "bloomy big shroomy..."
 msgstr ""
+"... bu nemli karanlığı aydınlatan parlak mantarlar, mavi ve yeşil, kasvetli, "
+"çiçek açmış büyük mantar bahçesi..."
 
 #. [message]: speaker=Mal Keshar
 #: data/campaigns/Descent_Into_Darkness/scenarios/11_Squidville.cfg:289
 msgid "... hi hi ho ho the shrooms go marching lo..."
-msgstr ""
+msgstr "... hi hi ho ho mantarlar yürüyüşe geçiyor lo..."
 
 #. [message]: speaker=Mal Keshar
 #: data/campaigns/Descent_Into_Darkness/scenarios/11_Squidville.cfg:293
 msgid "... wait for me shroomies..!"
-msgstr ""
+msgstr "... beni bekleyin mantarlar..!"
 
 #. [message]: speaker=Mal Keshar
 #: data/campaigns/Descent_Into_Darkness/scenarios/11_Squidville.cfg:324
 msgid "(<i>huff huff</i>)"
-msgstr ""
+msgstr "(<i>huff huff</i>)"
 
 #. [message]: speaker=Mal Keshar
 #. He breaks the fourth wall here because he's enlightened from the shrooms of course, so he talks directly to the player
@@ -6186,16 +6182,22 @@ msgid ""
 "entertainment? How revolting. I hope your sick enjoyment at my predicament "
 "is worth it, you monster."
 msgstr ""
+"... ne yapıyorum? Bir iskelet hiçbir şeyin tadına bakamaz, koklayamaz veya "
+"yiyemez. Bu mantarlar bende işe yaramıyor. Beni aptal mı sanıyorsun? Eğlence "
+"için tutulmuş kötü bir aktör müyüm? Benim gibi zavallı yaşlı yalnız "
+"umacıların sadece eğlence uğruna bu kadar acı çekmesine ne tür bir sadist "
+"üstün güç sebep oluyor? Ne iğrenç. Umarım benim durumum karşısındaki hasta "
+"zevkin buna değer, canavar."
 
 #. [floating_text]
 #: data/campaigns/Descent_Into_Darkness/scenarios/11_Squidville.cfg:352
 msgid "ENLIGHTENED"
-msgstr ""
+msgstr "AYDINLIK"
 
 #. [unit]: type=Necrophage Necron, id=Necron
 #: data/campaigns/Descent_Into_Darkness/scenarios/11_Squidville.cfg:390
 msgid "Necron"
-msgstr ""
+msgstr "Nekron"
 
 #. [message]: speaker=Mal Keshar
 #: data/campaigns/Descent_Into_Darkness/scenarios/11_Squidville.cfg:400
@@ -6204,16 +6206,18 @@ msgid ""
 "disgusting. Maybe I can send it to a quick death against all those Foolish "
 "Heroes."
 msgstr ""
+"... ne korkunç bir et yığını. Bir gulyabani için bile, bu şey iğrenç ötesi. "
+"Belki de onu tüm o Aptal Kahramanlara karşı hızlı bir ölüme gönderebilirim."
 
 #. [message]: speaker=Mal Keshar
 #: data/campaigns/Descent_Into_Darkness/scenarios/11_Squidville.cfg:428
 msgid "You are not the creature I seek!"
-msgstr ""
+msgstr "Aradığım yaratık sen değilsin!"
 
 #. [message]: speaker=Mal Keshar
 #: data/campaigns/Descent_Into_Darkness/scenarios/11_Squidville.cfg:467
 msgid "Oh for the love of... not these slimy things again..."
-msgstr ""
+msgstr "Aman Tanrım... yine şu sümüklü şeyler olmasın..."
 
 #. [message]: speaker=Mal Keshar
 #: data/campaigns/Descent_Into_Darkness/scenarios/11_Squidville.cfg:499
@@ -6221,58 +6225,57 @@ msgid ""
 "... wait a second, is this creature even supposed to live in this kind of "
 "habitat?"
 msgstr ""
+"... bir dakika, bu yaratığın böyle bir yaşam alanında yaşaması mümkün mü?"
 
 #. [message]: speaker=Mal Keshar
 #: data/campaigns/Descent_Into_Darkness/scenarios/11_Squidville.cfg:531
 msgid "The creatures down here keep getting stranger and stranger."
-msgstr ""
+msgstr "Buradaki yaratıklar giderek daha da tuhaflaşıyor."
 
 #. [message]: speaker=Mal Keshar
 #: data/campaigns/Descent_Into_Darkness/scenarios/11_Squidville.cfg:572
 msgid "Aha!"
-msgstr ""
+msgstr "Aha!"
 
 #. [message]: speaker=Mal Keshar
 #: data/campaigns/Descent_Into_Darkness/scenarios/11_Squidville.cfg:576
 msgid "Finally, I have found you! Now hold still for just a moment..."
-msgstr ""
+msgstr "Sonunda seni buldum! Şimdi bir an dur..."
 
 #. [message]: speaker=Mal Keshar
 #: data/campaigns/Descent_Into_Darkness/scenarios/11_Squidville.cfg:597
 msgid "Ha! I have you now!"
-msgstr ""
+msgstr "Ha! İşte şimdi yakaladım seni!"
 
 #. [message]: speaker=Mal Keshar
 #: data/campaigns/Descent_Into_Darkness/scenarios/11_Squidville.cfg:610
 msgid "... what’s that sound?"
-msgstr ""
+msgstr "...bu ne sesi?"
 
 #. [message]: speaker=Mal Keshar
 #: data/campaigns/Descent_Into_Darkness/scenarios/11_Squidville.cfg:636
 msgid "Where did you come from? Get off of me!"
-msgstr ""
+msgstr "Nereden çıktın sen? Çekil üstümden!"
 
 #. [message]: speaker=Mal Keshar
 #: data/campaigns/Descent_Into_Darkness/scenarios/11_Squidville.cfg:675
 msgid "Uh oh."
-msgstr ""
+msgstr "Uh oh."
 
 #. [message]: speaker=Mal Keshar
 #: data/campaigns/Descent_Into_Darkness/scenarios/11_Squidville.cfg:714
-#, fuzzy
-#| msgid "Let’s get out of here."
 msgid "I’m getting out of here!"
-msgstr "Gidelim buradan."
+msgstr "Ben buradan gidiyorum!"
 
 #. [message]: speaker=unit
 #: data/campaigns/Descent_Into_Darkness/scenarios/11_Squidville.cfg:739
 msgid "Aaargh, so many tentacles! Aieeeeee!!!"
-msgstr ""
+msgstr "Aaargh, bir sürü dokunaç! Aieeeeee!!!"
 
 #. [story]
 #: data/campaigns/Descent_Into_Darkness/scenarios/11_Squidville.cfg:749
 msgid "Bad Ending"
-msgstr ""
+msgstr "Kötü Son"
 
 #. [part]
 #: data/campaigns/Descent_Into_Darkness/scenarios/11_Squidville.cfg:751
@@ -6282,6 +6285,10 @@ msgid ""
 "no more than a few decorative elements around the watery backdrop of the "
 "village of squids for all eternity."
 msgstr ""
+"Onun için talihsizlik, Mal Keşnar'ın bir dokunaç sürüsü tarafından ele "
+"geçirilmesiydi. Büyüklük sanrıları ezilmişken, kemikli kalıntıları sonsuza "
+"dek mürekkep balığı köyünün sulak fonunda sadece birkaç dekoratif unsur "
+"olarak kaldı."
 
 #. [unit_type]: id=Apprentice Mage, race=human, gender=male
 #: data/campaigns/Descent_Into_Darkness/units/Apprentice_Mage.cfg:4
@@ -6372,7 +6379,7 @@ msgstr ""
 #. [attack]: type=blade
 #: data/campaigns/Descent_Into_Darkness/units/Ghast2.cfg:29
 msgid "bite"
-msgstr ""
+msgstr "ısırır"
 
 #. [advancement]: id=mal_keshar_amla_melee
 #. [advancement]: id=eidolon_baneblade
@@ -6439,28 +6446,28 @@ msgstr "Yakındaki düşmanlardan YP sömürür, ancak her el YP kaybeder"
 
 #. [attack]: type=arcane
 #: data/campaigns/Descent_Into_Darkness/units/Mal_Keshar.cfg:211
-#: data/campaigns/Descent_Into_Darkness/units/Mal_Keshar.cfg:350
+#: data/campaigns/Descent_Into_Darkness/units/Mal_Keshar.cfg:347
 #: data/campaigns/Descent_Into_Darkness/units/Spectral_Servant.cfg:357
 msgid "touch"
 msgstr "dokunuş"
 
 #. [attack]: type=cold
 #: data/campaigns/Descent_Into_Darkness/units/Mal_Keshar.cfg:223
-#: data/campaigns/Descent_Into_Darkness/units/Mal_Keshar.cfg:362
+#: data/campaigns/Descent_Into_Darkness/units/Mal_Keshar.cfg:359
 msgid "chill tempest"
 msgstr "soğuk fırtına"
 
 #. [attack]: type=arcane
 #: data/campaigns/Descent_Into_Darkness/units/Mal_Keshar.cfg:235
-#: data/campaigns/Descent_Into_Darkness/units/Mal_Keshar.cfg:374
+#: data/campaigns/Descent_Into_Darkness/units/Mal_Keshar.cfg:371
 msgid "shadow wave"
 msgstr "gölge dalgası"
 
-#: data/campaigns/Descent_Into_Darkness/units/Mal_Keshar.cfg:326
+#: data/campaigns/Descent_Into_Darkness/units/Mal_Keshar.cfg:323
 msgid "Ancient Lich"
 msgstr "Ezelî Umacı"
 
-#: data/campaigns/Descent_Into_Darkness/units/Mal_Keshar.cfg:342
+#: data/campaigns/Descent_Into_Darkness/units/Mal_Keshar.cfg:339
 msgid ""
 "A lich that accrues enough power over its newfound immortal lifespan becomes "
 "one who can stain souls with despair and sow ruin across the world. "
@@ -6558,7 +6565,7 @@ msgstr "Tüketim yeteneği kazanır"
 #. [attack]: type=blade
 #: data/campaigns/Descent_Into_Darkness/units/Necrophage2.cfg:18
 msgid "claws"
-msgstr ""
+msgstr "pençeler"
 
 #. [advancement]
 #: data/campaigns/Descent_Into_Darkness/units/Spectral_Servant.cfg:79
@@ -6654,27 +6661,27 @@ msgstr "Bu birim, yanındaki yarı ölü birimlerin hasarını %20 arttırır."
 msgid "This unit increases the damage of nearby undead units by 40%."
 msgstr "Bu birim, yanındaki yarı ölü birimlerin hasarını %40 arttırır."
 
-#. [dummy]: id=did_shadow_veil
+#. [hides]: id=did_shadow_veil
 #: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:133
 #: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:134
 msgid "shadow veil"
 msgstr "gölge başlığı"
 
-#. [dummy]: id=did_shadow_veil
+#. [hides]: id=did_shadow_veil
 #: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:135
 #: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:136
 msgid "Allied undead units within a 5 hex radius are hidden."
 msgstr "5 altıgenlik yarıçaptaki müttefik yarı ölü birimler gizlenir."
 
 #. [dummy]: id=did_frost_nova
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:238
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:239
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:151
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:152
 msgid "frost nova"
 msgstr "dondurucu hava"
 
 #. [dummy]: id=did_frost_nova
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:240
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:241
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:153
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:154
 msgid ""
 "On offense, this attack will additionally deal 70% of its damage in cold "
 "damage to all enemies adjacent to the target."
@@ -6683,14 +6690,14 @@ msgstr ""
 "soğuk hasar olarak verir."
 
 #. [damage]: id=did_spellbind
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:307
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:308
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:222
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:223
 msgid "spell bind"
 msgstr "büyüleme"
 
 #. [damage]: id=did_spellbind
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:309
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:310
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:224
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:225
 msgid ""
 "When this attack is used, the damage taken from fire, cold, and arcane "
 "attacks will be reduced by 60%."
@@ -6699,44 +6706,40 @@ msgstr ""
 "hasar %60 oranında azalır."
 
 #. [drains]: id=did_reap
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:325
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:240
 msgid "reap"
 msgstr "hasat"
 
 #. [drains]: id=did_reap
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:326
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:241
 msgid "This unit heals for 70% of the damage this attack deals."
 msgstr "Bu birim, bu saldırının verdiği hasarın %70'i kadar iyileşir."
 
 #. [dummy]: id=did_soul_rend
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:333
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:334
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:248
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:249
 msgid "soul rend"
 msgstr "ruh paralama"
 
 #. [dummy]: id=did_soul_rend
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:335
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:336
-#, fuzzy
-#| msgid ""
-#| "Every turn, this unit loses 5 hitpoints, but drains 4 hitpoints from each "
-#| "adjacent enemy."
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:250
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:251
 msgid ""
 "Every turn, this unit loses 3 hitpoints, but drains 6 hitpoints from each "
 "adjacent enemy."
 msgstr ""
-"Her el, bu birim 5 yaşam puanı kaybeder, ancak her bitişik düşmandan 4 yaşam "
+"Her el, bu birim 3 yaşam puanı kaybeder, ancak her bitişik düşmandan 6 yaşam "
 "puanı sömürür."
 
 #. [damage]: id=did_malevolence
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:432
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:433
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:349
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:350
 msgid "malevolence"
 msgstr "kin"
 
 #. [damage]: id=did_malevolence
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:434
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:435
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:351
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:352
 msgid ""
 "This attack gains 50% damage on offense, but causes this unit to lose 1 hp "
 "per hit."
@@ -6745,74 +6748,72 @@ msgstr ""
 "kaybetmesine neden olur."
 
 #. [swarm]: id=did_hysteria
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:449
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:366
 msgid "hysteria"
 msgstr "histeri"
 
 #. [swarm]: id=did_hysteria
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:450
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:367
 msgid "This attack gains up to 10 strikes when this unit is wounded."
 msgstr "Bu saldırı, bu birim yaralandığında en fazla 10 saldırı kazanır."
 
 #. [leadership]: id=sorrow
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:460
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:476
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:377
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:393
 msgid "sorrow"
 msgstr "üzüntü"
 
 #. [leadership]: id=sorrow
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:461
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:378
 msgid "Adjacent enemy units do 20% less damage."
 msgstr "Komşu düşman birimleri %20 daha az hasar verir."
 
 #. [leadership]: id=sorrow
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:477
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:394
 msgid "Adjacent enemy units do 40% less damage."
 msgstr "Komşu düşman birimleri %40 daha az hasar verir."
 
 #. [teleport]: id=did_enlightened
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:492
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:409
 msgid "enlightened"
-msgstr ""
+msgstr "aydınlatır"
 
 #. [teleport]: id=did_enlightened
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:493
-#, fuzzy
-#| msgid "female^maimed"
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:410
 msgid "female^enlightened"
-msgstr "sakat"
+msgstr "aydınlatır"
 
 #. [teleport]: id=did_enlightened
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:494
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:411
 msgid "This unit can teleport between mushroom groves."
-msgstr ""
+msgstr "Bu birim mantar bahçeleri arasında ışınlanma yeteneğine sahiptir."
 
 #. [heal_on_hit]: id=did_vitalize1
 #. [heal_on_hit]: id=did_vitalize2
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:518
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:527
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:435
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:444
 msgid "vitalize"
 msgstr "diriltme"
 
 #. [heal_on_hit]: id=did_vitalize1
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:519
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:436
 msgid "This unit heals 2 HP every time this attack hits."
 msgstr "Bu birim, bu saldırının her isabetinde 2 YP iyileşir."
 
 #. [heal_on_hit]: id=did_vitalize2
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:528
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:445
 msgid "This unit heals 4 HP every time this attack hits."
 msgstr "Bu birim, bu saldırının her isabetinde 4 YP iyileşir."
 
 #. [attacks]: id=did_fervor
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:535
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:536
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:452
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:453
 msgid "fervor"
 msgstr "şevk"
 
 #. [attacks]: id=did_fervor
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:537
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:538
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:454
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:455
 msgid ""
 "This attack gains 2 attacks on offense, but causes this unit to lose 4 hp "
 "per hit."
@@ -6821,14 +6822,14 @@ msgstr ""
 "YPkaybetmesine neden olur."
 
 #. [attacks]: id=did_impetuity
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:552
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:553
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:469
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:470
 msgid "impetuity"
 msgstr "sabırsızlık"
 
 #. [attacks]: id=did_impetuity
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:554
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:555
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:471
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:472
 msgid ""
 "This attack loses one strike on offense but deals three times the normal "
 "damage."
@@ -6837,33 +6838,28 @@ msgstr ""
 "hasar verir."
 
 #. [attacks]: id=did_corpse_launcher
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:569
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:486
 msgid "corpse launcher"
 msgstr "ceset fırlatıcı"
 
 #. [attacks]: id=did_corpse_launcher
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:570
-#, fuzzy
-#| msgid ""
-#| "On offense, enemies cannot retaliate against this attack. This attack "
-#| "consumes 3 HP from each nearby allied corpse to deal 11 impact damage "
-#| "(per corpse) to the target on top of this attack’s base damage."
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:487
 msgid ""
 "On offense, enemies cannot retaliate against this attack. This attack "
 "consumes 3 HP from each nearby allied corpse to deal 15 impact damage (per "
 "corpse) to the target on top of this attack’s base damage."
 msgstr ""
 "Hücumda, düşmanlar bu saldırıya karşı misilleme yapamazlar. Bu saldırı, bu "
-"saldırının temel hasarına ek olarak hedefe 11 darbe hasarı (ceset başına) "
-"vermek için yakındaki her bir müttefik cesetten 3 HP sömürür."
+"saldırının temel hasarına ek olarak hedefe 15 darbe hasarı (ceset başına) "
+"vermek için yakındaki her bir müttefik cesetten 3 YP sömürür."
 
 #. [leadership]: id=did_consumption
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:696
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:613
 msgid "consumption"
 msgstr "tüketim"
 
 #. [leadership]: id=did_consumption
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:697
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:614
 msgid ""
 "At night, this unit and adjacent allied undead gain 25% damage. However, "
 "this unit loses 2 HP per turn."
@@ -6872,12 +6868,12 @@ msgstr ""
 "Ancak bu birim el başına 2 YP kaybeder."
 
 #. [heals]: id=did_corpse_master
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:761
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:678
 msgid "corpse master"
 msgstr "ceset ustası"
 
 #. [heals]: id=did_corpse_master
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:762
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:679
 msgid ""
 "Adjacent allied corpses heal 8 HP per turn and gain 30% resistance to blade, "
 "impact, and pierce."
@@ -6886,24 +6882,24 @@ msgstr ""
 "delmeye karşı %30 direnç kazanır."
 
 #. [leadership]: id=did_zombie_frenzy
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:796
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:712
 msgid "zombie frenzy"
 msgstr "zombi çılgınlığı"
 
 #. [leadership]: id=did_zombie_frenzy
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:797
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:713
 msgid "Adjacent allied corpses gain 30% damage and are berserk."
 msgstr "Komşu müttefik cesetler %30 hasar alır ve çılgına döner."
 
 #. [regenerate]: id=did_cannibalize1
 #. [regenerate]: id=did_cannibalize2
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:827
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:912
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:743
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:828
 msgid "cannibalize"
 msgstr "yamyamlaştıma"
 
 #. [regenerate]: id=did_cannibalize1
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:828
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:744
 msgid ""
 "On each turn, this unit regenerates 2 HP per adjacent allied ghoul-type "
 "unit, but consumes 1 HP from each ally in the process."
@@ -6912,7 +6908,7 @@ msgstr ""
 "ancak süreçteki her müttefikten 1 YP sömürür."
 
 #. [regenerate]: id=did_cannibalize2
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:913
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:829
 msgid ""
 "On each turn, this unit regenerates 4 HP per adjacent allied ghoul-type "
 "unit, but consumes 2 HP from each ally in the process."
@@ -6921,89 +6917,85 @@ msgstr ""
 "ancak süreçteki her müttefikten 2 YP sömürür."
 
 #. [dummy]: id=did_death_cloud
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:995
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:911
 msgid "death cloud"
 msgstr "ölüm bulutu"
 
 #. [dummy]: id=did_death_cloud
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:996
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:912
 msgid ""
 "This unit poisons all nearby enemy units on the start of every new turn."
 msgstr ""
 "Bu birim, her yeni elin başında yanındaki tüm düşman birimlerini zehirler."
 
 #. [plague]: id=ghoulfication, type=Ghoul
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1039
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:955
 msgid "ghoulfication"
-msgstr ""
+msgstr "gulyabanileştirir"
 
 #. [plague]: id=ghoulfication, type=Ghoul
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1040
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:956
 msgid "When a unit is killed by this attack, it turns into a ghoul."
-msgstr ""
+msgstr "Bu saldırı sonucu bir birim öldürüldüğünde gulyabaniye dönüşür."
 
 #. [dummy]: id=did_starving
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1048
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1049
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:964
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:965
 msgid "starving"
-msgstr ""
+msgstr "açlıktan ölme"
 
 #. [dummy]: id=did_starving
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1050
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1051
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:966
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:967
 msgid "This unit loses 1 hitpoint every turn."
-msgstr ""
+msgstr "Bu birim her el 1 YP kaybeder."
 
 #. [leadership]: id=masochism1
 #. [leadership]: id=masochism2
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1094
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1106
-#, fuzzy
-#| msgid "Schism"
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1010
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1022
 msgid "masochism"
-msgstr "Ayrılık"
+msgstr "mazoşizm"
 
 #. [leadership]: id=masochism1
 #. [leadership]: id=masochism2
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1095
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1107
-#, fuzzy
-#| msgid "female^maimed"
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1011
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1023
 msgid "female^masochism"
-msgstr "sakat"
+msgstr "mazoşizm"
 
 #. [leadership]: id=masochism1
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1096
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1012
 msgid "This unit gains up to 50% damage as its hitpoints are reduced."
-msgstr ""
+msgstr "Bu birim, yaşam puanı azaldıkça %50'ye kadar hasar kazanır."
 
 #. [leadership]: id=masochism2
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1108
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1024
 msgid "This unit gains up to 100% damage as its hitpoints are reduced."
-msgstr ""
+msgstr "Bu birim, yaşam puanı azaldıkça %100'e kadar hasar kazanır."
 
 #. [resistance]: id=did_drunk
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1120
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1036
 msgid "drunk"
 msgstr "ayyaş"
 
 #. [resistance]: id=did_drunk
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1121
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1037
 msgid "female^drunk"
 msgstr "sarhoş"
 
 #. [resistance]: id=did_drunk
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1122
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1038
 msgid "This unit is drunk and has 10% increased resistances."
 msgstr "Bu birim sarhoş ve tüm dirençleri %10 arttı."
 
 #. [berserk]: id=did_drunken_rage
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1130
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1046
 msgid "drunken rage"
 msgstr "ayyaş öfkesi"
 
 #. [berserk]: id=did_drunken_rage
-#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1131
+#: data/campaigns/Descent_Into_Darkness/utils/abilities.cfg:1047
 msgid "On offense, this attack presses the engagement for 4 rounds of attacks."
 msgstr "Hücumda, bu saldırı çarpışmada 4 turluk saldırıya zorlar."
 
@@ -7107,14 +7099,12 @@ msgstr "Ölüm bulutu yeteneği kazanır"
 #: data/campaigns/Descent_Into_Darkness/utils/amlas.cfg:1029
 #: data/campaigns/Descent_Into_Darkness/utils/amlas.cfg:1056
 msgid "Gain increasing damage as hitpoints are reduced"
-msgstr ""
+msgstr "Bu birim, yaşam puanı azaldıkça hasar kazanır."
 
 #. [advancement]: id=necron_ghoulfication
 #: data/campaigns/Descent_Into_Darkness/utils/amlas.cfg:1083
-#, fuzzy
-#| msgid "Gain the ability to hide allied units"
 msgid "Gains the ability to turn enemies into ghouls"
-msgstr "Müttefik birimleri gizleme yeteneği kazanır"
+msgstr "Düşmanları Gulyabanilere dönüştürme yeteneği kazanır"
 
 #. [trait]: id=loyal
 #: data/campaigns/Descent_Into_Darkness/utils/characters.cfg:44

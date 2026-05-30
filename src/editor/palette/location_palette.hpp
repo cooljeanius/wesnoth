@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2024
+	Copyright (C) 2003 - 2025
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -33,8 +33,7 @@ class location_palette : public common_palette {
 
 public:
 
-	location_palette(editor_display &gui, const game_config_view& /*cfg*/,
-	                 editor_toolkit &toolkit);
+	location_palette(editor_display &gui, editor_toolkit &toolkit);
 
 
 	virtual sdl_handler_vector handler_members() override;
@@ -44,9 +43,8 @@ public:
 	std::size_t start_num(void) override { return items_start_; }
 
 	/** Menu expanding for palette group list */
-	void expand_palette_groups_menu(std::vector<config>& items, int i) override
+	void expand_palette_groups_menu(std::vector<config>& /*items*/) override
 	{
-		items.erase(items.begin() + i);
 	}
 
 	virtual void set_group(std::size_t /*index*/) override {}
@@ -64,17 +62,17 @@ public:
 	 *
 	 * Use if the size_specs have changed.
 	 */
-	void adjust_size(const SDL_Rect& target) override;
+	void adjust_size(const rect& target) override;
 
 	virtual bool scroll_up() override;
 	virtual bool can_scroll_up() override;
 	virtual bool scroll_down() override;
 	virtual bool can_scroll_down() override;
 
-	void swap() override {}
-	bool can_swap() { return false; }
+	virtual void swap() override {}
+	virtual bool supports_swap() override { return false; }
 
-	virtual std::string get_help_string() { return ""; }
+	std::string get_help_string() const { return ""; }
 
 	/** Return the currently selected item. */
 	const std::string& selected_item() const { return selected_item_; }

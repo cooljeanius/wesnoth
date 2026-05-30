@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2024
+	Copyright (C) 2003 - 2025
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -23,11 +23,13 @@
 #include "log.hpp"
 #include "resources.hpp"
 #include "serialization/string_utils.hpp"
+#include "utils/general.hpp"
 
 static lg::log_domain log_engine("engine");
 #define DBG_NG LOG_STREAM(debug, log_engine)
 #define LOG_NG LOG_STREAM(info, log_engine)
 #define WRN_NG LOG_STREAM(warn, log_engine)
+#define ERR_NG LOG_STREAM(err, log_engine)
 
 static lg::log_domain log_event_handler("event_handler");
 #define LOG_EH LOG_STREAM(info, log_event_handler)
@@ -83,9 +85,9 @@ void manager::add_event_handler_from_wml(const config& handler, game_lua_kernel&
 			}
 			args[attr] = val;
 		}
-		for(auto child : handler.all_children_range()) {
-			if(child.key.compare(0, 6, "filter") != 0) {
-				args.add_child(child.key, child.cfg);
+		for(auto [key, cfg] : handler.all_children_view()) {
+			if(key.compare(0, 6, "filter") != 0) {
+				args.add_child(key, cfg);
 			}
 		}
 		new_handler->set_arguments(args);
@@ -153,7 +155,7 @@ manager::~manager()
 void manager::add_events(const config::const_child_itors& cfgs, game_lua_kernel& lk, const std::string& type)
 {
 	if(!type.empty()) {
-		if(std::find(unit_wml_ids_.begin(), unit_wml_ids_.end(), type) != unit_wml_ids_.end()) {
+		if(utils::contains(unit_wml_ids_, type)) {
 			return;
 		}
 
@@ -182,13 +184,15 @@ void manager::write_events(config& cfg, bool include_nonserializable) const
 		// error occurs in MP. If the event in question is first-time-only, it will already
 		// have been flagged as disabled by this point (such events are disabled before their
 		// actions are run). If a disabled event is encountered outside an event context,
-		// however, assert. That means something went wrong with event list cleanup.
+		// however, show an error. That means something went wrong with event list cleanup.
 		// Also silently skip them when including nonserializable events, which can happen
 		// if viewing the inspector with :inspect after removing an event from the Lua console.
-		if(eh->disabled() && (is_event_running() || include_nonserializable)) {
+		if(eh->disabled()) {
+			if(!is_event_running() && !include_nonserializable) {
+				//This could in theory happen if an exception was thrown during execute_on_events.
+				ERR_NG << "found disabled event with no event running, seems like event cleanup has failed";
+			}
 			continue;
-		} else {
-			assert(!eh->disabled());
 		}
 
 		config event_cfg;
@@ -202,7 +206,7 @@ void manager::write_events(config& cfg, bool include_nonserializable) const
 	wml_menu_items_.to_config(cfg);
 }
 
-void manager::execute_on_events(const std::string& event_id, manager::event_func_t func)
+void manager::execute_on_events(const std::string& event_id, const manager::event_func_t& func)
 {
 	const std::string standardized_event_id = event_handlers::standardize_name(event_id);
 	const game_data* gd = resources::gamedata;

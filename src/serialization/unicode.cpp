@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2024
+	Copyright (C) 2003 - 2025
 	by Philippe Plantier <ayin@anathas.org>
 	Copyright (C) 2005 by Guillaume Melquiond <guillaume.melquiond@gmail.com>
 	Copyright (C) 2003 by David White <dave@whitevine.net>
@@ -47,7 +47,7 @@ static int byte_size_from_utf8_first(const unsigned char ch)
 	return count;
 }
 
-std::string lowercase(const std::string& s)
+std::string lowercase(std::string_view s)
 {
 	if(!s.empty()) {
 		utf8::iterator itor(s);
@@ -64,35 +64,37 @@ std::string lowercase(const std::string& s)
 		res.append(itor.substr().second, s.end());
 		return res;
 	}
-	return s;
+	return std::string();
 }
 
-std::size_t index(const std::string& str, const std::size_t index)
+std::size_t index(std::string_view str, const std::size_t index)
 {
 	// chr counts characters, i is the codepoint index
 	// remark: several functions rely on the fallback to str.length()
 	unsigned int i = 0, len = str.size();
-	try {
-		for (unsigned int chr=0; chr<index && i<len; ++chr) {
-			i += byte_size_from_utf8_first(str[i]);
-		}
-	} catch(const invalid_utf8_exception&) {
-		ERR_GENERAL << "Invalid UTF-8 string.";
+	for(unsigned int chr = 0; chr < index && i < len; ++chr) {
+		i += byte_size_from_utf8_first(str[i]);
 	}
 	return i;
 }
 
-std::size_t size(const std::string& str)
+std::size_t size(std::string_view str)
 {
-	unsigned int chr, i = 0, len = str.size();
-	try {
-		for (chr=0; i<len; ++chr) {
-			i += byte_size_from_utf8_first(str[i]);
-		}
-	} catch(const invalid_utf8_exception&) {
-		ERR_GENERAL << "Invalid UTF-8 string.";
+	std::size_t chr, i = 0, len = str.size();
+	for(chr = 0; i < len; ++chr) {
+		i += byte_size_from_utf8_first(str[i]);
 	}
 	return chr;
+}
+
+std::size_t size(const std::string::const_iterator& start, const std::string::const_iterator& end)
+{
+	std::size_t count;
+	std::string::const_iterator pos = start;
+	for(count = 0; pos < end; ++count) {
+		pos += byte_size_from_utf8_first(*pos);
+	}
+	return count;
 }
 
 std::string& insert(std::string& str, const std::size_t pos, const std::string& insert)

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2017 - 2024
+	Copyright (C) 2017 - 2025
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -33,7 +33,7 @@ static const char formulaKey[] = "formula";
 
 using namespace wfl;
 
-void luaW_pushfaivariant(lua_State* L, variant val);
+void luaW_pushfaivariant(lua_State* L, const variant& val);
 variant luaW_tofaivariant(lua_State* L, int i);
 
 class lua_callable : public formula_callable {
@@ -53,13 +53,13 @@ public:
 				lua_gettable(mState, table_i);
 				values.push_back(luaW_tofaivariant(mState, -1));
 			}
-			return variant(values);
+			return variant(std::move(values));
 		} else if(key == "__map") {
-			std::map<variant,variant> values;
+			std::map<variant, variant> values;
 			for(lua_pushnil(mState); lua_next(mState, table_i); lua_pop(mState, 1)) {
 				values[luaW_tofaivariant(mState, -2)] = luaW_tofaivariant(mState, -1);
 			}
-			return variant(values);
+			return variant(std::move(values));
 		}
 		lua_pushlstring(mState, key.c_str(), key.size());
 		lua_gettable(mState, table_i);
@@ -119,7 +119,7 @@ public:
 	}
 };
 
-void luaW_pushfaivariant(lua_State* L, variant val) {
+void luaW_pushfaivariant(lua_State* L, const variant& val) {
 	if(val.is_int()) {
 		lua_pushinteger(L, val.as_int());
 	} else if(val.is_decimal()) {
@@ -135,7 +135,7 @@ void luaW_pushfaivariant(lua_State* L, variant val) {
 			lua_settable(L, -3);
 		}
 	} else if(val.is_map()) {
-		typedef std::map<variant,variant>::value_type kv_type;
+		typedef std::map<variant, variant>::value_type kv_type;
 		lua_newtable(L);
 		for(const kv_type& v : val.as_map()) {
 			luaW_pushfaivariant(L, v.first);
@@ -144,7 +144,7 @@ void luaW_pushfaivariant(lua_State* L, variant val) {
 		}
 	} else if(val.is_callable()) {
 		// First try a few special cases
-		if(auto u_ref = val.try_convert<unit_callable>()) {
+		if(auto u_ref = callable_cast<unit_callable*>(val)) {
 			const unit& u = u_ref->get_unit();
 			unit_map::iterator un_it = resources::gameboard->units().find(u.get_location());
 			if(&*un_it == &u) {
@@ -152,16 +152,16 @@ void luaW_pushfaivariant(lua_State* L, variant val) {
 			} else {
 				luaW_pushunit(L, u.side(), u.underlying_id());
 			}
-		} else if(auto ut_ref = val.try_convert<unit_type_callable>()) {
+		} else if(auto ut_ref = callable_cast<unit_type_callable*>(val)) {
 			const unit_type& ut = ut_ref->get_unit_type();
 			luaW_pushunittype(L, ut);
-		} else if(auto atk_ref = val.try_convert<attack_type_callable>()) {
+		} else if(auto atk_ref = callable_cast<attack_type_callable*>(val)) {
 			const auto& atk = atk_ref->get_attack_type();
 			luaW_pushweapon(L, atk.shared_from_this());
-		} else if(auto team_ref = val.try_convert<team_callable>()) {
+		} else if(auto team_ref = callable_cast<team_callable*>(val)) {
 			auto t = team_ref->get_team();
 			luaW_pushteam(L, t);
-		} else if(auto loc_ref = val.try_convert<location_callable>()) {
+		} else if(auto loc_ref = callable_cast<location_callable*>(val)) {
 			luaW_pushlocation(L, loc_ref->loc());
 		} else {
 			// If those fail, convert generically to a map
@@ -192,7 +192,7 @@ variant luaW_tofaivariant(lua_State* L, int i) {
 		case LUA_TSTRING:
 			return variant(lua_tostring(L, i));
 		case LUA_TTABLE:
-			return variant(std::make_shared<lua_callable>(L, i));
+			return make_callable<lua_callable>(L, i);
 		case LUA_TUSERDATA:
 			static t_string tstr;
 			static vconfig vcfg = vconfig::unconstructed_vconfig();
@@ -200,17 +200,17 @@ variant luaW_tofaivariant(lua_State* L, int i) {
 			if(luaW_totstring(L, i, tstr)) {
 				return variant(tstr.str());
 			} else if(luaW_tovconfig(L, i, vcfg)) {
-				return variant(std::make_shared<config_callable>(vcfg.get_parsed_config()));
+				return make_callable<config_callable>(vcfg.get_parsed_config());
 			} else if(unit* u = luaW_tounit(L, i)) {
-				return variant(std::make_shared<unit_callable>(*u));
+				return make_callable<unit_callable>(*u);
 			} else if(const unit_type* ut = luaW_tounittype(L, i)) {
-				return variant(std::make_shared<unit_type_callable>(*ut));
+				return make_callable<unit_type_callable>(*ut);
 			} else if(const_attack_ptr atk = luaW_toweapon(L, i)) {
-				return variant(std::make_shared<attack_type_callable>(*atk));
+				return make_callable<attack_type_callable>(*atk);
 			} else if(team* t = luaW_toteam(L, i)) {
-				return variant(std::make_shared<team_callable>(*t));
+				return make_callable<team_callable>(*t);
 			} else if(luaW_tolocation(L, i, loc)) {
-				return variant(std::make_shared<location_callable>(loc));
+				return make_callable<location_callable>(loc);
 			}
 			break;
 	}
@@ -231,8 +231,9 @@ lua_formula_bridge::fpointer luaW_check_formula(lua_State* L, int idx, bool allo
 		form.reset(static_cast<fwrapper*>(ud));
 		// Setting a no-op deleter guarantees the Lua-held object is not deleted
 	} else if(allow_str) {
+		form.get_deleter() = std::default_delete<fwrapper>();
 		form.reset(new fwrapper(luaL_checkstring(L, idx)));
-		// Leave deleter at default so it's deleted properly later
+		// Set deleter to default so it's deleted properly later
 	} else {
 		luaW_type_error(L, idx, "formula");
 	}
@@ -277,8 +278,8 @@ int lua_formula_bridge::intf_compile_formula(lua_State* L)
 	return 1;
 }
 
-lua_formula_bridge::fwrapper::fwrapper(const std::string& code, function_symbol_table* functions)
-	: formula_ptr(new formula(code, functions))
+lua_formula_bridge::fwrapper::fwrapper(const std::string& code)
+	: formula_ptr(new formula(code))
 {
 }
 

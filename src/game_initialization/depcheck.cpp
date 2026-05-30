@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012 - 2024
+	Copyright (C) 2012 - 2025
 	by Boldizsár Lipka <lipkab@zoho.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -372,7 +372,7 @@ void manager::try_modification_by_id(const std::string& id, bool activate, bool 
 	std::vector<std::string> mods_copy = mods_;
 
 	if(activate) {
-		if(std::find(mods_copy.begin(), mods_copy.end(), id) == mods_copy.end()) {
+		if(!utils::contains(mods_copy, id) ) {
 			mods_copy.push_back(id);
 		}
 	} else {
@@ -409,6 +409,20 @@ int manager::get_era_index() const
 	return -1;
 }
 
+int manager::get_era_index(const std::string& id) const
+{
+	int result = 0;
+	for(const config& i : depinfo_.child_range("era")) {
+		if(i["id"] == id) {
+			return result;
+		}
+
+		result++;
+	}
+
+	return -1;
+}
+
 int manager::get_scenario_index() const
 {
 	int result = 0;
@@ -426,13 +440,12 @@ int manager::get_scenario_index() const
 
 bool manager::is_modification_active(int index) const
 {
-	std::string id = depinfo_.mandatory_child("modification", index)["id"];
-	return std::find(mods_.begin(), mods_.end(), id) != mods_.end();
+	return utils::contains(mods_, depinfo_.mandatory_child("modification", index)["id"].str());
 }
 
-bool manager::is_modification_active(const std::string id) const
+bool manager::is_modification_active(const std::string& id) const
 {
-	return std::find(mods_.begin(), mods_.end(), id) != mods_.end();
+	return utils::contains(mods_, id);
 }
 
 bool manager::enable_mods_dialog(const std::vector<std::string>& mods, const std::string& requester)
@@ -513,7 +526,7 @@ bool manager::change_scenario(const std::string& id)
 {
 	// Checking for missing dependencies
 	if(!get_required_not_installed(elem(id, "scenario")).empty()) {
-		std::string msg = _("Scenario can't be activated. Some dependencies are missing: ");
+		std::string msg = _("Scenario can’t be activated. Some dependencies are missing: ");
 
 		msg += utils::join(get_required_not_installed(elem(id, "scenario")), ", ");
 
@@ -582,7 +595,7 @@ bool manager::change_era(const std::string& id)
 {
 	// Checking for missing dependencies
 	if(!get_required_not_installed(elem(id, "era")).empty()) {
-		std::string msg = _("Era can't be activated. Some dependencies are missing: ");
+		std::string msg = _("Era can’t be activated. Some dependencies are missing: ");
 
 		msg += utils::join(get_required_not_installed(elem(id, "era")), ", ");
 		failure_dialog(msg);

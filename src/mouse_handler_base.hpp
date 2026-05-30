@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2006 - 2024
+	Copyright (C) 2006 - 2025
 	by Joerg Hinrichs <joerg.hinrichs@alice-dsl.de>
 	Copyright (C) 2003 by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
@@ -17,6 +17,7 @@
 #pragma once
 
 #include "map/location.hpp"
+#include "sdl/point.hpp"
 
 #include <SDL2/SDL_events.h>
 
@@ -35,8 +36,6 @@ extern int commands_disabled;
 class mouse_handler_base
 {
 public:
-	mouse_handler_base();
-
 	virtual ~mouse_handler_base()
 	{
 	}
@@ -100,7 +99,6 @@ public:
 	bool is_left_click(const SDL_MouseButtonEvent& event) const;
 	bool is_middle_click(const SDL_MouseButtonEvent& event) const;
 	bool is_right_click(const SDL_MouseButtonEvent& event) const;
-	bool is_touch_click(const SDL_MouseButtonEvent& event) const;
 
 	/** Called when scrolling with the mouse wheel. */
 	virtual void mouse_wheel(int xscroll, int yscroll, bool browse);
@@ -200,13 +198,13 @@ public:
 	/** Called when the middle click scrolling. */
 	void set_scroll_start(int x, int y)
 	{
-		scroll_start_x_ = x;
-		scroll_start_y_ = y;
+		scroll_start_.x = x;
+		scroll_start_.y = y;
 	}
 
-	const SDL_Point get_scroll_start() const
+	point get_scroll_start() const
 	{
-		return {scroll_start_x_, scroll_start_y_};
+		return scroll_start_;
 	}
 
 	bool scroll_started() const
@@ -220,43 +218,41 @@ protected:
 	void clear_drag_from_hex();
 	void init_dragging(bool& dragging_flag);
 
+	/** Show context menu flag */
+	bool show_menu_{false};
+
 	/** MMB click (on game map) state flag */
-	bool simple_warp_;
+	bool simple_warp_{false};
 
 	/** minimap scrolling (scroll-drag) state flag */
-	bool minimap_scrolling_;
+	bool minimap_scrolling_{false};
 
 	/** LMB drag init flag */
-	bool dragging_left_;
+	bool dragging_left_{false};
 
 	/** Finger drag init flag */
-	bool dragging_touch_;
+	bool dragging_touch_{false};
 
 	/** Actual drag flag */
-	bool dragging_started_;
+	bool dragging_started_{false};
 
 	/** RMB drag init flag */
-	bool dragging_right_;
+	bool dragging_right_{false};
 
-	/** Drag start position x */
-	int drag_from_x_;
+	/** Scroll start flag */
+	bool scroll_started_{false};
 
-	/** Drag start position y */
-	int drag_from_y_;
+	/** Relative to middle click scrolling */
+	point scroll_start_;
+
+	/** Drag start position */
+	point drag_from_;
 
 	/** Drag start or mouse-down map location */
 	map_location drag_from_hex_;
 
 	/** last highlighted hex */
 	map_location last_hex_;
-
-	/** Show context menu flag */
-	bool show_menu_;
-
-	/** Relative to middle click scrolling */
-	int scroll_start_x_;
-	int scroll_start_y_;
-	bool scroll_started_;
 };
 
 } // end namespace events

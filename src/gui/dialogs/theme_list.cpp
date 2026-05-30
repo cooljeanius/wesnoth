@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2014 - 2024
+	Copyright (C) 2014 - 2025
 	by Iris Morelle <shadowm2006@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -15,7 +15,6 @@
 
 #include "gui/dialogs/theme_list.hpp"
 
-#include "gui/auxiliary/find_widget.hpp"
 #include "gui/widgets/listbox.hpp"
 #include "gui/widgets/window.hpp"
 #include "theme.hpp"
@@ -32,27 +31,20 @@ theme_list::theme_list(const std::vector<theme_info>& themes, int selection)
 {
 }
 
-void theme_list::pre_show(window& window)
+void theme_list::pre_show()
 {
-	listbox& list = find_widget<listbox>(&window, "themes", false);
-	window.keyboard_capture(&list);
+	listbox& list = find_widget<listbox>("themes");
+	keyboard_capture(&list);
 
-	for(const auto & t : themes_)
-	{
-		widget_data data;
-		widget_item column;
-
-		std::string theme_name = t.name;
-		if(theme_name.empty()) {
-			theme_name = t.id;
-		}
-
-		column["label"] = theme_name;
-		data.emplace("name", column);
-		column["label"] = t.description;
-		data.emplace("description", column);
-
-		list.add_row(data);
+	for(const auto& t : themes_) {
+		list.add_row(widget_data{
+			{ "name", {
+				{ "label", t.name.empty() ? t_string(t.id) : t.name }
+			}},
+			{ "description", {
+				{ "label", t.description }
+			}},
+		});
 	}
 
 	if(index_ != -1 && static_cast<unsigned>(index_) < list.get_item_count()) {
@@ -62,13 +54,13 @@ void theme_list::pre_show(window& window)
 	index_ = -1;
 }
 
-void theme_list::post_show(window& window)
+void theme_list::post_show()
 {
 	if(get_retval() != retval::OK) {
 		return;
 	}
 
-	listbox& list = find_widget<listbox>(&window, "themes", false);
+	listbox& list = find_widget<listbox>("themes");
 	index_ = list.get_selected_row();
 }
 } // namespace dialogs

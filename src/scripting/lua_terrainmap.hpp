@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2018 - 2024
+	Copyright (C) 2018 - 2025
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -27,7 +27,10 @@ class mapgen_gamemap : public gamemap_base {
 public:
 	explicit mapgen_gamemap(std::string_view data);
 	mapgen_gamemap(int w, int h, terrain_code);
-	void set_terrain(const map_location& loc, const terrain_code & terrain, const terrain_type_data::merge_mode mode = terrain_type_data::BOTH, bool replace_if_failed = false) override;
+	gamemap_base::set_terrain_result set_terrain(const map_location& loc,
+		const terrain_code& terrain,
+		const terrain_type_data::merge_mode mode = terrain_type_data::BOTH,
+		bool replace_if_failed = false) override;
 
 	template<typename F>
 	void for_each_loc(const F& f) const

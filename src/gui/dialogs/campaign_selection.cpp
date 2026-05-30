@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2009 - 2024
+	Copyright (C) 2009 - 2025
 	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -18,132 +18,156 @@
 #include "gui/dialogs/campaign_selection.hpp"
 
 #include "filesystem.hpp"
-#include "font/text_formatting.hpp"
-#include "gui/auxiliary/find_widget.hpp"
-#include "gui/dialogs/campaign_difficulty.hpp"
 #include "gui/widgets/button.hpp"
 #include "gui/widgets/menu_button.hpp"
 #include "gui/widgets/multi_page.hpp"
 #include "gui/widgets/multimenu_button.hpp"
 #include "gui/widgets/text_box.hpp"
 #include "gui/widgets/toggle_button.hpp"
+#include "gui/widgets/toggle_panel.hpp"
 #include "gui/widgets/tree_view.hpp"
 #include "gui/widgets/tree_view_node.hpp"
 #include "gui/widgets/window.hpp"
 #include "preferences/preferences.hpp"
+#include "serialization/markup.hpp"
+#include "utils/irdya_datetime.hpp"
 
 #include <functional>
-#include "utils/irdya_datetime.hpp"
 
 namespace gui2::dialogs
 {
 
+namespace
+{
+	// These arbitary strings are used instead of a campaign id for the special pages
+	// which can appear in the right-hand pane. The data for those pages is loaded
+	// from the tree_view's WML via ids hardcoded in pre_show().
+	const std::string PAGE_ID_GET_ADDONS = "////addons////";
+	const std::string PAGE_ID_LANDING_PAGE = "////landing-page////";
+	const std::string PAGE_ID_MISSING_CAMPAIGNS = "////missing-campaign////";
+};
+
 REGISTER_DIALOG(campaign_selection)
+
+campaign_selection::campaign_selection(ng::create_engine& eng)
+	: modal_dialog(window_id())
+	, engine_(eng)
+	, choice_(-1)
+	, rng_mode_(RNG_DEFAULT)
+	, mod_states_()
+	, page_ids_()
+	, difficulties_()
+	, current_difficulty_()
+	, current_sorting_(RANK)
+	, currently_sorted_asc_(true)
+	, mod_ids_()
+{
+	set_show_even_without_video(true);
+	set_allow_plugin_skip(false);
+}
 
 void campaign_selection::campaign_selected()
 {
-	tree_view& tree = find_widget<tree_view>(this, "campaign_tree", false);
-	if(tree.empty()) {
+	tree_view& tree = find_widget<tree_view>("campaign_tree");
+	const std::string& campaign_id = tree.selected_item() ? tree.selected_item()->id() : PAGE_ID_LANDING_PAGE;
+	if(campaign_id.empty()) {
 		return;
 	}
 
-	assert(tree.selected_item());
+	const bool can_proceed = campaign_id != PAGE_ID_MISSING_CAMPAIGNS && campaign_id != PAGE_ID_LANDING_PAGE;
+	const bool actual_campaign = can_proceed && campaign_id != PAGE_ID_GET_ADDONS;
 
-	if(!tree.selected_item()->id().empty()) {
-		auto iter = std::find(page_ids_.begin(), page_ids_.end(), tree.selected_item()->id());
+	button& ok_button = find_widget<button>("proceed");
+	ok_button.set_active(can_proceed);
+	ok_button.set_label((campaign_id == PAGE_ID_GET_ADDONS) ? _("game^Get Add-ons") : _("game^Play"));
 
-		if(tree.selected_item()->id() == missing_campaign_) {
-			find_widget<button>(this, "ok", false).set_active(false);
-		} else {
-			find_widget<button>(this, "ok", false).set_active(true);
-		}
+	auto iter = std::find(page_ids_.begin(), page_ids_.end(), campaign_id);
+	if(iter == page_ids_.end()) {
+		return;
+	}
+	const int choice = std::distance(page_ids_.begin(), iter);
 
-		const int choice = std::distance(page_ids_.begin(), iter);
-		if(iter == page_ids_.end()) {
-			return;
-		}
+	multi_page& pages = find_widget<multi_page>("campaign_details");
+	pages.select_page(choice);
 
-		multi_page& pages = find_widget<multi_page>(this, "campaign_details", false);
-		pages.select_page(choice);
+	// The engine bounds-checks this and silently selects the first campaign if choice points to one
+	// of the non-campaign pages.
+	engine_.set_current_level(choice);
 
-		engine_.set_current_level(choice);
+	styled_widget& background = find_widget<styled_widget>("campaign_background");
+	background.set_label(engine_.current_level().data()["background"].str());
 
-		styled_widget& background = find_widget<styled_widget>(this, "campaign_background", false);
-		background.set_label(engine_.current_level().data()["background"].str());
+	// Rebuild difficulty menu
+	difficulties_.clear();
 
-		// Rebuild difficulty menu
-		difficulties_.clear();
+	auto& diff_menu = find_widget<menu_button>("difficulty_menu");
 
-		auto& diff_menu = find_widget<menu_button>(this, "difficulty_menu", false);
+	auto diff_config_range = engine_.current_level().data().child_range("difficulty");
+	const std::size_t difficulty_count = diff_config_range.size();
 
-		const auto& diff_config = generate_difficulty_config(engine_.current_level().data());
-		diff_menu.set_active(diff_config.child_count("difficulty") > 1);
+	if(diff_config_range.empty() || !actual_campaign) {
+		// Cosmetic bug: this leaves the difficulties of a previously-selected campaign visible
+		diff_menu.set_active(false);
+		return;
+	}
 
-		if(!diff_config.empty()) {
-			std::vector<config> entry_list;
-			unsigned n = 0, selection = 0, max_n = diff_config.child_count("difficulty");
+	std::vector<config> entry_list;
+	std::size_t n = 0, selection = 0;
 
-			for(const auto& cfg : diff_config.child_range("difficulty")) {
-				config entry;
+	for(const auto& cfg : diff_config_range) {
+		config entry;
 
-				// FIXME: description may have markup that will display weird on the menu_button proper
-				entry["label"] = cfg["label"].str() + " (" + cfg["description"].str() + ")";
-				entry["image"] = cfg["image"].str("misc/blank-hex.png");
+		// FIXME: description may have markup that will display weird on the menu_button proper
+		entry["label"] = cfg["label"].str() + " (" + cfg["description"].str() + ")";
+		entry["image"] = cfg["image"].str("misc/blank-hex.png");
 
-				if(prefs::get().is_campaign_completed(tree.selected_item()->id(), cfg["define"])) {
-					std::string laurel;
+		if(prefs::get().is_campaign_completed(campaign_id, cfg["define"])) {
+			std::string laurel;
 
-					if(n + 1 >= max_n) {
-						laurel = game_config::images::victory_laurel_hardest;
-					} else if(n == 0) {
-						laurel = game_config::images::victory_laurel_easy;
-					} else {
-						laurel = game_config::images::victory_laurel;
-					}
-
-					entry["image"] = laurel + "~BLIT(" + entry["image"] + ")";
-				}
-
-				if(!cfg["description"].empty()) {
-					std::string desc;
-					if(cfg["auto_markup"].to_bool(true) == false) {
-						desc = cfg["description"].str();
-					} else {
-						//desc = "<small>";
-						if(!cfg["old_markup"].to_bool()) {
-							desc += font::span_color(font::GRAY_COLOR) + "(" + cfg["description"].str() + ")</span>";
-						} else {
-							desc += font::span_color(font::GRAY_COLOR) + cfg["description"].str() + "</span>";
-						}
-						//desc += "</small>";
-					}
-
-					// Icons get displayed instead of the labels on the dropdown menu itself,
-					// so we want to prepend each label to its description here
-					desc = cfg["label"].str() + "\n" + desc;
-
-					entry["details"] = std::move(desc);
-				}
-
-				entry_list.emplace_back(std::move(entry));
-				difficulties_.emplace_back(cfg["define"].str());
-
-				if(cfg["default"].to_bool(false)) {
-					selection = n;
-				}
-
-				++n;
+			if(n + 1 >= difficulty_count) {
+				laurel = game_config::images::victory_laurel_hardest;
+			} else if(n == 0) {
+				laurel = game_config::images::victory_laurel_easy;
+			} else {
+				laurel = game_config::images::victory_laurel;
 			}
 
-			diff_menu.set_values(entry_list);
-			diff_menu.set_selected(selection);
+			entry["image"] = laurel + "~BLIT(" + entry["image"].str() + ")";
 		}
+
+		if(!cfg["description"].empty()) {
+			std::string desc;
+			if(cfg["auto_markup"].to_bool(true) == false) {
+				desc = cfg["description"].str();
+			} else {
+				desc = markup::span_color(font::GRAY_COLOR, "(", cfg["description"].str(), ")");
+			}
+
+			// Icons get displayed instead of the labels on the dropdown menu itself,
+			// so we want to prepend each label to its description here
+			desc = cfg["label"].str() + "\n" + desc;
+
+			entry["details"] = std::move(desc);
+		}
+
+		entry_list.emplace_back(std::move(entry));
+		difficulties_.emplace_back(cfg["define"].str());
+
+		if(cfg["default"].to_bool(false)) {
+			selection = n;
+		}
+
+		++n;
 	}
+
+	diff_menu.set_active(true);
+	diff_menu.set_values(entry_list);
+	diff_menu.set_selected(selection);
 }
 
 void campaign_selection::difficulty_selected()
 {
-	const std::size_t selection = find_widget<menu_button>(this, "difficulty_menu", false).get_value();
+	const std::size_t selection = find_widget<menu_button>("difficulty_menu").get_value();
 	current_difficulty_ = difficulties_.at(std::min(difficulties_.size() - 1, selection));
 }
 
@@ -191,14 +215,14 @@ void campaign_selection::sort_campaigns(campaign_selection::CAMPAIGN_ORDER order
 		break;
 	}
 
-	tree_view& tree = find_widget<tree_view>(this, "campaign_tree", false);
+	tree_view& tree = find_widget<tree_view>("campaign_tree");
 
 	// Remember which campaign was selected...
 	std::string was_selected;
-	if(!tree.empty()) {
+	if(tree.selected_item()) {
 		was_selected = tree.selected_item()->id();
-		tree.clear();
 	}
+	tree.clear();
 
 	boost::dynamic_bitset<> show_items;
 	show_items.resize(levels.size(), true);
@@ -209,9 +233,9 @@ void campaign_selection::sort_campaigns(campaign_selection::CAMPAIGN_ORDER order
 			for(const auto& word : last_search_words_) {
 				found = translation::ci_search(levels[i]->name(), word) ||
 						translation::ci_search(levels[i]->data()["name"].t_str().base_str(), word) ||
-				        translation::ci_search(levels[i]->description(), word) ||
+						translation::ci_search(levels[i]->description(), word) ||
 						translation::ci_search(levels[i]->data()["description"].t_str().base_str(), word) ||
-				        translation::ci_search(levels[i]->data()["abbrev"], word) ||
+						translation::ci_search(levels[i]->data()["abbrev"], word) ||
 						translation::ci_search(levels[i]->data()["abbrev"].t_str().base_str(), word);
 
 				if(!found) {
@@ -224,7 +248,7 @@ void campaign_selection::sort_campaigns(campaign_selection::CAMPAIGN_ORDER order
 	}
 
 	// List of which options has been selected in the completion filter multimenu_button
-	boost::dynamic_bitset<> filter_comp_options = find_widget<multimenu_button>(this, "filter_completion", false).get_toggle_states();
+	boost::dynamic_bitset<> filter_comp_options = find_widget<multimenu_button>("filter_completion").get_toggle_states();
 
 	bool exists_in_filtered_result = false;
 	for(unsigned i = 0; i < levels.size(); ++i) {
@@ -254,7 +278,7 @@ void campaign_selection::sort_campaigns(campaign_selection::CAMPAIGN_ORDER order
 	}
 
 	if(!was_selected.empty() && exists_in_filtered_result) {
-		find_widget<tree_view_node>(this, was_selected, false).select_node();
+		find_widget<tree_view_node>(was_selected).select_node();
 	} else {
 		campaign_selected();
 	}
@@ -284,9 +308,9 @@ void campaign_selection::toggle_sorting_selection(CAMPAIGN_ORDER order)
 		force = true;
 
 		if(order == NAME) {
-			find_widget<toggle_button>(this, "sort_time", false).set_value(0);
+			find_widget<toggle_button>("sort_time").set_value(0);
 		} else if(order == DATE) {
-			find_widget<toggle_button>(this, "sort_name", false).set_value(0);
+			find_widget<toggle_button>("sort_name").set_value(0);
 		}
 
 		force = false;
@@ -307,20 +331,19 @@ void campaign_selection::filter_text_changed(const std::string& text)
 	sort_campaigns(current_sorting_, currently_sorted_asc_);
 }
 
-void campaign_selection::pre_show(window& window)
+void campaign_selection::pre_show()
 {
-	text_box* filter = find_widget<text_box>(&window, "filter_box", false, true);
-	filter->set_text_changed_callback(
-			std::bind(&campaign_selection::filter_text_changed, this, std::placeholders::_2));
+	text_box* filter = find_widget<text_box>("filter_box", false, true);
+	filter->on_modified([this](const auto& box) { filter_text_changed(box.text()); });
 
 	/***** Setup campaign tree. *****/
-	tree_view& tree = find_widget<tree_view>(&window, "campaign_tree", false);
+	tree_view& tree = find_widget<tree_view>("campaign_tree");
 
 	connect_signal_notify_modified(tree,
 		std::bind(&campaign_selection::campaign_selected, this));
 
-	toggle_button& sort_name = find_widget<toggle_button>(&window, "sort_name", false);
-	toggle_button& sort_time = find_widget<toggle_button>(&window, "sort_time", false);
+	toggle_button& sort_name = find_widget<toggle_button>("sort_name");
+	toggle_button& sort_time = find_widget<toggle_button>("sort_time");
 
 	connect_signal_notify_modified(sort_name,
 		std::bind(&campaign_selection::toggle_sorting_selection, this, NAME));
@@ -328,19 +351,30 @@ void campaign_selection::pre_show(window& window)
 	connect_signal_notify_modified(sort_time,
 		std::bind(&campaign_selection::toggle_sorting_selection, this, DATE));
 
-	window.keyboard_capture(filter);
-	window.add_to_keyboard_chain(&tree);
+	connect_signal_mouse_left_click(find_widget<button>("proceed"),
+		std::bind(&campaign_selection::proceed, this));
+
+#ifdef __IPHONEOS__
+	// On iOS, opening the campaign browser should not immediately summon the
+	// software keyboard just because the optional filter field exists.
+	keyboard_capture(&tree);
+#else
+	keyboard_capture(filter);
+#endif
+	add_to_keyboard_chain(&tree);
 
 	/***** Setup campaign details. *****/
-	multi_page& pages = find_widget<multi_page>(&window, "campaign_details", false);
+	multi_page& pages = find_widget<multi_page>("campaign_details");
 
-	multimenu_button& filter_comp = find_widget<multimenu_button>(&window, "filter_completion", false);
+	// Setup completion filter
+	multimenu_button& filter_comp = find_widget<multimenu_button>("filter_completion");
 	connect_signal_notify_modified(filter_comp,
 		std::bind(&campaign_selection::sort_campaigns, this, RANK, 1));
 	for (unsigned j = 0; j < filter_comp.num_options(); j++) {
 		filter_comp.select_option(j);
 	}
 
+	// Add campaigns to the list
 	for(const auto& level : engine_.get_levels_by_type_unfiltered(level_type::type::sp_campaign)) {
 		const config& campaign = level->data();
 
@@ -348,25 +382,40 @@ void campaign_selection::pre_show(window& window)
 		add_campaign_to_tree(campaign);
 
 		/*** Add detail item ***/
-		widget_data data;
-		widget_item item;
-
-		item["label"] = campaign["description"];
-		item["use_markup"] = "true";
-
-		if(!campaign["description_alignment"].empty()) {
-			item["text_alignment"] = campaign["description_alignment"];
-		}
-
-		data.emplace("description", item);
-
-		item["label"] = campaign["image"];
-		data.emplace("image", item);
-
-		pages.add_page(data);
+		pages.add_page({
+			{"description", {
+				{"label", campaign["description"].t_str()},
+				{"text_alignment", campaign["description_alignment"].str("left")},
+				{"use_markup", "true"}
+			}},
+			{"image", {
+				{"label", campaign["image"].str()}
+			}}
+		});
 		page_ids_.push_back(campaign["id"]);
 	}
 
+	//
+	// Special-purpose pages that appear as if they were campaigns.
+	//
+
+	// The intro page is shown if nothing is selected in the tree_view, it isn't in the tree itself
+	pages.add_page("no_campaign_selected", -1, widget_data{});
+	page_ids_.push_back(PAGE_ID_LANDING_PAGE);
+
+	// Addon Manager link
+	config addons;
+	addons["icon"] = "icons/icon-game.png~BLIT(icons/icon-addon-publish.png)";
+	addons["name"] = _("More campaigns...");
+	addons["completed"] = false;
+	addons["id"] = PAGE_ID_GET_ADDONS;
+
+	add_campaign_to_tree(addons);
+
+	pages.add_page("go_download_more_stuff", -1, widget_data{});
+	page_ids_.push_back(PAGE_ID_GET_ADDONS);
+
+	// The data directory has few (or none) of the mainline campaigns
 	std::vector<std::string> dirs;
 	filesystem::get_files_in_dir(game_config::path + "/data/campaigns", nullptr, &dirs);
 	if(dirs.size() <= 15) {
@@ -374,26 +423,18 @@ void campaign_selection::pre_show(window& window)
 		missing["icon"] = "units/unknown-unit.png";
 		missing["name"] = _("Missing Campaigns");
 		missing["completed"] = false;
-		missing["id"] = missing_campaign_;
+		missing["id"] = PAGE_ID_MISSING_CAMPAIGNS;
 
 		add_campaign_to_tree(missing);
 
-		widget_data data;
-		widget_item item;
-
-		// TRANSLATORS: "more than 15" gives a little leeway to add or remove one without changing the translatable text.
-		// It's already ambiguous, 1.18 has 19 campaigns, if you include the tutorial and multiplayer-only World Conquest.
-		item["label"] = _("Wesnoth normally includes more than 15 mainline campaigns, even before installing any from the add-ons server. If you’ve installed the game via a package manager, there’s probably a separate package to install the complete game data.");
-		data.emplace("description", item);
-
-		pages.add_page(data);
-		page_ids_.push_back(missing_campaign_);
+		pages.add_page("missing_campaign_warning", -1, widget_data{});
+		page_ids_.push_back(PAGE_ID_MISSING_CAMPAIGNS);
 	}
 
 	//
 	// Set up Mods selection dropdown
 	//
-	multimenu_button& mods_menu = find_widget<multimenu_button>(&window, "mods_menu", false);
+	multimenu_button& mods_menu = find_widget<multimenu_button>("mods_menu");
 
 	if(!engine_.get_const_extras_by_type(ng::create_engine::MOD).empty()) {
 		std::vector<config> mod_menu_values;
@@ -402,7 +443,7 @@ void campaign_selection::pre_show(window& window)
 		for(const auto& mod : engine_.get_const_extras_by_type(ng::create_engine::MOD)) {
 			const bool active = std::find(enabled.begin(), enabled.end(), mod->id) != enabled.end();
 
-			mod_menu_values.emplace_back("label", mod->name, "checkbox", active);
+			mod_menu_values.emplace_back("label", mod->name, "tooltip", mod->description, "checkbox", active);
 
 			mod_states_.push_back(active);
 			mod_ids_.emplace_back(mod->id);
@@ -420,30 +461,45 @@ void campaign_selection::pre_show(window& window)
 	//
 	// Set up Difficulty dropdown
 	//
-	menu_button& diff_menu = find_widget<menu_button>(this, "difficulty_menu", false);
+	menu_button& diff_menu = find_widget<menu_button>("difficulty_menu");
 
 	diff_menu.set_use_markup(true);
 	connect_signal_notify_modified(diff_menu, std::bind(&campaign_selection::difficulty_selected, this));
 
 	campaign_selected();
+
+	plugins_context_.reset(new plugins_context("Campaign Selection"));
+	plugins_context_->set_callback("create", [this](const config&) { set_retval(retval::OK); }, false);
+	plugins_context_->set_callback("quit", [this](const config&) { set_retval(retval::CANCEL); }, false);
+
+	plugins_context_->set_accessor("find_level", [this](const config& cfg) {
+		const std::string id = cfg["id"].str();
+		auto result = engine_.find_level_by_id(id);
+		return config {
+			"index", result.second,
+			"type", level_type::get_string(result.first),
+		};
+	});
+
+	plugins_context_->set_accessor_int("find_mod", [this](const config& cfg) {
+		return engine_.find_extra_by_id(ng::create_engine::MOD, cfg["id"]);
+	});
+
+	plugins_context_->set_callback("select_level", [this](const config& cfg) {
+		choice_ = cfg["index"].to_int();
+		engine_.set_current_level(choice_);
+	}, true);
 }
 
 void campaign_selection::add_campaign_to_tree(const config& campaign)
 {
-	tree_view& tree = find_widget<tree_view>(this, "campaign_tree", false);
-	widget_data data;
-	widget_item item;
-
-	item["label"] = campaign["icon"];
-	data.emplace("icon", item);
-
-	item["label"] = campaign["name"];
-	data.emplace("name", item);
-
 	// We completed the campaign! Calculate the appropriate victory laurel.
-	if(campaign["completed"].to_bool()) {
-		config::const_child_itors difficulties = campaign.child_range("difficulty");
+	const auto get_laurel = [&campaign] {
+		if(!campaign["completed"].to_bool()) {
+			return std::string{};
+		}
 
+		config::const_child_itors difficulties = campaign.child_range("difficulty");
 		auto did_complete_at = [](const config& c) { return c["completed_at"].to_bool(); };
 
 		// Check for non-completion on every difficulty save the first.
@@ -462,37 +518,57 @@ void campaign_selection::add_campaign_to_tree(const config& campaign)
 		 * - Use the silver laurel otherwise.
 		 */
 		if(!difficulties.empty() && did_complete_at(difficulties.back())) {
-			item["label"] = game_config::images::victory_laurel_hardest;
+			return game_config::images::victory_laurel_hardest;
 		} else if(only_first_completed && did_complete_at(difficulties.front())) {
-			item["label"] = game_config::images::victory_laurel_easy;
+			return game_config::images::victory_laurel_easy;
 		} else {
-			item["label"] = game_config::images::victory_laurel;
+			return game_config::images::victory_laurel;
 		}
+	};
 
-		data.emplace("victory", item);
-	}
+	auto& node = find_widget<tree_view>("campaign_tree")
+		.add_node("campaign", {
+			{"icon", {
+				{"label", campaign["icon"].str()}
+			}},
+			{"name", {
+				{"label", campaign["name"].t_str()}
+			}},
+			{"victory", {
+				{"label", get_laurel()}
+			}}
+		});
 
-	tree.add_node("campaign", data).set_id(campaign["id"]);
+	node.set_id(campaign["id"]);
+	connect_signal_mouse_left_double_click(
+		node.find_widget<toggle_panel>("tree_view_node_label"),
+		std::bind(&campaign_selection::proceed, this)
+	);
 }
 
-void campaign_selection::post_show(window& window)
+void campaign_selection::proceed()
 {
-	tree_view& tree = find_widget<tree_view>(&window, "campaign_tree", false);
+	tree_view& tree = find_widget<tree_view>("campaign_tree");
 
-	if(tree.empty()) {
+	if(tree.empty() || !tree.selected_item()) {
 		return;
 	}
 
-	assert(tree.selected_item());
-	if(!tree.selected_item()->id().empty()) {
-		auto iter = std::find(page_ids_.begin(), page_ids_.end(), tree.selected_item()->id());
-		if(iter != page_ids_.end()) {
-			choice_ = std::distance(page_ids_.begin(), iter);
+	const std::string& campaign_id = tree.selected_item()->id();
+	if(!campaign_id.empty()) {
+		if (campaign_id == PAGE_ID_GET_ADDONS) {
+			set_retval(OPEN_ADDON_MANAGER);
+		} else {
+			auto iter = std::find(page_ids_.begin(), page_ids_.end(), campaign_id);
+			if(iter != page_ids_.end()) {
+				choice_ = std::distance(page_ids_.begin(), iter);
+			}
+			set_retval(retval::OK);
 		}
 	}
 
 
-	rng_mode_ = RNG_MODE(std::clamp<unsigned>(find_widget<menu_button>(&window, "rng_menu", false).get_value(), RNG_DEFAULT, RNG_BIASED));
+	rng_mode_ = RNG_MODE(std::clamp<unsigned>(find_widget<menu_button>("rng_menu").get_value(), RNG_DEFAULT, RNG_BIASED));
 
 	prefs::get().set_modifications(engine_.active_mods(), false);
 }
@@ -500,7 +576,7 @@ void campaign_selection::post_show(window& window)
 void campaign_selection::mod_toggled()
 {
 	boost::dynamic_bitset<> new_mod_states =
-		find_widget<multimenu_button>(this, "mods_menu", false).get_toggle_states();
+		find_widget<multimenu_button>("mods_menu").get_toggle_states();
 
 	// Get a mask of any mods that were toggled, regardless of new state
 	mod_states_ = mod_states_ ^ new_mod_states;

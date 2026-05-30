@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2024
+	Copyright (C) 2003 - 2025
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -22,8 +22,10 @@
 #include "log.hpp"
 #include "sdl/rect.hpp"
 #include "serialization/string_utils.hpp"
+#include "utils/charconv.hpp"
 #include "wml_exception.hpp"
 #include "game_config_view.hpp"
+
 #include <sstream>
 #include <utility>
 
@@ -41,6 +43,20 @@ const color_t DefaultFontRGB {200, 200, 200};
 _rect ref_rect {0, 0, 0, 0};
 }
 
+static int parse_signed_string(std::string_view expr)
+{
+	if(expr.empty()) {
+		return 0;
+	}
+
+	if(expr[0] == '+') {
+		// charconv doesn't support leading + signs, strip them out
+		expr = expr.substr(1);
+	}
+
+	return utils::from_chars<int>(expr).value_or(0);
+}
+
 static std::size_t compute(std::string expr, std::size_t ref1, std::size_t ref2 = 0)
 {
 	std::size_t ref = 0;
@@ -51,7 +67,7 @@ static std::size_t compute(std::string expr, std::size_t ref1, std::size_t ref2 
 		ref = ref2;
 	}
 
-	return ref + atoi(expr.c_str());
+	return ref + parse_signed_string(expr);
 }
 
 // If x2 or y2 are not specified, use x1 and y1 values
@@ -60,27 +76,27 @@ static _rect read_rect(const config& cfg)
 	_rect rect {0, 0, 0, 0};
 	std::vector<std::string> items = utils::split(cfg["rect"].str());
 	if(items.size() >= 1)
-		rect.x1 = atoi(items[0].c_str());
+		rect.x1 = parse_signed_string(items[0]);
 
 	if(items.size() >= 2)
-		rect.y1 = atoi(items[1].c_str());
+		rect.y1 = parse_signed_string(items[1]);
 
 	if(items.size() >= 3)
-		rect.x2 = atoi(items[2].c_str());
+		rect.x2 = parse_signed_string(items[2]);
 	else
 		rect.x2 = rect.x1;
 
 	if(items.size() >= 4)
-		rect.y2 = atoi(items[3].c_str());
+		rect.y2 = parse_signed_string(items[3]);
 	else
 		rect.y2 = rect.y1;
 
 	return rect;
 }
 
-static SDL_Rect read_sdl_rect(const config& cfg)
+static rect read_sdl_rect(const config& cfg)
 {
-	SDL_Rect sdlrect;
+	rect sdlrect;
 	const _rect rect = read_rect(cfg);
 	sdlrect.x = rect.x1;
 	sdlrect.y = rect.y1;
@@ -226,8 +242,8 @@ static config expand_partialresolution(const config& theme)
 
 		// cannot add [status] sub-elements, but who cares
 		for(const auto& add : part.child_range("add")) {
-			for(const auto child : add.all_children_range()) {
-				resolution.add_child(child.key, child.cfg);
+			for(const auto [key, cfg] : add.all_children_view()) {
+				resolution.add_child(key, cfg);
 			}
 		}
 
@@ -240,9 +256,9 @@ static config expand_partialresolution(const config& theme)
 static void do_resolve_rects(const config& cfg, config& resolved_config, config* resol_cfg = nullptr)
 {
 	// recursively resolve children
-	for(const config::any_child value : cfg.all_children_range()) {
-		config& childcfg = resolved_config.add_child(value.key);
-		do_resolve_rects(value.cfg, childcfg, value.key == "resolution" ? &childcfg : resol_cfg);
+	for(const auto [child_key, child_cfg] : cfg.all_children_view()) {
+		config& dest = resolved_config.add_child(child_key);
+		do_resolve_rects(child_cfg, dest, child_key == "resolution" ? &dest : resol_cfg);
 	}
 
 	// copy all key/values
@@ -274,9 +290,9 @@ static void do_resolve_rects(const config& cfg, config& resolved_config, config*
 theme::object::object()
 	: location_modified_(false)
 	, id_()
-	, loc_(sdl::empty_rect)
-	, relative_loc_(sdl::empty_rect)
-	, last_screen_(sdl::empty_rect)
+	, loc_()
+	, relative_loc_()
+	, last_screen_()
 	, xanchor_(object::FIXED)
 	, yanchor_(object::FIXED)
 	, spec_width_(0)
@@ -288,8 +304,8 @@ theme::object::object(std::size_t sw, std::size_t sh, const config& cfg)
 	: location_modified_(false)
 	, id_(cfg["id"])
 	, loc_(read_sdl_rect(cfg))
-	, relative_loc_(sdl::empty_rect)
-	, last_screen_(sdl::empty_rect)
+	, relative_loc_()
+	, last_screen_()
 	, xanchor_(read_anchor(cfg["xanchor"]))
 	, yanchor_(read_anchor(cfg["yanchor"]))
 	, spec_width_(sw)
@@ -314,7 +330,7 @@ theme::border_t::border_t(const config& cfg)
 	VALIDATE(size >= 0.0 && size <= 0.5, _("border_size should be between 0.0 and 0.5."));
 }
 
-rect& theme::object::location(const SDL_Rect& screen) const
+rect& theme::object::location(const rect& screen) const
 {
 	if(last_screen_ == screen && !location_modified_)
 		return relative_loc_;
@@ -401,7 +417,7 @@ void theme::object::modify_location(const _rect& rect)
 	location_modified_ = true;
 }
 
-void theme::object::modify_location(std::string rect_str, SDL_Rect location_ref_rect)
+void theme::object::modify_location(const std::string& rect_str, rect location_ref_rect)
 {
 	_rect rect {0, 0, 0, 0};
 	const std::vector<std::string> items = utils::split(rect_str.c_str());
@@ -433,7 +449,7 @@ theme::label::label(std::size_t sw, std::size_t sh, const config& cfg)
 	: object(sw, sh, cfg)
 	, text_(cfg["prefix"].str() + cfg["prefix_literal"].str() + cfg["text"].str() + cfg["postfix_literal"].str() + cfg["postfix"].str())
 	, icon_(cfg["icon"])
-	, font_(cfg["font_size"])
+	, font_(cfg["font_size"].to_size_t())
 	, font_rgb_set_(false)
 	, font_rgb_(DefaultFontRGB)
 {
@@ -451,7 +467,7 @@ theme::status_item::status_item(std::size_t sw, std::size_t sh, const config& cf
 	, prefix_(cfg["prefix"].str() + cfg["prefix_literal"].str())
 	, postfix_(cfg["postfix_literal"].str() + cfg["postfix"].str())
 	, label_()
-	, font_(cfg["font_size"])
+	, font_(cfg["font_size"].to_size_t())
 	, font_rgb_set_(false)
 	, font_rgb_(DefaultFontRGB)
 {
@@ -519,7 +535,7 @@ theme::menu::menu(std::size_t sw, std::size_t sh, const config& cfg)
 		items_.emplace_back("id", item);
 	}
 
-	const auto& cmd = hotkey::get_hotkey_command(items_[0]["id"]);
+	const auto& cmd = hotkey::get_hotkey_command(items_[0]["id"].str());
 	if(cfg["auto_tooltip"].to_bool() && tooltip_.empty() && items_.size() == 1) {
 		tooltip_ = cmd.description + hotkey::get_names(items_[0]["id"]) + "\n" + cmd.tooltip;
 	} else if(cfg["tooltip_name_prepend"].to_bool() && items_.size() == 1) {
@@ -576,7 +592,7 @@ const std::string theme::action::tooltip(std::size_t index) const
 	return result.str();
 }
 
-theme::theme(const config& cfg, const SDL_Rect& screen)
+theme::theme(const config& cfg, const rect& screen)
 	: theme_reset_event_("theme_reset")
 	, cur_theme()
 	, cfg_()
@@ -599,9 +615,7 @@ theme::theme(const config& cfg, const SDL_Rect& screen)
 	set_resolution(screen);
 }
 
-theme& theme::operator=(theme&& other) = default;
-
-bool theme::set_resolution(const SDL_Rect& screen)
+bool theme::set_resolution(const rect& screen)
 {
 	screen_dimensions_ = screen;
 
@@ -610,8 +624,8 @@ bool theme::set_resolution(const SDL_Rect& screen)
 	int current_rating = 1000000;
 	const config* current = nullptr;
 	for(const config& i : cfg_.child_range("resolution")) {
-		int width = i["width"];
-		int height = i["height"];
+		int width = i["width"].to_int();
+		int height = i["height"].to_int();
 		LOG_DP << "comparing resolution " << screen.w << "," << screen.h << " to " << width << "," << height;
 		if(screen.w >= width && screen.h >= height) {
 			LOG_DP << "loading theme: " << width << "," << height;
@@ -633,8 +647,8 @@ bool theme::set_resolution(const SDL_Rect& screen)
 		}
 		return false;
 	}
-	cur_spec_width_ = (*current)["width"];
-	cur_spec_height_ = (*current)["height"];
+	cur_spec_width_ = (*current)["width"].to_size_t();
+	cur_spec_height_ = (*current)["height"].to_size_t();
 
 	std::map<std::string, std::string> title_stash_menus;
 	std::vector<theme::menu>::iterator m;
@@ -689,8 +703,8 @@ void theme::add_object(std::size_t sw, std::size_t sh, const config& cfg)
 	}
 
 	if(const auto status_cfg = cfg.optional_child("status")) {
-		for(const config::any_child i : status_cfg->all_children_range()) {
-			status_[i.key].reset(new status_item(sw, sh, i.cfg));
+		for(const auto [child_key, child_cfg] : status_cfg->all_children_view()) {
+			status_[child_key].reset(new status_item(sw, sh, child_cfg));
 		}
 		if(const auto unit_image_cfg = status_cfg->optional_child("unit_image")) {
 			unit_image_ = object(sw, sh, unit_image_cfg.value());
@@ -802,7 +816,7 @@ void theme::remove_object(const std::string& id)
 	throw config::error(stream.str());
 }
 
-void theme::set_object_location(theme::object& element, std::string rect_str, std::string ref_id)
+void theme::set_object_location(theme::object& element, const std::string& rect_str, std::string ref_id)
 {
 	theme::object ref_element = element;
 	if(ref_id.empty()) {
@@ -811,7 +825,7 @@ void theme::set_object_location(theme::object& element, std::string rect_str, st
 		ref_element = find_element(ref_id);
 	}
 	if(ref_element.get_id() == ref_id) {
-		SDL_Rect location_ref_rect = ref_element.get_location();
+		rect location_ref_rect = ref_element.get_location();
 		element.modify_location(rect_str, location_ref_rect);
 	}
 }

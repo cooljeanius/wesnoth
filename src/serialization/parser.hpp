@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2005 - 2024
+	Copyright (C) 2005 - 2025
 	by Philippe Plantier <ayin@anathas.org>
 	Copyright (C) 2005 by Guillaume Melquiond <guillaume.melquiond@gmail.com>
 	Copyright (C) 2003 by David White <dave@whitevine.net>
@@ -19,22 +19,27 @@
 
 #include "config.hpp"
 #include "configr_assign.hpp"
+#include "serialization/tokenizer.hpp"
 
 class abstract_validator;
 
-// Read data in, clobbering existing data.
-void read(config& cfg, std::istream& in, abstract_validator* validator = nullptr);      // Throws config::error
-void read(config& cfg, const std::string& in, abstract_validator* validator = nullptr); // Throws config::error
-void read_gz(config& cfg, std::istream& in, abstract_validator* validator = nullptr);
-void read_bz2(config& cfg, std::istream& in, abstract_validator* validator = nullptr);
+namespace io
+{
+config read(std::istream& in, abstract_validator* validator = nullptr);      // Throws config::error
+config read(const std::string& in, abstract_validator* validator = nullptr); // Throws config::error
+config read_gz(std::istream& in, abstract_validator* validator = nullptr);
+config read_bz2(std::istream& in, abstract_validator* validator = nullptr);
 
-void write(std::ostream& out, const configr_of& cfg, unsigned int level = 0);
+void write(std::ostream& out, const configr_of& cfg, unsigned int level = 0, bool strong_quotes = false);
 void write_gz(std::ostream& out, const configr_of& cfg);
 void write_bz2(std::ostream& out, const configr_of& cfg);
 void write_key_val(std::ostream& out,
 		const std::string& key,
 		const config::attribute_value& value,
 		unsigned level,
-		std::string& textdomain);
+		std::string& textdomain,
+		bool strong_quotes);
 void write_open_child(std::ostream& out, const std::string& child, unsigned int level);
 void write_close_child(std::ostream& out, const std::string& child, unsigned int level);
+
+} // namespace io

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 - 2024
+	Copyright (C) 2016 - 2025
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -18,7 +18,6 @@
 
 #include "display.hpp"
 #include "formatter.hpp"
-#include "gui/auxiliary/find_widget.hpp"
 #include "gui/widgets/label.hpp"
 #include "gui/widgets/listbox.hpp"
 #include "gui/widgets/window.hpp"
@@ -43,23 +42,17 @@ terrain_layers::terrain_layers(display_t& disp, const map_location& loc)
 	tile_->rebuild_cache(tod_id, &tile_logs_);
 }
 
-void terrain_layers::pre_show(window& window)
+void terrain_layers::pre_show()
 {
 	//
 	// List terrain flags
 	//
-	std::vector<std::string> flags(tile_->flags.begin(), tile_->flags.end());
-
-	for(auto& flag : flags) {
-		flag = (formatter() << font::unicode_bullet << " " << flag).str();
-	}
-
-	find_widget<label>(&window, "flags", false).set_label(utils::join(flags, "\n"));
+	find_widget<label>("flags").set_label(utils::bullet_list(tile_->flags, 0));
 
 	//
 	// Generate terrain list
 	//
-	listbox& list = find_widget<listbox>(&window, "layer_list", false);
+	listbox& list = find_widget<listbox>("layer_list");
 
 	int order = 1;
 	for(const terrain_builder::tile::log_details& det : tile_logs_) {
@@ -73,16 +66,10 @@ void terrain_layers::pre_show(window& window)
 		//const std::string& modif = img.get_modifications();
 		const map_location& loc_cut = img.get_loc();
 
-		widget_data data;
-		widget_item item;
-
-		item["label"] = (formatter() << (ri->is_background() ? "B ": "F ") << order).str();
-		data.emplace("index", item);
-
 		std::ostringstream image_steam;
 
 		const int tz = game_config::tile_size;
-		SDL_Rect r {0,0,tz,tz};
+		rect r {0,0,tz,tz};
 
 		const point img_size = image::get_size(img.get_filename());
 
@@ -120,33 +107,37 @@ void terrain_layers::pre_show(window& window)
 				<< "~MASK(" << "terrain/alphamask.png" << ")";
 		}
 
-		item["label"] = image_steam.str();
-		data.emplace("image_used", item);
-
-		item["label"] = name + "~SCALE(72,72)";
-		data.emplace("image_full", item);
-
-		item["label"] = name;
-		data.emplace("name", item);
-
-		item["label"] = (formatter() << img.get_loc()).str();
-		data.emplace("loc", item);
-
-		item["label"] = std::to_string(ri->layer);
-		data.emplace("layer", item);
-
-		item["label"] = std::to_string(ri->basex);
-		data.emplace("base_x", item);
-
-		item["label"] = std::to_string(ri->basey);
-		data.emplace("base_y", item);
-
-		item["label"] = (formatter() << ri->center_x << ", " << ri->center_y).str();
-		data.emplace("center", item);
+		list.add_row(widget_data{
+			{ "index", {
+				{ "label", (formatter() << (ri->is_background() ? "B ": "F ") << order).str() }
+			}},
+			{ "image_used", {
+				{ "label", image_steam.str() }
+			}},
+			{ "image_full", {
+				{ "label", name + "~SCALE(72,72)" }
+			}},
+			{ "name", {
+				{ "label", name }
+			}},
+			{ "loc", {
+				{ "label", (formatter() << img.get_loc()).str() }
+			}},
+			{ "layer", {
+				{ "label", std::to_string(ri->layer) }
+			}},
+			{ "base_x", {
+				{ "label", std::to_string(ri->basex) }
+			}},
+			{ "base_y", {
+				{ "label", std::to_string(ri->basey) }
+			}},
+			{ "center", {
+				{ "label", (formatter() << ri->center_x << ", " << ri->center_y).str() }
+			}}
+		});
 
 		++order;
-
-		list.add_row(data);
 	}
 }
 

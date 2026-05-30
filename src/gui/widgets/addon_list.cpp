@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2016 - 2024
+	Copyright (C) 2016 - 2025
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -18,10 +18,9 @@
 
 #include "addon/client.hpp"
 #include "color.hpp"
-#include "font/text_formatting.hpp"
+#include "font/pango/escape.hpp"
 #include "formatter.hpp"
 #include "gettext.hpp"
-#include "gui/auxiliary/find_widget.hpp"
 #include "gui/core/event/dispatcher.hpp"
 #include "gui/core/register_widget.hpp"
 #include "gui/widgets/button.hpp"
@@ -31,6 +30,7 @@
 #include "gui/widgets/stacked_widget.hpp"
 #include "gui/widgets/toggle_panel.hpp"
 #include "gui/widgets/window.hpp"
+#include "serialization/markup.hpp"
 #include "wml_exception.hpp"
 
 #include <algorithm>
@@ -52,8 +52,8 @@ REGISTER_WIDGET(addon_list)
 addon_list::addon_list(const implementation::builder_addon_list& builder)
 	: container_base(builder, type())
 	, addon_vector_()
-	, install_status_visibility_(visibility::visible)
-	, install_buttons_visibility_(visibility::invisible)
+	, install_status_visibility_(builder.install_status_visibility)
+	, install_buttons_visibility_(builder.install_buttons_visibility)
 	, install_function_()
 	, uninstall_function_()
 	, publish_function_()
@@ -91,7 +91,7 @@ std::string addon_list::colorize_addon_state_string(const std::string& str, ADDO
 		break;
 	}
 
-	return font::span_color(colorname) + str + "</span>";
+	return markup::span_color(colorname, font::escape_text(str));
 }
 
 std::string addon_list::describe_status(const addon_tracking_info& info)
@@ -144,14 +144,14 @@ void addon_list::addon_action_wrapper(addon_op_func_t& func, const addon_info& a
 	}
 }
 
-const std::string addon_list::display_title_full_shift(const addon_info& addon) const
+const std::string addon_list::display_title_full_shift_markup(const addon_info& addon) const
 {
-	const std::string& local_title = addon.display_title_translated();
-	const std::string& display_title = addon.display_title();
-	if(local_title.empty())
+	const std::string& local_title = font::escape_text(addon.display_title_translated());
+	const std::string& display_title = font::escape_text(addon.display_title());
+	if(local_title.empty()) {
 		return display_title;
-	return local_title + "\n"
-		+ "<small>(" + display_title + ")</small>";
+	}
+	return local_title + "\n" + markup::tag("small", "(", display_title, ")");
 }
 
 void addon_list::set_addons(const addons_list& addons)
@@ -174,17 +174,17 @@ void addon_list::set_addons(const addons_list& addons)
 			item["label"] = addon.display_icon();
 			data.emplace("icon", item);
 
-			item["label"] = display_title_full_shift(addon);
+			item["label"] = display_title_full_shift_markup(addon);
 			data.emplace("name", item);
 		} else {
-			item["label"] = addon.display_icon() + "~SCALE(72,72)~BLIT(icons/icon-addon-publish.png,8,8)";
-			data.emplace("icon", item);
+			if(!addon.display_icon().empty()) {
+				item["label"] = addon.display_icon() + "~SCALE(72,72)~BLIT(icons/icon-addon-publish.png,8,8)";
+				data.emplace("icon", item);
+			}
 
-			const std::string publish_name = formatter()
-				<< font::span_color(font::GOOD_COLOR)
-				<< display_title_full_shift(addon)
-				<< "</span>";
-
+			const std::string publish_name = markup::span_color(
+				font::GOOD_COLOR,
+				display_title_full_shift_markup(addon));
 			item["label"] = publish_name;
 			data.emplace("name", item);
 		}
@@ -224,13 +224,13 @@ void addon_list::set_addons(const addons_list& addons)
 		item["label"] = addon.display_type();
 		data.emplace("type", item);
 
-		grid* row_grid = &list.add_row(data);
+		grid& row_grid = list.add_row(data);
 
 		// Set special retval for the toggle panels
-		find_widget<toggle_panel>(row_grid, "list_panel", false).set_retval(DEFAULT_ACTION_RETVAL);
+		row_grid.find_widget<toggle_panel>("list_panel").set_retval(DEFAULT_ACTION_RETVAL);
 
 		// The control button grid is excluded on lower resolutions.
-		grid* control_grid = find_widget<grid>(row_grid, "single_install_buttons", false, false);
+		grid* control_grid = row_grid.find_widget<grid>("single_install_buttons", false, false);
 		if(!control_grid) {
 			continue;
 		}
@@ -238,15 +238,15 @@ void addon_list::set_addons(const addons_list& addons)
 		//
 		// Set up the inline control buttons.
 		//
-		stacked_widget& install_update_stack = find_widget<stacked_widget>(control_grid, "install_update_stack", false);
+		stacked_widget& install_update_stack = control_grid->find_widget<stacked_widget>("install_update_stack");
 
 		// These three buttons are in the install_update_stack. Only one is shown depending on the addon's state.
-		button& install_button   = find_widget<button>(control_grid, "single_install", false);
-		button& update_button    = find_widget<button>(control_grid, "single_update", false);
-		button& publish_button   = find_widget<button>(control_grid, "single_publish", false);
+		button& install_button   = control_grid->find_widget<button>("single_install");
+		button& update_button    = control_grid->find_widget<button>("single_update");
+		button& publish_button   = control_grid->find_widget<button>("single_publish");
 
 		// This button is always shown.
-		button& uninstall_button = find_widget<button>(control_grid, "single_uninstall", false);
+		button& uninstall_button = control_grid->find_widget<button>("single_uninstall");
 
 		const bool is_installed = is_installed_addon_status(tracking_info.state);
 		const bool is_local = tracking_info.state == ADDON_INSTALLED_LOCAL_ONLY;
@@ -305,7 +305,7 @@ void addon_list::set_addons(const addons_list& addons)
 		}
 
 		control_grid->set_visible(install_buttons_visibility_);
-		find_widget<label>(row_grid, "installation_status", false).set_visible(install_status_visibility_);
+		row_grid.find_widget<label>("installation_status").set_visible(install_status_visibility_);
 	}
 
 	select_first_addon();
@@ -313,13 +313,13 @@ void addon_list::set_addons(const addons_list& addons)
 
 const addon_info* addon_list::get_selected_addon() const
 {
-	const listbox& list = find_widget<const listbox>(&get_grid(), "addons", false);
+	const listbox& list = get_grid().find_widget<const listbox>("addons");
 
-	try {
-		return addon_vector_.at(list.get_selected_row());
-	} catch(const std::out_of_range&) {
+	const int selected_row = list.get_selected_row();
+	if(selected_row == -1 || static_cast<std::size_t>(selected_row) >= addon_vector_.size()) {
 		return nullptr;
 	}
+	return addon_vector_[selected_row];
 }
 
 std::string addon_list::get_remote_addon_id()
@@ -336,9 +336,7 @@ void addon_list::select_addon(const std::string& id)
 {
 	listbox& list = get_listbox();
 
-	auto iter = std::find_if(addon_vector_.begin(), addon_vector_.end(),
-		[&id](const addon_info* a) { return a->id == id; }
-	);
+	auto iter = utils::ranges::find(addon_vector_, id, &addon_info::id);
 
 	// Corner case: if you publish an addon with an out-of-folder .pbl file and
 	// delete it locally before deleting it from the server, the game will try
@@ -356,8 +354,8 @@ void addon_list::select_addon(const std::string& id)
 	for(unsigned int i = 0u; i < list.get_item_count(); ++i) {
 		grid* row = list.get_row_grid(i);
 
-		const label& name_label = find_widget<label>(row, "name", false);
-		if(name_label.get_label().base_str() == display_title_full_shift(info)) {
+		const label& name_label = row->find_widget<label>("name");
+		if(name_label.get_label().base_str() == display_title_full_shift_markup(info)) {
 			list.select_row(i);
 		}
 	}
@@ -365,7 +363,7 @@ void addon_list::select_addon(const std::string& id)
 
 listbox& addon_list::get_listbox()
 {
-	return find_widget<listbox>(&get_grid(), "addons", false);
+	return get_grid().find_widget<listbox>("addons");
 }
 
 void addon_list::add_list_to_keyboard_chain()
@@ -379,17 +377,21 @@ void addon_list::finalize_setup()
 {
 	listbox& list = get_listbox();
 
-	list.register_translatable_sorting_option(0, [this](const int i) { return addon_vector_[i]->display_title_full(); });
-	list.register_sorting_option(1, [this](const int i) { return addon_vector_[i]->author; });
-	list.register_sorting_option(2, [this](const int i) { return addon_vector_[i]->size; });
-	list.register_sorting_option(3, [this](const int i) { return addon_vector_[i]->downloads; });
-	list.register_translatable_sorting_option(4, [this](const int i) { return addon_vector_[i]->display_type(); });
+	list.set_sorters(
+		[this](const std::size_t i) { return t_string(addon_vector_[i]->display_title_full()); },
+		[this](const std::size_t i) { return addon_vector_[i]->author; },
+		[this](const std::size_t i) { return addon_vector_[i]->size; },
+		[this](const std::size_t i) { return addon_vector_[i]->downloads; },
+		[this](const std::size_t i) { return t_string(addon_vector_[i]->display_type()); }
+	);
 
-	auto order = std::pair(0, sort_order::type::ascending);
-	list.set_active_sorting_option(order);
+	list.set_active_sorter("sort_0", sort_order::type::ascending);
+
+	// Propagate any modified events from the internal listbox to the widget as a whole
+	connect_signal_notify_modified(list, [this](auto&&...) { fire(event::NOTIFY_MODIFIED, *this, nullptr); });
 }
 
-void addon_list::set_addon_order(addon_sort_func func)
+void addon_list::set_addon_order(const addon_sort_func& func)
 {
 	listbox& list = get_listbox();
 
@@ -450,15 +452,15 @@ static widget::visibility parse_visibility(const std::string& str)
 
 builder_addon_list::builder_addon_list(const config& cfg)
 	: builder_styled_widget(cfg)
-	, install_status_visibility_(widget::visibility::visible)
-	, install_buttons_visibility_(widget::visibility::invisible)
+	, install_status_visibility(widget::visibility::visible)
+	, install_buttons_visibility(widget::visibility::invisible)
 {
 	if(cfg.has_attribute("install_status_visibility")) {
-		install_status_visibility_ = parse_visibility(cfg["install_status_visibility"]);
+		install_status_visibility = parse_visibility(cfg["install_status_visibility"]);
 	}
 
 	if(cfg.has_attribute("install_buttons_visibility")) {
-		install_buttons_visibility_ = parse_visibility(cfg["install_buttons_visibility"]);
+		install_buttons_visibility = parse_visibility(cfg["install_buttons_visibility"]);
 	}
 }
 
@@ -473,10 +475,6 @@ std::unique_ptr<widget> builder_addon_list::build() const
 	assert(conf != nullptr);
 
 	widget->init_grid(*conf->grid);
-
-	widget->set_install_status_visibility(install_status_visibility_);
-	widget->set_install_buttons_visibility(install_buttons_visibility_);
-
 	widget->finalize_setup();
 
 	return widget;

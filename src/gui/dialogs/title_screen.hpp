@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008 - 2024
+	Copyright (C) 2008 - 2025
 	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -47,6 +47,8 @@ public:
 	enum result {
 		// Window was resized, so needs redrawing
 		REDRAW_BACKGROUND = 0, // Needs to be 0, the value of gui2::retval::NONE
+		// Load and begin playing a saved game
+		LOAD_GAME,
 		// Start playing a single-player game, such as the tutorial or a campaign
 		LAUNCH_GAME,
 		// Connect to an MP server
@@ -71,6 +73,15 @@ private:
 
 	void init_callbacks();
 
+	// Does different actions based on if it was called by clicking
+	// the button or by using the hotkey
+	void register_button(
+		const std::string& id,
+		hotkey::HOTKEY_COMMAND hk,
+		const std::function<void()>& callback_btn,
+		const std::function<void()>& callback_hotkey);
+	void register_button(const std::string& id, hotkey::HOTKEY_COMMAND hk, const std::function<void()>& callback);
+
 	/***** ***** ***** ***** Callbacks ***** ***** ****** *****/
 
 	void on_resize();
@@ -88,14 +99,10 @@ private:
 	/** Shows the debug clock. */
 	void show_debug_clock_window();
 
-	/** Shows the gui test window. */
-	void show_gui_test_dialog();
+	/** Shows the preferences dialog. */
+	void show_preferences();
 
 	void hotkey_callback_select_tests();
-
-	void show_achievements();
-
-	void show_community();
 
 	void button_callback_multiplayer();
 

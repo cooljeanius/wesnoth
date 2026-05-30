@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2024
+	Copyright (C) 2003 - 2025
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -20,16 +20,13 @@
 #include "filter_context.hpp"
 #include "preferences/preferences.hpp"
 
-class map_generator;
-class game_config_view;
-
 namespace editor
 {
 
 class context_manager : public filter_context
 {
 public:
-	context_manager(editor_display& gui, const game_config_view& game_config, const std::string& addon_id);
+	context_manager(editor_display& gui, const std::string& addon_id);
 	~context_manager();
 
 	bool is_active_transitions_hotkey(const std::string& item);
@@ -103,22 +100,22 @@ public:
 	void rename_area_dialog();
 
 	/** Menu expanding for open maps list */
-	void expand_open_maps_menu(std::vector<config>& items, int i);
+	void expand_open_maps_menu(std::vector<config>& items) const;
 
 	/** Menu expanding for most recent loaded list */
-	void expand_load_mru_menu(std::vector<config>& items, int i);
+	void expand_load_mru_menu(std::vector<config>& items) const;
 
 	/** Menu expanding for the map's player sides */
-	void expand_sides_menu(std::vector<config>& items, int i);
+	void expand_sides_menu(std::vector<config>& items) const;
 
 	/** Menu expanding for the map's defined areas */
-	void expand_areas_menu(std::vector<config>& items, int i);
+	void expand_areas_menu(std::vector<config>& items) const;
 
 	/** Menu expanding for the map's defined areas */
-	void expand_time_menu(std::vector<config>& items, int i);
+	void expand_time_menu(std::vector<config>& items) const;
 
 	/** Menu expanding for the map's defined areas */
-	void expand_local_time_menu(std::vector<config>& items, int i);
+	void expand_local_time_menu(std::vector<config>& items) const;
 
 	/** Display a load map dialog and process user input. */
 	void load_map_dialog(bool force_same_context = false);
@@ -130,7 +127,7 @@ public:
 	void edit_scenario_dialog();
 
 	/** Display a side edit dialog and process user input. */
-	void edit_side_dialog(int side_index);
+	void edit_side_dialog(const team& t);
 
 	/** Display a new map dialog and process user input. */
 	void new_map_dialog();
@@ -145,7 +142,7 @@ public:
 	void save_scenario_as_dialog();
 
 	/** Display a generate random map dialog and process user input. */
-	void generate_map_dialog();
+	void generate_map_dialog(const std::vector<std::unique_ptr<map_generator>>& map_generators);
 
 	/** Display a load map dialog and process user input. */
 	void resize_map_dialog();
@@ -205,8 +202,6 @@ public:
 	// TODO: Make this private with an accessor or something
 	class location_palette* locs_;
 private:
-	/** init available random map generators */
-	void init_map_generators(const game_config_view& game_config);
 
 	/**
 	 * Shows an are-you-sure dialog if the map was modified.
@@ -225,7 +220,7 @@ private:
 	 * @return the index of the added map context in the map_contexts_ array
 	 */
 	template<typename... T>
-	int add_map_context(const T&... args);
+	int add_map_context(T&&... args);
 
 	int add_map_context_of(std::unique_ptr<map_context>&& mc);
 
@@ -233,7 +228,7 @@ private:
 	 * Replace the current map context and refresh accordingly
 	 */
 	template<typename... T>
-	void replace_map_context(const T&... args);
+	void replace_map_context(T&&... args);
 
 	void replace_map_context_with(std::unique_ptr<map_context>&& mc);
 
@@ -261,6 +256,11 @@ public:
 	/** Switches the context to the one under the specified index. */
 	void switch_context(const int index, const bool force = false);
 
+	/**
+	 * Convert existing map to scenario.
+	 */
+	void map_to_scenario();
+
 private:
 	/**
 	 * Save the map under a given filename. Displays an error message on failure.
@@ -268,6 +268,8 @@ private:
 	 */
 	bool write_map(bool display_confirmation = true);
 	bool write_scenario(bool display_confirmation = true);
+
+	void init_context(int width, int height, const t_translation::terrain_code& fill, bool new_context, bool is_pure_map = true);
 
 	/**
 	 * Create a new map.
@@ -317,17 +319,11 @@ public:
 private:
 	editor_display& gui_;
 
-	const game_config_view& game_config_;
-
 	/** Default directory for map load/save as dialogs */
 	std::string default_dir_;
 
 	/** The currently selected add-on */
 	std::string current_addon_;
-
-	/** Available random map generators */
-	std::vector<std::unique_ptr<map_generator>> map_generators_;
-	map_generator* last_map_generator_;
 
 	int current_context_index_;
 

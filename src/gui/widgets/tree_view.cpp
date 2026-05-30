@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2010 - 2024
+	Copyright (C) 2010 - 2025
 	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -37,7 +37,8 @@ REGISTER_WIDGET(tree_view)
 tree_view::tree_view(const implementation::builder_tree_view& builder)
 	: scrollbar_container(builder, type())
 	, node_definitions_(builder.nodes)
-	, indentation_step_size_(0)
+	, indentation_step_size_(builder.indentation_step_size)
+	, has_minimum_(builder.has_minimum)
 	, need_layout_(false)
 	, root_node_(nullptr)
 	, selected_item_(nullptr)
@@ -66,8 +67,7 @@ std::pair<std::shared_ptr<tree_view_node>, int> tree_view::remove_node(tree_view
 
 	tree_view_node::node_children_vector& siblings = node->parent_node_->children_;
 
-	auto node_itor = std::find_if(siblings.begin(), siblings.end(), [node](const auto& c) { return c.get() == node; });
-
+	auto node_itor = utils::ranges::find(siblings, node, [](const auto& c) { return c.get(); });
 	assert(node_itor != siblings.end());
 
 	auto old_node = std::move(*node_itor);
@@ -196,8 +196,8 @@ bool tree_view::handle_up_down_arrow()
 {
 	if(tree_view_node* next = get_next_node<func>()) {
 		next->select_node();
-		SDL_Rect visible = content_visible_area();
-		SDL_Rect rect = next->get_grid().get_rectangle();
+		rect visible = content_visible_area();
+		rect rect = next->get_grid().get_rectangle();
 		visible.y = rect.y; // - content_grid()->get_y();
 		visible.h = rect.h;
 		show_content_rect(visible);
@@ -277,10 +277,9 @@ tree_view_definition::resolution::resolution(const config& cfg)
 namespace implementation
 {
 builder_tree_view::builder_tree_view(const config& cfg)
-	: builder_styled_widget(cfg)
-	, vertical_scrollbar_mode(get_scrollbar_mode(cfg["vertical_scrollbar_mode"]))
-	, horizontal_scrollbar_mode(get_scrollbar_mode(cfg["horizontal_scrollbar_mode"]))
-	, indentation_step_size(cfg["indentation_step_size"])
+	: builder_scrollbar_container(cfg)
+	, indentation_step_size(cfg["indentation_step_size"].to_unsigned())
+	, has_minimum(cfg["has_minimum"].to_bool(true))
 	, nodes()
 {
 	for(const auto& node : cfg.child_range("node")) {
@@ -297,11 +296,6 @@ std::unique_ptr<widget> builder_tree_view::build() const
 	 *  building in several steps.
 	 */
 	auto widget = std::make_unique<tree_view>(*this);
-
-	widget->set_vertical_scrollbar_mode(vertical_scrollbar_mode);
-	widget->set_horizontal_scrollbar_mode(horizontal_scrollbar_mode);
-
-	widget->set_indentation_step_size(indentation_step_size);
 
 	DBG_GUI_G << "Window builder: placed tree_view '" << id << "' with definition '" << definition << "'.";
 
@@ -322,7 +316,7 @@ tree_node::tree_node(const config& cfg)
 	VALIDATE(!id.empty(), missing_mandatory_wml_key("node", "id"));
 
 	// TODO: interpolate this value into the error message
-	VALIDATE(id != tree_view::root_node_id, _("[node]id 'root' is reserved for the implementation."));
+	VALIDATE(id != tree_view::root_node_id, _("[node]id ‘root’ is reserved for the implementation."));
 
 	auto node_definition = VALIDATE_WML_CHILD(cfg, "node_definition", missing_mandatory_wml_tag("node", "node_definition"));
 	builder = std::make_shared<builder_grid>(node_definition);

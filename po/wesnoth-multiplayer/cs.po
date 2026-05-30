@@ -3,15 +3,15 @@
 # Vladimír Slávik <slavik.vladimir@seznam.cz>, 2007 - 2011.
 # Jan Dědič <jan.dedic@gmail.com>, 2014.
 # Martin Hrubý <hrubymar10@gmail.com>, 2017 - 2020.
-# Michal Žejdl <lachim@emer.cz>, 2019 - 2024
+# Michal Žejdl <lachim@emer.cz>, 2019 - 2025
 # Petr Šlejhar (Septim) <septim@centrum.cz>, 2020, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Battle for Wesnoth\n"
 "Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
-"POT-Creation-Date: 2024-05-26 20:07 UTC\n"
-"PO-Revision-Date: 2024-06-08 07:24+0200\n"
+"POT-Creation-Date: 2025-10-21 01:10 UTC\n"
+"PO-Revision-Date: 2025-11-16 07:45+0100\n"
 "Last-Translator: Michal Žejdl <lachim@emer.cz>\n"
 "Language-Team: Czech https://wiki.wesnoth.org/CzechTranslation\n"
 "Language: cs\n"
@@ -37,12 +37,12 @@ msgstr "Předpověď triumfu"
 
 #. [achievement]: id=Wesnoth_MP_Dark_Forecast
 #: data/multiplayer/achievements.cfg:11
-msgid "Complete the survival scenario <i>2p - Dark Forecast</i>."
+msgid "Complete the survival scenario <i>2p — Dark Forecast</i>."
 msgstr "Dokonči scénář přežití <i>2hr – Temná předpověď</i>."
 
 #. [achievement]: id=Wesnoth_MP_Dark_Forecast
 #: data/multiplayer/achievements.cfg:12
-msgid "Completed the survival scenario <i>2p - Dark Forecast</i>."
+msgid "Completed the survival scenario <i>2p — Dark Forecast</i>."
 msgstr "Dokončen scénář přežití <i>2hr – Temná předpověď</i>."
 
 #. [achievement]: id=Wesnoth_MP_Isle_of_Mists
@@ -57,12 +57,12 @@ msgstr "Mlhy zahnány"
 
 #. [achievement]: id=Wesnoth_MP_Isle_of_Mists
 #: data/multiplayer/achievements.cfg:22
-msgid "Complete the survival scenario <i>2p - Isle of Mists</i>."
+msgid "Complete the survival scenario <i>2p — Isle of Mists</i>."
 msgstr "Dokonči scénář přežití <i>2hr – Ostrov mlh</i>."
 
 #. [achievement]: id=Wesnoth_MP_Isle_of_Mists
 #: data/multiplayer/achievements.cfg:23
-msgid "Completed the survival scenario <i>2p - Isle of Mists</i>."
+msgid "Completed the survival scenario <i>2p — Isle of Mists</i>."
 msgstr "Dokončen scénář přežití <i>2hr – Ostrov mlh</i>."
 
 #. [achievement]: id=Wesnoth_MP_Team_Survival
@@ -72,12 +72,12 @@ msgstr "Bezvadná spolupráce"
 
 #. [achievement]: id=Wesnoth_MP_Team_Survival
 #: data/multiplayer/achievements.cfg:33
-msgid "Complete the survival scenario <i>6p - Team Survival</i>."
+msgid "Complete the survival scenario <i>6p — Team Survival</i>."
 msgstr "Dokonči scénář přežití <i>6hr – Týmové přežití</i>."
 
 #. [achievement]: id=Wesnoth_MP_Team_Survival
 #: data/multiplayer/achievements.cfg:34
-msgid "Completed the survival scenario <i>6p - Team Survival</i>."
+msgid "Completed the survival scenario <i>6p — Team Survival</i>."
 msgstr "Dokončen scénář přežití <i>6hr – Týmové přežití</i>."
 
 #. [achievement]: id=Wesnoth_MP_ANL
@@ -87,12 +87,12 @@ msgstr "Návrat ke slávě"
 
 #. [achievement]: id=Wesnoth_MP_ANL
 #: data/multiplayer/achievements.cfg:44
-msgid "Complete the survival scenario <i>4p - A New Land</i>."
+msgid "Complete the survival scenario <i>4p — A New Land</i>."
 msgstr "Dokonči scénář přežití <i>4hr – Nová země</i>."
 
 #. [achievement]: id=Wesnoth_MP_ANL
 #: data/multiplayer/achievements.cfg:45
-msgid "Completed the survival scenario <i>4p - A New Land</i>."
+msgid "Completed the survival scenario <i>4p — A New Land</i>."
 msgstr "Dokončen scénář přežití <i>4hr – Nová země</i>."
 
 #. [achievement]: id=Wesnoth_MP_ANL_mines
@@ -102,12 +102,12 @@ msgstr "Ekonomická recese"
 
 #. [achievement]: id=Wesnoth_MP_ANL_mines
 #: data/multiplayer/achievements.cfg:54
-msgid "Destroy all enemy mushroom mines in <i>4p - A New Land</i>."
+msgid "Destroy all enemy mushroom mines in <i>4p — A New Land</i>."
 msgstr "Znič všechny nepřátelské houbové doly ve <i>4hr – Nová země</i>."
 
 #. [achievement]: id=Wesnoth_MP_ANL_mines
 #: data/multiplayer/achievements.cfg:55
-msgid "Destroyed all enemy mushroom mines in <i>4p - A New Land</i>."
+msgid "Destroyed all enemy mushroom mines in <i>4p — A New Land</i>."
 msgstr "Zničeny všechny nepřátelské houbové doly ve <i>4hr – Nová země</i>."
 
 #. [achievement]: id=Wesnoth_MP_ANL_rescue_allies
@@ -117,12 +117,12 @@ msgstr "Pomoc!"
 
 #. [achievement]: id=Wesnoth_MP_ANL_rescue_allies
 #: data/multiplayer/achievements.cfg:65
-msgid "Rescue the trapped units in <i>4p - A New Land</i>."
+msgid "Rescue the trapped units in <i>4p — A New Land</i>."
 msgstr "Osvoboď chycené jednotky ve <i>4hr – Nová země</i>."
 
 #. [achievement]: id=Wesnoth_MP_ANL_rescue_allies
 #: data/multiplayer/achievements.cfg:66
-msgid "Rescued the trapped units in <i>4p - A New Land</i>."
+msgid "Rescued the trapped units in <i>4p — A New Land</i>."
 msgstr "Osvobozeny chycené jednotky ve <i>4hr – Nová země</i>."
 
 #. [era]: id=era_default, type=hybrid
@@ -207,24 +207,23 @@ msgid "Drakes"
 msgstr "Drakonidé"
 
 #. [multiplayer_side]: id=Drakes, type=random
-#: data/multiplayer/factions/drakes-aoh.cfg:14
-#: data/multiplayer/factions/drakes-default.cfg:14
+#: data/multiplayer/factions/drakes-aoh.cfg:13
+#: data/multiplayer/factions/drakes-default.cfg:13
 msgid ""
-"The <bold>text='Drakes'</bold> are a faction of dragon-like "
-"<ref>text='Drakes' dst='..race_drake'</ref> and their lizard "
-"<ref>text='Saurian' dst='..race_lizard'</ref> allies. Drakes are descendants "
-"of dragons, but smaller in size. Saurians are considerably smaller than "
-"Drakes and from different ancestry. Together, the Drake faction has high "
-"mobility but low defense, leading to unusual tactics for a "
-"<ref>text='Default Era' dst='..era_era_default'</ref> faction."
+"The <b>Drakes</b> are a faction of dragon-like <ref "
+"dst='..race_drake'>Drakes</ref> and their lizard <ref "
+"dst='..race_lizard'>Saurian</ref> allies. Drakes are descendants of dragons, "
+"but smaller in size. Saurians are considerably smaller than Drakes and from "
+"different ancestry. Together, the Drake faction has high mobility but low "
+"defense, leading to unusual tactics for a <ref "
+"dst='..era_era_default'>Default Era</ref> faction."
 msgstr ""
-"<bold>text='Drakonidé'</bold> jsou frakcí drakům podobných "
-"<ref>text='drakonidů' dst='..race_drake'</ref> a jejich spojenců "
-"<ref>text='ještěráků' dst='..race_lizard'</ref>. Drakonidé jsou potomky "
-"draků, ale oproti nim jsou menší. Ještěráci jsou ještě o kus menší než "
-"drakonidé a mají jiné předky. Obě rasy jsou rychlé, ale špatně se brání, což "
-"vyúsťuje k neobvyklým strategiím v <ref>text='základní éře' dst='.."
-"era_era_default'</ref>."
+"<b>Drakonidé</b> jsou frakcí drakům podobných <ref "
+"dst='..race_drake'>drakonidů</ref> a jejich spojenců <ref "
+"dst='..race_lizard'>ještěráků</ref>. Drakonidé jsou potomky draků, ale "
+"oproti nim jsou menší. Ještěráci jsou ještě o kus menší než drakonidé a mají "
+"jiné předky. Obě rasy jsou rychlé, ale špatně se brání, což pro frakci <ref "
+"dst='..era_era_default'>základní éry</ref> vede k neobvyklým taktikám."
 
 #. [multiplayer_side]: id=Dunefolk, type=random
 #: data/multiplayer/factions/dunefolk-aoh.cfg:4
@@ -233,21 +232,21 @@ msgid "Dunefolk"
 msgstr "Pouštní lid"
 
 #. [multiplayer_side]: id=Dunefolk, type=random
-#: data/multiplayer/factions/dunefolk-aoh.cfg:14
-#: data/multiplayer/factions/dunefolk-default.cfg:14
+#: data/multiplayer/factions/dunefolk-aoh.cfg:13
+#: data/multiplayer/factions/dunefolk-default.cfg:13
 msgid ""
-"The <bold>text='Dunefolk'</bold> are a faction of humans from the deserts "
-"and hills of the southern lands. The Dunefolk specialize in using terrain "
-"features to coordinate attacks at dawn or dusk. Their ranks boast lawful and "
-"liminal units, healers, high-accuracy melee fighters, and fearsome horse-"
-"mounted archers. While Dunefolk units tend to be more expensive than those "
-"of the Loyalist faction, they make up for this with high mobility — "
-"especially on hilly terrains."
+"The <b>Dunefolk</b> are a faction of humans from the deserts and hills of "
+"the southern lands. The Dunefolk specialize in using terrain features to "
+"coordinate attacks at dawn or dusk. Their ranks boast lawful and liminal "
+"units, healers, high-accuracy melee fighters, and fearsome horse-mounted "
+"archers. While Dunefolk units tend to be more expensive than those of the "
+"Loyalist faction, they make up for this with high mobility — especially on "
+"hilly terrains."
 msgstr ""
-"<bold>text='Pouštní lid'</bold> je frakcí lidí z pouští a hor na jihu. "
-"Pouštní lidé se specializují na využívání různorodosti krajiny ke koordinaci "
-"útoků za rozbřesku nebo za soumraku. Jejich řady se mohou pochlubit "
-"zákonnými a šerými jednotkami, léčiteli, vysoce přesnými bojovníky na blízko "
+"<b>Pouštní lid</b> je frakcí lidí z pouští a hor na jihu. Pouštní lidé se "
+"specializují na využívání různorodosti krajiny ke koordinaci útoků za "
+"rozbřesku nebo za soumraku. Jejich řady se mohou pochlubit zákonnými "
+"a šerými jednotkami, léčiteli, vysoce přesnými bojovníky na blízko "
 "a obávanými lučištníky na koních. Ač jsou jednotky pouštních lidí průměrně "
 "dražší než jednotky z frakce Věrných, vynahrazují to lepší pohyblivostí, "
 "obzvlášť v hornatém terénu."
@@ -256,30 +255,29 @@ msgstr ""
 #: data/multiplayer/factions/knalgans-aoh.cfg:4
 #: data/multiplayer/factions/knalgans-default.cfg:4
 msgid "Knalgan Alliance"
-msgstr "Knalganská aliance"
+msgstr "Knalžská aliance"
 
 #. [multiplayer_side]: id=Knalgan Alliance, type=random
-#: data/multiplayer/factions/knalgans-aoh.cfg:13
-#: data/multiplayer/factions/knalgans-default.cfg:13
+#: data/multiplayer/factions/knalgans-aoh.cfg:12
+#: data/multiplayer/factions/knalgans-default.cfg:12
 msgid ""
-"The <bold>text='Knalgan Alliance'</bold> is a faction of <ref>text='Dwarves' "
-"dst='..race_dwarf'</ref> and their outlaw <ref>text='Human' dst='.."
-"race_human'</ref> allies. Dwarves are an old race who live underground and "
-"have tough, but short, warriors. The outlaws are humans who are not socially "
-"acceptable among others of their race, but have become allies of the dwarves "
-"due to common enemies. This leads to a combination of tough and defensive "
-"dwarves who are only good on certain terrain and humans who can cover ground "
-"that dwarves are not good at fighting in."
+"The <b>Knalgan Alliance</b> is a faction of <ref dst='..race_dwarf'>Dwarves</"
+"ref> and their outlaw <ref dst='..race_human'>Human</ref> allies. Dwarves "
+"are an old race who live underground and have tough, but short, warriors. "
+"The outlaws are humans who are not socially acceptable among others of their "
+"race, but have become allies of the dwarves due to common enemies. This "
+"leads to a combination of tough and defensive dwarves who are only good on "
+"certain terrain and humans who can cover ground that dwarves are not good at "
+"fighting in."
 msgstr ""
-"<bold>text='Knalgská aliance'</bold> je spojenectví <ref>text='trpaslíků' "
-"dst='..race_dwarf'</ref> a <ref>text='psanců' dst='..race_human'</ref>. "
-"Trpaslíci jsou starobylá rasa, která většinu času tráví pod zemí. Jejich "
-"bojovníci jsou sice nízcí, zato houževnatí. Psanci jsou tvořeni skupinami "
-"lidí, které zavrhla jejich vlastní rasa, tak se přidali k trpaslíkům, se "
-"kterými sdílejí společné nepřátele. Toto spojenectví přináší kombinaci "
-"odolných a v obraně zdatných trpaslíků, kterým se ale daří jen v nemnoha "
-"typech terénu a lidí, kteří pokryjí terén, na kterém se trpaslíkům špatně "
-"bojuje."
+"<b>Knalžská aliance</b> je spojenectví <ref dst='..race_dwarf'>trpaslíků</"
+"ref> a <ref dst='..race_human'>lidských</ref> psanců. Trpaslíci jsou "
+"starobylá rasa, která většinu času tráví pod zemí. Jejich bojovníci jsou "
+"sice nízcí, zato houževnatí. Psanci jsou tvořeni skupinami lidí, které "
+"zavrhla jejich vlastní rasa, tak se přidali k trpaslíkům, se kterými sdílejí "
+"společné nepřátele. Toto spojenectví přináší kombinaci odolných a v obraně "
+"zdatných trpaslíků, kterým se ale daří jen v nemnoha typech terénu a lidí, "
+"kteří pokryjí terén, na kterém se trpaslíkům špatně bojuje."
 
 #. [multiplayer_side]: id=Loyalists, type=random
 #: data/multiplayer/factions/loyalists-aoh.cfg:4
@@ -288,47 +286,45 @@ msgid "Loyalists"
 msgstr "Věrní"
 
 #. [multiplayer_side]: id=Loyalists, type=random
-#: data/multiplayer/factions/loyalists-aoh.cfg:14
-#: data/multiplayer/factions/loyalists-default.cfg:14
+#: data/multiplayer/factions/loyalists-aoh.cfg:13
+#: data/multiplayer/factions/loyalists-default.cfg:13
 msgid ""
-"The <bold>text='Loyalists'</bold> are a faction of <ref>text='Humans' dst='.."
-"race_human'</ref> who are loyal to the throne of Wesnoth. Humans are a "
-"versatile race who specialize in many different areas. Similarly, the "
-"Loyalist faction is a very versatile melee-oriented faction with important "
-"ranged support from bowmen and mages."
+"The <b>Loyalists</b> are a faction of <ref dst='..race_human'>Humans</ref> "
+"who are loyal to the throne of Wesnoth. Humans are a versatile race who "
+"specialize in many different areas. Similarly, the Loyalist faction is a "
+"very versatile melee-oriented faction with important ranged support from "
+"bowmen and mages."
 msgstr ""
-"<bold>text='Věrní'</bold> jsou frakcí <ref>text='lidí' dst='..race_human'</"
-"ref>, kteří jsou oddaní wesnothskému trůnu. Lidé jsou všestranná rasa, která "
-"se specializuje v mnoha různých oblastech. Tak i Věrní jsou velmi všestranní "
-"s důrazem na souboje na blízko a nezanedbatelnou podporou lučištníků a mágů."
+"<b>Věrní</b> jsou frakcí <ref dst='..race_human'>lidí</ref>, kteří jsou "
+"oddaní wesnothskému trůnu. Lidé jsou všestranná rasa, která se specializuje "
+"v mnoha různých oblastech. Tak i Věrní jsou velmi všestranní s důrazem na "
+"souboje na blízko a nezanedbatelnou podporou lučištníků a mágů."
 
-#. [multiplayer_side]: id=Northerners, type=random, description=<img>src='portraits/orcs/warlord.webp~BG()' align='middle'</img>
+#. [multiplayer_side]: id=Northerners, type=random
 #: data/multiplayer/factions/northerners-aoh.cfg:4
 #: data/multiplayer/factions/northerners-default.cfg:4
 msgid "Northerners"
 msgstr "Seveřané"
 
-#. [multiplayer_side]: id=Northerners, type=random, description=<img>src='portraits/orcs/warlord.webp~BG()' align='middle'</img>
-#: data/multiplayer/factions/northerners-aoh.cfg:16
-#: data/multiplayer/factions/northerners-default.cfg:15
+#. [multiplayer_side]: id=Northerners, type=random
+#: data/multiplayer/factions/northerners-aoh.cfg:13
+#: data/multiplayer/factions/northerners-default.cfg:12
 msgid ""
-"The <bold>text='Northerners'</bold> are a faction of <ref>text='Orcs' dst='.."
-"race_orc'</ref> and their allies who live in the north of the Great "
-"Continent, thus their name. Northerners consist of the warrior orcs race, "
-"the enslaved <ref>text='goblins' dst='..race_goblin'</ref>, "
-"<ref>text='trolls' dst='..race_troll'</ref> who are tricked into combat by "
-"the orcs, and the serpentine <ref>text='naga' dst='..race_naga'</ref>. The "
-"Northerners play best by taking advantage of having many low-cost and high "
-"HP soldiers."
+"The <b>Northerners</b> are a faction of <ref dst='..race_orc'>Orcs</ref> and "
+"their allies who live in the north of the Great Continent, thus their name. "
+"Northerners consist of the warrior orcs race, the enslaved <ref "
+"dst='..race_goblin'>goblins</ref>, <ref dst='..race_troll'>trolls</ref> who "
+"are tricked into combat by the orcs, and the serpentine <ref "
+"dst='..race_naga'>naga</ref>. The Northerners play best by taking advantage "
+"of having many low-cost and high HP soldiers."
 msgstr ""
-"<bold>text='Seveřané'</bold> jsou frakcí <ref>text='skřetů' dst='.."
-"race_orc'</ref> a jejich spojenců, kteří žijí na sever od Velkého "
-"kontinentu, proto jejich jméno. Seveřany tvoří válečnická rasa skřetů, "
-"podmanění <ref>text='goblini' dst='..race_goblin'</ref>, "
-"<ref>text='trollové' dst='..race_trolls'</ref>, které k válčení navedli "
-"skřeti, a hadovité <ref>text='nágy' dst='..race_naga'</ref>. Seveřané se "
-"v boji mohou spolehnout na velké množství levných jednotek a bojovníky "
-"s vysokým počtem životů."
+"<b>Seveřané</b> jsou frakcí <ref dst='..race_orc'>skřetů</ref> a jejich "
+"spojenců, kteří žijí na sever od Velkého kontinentu, proto jejich jméno. "
+"Seveřany tvoří válečnická rasa skřetů, podmanění <ref "
+"dst='..race_goblin'>goblini</ref>, <ref dst='..race_troll'>trollové</ref>, "
+"které k válčení navedli skřeti, a hadovité <ref dst='..race_naga'>nágy</"
+"ref>. Seveřané se v boji mohou spolehnout na velké množství levných jednotek "
+"a bojovníky s vysokým počtem životů."
 
 #. [multiplayer_side]: id=Rebels, type=random
 #: data/multiplayer/factions/rebels-aoh.cfg:4
@@ -337,32 +333,31 @@ msgid "Rebels"
 msgstr "Odbojní"
 
 #. [multiplayer_side]: id=Rebels, type=random
-#: data/multiplayer/factions/rebels-aoh.cfg:14
-#: data/multiplayer/factions/rebels-default.cfg:14
+#: data/multiplayer/factions/rebels-aoh.cfg:13
+#: data/multiplayer/factions/rebels-default.cfg:13
 msgid ""
-"The <bold>text='Rebels'</bold> are a faction of <ref>text='Elves' dst='.."
-"race_elf'</ref> and their various forest-dwelling allies. They get their "
-"human name, Rebels, from the time of Heir to the Throne, when they started "
-"the rebellion against the evil Queen Asheviere. Elves are a magical race "
-"that are masters of the bow and are capable of living many years longer than "
-"humans. In harmony with nature, the elves find allies with the "
-"<ref>text='human' dst='..race_human'</ref> mages, certain "
-"<ref>text='merfolk' dst='..race_merman'</ref>, and tree creatures called "
-"<ref>text='Woses' dst='..race_wose'</ref>. Rebels are best played taking "
+"The <b>Rebels</b> are a faction of <ref dst='..race_elf'>Elves</ref> and "
+"their various forest-dwelling allies. They get their human name, Rebels, "
+"from the time of Heir to the Throne, when they started the rebellion against "
+"the evil Queen Asheviere. Elves are a magical race that are masters of the "
+"bow and are capable of living many years longer than humans. In harmony with "
+"nature, the elves find allies with the <ref dst='..race_human'>human</ref> "
+"mages, certain <ref dst='..race_merman'>merfolk</ref>, and tree creatures "
+"called <ref dst='..race_wose'>Woses</ref>. Rebels are best played taking "
 "advantage of their high forest defense, mastery of ranged attacks, and the "
 "elves’ neutral alignment."
 msgstr ""
-"<bold>text='Rebelové'</bold> jsou frakcí <ref>text='elfů' dst='..race_elf'</"
-"ref> a všemožných lesních stvoření, která se k nim připojila. Svoje "
-"pojmenování lidskou řečí, rebelové, dostali v Dědici trůnu, kde se vzbouřili "
-"proti zlé královně Ašvíře. Elfové jsou magií nadanou rasou, jsou ale také "
-"mistři luku a délka jejich života mnohokrát převyšuje délku života lidského. "
-"Žijíce v souladu s přírodou, elfové nalézají spojence mezi mágy z řad "
-"<ref>text='lidí' dst='..race_human'</ref>, některými <ref>text='mořskými "
-"lidmi' dst='..race_merman'</ref> a stromovitými stvořeními zvanými "
-"<ref>text='stromolidé' dst='..race_wose'</ref>. Rebelové s výhodou bojují "
-"v lesích, kde vyniká jejich skvělá obrana, jsou mistry v útocích na dálku "
-"a výhodou jim je i jejich nezávislost na denní době."
+"<b>Rebelové</b> jsou frakcí <ref dst='..race_elf'>elfů</ref> a všemožných "
+"lesních stvoření, která se k nim připojila. Svoje pojmenování lidskou řečí, "
+"rebelové, dostali v Dědici trůnu, kde se vzbouřili proti zlé královně "
+"Ašvíře. Elfové jsou magií nadanou rasou, jsou ale také mistři luku a délka "
+"jejich života mnohokrát převyšuje délku života lidského. Žijíce v souladu "
+"s přírodou, elfové nalézají spojence mezi mágy z řad <ref "
+"dst='..race_human'>lidí</ref>, některými <ref dst='..race_merman'>mořskými "
+"lidmi</ref> a stromovitými stvořeními zvanými <ref "
+"dst='..race_wose'>stromolidé</ref>. Rebelové s výhodou bojují v lesích, kde "
+"vyniká jejich skvělá obrana, jsou mistry v útocích na dálku a výhodou jim je "
+"i jejich nezávislost na denní době."
 
 #. [multiplayer_side]: id=Undead, type=random
 #: data/multiplayer/factions/undead-aoh.cfg:4
@@ -371,26 +366,26 @@ msgid "Undead"
 msgstr "Nemrtví"
 
 #. [multiplayer_side]: id=Undead, type=random
-#: data/multiplayer/factions/undead-aoh.cfg:14
-#: data/multiplayer/factions/undead-default.cfg:14
+#: data/multiplayer/factions/undead-aoh.cfg:13
+#: data/multiplayer/factions/undead-default.cfg:13
 msgid ""
-"The <bold>text='Undead'</bold> are a faction of <ref>text='undead' dst='.."
-"race_undead'</ref> creatures and <ref>text='human' dst='..race_human'</ref> "
-"practitioners of dark arts that usually accompany them. Often, these “Dark "
-"Adepts” are the units that do the most damage for the faction, but they have "
-"a major vulnerability — their practicing of this forbidden, evil magic has "
-"consumed all their energy and so they have no melee attack at all. The "
-"Undead are a very aggressive faction and the most powerful "
-"<ref>text='Default Era' dst='..era_era_default'</ref> faction at nighttime."
+"The <b>Undead</b> are a faction of <ref dst='..race_undead'>undead</ref> "
+"creatures and <ref dst='..race_human'>human</ref> practitioners of dark arts "
+"that usually accompany them. Often, these “Dark Adepts” are the units that "
+"do the most damage for the faction, but they have a major vulnerability — "
+"their practicing of this forbidden, evil magic has consumed all their energy "
+"and so they have no melee attack at all. The Undead are a very aggressive "
+"faction and the most powerful <ref dst='..era_era_default'>Default Era</ref> "
+"faction at nighttime."
 msgstr ""
-"<bold>text='Nemrtví'</bold> jsou frakcí <ref>text='nemrtvých' dst='.."
-"race_undead'</ref> stvoření a <ref>text='lidí' dst='..race_human'</ref>, "
-"kteří propadli temným uměním a nemrtvé obvykle doprovází. Často jsou v rámci "
-"jednotek nemrtvých tito „temní učedníci“ právě tou silou, která způsobí "
-"nejvíce škod. Mají ale jednu velkou slabost – praktikováním zakázané, temné "
-"magie přišli o všechnu fyzickou sílu, a proto nejsou schopni útoku na "
-"blízko. Nemrtví jsou velice agresivní a v <ref>text='základní éře' dst='.."
-"era_era_default'</ref> jsou během noci nejobávanější frakcí."
+"<b>Nemrtví</b> jsou frakcí <ref dst='..race_undead'>nemrtvých</ref> stvoření "
+"a <ref dst='..race_human'>lidí</ref>, kteří propadli temným uměním a nemrtvé "
+"obvykle doprovází. Často jsou v rámci jednotek nemrtvých tito „temní "
+"učedníci“ právě tou silou, která způsobí nejvíce škod. Mají ale jednu velkou "
+"slabost – praktikováním zakázané, temné magie přišli o všechnu fyzickou "
+"sílu, a proto nejsou schopni útoku na blízko. Nemrtví jsou velice agresivní "
+"a v <ref dst='..era_era_default'>základní éře</ref> jsou během noci "
+"nejobávanější frakcí."
 
 #. [multiplayer]: id=multiplayer_Aethermaw
 #: data/multiplayer/scenarios/2p_Aethermaw.cfg:4
@@ -1196,59 +1191,59 @@ msgstr ""
 "Poznámka: Aby scénář fungoval správně, je zapotřebí použít nastavení z mapy."
 
 #. [side]
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:21
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:33
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:22
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:34
 msgid "teamname^Revolt"
 msgstr "Povstalci"
 
 #. [side]
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:50
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:76
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:51
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:77
 msgid "teamname^Human"
 msgstr "Lidé"
 
 #. [then]
 #. [objective]: condition=lose
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:114
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:135
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:274
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:115
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:136
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:278
 msgid "Death of your leader"
 msgstr "Tvůj vůdce zemře"
 
 #. [then]
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:115
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:136
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:116
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:137
 msgid ""
 "Since your team has only one leader, the enemy waves will not be at full "
 "strength."
 msgstr "Tvůj tým má pouze jednoho vůdce, nepřátelské vlny tedy budou oslabeny."
 
 #. [else]
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:118
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:143
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:119
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:144
 msgid "Death of both of your team’s leaders"
 msgstr "Vůdci obou tvých týmů zemřou"
 
 #. [else]
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:119
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:144
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:120
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:145
 msgid ""
 "Since your team has two leaders, the enemy waves will be at full strength."
 msgstr "Tvůj tým má dva vůdce, takže vlny nepřátel přijdou v plné síle."
 
 #. [objective]: condition=win
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:146
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:171
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:133
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:157
 msgid "Survive and defeat all enemy waves"
 msgstr "Přežij a poraz všechny vlny nepřátel"
 
 #. [message]: speaker=narrator
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:166
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:153
 msgid "Dark Forecast — a random survival scenario"
 msgstr "Temná předpověď – náhodný scénář pro přežití"
 
 #. [message]: speaker=narrator
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:169
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:156
 msgid ""
 "Your aim is to survive the spawning waves of units and defeat the final "
 "archenemies.\n"
@@ -1292,12 +1287,12 @@ msgstr ""
 "• kódování WML"
 
 #. [message]
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:188
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:175
 msgid "So this is the accursed valley — a land ours for the taking."
 msgstr "Takže toto je to prokleté údolí. Země, kterou zabereme."
 
 #. [message]
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:192
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:179
 msgid ""
 "The inhabitants are rumored to be a strange alliance of man and beast, and "
 "our claim is not going to be unopposed. We must be prepared for the "
@@ -1308,14 +1303,14 @@ msgstr ""
 "tato země přichystá."
 
 #. [message]
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:196
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:183
 msgid ""
 "Then let us discover what lies in waiting and teach them not to oppose our "
 "claim."
 msgstr "Zjistíme, kdo a co na nás čeká, a naučíme je nestavět se nám na odpor."
 
 #. [message]: speaker=unit
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:215
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:202
 msgid ""
 "Ugh! How can this be? Defeated by mere barbarians! My gods have forsaken "
 "me..."
@@ -1323,16 +1318,16 @@ msgstr ""
 "Ech! Je to možné? Porazili mě takovíto barbaři, mí bozi mne museli opustit..."
 
 #. [message]: speaker=second_unit
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:229
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:216
 msgid ""
-"Cheers of your enemy are the last thing you hear as you slip into death..."
-"their joy fills your last moments with pure hate."
+"Cheers of your enemy are the last thing you hear as you slip into "
+"death...their joy fills your last moments with pure hate."
 msgstr ""
 "Poslední, co slyšíš, ještě než tě opustí smysly navždy, je jásavý řev "
 "nepřátel. Jejich radost tě na poslední okamžik plní nejčistší nenávistí."
 
 #. [message]
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:251
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:238
 msgid ""
 "The enemy cheers as a dark mist rises from the land, engulfing you. As "
 "ghostly wisps drain away your will, you realize that your time in this land "
@@ -1344,8 +1339,8 @@ msgstr ""
 
 #. [slider]: id=enemey_gold_factor
 #. [slider]: id=enemy_gold_factor
-#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:264
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:311
+#: data/multiplayer/scenarios/2p_Dark_Forecast.cfg:251
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:297
 msgid "Changes the gold worth of the enemy spawns by a certain percentage"
 msgstr "Změní o dané procento sumu, kterou má nepřítel k dispozici"
 
@@ -1433,7 +1428,7 @@ msgid ""
 "Fight through corridors and gardens, and dominate the eastern courtyard of "
 "what used to be the glorious city of Elensefar."
 msgstr ""
-"Bojujte v nepřehledném terénu chodeb a zahrad – a ovládněte východní nádvoří "
+"Bojuj v nepřehledném terénu chodeb a zahrad – a ovládni východní nádvoří "
 "kdysi skvělého města Elensefar!"
 
 #. [time]: id=underground_illum
@@ -1655,31 +1650,31 @@ msgstr ""
 "se patří. Vytvořil Lord-Knightmare."
 
 #. [side]
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:25
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:38
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:26
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:39
 msgid "teamname^Invaders"
 msgstr "Útočníci"
 
 #. [side]
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:56
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:83
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:107
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:57
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:84
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:108
 #: data/multiplayer/scenarios/Test_Elevation_Test.cfg:45
 msgid "teamname^Defenders"
 msgstr "Obránci"
 
 #. [label]
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:189
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:175
 msgid "Healing Keep"
 msgstr "tvrz uzdravování"
 
 #. [message]: speaker=narrator
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:213
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:199
 msgid "Isle of Mists — a random survival scenario"
 msgstr "Ostrov mlh – náhodný scénář pro přežití"
 
 #. [message]
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:220
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:206
 msgid ""
 "You arrive near a mystic shrine, where the apparitions of ancient armies are "
 "forever trapped and doomed to eternally cleanse the isle of all interlopers."
@@ -1689,7 +1684,7 @@ msgstr ""
 "všech vetřelců."
 
 #. [message]
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:224
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:210
 msgid ""
 "Phantom armies approach on the horizon. If we defeat them all, they may be "
 "released from this timeless prison."
@@ -1698,17 +1693,17 @@ msgstr ""
 "vysvobozena z tohoto věčného žaláře."
 
 #. [message]
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:228
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:214
 msgid "Let us prepare ourselves for the coming battle."
 msgstr "Připravme se na blížící se bitvu."
 
 #. [message]: speaker=unit
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:247
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:233
 msgid "How can this be? My gods have forsaken me..."
 msgstr "Jak je to možné? Moji bohové mě opustili..."
 
 #. [message]: speaker=second_unit
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:261
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:247
 msgid ""
 "As the cold grasp of death draws nearer, you feel your spirit being "
 "separated from your body. You realize that you will soon be doomed to the "
@@ -1718,7 +1713,7 @@ msgstr ""
 "Uvědomuješ si, že tě brzy čeká stejný osud jako přízračné strážce svatyně."
 
 #. [message]
-#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:283
+#: data/multiplayer/scenarios/2p_Isle_of_Mists.cfg:269
 msgid ""
 "A dark mist rises from the land, draining your senses and your will away. "
 "You dimly realize that you will soon join the other ghosts as another "
@@ -1870,13 +1865,13 @@ msgstr "Sullina socha"
 #. [unit]: gender=female
 #: data/multiplayer/scenarios/2p_Sullas_Ruins.cfg:101
 msgid ""
-"A stone-carved likeness of Sulla the Great, also known as Sulla the Just, "
+"A stone-carved likeness of Aether Mage Sulla, also known as Sulla the Just, "
 "Sulla the Tyrant, Empress of the Sinking Tower, Lady of the Walking Glacier, "
 "Sulla the Incinerator, Sulla the Proud and Sulla the Righteous."
 msgstr ""
-"Kamenná podobizna Sully Veliké, též známé jako Sulla Spravedlivá, Sulla "
-"Tyranka, Vládkyně Zatopené věže, Dcera drtících vichrů, Paní Kráčejícího "
-"ledovce, Sulla Spalovačka, Sulla Hrdá a Sulla Čestná."
+"Kamenná podobizna éterické magyně Sully, též známé jako Sulla Spravedlivá, "
+"Sulla Tyranka, Vládkyně Zatopené věže, Dcera drtících vichrů, Paní "
+"Kráčejícího ledovce, Sulla Spalovačka, Sulla Hrdá a Sulla Čestná."
 
 #. [side]
 #: data/multiplayer/scenarios/2p_Sullas_Ruins.cfg:103
@@ -2250,7 +2245,7 @@ msgstr ""
 #. [side]
 #: data/multiplayer/scenarios/4p_Blue_Water_Province.cfg:21
 #: data/multiplayer/scenarios/4p_Blue_Water_Province.cfg:54
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:73
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:70
 #: data/multiplayer/scenarios/6p_Crusaders_Field.cfg:20
 #: data/multiplayer/scenarios/6p_Crusaders_Field.cfg:42
 #: data/multiplayer/scenarios/6p_Crusaders_Field.cfg:64
@@ -2264,7 +2259,7 @@ msgstr "Tým 1"
 #. [side]
 #: data/multiplayer/scenarios/4p_Blue_Water_Province.cfg:32
 #: data/multiplayer/scenarios/4p_Blue_Water_Province.cfg:43
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:84
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:81
 #: data/multiplayer/scenarios/6p_Crusaders_Field.cfg:31
 #: data/multiplayer/scenarios/6p_Crusaders_Field.cfg:53
 #: data/multiplayer/scenarios/6p_Crusaders_Field.cfg:75
@@ -2283,7 +2278,7 @@ msgstr "4hr – Hrady Roztodivného ostrova"
 #. [multiplayer]: id=multiplayer_Castle_Hopping_Isle
 #: data/multiplayer/scenarios/4p_Castle_Hopping_Isle.cfg:7
 msgid "Hop from castle to castle while fighting over a central isle."
-msgstr "Přeskakujte z hradu do hradu během boje o centrální ostrov."
+msgstr "Přeskakujte z hradu do hradu během boje o centrální ostrov."
 
 #. [multiplayer]: id=multiplayer_Clash
 #: data/multiplayer/scenarios/4p_Clash.cfg:5
@@ -2589,8 +2584,8 @@ msgid ""
 "Battle over the legendary treasures of the ancient ruins of Terra-Dwelve. "
 "Large multi-fronted 2 vs. 2 set in a vast underground complex."
 msgstr ""
-"Bojujte o legendární poklady starobylých ruin Terra-Dwelve. Veliká mapa pro "
-"hru 2 proti 2 s více frontami, zasazená do rozlehlého podzemního komplexu."
+"Bojujte o legendární poklady starobylých ruin Terra-Dwelve. Veliká mapa pro "
+"hru 2 proti 2 s více frontami, zasazená do rozlehlého podzemního komplexu."
 
 #. [multiplayer]: id=multiplayer_Siege_Castles
 #: data/multiplayer/scenarios/4p_Siege_Castles.cfg:7
@@ -2646,10 +2641,10 @@ msgid ""
 "a very small map so 75 gold is recommended for the other players."
 msgstr ""
 "Čtyři hráči obklopují centrální tvrz při hře na přežití proti UI, při hře "
-"všichni proti všem nebo volné hře 4 proti 1. Hráč v centru potřebuje více "
+"všichni proti všem nebo volné hře 4 proti 1. Hráč v centru potřebuje více "
 "zlata, pokud proti němu stojí všichni ostatní nebo při hře všichni proti "
-"všem. A nezapomínejte, že nejlepším způsobem jak zjistit, jak vysoká je "
-"sázka, je vsadit co nejméně!\n"
+"všem. A nezapomínej, že nejlepším způsobem jak zjistit, jak vysoká je sázka, "
+"je vsadit co nejméně!\n"
 "Tato mapa je velmi malá, proto je pro ostatní hráče doporučeno nastavení 75 "
 "zlatých."
 
@@ -2669,19 +2664,19 @@ msgid "In this mixed landscape, five armies battle for supremacy."
 msgstr "V této různorodé krajině svede 5 armád boj o nadvládu."
 
 #. [multiplayer]: id=multiplayer_The_Wilderlands
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:57
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:54
 msgid "5p — The Wilderlands"
 msgstr "5hr – Divočina"
 
 #. [multiplayer]: id=multiplayer_The_Wilderlands
 #. [multiplayer]: id=multiplayer_Crusaders_Field
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:58
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:55
 #: data/multiplayer/scenarios/6p_Crusaders_Field.cfg:7
 msgid " Recommended setting of 1 gold per village."
 msgstr " Doporučeným nastavením je 1 zlatý na vesnici."
 
 #. [multiplayer]: id=multiplayer_The_Wilderlands
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:58
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:55
 msgid ""
 "A vast region of wild, untamed wilderness, its terrain dotted with forests, "
 "caves, rivers, and the ruins of ancient fortresses."
@@ -2690,42 +2685,42 @@ msgstr ""
 "jeskyní, řek a ruin starobylého opevnění."
 
 #. [side]
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:95
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:92
 msgid "teamname^Team 3"
 msgstr "Tým 3"
 
 #. [side]
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:106
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:103
 msgid "teamname^Team 4"
 msgstr "Tým 4"
 
 #. [side]
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:128
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:125
 msgid "teamname^Monsters"
 msgstr "Příšery"
 
 #. [objective]: condition=win
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:245
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:249
 msgid "Defeat all enemy leaders"
 msgstr "Poraz všechny vůdce nepřátel"
 
 #. [objective]: condition=win
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:264
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:268
 msgid "Defeat all monsters"
 msgstr "Poraz všechny příšery"
 
 #. [objective]: condition=win
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:282
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:286
 msgid "Defeat the enemy leaders"
 msgstr "Poraz vůdce nepřátel"
 
 #. [objective]: condition=lose
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:287
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:291
 msgid "Death of all your units"
 msgstr "Všechny tvé jednotky zemřou"
 
 #. [note]
-#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:292
+#: data/multiplayer/scenarios/5p_The_Wilderlands.cfg:296
 msgid "You cannot recruit units."
 msgstr "Nemůžeš verbovat jednotky."
 
@@ -2744,6 +2739,34 @@ msgstr ""
 "Sílící zvuky bitvy se opět rozléhají po tomto časem opotřebeném bojišti, kde "
 "duchové tisíců hrdinných válečníků neviditelně proplouvají horami, stromy a "
 "řekami."
+
+#. [multiplayer]: id=multiplayer_Double_Siege
+#: data/multiplayer/scenarios/6p_Double_Siege.cfg:7
+msgid "6p — Double Siege"
+msgstr "6hr – Dvojité obléhání"
+
+#. [multiplayer]: id=multiplayer_Double_Siege
+#: data/multiplayer/scenarios/6p_Double_Siege.cfg:8
+msgid ""
+"Two armies attacked a single city, both emerged victorious. Now, only one "
+"can claim the victory."
+msgstr ""
+"Dvě vojska zaútočila na jedno město a obě zvítězila. Nyní si vítězství může "
+"připsat jen jedno z nich."
+
+#. [side]
+#: data/multiplayer/scenarios/6p_Double_Siege.cfg:25
+#: data/multiplayer/scenarios/6p_Double_Siege.cfg:61
+#: data/multiplayer/scenarios/6p_Double_Siege.cfg:73
+msgid "teamname^Top"
+msgstr "Horní"
+
+#. [side]
+#: data/multiplayer/scenarios/6p_Double_Siege.cfg:37
+#: data/multiplayer/scenarios/6p_Double_Siege.cfg:49
+#: data/multiplayer/scenarios/6p_Double_Siege.cfg:85
+msgid "teamname^Bottom"
+msgstr "Dolní"
 
 #. [multiplayer]: id=multiplayer_Hexcake
 #: data/multiplayer/scenarios/6p_Hexcake.cfg:5
@@ -2973,8 +2996,8 @@ msgid ""
 "Randomly generated map. Note: random maps are often unbalanced, but if you "
 "have time, you can regenerate them until you get a good one."
 msgstr ""
-"Náhodně vytvořená mapa. Pamatujte, že tyto mapy jsou často nevyvážené, ale "
-"pokud máte dostatek času, můžete generovat tak dlouho, dokud nevyberete tu "
+"Náhodně vytvořená mapa. Pamatuj, že tyto mapy jsou často nevyvážené, ale "
+"pokud máš dostatek času, můžeš generovat tak dlouho, dokud nevybereš tu "
 "správnou."
 
 #. [scenario]: id=multiplayer_Random_Map_Desert
@@ -2991,9 +3014,9 @@ msgid ""
 "unbalanced, but if you have time, you can regenerate them until you get a "
 "good one."
 msgstr ""
-"Náhodně vytvořená mapa s pískem jako primárním terénem. Pamatujte, že tyto "
-"mapy jsou často nevyvážené, ale pokud máte dostatek času, můžete generovat "
-"tak dlouho, dokud nevyberete tu správnou."
+"Náhodně vytvořená mapa s pískem jako primárním terénem. Pamatuj, že tyto "
+"mapy jsou často nevyvážené, ale pokud máš dostatek času, můžeš generovat tak "
+"dlouho, dokud nevybereš tu správnou."
 
 #. [scenario]: id=multiplayer_Random_Map_Marsh
 #. [multiplayer]: id=multiplayer_Random_Map_Marsh
@@ -3009,9 +3032,9 @@ msgid ""
 "unbalanced, but if you have time, you can regenerate them until you get a "
 "good one."
 msgstr ""
-"Náhodně vytvořená mapa s bažinou jako primárním terénem. Pamatujte, že tyto "
-"mapy jsou často nevyvážené, ale pokud máte dostatek času, můžete generovat "
-"tak dlouho, dokud nevyberete tu správnou."
+"Náhodně vytvořená mapa s bažinou jako primárním terénem. Pamatuj, že tyto "
+"mapy jsou často nevyvážené, ale pokud máš dostatek času, můžeš generovat tak "
+"dlouho, dokud nevybereš tu správnou."
 
 #. [scenario]: id=multiplayer_Random_Map_Winter
 #. [multiplayer]: id=multiplayer_Random_Map_Winter
@@ -3027,13 +3050,13 @@ msgid ""
 "terrains. Note: random maps are often unbalanced, but if you have time, you "
 "can regenerate them until you get a good one."
 msgstr ""
-"Náhodně vytvořená mapa s většinou zasněženým povrchem. Pamatujte, že tyto "
-"mapy jsou často nevyvážené, ale pokud máte dostatek času, můžete generovat "
-"tak dlouho, dokud nevyberete tu správnou."
+"Náhodně vytvořená mapa s většinou zasněženým povrchem. Pamatuj, že tyto mapy "
+"jsou často nevyvážené, ale pokud máš dostatek času, můžeš generovat tak "
+"dlouho, dokud nevybereš tu správnou."
 
 #. [multiplayer]: id=multiplayer_test_Elevation_Demo
 #: data/multiplayer/scenarios/Test_Elevation_Test.cfg:5
-msgid "3p - Elevation Test"
+msgid "3p — Elevation Test"
 msgstr "3hr – Zkouška vyvýšení"
 
 #. [multiplayer]: id=multiplayer_test_Elevation_Demo

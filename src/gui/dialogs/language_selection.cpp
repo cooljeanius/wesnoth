@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008 - 2024
+	Copyright (C) 2008 - 2025
 	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -17,7 +17,6 @@
 
 #include "gui/dialogs/language_selection.hpp"
 
-#include "gui/auxiliary/find_widget.hpp"
 #include "gui/widgets/listbox.hpp"
 #include "gui/widgets/toggle_button.hpp"
 #include "gui/widgets/window.hpp"
@@ -25,6 +24,7 @@
 #include "gettext.hpp"
 #include "language.hpp"
 #include "preferences/preferences.hpp"
+#include "serialization/markup.hpp"
 
 namespace gui2::dialogs
 {
@@ -72,42 +72,44 @@ language_selection::language_selection()
 
 void language_selection::shown_filter_callback()
 {
-	window& window = *get_window();
-
-	toggle_button& show_all_toggle = find_widget<toggle_button>(&window, "show_all", false);
-	listbox& list = find_widget<listbox>(&window, "language_list", false);
+	toggle_button& show_all_toggle = find_widget<toggle_button>("show_all");
+	listbox& list = find_widget<listbox>("language_list");
 
 	if(show_all_toggle.get_value_bool()) {
-		list.set_row_shown(boost::dynamic_bitset<>{langs_.size(), ~0UL});
+		boost::dynamic_bitset<> mask;
+		mask.resize(langs_.size(), true);
+		list.set_row_shown(mask);
 	} else {
 		list.set_row_shown(complete_langs_);
 	}
 }
 
-void language_selection::pre_show(window& window)
+void language_selection::pre_show()
 {
-	listbox& list = find_widget<listbox>(&window, "language_list", false);
-	window.keyboard_capture(&list);
+	listbox& list = find_widget<listbox>("language_list");
+	keyboard_capture(&list);
 
-	toggle_button& show_all_toggle = find_widget<toggle_button>(&window, "show_all", false);
+	toggle_button& show_all_toggle = find_widget<toggle_button>("show_all");
 	connect_signal_mouse_left_click(show_all_toggle, std::bind(
 			&language_selection::shown_filter_callback, this));
 
 	const language_def& current_language = get_language();
 
 	for(const auto& lang : langs_) {
-		widget_data data;
+		std::string lang_label = game_config::debug && !lang.localename.empty()
+			? lang.language + "\n" + markup::tag("small", markup::tag("tt", lang.localename))
+			: lang.language;
 
-		data["language"]["label"] = lang.language;
-		data["language"]["use_markup"] = "true";
-		data["translated_total"]["label"] = "<span color='" + game_config::red_to_green(lang.percent).to_hex_string() + "'>" + std::to_string(lang.percent) + "%</span>";
-		data["translated_total"]["use_markup"] = "true";
-
-		if(game_config::debug && !lang.localename.empty()) {
-			data["language"]["label"] += "\n<small><tt>" + lang.localename + "</tt></small>";
-		}
-
-		list.add_row(data);
+		list.add_row(widget_data{
+			{ "language", {
+				{ "label", std::move(lang_label) },
+				{ "use_markup", "true" }
+			}},
+			{ "translated_total", {
+				{ "label", markup::span_color(game_config::red_to_green(lang.percent), lang.percent, "%") },
+				{ "use_markup", "true" }
+			}},
+		});
 
 		if(lang == current_language) {
 			list.select_last_row();
@@ -119,10 +121,10 @@ void language_selection::pre_show(window& window)
 	shown_filter_callback();
 }
 
-void language_selection::post_show(window& window)
+void language_selection::post_show()
 {
 	if(get_retval() == retval::OK) {
-		const int res = find_widget<listbox>(&window, "language_list", false)
+		const int res = find_widget<listbox>("language_list")
 								.get_selected_row();
 
 		assert(res != -1);

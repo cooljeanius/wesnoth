@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2024
+	Copyright (C) 2003 - 2025
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -25,6 +25,7 @@
 #include "play_controller.hpp"
 #include "color.hpp"
 #include "sound.hpp"
+#include "units/ability_tags.hpp"
 #include "units/unit.hpp"
 #include "units/animation_component.hpp"
 #include "units/map.hpp"
@@ -73,8 +74,7 @@ void teleport_unit_between(const map_location& a, const map_location& b, unit& t
 	if ( disp.fogged(a) && disp.fogged(b) ) {
 		return;
 	}
-	const display_context& dc = disp.get_disp_context();
-	const team& viewing_team = dc.get_team(disp.viewing_side());
+	const team& viewing_team = disp.viewing_team();
 
 	const bool a_visible = temp_unit.is_visible_to_team(a, viewing_team, false);
 	const bool b_visible = temp_unit.is_visible_to_team(b, viewing_team, false);
@@ -91,6 +91,7 @@ void teleport_unit_between(const map_location& a, const map_location& b, unit& t
 		animator.add_animation(temp_unit.shared_from_this(),"pre_teleport",a);
 		animator.start_animations();
 		animator.wait_for_end();
+		temp_unit.anim_comp().reset_affect_adjacent(disp);
 	}
 
 	temp_unit.set_location(b);
@@ -105,6 +106,7 @@ void teleport_unit_between(const map_location& a, const map_location& b, unit& t
 		animator.add_animation(temp_unit.shared_from_this(),"post_teleport",b);
 		animator.start_animations();
 		animator.wait_for_end();
+		temp_unit.anim_comp().reset_affect_adjacent(disp);
 	}
 
 	temp_unit.anim_comp().set_standing();
@@ -125,18 +127,18 @@ void teleport_unit_between(const map_location& a, const map_location& b, unit& t
  *                   but will likely not be clear when we return.
  * @param disp       The game display. Assumed neither locked nor faked.
  * @returns  The animation potential until this animation will finish.
- *           INT_MIN indicates that no animation is pending.
+ *           milliseconds::min indicates that no animation is pending.
  */
-int move_unit_between(const map_location& a,
+std::chrono::milliseconds move_unit_between(const map_location& a,
 		const map_location& b,
-		unit_ptr temp_unit,
+		const unit_ptr& temp_unit,
 		unsigned int step_num,
 		unsigned int step_left,
 		unit_animator& animator,
 		display& disp)
 {
 	if ( disp.fogged(a) && disp.fogged(b) ) {
-		return std::numeric_limits<int>::min();
+		return std::chrono::milliseconds::min();
 	}
 
 	temp_unit->set_location(a);
@@ -152,12 +154,12 @@ int move_unit_between(const map_location& a,
 	// useless now, previous short draw() just did one
 	// new_animation_frame();
 
-	int target_time = animator.get_animation_time_potential();
+	auto target_time = animator.get_animation_time_potential();
 		// target_time must be short to avoid jumpy move
 		// std::cout << "target time: " << target_time << "\n";
 	// we round it to the next multiple of 200 so that movement aligns to hex changes properly
-	target_time += 200;
-	target_time -= target_time%200;
+	target_time += 200ms;
+	target_time -= target_time % 200ms;
 
 	return target_time;
 }
@@ -172,13 +174,13 @@ bool do_not_show_anims(display* disp)
 /**
  * The path must remain unchanged for the life of this object.
  */
-unit_mover::unit_mover(const std::vector<map_location>& path, bool animate, bool force_scroll) :
+unit_movement_animator::unit_movement_animator(const std::vector<map_location>& path, bool animate, bool force_scroll) :
 	disp_(game_display::get_singleton()),
 	can_draw_(disp_ && !video::headless() && path.size() > 1),
 	animate_(animate),
 	force_scroll_(force_scroll),
 	animator_(),
-	wait_until_(std::numeric_limits<int>::min()),
+	wait_until_(std::chrono::milliseconds::min()),
 	shown_unit_(),
 	path_(path),
 	current_(0),
@@ -195,7 +197,7 @@ unit_mover::unit_mover(const std::vector<map_location>& path, bool animate, bool
 }
 
 
-unit_mover::~unit_mover()
+unit_movement_animator::~unit_movement_animator()
 {
 	// Make sure a unit hidden for movement is unhidden.
 	update_shown_unit();
@@ -214,7 +216,7 @@ unit_mover::~unit_mover()
 /* Note: Hide the unit in its current location; do not actually remove it.
  * Otherwise the status displays will be wrong during the movement.
  */
-void unit_mover::replace_temporary(unit_ptr u)
+void unit_movement_animator::replace_temporary(const unit_ptr& u)
 {
 	if ( disp_ == nullptr )
 		// No point in creating a temp unit with no way to display it.
@@ -231,7 +233,7 @@ void unit_mover::replace_temporary(unit_ptr u)
 	u->set_hidden(true);
 
 	// Update cached data.
-	is_enemy_ =	resources::gameboard->get_team(u->side()).is_enemy(disp_->viewing_side());
+	is_enemy_ =	resources::gameboard->get_team(u->side()).is_enemy(disp_->viewing_team().side());
 }
 
 
@@ -240,7 +242,7 @@ void unit_mover::replace_temporary(unit_ptr u)
  * This uses temp_unit_ptr_, so (in the destructor) call this before deleting
  * temp_unit_ptr_.
  */
-void unit_mover::update_shown_unit()
+void unit_movement_animator::update_shown_unit()
 {
 	if ( shown_unit_ ) {
 		// Switch the display back to the real unit.
@@ -255,12 +257,13 @@ void unit_mover::update_shown_unit()
  * Initiates the display of movement for the supplied unit.
  * This should be called before attempting to display moving to a new hex.
  */
-void unit_mover::start(unit_ptr u)
+void unit_movement_animator::start(const unit_ptr& u)
 {
 	// Nothing to do here if there is nothing to animate.
 	if ( !can_draw_ )
 		return;
 	// If no animation then hide unit until end of movement
+	u->anim_comp().reset_affect_adjacent(*disp_);
 	if ( !animate_ ) {
 		was_hidden_ = u->get_hidden();
 		u->set_hidden(true);
@@ -312,7 +315,7 @@ void unit_mover::start(unit_ptr u)
  * wait (another call to proceed_to() or finish() will implicitly wait). The
  * unit must remain valid until the wait is finished.
  */
-void unit_mover::proceed_to(unit_ptr u, std::size_t path_index, bool update, bool wait)
+void unit_movement_animator::proceed_to(const unit_ptr& u, std::size_t path_index, bool update, bool wait)
 {
 	// Nothing to do here if animations cannot be shown.
 	if ( !can_draw_ || !animate_ )
@@ -391,12 +394,12 @@ void unit_mover::proceed_to(unit_ptr u, std::size_t path_index, bool update, boo
  * It is not necessary to call this unless you want to wait before the next
  * call to proceed_to() or finish().
  */
-void unit_mover::wait_for_anims()
+void unit_movement_animator::wait_for_anims()
 {
-	if ( wait_until_ == std::numeric_limits<int>::max() )
+	if ( wait_until_ == std::chrono::milliseconds::max() )
 		// Wait for end (not currently used, but still supported).
 		animator_.wait_for_end();
-	else if ( wait_until_ != std::numeric_limits<int>::min() ) {
+	else if ( wait_until_ != std::chrono::milliseconds::min() ) {
 		// Wait until the specified time (used for normal movement).
 		animator_.wait_until(wait_until_);
 		// debug code, see unit_frame::redraw()
@@ -417,7 +420,7 @@ void unit_mover::wait_for_anims()
 	}
 
 	// Reset data.
-	wait_until_ = std::numeric_limits<int>::min();
+	wait_until_ = std::chrono::milliseconds::min();
 	animator_.clear();
 
 	update_shown_unit();
@@ -431,7 +434,7 @@ void unit_mover::wait_for_anims()
  * If @a dir is not supplied, the final direction will be determined by (the
  * last two traversed hexes of) the path.
  */
-void unit_mover::finish(unit_ptr u, map_location::DIRECTION dir)
+void unit_movement_animator::finish(const unit_ptr& u, map_location::direction dir)
 {
 	// Nothing to do here if the display is not valid.
 	if ( !can_draw_ ) {
@@ -443,7 +446,7 @@ void unit_mover::finish(unit_ptr u, map_location::DIRECTION dir)
 	}
 
 	const map_location & end_loc = path_[current_];
-	const map_location::DIRECTION final_dir = current_ == 0 ?
+	const map_location::direction final_dir = current_ == 0 ?
 		path_[0].get_relative_dir(path_[1]) :
 		path_[current_-1].get_relative_dir(end_loc);
 
@@ -465,6 +468,7 @@ void unit_mover::finish(unit_ptr u, map_location::DIRECTION dir)
 		// Switch the display back to the real unit.
 		u->set_hidden(was_hidden_);
 		temp_unit_ptr_->set_hidden(true);
+		u->anim_comp().reset_affect_adjacent(*disp_);
 
 		if(events::mouse_handler* mousehandler = events::mouse_handler::get_singleton()) {
 			mousehandler->invalidate_reachmap();
@@ -477,7 +481,7 @@ void unit_mover::finish(unit_ptr u, map_location::DIRECTION dir)
 	}
 
 	// Facing gets set even when not animating.
-	u->set_facing(dir == map_location::NDIRECTIONS ? final_dir : dir);
+	u->set_facing(dir == map_location::direction::indeterminate ? final_dir : dir);
 	u->anim_comp().set_standing(true);	// Need to reset u's animation so the new facing takes effect.
 
 	// Redraw path ends (even if not animating).
@@ -503,11 +507,11 @@ void unit_mover::finish(unit_ptr u, map_location::DIRECTION dir)
  * so that while the unit is moving status etc.
  * will still display the correct number of units.
  */
-void move_unit(const std::vector<map_location>& path, unit_ptr u,
-               bool animate, map_location::DIRECTION dir,
+void move_unit(const std::vector<map_location>& path, const unit_ptr& u,
+               bool animate, map_location::direction dir,
                bool force_scroll)
 {
-	unit_mover mover(path, animate, force_scroll);
+	unit_movement_animator mover(path, animate, force_scroll);
 
 	mover.start(u);
 	mover.proceed_to(u, path.size());
@@ -518,7 +522,7 @@ void move_unit(const std::vector<map_location>& path, unit_ptr u,
 void reset_helpers(const unit *attacker,const unit *defender);
 
 void unit_draw_weapon(const map_location& loc, unit& attacker,
-		const_attack_ptr attack,const_attack_ptr secondary_attack, const map_location& defender_loc, unit_ptr defender)
+		const const_attack_ptr& attack,const const_attack_ptr& secondary_attack, const map_location& defender_loc, const unit_ptr& defender)
 {
 	display* disp = display::get_singleton();
 	if(do_not_show_anims(disp) || disp->fogged(loc) || !prefs::get().show_combat()) {
@@ -537,8 +541,8 @@ void unit_draw_weapon(const map_location& loc, unit& attacker,
 }
 
 
-void unit_sheath_weapon(const map_location& primary_loc, unit_ptr primary_unit,
-		const_attack_ptr primary_attack,const_attack_ptr secondary_attack, const map_location& secondary_loc,unit_ptr secondary_unit)
+void unit_sheath_weapon(const map_location& primary_loc, const unit_ptr& primary_unit,
+		const const_attack_ptr& primary_attack,const const_attack_ptr& secondary_attack, const map_location& secondary_loc,const unit_ptr& secondary_unit)
 {
 	display* disp = display::get_singleton();
 	if(do_not_show_anims(disp) || disp->fogged(primary_loc) || !prefs::get().show_combat()) {
@@ -568,7 +572,7 @@ void unit_sheath_weapon(const map_location& primary_loc, unit_ptr primary_unit,
 
 
 void unit_die(const map_location& loc, unit& loser,
-		const_attack_ptr attack,const_attack_ptr secondary_attack, const map_location& winner_loc, unit_ptr winner)
+		const const_attack_ptr& attack,const const_attack_ptr& secondary_attack, const map_location& winner_loc, const unit_ptr& winner)
 {
 	display* disp = display::get_singleton();
 	if(do_not_show_anims(disp) || disp->fogged(loc) || !prefs::get().show_combat()) {
@@ -590,12 +594,13 @@ void unit_die(const map_location& loc, unit& loser,
 	if(events::mouse_handler* mousehandler = events::mouse_handler::get_singleton()) {
 		mousehandler->invalidate_reachmap();
 	}
+	loser.anim_comp().reset_affect_adjacent(*disp);
 }
 
 
 void unit_attack(display * disp, game_board & board,
                  const map_location& a, const map_location& b, int damage,
-                 const attack_type& attack, const_attack_ptr secondary_attack,
+                 const attack_type& attack, const const_attack_ptr& secondary_attack,
                  int swing, const std::string& hit_text, int drain_amount,
                  const std::string& att_text,
                  const std::vector<std::string>* extra_hit_sounds,
@@ -621,12 +626,11 @@ void unit_attack(display * disp, game_board & board,
 	unit &defender = *def;
 	int def_hitpoints = defender.hitpoints();
 	const_attack_ptr weapon = attack.shared_from_this();
-	auto ctx = weapon->specials_context(attacker.shared_from_this(), defender.shared_from_this(), a, b, attacking, secondary_attack);
-	utils::optional<decltype(ctx)> opp_ctx;
 
-	if(secondary_attack) {
-		opp_ctx.emplace(secondary_attack->specials_context(defender.shared_from_this(), attacker.shared_from_this(), b, a, !attacking, weapon));
-	}
+	auto ctx = specials_context_t::make(
+		{ attacker.shared_from_this(), a, weapon },
+		{ defender.shared_from_this(), b, secondary_attack },
+		attacking);
 
 	att->set_facing(a.get_relative_dir(b));
 	def->set_facing(b.get_relative_dir(a));
@@ -656,9 +660,9 @@ void unit_attack(display * disp, game_board & board,
 
 	animator.add_animation(defender.shared_from_this(), defender_anim, def->get_location(), true, text, {255, 0, 0});
 
-	unit_ability_list leadership_list = attacker.get_abilities_weapons("leadership", weapon, secondary_attack);
-	unit_ability_list resistance_list = defender.get_abilities_weapons("resistance", secondary_attack, weapon);
-	for(const unit_ability& ability : leadership_list) {
+	active_ability_list leadership_list = ctx.get_abilities_weapons("leadership", attacker);
+	active_ability_list resistance_list = ctx.get_abilities_weapons("resistance", defender);
+	for(const active_ability& ability : leadership_list) {
 		if(ability.teacher_loc == a) {
 			continue;
 		}
@@ -676,7 +680,7 @@ void unit_attack(display * disp, game_board & board,
 			hit_type, weapon, secondary_attack, swing);
 	}
 
-	for(const unit_ability& ability : resistance_list) {
+	for(const active_ability& ability : resistance_list) {
 		if(ability.teacher_loc == a) {
 			continue;
 		}
@@ -693,12 +697,9 @@ void unit_attack(display * disp, game_board & board,
 			hit_type, weapon, secondary_attack, swing);
 	}
 
-	unit_ability_list abilities = att->get_location();
-	for(auto& special : attacker.checking_tags()) {
-		abilities.append(weapon->get_weapon_ability(special));
-	}
+	active_ability_list abilities = ctx.get_active_combat_teachers(*weapon);
 
-	for(const unit_ability& ability : abilities) {
+	for(const active_ability& ability : abilities) {
 		if(ability.teacher_loc == a) {
 			continue;
 		}
@@ -709,14 +710,14 @@ void unit_attack(display * disp, game_board & board,
 
 		bool leading_playable = false;
 		bool helping_playable = false;
-		for(const unit_ability& leader_list : leadership_list) {
+		for(const active_ability& leader_list : leadership_list) {
 			if(ability.teacher_loc == leader_list.teacher_loc) {
 				leading_playable = true;
 				break;
 			}
 		}
 
-		for(const unit_ability& helper_list : resistance_list) {
+		for(const active_ability& helper_list : resistance_list) {
 			if(ability.teacher_loc == helper_list.teacher_loc) {
 				helping_playable = true;
 				break;
@@ -741,7 +742,7 @@ void unit_attack(display * disp, game_board & board,
 
 
 	animator.start_animations();
-	animator.wait_until(0);
+	animator.wait_until(0ms);
 	int damage_left = damage;
 	bool extra_hit_sounds_played = false;
 	while(damage_left > 0 && !animator.would_end()) {
@@ -752,13 +753,13 @@ void unit_attack(display * disp, game_board & board,
 			extra_hit_sounds_played = true;
 		}
 
-		int step_left = (animator.get_end_time() - animator.get_animation_time() )/50;
+		auto step_left = (animator.get_end_time() - animator.get_animation_time() ) / 50ms;
 		if(step_left < 1) step_left = 1;
 		int removed_hp =  damage_left/step_left ;
 		if(removed_hp < 1) removed_hp = 1;
 		defender.take_hit(removed_hp);
 		damage_left -= removed_hp;
-		animator.wait_until(animator.get_animation_time_potential() +50);
+		animator.wait_until(animator.get_animation_time_potential() + 50ms);
 	}
 	animator.wait_for_end();
 	// pass the animation back to the real unit
@@ -771,13 +772,13 @@ void unit_attack(display * disp, game_board & board,
 void reset_helpers(const unit *attacker,const unit *defender)
 {
 	display* disp = display::get_singleton();
-	const unit_map& units = disp->get_units();
+	const unit_map& units = disp->context().units();
 	if(attacker) {
-		unit_ability_list attacker_abilities = attacker->get_abilities("leadership");
-		for(auto& special : attacker->checking_tags()) {
+		active_ability_list attacker_abilities = attacker->get_abilities("leadership");
+		for(auto& special : abilities_list::all_weapon_tags()) {
 			attacker_abilities.append(attacker->get_abilities(special));
 		}
-		for(const unit_ability& ability : attacker_abilities) {
+		for(const active_ability& ability : attacker_abilities) {
 			unit_map::const_iterator leader = units.find(ability.teacher_loc);
 			assert(leader != units.end());
 			leader->anim_comp().set_standing();
@@ -785,11 +786,11 @@ void reset_helpers(const unit *attacker,const unit *defender)
 	}
 
 	if(defender) {
-		unit_ability_list defender_abilities = defender->get_abilities("resistance");
-		for(auto& special : defender->checking_tags()) {
+		active_ability_list defender_abilities = defender->get_abilities("resistance");
+		for(auto& special : abilities_list::all_weapon_tags()) {
 			defender_abilities.append(defender->get_abilities(special));
 		}
-		for(const unit_ability& ability : defender_abilities) {
+		for(const active_ability& ability : defender_abilities) {
 			unit_map::const_iterator helper = units.find(ability.teacher_loc);
 			assert(helper != units.end());
 			helper->anim_comp().set_standing();
@@ -804,15 +805,15 @@ void unit_recruited(const map_location& loc,const map_location& leader_loc)
 		return;
 	}
 
-	const display_context& dc = disp->get_disp_context();
-	const team& viewing_team = dc.get_team(disp->viewing_side());
+	const team& viewing_team = disp->viewing_team();
+	const unit_map& units = disp->context().units();
 
-	unit_map::const_iterator u = disp->get_units().find(loc);
-	if(u == disp->get_units().end()) return;
+	unit_map::const_iterator u = units.find(loc);
+	if(u == units.end()) return;
 	const bool unit_visible = u->is_visible_to_team(viewing_team, false);
 
-	unit_map::const_iterator leader = disp->get_units().find(leader_loc); // may be null_location
-	const bool leader_visible = (leader != disp->get_units().end()) && leader->is_visible_to_team(viewing_team, false);
+	unit_map::const_iterator leader = units.find(leader_loc); // may be null_location
+	const bool leader_visible = (leader != units.end()) && leader->is_visible_to_team(viewing_team, false);
 
 	unit_animator animator;
 
@@ -831,13 +832,14 @@ void unit_recruited(const map_location& loc,const map_location& leader_loc)
 		} else {
 			return;
 		}
-		if (leader != disp->get_units().end()) {
+		if(leader != units.end()) {
 			leader->set_facing(leader_loc.get_relative_dir(loc));
 			if (leader_visible) {
 				animator.add_animation(leader.get_shared_ptr(), "recruiting", leader_loc, loc, 0, true);
 			}
 		}
 	}
+	u->anim_comp().reset_affect_adjacent(*disp);
 	animator.add_animation(u.get_shared_ptr(), "recruited", loc, leader_loc);
 	animator.start_animations();
 	animator.wait_for_end();

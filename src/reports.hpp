@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2024
+	Copyright (C) 2003 - 2025
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -17,7 +17,10 @@
 
 #include "display_context.hpp"
 
+#include "config.hpp"
 #include <vector>
+#include <map>
+#include <set>
 
 #include "utils/optional_reference.hpp"
 
@@ -74,7 +77,11 @@ public:
 
 	void register_generator(const std::string &name, generator *);
 
-	config generate_report(const std::string &name, const context& ct, bool only_static = false);
+	/** Generate the specified report using the given context. */
+	config generate_report(const std::string& name, const context& ct);
+
+	/** Generate the specified report using the given context, excluding dynamic generators. */
+	config generate_builtin_report(const std::string& name, const context& rc);
 
 	const std::set<std::string> &report_list();
 

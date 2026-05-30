@@ -34,6 +34,13 @@ function wesnoth.map.read_location(...)
 	return nil, 0
 end
 
+function wesnoth.map.nearest_loc(to, candidates)
+	local F = wesnoth.require "functional"
+	return F.choose(candidates, function(loc)
+		return -wesnoth.map.distance_between(to, loc)
+	end)
+end
+
 if wesnoth.kernel_type() ~= "Application Lua Kernel" then
 	-- possible terrain string inputs:
 	-- A        A^       A^B      ^        ^B
@@ -461,6 +468,9 @@ if wesnoth.kernel_type() == "Mapgen Lua Kernel" then
 	wesnoth.map.get_tiles_radius = wesnoth.deprecate_api('map:get_tiles_radius', 'map:find_in_radius', 1, nil, function(map, locs, filter, radius)
 		return wesnoth.map.find_in_radius(map, locs, radius, filter)
 	end, 'The filter is now the last parameter, instead of the radius')
+	wesnoth.map.vector_sum = wesnoth.deprecate_api('wesnoth.map.vector_sum', 'wesnoth.map.hex_vector_sum', 1, nil, wesnoth.map.hex_vector_sum)
+	wesnoth.map.vector_diff = wesnoth.deprecate_api('wesnoth.map.vector_diff', 'wesnoth.map.hex_vector_dif', 1, nil, wesnoth.map.hex_vector_diff)
+	wesnoth.map.vector_negation = wesnoth.deprecate_api('wesnoth.map.vector_negation', 'wesnoth.map.hex_vector_negation', 1, nil, wesnoth.map.hex_vector_negation)
 end
 
 wesnoth.map.tiles_adjacent = wesnoth.deprecate_api('wesnoth.map.tiles_adjacent', 'wesnoth.map.are_hexes_adjacent', 1, nil, wesnoth.map.are_hexes_adjacent)

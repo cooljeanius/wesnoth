@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013 - 2024
+	Copyright (C) 2013 - 2025
 	by Andrius Silinskas <silinskas.andrius@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -31,6 +31,10 @@ class game_config_manager
 public:
 	game_config_manager(const commandline_options& cmdline_opts);
 	~game_config_manager();
+
+	game_config_manager(const game_config_manager&) = delete;
+	game_config_manager& operator=(const game_config_manager&) = delete;
+
 	enum FORCE_RELOAD_CONFIG
 	{
 		/** Always reload config */
@@ -43,7 +47,6 @@ public:
 
 	const game_config_view& game_config() const { return game_config_view_; }
 	const preproc_map& old_defines_map() const { return old_defines_map_; }
-	const std::shared_ptr<terrain_type_data>& terrain_types() const { return tdata_; }
 	std::vector<achievement_group>& get_achievements() { return achievements_.get_list(); }
 
 	bool init_game_config(FORCE_RELOAD_CONFIG force_reload);
@@ -55,12 +58,9 @@ public:
 
 	static game_config_manager * get();
 
-
 private:
-	void set_enabled_addon(std::set<std::string> addon_ids);
+	void set_enabled_addon(const std::set<std::string>& addon_ids);
 	void set_enabled_addon_all();
-	game_config_manager(const game_config_manager&);
-	void operator=(const game_config_manager&);
 
 	void load_game_config(bool reload_everything, const game_classification* classification, const std::string& scenario_id);
 
@@ -85,7 +85,7 @@ private:
 
 	game_config::config_cache& cache_;
 
-	std::shared_ptr<terrain_type_data> tdata_;
+	terrain_type_data tdata_;
 
 	achievements achievements_;
 };

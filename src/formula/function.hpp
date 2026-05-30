@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008 - 2024
+	Copyright (C) 2008 - 2025
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -138,7 +138,8 @@ public:
 	{
 	}
 
-	void serialize_to_string(std::string& str) const override;
+	/** Inherited from formula_callable */
+	std::string serialize_to_string() const override;
 
 private:
 	variant key_;
@@ -232,7 +233,7 @@ typedef std::map<std::string, formula_function_ptr> functions_map;
 class function_symbol_table
 {
 public:
-	explicit function_symbol_table(std::shared_ptr<function_symbol_table> parent = nullptr);
+	explicit function_symbol_table(const std::shared_ptr<function_symbol_table>& parent = nullptr);
 
 	void add_function(const std::string& name, formula_function_ptr&& fcn);
 
@@ -260,7 +261,7 @@ private:
 class action_function_symbol_table : public function_symbol_table
 {
 public:
-	action_function_symbol_table(std::shared_ptr<function_symbol_table> parent = nullptr);
+	action_function_symbol_table(const std::shared_ptr<function_symbol_table>& parent = nullptr);
 };
 
 class wrapper_formula : public formula_expression

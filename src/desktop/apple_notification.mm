@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2014 - 2024
+	Copyright (C) 2014 - 2025
 	by Google Inc.
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -17,9 +17,12 @@
 
 #include "desktop/apple_notification.hpp"
 
+#include <TargetConditionals.h>
 #import <Foundation/Foundation.h>
 
 namespace apple_notifications {
+
+#if TARGET_OS_OSX
 
 bool available() {
 	Class notificationClass = NSClassFromString(@"NSUserNotificationCenter");
@@ -53,6 +56,17 @@ void send_cocoa_notification(const std::string& owner, const std::string& messag
 
     [[NSUserNotificationCenter defaultUserNotificationCenter] scheduleNotification:notification];
 }
+
+#else
+
+bool available() {
+	return false;
+}
+
+void send_notification(const std::string&, const std::string&, const desktop::notifications::type) {
+}
+
+#endif
 
 }
 #endif //end __APPLE__

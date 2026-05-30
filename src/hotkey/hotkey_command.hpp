@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2024
+	Copyright (C) 2003 - 2025
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -54,7 +54,7 @@ enum HOTKEY_COMMAND {
 	HOTKEY_FULLSCREEN, HOTKEY_SCREENSHOT, HOTKEY_MAP_SCREENSHOT, HOTKEY_ACCELERATED,
 	HOTKEY_TERRAIN_DESCRIPTION,
 	HOTKEY_UNIT_DESCRIPTION, HOTKEY_RENAME_UNIT, HOTKEY_DELETE_UNIT,
-	HOTKEY_SAVE_GAME, HOTKEY_SAVE_REPLAY, HOTKEY_SAVE_MAP, HOTKEY_LOAD_GAME,
+	HOTKEY_SAVE_GAME, HOTKEY_SAVE_REPLAY, HOTKEY_SAVE_MAP, HOTKEY_LOAD_GAME, HOTKEY_LOAD_AUTOSAVES,
 	HOTKEY_RECRUIT, HOTKEY_REPEAT_RECRUIT, HOTKEY_RECALL, HOTKEY_ENDTURN,
 	HOTKEY_TOGGLE_ELLIPSES, HOTKEY_TOGGLE_GRID, HOTKEY_STATUS_TABLE, HOTKEY_MUTE, HOTKEY_MOUSE_SCROLL,
 	HOTKEY_SPEAK, HOTKEY_CREATE_UNIT, HOTKEY_CHANGE_SIDE, HOTKEY_KILL_UNIT, HOTKEY_PREFERENCES, HOTKEY_TELEPORT_UNIT,
@@ -173,6 +173,7 @@ enum HOTKEY_COMMAND {
 	HOTKEY_EDITOR_MAP_RESIZE,
 	HOTKEY_EDITOR_MAP_GENERATE, HOTKEY_EDITOR_MAP_APPLY_MASK,
 	HOTKEY_EDITOR_MAP_CREATE_MASK_TO,
+	HOTKEY_EDITOR_MAP_TO_SCENARIO,
 
 	// Transitions
 	HOTKEY_EDITOR_UPDATE_TRANSITIONS, HOTKEY_EDITOR_TOGGLE_TRANSITIONS,
@@ -245,16 +246,11 @@ struct hotkey_command_temp;
  */
 struct hotkey_command
 {
-	hotkey_command() = delete;
-
 	/** Constructs a new command from a temporary static hotkey object. */
 	hotkey_command(const hotkey_command_temp& temp_command);
 
 	/** @todo: see if we can remove this with c++20. Aggregate initialization with try_emplace?*/
 	hotkey_command(HOTKEY_COMMAND cmd, const std::string& id, const t_string& desc, bool hidden, bool toggle, hk_scopes scope, HOTKEY_CATEGORY category, const t_string& tooltip);
-
-	hotkey_command(const hotkey_command&) = default;
-	hotkey_command& operator=(const hotkey_command&) = default;
 
 	/** The command associated with this hotkey. Does not need to be unique. */
 	HOTKEY_COMMAND command;
@@ -287,12 +283,6 @@ struct hotkey_command
 
 	/** returns the command that is treated as null */
 	static const hotkey_command& null_command();
-
-	/**
-	 * the execute_command argument was changed from HOTKEY_COMMAND to hotkey_command,
-	 * to be able to call it with HOTKEY_COMMAND, this function was created
-	 */
-	static const hotkey_command& get_command_by_command(HOTKEY_COMMAND command);
 };
 
 class scope_changer
@@ -312,13 +302,16 @@ private:
  */
 const std::map<std::string_view, hotkey::hotkey_command>& get_hotkey_commands();
 
-/** returns the hotkey_command with the given name */
-NOT_DANGLING const hotkey_command& get_hotkey_command(const std::string& command);
+/** Returns the hotkey_command with the given id */
+NOT_DANGLING const hotkey_command& get_hotkey_command(std::string_view command);
+
+/** Returns the hotkey_command with the given command */
+NOT_DANGLING const hotkey_command& get_hotkey_command(HOTKEY_COMMAND command);
 
 bool is_scope_active(scope s);
 bool is_scope_active(hk_scopes s);
 
-bool has_hotkey_command(const std::string& id);
+bool has_hotkey_command(std::string_view id);
 
 /**
  * RAII helper class to control the lifetime of a WML hotkey_command.
@@ -326,15 +319,13 @@ bool has_hotkey_command(const std::string& id);
 class wml_hotkey_record
 {
 public:
-	wml_hotkey_record() = default;
-
 	/** Don't allow copying so objects don't get erased early. */
 	wml_hotkey_record(const wml_hotkey_record&) = delete;
 	const wml_hotkey_record& operator=(const wml_hotkey_record&) = delete;
 
 	/** But we *do* want move semantics. */
-	wml_hotkey_record(wml_hotkey_record&&) = default;
-	wml_hotkey_record& operator=(wml_hotkey_record&&) = default;
+	wml_hotkey_record(wml_hotkey_record&&) noexcept = default;
+	wml_hotkey_record& operator=(wml_hotkey_record&&) noexcept= default;
 
 	/** Registers a hotkey_command for a WML hotkey with the given ID if one does not already exist. */
 	wml_hotkey_record(const std::string& id, const t_string& description, const config& default_hotkey);

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008 - 2024
+	Copyright (C) 2008 - 2025
 	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -23,21 +23,12 @@
 
 class map_generator;
 
-namespace gui2
+namespace gui2::dialogs
 {
-
-namespace dialogs
-{
-
 class editor_generate_map : public modal_dialog
 {
 public:
-	explicit editor_generate_map(std::vector<std::unique_ptr<map_generator>>& mg);
-
-	std::vector<std::unique_ptr<map_generator>>& get_map_generators()
-	{
-		return map_generators_;
-	}
+	explicit editor_generate_map(const std::vector<std::unique_ptr<map_generator>>& mg);
 
 	map_generator* get_selected_map_generator();
 
@@ -48,7 +39,7 @@ public:
 private:
 	virtual const std::string& window_id() const override;
 
-	virtual void pre_show(window& window) override;
+	virtual void pre_show() override;
 
 	/** Callback for generator list selection changes. */
 	void do_generator_selected();
@@ -57,7 +48,7 @@ private:
 	void do_settings();
 
 	/** Available map generators */
-	std::vector<std::unique_ptr<map_generator>>& map_generators_;
+	const std::vector<std::unique_ptr<map_generator>>& map_generators_;
 
 	/** Last used map generator, must be in map_generators_ */
 	map_generator* last_map_generator_;
@@ -69,5 +60,4 @@ private:
 	std::string random_seed_;
 };
 
-} // namespace dialogs
-} // namespace gui2
+} // namespace gui2::dialogs

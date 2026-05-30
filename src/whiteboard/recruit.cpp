@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2010 - 2024
+	Copyright (C) 2010 - 2025
 	by Gabriel Morin <gabrielmorin (at) gmail (dot) com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -31,16 +31,17 @@
 #include "units/animation_component.hpp"
 #include "units/map.hpp"
 #include "units/types.hpp"
+#include "utils/general.hpp"
 
 namespace wb
 {
 
-std::ostream& operator<<(std::ostream& s, recruit_ptr recruit)
+std::ostream& operator<<(std::ostream& s, const recruit_ptr& recruit)
 {
 	assert(recruit);
 	return recruit->print(s);
 }
-std::ostream& operator<<(std::ostream& s, recruit_const_ptr recruit)
+std::ostream& operator<<(std::ostream& s, const recruit_const_ptr& recruit)
 {
 	assert(recruit);
 	return recruit->print(s);
@@ -142,7 +143,7 @@ void recruit::apply_temp_modifier(unit_map& unit_map)
 
 	// Temporarily insert unit into unit_map
 	// unit map takes ownership of temp_unit
-	const size_t old_id = temp_unit_->underlying_id();
+	const std::size_t old_id = temp_unit_->underlying_id();
 	unit_map.insert(temp_unit_);
 
 	//in the past there was a bug where the map changed the unit ids here (because a unit with that id already existed) which caused crashes later.
@@ -209,7 +210,7 @@ action::error recruit::check_validity() const
 	const std::set<std::string>& recruits = resources::gameboard->teams()[team_index()].recruits();
 	if(recruits.find(unit_name_) == recruits.end()) {
 		bool in_extra_recruit = any_recruiter(team_index() + 1, get_recruit_hex(), [&](unit& leader) {
-			return std::find(leader.recruits().begin(), leader.recruits().end(), unit_name_) != leader.recruits().end();
+			return utils::contains(leader.recruits(), unit_name_);
 		});
 		if (!in_extra_recruit) {
 			return UNIT_UNAVAILABLE;

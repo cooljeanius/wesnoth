@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2017 - 2024
+	Copyright (C) 2017 - 2025
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -30,24 +30,25 @@ static lg::log_domain log_engine("engine");
 #define ERR_NG LOG_STREAM(err, log_engine)
 #define LOG_NG LOG_STREAM(info, log_engine)
 
-namespace actions
+namespace actions::undo
 {
-namespace undo
-{
-
-recall_action::recall_action(const unit_const_ptr recalled, const map_location& loc,
-			  const map_location& from, int orig_village_owner, bool time_bonus)
+recall_action::recall_action(const unit_const_ptr& recalled, const map_location& loc,
+			  const map_location& from)
 	: undo_action()
-	, shroud_clearing_action(recalled, loc, orig_village_owner, time_bonus)
+	, shroud_clearing_action(recalled, loc)
 	, id(recalled->id())
+	, prev_mp(recalled->movement_left(true))
+	, prev_ap(recalled->attacks_left(true))
 	, recall_from(from)
 {}
 
-recall_action::recall_action(const config & cfg, const map_location & from)
-	: undo_action(cfg)
+recall_action::recall_action(const config & cfg)
+	: undo_action()
 	, shroud_clearing_action(cfg)
 	, id(cfg["id"])
-	, recall_from(from)
+	, prev_mp(cfg["previous_movement"].to_int())
+	, prev_ap(cfg["previous_attacks"].to_int())
+	, recall_from(map_location(cfg.child_or_empty("leader"), nullptr))
 {}
 
 /**
@@ -60,6 +61,8 @@ void recall_action::write(config & cfg) const
 
 	recall_from.write(cfg.add_child("leader"));
 	cfg["id"] = id;
+	cfg["previous_movement"] = prev_mp;
+	cfg["previous_attacks"] = prev_ap;
 }
 
 /**
@@ -92,6 +95,8 @@ bool recall_action::undo(int side)
 		current_team.spend_gold(-cost);
 	}
 
+	un->set_attacks(prev_ap);
+	un->set_movement(prev_mp);
 	current_team.recall_list().add(un);
 	// Invalidate everything, not just recall_loc, in case the sprite
 	// extends into adjacent hexes (Horseman) or even farther away (Fire
@@ -100,10 +105,8 @@ bool recall_action::undo(int side)
 	units.erase(recall_loc);
 	resources::whiteboard->on_kill_unit();
 	un->anim_comp().clear_haloes();
-	this->return_village();
-	execute_undo_umc_wml();
 	return true;
 }
+static auto reg_undo_recall = undo_action_container::subaction_factory<recall_action>();
 
-}
 }

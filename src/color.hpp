@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2024
+	Copyright (C) 2003 - 2025
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -18,8 +18,10 @@
 
 #include <algorithm> // for max
 #include <cstdint>
+#include <limits>
 #include <ostream>
 #include <string>
+#include <tuple>
 #include <utility>
 
 constexpr uint32_t SDL_ALPHA_MASK = 0xFF000000;
@@ -31,16 +33,6 @@ constexpr uint32_t SDL_ALPHA_BITSHIFT = 24;
 constexpr uint32_t SDL_RED_BITSHIFT   = 16;
 constexpr uint32_t SDL_GREEN_BITSHIFT = 8;
 constexpr uint32_t SDL_BLUE_BITSHIFT  = 0;
-
-constexpr uint32_t RGBA_ALPHA_MASK = 0x000000FF;
-constexpr uint32_t RGBA_RED_MASK   = 0xFF000000;
-constexpr uint32_t RGBA_GREEN_MASK = 0x00FF0000;
-constexpr uint32_t RGBA_BLUE_MASK  = 0x0000FF00;
-
-constexpr uint32_t RGBA_ALPHA_BITSHIFT = 0;
-constexpr uint32_t RGBA_RED_BITSHIFT   = 24;
-constexpr uint32_t RGBA_GREEN_BITSHIFT = 16;
-constexpr uint32_t RGBA_BLUE_BITSHIFT  = 8;
 
 constexpr uint8_t ALPHA_OPAQUE = SDL_ALPHA_OPAQUE; // This is always 255 in SDL2
 
@@ -104,22 +96,6 @@ struct color_t : SDL_Color
 	/**
 	 * Creates a new color_t object from a uint32_t variable.
 	 *
-	 * @param c      A uint32_t variable, in RGBA format.
-	 * @return       A new color_t object.
-	 */
-	static constexpr color_t from_rgba_bytes(uint32_t c)
-	{
-		return {
-			static_cast<uint8_t>((RGBA_RED_MASK   & c) >> RGBA_RED_BITSHIFT),
-			static_cast<uint8_t>((RGBA_GREEN_MASK & c) >> RGBA_GREEN_BITSHIFT),
-			static_cast<uint8_t>((RGBA_BLUE_MASK  & c) >> RGBA_BLUE_BITSHIFT),
-			static_cast<uint8_t>((RGBA_ALPHA_MASK & c) >> RGBA_ALPHA_BITSHIFT),
-		};
-	}
-
-	/**
-	 * Creates a new color_t object from a uint32_t variable.
-	 *
 	 * @param c      A uint32_t variable, in ARGB format.
 	 * @return       A new color_t object.
 	 */
@@ -134,26 +110,30 @@ struct color_t : SDL_Color
 	}
 
 	/**
+	 * Creates a new color_t object from a triplet of 16 bit color values,
+	 * usually used by Pango.
+	 *
+	 * @param r      The red channel's value as a 16 bit integer.
+	 * @param g      The green channel's value as a 16 bit integer.
+	 * @param b      The blue channel's value as a 16 bit integer.
+	 * @return       A new color_t object.
+	 */
+	static constexpr color_t from_pango_format(uint16_t r, uint16_t g, uint16_t b)
+	{
+		return {
+			static_cast<uint8_t>(r * 255.0 / std::numeric_limits<uint16_t>::max()),
+			static_cast<uint8_t>(g * 255.0 / std::numeric_limits<uint16_t>::max()),
+			static_cast<uint8_t>(b * 255.0 / std::numeric_limits<uint16_t>::max())
+		};
+	}
+
+	/**
 	 * Returns the stored color in rrggbb hex format.
 	 *
 	 * @return       The string in hex format. The preceding '#' needed for pango markup
 	 *               is prepended.
 	 */
 	std::string to_hex_string() const;
-
-	/**
-	 * Returns the stored color as a uint32_t, in RGBA format.
-	 *
-	 * @return       The new uint32_t object.
-	 */
-	constexpr uint32_t to_rgba_bytes() const
-	{
-		return
-			(static_cast<uint32_t>(r) << RGBA_RED_BITSHIFT) |
-			(static_cast<uint32_t>(g) << RGBA_GREEN_BITSHIFT) |
-			(static_cast<uint32_t>(b) << RGBA_BLUE_BITSHIFT) |
-			(static_cast<uint32_t>(a) << RGBA_ALPHA_BITSHIFT);
-	}
 
 	/**
 	 * Returns the stored color as a uint32_t, an ARGB format.
@@ -163,10 +143,10 @@ struct color_t : SDL_Color
 	constexpr uint32_t to_argb_bytes() const
 	{
 		return
+			(static_cast<uint32_t>(a) << SDL_ALPHA_BITSHIFT) |
 			(static_cast<uint32_t>(r) << SDL_RED_BITSHIFT) |
 			(static_cast<uint32_t>(g) << SDL_GREEN_BITSHIFT) |
-			(static_cast<uint32_t>(b) << SDL_BLUE_BITSHIFT) |
-			(static_cast<uint32_t>(a) << SDL_ALPHA_BITSHIFT);
+			(static_cast<uint32_t>(b) << SDL_BLUE_BITSHIFT);
 	}
 
 	/**
@@ -182,6 +162,20 @@ struct color_t : SDL_Color
 	 * @return      The new color string.
 	 */
 	std::string to_rgb_string() const;
+
+	/**
+	 * Returns the color as a triplet of 16 bit integers, a format used by Pango.
+	 *
+	 * @return      A tuple containing R,G,B values as 16 bit integers
+	 */
+	constexpr std::tuple<uint16_t, uint16_t, uint16_t> to_pango_format() const
+	{
+		return {
+			r / 255.0 * std::numeric_limits<uint16_t>::max(),
+			g / 255.0 * std::numeric_limits<uint16_t>::max(),
+			b / 255.0 * std::numeric_limits<uint16_t>::max()
+		};
+	}
 
 	constexpr bool null() const
 	{
@@ -267,7 +261,7 @@ namespace std
 	{
 		std::size_t operator()(const color_t& c) const noexcept
 		{
-			return c.to_rgba_bytes();
+			return c.to_argb_bytes();
 		}
 	};
 }

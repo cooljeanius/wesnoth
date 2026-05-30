@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2024
+	Copyright (C) 2003 - 2025
 	by Jörg Hinrichs, David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -22,8 +22,10 @@
 #include "gettext.hpp"
 #include "log.hpp"
 #include "preferences/preferences.hpp"
+#include "serialization/chrono.hpp"
 #include "serialization/parser.hpp"
 #include "team.hpp"
+#include "utils/general.hpp"
 
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/iostreams/filter/gzip.hpp>
@@ -37,42 +39,38 @@ static lg::log_domain log_enginerefac("enginerefac");
 
 namespace savegame
 {
-void extract_summary_from_config(config&, config&);
+void extract_summary_from_config(const config&, config&);
 
 void save_index_class::rebuild(const std::string& name)
 {
-	std::time_t modified = filesystem::file_modified_time(dir_ + "/" + name);
+	auto modified = filesystem::file_modified_time(dir_ + "/" + name);
 	rebuild(name, modified);
 }
 
-void save_index_class::rebuild(const std::string& name, const std::time_t& modified)
+void save_index_class::rebuild(const std::string& name, const std::chrono::system_clock::time_point& modified)
 {
 	log_scope("load_summary_from_file");
 
 	config& summary = data(name);
 
 	try {
-		config full;
-		std::string dummy;
-		read_save_file(dir_, name, full, &dummy);
-
-		extract_summary_from_config(full, summary);
+		extract_summary_from_config(read_save_file(dir_, name), summary);
 	} catch(const game::load_game_failed&) {
 		summary["corrupt"] = true;
 	}
 
-	summary["mod_time"] = std::to_string(static_cast<int>(modified));
+	summary["mod_time"] = chrono::serialize_timestamp(modified);
 	write_save_index();
 }
 
 void save_index_class::remove(const std::string& name)
 {
 	config& root = data();
-	root.remove_children("save", [&name](const config& d) { return name == d["save"]; });
+	root.remove_children("save", [&name](const config& d) { return d["save"] == name; });
 	write_save_index();
 }
 
-void save_index_class::set_modified(const std::string& name, const std::time_t& modified)
+void save_index_class::set_modified(const std::string& name, const std::chrono::system_clock::time_point& modified)
 {
 	modified_[name] = modified;
 }
@@ -80,10 +78,10 @@ void save_index_class::set_modified(const std::string& name, const std::time_t& 
 config& save_index_class::get(const std::string& name)
 {
 	config& result = data(name);
-	std::time_t m = modified_[name];
+	const auto& m = modified_[name];
 
 	config::attribute_value& mod_time = result["mod_time"];
-	if(mod_time.empty() || mod_time.to_time_t() != m) {
+	if(mod_time.empty() || chrono::parse_timestamp(mod_time) != m) {
 		rebuild(name, m);
 	}
 
@@ -105,7 +103,7 @@ void save_index_class::clean_up_index()
 	if(root.all_children_count() > filenames.size()) {
 		root.remove_children("save", [&filenames](const config& d)
 			{
-				return std::find(filenames.begin(), filenames.end(), d["save"]) == filenames.end();
+				return !utils::contains(filenames, d["save"].str());
 			}
 		);
 	}
@@ -130,9 +128,9 @@ void save_index_class::write_save_index()
 
 		if(prefs::get().save_compression_format() != compression::format::none) {
 			// TODO: maybe allow writing this using bz2 too?
-			write_gz(*stream, data());
+			io::write_gz(*stream, data());
 		} else {
-			write(*stream, data());
+			io::write(*stream, data());
 		}
 	} catch(const filesystem::io_exception& e) {
 		ERR_SAVE << "error writing to save index file: '" << e.what() << "'";
@@ -140,13 +138,31 @@ void save_index_class::write_save_index()
 }
 
 save_index_class::save_index_class(const std::string& dir)
-	: loaded_(false)
-	, data_()
+	: data_()
 	, modified_()
 	, dir_(dir)
 	, read_only_(true)
 	, clean_up_index_(true)
 {
+	const std::string si_file = filesystem::get_save_index_file();
+
+	// Don't try to load the file if it doesn't exist.
+	if(filesystem::file_exists(si_file)) {
+		try {
+			filesystem::scoped_istream stream = filesystem::istream_file(si_file);
+			try {
+				data_ = io::read_gz(*stream);
+			} catch(const boost::iostreams::gzip_error&) {
+				stream->seekg(0);
+				data_ = io::read(*stream);
+			}
+		} catch(const filesystem::io_exception& e) {
+			ERR_SAVE << "error reading save index: '" << e.what() << "'";
+		} catch(const config::error& e) {
+			ERR_SAVE << "error parsing save index config file:\n" << e.message;
+			data_.clear();
+		}
+	}
 }
 
 save_index_class::save_index_class(create_for_default_saves_dir)
@@ -170,28 +186,6 @@ config& save_index_class::data(const std::string& name)
 
 config& save_index_class::data()
 {
-	const std::string si_file = filesystem::get_save_index_file();
-
-	// Don't try to load the file if it doesn't exist.
-	if(loaded_ == false && filesystem::file_exists(si_file)) {
-		try {
-			filesystem::scoped_istream stream = filesystem::istream_file(si_file);
-			try {
-				read_gz(data_, *stream);
-			} catch(const boost::iostreams::gzip_error&) {
-				stream->seekg(0);
-				read(data_, *stream);
-			}
-		} catch(const filesystem::io_exception& e) {
-			ERR_SAVE << "error reading save index: '" << e.what() << "'";
-		} catch(const config::error& e) {
-			ERR_SAVE << "error parsing save index config file:\n" << e.message;
-			data_.clear();
-		}
-
-		loaded_ = true;
-	}
-
 	return data_;
 }
 
@@ -219,21 +213,19 @@ std::vector<save_info> save_index_class::get_saves_list(const std::string* filte
 	std::vector<std::string> filenames;
 	filesystem::get_files_in_dir(dir(), &filenames);
 
-	const auto should_remove = [filter](const std::string& filename) {
+	utils::erase_if(filenames, [filter](const std::string& filename) {
 		// Steam documentation indicates games can ignore their auto-generated 'steam_autocloud.vdf'.
 		// Reference: https://partner.steamgames.com/doc/features/cloud (under Steam Auto-Cloud section as of September 2021)
 		static const std::vector<std::string> to_ignore {"steam_autocloud.vdf"};
 
-		if(std::find(to_ignore.begin(), to_ignore.end(), filename) != to_ignore.end()) {
+		if(utils::contains(to_ignore, filename)) {
 			return true;
 		} else if(filter) {
 			return filename.end() == std::search(filename.begin(), filename.end(), filter->begin(), filter->end());
 		}
 
 		return false;
-	};
-
-	filenames.erase(std::remove_if(filenames.begin(), filenames.end(), should_remove), filenames.end());
+	});
 
 	std::vector<save_info> result;
 	std::transform(filenames.begin(), filenames.end(), std::back_inserter(result), creator);
@@ -249,24 +241,20 @@ const config& save_info::summary() const
 
 std::string save_info::format_time_local() const
 {
-	if(std::tm* tm_l = std::localtime(&modified())) {
-		const std::string format = prefs::get().use_twelve_hour_clock_format()
-			// TRANSLATORS: Day of week + month + day of month + year + 12-hour time, eg 'Tue Nov 02 2021, 1:59 PM'. Format for your locale.
-			? _("%a %b %d %Y, %I:%M %p")
-			// TRANSLATORS: Day of week + month + day of month + year + 24-hour time, eg 'Tue Nov 02 2021, 13:59'. Format for your locale.
-			: _("%a %b %d %Y, %H:%M");
+	const std::string format = prefs::get().use_twelve_hour_clock_format()
+		// TRANSLATORS: Day of week + month + day of month + year + 12-hour time, eg 'Tue Nov 02 2021, 1:59 PM'.
+		// Format for your locale.
+		? _("%a %b %d %Y, %I:%M %p")
+		// TRANSLATORS: Day of week + month + day of month + year + 24-hour time, eg 'Tue Nov 02 2021, 13:59'.
+		// Format for your locale.
+		: _("%a %b %d %Y, %H:%M");
 
-		return translation::strftime(format, tm_l);
-	}
-
-	LOG_SAVE << "localtime() returned null for time " << this->modified() << ", save " << name();
-	return "";
+	return chrono::format_local_timestamp(modified(), format);
 }
 
 std::string save_info::format_time_summary() const
 {
-	std::time_t t = modified();
-	return utils::format_time_summary(t);
+	return utils::format_time_summary(modified());
 }
 
 bool save_info_less_time::operator()(const save_info& a, const save_info& b) const
@@ -309,45 +297,39 @@ static filesystem::scoped_istream find_save_file(const std::string& dir,
 	throw game::load_game_failed();
 }
 
-void read_save_file(const std::string& dir, const std::string& name, config& cfg, std::string* error_log)
+config read_save_file(const std::string& dir, const std::string& name)
 {
 	static const std::vector<std::string> suffixes{"", ".gz", ".bz2"};
 	filesystem::scoped_istream file_stream = find_save_file(dir, name, suffixes);
+	config cfg;
 
-	cfg.clear();
 	try {
 		/*
 		 * Test the modified name, since it might use a .gz
 		 * file even when not requested.
 		 */
 		if(filesystem::is_gzip_file(name)) {
-			read_gz(cfg, *file_stream);
+			cfg = io::read_gz(*file_stream);
 		} else if(filesystem::is_bzip2_file(name)) {
-			read_bz2(cfg, *file_stream);
+			cfg = io::read_bz2(*file_stream);
 		} else {
-			read(cfg, *file_stream);
+			cfg = io::read(*file_stream);
 		}
 	} catch(const std::ios_base::failure& e) {
 		LOG_SAVE << e.what();
+		throw game::load_game_failed(e.what());
 
-		if(error_log) {
-			*error_log += e.what();
-		}
-		throw game::load_game_failed();
 	} catch(const config::error& err) {
 		LOG_SAVE << err.message;
-
-		if(error_log) {
-			*error_log += err.message;
-		}
-
-		throw game::load_game_failed();
+		throw game::load_game_failed(err.message);
 	}
 
 	if(cfg.empty()) {
 		LOG_SAVE << "Could not parse file data into config";
 		throw game::load_game_failed();
 	}
+
+	return cfg;
 }
 
 void save_index_class::delete_old_auto_saves(const int autosavemax, const int infinite_auto_saves)
@@ -393,12 +375,12 @@ create_save_info::create_save_info(const std::shared_ptr<save_index_class>& mana
 
 save_info create_save_info::operator()(const std::string& filename) const
 {
-	std::time_t modified = filesystem::file_modified_time(manager_->dir() + "/" + filename);
+	auto modified = filesystem::file_modified_time(manager_->dir() + "/" + filename);
 	manager_->set_modified(filename, modified);
 	return save_info(filename, manager_, modified);
 }
 
-void extract_summary_from_config(config& cfg_save, config& cfg_summary)
+void extract_summary_from_config(const config& cfg_save, config& cfg_summary)
 {
 	auto cfg_snapshot = cfg_save.optional_child("snapshot");
 
@@ -452,7 +434,7 @@ void extract_summary_from_config(config& cfg_save, config& cfg_summary)
 			std::string leader_image;
 			std::string leader_image_tc_modifier;
 			std::string leader_name;
-			int gold = side["gold"];
+			int gold = side["gold"].to_int();
 			int units = 0, recall_units = 0;
 
 			if(side["controller"] != side_controller::human) {

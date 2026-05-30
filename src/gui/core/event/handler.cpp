@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2009 - 2024
+	Copyright (C) 2009 - 2025
 	by Mark de Wever <koraq@xs4all.nl>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -27,6 +27,8 @@
 #include "hotkey/hotkey_item.hpp"
 #include "video.hpp"
 #include "utils/ranges.hpp"
+
+#include <SDL2/SDL.h>
 
 #include <cassert>
 
@@ -59,7 +61,7 @@ namespace event
 
 /***** Static data. *****/
 static std::unique_ptr<class sdl_event_handler> handler_ = nullptr;
-static events::event_context* event_context = nullptr;
+static std::unique_ptr<events::event_context> event_context = nullptr;
 
 #ifdef MAIN_EVENT_HANDLER
 static unsigned draw_interval = 0;
@@ -278,7 +280,7 @@ private:
 	 *                            which to execute the hotkey callback, false
 	 *                            otherwise.
 	 */
-	bool hotkey_pressed(const hotkey::hotkey_ptr key);
+	bool hotkey_pressed(const hotkey::hotkey_ptr& key);
 
 	/**
 	 * Fires a key down event.
@@ -504,7 +506,6 @@ void sdl_event_handler::handle_event(const SDL_Event& event)
 
 		// Silently ignored events.
 		case SDL_KEYUP:
-		case DOUBLE_CLICK_EVENT:
 			break;
 
 		default:
@@ -525,14 +526,12 @@ void sdl_event_handler::handle_window_event(const SDL_Event& event)
 
 void sdl_event_handler::connect(dispatcher* dispatcher)
 {
-	assert(std::find(dispatchers_.begin(), dispatchers_.end(), dispatcher)
-		   == dispatchers_.end());
-
+	assert(!utils::contains(dispatchers_, dispatcher));
 	DBG_GUI_E << "adding dispatcher " << static_cast<void*>(dispatcher);
 
 	if(dispatchers_.empty()) {
 		LOG_GUI_E << "creating new dispatcher event context";
-		event_context = new events::event_context();
+		event_context = std::make_unique<events::event_context>();
 		join();
 	}
 
@@ -561,13 +560,11 @@ void sdl_event_handler::disconnect(dispatcher* disp)
 	//activate();
 
 	/***** Validate post conditions. *****/
-	assert(std::find(dispatchers_.begin(), dispatchers_.end(), disp)
-		   == dispatchers_.end());
+	assert(!utils::contains(dispatchers_, disp));
 
 	if(dispatchers_.empty()) {
 		LOG_GUI_E << "deleting unused dispatcher event context";
 		leave();
-		delete event_context;
 		event_context = nullptr;
 	}
 }
@@ -608,7 +605,7 @@ void sdl_event_handler::mouse(const ui_event event, const point& position)
 		return;
 	}
 
-	for(auto& dispatcher : utils::reversed_view(dispatchers_)) {
+	for(auto& dispatcher : dispatchers_ | utils::views::reverse) {
 		if(dispatcher->get_mouse_behavior() == dispatcher::mouse_behavior::all) {
 			dispatcher->fire(event, dynamic_cast<widget&>(*dispatcher), position);
 			break;
@@ -637,6 +634,12 @@ void sdl_event_handler::mouse_button_up(const point& position, const uint8_t but
 		case SDL_BUTTON_RIGHT:
 			mouse(SDL_RIGHT_BUTTON_UP, position);
 			break;
+		case SDL_BUTTON_X1:
+			mouse(SDL_BACK_BUTTON_UP, position);
+			break;
+		case SDL_BUTTON_X2:
+			mouse(SDL_FORWARD_BUTTON_UP, position);
+			break;
 		default:
 #ifdef GUI2_SHOW_UNHANDLED_EVENT_WARNINGS
 			WRN_GUI_E << "Unhandled 'mouse button up' event for button "
@@ -657,6 +660,12 @@ void sdl_event_handler::mouse_button_down(const point& position, const uint8_t b
 			break;
 		case SDL_BUTTON_RIGHT:
 			mouse(SDL_RIGHT_BUTTON_DOWN, position);
+			break;
+		case SDL_BUTTON_X1:
+			mouse(SDL_BACK_BUTTON_DOWN, position);
+			break;
+		case SDL_BUTTON_X2:
+			mouse(SDL_FORWARD_BUTTON_DOWN, position);
 			break;
 		default:
 #ifdef GUI2_SHOW_UNHANDLED_EVENT_WARNINGS
@@ -688,7 +697,7 @@ dispatcher* sdl_event_handler::keyboard_dispatcher()
 		return keyboard_focus_;
 	}
 
-	for(auto& dispatcher : utils::reversed_view(dispatchers_)) {
+	for(auto& dispatcher : dispatchers_ | utils::views::reverse) {
 		if(dispatcher->get_want_keyboard_input()) {
 			return dispatcher;
 		}
@@ -699,28 +708,28 @@ dispatcher* sdl_event_handler::keyboard_dispatcher()
 
 void sdl_event_handler::touch_motion(const point& position, const point& distance)
 {
-	for(auto& dispatcher : utils::reversed_view(dispatchers_)) {
+	for(auto& dispatcher : dispatchers_ | utils::views::reverse) {
 		dispatcher->fire(SDL_TOUCH_MOTION , dynamic_cast<widget&>(*dispatcher), position, distance);
 	}
 }
 
 void sdl_event_handler::touch_up(const point& position)
 {
-	for(auto& dispatcher : utils::reversed_view(dispatchers_)) {
+	for(auto& dispatcher : dispatchers_ | utils::views::reverse) {
 		dispatcher->fire(SDL_TOUCH_UP, dynamic_cast<widget&>(*dispatcher), position);
 	}
 }
 
 void sdl_event_handler::touch_down(const point& position)
 {
-	for(auto& dispatcher : utils::reversed_view(dispatchers_)) {
+	for(auto& dispatcher : dispatchers_ | utils::views::reverse) {
 		dispatcher->fire(SDL_TOUCH_DOWN, dynamic_cast<widget&>(*dispatcher), position);
 	}
 }
 
 void sdl_event_handler::touch_multi_gesture(const point& center, float dTheta, float dDist, uint8_t numFingers)
 {
-	for(auto& dispatcher : utils::reversed_view(dispatchers_)) {
+	for(auto& dispatcher : dispatchers_ | utils::views::reverse) {
 		dispatcher->fire(SDL_TOUCH_MULTI_GESTURE, dynamic_cast<widget&>(*dispatcher), center, dTheta, dDist, numFingers);
 	}
 }
@@ -787,7 +796,7 @@ void sdl_event_handler::text_editing(const std::string& unicode, int32_t start, 
 	}
 }
 
-bool sdl_event_handler::hotkey_pressed(const hotkey::hotkey_ptr key)
+bool sdl_event_handler::hotkey_pressed(const hotkey::hotkey_ptr& key)
 {
 	if(dispatcher* dispatcher = keyboard_dispatcher()) {
 		return dispatcher->execute_hotkey(hotkey::get_hotkey_command(key->get_command()).command);
@@ -993,6 +1002,42 @@ std::ostream& operator<<(std::ostream& stream, const ui_event event)
 		case RIGHT_BUTTON_DOUBLE_CLICK:
 			stream << "right button double click";
 			break;
+		case SDL_FORWARD_BUTTON_DOWN:
+			stream << "SDL forward/5 button down";
+			break;
+		case SDL_FORWARD_BUTTON_UP:
+			stream << "SDL forward/5 button up";
+			break;
+		case FORWARD_BUTTON_DOWN:
+			stream << "forward/5 button down";
+			break;
+		case FORWARD_BUTTON_UP:
+			stream << "forward/5 button up";
+			break;
+		case FORWARD_BUTTON_CLICK:
+			stream << "forward/5 button click";
+			break;
+		case FORWARD_BUTTON_DOUBLE_CLICK:
+			stream << "forward/5 button double click";
+			break;
+		case SDL_BACK_BUTTON_DOWN:
+			stream << "SDL back/4 button down";
+			break;
+		case SDL_BACK_BUTTON_UP:
+			stream << "SDL back/4 button up";
+			break;
+		case BACK_BUTTON_DOWN:
+			stream << "back/4 button down";
+			break;
+		case BACK_BUTTON_UP:
+			stream << "back/4 button up";
+			break;
+		case BACK_BUTTON_CLICK:
+			stream << "back/4 button click";
+			break;
+		case BACK_BUTTON_DOUBLE_CLICK:
+			stream << "back/4 button double click";
+			break;
 		case SDL_WHEEL_LEFT:
 			stream << "SDL wheel left";
 			break;
@@ -1070,21 +1115,9 @@ std::ostream& operator<<(std::ostream& stream, const ui_event event)
 
 } // namespace event
 
-std::vector<window*> open_window_stack {};
-
-void remove_from_window_stack(window* window)
-{
-	for(auto iter = open_window_stack.rbegin(); iter != open_window_stack.rend(); ++iter) {
-		if(*iter == window) {
-			open_window_stack.erase(std::next(iter).base());
-			break;
-		}
-	}
-}
-
 bool is_in_dialog()
 {
-	return !open_window_stack.empty();
+	return !event::get_all_dispatchers().empty();
 }
 
 } // namespace gui2

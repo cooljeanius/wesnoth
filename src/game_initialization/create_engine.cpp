@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013 - 2024
+	Copyright (C) 2013 - 2025
 	by Andrius Silinskas <silinskas.andrius@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -28,6 +28,7 @@
 #include "side_controller.hpp"
 #include "wml_exception.hpp"
 
+#include "serialization/chrono.hpp"
 #include "serialization/preprocessor.hpp"
 #include "serialization/parser.hpp"
 
@@ -233,6 +234,7 @@ create_engine::create_engine(saved_game& state)
 	, level_name_filter_()
 	, player_count_filter_(1)
 	, type_map_()
+	, preset_ids_()
 	, user_map_names_()
 	, user_scenario_names_()
 	, eras_()
@@ -250,6 +252,7 @@ create_engine::create_engine(saved_game& state)
 	type_map_.emplace(level_type::type::campaign, type_list());
 	type_map_.emplace(level_type::type::sp_campaign, type_list());
 	type_map_.emplace(level_type::type::random_map, type_list());
+	type_map_.emplace(level_type::type::preset, type_list());
 
 	DBG_MP << "restoring game config";
 
@@ -265,10 +268,10 @@ create_engine::create_engine(saved_game& state)
 	dependency_manager_.reset(new depcheck::manager(game_config_, state_.classification().is_multiplayer()));
 
 	// TODO: the editor dir is already configurable, is the preferences value
-	filesystem::get_files_in_dir(filesystem::get_user_data_dir() + "/editor/maps", &user_map_names_,
+	filesystem::get_files_in_dir(filesystem::get_legacy_editor_dir() + "/maps", &user_map_names_,
 		nullptr, filesystem::name_mode::FILE_NAME_ONLY);
 
-	filesystem::get_files_in_dir(filesystem::get_user_data_dir() + "/editor/scenarios", &user_scenario_names_,
+	filesystem::get_files_in_dir(filesystem::get_legacy_editor_dir() + "/scenarios", &user_scenario_names_,
 		nullptr, filesystem::name_mode::FILE_NAME_ONLY);
 
 	DBG_MP << "initializing all levels, eras and mods";
@@ -403,9 +406,15 @@ void create_engine::prepare_for_campaign(const std::string& difficulty)
 	state_.classification().campaign = current_level_data["id"].str();
 	state_.classification().campaign_name = current_level_data["name"].str();
 	state_.classification().abbrev = current_level_data["abbrev"].str();
+	if (current_level_data["type"] == "hybrid" && state_.classification().is_multiplayer()) {
+		// for hybrid campaigns in MP mode let's make a clarification in the abbrev
+		// so saves for sp and mp runs don't get confused
+		state_.classification().abbrev = state_.classification().abbrev + "-" + _("multiplayer^MP");
+	}
+
 
 	state_.classification().end_text = current_level_data["end_text"].str();
-	state_.classification().end_text_duration = current_level_data["end_text_duration"];
+	state_.classification().end_text_duration = chrono::parse_duration<std::chrono::milliseconds>(current_level_data["end_text_duration"]);
 	state_.classification().end_credits = current_level_data["end_credits"].to_bool(true);
 
 	state_.classification().campaign_define = current_level_data["define"].str();
@@ -480,6 +489,7 @@ void create_engine::prepare_for_other()
 	state_.set_scenario(current_level().data());
 	state_.mp_settings().hash = current_level().data().hash();
 	state_.check_require_scenario();
+	game_config_manager::get()->load_game_config_for_game(state_.classification(), state_.get_scenario_id());
 }
 
 void create_engine::apply_level_filter(const std::string& name)
@@ -539,6 +549,15 @@ void create_engine::set_current_level(const std::size_t index)
 
 void create_engine::set_current_era_index(const std::size_t index, bool force)
 {
+	current_era_index_ = index;
+
+	dependency_manager_->try_era_by_index(index, force);
+}
+
+void create_engine::set_current_era_id(const std::string& id, bool force)
+{
+	std::size_t index = dependency_manager_->get_era_index(id);
+
 	current_era_index_ = index;
 
 	dependency_manager_->try_era_by_index(index, force);
@@ -616,7 +635,7 @@ std::vector<create_engine::extras_metadata_ptr> create_engine::active_mods_data(
 	const std::vector<extras_metadata_ptr>& mods = get_const_extras_by_type(MP_EXTRA::MOD);
 
 	std::vector<extras_metadata_ptr> data_vec;
-	std::copy_if(mods.begin(), mods.end(), std::back_inserter(data_vec), [this](extras_metadata_ptr mod) {
+	std::copy_if(mods.begin(), mods.end(), std::back_inserter(data_vec), [this](const extras_metadata_ptr& mod) {
 		return dependency_manager_->is_modification_active(mod->id);
 	});
 
@@ -658,7 +677,7 @@ void create_engine::init_all_levels()
 			bool add_map = true;
 			std::unique_ptr<gamemap> map;
 			try {
-				map.reset(new gamemap(user_map_data["map_data"]));
+				map.reset(new gamemap(user_map_data["map_data"].str()));
 			} catch (const incorrect_map_format_error& e) {
 				// Set map content to nullptr, so that it fails can_launch_game()
 				map.reset(nullptr);
@@ -687,10 +706,14 @@ void create_engine::init_all_levels()
 		{
 			config data;
 			try {
-				read(data, *preprocess_file(filesystem::get_user_data_dir() + "/editor/scenarios/" + user_scenario_names_[i]));
+				// Only attempt to load .cfg files (.cfg extension is enforced in Editor save)
+				if (!filesystem::is_cfg(user_scenario_names_[i]))
+					continue;
+
+				data = io::read(*preprocess_file(filesystem::get_legacy_editor_dir() + "/scenarios/" + user_scenario_names_[i]));
 			} catch(const config::error & e) {
 				ERR_CF << "Caught a config error while parsing user made (editor) scenarios:\n" << e.message;
-				ERR_CF << "Skipping file: " << (filesystem::get_user_data_dir() + "/editor/scenarios/" + user_scenario_names_[i]);
+				ERR_CF << "Skipping file: " << (filesystem::get_legacy_editor_dir() + "/scenarios/" + user_scenario_names_[i]);
 				continue;
 			}
 
@@ -720,6 +743,16 @@ void create_engine::init_all_levels()
 			type_map_[level_type::type::random_map].games.emplace_back(new random_map(data));
 		} else {
 			type_map_[level_type::type::scenario].games.emplace_back(new scenario(data));
+		}
+	}
+
+	// Presets.
+	for(const config& preset : prefs::get().get_game_presets()) {
+		optional_const_config data = game_config_.find_child("multiplayer", "id", preset["scenario"].str());
+
+		if(data) {
+			type_map_[level_type::type::preset].games.emplace_back(new scenario(*data));
+			preset_ids_.emplace_back(preset["id"].to_int());
 		}
 	}
 

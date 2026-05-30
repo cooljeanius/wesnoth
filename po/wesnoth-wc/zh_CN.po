@@ -9,16 +9,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.wesnoth.org/\n"
-"POT-Creation-Date: 2024-04-10 17:05 UTC\n"
-"PO-Revision-Date: 2023-09-10 09:13+0800\n"
-"Last-Translator: CloudiDust <cloudidust@gmail.com>\n"
+"POT-Creation-Date: 2026-05-19 02:15 UTC\n"
+"PO-Revision-Date: 2025-12-14 13:55+0800\n"
+"Last-Translator: vimacs <vimacs.hacks@gmail.com>\n"
 "Language-Team: Wesnoth Simplified Chinese Team\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n>1;\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Poedit 3.8\n"
 
 #. [era]: id=world_conquest_era
 #: data/campaigns/World_Conquest/_main.cfg:41
@@ -110,14 +110,12 @@ msgstr "联盟"
 #. [world_conquest_data]
 #: data/campaigns/World_Conquest/era/factions/The_Alliance.cfg:16
 msgid "Young Ogre, Undead and Northerners"
-msgstr ""
+msgstr "幼年食人魔、亡灵和北陆之民"
 
 #. [multiplayer_side]: id=The_Artisans, type=random
 #: data/campaigns/World_Conquest/era/factions/The_Artisans.cfg:8
-#, fuzzy
-#| msgid "The Alliance"
 msgid "The Artisans"
-msgstr "联盟"
+msgstr "工匠"
 
 #. [multiplayer_side]: id=The Cult, type=random
 #: data/campaigns/World_Conquest/era/factions/The_Cult.cfg:6
@@ -127,14 +125,12 @@ msgstr "邪教"
 #. [world_conquest_data]
 #: data/campaigns/World_Conquest/era/factions/The_Cult.cfg:16
 msgid "Young Ogre, Drakes and Northerners"
-msgstr ""
+msgstr "幼年食人魔、 龙人和北陆之民"
 
 #. [multiplayer_side]: id=The_Defiance, type=random
 #: data/campaigns/World_Conquest/era/factions/The_Defiance.cfg:8
-#, fuzzy
-#| msgid "The Alliance"
 msgid "The Defiance"
-msgstr "联盟"
+msgstr "逆命联军"
 
 #. [multiplayer_side]: id=The Empire, type=random
 #: data/campaigns/World_Conquest/era/factions/The_Empire.cfg:7
@@ -149,7 +145,7 @@ msgstr "黑帮"
 #. [world_conquest_data]
 #: data/campaigns/World_Conquest/era/factions/The_Gang.cfg:16
 msgid "Dune Herbalist, Loyalists and Knalgan Alliance"
-msgstr ""
+msgstr "沙丘草药师、保王党人和纳尔迦联盟"
 
 #. [multiplayer_side]: id=The Guild, type=random
 #: data/campaigns/World_Conquest/era/factions/The_Guild.cfg:6
@@ -159,7 +155,7 @@ msgstr "公会"
 #. [world_conquest_data]
 #: data/campaigns/World_Conquest/era/factions/The_Guild.cfg:16
 msgid "Dune Soldier, Loyalists and Drakes"
-msgstr ""
+msgstr "沙丘士兵、保王党人和龙人"
 
 #. [multiplayer_side]: id=The Hand, type=random
 #: data/campaigns/World_Conquest/era/factions/The_Hand.cfg:6
@@ -167,9 +163,9 @@ msgid "The Hand"
 msgstr "神手"
 
 #. [world_conquest_data]
-#: data/campaigns/World_Conquest/era/factions/The_Hand.cfg:17
+#: data/campaigns/World_Conquest/era/factions/The_Hand.cfg:16
 msgid "Dune Rider, Knalgan Alliance and Drakes"
-msgstr ""
+msgstr "沙丘骑手、纳尔迦联盟和龙人"
 
 #. [multiplayer_side]: id=The Horde, type=random
 #: data/campaigns/World_Conquest/era/factions/The_Horde.cfg:6
@@ -179,14 +175,12 @@ msgstr "部落"
 #. [world_conquest_data]
 #: data/campaigns/World_Conquest/era/factions/The_Horde.cfg:16
 msgid "Dune Rider, Knalgan Alliance and Rebels"
-msgstr ""
+msgstr "沙丘骑手、纳尔迦联盟和忠勇义军"
 
 #. [multiplayer_side]: id=The_Marauders, type=random
 #: data/campaigns/World_Conquest/era/factions/The_Marauders.cfg:8
-#, fuzzy
-#| msgid "The Horde"
 msgid "The Marauders"
-msgstr "部落"
+msgstr "掠夺者"
 
 #. [multiplayer_side]: id=The Militia, type=random
 #: data/campaigns/World_Conquest/era/factions/The_Militia.cfg:6
@@ -196,7 +190,7 @@ msgstr "民兵"
 #. [world_conquest_data]
 #: data/campaigns/World_Conquest/era/factions/The_Militia.cfg:16
 msgid "Dune Rover, Undead and Loyalists"
-msgstr ""
+msgstr "沙丘浪游者、亡灵和保王党人"
 
 #. [multiplayer_side]: id=The Scourge, type=random
 #: data/campaigns/World_Conquest/era/factions/The_Scourge.cfg:7
@@ -304,7 +298,6 @@ msgstr "获取此物品"
 #. [button]: id=ok
 #: data/campaigns/World_Conquest/gui/invest_dialog.cfg:327
 #: data/campaigns/World_Conquest/gui/invest_tellunit.cfg:58
-#: data/campaigns/World_Conquest/gui/settings_dialog.cfg:236
 msgid "OK"
 msgstr "确定"
 
@@ -329,62 +322,67 @@ msgid "No"
 msgstr "否"
 
 #. [label]: id=title
-#: data/campaigns/World_Conquest/gui/settings_dialog.cfg:29
-msgid "Map Settings"
-msgstr "地图设置"
+#: data/campaigns/World_Conquest/gui/settings_dialog.cfg:48
+msgid "Map Generator Settings"
+msgstr "地图生成器设置"
 
-#. [label]
-#: data/campaigns/World_Conquest/gui/settings_dialog.cfg:50
-msgid " players: "
+#. [grid]
+#: data/campaigns/World_Conquest/gui/settings_dialog.cfg:57
+msgid "Players:"
 msgstr "玩家："
 
-#. [label]
-#: data/campaigns/World_Conquest/gui/settings_dialog.cfg:64
-msgid " scenario: "
+#. [grid]
+#: data/campaigns/World_Conquest/gui/settings_dialog.cfg:58
+msgid "Scenario:"
 msgstr "场景："
 
-#. [label]
-#: data/campaigns/World_Conquest/gui/settings_dialog.cfg:85
-msgid " map: "
+#. [grid]
+#: data/campaigns/World_Conquest/gui/settings_dialog.cfg:59
+msgid "Map:"
 msgstr "地图："
 
-#. [label]
-#: data/campaigns/World_Conquest/gui/settings_dialog.cfg:112
-msgid "map size"
-msgstr "地图尺寸"
+#. [grid]
+#: data/campaigns/World_Conquest/gui/settings_dialog.cfg:60
+msgid "Map Size:"
+msgstr "地图大小："
 
-#. [label]
-#: data/campaigns/World_Conquest/gui/settings_dialog.cfg:128
-msgid "village density"
-msgstr "村庄密度"
+#. [grid]
+#: data/campaigns/World_Conquest/gui/settings_dialog.cfg:61
+msgid "Village Density:"
+msgstr "村庄密度："
 
-#. [label]
-#: data/campaigns/World_Conquest/gui/settings_dialog.cfg:144
-msgid "keep size"
-msgstr "主楼尺寸"
+#. [grid]
+#: data/campaigns/World_Conquest/gui/settings_dialog.cfg:62
+msgid "Keep Size:"
+msgstr "主楼尺寸："
 
-#. [label]
-#: data/campaigns/World_Conquest/gui/settings_dialog.cfg:160
-msgid "iterations"
-msgstr "迭代次数"
+#. [grid]
+#: data/campaigns/World_Conquest/gui/settings_dialog.cfg:63
+msgid "Iterations:"
+msgstr "迭代次数："
 
-#. [label]
-#: data/campaigns/World_Conquest/gui/settings_dialog.cfg:176
-msgid "terrain factor"
-msgstr "地形因子"
+#. [grid]
+#: data/campaigns/World_Conquest/gui/settings_dialog.cfg:64
+msgid "Terrain Factor:"
+msgstr "地形因子："
 
-#. [label]
-#: data/campaigns/World_Conquest/gui/settings_dialog.cfg:192
-msgid "island factor"
-msgstr "岛屿因子"
+#. [grid]
+#: data/campaigns/World_Conquest/gui/settings_dialog.cfg:65
+msgid "Island Factor:"
+msgstr "岛屿因子："
 
-#. [label]
-#: data/campaigns/World_Conquest/gui/settings_dialog.cfg:208
-msgid "number of keeps"
-msgstr "主楼数量"
+#. [grid]
+#: data/campaigns/World_Conquest/gui/settings_dialog.cfg:66
+msgid "Number of Keeps:"
+msgstr "主楼数量："
+
+#. [button]: id=ok
+#: data/campaigns/World_Conquest/gui/settings_dialog.cfg:76
+msgid "Close"
+msgstr "关闭"
 
 #: data/campaigns/World_Conquest/lua/campaign/enemy_themed.lua:5
-msgid "$name|'s pet"
+msgid "$name|’s pet"
 msgstr "$name|的宠物"
 
 #: data/campaigns/World_Conquest/lua/campaign/objectives.lua:6
@@ -402,6 +400,11 @@ msgstr "失去你的首领和所有指挥官"
 #: data/campaigns/World_Conquest/lua/campaign/objectives.lua:10
 msgid "An in-game help is available: right-click on any empty hex."
 msgstr "游戏中有帮助可用：右击任意空六角格即可。"
+
+#. [lua]: carryover.remaining_gold_message
+#: data/campaigns/World_Conquest/lua/campaign/scenario.lua:87
+msgid "Average remaining gold: "
+msgstr "平均剩余金币数："
 
 #: data/campaigns/World_Conquest/lua/era/era.lua:12
 msgid "Tell me how my recruit works"
@@ -1907,47 +1910,47 @@ msgstr ""
 "Zzupde"
 
 #. [lua]: training.describe_training_level
-#: data/campaigns/World_Conquest/lua/game_mechanics/training.lua:111
+#: data/campaigns/World_Conquest/lua/game_mechanics/training.lua:114
 msgid "$name Training Maximum Level"
 msgstr "$name|训练最高级"
 
 #. [lua]: training.describe_training_level
-#: data/campaigns/World_Conquest/lua/game_mechanics/training.lua:115
+#: data/campaigns/World_Conquest/lua/game_mechanics/training.lua:118
 msgid "$name Training level $level"
 msgstr "$name|训练$level|级"
 
 #. [lua]: training.describe_training_level2
-#: data/campaigns/World_Conquest/lua/game_mechanics/training.lua:124
+#: data/campaigns/World_Conquest/lua/game_mechanics/training.lua:127
 msgid "Maximum Level"
 msgstr "最高级"
 
 #. [lua]: training.describe_training_level2
-#: data/campaigns/World_Conquest/lua/game_mechanics/training.lua:126
+#: data/campaigns/World_Conquest/lua/game_mechanics/training.lua:129
 msgid "level $level"
 msgstr "等级$level"
 
 #. [lua]: training.generate_message
-#: data/campaigns/World_Conquest/lua/game_mechanics/training.lua:143
+#: data/campaigns/World_Conquest/lua/game_mechanics/training.lua:146
 msgid "$chance| chance to $arrow $desc"
 msgstr "有$chance|机率将$arrow|$desc"
 
 #. [lua]: training.apply
-#: data/campaigns/World_Conquest/lua/game_mechanics/training.lua:219
+#: data/campaigns/World_Conquest/lua/game_mechanics/training.lua:216
 msgid "trained"
 msgstr "训练有素"
 
 #. [lua]: training.apply
-#: data/campaigns/World_Conquest/lua/game_mechanics/training.lua:220
+#: data/campaigns/World_Conquest/lua/game_mechanics/training.lua:217
 msgid "female^trained"
 msgstr "训练有素"
 
 #. [lua]: training.describe_bonus
-#: data/campaigns/World_Conquest/lua/game_mechanics/training.lua:272
+#: data/campaigns/World_Conquest/lua/game_mechanics/training.lua:268
 msgid "Nothing to learn here"
 msgstr "这里没什么可学的"
 
 #. [lua]: training.describe_bonus
-#: data/campaigns/World_Conquest/lua/game_mechanics/training.lua:274
+#: data/campaigns/World_Conquest/lua/game_mechanics/training.lua:270
 msgid "From $level_before to $level_after"
 msgstr "从$level_before|到$level_after"
 
@@ -2237,14 +2240,10 @@ msgstr "酷。我们的空中力量总是越强越好。"
 
 #. a Drake Fighter joins a player's side; they will have their standard weapon (a "war blade" in English)
 #: data/campaigns/World_Conquest/lua/game_mechanics/unittypedata.lua:252
-#, fuzzy
-#| msgid ""
-#| "The ancient spirits tell me my destiny lies with yours. My sword is at "
-#| "your command."
 msgid ""
 "The ancient spirits tell me my destiny lies with yours. My blade is at your "
 "command."
-msgstr "古老灵魂告诉我，我的命运与你同在。我的剑听从你的指挥。"
+msgstr "古老灵魂告诉我，我的命运与你同在。我的战刃听从你的指挥。"
 
 #. a Drake Clasher joins a player's side
 #: data/campaigns/World_Conquest/lua/game_mechanics/unittypedata.lua:258
@@ -2563,16 +2562,6 @@ msgstr "派系"
 
 #. [lua]: preshow
 #: data/campaigns/World_Conquest/lua/game_mechanics/wocopedia/help.lua:44
-#, fuzzy
-#| msgid ""
-#| "The World Conquest II era consists of factions that are built from pairs "
-#| "of mainline factions. One faction will have a healer available (Drakes, "
-#| "Rebels and Loyalists) and one will not (Orcs, Dwarves and Undead). The "
-#| "recruit list is also organized in pairs so that sometimes you will have "
-#| "to recruit a different unit before you can recruit the units that you "
-#| "want. The available heroes, deserters, and random leaders also depend on "
-#| "your factions; the items you can get do not depend on the faction you "
-#| "choose."
 msgid ""
 "The World Conquest era consists of factions that are built from pairs of "
 "mainline factions. One faction will have a healer available (Drakes, "
@@ -2582,10 +2571,11 @@ msgid ""
 "The available heroes, deserters, and random leaders also depend on your "
 "factions; the items you can get do not depend on the faction you choose."
 msgstr ""
-"世界征服II时代包括由成对的主线派系组成的派系。其中一个派系会有医者可用（龙"
-"人、义军和保王党人），另一个则没有（兽人、矮人和亡灵）。征募名单也是成对组织"
-"的，所以有时，在征募想要的单位之前，你必须先征募一个不同的单位。可用的英雄、"
-"逃兵和随机首领也取决于你的派系。而你能得到的物品则不取决于你选择的派系。"
+"世界征服时代包括由成对的主线派系组成的派系。其中一个派系会有医者可用（龙人、"
+"沙丘游民、义军和保王党人），另一个则没有（兽人、矮人和亡灵）。征募名单也是成"
+"对组织的，所以有时，在征募想要的单位之前，你必须先征募一个不同的单位。可用的"
+"英雄、逃兵和随机首领也取决于你的派系。而你能得到的物品则不取决于你选择的派"
+"系。"
 
 #. [lua]: type_icon
 #: data/campaigns/World_Conquest/lua/game_mechanics/wocopedia/help.lua:169
@@ -2599,18 +2589,18 @@ msgstr "（玩家不可使用）"
 
 #. [lua]: wc_ii_generate_scenario
 #. [lua]: wct_store_possible_encampment_ford
-#: data/campaigns/World_Conquest/lua/map/main.lua:126
+#: data/campaigns/World_Conquest/lua/map/main.lua:125
 #: data/campaigns/World_Conquest/lua/map/postgeneration/1A_Start.lua:146
 msgid "Start"
 msgstr "开始"
 
 #. [lua]: wc_ii_generate_scenario
-#: data/campaigns/World_Conquest/lua/map/main.lua:128
-msgid "Scenario"
-msgstr "场景"
+#: data/campaigns/World_Conquest/lua/map/main.lua:127
+msgid "Scenario "
+msgstr "场景 "
 
 #. [lua]: wc_ii_generate_scenario
-#: data/campaigns/World_Conquest/lua/map/main.lua:130
+#: data/campaigns/World_Conquest/lua/map/main.lua:129
 msgid "Final Battle"
 msgstr "决战"
 
@@ -2888,7 +2878,7 @@ msgid "Enemies"
 msgstr "敌军"
 
 #. [lua]: add_player_side
-#: data/campaigns/World_Conquest/lua/map/scenario_utils/side_definitions.lua:59
+#: data/campaigns/World_Conquest/lua/map/scenario_utils/side_definitions.lua:61
 msgid "Allies"
 msgstr "盟军"
 
@@ -2904,7 +2894,7 @@ msgstr "韧甲"
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:9
 msgid "blade/impact/pierce: up to 10% resistances, steadfast"
-msgstr ""
+msgstr "刃器/冲击/穿刺：高达10%抗性，坚定"
 
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:10
@@ -2923,7 +2913,7 @@ msgstr "刺客指环"
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:30
 msgid "melee: backstab"
-msgstr ""
+msgstr "近战：背刺"
 
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:31
@@ -2967,7 +2957,7 @@ msgstr "牛黄"
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:82
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:93
 msgid "fearless, undead, healthy, tenacity"
-msgstr ""
+msgstr "无惧，亡灵，康健，顽强"
 
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:83
@@ -2986,7 +2976,7 @@ msgstr "血戒"
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:138
 msgid "melee: drains"
-msgstr ""
+msgstr "近战：吸血"
 
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:139
@@ -3002,10 +2992,8 @@ msgstr "残忍之刺"
 
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:157
-#, fuzzy
-#| msgid "melee: optional charge"
 msgid "melee: charge"
-msgstr "近战：可选择冲锋"
+msgstr "近战：冲锋"
 
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:158
@@ -3025,7 +3013,7 @@ msgstr "被诅咒的生命象征"
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:176
 msgid "ranged: drains"
-msgstr ""
+msgstr "远战：吸血"
 
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:177
@@ -3040,10 +3028,8 @@ msgstr "鹰眼长弓"
 
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:195
-#, fuzzy
-#| msgid "$range|: arcane and +25% damage"
 msgid "ranged: marksman and +25% damage"
-msgstr "$range|：奥术且+25%伤害"
+msgstr "远战：精准及+25%伤害"
 
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:196
@@ -3060,10 +3046,8 @@ msgstr "禁忌法书"
 
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:219
-#, fuzzy
-#| msgid "melee: optional charge"
 msgid "melee: plague"
-msgstr "近战：可选择冲锋"
+msgstr "近战：瘟疫"
 
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:220
@@ -3094,8 +3078,14 @@ msgstr ""
 
 #. [leadership]: id=forcefield
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:249
-#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:250
 msgid "forcefield"
+msgstr "力场"
+
+#. [leadership]: id=forcefield
+#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:250
+#, fuzzy
+#| msgid "forcefield"
+msgid "female^forcefield"
 msgstr "力场"
 
 #. [leadership]: id=forcefield
@@ -3111,7 +3101,7 @@ msgstr "食尸妖鬼精华"
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:268
 msgid "feeding, +3 HP"
-msgstr ""
+msgstr "食尸，+3生命"
 
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:269
@@ -3131,7 +3121,7 @@ msgstr "火之心"
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:292
 msgid "melee: fire and +25% damage, +30 resistance vs fire"
-msgstr ""
+msgstr "近战：火焰及+25%伤害，+30对火焰的抗性"
 
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:293
@@ -3150,7 +3140,7 @@ msgstr "先驱者铠甲"
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:312
 msgid "illuminates, lawful, heals +4, firststrike"
-msgstr ""
+msgstr "照明，守序，疗伤+4，先制"
 
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:313
@@ -3170,7 +3160,7 @@ msgstr "圣水"
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:350
 msgid "melee: arcane and +25% damage, +30 resistance vs arcane"
-msgstr ""
+msgstr "近战：奥术及+25%伤害，+30对奥术的抗性"
 
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:351
@@ -3189,18 +3179,14 @@ msgstr "冰弓"
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:374
 msgid "19-1 ranged-cold slows"
-msgstr ""
+msgstr "19-1 远程-冰寒 减速"
 
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:375
-#, fuzzy
-#| msgid ""
-#| "Draw this magical bow summon an ice arrow that will freeze and slow its "
-#| "target upon hit."
 msgid ""
 "Draw this magical bow to summon an ice arrow that will freeze and slow its "
 "target upon hit."
-msgstr "拉开这把神奇的弓，便能召唤出一支冰箭，命中后会冻结目标并减缓其速度。"
+msgstr "拉开这把神奇的弓以召唤出一支冰箭，命中后会冻结目标并减缓其速度。"
 
 #. [effect]: type=cold
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:380
@@ -3216,7 +3202,7 @@ msgstr "药草"
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:420
 #: data/campaigns/World_Conquest/resources/strings/mainline.cfg:5
 msgid "heals +8, cures"
-msgstr ""
+msgstr "疗伤 +8，疗毒"
 
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:421
@@ -3232,12 +3218,10 @@ msgstr "奇妙混合物"
 
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:441
-#, fuzzy
-#| msgid "no undead^consumed by a living being:"
 msgid ""
 "no undead^consumed by a living being: +1 damage and +1 moves and -20% XP to "
 "advance"
-msgstr "被活物吃掉："
+msgstr "被活物吃掉：+1伤害，+1移动，且升级-20%经验"
 
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:442
@@ -3255,7 +3239,7 @@ msgstr "毒液药膏"
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:471
 msgid "blade/pierce: poison and +20% damage"
-msgstr ""
+msgstr "刃器/穿刺：毒素和 +10% 伤害"
 
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:472
@@ -3274,7 +3258,7 @@ msgstr "霜冻指环"
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:491
 msgid "melee: cold and slows"
-msgstr ""
+msgstr "近战：冰寒和减速"
 
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:492
@@ -3294,7 +3278,7 @@ msgstr "力量指环"
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:511
 msgid "arcane/cold/fire: disengage"
-msgstr ""
+msgstr "奥术/冰寒/火焰：脱战"
 
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:512
@@ -3312,10 +3296,8 @@ msgstr "年长树人的根"
 
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:528
-#, fuzzy
-#| msgid "$range|: arcane and +25% damage"
 msgid "impact: +1 strike and +2 damage"
-msgstr "$range|：奥术且+25%伤害"
+msgstr "冲击：+1攻击次数并+2伤害"
 
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:529
@@ -3331,7 +3313,7 @@ msgstr "符文剑"
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:545
 msgid "melee: magical"
-msgstr ""
+msgstr "近战：魔法"
 
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:546
@@ -3348,7 +3330,7 @@ msgstr "光芒之杖"
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:564
 msgid "11-3 ranged-arcane magical"
-msgstr ""
+msgstr "11-3 远程-奥术 魔法"
 
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:565
@@ -3368,7 +3350,7 @@ msgstr "风暴使者"
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:610
 msgid "melee: fury"
-msgstr ""
+msgstr "近战：狂怒"
 
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:611
@@ -3381,9 +3363,15 @@ msgstr ""
 
 #. [berserk]: id=wct_fury
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:624
-#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:625
 msgid "fury"
 msgstr "狂怒"
+
+#. [berserk]: id=wct_fury
+#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:625
+#, fuzzy
+#| msgid "female^heroic"
+msgid "female^fury"
+msgstr "英雄"
 
 #. [berserk]: id=wct_fury
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:626
@@ -3402,7 +3390,7 @@ msgstr "风仙子弓"
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:635
 msgid "ranged-blade/impact/pierce: +60% strikes and +1 damage"
-msgstr ""
+msgstr "远程-刃器/冲击/穿刺：+60% 打击次数和 +1 伤害"
 
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:636
@@ -3422,7 +3410,7 @@ msgstr "恐怖伪装"
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:653
 msgid "darkness, chaotic, corruption, distract"
-msgstr ""
+msgstr "黑暗，混沌，腐化，分心"
 
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:654
@@ -3433,8 +3421,14 @@ msgstr "这件被诅咒的外装会散布黑暗之痕迹，伤害那些过于接
 
 #. [illuminates]: id=darkness
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:674
-#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:675
 msgid "darkness"
+msgstr "黑暗"
+
+#. [illuminates]: id=darkness
+#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:675
+#, fuzzy
+#| msgid "darkness"
+msgid "female^darkness"
 msgstr "黑暗"
 
 #. [illuminates]: id=darkness
@@ -3449,8 +3443,14 @@ msgstr ""
 
 #. [dummy]: id=wc2_corruption
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:681
-#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:682
 msgid "corruption"
+msgstr "腐蚀"
+
+#. [dummy]: id=wc2_corruption
+#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:682
+#, fuzzy
+#| msgid "corruption"
+msgid "female^corruption"
 msgstr "腐蚀"
 
 #. [dummy]: id=wc2_corruption
@@ -3480,10 +3480,8 @@ msgstr "秘密典籍"
 
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:725
-#, fuzzy
-#| msgid "XP to advance"
 msgid "-50% XP to advance"
-msgstr "经验值后升级"
+msgstr "-50%升级所需经验"
 
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:726
@@ -3498,7 +3496,7 @@ msgstr "风暴三叉戟"
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:736
 msgid "17-2 ranged-fire magical"
-msgstr ""
+msgstr "17-2 远程-火焰 魔法"
 
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:737
@@ -3530,7 +3528,7 @@ msgstr "战旗"
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:774
 msgid "adjacent allies do 20% more damage"
-msgstr "相邻友军的伤害增加20%。"
+msgstr "相邻友军的伤害增加20%"
 
 #. [artifact]
 #: data/campaigns/World_Conquest/resources/data/artifacts.cfg:775
@@ -3540,13 +3538,19 @@ msgid ""
 msgstr "这面鼓舞人心的旗帜使持旗者的友军集结开战，使周围的友军单位伤害上升。"
 
 #. [leadership]: id=banner
-#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:785
-#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:786
+#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:784
 msgid "banner"
 msgstr "战旗"
 
 #. [leadership]: id=banner
-#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:787
+#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:785
+#, fuzzy
+#| msgid "female^trained"
+msgid "female^banner"
+msgstr "训练有素"
+
+#. [leadership]: id=banner
+#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:786
 msgid ""
 "This unit can lead ~allied~ units that are next to it, making them fight "
 "better. Adjacent allied units will do 20% more damage. This is cumulative "
@@ -3556,19 +3560,19 @@ msgstr ""
 "20%。此能力效果可与领导能力效果累积。"
 
 #. [artifact]
-#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:798
+#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:797
 msgid "Winged scepter"
 msgstr "有翼权杖"
 
 #. [artifact]
-#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:800
+#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:799
 msgid ""
 "Full movement and up to 50% defense in all terrains but cave or mushroom "
 "grove."
 msgstr "在除洞穴或蘑菇林以外的所有地形上都可以全速移动，并获得最高50%的防御。"
 
 #. [artifact]
-#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:801
+#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:800
 msgid ""
 "This wondrous rod imparts the user the ability to soar through the skies, "
 "making it a breeze to move through most terrain. Units that can already fly "
@@ -3578,34 +3582,34 @@ msgstr ""
 "本就能飞行的单位，其防御将提升。"
 
 #. [artifact]
-#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:841
+#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:840
 msgid "Winter’s bloom"
 msgstr "冬日繁花"
 
 #. [artifact]
-#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:843
+#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:842
 msgid "+15 HP, up to 20% resistance vs cold"
-msgstr ""
+msgstr "+15 生命，高达 20% 对冰寒的抗性"
 
 #. [artifact]
-#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:844
+#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:843
 msgid ""
 "This delicate blossom rarely found in snowy peaks, is strongly appreciated "
 "for its beneficial effects on health."
 msgstr "这精致的花簇很少在雪峰上出现，它有益健康，因此很受重视。"
 
 #. [artifact]
-#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:859
+#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:858
 msgid "Zephyr cloak"
 msgstr "西风斗篷"
 
 #. [artifact]
-#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:861
+#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:860
 msgid "skirmisher, ambush, nightstalk, +2 moves"
-msgstr ""
+msgstr "散兵，伏击，夜遁，+2 移动"
 
 #. [artifact]
-#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:862
+#: data/campaigns/World_Conquest/resources/data/artifacts.cfg:861
 msgid ""
 "This lightweight cloak renders its wearer almost invisible in the darkness "
 "and lets them move with fluid grace past enemies with ease."
@@ -3628,19 +3632,12 @@ msgstr ""
 "还是能克服的。"
 
 #. [trainer]: type=Duelist
-#: data/campaigns/World_Conquest/resources/data/training.cfg:59
+#: data/campaigns/World_Conquest/resources/data/training.cfg:60
 msgid "Movement"
 msgstr "移动"
 
 #. [trainer]: type=Duelist
-#: data/campaigns/World_Conquest/resources/data/training.cfg:60
-#, fuzzy
-#| msgid ""
-#| "What, you want me to join the fight? Quite out of the question, old boy! "
-#| "I’m afraid battlefields just aren’t my scene - no drama, no style, no "
-#| "romance! No finesse at all! You probably wouldn’t understand, so let me "
-#| "show you. I’ll teach you how to break out of those dreary marching "
-#| "formations and step light as a feather!"
+#: data/campaigns/World_Conquest/resources/data/training.cfg:61
 msgid ""
 "What, you want me to join the fight? Quite out of the question, old boy! I’m "
 "afraid battlefields just aren’t my scene — no drama, no style, no romance! "
@@ -3653,12 +3650,12 @@ msgstr ""
 "何弃用那些沉闷的行军队形，像羽毛一样轻盈迈步！"
 
 #. [trainer]: type=Orcish Warrior
-#: data/campaigns/World_Conquest/resources/data/training.cfg:77
+#: data/campaigns/World_Conquest/resources/data/training.cfg:78
 msgid "Melee Combat"
 msgstr "近身战斗"
 
 #. [trainer]: type=Orcish Warrior
-#: data/campaigns/World_Conquest/resources/data/training.cfg:78
+#: data/campaigns/World_Conquest/resources/data/training.cfg:79
 msgid ""
 "Looks like you could use some help. A grizzled old veteran like me won’t be "
 "much use on the field, but I bet I can teach your men a thing or two about "
@@ -3668,17 +3665,17 @@ msgstr ""
 "士兵一些剑术。"
 
 #. [chance]
-#: data/campaigns/World_Conquest/resources/data/training.cfg:102
+#: data/campaigns/World_Conquest/resources/data/training.cfg:103
 msgid "melee: +1 strikes"
-msgstr ""
+msgstr "近战：+1攻击次数"
 
 #. [trainer]: type=Elvish Ranger
-#: data/campaigns/World_Conquest/resources/data/training.cfg:120
+#: data/campaigns/World_Conquest/resources/data/training.cfg:121
 msgid "Ranger Tactics"
 msgstr "游侠战术"
 
 #. [trainer]: type=Elvish Ranger
-#: data/campaigns/World_Conquest/resources/data/training.cfg:121
+#: data/campaigns/World_Conquest/resources/data/training.cfg:122
 msgid ""
 "I sympathize with your cause, but this is not my battle. I will not fight "
 "for you, but I will gladly instruct your recruits in the art of the ranger, "
@@ -3688,12 +3685,12 @@ msgstr ""
 "游侠的技艺，让他们能更好地独立作战。"
 
 #. [trainer]: type=Drake Flare
-#: data/campaigns/World_Conquest/resources/data/training.cfg:159
+#: data/campaigns/World_Conquest/resources/data/training.cfg:160
 msgid "Combat Experience"
 msgstr "战斗经验"
 
 #. [trainer]: type=Drake Flare
-#: data/campaigns/World_Conquest/resources/data/training.cfg:160
+#: data/campaigns/World_Conquest/resources/data/training.cfg:161
 msgid ""
 " Join the battle? Nay, lads, my talents would be wasted on the frontlines. "
 "Give me some raw recruits to work with, though, and I’ll whip ’em into shape "
@@ -3705,12 +3702,12 @@ msgstr ""
 "点儿。"
 
 #. [trainer]: type=Dwarvish Runesmith
-#: data/campaigns/World_Conquest/resources/data/training.cfg:186
+#: data/campaigns/World_Conquest/resources/data/training.cfg:187
 msgid "Health"
 msgstr "健康"
 
 #. [trainer]: type=Dwarvish Runesmith
-#: data/campaigns/World_Conquest/resources/data/training.cfg:187
+#: data/campaigns/World_Conquest/resources/data/training.cfg:188
 msgid ""
 "Looks like a pretty grim fight you’ve got up ahead. I’ve got too many "
 "troubles of my own to join in, but stick about a while and I’ll put some "
@@ -3722,128 +3719,138 @@ msgstr ""
 "续前进了！"
 
 #. [chance]
-#: data/campaigns/World_Conquest/resources/data/training.cfg:220
-#, fuzzy
-#| msgid "disengage"
+#: data/campaigns/World_Conquest/resources/data/training.cfg:221
 msgid "ranged: disengage"
-msgstr "脱战"
+msgstr "远战：脱战"
 
 #. [dummy]: id=wc2_disengage
-#: data/campaigns/World_Conquest/resources/data/training.cfg:234
+#: data/campaigns/World_Conquest/resources/data/training.cfg:235
 msgid "disengage"
 msgstr "脱战"
 
 #. [dummy]: id=wc2_disengage
-#: data/campaigns/World_Conquest/resources/data/training.cfg:235
+#: data/campaigns/World_Conquest/resources/data/training.cfg:236
 msgid ""
 "Attack with this weapon gives unit 1 moves at end of combat (unit doesn’t "
 "gain a new attack)."
 msgstr "使用此武器发起攻击，在战斗结束后，单位可以移动1次（但不可再次攻击）。"
 
 #. [chance]
-#: data/campaigns/World_Conquest/resources/data/training.cfg:246
+#: data/campaigns/World_Conquest/resources/data/training.cfg:247
 msgid "Full movement on turn recruited or recalled"
-msgstr "在被征募或召回的回合可全速移动。"
+msgstr "在被征募或召回的回合可全速移动"
 
 #. [chance]
-#: data/campaigns/World_Conquest/resources/data/training.cfg:312
+#: data/campaigns/World_Conquest/resources/data/training.cfg:313
 msgid "$range|: $special|"
 msgstr "$range|：$special|"
 
 #. [chance]
 #. [skirmisher]: id=distract
-#: data/campaigns/World_Conquest/resources/data/training.cfg:377
-#: data/campaigns/World_Conquest/resources/data/training.cfg:402
+#: data/campaigns/World_Conquest/resources/data/training.cfg:378
 #: data/campaigns/World_Conquest/resources/data/training.cfg:403
 msgid "distract"
 msgstr "分神"
 
 #. [chance]
 #. [resistance]: id=tenacity
-#: data/campaigns/World_Conquest/resources/data/training.cfg:389
-#: data/campaigns/World_Conquest/resources/data/training.cfg:426
+#: data/campaigns/World_Conquest/resources/data/training.cfg:390
 #: data/campaigns/World_Conquest/resources/data/training.cfg:427
 msgid "tenacity"
 msgstr "顽强"
 
 #. [skirmisher]: id=distract
 #: data/campaigns/World_Conquest/resources/data/training.cfg:404
+#, fuzzy
+#| msgid "distract"
+msgid "female^distract"
+msgstr "分神"
+
+#. [skirmisher]: id=distract
+#: data/campaigns/World_Conquest/resources/data/training.cfg:405
 msgid "Allied units ignore enemy zones of control adjacent to this unit."
 msgstr "友方单位无视与此单位相邻的敌方控制区域。"
 
 #. [resistance]: id=tenacity
 #: data/campaigns/World_Conquest/resources/data/training.cfg:428
+#, fuzzy
+#| msgid "female^legendary"
+msgid "female^tenacity"
+msgstr "传奇"
+
+#. [resistance]: id=tenacity
+#: data/campaigns/World_Conquest/resources/data/training.cfg:429
 msgid "This unit’s vulnerabilities are halved when defending."
 msgstr "防御时，此单位的脆弱程度减半。"
 
 #. [chance]
-#: data/campaigns/World_Conquest/resources/data/training.cfg:468
+#: data/campaigns/World_Conquest/resources/data/training.cfg:469
 msgid "heals +4, cures"
-msgstr ""
+msgstr "疗伤 +4，疗毒"
 
 #. [chance]
-#: data/campaigns/World_Conquest/resources/data/training.cfg:544
+#: data/campaigns/World_Conquest/resources/data/training.cfg:545
 msgid "+$boost| moves"
 msgstr "+$boost|行动次数"
 
 #. [chance]
-#: data/campaigns/World_Conquest/resources/data/training.cfg:558
+#: data/campaigns/World_Conquest/resources/data/training.cfg:559
 msgid "$range|: +$boost| damage"
 msgstr "$range|：+$boost|伤害"
 
 #. [chance]
-#: data/campaigns/World_Conquest/resources/data/training.cfg:574
+#: data/campaigns/World_Conquest/resources/data/training.cfg:575
 msgid "$range|: +1 damage per level"
 msgstr "$range|：每级+1伤害"
 
 #. [chance]
-#: data/campaigns/World_Conquest/resources/data/training.cfg:590
+#: data/campaigns/World_Conquest/resources/data/training.cfg:591
 msgid "+$hitpoints| hitpoints"
 msgstr "+$hitpoints|生命值"
 
 #. [chance]
-#: data/campaigns/World_Conquest/resources/data/training.cfg:605
+#: data/campaigns/World_Conquest/resources/data/training.cfg:606
 msgid "+$hitpoints| hitpoints per level"
 msgstr "每级+$hitpoints|生命值"
 
 #. [chance]
-#: data/campaigns/World_Conquest/resources/data/training.cfg:621
+#: data/campaigns/World_Conquest/resources/data/training.cfg:622
 msgid "$value| XP to advance"
 msgstr "获得$value|经验值后升级"
 
 #. [chance]
-#: data/campaigns/World_Conquest/resources/data/training.cfg:635
+#: data/campaigns/World_Conquest/resources/data/training.cfg:636
 msgid "free upkeep"
 msgstr "免费维护"
 
 #. [chance]
-#: data/campaigns/World_Conquest/resources/data/training.cfg:645
+#: data/campaigns/World_Conquest/resources/data/training.cfg:646
 msgid "Village/Castle: +5 defense"
 msgstr "村庄/城堡：+5防御"
 
 #. [chance]
-#: data/campaigns/World_Conquest/resources/data/training.cfg:677
+#: data/campaigns/World_Conquest/resources/data/training.cfg:678
 msgid ""
 "$terrain|: +$def| defense and full movement, +$res| resistance vs $dmg_type|"
 msgstr "$terrain|：+$def|防御并可全速移动，+$res|对$dmg_type|的抗性"
 
 #. [chance]
-#: data/campaigns/World_Conquest/resources/data/training.cfg:706
+#: data/campaigns/World_Conquest/resources/data/training.cfg:707
 msgid "$terrain|: +10 defense and full movement"
 msgstr "$terrain|：+10防御并可全速移动"
 
 #. [chance]
-#: data/campaigns/World_Conquest/resources/data/training.cfg:717
+#: data/campaigns/World_Conquest/resources/data/training.cfg:718
 msgid "+moves defense"
 msgstr "+相当于行动次数的防御"
 
 #. [chance]
-#: data/campaigns/World_Conquest/resources/data/training.cfg:727
+#: data/campaigns/World_Conquest/resources/data/training.cfg:728
 msgid "melee: optional charge"
 msgstr "近战：可选择冲锋"
 
 #. [chance]
-#: data/campaigns/World_Conquest/resources/data/training.cfg:752
+#: data/campaigns/World_Conquest/resources/data/training.cfg:753
 msgid "$range|: arcane and +25% damage"
 msgstr "$range|：奥术且+25%伤害"
 
@@ -3860,17 +3867,26 @@ msgid "World Conquest 3p"
 msgstr "世界征服 3p"
 
 #: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:14
-#, fuzzy
-#| msgid "World Conquest 1p"
 msgid "World Conquest 4p"
-msgstr "世界征服 1p"
+msgstr "世界征服 4p"
 
 #: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:17
-#, fuzzy
-#| msgid ""
-#| "A randomly generated campaign for 1 player. It has 6 level of "
-#| "difficulties.\n"
-#| "(Expert level, 5 scenarios.)"
+msgid "WC1p"
+msgstr "WC1p"
+
+#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:20
+msgid "WC2p"
+msgstr "WC2p"
+
+#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:23
+msgid "WC3p"
+msgstr "WC3p"
+
+#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:26
+msgid "WC4p"
+msgstr "WC4p"
+
+#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:29
 msgid ""
 "A randomly generated campaign for 1 player. It has 6 levels of difficulty.\n"
 "(Expert level, 5 scenarios.)"
@@ -3878,12 +3894,7 @@ msgstr ""
 "一个随机生成的单人战役。有6个级别的难度。\n"
 "（专家级别，5幕场景。）"
 
-#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:21
-#, fuzzy
-#| msgid ""
-#| "A randomly generated cooperative campaign for 2 players. It has 6 level "
-#| "of difficulties.\n"
-#| "(Expert level, 5 scenarios.)"
+#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:33
 msgid ""
 "A randomly generated cooperative campaign for 2 players. It has 6 levels of "
 "difficulty.\n"
@@ -3892,12 +3903,7 @@ msgstr ""
 "一个随机生成的2人合作战役。有6个级别的难度。\n"
 "（专家级别，5幕场景。）"
 
-#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:25
-#, fuzzy
-#| msgid ""
-#| "A randomly generated cooperative campaign for 3 players. It has 6 level "
-#| "of difficulties.\n"
-#| "(Expert level, 5 scenarios.)"
+#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:37
 msgid ""
 "A randomly generated cooperative campaign for 3 players. It has 6 levels of "
 "difficulty.\n"
@@ -3906,186 +3912,96 @@ msgstr ""
 "一个随机生成的3人合作战役。有6个级别的难度。\n"
 "（专家级别，5幕场景。）"
 
-#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:29
-#, fuzzy
-#| msgid ""
-#| "A randomly generated cooperative campaign for 2 players. It has 6 level "
-#| "of difficulties.\n"
-#| "(Expert level, 5 scenarios.)"
+#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:41
 msgid ""
 "A randomly generated cooperative campaign for 4 players. It has 6 levels of "
 "difficulty.\n"
 "(Expert level, 5 scenarios.)"
 msgstr ""
-"一个随机生成的2人合作战役。有6个级别的难度。\n"
+"一个随机生成的4人合作战役。有6个级别的难度。\n"
 "（专家级别，5幕场景。）"
 
 #. [campaign]: id=WC_II_{PLAYERS}p, description={WC_II_CAMPAIGN_DESC_{PLAYERS}P}, type=mp
-#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:104
-msgid "WC"
-msgstr "WC"
-
-#. [campaign]: id=WC_II_{PLAYERS}p, description={WC_II_CAMPAIGN_DESC_{PLAYERS}P}, type=mp
-#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:105
+#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:117
 msgid "Beginner"
-msgstr ""
+msgstr "新手"
 
 #. [campaign]: id=WC_II_{PLAYERS}p, description={WC_II_CAMPAIGN_DESC_{PLAYERS}P}, type=mp
-#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:105
+#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:117
 msgid "Peasant"
-msgstr ""
+msgstr "农民"
 
 #. [campaign]: id=WC_II_{PLAYERS}p, description={WC_II_CAMPAIGN_DESC_{PLAYERS}P}, type=mp
-#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:106
+#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:118
 msgid "Easy"
-msgstr ""
+msgstr "简单"
 
 #. [campaign]: id=WC_II_{PLAYERS}p, description={WC_II_CAMPAIGN_DESC_{PLAYERS}P}, type=mp
-#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:106
+#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:118
 msgid "Sergeant"
-msgstr ""
+msgstr "军士"
 
 #. [campaign]: id=WC_II_{PLAYERS}p, description={WC_II_CAMPAIGN_DESC_{PLAYERS}P}, type=mp
-#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:107
+#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:119
 msgid "Lieutenant"
-msgstr ""
+msgstr "尉官"
 
 #. [campaign]: id=WC_II_{PLAYERS}p, description={WC_II_CAMPAIGN_DESC_{PLAYERS}P}, type=mp
-#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:107
+#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:119
 msgid "Medium"
-msgstr ""
+msgstr "中等"
 
 #. [campaign]: id=WC_II_{PLAYERS}p, description={WC_II_CAMPAIGN_DESC_{PLAYERS}P}, type=mp
-#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:108
+#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:120
 msgid "General"
-msgstr ""
+msgstr "将军"
 
 #. [campaign]: id=WC_II_{PLAYERS}p, description={WC_II_CAMPAIGN_DESC_{PLAYERS}P}, type=mp
-#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:108
+#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:120
 msgid "Hard"
-msgstr ""
+msgstr "困难"
 
 #. [campaign]: id=WC_II_{PLAYERS}p, description={WC_II_CAMPAIGN_DESC_{PLAYERS}P}, type=mp
-#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:109
+#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:121
 msgid "Challenging"
-msgstr ""
+msgstr "挑战"
 
 #. [campaign]: id=WC_II_{PLAYERS}p, description={WC_II_CAMPAIGN_DESC_{PLAYERS}P}, type=mp
-#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:109
-#, fuzzy
-#| msgid "Granary"
+#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:121
 msgid "Grand Marshal"
-msgstr "粮仓"
+msgstr "大元帅"
 
 #. [campaign]: id=WC_II_{PLAYERS}p, description={WC_II_CAMPAIGN_DESC_{PLAYERS}P}, type=mp
-#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:110
-#, fuzzy
-#| msgid "expert"
+#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:122
 msgid "Expert"
 msgstr "专家"
 
 #. [campaign]: id=WC_II_{PLAYERS}p, description={WC_II_CAMPAIGN_DESC_{PLAYERS}P}, type=mp
-#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:110
+#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:122
 msgid "Nightmare"
-msgstr ""
+msgstr "噩梦"
 
 #. [about]
-#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:113
+#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:125
 msgid "Campaign Design"
-msgstr ""
+msgstr "战役设计"
 
 #. [about]
-#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:120
+#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:132
 msgid "Prose, Grammatical and Text Assistance"
-msgstr ""
+msgstr "散文、语法和文字助理"
 
 #. [about]
-#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:136
+#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:148
 msgid "Minor Code Contributors"
-msgstr ""
+msgstr "次要代码贡献者"
 
 #. [about]
-#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:146
+#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:158
 msgid "Playtesting"
-msgstr ""
+msgstr "游戏测试"
 
 #. [about]
-#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:165
+#: data/campaigns/World_Conquest/scenarios/WC_II_scenario.cfg:177
 msgid "Campaign Maintenance"
-msgstr ""
-
-#, fuzzy
-#~| msgid ""
-#~| "A randomly generated cooperative campaign for 2 players. It has 6 level "
-#~| "of difficulties.\n"
-#~| "(Expert level, 5 scenarios.)"
-#~ msgid ""
-#~ "A randomly generated cooperative campaign for 4 players. It has 6 level "
-#~ "of difficulties.\n"
-#~ "(Expert level, 5 scenarios.)"
-#~ msgstr ""
-#~ "一个随机生成的2人合作战役。有6个级别的难度。\n"
-#~ "（专家级别，5幕场景。）"
-
-#~ msgid "Use World Conquest PYA mod"
-#~ msgstr "使用世界征服的PYA模组"
-
-#~ msgid "World Conquest version"
-#~ msgstr "世界征服版本"
-
-#~ msgid "Brave words. Welcome little big man."
-#~ msgstr "这话很勇敢。欢迎你，小个子真男人。"
-
-#~ msgid "Preset Advancement"
-#~ msgstr "预设升级"
-
-#~ msgid ""
-#~ "Currently I’m set to advance towards: $name \n"
-#~ "\n"
-#~ "What are your new orders?"
-#~ msgstr ""
-#~ "目前，指定给我的升级目标是：$name\n"
-#~ "\n"
-#~ "你的新命令是什么？"
-
-#~ msgid "Random"
-#~ msgstr "随机"
-
-#~ msgid " and "
-#~ msgstr " 和 "
-
-#~ msgid "damage"
-#~ msgstr "伤害"
-
-#~ msgid " resistance vs "
-#~ msgstr " 抗性 vs "
-
-#~ msgid "moves"
-#~ msgstr "行动次数"
-
-#~ msgid "strike"
-#~ msgstr "打击"
-
-#~ msgid "flight"
-#~ msgstr "飞行"
-
-#~ msgid "swim"
-#~ msgstr "游泳"
-
-#~ msgid "optional charge"
-#~ msgstr "可选择冲锋"
-
-#~ msgid "full movement"
-#~ msgstr "全速移动"
-
-#~ msgid "terrain^water"
-#~ msgstr "水"
-
-#~ msgid "improved defenses"
-#~ msgstr "防御力改善"
-
-#~ msgid "up to"
-#~ msgstr "上至"
-
-#~ msgid "per level"
-#~ msgstr "每级"
+msgstr "战役维护"

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2024
+	Copyright (C) 2003 - 2025
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -57,6 +57,11 @@ event_handler::event_handler(const std::string& types, const std::string& id)
 	, is_menu_item_(false)
 	, disabled_(false)
 	, is_lua_(false)
+	, has_preloaded_(false)
+	, event_ref_(0)
+	, priority_(0.0)
+	, args_()
+	, filters_()
 	, id_(id)
 	, types_(types)
 {}
@@ -255,14 +260,10 @@ struct filter_attack : public event_filter {
 					const auto opp = unit_d->shared_from_this();
 					auto temp_other_weapon = event_info.data.optional_child(!first_ ? "first" : "second");
 					const_attack_ptr second_attack = temp_other_weapon ? std::make_shared<const attack_type>(*temp_other_weapon) : nullptr;
-					auto ctx = attack->specials_context(u, opp, loc, loc_d, first_, second_attack);
-					utils::optional<decltype(ctx)> opp_ctx;
-					if(second_attack){
-						opp_ctx.emplace(second_attack->specials_context(opp, u, loc_d, loc, !first_, attack));
-					}
+					auto ctx = specials_context_t::make({ u, loc, attack }, { opp, loc_d, second_attack }, first_);
 					return swf_.empty() || attack->matches_filter(swf_.get_parsed_config());
 				} else {
-					auto ctx = attack->specials_context(u, loc, first_);
+					auto ctx = specials_context_t::make({ u, loc, attack }, { }, first_);
 					return swf_.empty() || attack->matches_filter(swf_.get_parsed_config());
 				}
 			}
@@ -357,11 +358,11 @@ private:
 
 void event_handler::read_filters(const config &cfg)
 {
-	for(auto filter : cfg.all_children_range()) {
-		vconfig vcfg(filter.cfg);
-		if(auto filter_ptr = make_filter(filter.key, vcfg)) {
+	for(const auto [filter_key, filter_cfg] : cfg.all_children_view()) {
+		vconfig vcfg(filter_cfg);
+		if(auto filter_ptr = make_filter(filter_key, vcfg)) {
 			add_filter(std::move(filter_ptr));
-		} else if(filter.key == "insert_tag" && make_filter(vcfg["name"], vconfig::empty_vconfig())) {
+		} else if(filter_key == "insert_tag" && make_filter(vcfg["name"], vconfig::empty_vconfig())) {
 			add_filter(std::make_unique<filter_dynamic>(vcfg["name"], vcfg["variable"]));
 		}
 	}

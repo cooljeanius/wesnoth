@@ -1,6 +1,6 @@
 /*
-	Copyright (C) 2024
-	by Subhraman Sarkar (babaissarkar) <suvrax@gmail.com>
+	Copyright (C) 2024 - 2025
+	by Subhraman Sarkar (babaissarkar) <sbmskmm@protonmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -15,13 +15,11 @@
 
 #pragma once
 
+#include "color.hpp"
 #include "gui/widgets/styled_widget.hpp"
 
-#include "font/standard_colors.hpp"
 #include "gui/core/canvas_private.hpp"
 #include "gui/core/widget_definition.hpp"
-#include "help/help_impl.hpp"
-#include "serialization/parser.hpp"
 
 namespace gui2
 {
@@ -63,11 +61,11 @@ public:
 		return link_color_;
 	}
 
-	virtual void set_active(const bool active) override;
+	virtual void set_active(const bool) override;
 
 	virtual bool get_active() const override
 	{
-		return state_ != DISABLED;
+		return true; // Always enabled
 	}
 
 	virtual unsigned get_state() const override
@@ -85,6 +83,8 @@ public:
 		return !tooltip().empty() || get_link_aware();
 	}
 
+	virtual void request_reduce_height(const unsigned /*maximum_height*/) override {};
+
 	virtual void update_canvas() override;
 
 	/* **** ***** ***** setters / getters for members ***** ****** **** */
@@ -92,11 +92,6 @@ public:
 	void set_can_wrap(const bool wrap)
 	{
 		can_wrap_ = wrap;
-	}
-
-	void set_characters_per_line(const unsigned characters_per_line)
-	{
-		characters_per_line_ = characters_per_line;
 	}
 
 	void set_link_aware(bool l);
@@ -108,24 +103,53 @@ public:
 		can_shrink_ = can_shrink;
 	}
 
-	void set_width(unsigned width)
+	void set_font_family(const std::string& font_family)
 	{
-		w_ = width;
+		font_family_ = font_family;
+	}
+
+	void set_font_size(int font_size)
+	{
+		font_size_ = font_size;
+	}
+
+	void set_font_style(const std::string& font_style)
+	{
+		font_style_ = font_style;
 	}
 
 	void set_text_alpha(unsigned short alpha);
 
-	const t_string& get_label() const
-	{
-		return unparsed_text_.empty() ? styled_widget::get_label() : unparsed_text_;
-	}
-
+	// Show text marked up with help markup
 	void set_label(const t_string& text) override;
 
-	void register_link_callback(std::function<void(std::string)> link_handler)
+	// Show a given DOM (given as a config)
+	void set_dom(const config& dom);
+
+	int get_width()
 	{
-		link_handler_ = link_handler;
+		return init_w_;
 	}
+
+	// NOTE: set_label() must be done after this so the text can be
+	// laid out with the new width.
+	void set_width(const int width)
+	{
+		init_w_ = width;
+	}
+
+	typedef std::unique_ptr<canvas::shape> shape_ptr;
+
+	// Given a parsed config from help markup,
+	// layout it into a config that can be understood by canvas
+	std::pair<std::vector<shape_ptr>, point> get_parsed_text(
+		const config& parsed_text,
+		const point& origin,
+		const unsigned init_width,
+		const bool finalize = false);
+
+	// Attaches a callback function that will be called when a link is clicked
+	void register_link_callback(std::function<void(std::string)> link_handler);
 
 private:
 	/**
@@ -133,10 +157,7 @@ private:
 	 *
 	 * Note the order of the states must be the same as defined in settings.hpp.
 	 */
-	enum state_t {
-		ENABLED,
-		DISABLED,
-	};
+	enum state_t { ENABLED }; // Always enabled
 
 	void set_state(const state_t state);
 
@@ -165,9 +186,39 @@ private:
 	bool link_aware_;
 
 	/**
+	 * Base text color, enabled state
+	 */
+	color_t text_color_enabled_;
+
+	/**
+	 * Base text color, disabled state
+	 */
+	color_t text_color_disabled_;
+
+	/**
 	 * What color links will be rendered in.
 	 */
 	color_t link_color_;
+
+	/**
+	 * Color variables that can be used in place of colors strings, like `<row bgcolor=color1>`
+	 */
+	std::map<std::string, color_t> predef_colors_;
+
+	/**
+	 * Base font family
+	 */
+	std::string font_family_;
+
+	/**
+	 * Base font size
+	 */
+	int font_size_;
+
+	/**
+	 * Base font style
+	 */
+	std::string font_style_;
 
 	bool can_shrink_;
 
@@ -179,58 +230,49 @@ private:
 		return can_shrink_;
 	}
 
-	/** structure tree of the marked up text after parsing */
-	config text_dom_;
-
-	/** The unparsed/raw text */
-	t_string unparsed_text_;
-
-	/** shapes used for size calculation */
-	std::unique_ptr<text_shape> tshape_;
-	std::unique_ptr<image_shape> ishape_;
-
 	/** Width and height of the canvas */
-	unsigned w_, h_, x_;
+	unsigned init_w_;
+	point size_;
+
+	config dom_;
 
 	/** Padding */
-	unsigned padding_;
+	int padding_;
 
-	/** Height of current text block */
-	unsigned txt_height_;
+	/** If color is a predefined color set in resolution, return it, otherwise decode using `font::string_to_color`. */
+	color_t get_color(const std::string& color);
 
-	/** Height of all previous blocks, combined */
-	unsigned prev_blk_height_;
+	/** Create template for text config that can be shown in canvas */
+	std::unique_ptr<gui2::text_shape> new_text_shape(const point& origin, const int max_width);
 
-	/** template for canvas text config */
-	void default_text_config(config* txt_ptr, t_string text = "");
+	std::pair<std::size_t, std::size_t> add_text_with_attribute(
+		text_shape& tshape,
+		const t_string& text,
+		const std::string& attr_name = "",
+		const std::string& extra_data = "");
 
-	void add_text_with_attribute(config& curr_item, std::string text, std::string attr_name = "", std::string extra_data = "");
-	void add_text_with_attributes(config& curr_item, std::string text, std::vector<std::string> attr_names, std::vector<std::string> extra_data);
-	void add_image(config& curr_item, std::string name, std::string align, bool floating, point& img_size);
-	void add_link(config& curr_item, std::string name, std::string dest, int img_width);
-
-	void append_if_not_empty(config_attribute_value* key, std::string suffix) {
-		if (!key->str().empty()) {
-			*key = key->str() + suffix;
-		}
-	}
+	void add_link(
+		text_shape& tshape,
+		const std::string& name,
+		const std::string& dest,
+		const point& origin,
+		int img_width);
 
 	/** size calculation functions */
-	point get_text_size(config text_cfg, unsigned width = 0);
-	point get_image_size(config img_cfg);
+	wfl::map_formula_callable setup_text_renderer(text_shape& tshape, unsigned width) const;
+	point get_text_size(text_shape& tshape, unsigned width) const;
+	point get_image_size(const std::string& path) const;
 
-	wfl::map_formula_callable setup_text_renderer(config text_cfg, unsigned width = 0);
-
-	size_t get_split_location(std::string text, int img_height);
+	std::size_t get_split_location(std::string_view text, const point& pos);
 
 	/** link variables and functions */
 	std::vector<std::pair<rect, std::string>> links_;
 
 	std::function<void(std::string)> link_handler_;
 
-	point get_column_line(const point& position) const
+	int get_offset_from_xy(const point& position) const
 	{
-		return font::get_text_renderer().get_column_line(position);
+		return std::get<0>(font::get_text_renderer().xy_to_index(position));
 	}
 
 	point get_xy_from_offset(const unsigned offset) const
@@ -238,10 +280,11 @@ private:
 		return font::get_text_renderer().get_cursor_position(offset);
 	}
 
-	point calculate_best_size() const override
-	{
-		return point(w_, h_);
-	}
+	point calculate_best_size() const override;
+
+	void request_reduce_width(const unsigned maximum_width) override;
+
+	void place(const point& origin, const point& size) override;
 
 public:
 	/** Static type getter that does not rely on the widget being constructed. */
@@ -285,7 +328,12 @@ struct rich_label_definition : public styled_widget_definition
 	{
 		explicit resolution(const config& cfg);
 
+		color_t text_color_enabled, text_color_disabled;
 		color_t link_color;
+		std::string font_family;
+		int font_size;
+		std::string font_style;
+		std::map<std::string, color_t> colors;
 	};
 };
 
@@ -304,7 +352,7 @@ struct builder_rich_label : public builder_styled_widget
 
 	PangoAlignment text_alignment;
 	bool link_aware;
-	unsigned width;
+	unsigned padding;
 };
 
 } // namespace implementation

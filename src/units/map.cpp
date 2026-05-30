@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2010 - 2024
+	Copyright (C) 2010 - 2025
 	by Guillaume Melquiond <guillaume.melquiond@gmail.com>
 	Copyright (C) 2006 - 2009 by Rusty Russell <rusty@rustcorp.com.au>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
@@ -48,7 +48,7 @@ unit_map& unit_map::operator=(const unit_map& that)
 	return *this;
 }
 
-void unit_map::swap(unit_map& o)
+void unit_map::swap(unit_map& o) noexcept
 {
 	assert(num_iters() == 0 && o.num_iters() == 0);
 
@@ -132,7 +132,7 @@ unit_map::umap_retval_pair_t unit_map::move(const map_location& src, const map_l
 	return std::pair(make_unit_iterator(uit), true);
 }
 
-unit_map::umap_retval_pair_t unit_map::insert(unit_ptr p)
+unit_map::umap_retval_pair_t unit_map::insert(const unit_ptr& p)
 {
 	// 1. Construct a unit_pod.
 	// 2. Try insertion into the umap.
@@ -213,7 +213,7 @@ unit_map::umap_retval_pair_t unit_map::insert(unit_ptr p)
 	return std::pair(make_unit_iterator(uinsert.first), true);
 }
 
-unit_map::umap_retval_pair_t unit_map::replace(const map_location& l, unit_ptr p)
+unit_map::umap_retval_pair_t unit_map::replace(const map_location& l, const unit_ptr& p)
 {
 	self_check();
 	p->set_location(l);
@@ -437,7 +437,7 @@ bool unit_map::has_unit_at(const map_location& loc) const
 	return find(loc) != end();
 }
 
-void swap(unit_map& lhs, unit_map& rhs)
+void swap(unit_map& lhs, unit_map& rhs) noexcept
 {
 	lhs.swap(rhs);
 }

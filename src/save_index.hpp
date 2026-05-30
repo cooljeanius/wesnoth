@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2024
+	Copyright (C) 2003 - 2025
 	by Jörg Hinrichs, David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -17,6 +17,8 @@
 
 #include "config.hpp"
 
+#include <chrono>
+
 namespace savegame
 {
 class save_index_class;
@@ -27,7 +29,9 @@ class save_info
 private:
 	friend class create_save_info;
 
-	save_info(const std::string& name, const std::shared_ptr<save_index_class>& index, const std::time_t& modified)
+	save_info(const std::string& name,
+		const std::shared_ptr<save_index_class>& index,
+		const std::chrono::system_clock::time_point& modified)
 		: name_(name)
 		, save_index_(index)
 		, modified_(modified)
@@ -40,7 +44,7 @@ public:
 		return name_;
 	}
 
-	const std::time_t& modified() const
+	const auto& modified() const
 	{
 		return modified_;
 	}
@@ -52,7 +56,7 @@ public:
 private:
 	std::string name_;
 	std::shared_ptr<save_index_class> save_index_;
-	std::time_t modified_;
+	std::chrono::system_clock::time_point modified_;
 };
 
 /**
@@ -65,7 +69,7 @@ struct save_info_less_time
 };
 
 /** Read the complete config information out of a savefile. */
-void read_save_file(const std::string& dir, const std::string& name, config& cfg, std::string* error_log);
+config read_save_file(const std::string& dir, const std::string& name);
 
 class create_save_info
 {
@@ -95,11 +99,11 @@ public:
 	void delete_game(const std::string& name);
 
 	void rebuild(const std::string& name);
-	void rebuild(const std::string& name, const std::time_t& modified);
+	void rebuild(const std::string& name, const std::chrono::system_clock::time_point& modified);
 
 	/** Delete a savegame from the index, without deleting the underlying file. */
 	void remove(const std::string& name);
-	void set_modified(const std::string& name, const std::time_t& modified);
+	void set_modified(const std::string& name, const std::chrono::system_clock::time_point& modified);
 
 	config& get(const std::string& name);
 	const std::string& dir() const;
@@ -126,9 +130,8 @@ private:
 	/** Deletes non-existent save files from the index. */
 	void clean_up_index();
 
-	bool loaded_;
 	config data_;
-	std::map<std::string, std::time_t> modified_;
+	std::map<std::string, std::chrono::system_clock::time_point> modified_;
 	const std::string dir_;
 	/**
 	 * The instance for default_saves_dir() writes a cache file. For other instances,

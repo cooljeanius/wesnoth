@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2009 - 2024
+	Copyright (C) 2009 - 2025
 	by Iris Morelle <shadowm2006@gmail.com>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -15,18 +15,19 @@
 
 #include "image_modifications.hpp"
 
+#include <utility>
+
 #include "color.hpp"
 #include "config.hpp"
 #include "game_config.hpp"
 #include "picture.hpp"
-#include "lexical_cast.hpp"
 #include "log.hpp"
 #include "serialization/string_utils.hpp"
 #include "team.hpp"
-#include "utils/from_chars.hpp"
+#include "utils/charconv.hpp"
 
 #include "formula/formula.hpp"
-#include "formula/callable.hpp"
+#include "formula/callable_objects.hpp"
 
 #define GETTEXT_DOMAIN "wesnoth-lib"
 
@@ -35,41 +36,38 @@ static lg::log_domain log_display("display");
 
 namespace image {
 
-/** Adds @a mod to the queue (unless mod is nullptr). */
-void modification_queue::push(std::unique_ptr<modification> mod)
+void modification_queue::push(std::unique_ptr<modification>&& mod)
 {
 	priorities_[mod->priority()].push_back(std::move(mod));
 }
 
-/** Removes the top element from the queue */
 void modification_queue::pop()
 {
-	map_type::iterator top_pair = priorities_.begin();
-	auto& top_vector = top_pair->second;
+	auto top_pair = priorities_.begin();
+	auto& mod_list = top_pair->second;
 
 	// Erase the top element.
-	top_vector.erase(top_vector.begin());
-	if(top_vector.empty()) {
-		// We need to keep the map clean.
+	mod_list.erase(mod_list.begin());
+
+	// We need to keep the map clean.
+	if(mod_list.empty()) {
 		priorities_.erase(top_pair);
 	}
 }
 
-/** Returns the number of elements in the queue. */
 std::size_t modification_queue::size() const
 {
 	std::size_t count = 0;
-	for(const map_type::value_type& pair : priorities_) {
-		count += pair.second.size();
+	for(const auto& [priority, mods] : priorities_) {
+		count += mods.size();
 	}
 
 	return count;
 }
 
-/** Returns the top element in the queue . */
-modification * modification_queue::top() const
+const modification& modification_queue::top() const
 {
-	return priorities_.begin()->second.front().get();
+	return *priorities_.begin()->second.front();
 }
 
 
@@ -238,23 +236,23 @@ void wipe_alpha_modification::operator()(surface& src) const
 }
 
 // TODO: Is this useful enough to move into formula/callable_objects?
-class pixel_callable : public wfl::formula_callable
+class pixel_callable : public wfl::color_callable
 {
 public:
-	pixel_callable(SDL_Point p, color_t clr, uint32_t w, uint32_t h)
-		: p(p), clr(clr), w(w), h(h)
-	{}
+	pixel_callable(std::size_t index, color_t clr, int w, int h)
+		: color_callable(clr), coord(), w(w), h(h)
+	{
+		coord.x = index % w;
+		coord.y = index / w;
+	}
 
 	void get_inputs(wfl::formula_input_vector& inputs) const override
 	{
+		color_callable::get_inputs(inputs);
 		add_input(inputs, "x");
 		add_input(inputs, "y");
 		add_input(inputs, "u");
 		add_input(inputs, "v");
-		add_input(inputs, "red");
-		add_input(inputs, "green");
-		add_input(inputs, "blue");
-		add_input(inputs, "alpha");
 		add_input(inputs, "height");
 		add_input(inputs, "width");
 	}
@@ -263,34 +261,25 @@ public:
 	{
 		using wfl::variant;
 		if(key == "x") {
-			return variant(p.x);
+			return variant(coord.x);
 		} else if(key == "y") {
-			return variant(p.y);
-		} else if(key == "red") {
-			return variant(clr.r);
-		} else if(key == "green") {
-			return variant(clr.g);
-		} else if(key == "blue") {
-			return variant(clr.b);
-		} else if(key == "alpha") {
-			return variant(clr.a);
+			return variant(coord.y);
 		} else if(key == "width") {
 			return variant(w);
 		} else if(key == "height") {
 			return variant(h);
 		} else if(key == "u") {
-			return variant(p.x / static_cast<float>(w));
+			return variant(coord.x / static_cast<float>(w));
 		} else if(key == "v") {
-			return variant(p.y / static_cast<float>(h));
+			return variant(coord.y / static_cast<float>(h));
 		}
 
-		return variant();
+		return color_callable::get_value(key);
 	}
 
 private:
-	SDL_Point p;
-	color_t clr;
-	uint32_t w, h;
+	point coord;
+	int w, h;
 };
 
 void adjust_alpha_modification::operator()(surface& src) const
@@ -299,27 +288,15 @@ void adjust_alpha_modification::operator()(surface& src) const
 		wfl::formula new_alpha(formula_);
 
 		surface_lock lock(src);
-		uint32_t* cur = lock.pixels();
-		uint32_t* const end = cur + src->w * src->h;
-		uint32_t* const beg = cur;
+		std::size_t index{0};
 
-		while(cur != end) {
-			color_t pixel;
-			pixel.a = (*cur) >> 24;
-			pixel.r = (*cur) >> 16;
-			pixel.g = (*cur) >> 8;
-			pixel.b = (*cur);
+		for(auto& pixel : lock.pixel_span()) {
+			auto color = color_t::from_argb_bytes(pixel);
 
-			int i = cur - beg;
-			SDL_Point p;
-			p.y = i / src->w;
-			p.x = i % src->w;
+			auto px = pixel_callable{index++, color, src->w, src->h};
+			color.a = std::min<unsigned>(new_alpha.evaluate(px).as_int(), 255);
 
-			pixel_callable px(p, pixel, src->w, src->h);
-			pixel.a = std::min<unsigned>(new_alpha.evaluate(px).as_int(), 255);
-			*cur = (pixel.a << 24) + (pixel.r << 16) + (pixel.g << 8) + pixel.b;
-
-			++cur;
+			pixel = color.to_argb_bytes();
 		}
 	}
 }
@@ -327,43 +304,31 @@ void adjust_alpha_modification::operator()(surface& src) const
 void adjust_channels_modification::operator()(surface& src) const
 {
 	if(src) {
-		wfl::formula new_red(formulas_[0]);
-		wfl::formula new_green(formulas_[1]);
-		wfl::formula new_blue(formulas_[2]);
-		wfl::formula new_alpha(formulas_[3]);
+		wfl::formula new_r(formulas_[0]);
+		wfl::formula new_g(formulas_[1]);
+		wfl::formula new_b(formulas_[2]);
+		wfl::formula new_a(formulas_[3]);
 
 		surface_lock lock(src);
-		uint32_t* cur = lock.pixels();
-		uint32_t* const end = cur + src->w * src->h;
-		uint32_t* const beg = cur;
+		std::size_t index{0};
 
-		while(cur != end) {
-			color_t pixel;
-			pixel.a = (*cur) >> 24;
-			pixel.r = (*cur) >> 16;
-			pixel.g = (*cur) >> 8;
-			pixel.b = (*cur);
+		for(auto& pixel : lock.pixel_span()) {
+			auto color = color_t::from_argb_bytes(pixel);
 
-			int i = cur - beg;
-			SDL_Point p;
-			p.y = i / src->w;
-			p.x = i % src->w;
+			auto px = pixel_callable{index++, color, src->w, src->h};
+			color.r = std::min<unsigned>(new_r.evaluate(px).as_int(), 255);
+			color.g = std::min<unsigned>(new_g.evaluate(px).as_int(), 255);
+			color.b = std::min<unsigned>(new_b.evaluate(px).as_int(), 255);
+			color.a = std::min<unsigned>(new_a.evaluate(px).as_int(), 255);
 
-			pixel_callable px(p, pixel, src->w, src->h);
-			pixel.r = std::min<unsigned>(new_red.evaluate(px).as_int(), 255);
-			pixel.g = std::min<unsigned>(new_green.evaluate(px).as_int(), 255);
-			pixel.b = std::min<unsigned>(new_blue.evaluate(px).as_int(), 255);
-			pixel.a = std::min<unsigned>(new_alpha.evaluate(px).as_int(), 255);
-			*cur = (pixel.a << 24) + (pixel.r << 16) + (pixel.g << 8) + pixel.b;
-
-			++cur;
+			pixel = color.to_argb_bytes();
 		}
 	}
 }
 
 void crop_modification::operator()(surface& src) const
 {
-	SDL_Rect area = slice_;
+	rect area = slice_;
 	if(area.w == 0) {
 		area.w = src->w;
 	}
@@ -411,7 +376,7 @@ void blit_modification::operator()(surface& src) const
 		throw imod_exception(sstr);
 	}
 
-	SDL_Rect r {x_, y_, 0, 0};
+	rect r {x_, y_, 0, 0};
 	sdl_blit(surf_, nullptr, src, &r);
 }
 
@@ -422,7 +387,7 @@ void mask_modification::operator()(surface& src) const
 		return;
 	}
 
-	SDL_Rect r {x_, y_, 0, 0};
+	rect r {x_, y_, 0, 0};
 	surface new_mask(src->w, src->h);
 	sdl_blit(mask_, nullptr, new_mask, &r);
 	mask_surface(src, new_mask);
@@ -482,6 +447,36 @@ void xbrz_modification::operator()(surface& src) const
 	}
 }
 
+void pad_modification::operator()(surface& src) const
+{
+	// Calculate the new dimensions of the padded surface
+	const int new_w = src->w + left_ + right_;
+	const int new_h = src->h + top_ + bottom_;
+
+	// Create a new transparent surface with the calculated dimensions
+	surface padded(new_w, new_h);
+
+	// Define the destination rectangle for the original image
+	rect dstrect{
+		left_,
+		top_,
+		0, // These two values are ignored by SDL_BlitSurface, so we set them to 0.
+		0  // The function always blits the entire source surface.
+	};
+
+	SDL_BlendMode original_blend_mode;
+	SDL_GetSurfaceBlendMode(src, &original_blend_mode);
+	// Set blend mode to none to prevent blending
+	SDL_SetSurfaceBlendMode(src, SDL_BLENDMODE_NONE);
+
+	// Blit the original surface onto the new, padded surface
+	SDL_BlitSurface(src, nullptr, padded, &dstrect);
+
+	SDL_SetSurfaceBlendMode(padded, original_blend_mode);
+
+	src = padded;
+}
+
 /*
  * The Opacity IPF doesn't seem to work with surface-wide alpha and instead needs per-pixel alpha.
  * If this is needed anywhere else it can be moved back to sdl/utils.*pp.
@@ -493,7 +488,7 @@ void o_modification::operator()(surface& src) const
 
 		surface_lock lock(src);
 		uint32_t* beg = lock.pixels();
-		uint32_t* end = beg + src->w * src->h;
+		uint32_t* end = beg + src.area();
 
 		while(beg != end) {
 			uint8_t alpha = (*beg) >> 24;
@@ -549,7 +544,7 @@ struct parse_mod_registration
 {
 	parse_mod_registration(const char* name, mod_parser parser)
 	{
-		mod_parsers[name] = parser;
+		mod_parsers[name] = std::move(parser);
 	}
 };
 
@@ -594,20 +589,17 @@ REGISTER_MOD_PARSER(TC, args)
 		return nullptr;
 	}
 
-	color_range_map rc_map;
 	try {
 		const color_range& new_color = team::get_side_color_range(side_n);
 		const std::vector<color_t>& old_color = game_config::tc_info(params[1]);
 
-		rc_map = recolor_range(new_color,old_color);
+		return std::make_unique<rc_modification>(generate_color_mapping(new_color, old_color));
 	} catch(const config::error& e) {
 		ERR_DP << "caught config::error while processing TC: " << e.message;
 		ERR_DP << "bailing out from TC";
 
 		return nullptr;
 	}
-
-	return std::make_unique<rc_modification>(rc_map);
 }
 
 // Team-color-based color range selection and recoloring
@@ -622,21 +614,18 @@ REGISTER_MOD_PARSER(RC, args)
 	//
 	// recolor source palette to color range
 	//
-	color_range_map rc_map;
 	try {
 		const color_range& new_color = game_config::color_info(recolor_params[1]);
 		const std::vector<color_t>& old_color = game_config::tc_info(recolor_params[0]);
 
-		rc_map = recolor_range(new_color,old_color);
+		return std::make_unique<rc_modification>(generate_color_mapping(new_color, old_color));
 	} catch (const config::error& e) {
 		ERR_DP
 			<< "caught config::error while processing color-range RC: "
 			<< e.message;
 		ERR_DP << "bailing out from RC";
-		rc_map.clear();
+		return nullptr;
 	}
-
-	return std::make_unique<rc_modification>(rc_map);
 }
 
 // Palette switch
@@ -651,15 +640,15 @@ REGISTER_MOD_PARSER(PAL, args)
 	}
 
 	try {
-		color_range_map rc_map;
+		color_mapping rc_map;
 		const std::vector<color_t>& old_palette = game_config::tc_info(remap_params[0]);
-		const std::vector<color_t>& new_palette =game_config::tc_info(remap_params[1]);
+		const std::vector<color_t>& new_palette = game_config::tc_info(remap_params[1]);
 
 		for(std::size_t i = 0; i < old_palette.size() && i < new_palette.size(); ++i) {
 			rc_map[old_palette[i]] = new_palette[i];
 		}
 
-		return std::make_unique<rc_modification>(rc_map);
+		return std::make_unique<rc_modification>(std::move(rc_map));
 	} catch(const config::error& e) {
 		ERR_DP
 			<< "caught config::error while processing PAL function: "
@@ -876,11 +865,11 @@ REGISTER_MOD_PARSER(BLEND, args)
 	const std::string_view::size_type p100_pos = opacity_str.find('%');
 
 	if(p100_pos == std::string::npos)
-		opacity = lexical_cast_default<float>(opacity_str);
+		opacity = utils::from_chars<float>(opacity_str).value_or(0.0f);
 	else {
 		// make multiplier
 		const std::string_view parsed_field = opacity_str.substr(0, p100_pos);
-		opacity = lexical_cast_default<float>(parsed_field);
+		opacity = utils::from_chars<float>(parsed_field).value_or(0.0f);
 		opacity /= 100.0f;
 	}
 
@@ -902,7 +891,7 @@ REGISTER_MOD_PARSER(CROP, args)
 		return nullptr;
 	}
 
-	SDL_Rect slice_rect { 0, 0, 0, 0 };
+	rect slice_rect { 0, 0, 0, 0 };
 
 	slice_rect.x = utils::from_chars<int16_t>(slice_params[0]).value_or(0);
 
@@ -1097,12 +1086,68 @@ REGISTER_MOD_PARSER(SCALE_INTO_SHARP, args)
 // xBRZ
 REGISTER_MOD_PARSER(XBRZ, args)
 {
-	int z = utils::from_chars<int>(args).value_or(0);
-	if(z < 1 || z > 5) {
-		z = 5; //only values 2 - 5 are permitted for xbrz scaling factors.
+	const int factor = std::clamp(utils::from_chars<int>(args).value_or(1), 1, 6);
+	return std::make_unique<xbrz_modification>(factor);
+}
+
+// Pad
+REGISTER_MOD_PARSER(PAD, args)
+{
+	int top = 0;
+	int right = 0;
+	int bottom = 0;
+	int left = 0;
+
+	// Check for the presence of an '=' sign to determine the parsing mode.
+	if(args.find('=') != std::string_view::npos) {
+		// --- Keyword-Argument Mode ---
+		const auto params = utils::map_split(std::string{args}, ',', '='); // map_split needs a std::string
+
+		// Map valid input strings to the corresponding integer reference
+		const std::map<std::string, int*> alias_map = {
+			{"top", &top},
+			{"t", &top},
+			{"right", &right},
+			{"r", &right},
+			{"bottom", &bottom},
+			{"b", &bottom},
+			{"left", &left},
+			{"l", &left},
+		};
+
+		// Parse and assign values if keywords are valid
+		for(const auto& [key, value] : params) {
+			auto it = alias_map.find(key);
+			if(it != alias_map.end()) {
+				if(utils::optional padding = utils::from_chars<int>(value)) {
+					*it->second = padding.value();
+				} else {
+					ERR_DP << "~PAD() keyword argument '" << key << "' requires a valid integer value. Received: '" << value << "'.";
+					return nullptr;
+				}
+			} else {
+				ERR_DP << "~PAD() found an unknown keyword: '" << key << "'. Valid keywords: top, t, right, r, bottom, b, left, l.";
+				return nullptr;
+			}
+		}
+	} else {
+		// --- Numeric-Argument Mode ---
+		const auto params = utils::split_view(args, ',');
+		if(params.size() != 1) {
+			ERR_DP << "~PAD() takes either 1 numeric argument for the padding on all sides or a comma separated list of '<keyword>=<number>' pairs with available keywords: top, t, right, r, bottom, b, left, l.";
+			return nullptr;
+		}
+
+		// Single integer argument: apply to all sides
+		if(utils::optional padding = utils::from_chars<int>(params[0])) {
+			top = right = bottom = left = padding.value();
+		} else {
+			ERR_DP << "~PAD() numeric argument (pad all sides) requires a single valid integer. Received: '" << params[0] << "'.";
+			return nullptr;
+		}
 	}
 
-	return std::make_unique<xbrz_modification>(z);
+	return std::make_unique<pad_modification>(top, right, bottom, left);
 }
 
 // Gaussian-like blur
@@ -1118,11 +1163,11 @@ REGISTER_MOD_PARSER(O, args)
 	const std::string::size_type p100_pos = args.find('%');
 	float num = 0.0f;
 	if(p100_pos == std::string::npos) {
-		num = lexical_cast_default<float, std::string_view>(args);
+		num = utils::from_chars<float>(args).value_or(0.0f);
 	} else {
 		// make multiplier
 		const std::string_view parsed_field = args.substr(0, p100_pos);
-		num = lexical_cast_default<float, std::string_view>(parsed_field);
+		num = utils::from_chars<float>(parsed_field).value_or(0.0f);
 		num /= 100.0f;
 	}
 

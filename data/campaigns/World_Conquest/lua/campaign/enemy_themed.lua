@@ -2,7 +2,7 @@ local _ = wesnoth.textdomain 'wesnoth-wc'
 local on_event = wesnoth.require("on_event")
 
 local strings = {
-	enemy_pet = _ "$name|'s pet"
+	enemy_pet = _ "$name|’s pet"
 }
 -- in the later scenarios there is a small chance that a scenario will be themed for an enemy
 -- which means in paticular changing the castle of the enemy accorign to the unit type of that
@@ -80,8 +80,8 @@ local function wct_map_enemy_themed(race, pet, castle, village, chance)
 		role = "hero",
 		overlays = "misc/hero-icon.png",
 		wml.tag.modifications {
-			wc2_heroes.trait_heroic,
-			wc2_heroes.trait_expert,
+			wml.tag.trait(wc2_heroes.trait_heroic),
+			wml.tag.trait(wc2_heroes.trait_expert),
 			wml.tag.object {
 				id = "wc2_hero_overlay",
 				wml.tag.effect {

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2008 - 2024
+	Copyright (C) 2008 - 2025
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
 	This program is free software; you can redistribute it and/or modify
@@ -20,7 +20,6 @@
 #include "filesystem.hpp"
 #include "game_version.hpp"
 #include "gettext.hpp"
-#include "gui/auxiliary/find_widget.hpp"
 #include "gui/dialogs/message.hpp"
 #include "gui/widgets/listbox.hpp"
 #include "gui/widgets/window.hpp"
@@ -67,26 +66,20 @@ migrate_version_selection::migrate_version_selection()
 	}
 }
 
-void migrate_version_selection::pre_show(window& window)
+void migrate_version_selection::pre_show()
 {
-	listbox& version_list = find_widget<listbox>(&window, "versions_listbox", false);
+	listbox& version_list = find_widget<listbox>("versions_listbox");
 
 	for(const auto& version : versions_) {
-		widget_data data;
-		widget_item item_label;
-
-		item_label["label"] = version;
-		data["version_label"] = item_label;
-
-		version_list.add_row(data);
+		version_list.add_row(widget_data{{ "version_label", {{ "label", version }}}});
 	}
 }
 
-void migrate_version_selection::post_show(window& window)
+void migrate_version_selection::post_show()
 {
 	if(get_retval() == gui2::OK) {
 		std::string current_version_str = filesystem::get_version_path_suffix();
-		listbox& version_list = find_widget<listbox>(&window, "versions_listbox", false);
+		listbox& version_list = find_widget<listbox>("versions_listbox");
 		int selected_row = version_list.get_selected_row();
 		std::string selected = versions_.at(selected_row);
 

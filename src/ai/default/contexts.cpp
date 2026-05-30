@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2009 - 2024
+	Copyright (C) 2009 - 2025
 	by Yurii Chernyi <terraninfo@terraninfo.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -94,8 +94,7 @@ default_ai_context& default_ai_context_impl::get_default_ai_context(){
 int default_ai_context_impl::rate_terrain(const unit& u, const map_location& loc) const
 {
 	const gamemap &map_ = resources::gameboard->map();
-	const t_translation::terrain_code terrain = map_.get_terrain(loc);
-	const int defense = u.defense_modifier(terrain);
+	const int defense = u.defense_modifier(map_.get_terrain(loc));
 	int rating = 100 - defense;
 
 	const int healing_value = 10;
@@ -103,11 +102,11 @@ int default_ai_context_impl::rate_terrain(const unit& u, const map_location& loc
 	const int neutral_village_value = 10;
 	const int enemy_village_value = 15;
 
-	if(map_.gives_healing(terrain) && u.get_ability_bool("regenerate", loc) == false) {
+	if(map_.gives_healing(loc) && u.get_ability_bool("regenerate", loc) == false) {
 		rating += healing_value;
 	}
 
-	if(map_.is_village(terrain)) {
+	if(map_.is_village(loc)) {
 		int owner = resources::gameboard->village_owner(loc);
 
 		if(owner == get_side()) {
@@ -129,7 +128,6 @@ std::vector<target> default_ai_context_impl::find_targets(const move_map& enemy_
 	unit_map &units_ = resources::gameboard->units();
 	unit_map::iterator leader = units_.find_leader(get_side());
 	const gamemap &map_ = resources::gameboard->map();
-	std::vector<team> teams_ = resources::gameboard->teams();
 	const bool has_leader = leader != units_.end();
 
 	std::vector<target> targets;
@@ -144,7 +142,7 @@ std::vector<target> default_ai_context_impl::find_targets(const move_map& enemy_
 			std::set<map_location> threats;
 
 			for(const map_location& adj : get_adjacent_tiles(leader->get_location())) {
-				std::pair<move_map::const_iterator,move_map::const_iterator> itors = enemy_dstsrc.equal_range(adj);
+				auto itors = enemy_dstsrc.equal_range(adj);
 				while(itors.first != itors.second) {
 					if(units_.count(itors.first->second)) {
 						threats.insert(itors.first->second);
@@ -171,15 +169,12 @@ std::vector<target> default_ai_context_impl::find_targets(const move_map& enemy_
 		move_map friends_srcdst, friends_dstsrc;
 		calculate_possible_moves(friends_possible_moves, friends_srcdst, friends_dstsrc, false, true);
 
-		const std::vector<map_location>& villages = map_.villages();
-		for(std::vector<map_location>::const_iterator t =
-				villages.begin(); t != villages.end(); ++t) {
+		for(const map_location& village_loc : map_.villages()) {
+			assert(map_.on_board(village_loc));
 
-			assert(map_.on_board(*t));
 			bool ally_village = false;
-			for (std::size_t i = 0; i != teams_.size(); ++i)
-			{
-				if (!current_team().is_enemy(i + 1) && teams_[i].owns_village(*t)) {
+			for(const team& t : resources::gameboard->teams()) {
+				if(!current_team().is_enemy(t.side()) && t.owns_village(village_loc)) {
 					ally_village = true;
 					break;
 				}
@@ -190,24 +185,24 @@ std::vector<target> default_ai_context_impl::find_targets(const move_map& enemy_
 				//Support seems to cause the AI to just 'sit around' a lot, so
 				//only turn it on if it's explicitly enabled.
 				if(get_support_villages()) {
-					double enemy = power_projection(*t, enemy_dstsrc);
+					double enemy = power_projection(village_loc, enemy_dstsrc);
 					if (enemy > 0)
 					{
 						enemy *= 1.7;
-						double our = power_projection(*t, friends_dstsrc);
+						double our = power_projection(village_loc, friends_dstsrc);
 						double value = village_value * our / enemy;
-						add_target(target(*t, value, ai_target::type::support));
+						add_target(target(village_loc, value, ai_target::type::support));
 					}
 				}
 			}
 			else
 			{
-				double leader_distance = distance_between(*t, leader->get_location());
+				double leader_distance = distance_between(village_loc, leader->get_location());
 				double value = village_value * (1.0 - leader_distance / corner_distance);
-				LOG_AI << "found village target... " << *t
+				LOG_AI << "found village target... " << village_loc
 					<< " with value: " << value
 					<< " distance: " << leader_distance;
-				targets.emplace_back(*t,value,ai_target::type::village);
+				targets.emplace_back(village_loc,value,ai_target::type::village);
 			}
 		}
 	}

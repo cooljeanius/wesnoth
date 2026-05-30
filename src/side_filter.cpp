@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2010 - 2024
+	Copyright (C) 2010 - 2025
 	by Yurii Chernyi <terraninfo@terraninfo.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -34,6 +34,7 @@
 #include "formula/callable_objects.hpp"
 #include "formula/formula.hpp"
 #include "formula/function_gamestate.hpp"
+#include "utils/general.hpp"
 
 static lg::log_domain log_engine_sf("engine/side_filter");
 #define ERR_NG LOG_STREAM(err, log_engine_sf)
@@ -99,7 +100,7 @@ bool side_filter::match_internal(const team &t) const
 		const std::string& that_team_name = cfg_team_name;
 		const std::string& this_team_name = t.team_name();
 
-		if(std::find(this_team_name.begin(), this_team_name.end(), ',') == this_team_name.end()) {
+		if(!utils::contains(this_team_name, ',')) {
 			if(this_team_name != that_team_name) return false;
 		}
 		else {
@@ -226,7 +227,8 @@ bool side_filter::match_internal(const team &t) const
 	if (cfg_.has_attribute("formula")) {
 		try {
 			const wfl::team_callable callable(t);
-			const wfl::formula form(cfg_["formula"], new wfl::gamestate_function_symbol_table);
+			wfl::gamestate_function_symbol_table symbols;
+			const wfl::formula form(cfg_["formula"], &symbols);
 			if(!form.evaluate(callable).as_bool()) {
 				return false;
 			}

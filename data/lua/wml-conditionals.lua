@@ -34,6 +34,10 @@ function wesnoth.wml_conditionals.variable(cfg)
 		-- WFL considers 0 as false; Lua doesn't
 		if result == 0 then return false end
 		return result
+	elseif cfg.blank then
+		if type(cfg.blank) ~= 'boolean' then wml.error('[variable]blank= must be a boolean') end
+		local value = wml.variables[cfg.name]
+		return cfg.blank == (value == nil)
 	else
 		return old_variable(cfg)
 	end
@@ -45,4 +49,13 @@ end
 
 function wesnoth.wml_conditionals.has_sub_achievement(cfg)
 	return wesnoth.achievements.has_sub_achievement(cfg.content_for, cfg.id, cfg.sub_id);
+end
+
+function wesnoth.wml_conditionals.have_side(cfg)
+	local sides = wesnoth.sides.find(cfg)
+	if cfg.count then
+		if #sides == cfg.count then return true else return false end
+	else
+		if sides[1] then return true else return false end
+	end
 end

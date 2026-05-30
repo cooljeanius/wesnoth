@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2003 - 2024
+	Copyright (C) 2003 - 2025
 	by David White <dave@whitevine.net>
 	Part of the Battle for Wesnoth Project https://www.wesnoth.org/
 
@@ -37,7 +37,7 @@ public:
 		const std::string& defender_type_id, int attacker_lvl,
 		int defender_lvl, const std::size_t turn, const time_of_day &t);
 
-	static config get_auto_shroud(bool turned_on);
+	static config get_auto_shroud(bool turned_on, bool block_undo = true);
 
 	static config get_update_shroud();
 
