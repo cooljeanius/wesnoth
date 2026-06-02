@@ -2032,7 +2032,7 @@
             : e.add(s).removeClass(L.css.processing + " " + o.cssProcessing);
         },
         processTbody: function (e, t, r) {
-          if (!(e = A.find(e)[0])) return;
+          if (!((e = A(e)[0]) && 1 === e.nodeType)) return;
           if (r)
             return (
               (e.isProcessing = !0),
