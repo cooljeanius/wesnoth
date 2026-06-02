@@ -2032,7 +2032,8 @@
             : e.add(s).removeClass(L.css.processing + " " + o.cssProcessing);
         },
         processTbody: function (e, t, r) {
-          if (!((e = A(e)[0]) && 1 === e.nodeType)) return;
+          e = e && e.jquery ? e[0] : e;
+          if (!(e && 1 === e.nodeType)) return;
           if (r)
             return (
               (e.isProcessing = !0),
