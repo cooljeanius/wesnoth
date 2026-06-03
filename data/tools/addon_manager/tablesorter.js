@@ -2004,10 +2004,15 @@
           var a,
             n = (e = A.find(e)[0]).config,
             i = s || n.$headers,
+            l =
+              "string" == typeof i
+                ? A(A.find(i, e))
+                : A(i && i.jquery ? i.toArray() : i),
+            c = l.length ? l : n.$headers,
             d =
               (n.$headerIndexed && n.$headerIndexed[r]) ||
-              A(i).filter('[data-column="' + r + '"]:last');
-          if (void 0 !== t[r]) return o ? t[r] : t[i.index(d)];
+              c.filter('[data-column="' + r + '"]:last');
+          if (void 0 !== t[r]) return o ? t[r] : t[c.index(d)];
           for (a in t)
             if ("string" == typeof a && d.filter(a).add(d.find(a)).length)
               return t[a];
