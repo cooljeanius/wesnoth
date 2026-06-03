@@ -418,7 +418,13 @@
                     s,
                     a,
                     n,
-                    i = A(e);
+                    i;
+                  if ("string" == typeof e) {
+                    n = A.find(e, d.table);
+                    e = n && n.length ? n[0] : null;
+                  }
+                  if (!e || !e.nodeType) return;
+                  i = A(e);
                   if (!L.getClosest(i, "tr").hasClass(d.cssIgnoreRow))
                     return (
                       /(th|td)/i.test(e.nodeName) ||
