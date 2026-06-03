@@ -2006,10 +2006,16 @@
             i = s || n.$headers,
             l =
               "string" == typeof i
-                ? -1 < i.indexOf("<")
-                  ? A()
-                  : A(A.find(i, e))
-                : A(i && i.jquery ? i.toArray() : i),
+                ? ((i = A.trim(i)),
+                  -1 < i.indexOf("<") ||
+                  !/^[\w\s\-#.:,[\]\(\)="'>+~*|^$\\]+$/.test(i)
+                    ? A()
+                    : A(A.find(i, e)))
+                : i && i.jquery
+                  ? i
+                  : i && ("number" == typeof i.length || i.nodeType)
+                    ? A(i)
+                    : A(),
             c = l.length ? l : n.$headers,
             d =
               (n.$headerIndexed && n.$headerIndexed[r]) ||
