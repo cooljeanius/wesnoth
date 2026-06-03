@@ -2032,13 +2032,15 @@
             : e.add(s).removeClass(L.css.processing + " " + o.cssProcessing);
         },
         processTbody: function (e, t, r) {
-          if (((e = A.find(e)[0]), r))
+          e = e && e.jquery ? e[0] : e;
+          if (!(e && 1 === e.nodeType)) return;
+          if (r)
             return (
               (e.isProcessing = !0),
               t.before('<colgroup class="tablesorter-savemyplace"/>'),
               A.fn.detach ? t.detach() : t.remove()
             );
-          var o = A(e).find("colgroup.tablesorter-savemyplace");
+          var o = A(A.find("colgroup.tablesorter-savemyplace", e));
           t.insertAfter(o), o.remove(), (e.isProcessing = !1);
         },
         clearTableBody: function (e) {
