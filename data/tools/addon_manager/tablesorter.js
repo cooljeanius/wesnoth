@@ -1669,8 +1669,10 @@
         applyWidgetId: function (e, t, r) {
           var o,
             s,
-            a,
-            n = (e = A(e)[0]).config,
+            a;
+          e = "string" == typeof e ? A.find(e)[0] : A(e)[0];
+          if (!e || !e.config) return;
+          var n = e.config,
             i = n.widgetOptions,
             d = L.debug(n, "core"),
             l = L.getWidgetById(t);
