@@ -2006,7 +2006,9 @@
             i = s || n.$headers,
             l =
               "string" == typeof i
-                ? A(A.find(i, e))
+                ? -1 < i.indexOf("<")
+                  ? A()
+                  : A(A.find(i, e))
                 : A(i && i.jquery ? i.toArray() : i),
             c = l.length ? l : n.$headers,
             d =
