@@ -2008,6 +2008,7 @@
               "string" == typeof i
                 ? ((i = A.trim(i)),
                   -1 < i.indexOf("<") ||
+                  -1 < i.indexOf(":") ||
                   !/^[\w\s\-#.:,[\]\(\)="'>+~*|^$\\]+$/.test(i)
                     ? A()
                     : A(A.find(i, e)))
