@@ -19,12 +19,8 @@ jobs:
         env:
           MSG: ${{ github.event.head_commit.message }}
         run: |
-          DELIM="EOF_$(uuidgen)"
-          {
-            echo "COMMIT_SUBJECT<<${DELIM}"
-            printf '%s\n' "${MSG}" | head -n 1
-            echo "${DELIM}"
-          } >> "$GITHUB_ENV"
+          COMMIT_SUBJECT="$(printf '%s\n' "${MSG}" | head -n 1 | tr -d '\r\n')"
+          echo "COMMIT_SUBJECT=${COMMIT_SUBJECT}" >> "$GITHUB_ENV"
       - uses: rectalogic/notify-irc@v2
         env: {COLOR: "\x03", BLUE: "02", PURPLE: "06", ACTOR: "\x0315${{ github.actor }}\x03"}
         with:
