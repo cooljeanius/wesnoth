@@ -9,7 +9,7 @@ updates:
   - package-ecosystem: "github-actions"  # See docs for possible values
     directory: "/"  # Location of package manifests
     schedule:
-      interval: "weekly"
+      interval: "monthly"
   - package-ecosystem: "gitsubmodule"
     directory: "/"
     schedule:
@@ -34,7 +34,7 @@ updates:
   - package-ecosystem: "gradle"
     directory: "/packaging/android/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     target-branch: "android-support"
     labels:
       - enhancement
